@@ -10,12 +10,19 @@ This exporter handles ALttP-specific patterns:
   to purchase items from shops.
 """
 
-from typing import Dict, Any, Optional, List, Set
+from typing import Dict, Any, Optional, List, Set, Callable
 from ..base import GenericGameExportHandler
+from exporter.analyzer.closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 import logging
 import re
 
 logger = logging.getLogger(__name__)
+
+# Feature flag for dynamic bunny rule analysis
+# When True, attempts to analyze bunny rules dynamically before falling back to workaround
+# EXPERIMENTAL: Set to False to let the main analyzer handle bunny rules via
+# factory function execution and callable list analysis
+ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
 
 
 # --- Dynamic imports from original ALttP code ---
@@ -66,7 +73,26 @@ BUNNY_ACCESSIBLE_LOCATIONS = {
 }
 
 # Glitch modes that enable superbunny accessibility
-GLITCH_MODES_WITH_SUPERBUNNY = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+# Derived dynamically from GlitchesRequired options - all modes except no_glitches
+def _get_glitch_modes_with_superbunny() -> Set[str]:
+    """Get the set of glitch modes that enable superbunny accessibility.
+
+    Derives this dynamically from the GlitchesRequired class in Options.py.
+    All glitch modes except 'no_glitches' enable superbunny accessibility.
+    """
+    try:
+        from worlds.alttp.Options import GlitchesRequired
+        # Get all option_* attributes and extract mode names (excluding no_glitches)
+        return {
+            key.replace('option_', '') for key, value in vars(GlitchesRequired).items()
+            if key.startswith('option_') and key != 'option_no_glitches'
+        }
+    except ImportError:
+        logger.warning("Could not import ALttP Options, using fallback glitch modes list")
+        return {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+
+
+GLITCH_MODES_WITH_SUPERBUNNY = _get_glitch_modes_with_superbunny()
 
 # Locations with mandatory superbunny paths that work in glitch modes
 # These are locations where the superbunny entrance path is always available
@@ -111,11 +137,27 @@ STANDARD_MIRROR_REVIVAL_DUNGEONS = {
     'Sanctuary',
 }
 
+# All invalid bunny revival dungeons combined - these are the ONLY dungeons
+# that require Moon Pearl or Magic Mirror in glitch modes. All other dungeons
+# allow bunny revival without any item requirements.
+ALL_INVALID_BUNNY_REVIVAL_DUNGEONS = (
+    STANDARD_MIRROR_REVIVAL_DUNGEONS |
+    {SWAMP_PALACE_ENTRANCE, TOWER_OF_HERA_BOTTOM}
+)
+
 # Other superbunny accessible locations in glitch modes that require Magic Mirror
 # (in addition to Moon Pearl as an alternative). Computed dynamically from
 # OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
 # For these, the rule is: Moon Pearl OR Magic Mirror
 MIRROR_SUPERBUNNY_LOCATIONS = _get_superbunny_accessible_locations() - MANDATORY_SUPERBUNNY_LOCATIONS
+
+# Regions that contain ONLY superbunny-accessible locations.
+# In glitch modes, exits to these regions should not require Moon Pearl.
+# These regions are specifically accessible via superbunny state.
+MANDATORY_SUPERBUNNY_REGIONS = {
+    'Superbunny Cave (Top)',      # Contains: Superbunny Cave - Top, Superbunny Cave - Bottom
+    'Kakariko Well (top)',        # Contains: Kakariko Well - Left/Middle/Right/Bottom
+}
 
 # Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
 # These are regions where bunnies cannot pass through - if you enter as a bunny,
@@ -129,12 +171,23 @@ BUNNY_IMPASSABLE_CAVES = {
     'Desert Palace Main (Inner)', 'Fairy Ascension Cave (Drop)'
 }
 
-# Set of dungeon names for small key mapping
-DUNGEON_NAMES = {
+# Fallback set of dungeon names for small key mapping (used if world.dungeons unavailable)
+_FALLBACK_DUNGEON_NAMES = {
     'Hyrule Castle', 'Agahnims Tower', 'Eastern Palace', 'Desert Palace',
     'Tower of Hera', 'Palace of Darkness', 'Swamp Palace', 'Skull Woods',
     'Thieves Town', 'Ice Palace', 'Misery Mire', 'Turtle Rock', 'Ganons Tower'
 }
+
+
+def _get_dungeon_names(world) -> Set[str]:
+    """Get the set of dungeon names from the world object.
+
+    Reads dungeon names dynamically from world.dungeons when available,
+    falling back to a hardcoded list if the world is not available.
+    """
+    if world is not None and hasattr(world, 'dungeons') and world.dungeons:
+        return set(world.dungeons.keys())
+    return _FALLBACK_DUNGEON_NAMES
 
 
 class ALttPGameExportHandler(GenericGameExportHandler):
@@ -159,7 +212,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
         self._entrance_shuffle_mode = self._check_entrance_shuffle_mode(world)
+        self._is_no_logic_single_player = self._check_no_logic_single_player(world)
         self._item_placements: Dict[str, str] = {}
+        # Dungeon names for small key validation - read from world.dungeons when available
+        self._dungeon_names = _get_dungeon_names(world)
 
     def _check_glitch_mode(self, world) -> bool:
         """Check if the world is in a glitch mode that enables superbunny accessibility."""
@@ -230,6 +286,32 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             logger.info(f"ALttP: Entrance shuffle mode '{mode}' detected - will intercept glitch rules")
         return mode
 
+    def _check_no_logic_single_player(self, world) -> bool:
+        """Check if the world is in no_logic single-player mode.
+
+        In no_logic single-player mode, ALttP's set_rules() returns early
+        without setting any rules at all. This means:
+        - All locations are accessible without items
+        - All exits are passable without items
+        - No bunny rules, no key rules, nothing
+
+        We need to detect this to avoid exporting rules that don't exist
+        in the original world. When this returns True, all rules should
+        be trivially True (no access requirements).
+        """
+        if world is None:
+            return False
+        if not hasattr(world, 'options') or not hasattr(world.options, 'glitches_required'):
+            return False
+        if world.options.glitches_required.current_key != 'no_logic':
+            return False
+        # Check if this is a single-player world
+        if not hasattr(world, 'multiworld'):
+            return False
+        if world.multiworld.players != 1:
+            return False
+        logger.info("ALttP: Detected no_logic single-player mode - all rules will be trivial")
+        return True
     def _get_option_value(self, option_name: str) -> Any:
         """Get the value of an option from the world.
 
@@ -856,14 +938,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             item = rule.get('item', '')
             if isinstance(item, str) and item.startswith('Small Key ('):
                 dungeon = item[11:-1]  # Extract dungeon name from 'Small Key (X)'
-                return dungeon in DUNGEON_NAMES
+                return dungeon in self._dungeon_names
 
         # Check item_check type
         if rule.get('type') == 'item_check':
             item = rule.get('item', '')
             if isinstance(item, str) and item.startswith('Small Key ('):
                 dungeon = item[11:-1]
-                return dungeon in DUNGEON_NAMES
+                return dungeon in self._dungeon_names
 
         # Check Rule Builder Has format
         if rule.get('rule') == 'Has':
@@ -871,16 +953,17 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             item_name = args.get('item_name', '')
             if isinstance(item_name, str) and item_name.startswith('Small Key ('):
                 dungeon = item_name[11:-1]
-                return dungeon in DUNGEON_NAMES
+                return dungeon in self._dungeon_names
 
         return False
 
     def _replace_small_key_checks(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Replace dungeon-specific small key checks with can_buy_unlimited helper.
+        """Replace dungeon-specific small key checks with True when universal keys enabled.
 
         When small_key_shuffle is 'universal', the server uses can_buy_unlimited
         which checks if any shop with unlimited universal keys is reachable.
-        We emit a helper call so the worldgen can properly evaluate shop reachability.
+        Since universal key shops are accessible in normal gameplay and this method
+        is only called when universal keys are enabled, we expand directly to True.
 
         Recursively processes the rule tree to replace all small key checks.
         """
@@ -889,13 +972,21 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Check if this is a small key check that should be replaced
         if self._is_dungeon_small_key_check(rule):
-            # Return a helper call to can_buy_unlimited instead of True_
-            # This allows proper evaluation of shop reachability
+            # With universal keys enabled, replace dungeon small key checks with
+            # can_buy_unlimited('Small Key (Universal)') - this requires actually
+            # reaching a shop that sells unlimited universal keys.
+            # Note: This method is only called when self._is_universal_keys is True
+            # (checked at call sites in post_process_data).
             return {
-                'type': 'helper',
-                'name': 'can_buy_unlimited',
+                'rule': 'can_buy_unlimited',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
                 'args': [
-                    {'type': 'constant', 'value': 'Small Key (Universal)'}
+                    {
+                        'rule': 'Constant',
+                        'args': {'value': 'Small Key (Universal)'},
+                        '_converted_from_ast': True
+                    }
                 ]
             }
 
@@ -1015,27 +1106,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Set the current location context for rule analysis."""
         self._current_location_context = location_name
 
-    # Class variable to control whether to skip glitch rule interception
-    # Set to True to let generic analysis handle simpler glitch rules (not rule_map patterns)
-    # When True: generic analyzer handles rules without unanalyzable closures (rule_map, etc.)
-    # When False: all glitch rules use hardcoded replacement rules
-    SKIP_GLITCH_INTERCEPTION = True
-
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Intercept complex rules before standard analysis.
 
-        Handles:
-        1. Bunny rules: Complex lambdas created by set_bunny_rules() that can't be
-           properly analyzed because they contain nested lambdas and dynamic path lookups.
-        2. Dungeon reentry rules: Lambdas from dungeon_reentry_rules() that reference
-           dungeon_entrance closure variable which can't be serialized.
-        3. Underworld glitch rules: Lambdas from underworld_glitches_rules() that have
-           complex dict lookups with lambda values.
+        Currently handles bunny rules, which have complex nested lambdas and
+        dynamic path lookups. The analyzer now attempts to analyze these dynamically
+        using the ClosureFunctionAnalyzer before falling back to pre-computed workarounds.
 
-        We detect these by checking the function's qualified name and closure variables.
-
-        Set SKIP_GLITCH_INTERCEPTION = True to bypass glitch rule interception and
-        let the generic recursive closure analysis handle them instead.
+        All other rule patterns (dungeon_reentry_rules, underworld_glitches_rules,
+        dict lookups, closure function calls, etc.) are handled by the generic analyzer.
         """
         if rule_func is None:
             return None
@@ -1044,566 +1123,71 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         func_qualname = getattr(rule_func, '__qualname__', '')
         if 'set_bunny_rules' in func_qualname:
             location_name = rule_target_name or self._current_location_context or ''
-            logger.debug(f"ALttP: Intercepting bunny rule for '{location_name}'")
-            return self._get_bunny_replacement_rule(location_name)
+            logger.debug(f"ALttP: Detected bunny rule for '{location_name}'")
 
-        # Check if this is a dungeon reentry rule lambda
-        # These are created in dungeon_reentry_rules() and reference dungeon_entrance
-        if 'dungeon_reentry_rules' in func_qualname:
-            target_name = rule_target_name or self._current_location_context or ''
-            return self._get_dungeon_reentry_replacement_rule(rule_func, target_name)
+            # Attempt dynamic analysis if enabled (legacy path using ClosureFunctionAnalyzer)
+            if ENABLE_DYNAMIC_BUNNY_ANALYSIS:
+                try:
+                    analyzed_result = self._try_dynamic_bunny_analysis(rule_func, location_name)
+                    if analyzed_result is not None:
+                        logger.debug(f"ALttP: Dynamic bunny rule analysis succeeded for '{location_name}'")
+                        return analyzed_result
+                    logger.debug(f"ALttP: Dynamic analysis returned None, using workaround")
+                except Exception as e:
+                    logger.debug(f"ALttP: Dynamic bunny rule analysis failed: {e}, using workaround")
 
-        # Check if this is an underworld glitch rule lambda
-        # These are created in underworld_glitches_rules() and may reference dungeon_entrance
-        if 'underworld_glitches_rules' in func_qualname:
-            # Check if SKIP_GLITCH_INTERCEPTION is enabled AND the rule can be handled generically
-            if self.SKIP_GLITCH_INTERCEPTION and not self._has_unanalyzable_closure(rule_func):
-                logger.info(f"ALttP: SKIP_GLITCH_INTERCEPTION enabled - letting generic analysis handle '{rule_target_name}'")
-                return None  # Let generic analysis try
-            target_name = rule_target_name or self._current_location_context or ''
-            return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
+                # Fall back to pre-computed workaround
+                logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
+                return self._get_bunny_replacement_rule(location_name)
 
-        # Check if closure contains underworld_glitches_rules lambdas
-        # This catches rules combined via add_rule() that wrap the original lambdas
-        if self._has_problematic_closure(rule_func):
-            # Check if SKIP_GLITCH_INTERCEPTION is enabled AND the rule can be handled generically
-            if self.SKIP_GLITCH_INTERCEPTION and not self._has_unanalyzable_closure(rule_func):
-                logger.info(f"ALttP: SKIP_GLITCH_INTERCEPTION enabled - letting generic analysis handle closure for '{rule_target_name}'")
-                return None  # Let generic analysis try
-            target_name = rule_target_name or self._current_location_context or ''
-            return self._get_underworld_glitch_replacement_rule(rule_func, target_name)
+            # When ENABLE_DYNAMIC_BUNNY_ANALYSIS is False, let the main analyzer handle
+            # bunny rules via factory function execution and callable list analysis
+            logger.debug(f"ALttP: Letting main analyzer handle bunny rule for '{location_name}'")
+            return None
 
-        # Not a special rule - let standard analysis handle it
+        # All other rules are handled by the generic analyzer
         return None
 
-    def _has_problematic_closure(self, func, depth: int = 0) -> bool:
-        """Recursively check if a function has problematic closure variables.
+    def _try_dynamic_bunny_analysis(self, rule_func: Callable, location_name: str) -> Optional[Dict[str, Any]]:
+        """Attempt to dynamically analyze a bunny rule function.
 
-        Detects:
-        - Lambdas from underworld_glitches_rules() or dungeon_reentry_rules()
-        - Dicts with lambda values (rule_map)
-        - Known problematic closure variable names
+        This method uses the ClosureFunctionAnalyzer to extract the actual logic
+        from bunny rule lambdas, including their nested options and path patterns.
 
         Args:
-            func: Function to check
-            depth: Recursion depth (to prevent infinite recursion)
+            rule_func: The bunny rule lambda function
+            location_name: Name of the location for context
 
         Returns:
-            True if problematic closures are found
+            Analyzed rule dict if successful, None otherwise
         """
-        if depth > 5 or not callable(func):
-            return False
+        # Create a mock analyzer context for the ClosureFunctionAnalyzer
+        # We need to provide enough context for it to work
+        class MockAnalyzerContext:
+            def __init__(self, handler):
+                self.closure_vars = {}
+                self.seen_funcs = {}
+                self.game_handler = handler
+                self.player_context = None
 
-        # Check qualname of this function
-        func_qualname = getattr(func, '__qualname__', '')
-        if 'underworld_glitches_rules' in func_qualname or 'dungeon_reentry_rules' in func_qualname:
-            return True
+        mock_context = MockAnalyzerContext(self)
 
-        # Check closure variables
-        if not hasattr(func, '__closure__') or func.__closure__ is None:
-            return False
+        closure_analyzer = ClosureFunctionAnalyzer(mock_context)
+        result = closure_analyzer.analyze_function(rule_func)
 
-        free_vars = getattr(func.__code__, 'co_freevars', ())
-        for var_name, cell in zip(free_vars, func.__closure__):
-            try:
-                value = cell.cell_contents
-
-                # Check for known problematic variable names
-                if var_name in ('dungeon_entrance', 'rule_map', 'mire_clip', 'hera_clip',
-                               'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
-                    return True
-
-                # Check for dicts with callable values
-                if isinstance(value, dict):
-                    if any(callable(v) for v in value.values()):
-                        return True
-
-                # Recursively check callable closure variables
-                if callable(value):
-                    if self._has_problematic_closure(value, depth + 1):
-                        return True
-
-            except ValueError:
-                # Empty cell
-                pass
-
-        return False
-
-    def _has_unanalyzable_closure(self, func, depth: int = 0) -> bool:
-        """Check if function has closure patterns that generic analysis can't handle.
-
-        These are patterns where the generic analyzer would produce invalid output.
-        Note: rule_map dicts with lambdas ARE now supported via _try_handle_dict_lambda_lookup
-        in the generic analyzer, so we allow those to go through.
-
-        Currently only dungeon_entrance objects are truly unanalyzable because they
-        involve dynamic entrance lookups that can't be serialized.
-
-        Args:
-            func: Function to check
-            depth: Recursion depth (to prevent infinite recursion)
-
-        Returns:
-            True if the function has unanalyzable patterns that require interception
-        """
-        if depth > 5 or not callable(func):
-            return False
-
-        # Check closure variables
-        if not hasattr(func, '__closure__') or func.__closure__ is None:
-            return False
-
-        try:
-            free_vars = func.__code__.co_freevars
-            for var_name, cell in zip(free_vars, func.__closure__):
-                try:
-                    value = cell.cell_contents
-
-                    # dungeon_entrance objects can't be serialized - this is used in
-                    # dungeon_reentry_rules and involves dynamic entrance lookups
-                    if var_name == 'dungeon_entrance':
-                        logger.debug(f"ALttP: Found unanalyzable closure: dungeon_entrance")
-                        return True
-
-                    # Recurse into callable closures
-                    if callable(value) and self._has_unanalyzable_closure(value, depth + 1):
-                        return True
-
-                except ValueError:
-                    pass  # Empty cell
-        except (AttributeError, TypeError):
-            pass
-
-        return False
-
-    def _get_dungeon_reentry_replacement_rule(self, rule_func, target_name: str) -> Dict[str, Any]:
-        """Get a replacement rule for dungeon reentry rules.
-
-        Dungeon reentry rules from dungeon_reentry_rules() reference a dynamically
-        determined dungeon_entrance variable that can't be serialized. These rules
-        are active when entrance_shuffle is 'full' or 'dungeons_full'.
-
-        The rules are:
-        1. Entry rule: dungeon_entrance.access_rule(fake_pearl_state(state, player))
-           - Checks if dungeon entrance is accessible with Moon Pearl
-           - Simplified to: requires Moon Pearl (conservative but safe)
-
-        2. Exit rule: dungeon_entrance.can_reach(state)
-           - Checks if dungeon entrance region is reachable
-           - Simplified to: True_ (permissive - allows exit even if entrance not reached)
-           - This is safe because it's an exit restriction, not an entry requirement
-
-        Args:
-            rule_func: The rule function to analyze
-            target_name: The name of the entrance/location this rule applies to
-
-        Returns:
-            A simplified rule dict
-        """
-        # Try to determine which type of rule this is by examining closure variables
-        closure_vars = {}
-        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
-            free_vars = rule_func.__code__.co_freevars
-            for var_name, cell in zip(free_vars, rule_func.__closure__):
-                try:
-                    closure_vars[var_name] = cell.cell_contents
-                except ValueError:
-                    pass
-
-        # Check if dungeon_entrance is in closure - if so, this is one of the complex rules
-        if 'dungeon_entrance' in closure_vars:
-            dungeon_entrance = closure_vars['dungeon_entrance']
-            entrance_name = getattr(dungeon_entrance, 'name', 'unknown')
-            logger.info(f"ALttP: Intercepting dungeon_reentry rule for '{target_name}' "
-                       f"(dungeon_entrance={entrance_name})")
-
-            # Try to get the source code to distinguish between access_rule and can_reach
-            try:
-                import inspect
-                source = inspect.getsource(rule_func)
-                if 'access_rule' in source and 'fake_pearl_state' in source:
-                    # Entry rule - requires reaching dungeon entrance with Moon Pearl
-                    # Simplify to just requiring Moon Pearl
-                    logger.debug(f"ALttP: Replacing access_rule(fake_pearl_state) with Moon Pearl requirement")
-                    return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
-                elif 'can_reach' in source:
-                    # Exit rule - checks if entrance region is reachable
-                    # Simplify to True_ (permissive) since we can't know the entrance
-                    logger.debug(f"ALttP: Replacing can_reach rule with True_")
-                    return {'rule': 'True_'}
-            except (OSError, TypeError):
-                pass
-
-            # Default: if we can't determine the type, use Moon Pearl (safer)
-            logger.debug(f"ALttP: Unknown dungeon_reentry rule type, using Moon Pearl")
-            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
-
-        # No dungeon_entrance in closure - this might be a simpler rule
-        # Let it fall through to standard analysis
-        logger.debug(f"ALttP: dungeon_reentry rule without dungeon_entrance closure for '{target_name}'")
-        return None
-
-    def _get_underworld_glitch_replacement_rule(self, rule_func, target_name: str) -> Optional[Dict[str, Any]]:
-        """Get a replacement rule for underworld glitch rules.
-
-        Some rules in underworld_glitches_rules() contain complex constructs that
-        can't be properly serialized:
-        1. Lambdas referencing dungeon_entrance closure variable
-        2. Dicts with lambda values (rule_map) that get serialized as strings
-        3. Nested lambdas (like mirrorless_moat_rule -> hera_rule -> rule_map)
-        4. Combined rules from add_rule(..., combine='or') that wrap glitch rules
-
-        For combined rules (from add_rule with combine='or'), the rule looks like:
-            lambda state: glitch_rule(state) or old_rule(state)
-        The source won't contain 'can_bomb_clip' directly - it's in the 'rule' closure.
-        We need to check the closure's 'rule' variable for glitch patterns.
-
-        Args:
-            rule_func: The rule function to analyze
-            target_name: The name of the entrance/location this rule applies to
-
-        Returns:
-            A simplified rule dict, or None if standard analysis should handle it
-        """
-        import inspect
-
-        # Check closure variables for problematic constructs
-        closure_vars = {}
-        has_problematic_closure = False
-        problematic_reason = None
-        is_combined_or_rule = False  # True if this is a combined rule from add_rule(..., combine='or')
-        glitch_rule_source = None  # Source code of the glitch rule if it's in closure
-        old_rule_func = None  # The original rule from a combined or-rule
-
-        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
-            free_vars = rule_func.__code__.co_freevars
-            for var_name, cell in zip(free_vars, rule_func.__closure__):
-                try:
-                    value = cell.cell_contents
-                    closure_vars[var_name] = value
-
-                    # Check for dungeon_entrance (Entrance object)
-                    if var_name == 'dungeon_entrance':
-                        has_problematic_closure = True
-                        problematic_reason = f"dungeon_entrance={getattr(value, 'name', 'unknown')}"
-
-                    # Check for rule_map (dict with lambda values)
-                    elif var_name == 'rule_map' and isinstance(value, dict):
-                        has_problematic_closure = True
-                        problematic_reason = "rule_map dict"
-
-                    # Check for nested lambdas (mirrorless_moat_rule, hera_rule, gt_rule, etc.)
-                    elif callable(value) and 'underworld_glitches_rules' in getattr(value, '__qualname__', ''):
-                        has_problematic_closure = True
-                        problematic_reason = f"nested lambda {var_name}"
-                        # If this is named 'rule', it's likely from add_rule(spot, rule, combine='or')
-                        if var_name == 'rule':
-                            is_combined_or_rule = 'old_rule' in free_vars
-                            # Try to get the source of the glitch rule
-                            try:
-                                glitch_rule_source = inspect.getsource(value)
-                            except (OSError, TypeError):
-                                pass
-
-                    # Store old_rule for later analysis if this is a combined or-rule
-                    elif var_name == 'old_rule' and callable(value):
-                        old_rule_func = value
-
-                    # Check for mire_clip, hera_clip (lambda functions) - alternate detection
-                    elif var_name in ('mire_clip', 'hera_clip', 'mirrorless_moat_rule', 'hera_rule', 'gt_rule'):
-                        if callable(value):
-                            has_problematic_closure = True
-                            problematic_reason = f"glitch helper lambda {var_name}"
-                            # Try to get the source of the glitch helper
-                            try:
-                                helper_source = inspect.getsource(value)
-                                if glitch_rule_source:
-                                    glitch_rule_source += '\n' + helper_source
-                                else:
-                                    glitch_rule_source = helper_source
-                            except (OSError, TypeError):
-                                pass
-                except ValueError:
-                    pass
-
-        # If no problematic closure found, let standard analysis handle it
-        if not has_problematic_closure:
+        if result is None:
             return None
 
-        logger.info(f"ALttP: Intercepting underworld_glitch rule for '{target_name}' "
-                   f"(reason: {problematic_reason})")
-
-        # For combined rules (from add_rule with combine='or'), prioritize analyzing old_rule
-        # to preserve the original (non-glitch) rule requirements.
-        # The combined rule is: glitch_rule OR old_rule
-        # Since we can't properly serialize the glitch alternative, we export just old_rule.
-        # This ensures UT matches server logic when glitches aren't being used.
-        if is_combined_or_rule and old_rule_func is not None:
-            logger.debug(f"ALttP: Combined or-rule - analyzing old_rule for '{target_name}'")
-            old_rule_result = self._analyze_old_rule(old_rule_func, target_name)
-            if old_rule_result is not None:
-                return old_rule_result
-            # If old_rule analysis fails, fall through to pattern matching
-            logger.debug(f"ALttP: Failed to analyze old_rule, trying pattern matching")
-
-        # Try to determine the best replacement rule based on source code
-        try:
-            source = inspect.getsource(rule_func)
-
-            # For combined rules, also check the glitch rule's source
-            combined_source = source
-            if glitch_rule_source:
-                combined_source = source + '\n' + glitch_rule_source
-
-            # Rules with access_rule(fake_pearl_state) need Moon Pearl
-            if 'access_rule' in combined_source and 'fake_pearl_state' in combined_source:
-                logger.debug(f"ALttP: Replacing with Moon Pearl requirement")
-                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
-
-            # Rules with Magic Mirror as alternative should use Magic Mirror
-            # Example: state.has('Magic Mirror', player) or mirrorless_moat_rule(state)
-            if 'Magic Mirror' in combined_source:
-                logger.debug(f"ALttP: Rule has Magic Mirror alternative - using Magic Mirror OR True_")
-                return {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
-
-            # Rules with mire_clip, hera_clip require complex conditions:
-            # - mire_clip: can_reach('Misery Mire (West)') AND can_bomb_clip AND has_fire_source
-            # - hera_clip: can_reach('Tower of Hera (Top)') AND can_bomb_clip
-            # Use CanReachRegion to properly check region accessibility.
-            # Also check problematic_reason for the closure variable name
-            check_source = combined_source + ' ' + (problematic_reason or '')
-            if 'mire_clip' in check_source and 'hera_clip' not in check_source:
-                # Pure mire_clip: CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND (Fire Rod OR Lamp)
-                logger.debug(f"ALttP: Replacing mire_clip rule with CanReachRegion + item requirements")
-                return {
-                    'rule': 'And',
-                    'args': {
-                        'rules': [
-                            {'rule': 'CanReachRegion', 'args': {'region_name': 'Misery Mire (West)'}},
-                            {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}},
-                            {'rule': 'Or', 'args': {'rules': [
-                                {'rule': 'Has', 'args': {'item_name': 'Fire Rod'}},
-                                {'rule': 'Has', 'args': {'item_name': 'Lamp'}}
-                            ]}}
-                        ]
-                    }
-                }
-            elif 'hera_clip' in check_source and 'mire_clip' not in check_source:
-                # Pure hera_clip: CanReachRegion('Tower of Hera (Top)') AND Pegasus Boots
-                logger.debug(f"ALttP: Replacing hera_clip rule with CanReachRegion + Pegasus Boots")
-                return {
-                    'rule': 'And',
-                    'args': {
-                        'rules': [
-                            {'rule': 'CanReachRegion', 'args': {'region_name': 'Tower of Hera (Top)'}},
-                            {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
-                        ]
-                    }
-                }
-            elif 'mire_clip' in check_source and 'hera_clip' in check_source:
-                # Both clips as alternatives: (mire_clip OR hera_clip)
-                # mire_clip: CanReachRegion('Misery Mire (West)') AND Pegasus Boots AND fire source
-                # hera_clip: CanReachRegion('Tower of Hera (Top)') AND Pegasus Boots
-                logger.debug(f"ALttP: Replacing mire_clip/hera_clip rule with CanReachRegion alternatives")
-                return {
-                    'rule': 'Or',
-                    'args': {
-                        'rules': [
-                            # mire_clip path
-                            {'rule': 'And', 'args': {'rules': [
-                                {'rule': 'CanReachRegion', 'args': {'region_name': 'Misery Mire (West)'}},
-                                {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}},
-                                {'rule': 'Or', 'args': {'rules': [
-                                    {'rule': 'Has', 'args': {'item_name': 'Fire Rod'}},
-                                    {'rule': 'Has', 'args': {'item_name': 'Lamp'}}
-                                ]}}
-                            ]}},
-                            # hera_clip path
-                            {'rule': 'And', 'args': {'rules': [
-                                {'rule': 'CanReachRegion', 'args': {'region_name': 'Tower of Hera (Top)'}},
-                                {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
-                            ]}}
-                        ]
-                    }
-                }
-
-            # Direct can_bomb_clip usage (e.g., Ice Palace rules, Kiki Skip)
-            # can_bomb_clip requires: can_use_bombs (always available) + is_not_bunny + Pegasus Boots
-            # We approximate with Pegasus Boots since bombs are common and bunny state is edge case
-            if 'can_bomb_clip' in combined_source:
-                logger.debug(f"ALttP: Replacing can_bomb_clip rule with Pegasus Boots")
-                return {'rule': 'Has', 'args': {'item_name': 'Pegasus Boots'}}
-
-            # Rules that only check can_reach are permissive (but not for combined or-rules,
-            # since those should have been handled above by analyzing old_rule)
-            # This check must come AFTER mire_clip/hera_clip handling since those contain can_reach
-            if 'can_reach' in combined_source and 'access_rule' not in combined_source:
-                if is_combined_or_rule:
-                    # For combined or-rules where old_rule analysis failed, use False_
-                    # to be conservative (disable glitch path, require normal path)
-                    logger.debug(f"ALttP: Combined or-rule with can_reach, old_rule analysis failed, using False_")
-                    return {'rule': 'False_'}
-                logger.debug(f"ALttP: Replacing can_reach rule with True_")
-                return {'rule': 'True_'}
-
-        except (OSError, TypeError) as e:
-            logger.debug(f"ALttP: Could not inspect source: {e}")
-
-        # Handle combined or-rule case where we couldn't analyze old_rule
-        if is_combined_or_rule:
-            # old_rule not found or not analyzable, use conservative approach
-            logger.debug(f"ALttP: Combined or-rule without analyzable old_rule, using False_")
-
-        # Default: use conservative False_ for unknown glitch rules
-        # This disables the glitch alternative, falling back to original rules.
-        # Being conservative ensures UT matches server when glitch conditions aren't met.
-        logger.debug(f"ALttP: Using conservative False_ for unknown underworld_glitch rule")
-        return {'rule': 'False_'}
-
-    def _analyze_old_rule(self, old_rule_func, target_name: str) -> Optional[Dict[str, Any]]:
-        """Analyze the original (non-glitch) rule from a combined or-rule.
-
-        When add_rule(..., combine='or') creates a combined rule, the old_rule
-        closure variable contains the original rule. This method attempts to
-        analyze that original rule and serialize it.
-
-        Args:
-            old_rule_func: The original rule function from the closure
-            target_name: The name of the entrance/location this rule applies to
-
-        Returns:
-            A serialized rule dict, or None if analysis fails
-        """
-        import inspect
-        import re
-
-        # First, check if old_rule_func itself has problematic closures
-        # If so, recursively handle it
-        old_rule_qualname = getattr(old_rule_func, '__qualname__', '')
-
-        # If old_rule is also from underworld_glitches_rules or dungeon_reentry_rules,
-        # it may be a chained combined rule. Check its closure.
-        if 'underworld_glitches_rules' in old_rule_qualname or 'dungeon_reentry_rules' in old_rule_qualname:
-            # This is another problematic rule - use conservative approach
-            logger.debug(f"ALttP: old_rule is also a glitch rule, using False_")
-            return None
-
-        # Check if old_rule has its own problematic closure (nested combined rules)
-        if self._has_problematic_closure(old_rule_func):
-            logger.debug(f"ALttP: old_rule has problematic closure, using False_")
-            return None
-
-        try:
-            source = inspect.getsource(old_rule_func)
-
-            # Parse common patterns in ALttP rules
-
-            # Pattern: state.has('Item Name', player)
-            has_pattern = r"state\.has\(['\"]([^'\"]+)['\"],\s*player\)"
-            has_matches = re.findall(has_pattern, source)
-
-            # Pattern: state._lttp_has_key('Key Name', player)
-            key_pattern = r"state\._lttp_has_key\(['\"]([^'\"]+)['\"],\s*player\)"
-            key_matches = re.findall(key_pattern, source)
-
-            # Pattern: helper function calls like can_activate_crystal_switch(state, player)
-            helper_pattern = r"(can_\w+|has_\w+|defeat_\w+)\(state,\s*player\)"
-            helper_matches = re.findall(helper_pattern, source)
-
-            # Build rule components
-            components = []
-
-            for item in has_matches:
-                components.append({'rule': 'Has', 'args': {'item_name': item}})
-
-            for key in key_matches:
-                components.append({'rule': 'Has', 'args': {'item_name': key}})
-
-            for helper in helper_matches:
-                components.append({'rule': helper, '_original_ast_type': 'helper', '_converted_from_ast': True})
-
-            if not components:
-                # No recognizable patterns - can't serialize
-                # Check if this is a combined lambda that wraps another combined lambda
-                # If so, we can't analyze it directly, but we can use fallback rules
-                # based on the target name
-                if 'rule(state)' in source and 'old_rule(state)' in source:
-                    # This is a nested combined lambda - can't analyze directly
-                    # Use fallback rules for known dungeon doors
-                    logger.debug(f"ALttP: Nested combined lambda for '{target_name}', using fallback")
-                    return self._get_dungeon_door_fallback_rule(target_name)
-                logger.debug(f"ALttP: No recognizable patterns in old_rule source")
-                return None
-
-            # Determine if it's an AND or OR combination based on source
-            if ' and ' in source and ' or ' not in source:
-                # All components ANDed together
-                if len(components) == 1:
-                    result = components[0]
-                else:
-                    result = {'rule': 'And', 'children': components}
-            elif ' or ' in source and ' and ' not in source:
-                # All components ORed together
-                if len(components) == 1:
-                    result = components[0]
-                else:
-                    result = {'rule': 'Or', 'children': components}
-            else:
-                # Mixed or complex - just AND all components for safety
-                if len(components) == 1:
-                    result = components[0]
-                else:
-                    result = {'rule': 'And', 'children': components}
-
-            logger.debug(f"ALttP: Successfully analyzed old_rule for '{target_name}': {result.get('rule', 'unknown')}")
+        # Validate the result is reasonable
+        result_type = result.get('type')
+        if result_type in ('item_check', 'and', 'or', 'constant', 'can_reach'):
             return result
 
-        except (OSError, TypeError) as e:
-            logger.debug(f"ALttP: Could not analyze old_rule source: {e}")
+        # For other types, check if they make sense
+        if result_type == 'error':
             return None
 
-    def _get_dungeon_door_fallback_rule(self, target_name: str) -> Optional[Dict[str, Any]]:
-        """Get a fallback rule for dungeon doors when old_rule analysis fails.
-
-        When the old_rule is itself a nested combined lambda (from multiple add_rule calls),
-        we can't easily analyze it. For known dungeon doors, we use fallback rules based
-        on the original game requirements.
-
-        Big Key Doors typically require:
-        - The Big Key for that dungeon
-        - Optional: can_activate_crystal_switch (for Tower of Hera)
-
-        Args:
-            target_name: The name of the entrance
-
-        Returns:
-            A rule dict or None if no fallback is available
-        """
-        # Map of Big Key Doors to their Big Key requirements
-        # These are the baseline requirements that glitches can bypass
-        big_key_door_map = {
-            'Tower of Hera Big Key Door': {
-                'rule': 'And',
-                'children': [
-                    {'rule': 'can_activate_crystal_switch', '_original_ast_type': 'helper', '_converted_from_ast': True},
-                    {'rule': 'Has', 'args': {'item_name': 'Big Key (Tower of Hera)'}}
-                ]
-            },
-            'Swamp Palace Small Key Door': {
-                'rule': 'Has',
-                'args': {'item_name': 'Small Key (Swamp Palace)'}
-            },
-            'Ice Palace (Main)': {
-                'rule': 'Has',
-                'args': {'item_name': 'Small Key (Ice Palace)', 'count': 2}
-            },
-        }
-
-        if target_name in big_key_door_map:
-            logger.info(f"ALttP: Using fallback rule for '{target_name}'")
-            return big_key_door_map[target_name]
-
-        return None
+        return result
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
@@ -1677,12 +1261,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if base_result is not None:
             return base_result
 
-        # Handle can_buy_unlimited for universal keys
-        # When small_key_shuffle is 'universal', shops with unlimited universal keys
-        # are accessible in normal gameplay. We expand this to True for simplicity.
-        if helper_name == 'can_buy_unlimited' and self._is_universal_keys:
-            logger.debug("ALttP: Expanding can_buy_unlimited to True (universal keys enabled)")
-            return {'type': 'constant', 'value': True}
+        # Note: can_buy_unlimited is NOT expanded to True anymore.
+        # When small_key_shuffle is 'universal', rules that check for dungeon small keys
+        # are replaced with can_buy_unlimited('Small Key (Universal)'), which requires
+        # actually reaching a shop that sells unlimited universal keys.
+        # The can_buy_unlimited helper is exported to the worldgen world's Rules.py
+        # and evaluates shop reachability at runtime.
 
         # Helper for creating item check rules
         def _item(name: str) -> Dict[str, Any]:
@@ -1780,14 +1364,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 location_data['access_rule'], location_name
             )
 
-        # Generate shop price rules if applicable
-        # This replaces the broken shop_price_rules helper call that references 'location'
+        # Handle shop price rules:
+        # 1. Always remove the broken shop_price_rules helper that references 'location'
+        # 2. For Hearts/Bombs/Arrows types, add the appropriate replacement rule
+        # 3. For Rupees (type 0), just removing the helper is enough (no item requirement)
+        existing_rule = location_data.get('access_rule')
+        if existing_rule:
+            existing_rule = self._remove_shop_price_rules_helper(existing_rule)
+            location_data['access_rule'] = existing_rule
+
+        # Generate shop price rules for non-Rupee types
         shop_price_rule = self._generate_shop_price_rule(location_data)
         if shop_price_rule:
             existing_rule = location_data.get('access_rule')
-            # Remove any existing shop_price_rules helper from the rule
-            if existing_rule:
-                existing_rule = self._remove_shop_price_rules_helper(existing_rule)
             if existing_rule and existing_rule != {'rule': 'True_'}:
                 # Combine with existing rule using AND
                 location_data['access_rule'] = {
@@ -2125,6 +1714,22 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     location_name = location_data.get('name', '')
                     access_rule = location_data.get('access_rule', {})
 
+                    # In no_logic single-player mode, all locations should be trivially accessible
+                    # EXCEPT for shop price rules, which are enforced even in no_logic mode.
+                    # Shop price rules are added in create_shops() via add_rule(), not in
+                    # set_rules(), so the no_logic early return doesn't affect them.
+                    if self._is_no_logic_single_player:
+                        # Check if this location has shop price requirements
+                        # ShopPriceType: 1=Hearts, 3=Bombs, 4=Arrows (0=Rupees, 2=Magic need no rule)
+                        shop_price_type = location_data.get('shop_price_type')
+                        if shop_price_type in (1, 3, 4):
+                            # Regenerate the shop price rule to ensure it's preserved
+                            shop_rule = self._generate_shop_price_rule(location_data)
+                            location_data['access_rule'] = shop_rule if shop_rule else {}
+                        else:
+                            location_data['access_rule'] = {}
+                        continue
+
                     # Resolve OptionValue comparisons first (e.g., mode checks, small_key_shuffle checks)
                     if access_rule:
                         location_data['access_rule'] = self._resolve_option_comparisons_in_rule(access_rule)
@@ -2135,34 +1740,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         location_data['access_rule'] = self._resolve_placement_conditionals(access_rule)
                         access_rule = location_data.get('access_rule', {})
 
-                    # For mixed regions, remove Moon Pearl requirement from compound rules.
+                    # For mixed regions (both Light World and Dark World accessible),
+                    # the bunny rule system adds Moon Pearl requirements via add_rule().
+                    # But since there are Light World paths available, Moon Pearl isn't
+                    # actually required - you can enter as Link from a Light World entrance.
+                    # Remove Moon Pearl from location rules in mixed regions.
                     #
-                    # In the original ALttP bunny rules (Rules.py set_bunny_rules):
-                    # - is_link(region) returns True if region.is_dark_world (inverted) or
-                    #   region.is_light_world (standard)
-                    # - When is_link() returns True, path finding happens but Moon Pearl
-                    #   is only made optional if a PURE Link path exists
-                    #
-                    # The is_dark_world/is_light_world flags indicate CONNECTIVITY, not
-                    # whether a pure path exists. A mixed region might only have item-gated
-                    # paths from Link territory, so we can't assume Moon Pearl is optional.
-                    #
-                    # In inverted mode, only type 2 (pure DarkWorld) guarantees Link access.
-                    # In standard mode, mixed regions have Light World (Link) paths.
-                    is_starting_region = region_name in starting_regions
-                    should_remove_moon_pearl = False
-                    if access_rule and location_name not in self._bunny_accessible_locations:
-                        if self._is_inverted_mode:
-                            # In inverted mode, only pure DarkWorld (type 2) and starting regions
-                            # guarantee Link access. Mixed regions might have item-gated paths,
-                            # so we conservatively keep Moon Pearl requirement.
-                            should_remove_moon_pearl = (region_type == 2) or is_starting_region
-                        else:
-                            # In standard mode, player is Link in Light World, bunny in Dark World.
-                            # Remove Moon Pearl for mixed regions (since Light World paths exist).
-                            should_remove_moon_pearl = is_mixed_region
-
-                    if should_remove_moon_pearl:
+                    # NOTE: This is different from game logic rules like Frog's
+                    # "can_lift_heavy_rocks AND (Moon Pearl OR Beat Agahnim 1)" where
+                    # Moon Pearl is one of multiple alternatives. Those are preserved
+                    # because removing Moon Pearl would change the game logic.
+                    # The _remove_moon_pearl_from_rule() function handles this distinction
+                    # by only removing pure Moon Pearl requirements or filtering from HasAny/Or.
+                    if is_mixed_region and access_rule:
                         location_data['access_rule'] = self._remove_moon_pearl_from_rule(
                             access_rule, location_name
                         )
@@ -2181,6 +1771,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
+                    # In no_logic single-player mode, all exits should be trivially passable
+                    # since set_rules() returns early without setting any rules
+                    if self._is_no_logic_single_player:
+                        exit_data['access_rule'] = {'rule': 'True_'}
+                        continue
                     if 'access_rule' in exit_data and exit_data['access_rule']:
                         # Resolve OptionValue comparisons first
                         exit_data['access_rule'] = self._resolve_option_comparisons_in_rule(
@@ -2209,28 +1804,116 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
                             dest_is_pure_bunny_territory = dest_is_light and not dest_is_dark
                         else:
-                            # Standard: pure Dark World is bunny (handled elsewhere)
-                            pass
+                            # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
+                            # Exiting from a mixed region to pure Dark World requires Moon Pearl
+                            dest_is_pure_bunny_territory = dest_is_dark and not dest_is_light
+
+                        # Check if all locations in the destination are bunny-accessible.
+                        # If so, we don't need Moon Pearl even in bunny territory since
+                        # bunnies can collect items at these locations.
+                        dest_locations = [loc.get('name', '') for loc in connected_region.get('locations', [])]
+                        dest_all_bunny_accessible = (
+                            len(dest_locations) > 0 and
+                            all(loc in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
+                        )
+
                         should_keep_moon_pearl = (
                             (is_bunny_impassable and self._is_inverted_mode) or
-                            dest_is_pure_bunny_territory
+                            (dest_is_pure_bunny_territory and not dest_all_bunny_accessible)
                         )
                         if is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
+
+                        # For exits FROM pure bunny territory (not mixed) to regions with
+                        # non-bunny-accessible locations, ADD Moon Pearl requirement.
+                        # This handles entrance shuffle cases where an exit from bunny
+                        # territory leads to a region that wasn't originally accessible
+                        # from that world.
+                        #
+                        # IMPORTANT: Only apply this in entrance shuffle modes. In vanilla mode,
+                        # DW regions like Dark Death Mountain (West Bottom) are directly reachable
+                        # from Light World via teleporter, so the player arrives in Link state
+                        # and doesn't need Moon Pearl for exits. The original Python rules
+                        # account for these Light World paths via set_bunny_rules() path tracing.
+                        src_is_pure_bunny_territory = False
+                        if self._is_inverted_mode:
+                            # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
+                            src_is_pure_bunny_territory = is_light_world and not is_dark_world
+                        else:
+                            # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
+                            src_is_pure_bunny_territory = is_dark_world and not is_light_world
+
+                        # Check if destination has any non-bunny-accessible locations
+                        dest_has_non_bunny_locs = (
+                            len(dest_locations) > 0 and
+                            any(loc not in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
+                        )
+
+                        # Add Moon Pearl if needed - but ONLY in entrance shuffle modes
+                        # Skip this in no_logic single-player mode where no rules are set
+                        #
+                        # IMPORTANT: In glitch modes, dungeons allow bunny revival, meaning
+                        # you can enter as a bunny and revive to Link state inside. Only
+                        # the invalid bunny revival dungeons (Swamp Palace, Tower of Hera,
+                        # Turtle Rock, Sanctuary) have special Moon Pearl requirements.
+                        # For all other dungeons, we skip adding Moon Pearl here.
+                        dest_is_dungeon = connected_region.get('type') == 4  # type 4 = Dungeon
+                        dest_allows_bunny_revival = (
+                            dest_is_dungeon and
+                            connected_region_name not in ALL_INVALID_BUNNY_REVIVAL_DUNGEONS
+                        )
+                        skip_moon_pearl_for_glitch_dungeon = (
+                            self._is_glitch_mode and dest_allows_bunny_revival
+                        )
+
+                        if (not self._is_no_logic_single_player and
+                            self._entrance_shuffle_mode != 'vanilla' and
+                            src_is_pure_bunny_territory and
+                            dest_has_non_bunny_locs and
+                            not self._rule_contains_moon_pearl(exit_data.get('access_rule', {})) and
+                            not skip_moon_pearl_for_glitch_dungeon):
+                            current_rule = exit_data.get('access_rule', {})
+                            logger.debug(f"ALttP: Adding Moon Pearl to exit '{exit_name}' "
+                                         f"from bunny territory '{region_name}' to '{connected_region_name}'")
+                            # Check if rule is trivially true (Rule Builder True_ or AST constant=true)
+                            is_trivially_true = (
+                                current_rule.get('rule') == 'True_' or
+                                (current_rule.get('type') == 'constant' and current_rule.get('value') is True)
+                            )
+                            if is_trivially_true:
+                                # Replace trivial rule with just Moon Pearl
+                                exit_data['access_rule'] = {
+                                    'rule': 'Has',
+                                    'args': {'item_name': 'Moon Pearl'}
+                                }
+                            else:
+                                # AND Moon Pearl with existing rule
+                                exit_data['access_rule'] = {
+                                    'rule': 'And',
+                                    'children': [
+                                        {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
+                                        current_rule
+                                    ]
+                                }
+
                         # In glitch modes, exits to certain invalid bunny revival dungeons
                         # can use Magic Mirror for bunny revival instead of Moon Pearl.
                         # Note: Swamp Palace is NOT included - 0hp revival isn't in logic,
                         # so only Moon Pearl works there.
                         # Note: Tower of Hera (Bottom) has a special case requiring sword.
-                        if self._is_glitch_mode and connected_region_name in STANDARD_MIRROR_REVIVAL_DUNGEONS:
+                        # Skip in no_logic single-player mode where no rules are set.
+                        if (not self._is_no_logic_single_player and
+                            self._is_glitch_mode and connected_region_name in STANDARD_MIRROR_REVIVAL_DUNGEONS):
                             exit_data['access_rule'] = self._add_mirror_alternative_to_moon_pearl(
                                 exit_data['access_rule'], exit_name
                             )
                         # Tower of Hera (Bottom) has a special case - requires hitting a crystal switch.
                         # Rule is: (Magic Mirror AND sword) OR Moon Pearl
-                        if self._is_glitch_mode and connected_region_name == TOWER_OF_HERA_BOTTOM:
+                        # Skip in no_logic single-player mode where no rules are set.
+                        if (not self._is_no_logic_single_player and
+                            self._is_glitch_mode and connected_region_name == TOWER_OF_HERA_BOTTOM):
                             exit_data['access_rule'] = self._add_hera_bottom_alternative_to_moon_pearl(
                                 exit_data['access_rule'], exit_name
                             )
@@ -2240,6 +1923,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # (see Rules.py get_rule_to_add() line ~1700-1701).
                         # This allows Magic Mirror bunny revival inside dungeons.
                         if self._is_glitch_mode and region_type == 4:  # 4 = Dungeon
+                            exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                                exit_data['access_rule'], exit_name
+                            )
+                        # In glitch modes, exits TO mandatory superbunny regions don't require
+                        # Moon Pearl. The superbunny entrances to these regions are mandatory
+                        # connections that are never shuffled, allowing access in bunny form.
+                        if self._is_glitch_mode and connected_region_name in MANDATORY_SUPERBUNNY_REGIONS:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
@@ -2253,6 +1943,10 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 for entrance_data in region_data.get('entrances', []):
                     entrance_name = entrance_data.get('name', region_name)
                     connected_region = entrance_data.get('connected_region', '')
+                    # In no_logic single-player mode, all entrances should be trivially passable
+                    if self._is_no_logic_single_player:
+                        entrance_data['access_rule'] = {'rule': 'True_'}
+                        continue
                     if 'access_rule' in entrance_data and entrance_data['access_rule']:
                         # Resolve OptionValue comparisons first
                         entrance_data['access_rule'] = self._resolve_option_comparisons_in_rule(
@@ -2310,6 +2004,40 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         player_helpers[helper_name] = self._resolve_placement_conditionals(
                             player_helpers[helper_name]
                         )
+
+        # Add implicit exits for single-entrance caves with entrance shuffle
+        # In ALttP with entrance shuffle, single-entrance caves (caves with no defined exits)
+        # have an implicit exit back to the entrance's parent region. When entrance shuffle
+        # remaps these connections, we need to create explicit exit data for the UT to
+        # properly evaluate reachability.
+        if self._entrance_shuffle_mode != 'vanilla':
+            logger.debug(f"ALttP: Processing single-entrance cave exits for entrance_shuffle={self._entrance_shuffle_mode}")
+            for player_id, player_regions in regions.items():
+                for region_name, region_data in player_regions.items():
+                    entrances = region_data.get('entrances', [])
+                    exits = region_data.get('exits', [])
+
+                    # Check if this is a single-entrance cave (has entrances but no exits)
+                    # Type 3 = Cave, Type 4 = Dungeon (don't process dungeons)
+                    region_type = region_data.get('type', 0)
+                    if entrances and not exits and region_type == 3:
+                        # Create an implicit exit for each entrance
+                        for entrance_data in entrances:
+                            parent_region = entrance_data.get('parent_region')
+                            entrance_name = entrance_data.get('name', 'Unknown')
+                            if parent_region:
+                                # Create exit going back to entrance's parent region
+                                exit_name = f"{region_name} Exit"
+                                implicit_exit = {
+                                    'name': exit_name,
+                                    'connected_region': parent_region,
+                                    'access_rule': {'rule': 'True_'},  # No requirements to exit
+                                }
+                                region_data['exits'].append(implicit_exit)
+                                logger.debug(
+                                    f"ALttP: Added implicit exit '{exit_name}' from '{region_name}' "
+                                    f"to '{parent_region}' (via entrance '{entrance_name}')"
+                                )
 
         return data
 
@@ -2433,6 +2161,45 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def _rule_contains_moon_pearl(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule contains Moon Pearl anywhere in its structure.
+
+        Returns True if Moon Pearl is required anywhere in the rule,
+        even if combined with other requirements.
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        # True_ has no requirements
+        if rule.get('rule') == 'True_':
+            return False
+
+        # Check Has(Moon Pearl)
+        if rule.get('rule') == 'Has':
+            args = rule.get('args', {})
+            return args.get('item_name') == 'Moon Pearl'
+
+        # Check HasAll/HasAny containing Moon Pearl
+        if rule.get('rule') in ('HasAll', 'HasAny'):
+            args = rule.get('args', {})
+            items = args.get('items', [])
+            return 'Moon Pearl' in items
+
+        # Recursively check And/Or children
+        if rule.get('rule') in ('And', 'Or'):
+            children = rule.get('children', [])
+            return any(self._rule_contains_moon_pearl(c) for c in children)
+
+        # Check AST format
+        if rule.get('type') == 'item_check':
+            return rule.get('item') == 'Moon Pearl'
+
+        if rule.get('type') in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            return any(self._rule_contains_moon_pearl(c) for c in conditions)
+
+        return False
+
     def _remove_moon_pearl_from_rule(self, rule: Dict[str, Any], rule_name: str) -> Dict[str, Any]:
         """Remove Moon Pearl requirements from a rule, keeping other requirements.
 
@@ -2521,6 +2288,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     return {'rule': 'HasAll', 'args': {'items': filtered_items}}
 
         # Handle Rule Builder HasAny - filter out Moon Pearl from items list
+        # NOTE: This function is now only called for EXIT rules, not location rules.
+        # For exits, HasAny(Moon Pearl, Magic Mirror) means either satisfies the bunny requirement.
         if rule.get('rule') == 'HasAny':
             args = rule.get('args', {})
             items = args.get('items', [])
@@ -2534,6 +2303,60 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 else:
                     # Keep the rest of the items as valid options (the original HasAny becomes simpler)
                     return {'rule': 'HasAny', 'args': {'items': filtered_items}}
+
+        # Handle Rule Builder Or - recursively process children and filter out pure Moon Pearl rules
+        # This is used for dungeon exits where _add_mirror_alternative_to_moon_pearl creates
+        # Or(Moon Pearl, Magic Mirror), and then dungeon exit processing should remove Moon Pearl.
+        # NOTE: This function is now only called for EXIT rules, not location rules.
+        # Location rules have Moon Pearl alternatives as game logic and are not processed here.
+        if rule.get('rule') == 'Or':
+            children = rule.get('children', [])
+            # First, recursively process each child
+            processed_children = [
+                self._remove_moon_pearl_from_rule(child, rule_name)
+                for child in children
+            ]
+            # Filter out children that became True_ (pure Moon Pearl rules)
+            filtered_children = [
+                child for child in processed_children
+                if child != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(child)
+            ]
+            if len(filtered_children) != len(children):
+                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+
+            if not filtered_children:
+                # All children were Moon Pearl - return True_ (no restriction)
+                return {'rule': 'True_'}
+            elif len(filtered_children) == 1:
+                # Single child remains - unwrap the Or
+                return filtered_children[0]
+            else:
+                return {'rule': 'Or', 'children': filtered_children}
+
+        # Handle AST-style 'or' rules
+        if rule.get('type') == 'or':
+            conditions = rule.get('conditions', [])
+            # First, recursively process each condition
+            processed_conditions = [
+                self._remove_moon_pearl_from_rule(cond, rule_name)
+                for cond in conditions
+            ]
+            # Filter out conditions that became True_ (pure Moon Pearl rules)
+            filtered_conditions = [
+                cond for cond in processed_conditions
+                if cond != {'rule': 'True_'} and not self._is_pure_moon_pearl_rule(cond)
+            ]
+            if len(filtered_conditions) != len(conditions):
+                logger.debug(f"ALttP: Removed Moon Pearl from OR rule for exit '{rule_name}'")
+
+            if not filtered_conditions:
+                # All conditions were Moon Pearl - return True_ (no restriction)
+                return {'rule': 'True_'}
+            elif len(filtered_conditions) == 1:
+                # Single condition remains - unwrap the Or
+                return filtered_conditions[0]
+            else:
+                return {'type': 'or', 'conditions': filtered_conditions}
 
         # No changes needed
         return rule

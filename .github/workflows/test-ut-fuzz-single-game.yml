@@ -1,0 +1,258 @@
+name: Test UT Fuzzer (Single Game)
+
+on:
+  workflow_dispatch:
+    inputs:
+      game:
+        description: 'Game template name (e.g., "A Link to the Past.yaml")'
+        required: true
+        type: string
+        default: 'A Link to the Past.yaml'
+
+      runs:
+        description: 'Number of fuzz runs'
+        required: true
+        type: number
+        default: 50
+
+      jobs:
+        description: 'Number of parallel fuzzer jobs'
+        required: true
+        type: number
+        default: 4
+
+      timeout:
+        description: 'Timeout per generation in seconds'
+        required: true
+        type: number
+        default: 120
+
+      seed:
+        description: 'Random seed for reproducibility (leave empty for random)'
+        required: false
+        type: number
+        default: 1
+
+      ut_version:
+        description: 'Universal Tracker version to test'
+        required: true
+        type: choice
+        options:
+          - modified
+          - hybrid
+          - original
+        default: modified
+
+      default_options:
+        description: 'Options to leave at defaults (comma-separated, e.g., "mode,entrance_shuffle")'
+        required: false
+        type: string
+
+      disallow_options:
+        description: 'Disallow option values (e.g., "glitches_required=no_logic;mode=inverted")'
+        required: false
+        type: string
+
+      fractional_spheres:
+        description: 'Enable fractional sphere logic for more precise UT comparison'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  test-single-game:
+    name: Fuzz Test ${{ inputs.game }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Update world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Swap to original Universal Tracker
+        if: inputs.ut_version == 'original'
+        run: |
+          echo "Replacing modified tracker with original tracker from FarisTheAncient..."
+          rm -rf worlds/tracker
+          cp -r scripts/test/fixtures/tracker_original worlds/tracker
+          echo "Original tracker installed:"
+          ls -la worlds/tracker/
+
+      - name: Run UT fuzz test
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+
+          echo "========================================"
+          echo "UT Fuzz Test Configuration"
+          echo "========================================"
+          echo "Game: ${{ inputs.game }}"
+          echo "Runs: ${{ inputs.runs }}"
+          echo "Jobs: ${{ inputs.jobs }}"
+          echo "Timeout: ${{ inputs.timeout }}s"
+          echo "Seed: ${{ inputs.seed || 'random' }}"
+          echo "UT Version: ${{ inputs.ut_version }}"
+          echo "Default Options: ${{ inputs.default_options || '(none)' }}"
+          echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
+          echo "Fractional Spheres: ${{ inputs.fractional_spheres }}"
+          echo "========================================"
+
+          # Determine UT version flags
+          if [ "${{ inputs.ut_version }}" = "original" ]; then
+            UT_FLAGS="--ut-version original"
+          elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
+            UT_FLAGS="--ut-version modified --prefer-native-ut"
+          else
+            UT_FLAGS="--ut-version modified --no-prefer-native-ut"
+          fi
+
+          # Build command with optional arguments
+          CMD="python scripts/test/test-all-ut-fuzz.py"
+          CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --runs ${{ inputs.runs }}"
+          CMD="$CMD --jobs ${{ inputs.jobs }}"
+          CMD="$CMD --timeout ${{ inputs.timeout }}"
+          CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
+          CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
+          CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
+          CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
+          CMD="$CMD $UT_FLAGS"
+
+          echo "Running: $CMD"
+          eval $CMD
+
+      - name: Generate branch name
+        id: branch-name
+        if: ${{ !cancelled() }}
+        run: |
+          # Sanitize game name for branch name (replace spaces and special chars)
+          GAME_SLUG=$(echo "${{ inputs.game }}" | sed 's/\.yaml$//' | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          BRANCH_NAME="ut-fuzz-single/${GAME_SLUG}/${TIMESTAMP}"
+          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "game_slug=${GAME_SLUG}" >> $GITHUB_OUTPUT
+          echo "Generated branch name: ${BRANCH_NAME}"
+
+      - name: Create branch and commit results
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create new branch from current HEAD
+          git checkout -b "${{ steps.branch-name.outputs.branch_name }}"
+
+          # Add test results
+          git add -f scripts/output/ut-fuzz/test-results-*.json || true
+
+          # Add fuzz output if it exists (for debugging failures)
+          if [ -d "fuzz_output" ]; then
+            git add -f fuzz_output/ || true
+          fi
+
+          if ! git diff --staged --quiet; then
+            git commit -m "UT fuzz test results for ${{ inputs.game }}
+
+          Workflow run: ${{ github.run_id }}
+          Game: ${{ inputs.game }}
+          UT Version: ${{ inputs.ut_version }}
+          Seed: ${{ inputs.seed || 'random' }}
+          Runs: ${{ inputs.runs }}
+          Jobs: ${{ inputs.jobs }}
+          Timeout: ${{ inputs.timeout }}s
+          Default Options: ${{ inputs.default_options || '(none)' }}
+          Disallow Options: ${{ inputs.disallow_options || '(none)' }}
+          Fractional Spheres: ${{ inputs.fractional_spheres }}
+          "
+            git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
+            echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
+          else
+            echo "No results to commit"
+          fi
+
+      - name: Upload test results artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}
+          path: scripts/output/ut-fuzz/test-results-*.json
+          retention-days: 30
+
+      - name: Upload fuzz output artifact
+        if: ${{ !cancelled() && failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}
+          path: fuzz_output/
+          retention-days: 30
+
+      - name: Summary
+        if: ${{ !cancelled() }}
+        run: |
+          echo "## UT Fuzz Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
+          echo "**UT Version:** ${{ inputs.ut_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Seed:** ${{ inputs.seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ inputs.default_options }}" ]; then
+            echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ inputs.disallow_options }}" ]; then
+            echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ inputs.fractional_spheres }}" = "true" ]; then
+            echo "**Fractional Spheres:** enabled" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY

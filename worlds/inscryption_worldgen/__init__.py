@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -138,105 +138,210 @@ class InscryptionWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Act 1 - Boss Prospector": "Card Pack",
-        "Act 1 - Boss Angler": "Currency",
-        "Act 1 - Boss Trapper": "Currency",
-        "Act 1 - Boss Leshy": "Currency",
+        "Act 1 - Magnificus Eye": "Card Pack",
         "Act 1 - Safe": "Card Pack",
-        "Act 1 - Clock Main Compartment": "Holo Pelt",
-        "Act 1 - Clock Upper Compartment": "Film Roll",
-        "Act 1 - Dagger": "Salmon Card",
         "Act 1 - Wardrobe Drawer 1": "Card Pack",
+        "Act 2 - Battle Prospector": "Card Pack",
+        "Act 2 - Battle Royal": "Card Pack",
+        "Act 2 - Bone Lord Horn": "Card Pack",
+        "Act 2 - Boss Magnificus": "Card Pack",
+        "Act 2 - Crypt Casket 1": "Card Pack",
+        "Act 2 - Crypt Well": "Card Pack",
+        "Act 2 - Epitaph Piece 4": "Card Pack",
+        "Act 2 - Epitaph Piece 5": "Card Pack",
+        "Act 2 - Epitaph Piece 9": "Card Pack",
+        "Act 2 - Factory Chest 2": "Card Pack",
+        "Act 2 - Factory Chest 4": "Card Pack",
+        "Act 2 - Forest Cabin Chest": "Card Pack",
+        "Act 2 - Monocle": "Card Pack",
+        "Act 3 - Boss Unfinished": "Card Pack",
+        "Act 3 - Chest": "Card Pack",
+        "Act 3 - Clock": "Card Pack",
+        "Act 3 - Crypt Holo Pelt": "Card Pack",
+        "Act 3 - Luke's File Entry 3": "Card Pack",
+        "Act 3 - Trader 1": "Card Pack",
+        "Act 3 - Trader 4": "Card Pack",
+        "Act 1 - Boss Angler": "Currency",
+        "Act 1 - Boss Leshy": "Currency",
+        "Act 1 - Boss Trapper": "Currency",
         "Act 1 - Wardrobe Drawer 2": "Currency",
         "Act 1 - Wardrobe Drawer 3": "Currency",
+        "Act 2 - Battle Angler": "Currency",
+        "Act 2 - Battle Kaycee": "Currency",
+        "Act 2 - Battle Sawyer": "Currency",
+        "Act 2 - Battle Trapper": "Currency",
+        "Act 2 - Boss Leshy": "Currency",
+        "Act 2 - Clover": "Currency",
+        "Act 2 - Factory Chest 1": "Currency",
+        "Act 2 - Factory Chest 3": "Currency",
+        "Act 2 - Factory Trash Can": "Currency",
+        "Act 2 - Forest Meadow Chest": "Currency",
+        "Act 2 - Mycologists Holo Key": "Currency",
+        "Act 2 - Tower Chest 2": "Currency",
+        "Act 3 - Bone Lord Room": "Currency",
+        "Act 3 - Boss G0lly": "Currency",
+        "Act 3 - Boss Mycologists": "Currency",
+        "Act 3 - Extra Battery": "Currency",
+        "Act 3 - Goobert's Painting": "Currency",
+        "Act 3 - Nano Armor Generator": "Currency",
+        "Act 3 - Shop Holo Pelt": "Currency",
+        "Act 3 - Trader 2": "Currency",
+        "Act 1 - Clock Main Compartment": "Holo Pelt",
+        "Act 2 - Battle Melter": "Holo Pelt",
+        "Act 2 - Crypt Casket 2": "Holo Pelt",
+        "Act 2 - Tower Chest 3": "Holo Pelt",
+        "Act 3 - Boss Photographer": "Holo Pelt",
+        "Act 1 - Clock Upper Compartment": "Film Roll",
+        "Act 1 - Dagger": "Salmon Card",
         "Act 1 - Wardrobe Drawer 4": "Monocle",
-        "Act 1 - Magnificus Eye": "Card Pack",
         "Act 1 - Painting 1": "Epitaph Piece",
+        "Act 2 - Ancient Obol": "Epitaph Piece",
+        "Act 2 - Battle Lonely Wizard": "Epitaph Piece",
+        "Act 2 - Battle Pike Mage": "Epitaph Piece",
+        "Act 2 - Boss P03": "Epitaph Piece",
+        "Act 2 - Cabin Wardrobe Drawer": "Epitaph Piece",
+        "Act 2 - Epitaph Piece 1": "Epitaph Piece",
+        "Act 2 - Epitaph Piece 8": "Epitaph Piece",
+        "Act 2 - Tower Chest 1": "Epitaph Piece",
         "Act 1 - Painting 2": "Caged Wolf Card",
         "Act 1 - Painting 3": "Bone Lord Horn",
         "Act 1 - Greater Smoke": "Mrs. Bomb's Remote",
-        "Act 2 - Boss Leshy": "Currency",
-        "Act 2 - Boss Magnificus": "Card Pack",
         "Act 2 - Boss Grimora": "Bone Lord Holo Key",
-        "Act 2 - Boss P03": "Epitaph Piece",
-        "Act 2 - Battle Prospector": "Card Pack",
-        "Act 2 - Battle Angler": "Currency",
-        "Act 2 - Battle Trapper": "Currency",
-        "Act 2 - Battle Sawyer": "Currency",
-        "Act 2 - Battle Royal": "Card Pack",
-        "Act 2 - Battle Kaycee": "Currency",
         "Act 2 - Battle Goobert": "Magnificus Eye",
-        "Act 2 - Battle Pike Mage": "Epitaph Piece",
-        "Act 2 - Battle Lonely Wizard": "Epitaph Piece",
         "Act 2 - Battle Inspector": "Greater Smoke",
-        "Act 2 - Battle Melter": "Holo Pelt",
         "Act 2 - Battle Dredger": "Stunted Wolf Card",
         "Act 2 - Dock Chest": "Pile Of Meat",
-        "Act 2 - Forest Cabin Chest": "Card Pack",
-        "Act 2 - Forest Meadow Chest": "Currency",
-        "Act 2 - Cabin Wardrobe Drawer": "Epitaph Piece",
         "Act 2 - Cabin Safe": "Lonely Wizbot Card",
-        "Act 2 - Crypt Casket 1": "Card Pack",
-        "Act 2 - Crypt Casket 2": "Holo Pelt",
-        "Act 2 - Crypt Well": "Card Pack",
-        "Act 2 - Tower Chest 1": "Epitaph Piece",
-        "Act 2 - Tower Chest 2": "Currency",
-        "Act 2 - Tower Chest 3": "Holo Pelt",
         "Act 2 - Tentacle": "Great Kraken Card",
-        "Act 2 - Factory Trash Can": "Currency",
         "Act 2 - Factory Drawer 1": "Gems Module",
         "Act 2 - Factory Drawer 2": "Wardrobe Key",
-        "Act 2 - Factory Chest 1": "Currency",
-        "Act 2 - Factory Chest 2": "Card Pack",
-        "Act 2 - Factory Chest 3": "Currency",
-        "Act 2 - Factory Chest 4": "Card Pack",
-        "Act 2 - Ancient Obol": "Epitaph Piece",
         "Act 2 - Bone Lord Femur": "Camera Replica",
-        "Act 2 - Bone Lord Horn": "Card Pack",
         "Act 2 - Bone Lord Holo Key": "Extra Candle",
-        "Act 2 - Mycologists Holo Key": "Currency",
         "Act 2 - Camera Replica": "Ancient Obol",
-        "Act 2 - Clover": "Currency",
-        "Act 2 - Monocle": "Card Pack",
-        "Act 2 - Epitaph Piece 1": "Epitaph Piece",
         "Act 2 - Epitaph Piece 2": "Drowned Soul Card",
         "Act 2 - Epitaph Piece 3": "Skink Card",
-        "Act 2 - Epitaph Piece 4": "Card Pack",
-        "Act 2 - Epitaph Piece 5": "Card Pack",
         "Act 2 - Epitaph Piece 6": "Oil Painting's Clover Plant",
         "Act 2 - Epitaph Piece 7": "Ourobot Card",
-        "Act 2 - Epitaph Piece 8": "Epitaph Piece",
-        "Act 2 - Epitaph Piece 9": "Card Pack",
-        "Act 3 - Boss Photographer": "Holo Pelt",
         "Act 3 - Boss Archivist": "Bone Lord Femur",
-        "Act 3 - Boss Unfinished": "Card Pack",
-        "Act 3 - Boss G0lly": "Currency",
-        "Act 3 - Boss Mycologists": "Currency",
-        "Act 3 - Bone Lord Room": "Currency",
-        "Act 3 - Shop Holo Pelt": "Currency",
         "Act 3 - Middle Holo Pelt": "Dock's Clover Plant",
         "Act 3 - Forest Holo Pelt": "Stinkbug Card",
-        "Act 3 - Crypt Holo Pelt": "Card Pack",
         "Act 3 - Tower Holo Pelt": "Ant Cards",
-        "Act 3 - Trader 1": "Card Pack",
-        "Act 3 - Trader 2": "Currency",
         "Act 3 - Trader 3": "Fishbot Card",
-        "Act 3 - Trader 4": "Card Pack",
         "Act 3 - Trader 5": "Quill",
         "Act 3 - Drawer 1": "Inspectometer Battery",
         "Act 3 - Drawer 2": "Ring",
-        "Act 3 - Clock": "Card Pack",
-        "Act 3 - Extra Battery": "Currency",
-        "Act 3 - Nano Armor Generator": "Currency",
-        "Act 3 - Chest": "Card Pack",
-        "Act 3 - Goobert's Painting": "Currency",
         "Act 3 - Luke's File Entry 1": "Dagger",
         "Act 3 - Luke's File Entry 2": "Extra Battery",
-        "Act 3 - Luke's File Entry 3": "Card Pack",
         "Act 3 - Luke's File Entry 4": "Angler Hook",
         "Act 3 - Inspectometer Battery": "Bee Figurine",
         "Act 3 - Gems Drone": "Squirrel Totem Head",
         "Act 3 - The Great Transcendence": "Mycologists Holo Key",
         "Act 3 - Well": "Nano Armor Generator",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Act 1 - Boss Prospector": False,
+        "Act 1 - Boss Angler": False,
+        "Act 1 - Boss Trapper": False,
+        "Act 1 - Boss Leshy": False,
+        "Act 1 - Safe": False,
+        "Act 1 - Clock Main Compartment": True,
+        "Act 1 - Clock Upper Compartment": True,
+        "Act 1 - Dagger": False,
+        "Act 1 - Wardrobe Drawer 1": False,
+        "Act 1 - Wardrobe Drawer 2": False,
+        "Act 1 - Wardrobe Drawer 3": False,
+        "Act 1 - Wardrobe Drawer 4": True,
+        "Act 1 - Magnificus Eye": False,
+        "Act 1 - Painting 1": True,
+        "Act 1 - Painting 2": True,
+        "Act 1 - Painting 3": False,
+        "Act 1 - Greater Smoke": False,
+        "Act 2 - Boss Leshy": False,
+        "Act 2 - Boss Magnificus": False,
+        "Act 2 - Boss Grimora": True,
+        "Act 2 - Boss P03": True,
+        "Act 2 - Battle Prospector": False,
+        "Act 2 - Battle Angler": False,
+        "Act 2 - Battle Trapper": False,
+        "Act 2 - Battle Sawyer": False,
+        "Act 2 - Battle Royal": False,
+        "Act 2 - Battle Kaycee": False,
+        "Act 2 - Battle Goobert": True,
+        "Act 2 - Battle Pike Mage": True,
+        "Act 2 - Battle Lonely Wizard": True,
+        "Act 2 - Battle Inspector": False,
+        "Act 2 - Battle Melter": True,
+        "Act 2 - Battle Dredger": False,
+        "Act 2 - Dock Chest": True,
+        "Act 2 - Forest Cabin Chest": False,
+        "Act 2 - Forest Meadow Chest": False,
+        "Act 2 - Cabin Wardrobe Drawer": True,
+        "Act 2 - Cabin Safe": False,
+        "Act 2 - Crypt Casket 1": False,
+        "Act 2 - Crypt Casket 2": True,
+        "Act 2 - Crypt Well": False,
+        "Act 2 - Tower Chest 1": True,
+        "Act 2 - Tower Chest 2": False,
+        "Act 2 - Tower Chest 3": True,
+        "Act 2 - Tentacle": False,
+        "Act 2 - Factory Trash Can": False,
+        "Act 2 - Factory Drawer 1": True,
+        "Act 2 - Factory Drawer 2": True,
+        "Act 2 - Factory Chest 1": False,
+        "Act 2 - Factory Chest 2": False,
+        "Act 2 - Factory Chest 3": False,
+        "Act 2 - Factory Chest 4": False,
+        "Act 2 - Ancient Obol": True,
+        "Act 2 - Bone Lord Femur": True,
+        "Act 2 - Bone Lord Horn": False,
+        "Act 2 - Bone Lord Holo Key": False,
+        "Act 2 - Mycologists Holo Key": False,
+        "Act 2 - Camera Replica": True,
+        "Act 2 - Clover": False,
+        "Act 2 - Monocle": False,
+        "Act 2 - Epitaph Piece 1": True,
+        "Act 2 - Epitaph Piece 2": False,
+        "Act 2 - Epitaph Piece 3": False,
+        "Act 2 - Epitaph Piece 4": False,
+        "Act 2 - Epitaph Piece 5": False,
+        "Act 2 - Epitaph Piece 6": True,
+        "Act 2 - Epitaph Piece 7": False,
+        "Act 2 - Epitaph Piece 8": True,
+        "Act 2 - Epitaph Piece 9": False,
+        "Act 3 - Boss Photographer": True,
+        "Act 3 - Boss Archivist": False,
+        "Act 3 - Boss Unfinished": False,
+        "Act 3 - Boss G0lly": False,
+        "Act 3 - Boss Mycologists": False,
+        "Act 3 - Bone Lord Room": False,
+        "Act 3 - Shop Holo Pelt": False,
+        "Act 3 - Middle Holo Pelt": False,
+        "Act 3 - Forest Holo Pelt": False,
+        "Act 3 - Crypt Holo Pelt": False,
+        "Act 3 - Tower Holo Pelt": False,
+        "Act 3 - Trader 1": False,
+        "Act 3 - Trader 2": False,
+        "Act 3 - Trader 3": False,
+        "Act 3 - Trader 4": False,
+        "Act 3 - Trader 5": True,
+        "Act 3 - Drawer 1": True,
+        "Act 3 - Drawer 2": False,
+        "Act 3 - Clock": False,
+        "Act 3 - Extra Battery": False,
+        "Act 3 - Nano Armor Generator": False,
+        "Act 3 - Chest": False,
+        "Act 3 - Goobert's Painting": False,
+        "Act 3 - Luke's File Entry 1": True,
+        "Act 3 - Luke's File Entry 2": False,
+        "Act 3 - Luke's File Entry 3": False,
+        "Act 3 - Luke's File Entry 4": False,
+        "Act 3 - Inspectometer Battery": False,
+        "Act 3 - Gems Drone": True,
+        "Act 3 - The Great Transcendence": True,
+        "Act 3 - Well": False,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -333,14 +438,38 @@ class InscryptionWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = InscryptionWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = InscryptionWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = InscryptionWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -367,27 +496,81 @@ class InscryptionWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

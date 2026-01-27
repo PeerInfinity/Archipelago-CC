@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -113,34 +113,15 @@ class PaintWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Similarity: 1.0%": "Additional Palette Color",
-        "Similarity: 2.0%": "Additional Palette Color",
-        "Similarity: 3.0%": "Progressive Color Depth (Green)",
-        "Similarity: 4.0%": "Progressive Color Depth (Blue)",
-        "Similarity: 5.0%": "Additional Palette Color",
-        "Similarity: 6.0%": "Additional Palette Color",
-        "Similarity: 7.0%": "Additional Palette Color",
-        "Similarity: 8.0%": "Additional Palette Color",
-        "Similarity: 9.0%": "Progressive Canvas Width",
         "Similarity: 10.0%": "Additional Palette Color",
         "Similarity: 11.0%": "Additional Palette Color",
         "Similarity: 12.0%": "Additional Palette Color",
-        "Similarity: 13.0%": "Pick Color",
         "Similarity: 14.0%": "Additional Palette Color",
-        "Similarity: 15.0%": "Curve",
-        "Similarity: 16.0%": "Progressive Color Depth (Red)",
-        "Similarity: 17.0%": "Progressive Color Depth (Red)",
-        "Similarity: 18.0%": "Progressive Color Depth (Blue)",
-        "Similarity: 19.0%": "Progressive Canvas Width",
+        "Similarity: 2.0%": "Additional Palette Color",
         "Similarity: 20.0%": "Additional Palette Color",
         "Similarity: 21.0%": "Additional Palette Color",
-        "Similarity: 22.0%": "Progressive Color Depth (Blue)",
         "Similarity: 23.0%": "Additional Palette Color",
         "Similarity: 24.0%": "Additional Palette Color",
-        "Similarity: 25.0%": "Progressive Canvas Height",
-        "Similarity: 26.0%": "Line",
-        "Similarity: 27.0%": "Eraser/Color Eraser",
-        "Similarity: 28.0%": "Progressive Canvas Height",
-        "Similarity: 29.0%": "Progressive Canvas Height",
         "Similarity: 30.0%": "Additional Palette Color",
         "Similarity: 31.0%": "Additional Palette Color",
         "Similarity: 32.0%": "Additional Palette Color",
@@ -156,19 +137,14 @@ class PaintWorld(RuleWorldMixin, World):
         "Similarity: 42.0%": "Additional Palette Color",
         "Similarity: 43.0%": "Additional Palette Color",
         "Similarity: 44.0%": "Additional Palette Color",
-        "Similarity: 45.0%": "Pencil",
         "Similarity: 46.0%": "Additional Palette Color",
-        "Similarity: 47.0%": "Progressive Color Depth (Green)",
         "Similarity: 48.0%": "Additional Palette Color",
         "Similarity: 49.0%": "Additional Palette Color",
-        "Similarity: 50.0%": "Select",
+        "Similarity: 5.0%": "Additional Palette Color",
         "Similarity: 50.5%": "Additional Palette Color",
         "Similarity: 51.0%": "Additional Palette Color",
         "Similarity: 51.5%": "Additional Palette Color",
         "Similarity: 52.0%": "Additional Palette Color",
-        "Similarity: 52.5%": "Text",
-        "Similarity: 53.0%": "Progressive Color Depth (Red)",
-        "Similarity: 53.5%": "Progressive Canvas Width",
         "Similarity: 54.0%": "Additional Palette Color",
         "Similarity: 54.5%": "Additional Palette Color",
         "Similarity: 55.0%": "Additional Palette Color",
@@ -177,71 +153,230 @@ class PaintWorld(RuleWorldMixin, World):
         "Similarity: 56.5%": "Additional Palette Color",
         "Similarity: 57.0%": "Additional Palette Color",
         "Similarity: 57.5%": "Additional Palette Color",
-        "Similarity: 58.0%": "Progressive Canvas Width",
         "Similarity: 58.5%": "Additional Palette Color",
         "Similarity: 59.0%": "Additional Palette Color",
         "Similarity: 59.5%": "Additional Palette Color",
-        "Similarity: 60.0%": "Progressive Color Depth (Green)",
+        "Similarity: 6.0%": "Additional Palette Color",
         "Similarity: 60.5%": "Additional Palette Color",
         "Similarity: 61.0%": "Additional Palette Color",
         "Similarity: 61.5%": "Additional Palette Color",
         "Similarity: 62.0%": "Additional Palette Color",
         "Similarity: 62.5%": "Additional Palette Color",
         "Similarity: 63.0%": "Additional Palette Color",
-        "Similarity: 63.5%": "Rounded Rectangle",
         "Similarity: 64.0%": "Additional Palette Color",
         "Similarity: 64.5%": "Additional Palette Color",
         "Similarity: 65.0%": "Additional Palette Color",
         "Similarity: 65.5%": "Additional Palette Color",
         "Similarity: 66.0%": "Additional Palette Color",
         "Similarity: 66.5%": "Additional Palette Color",
-        "Similarity: 67.0%": "Progressive Color Depth (Red)",
         "Similarity: 67.5%": "Additional Palette Color",
         "Similarity: 68.0%": "Additional Palette Color",
         "Similarity: 68.5%": "Additional Palette Color",
-        "Similarity: 69.0%": "Progressive Color Depth (Red)",
         "Similarity: 69.5%": "Additional Palette Color",
+        "Similarity: 7.0%": "Additional Palette Color",
         "Similarity: 70.0%": "Additional Palette Color",
-        "Similarity: 70.25%": "Progressive Color Depth (Green)",
         "Similarity: 70.5%": "Additional Palette Color",
-        "Similarity: 70.75%": "Fill With Color",
         "Similarity: 71.0%": "Additional Palette Color",
         "Similarity: 71.25%": "Additional Palette Color",
-        "Similarity: 71.5%": "Rectangle",
         "Similarity: 71.75%": "Additional Palette Color",
         "Similarity: 72.0%": "Additional Palette Color",
         "Similarity: 72.25%": "Additional Palette Color",
         "Similarity: 72.5%": "Additional Palette Color",
         "Similarity: 72.75%": "Additional Palette Color",
-        "Similarity: 73.0%": "Progressive Color Depth (Red)",
         "Similarity: 73.25%": "Additional Palette Color",
-        "Similarity: 73.5%": "Airbrush",
         "Similarity: 73.75%": "Additional Palette Color",
         "Similarity: 74.0%": "Additional Palette Color",
-        "Similarity: 74.25%": "Free-Form Select",
-        "Similarity: 74.5%": "Progressive Color Depth (Green)",
         "Similarity: 74.75%": "Additional Palette Color",
         "Similarity: 75.0%": "Additional Palette Color",
-        "Similarity: 75.25%": "Progressive Color Depth (Green)",
         "Similarity: 75.5%": "Additional Palette Color",
         "Similarity: 75.75%": "Additional Palette Color",
         "Similarity: 76.0%": "Additional Palette Color",
-        "Similarity: 76.25%": "Progressive Color Depth (Blue)",
-        "Similarity: 76.5%": "Progressive Color Depth (Blue)",
         "Similarity: 76.75%": "Additional Palette Color",
         "Similarity: 77.0%": "Additional Palette Color",
         "Similarity: 77.25%": "Additional Palette Color",
         "Similarity: 77.5%": "Additional Palette Color",
         "Similarity: 77.75%": "Additional Palette Color",
         "Similarity: 78.0%": "Additional Palette Color",
-        "Similarity: 78.25%": "Progressive Color Depth (Blue)",
         "Similarity: 78.5%": "Additional Palette Color",
         "Similarity: 78.75%": "Additional Palette Color",
-        "Similarity: 79.0%": "Ellipse",
         "Similarity: 79.25%": "Additional Palette Color",
         "Similarity: 79.5%": "Additional Palette Color",
         "Similarity: 79.75%": "Additional Palette Color",
+        "Similarity: 8.0%": "Additional Palette Color",
+        "Similarity: 3.0%": "Progressive Color Depth (Green)",
+        "Similarity: 47.0%": "Progressive Color Depth (Green)",
+        "Similarity: 60.0%": "Progressive Color Depth (Green)",
+        "Similarity: 70.25%": "Progressive Color Depth (Green)",
+        "Similarity: 74.5%": "Progressive Color Depth (Green)",
+        "Similarity: 75.25%": "Progressive Color Depth (Green)",
+        "Similarity: 18.0%": "Progressive Color Depth (Blue)",
+        "Similarity: 22.0%": "Progressive Color Depth (Blue)",
+        "Similarity: 4.0%": "Progressive Color Depth (Blue)",
+        "Similarity: 76.25%": "Progressive Color Depth (Blue)",
+        "Similarity: 76.5%": "Progressive Color Depth (Blue)",
+        "Similarity: 78.25%": "Progressive Color Depth (Blue)",
+        "Similarity: 19.0%": "Progressive Canvas Width",
+        "Similarity: 53.5%": "Progressive Canvas Width",
+        "Similarity: 58.0%": "Progressive Canvas Width",
+        "Similarity: 9.0%": "Progressive Canvas Width",
+        "Similarity: 13.0%": "Pick Color",
+        "Similarity: 15.0%": "Curve",
+        "Similarity: 16.0%": "Progressive Color Depth (Red)",
+        "Similarity: 17.0%": "Progressive Color Depth (Red)",
+        "Similarity: 53.0%": "Progressive Color Depth (Red)",
+        "Similarity: 67.0%": "Progressive Color Depth (Red)",
+        "Similarity: 69.0%": "Progressive Color Depth (Red)",
+        "Similarity: 73.0%": "Progressive Color Depth (Red)",
+        "Similarity: 25.0%": "Progressive Canvas Height",
+        "Similarity: 28.0%": "Progressive Canvas Height",
+        "Similarity: 29.0%": "Progressive Canvas Height",
+        "Similarity: 26.0%": "Line",
+        "Similarity: 27.0%": "Eraser/Color Eraser",
+        "Similarity: 45.0%": "Pencil",
+        "Similarity: 50.0%": "Select",
+        "Similarity: 52.5%": "Text",
+        "Similarity: 63.5%": "Rounded Rectangle",
+        "Similarity: 70.75%": "Fill With Color",
+        "Similarity: 71.5%": "Rectangle",
+        "Similarity: 73.5%": "Airbrush",
+        "Similarity: 74.25%": "Free-Form Select",
+        "Similarity: 79.0%": "Ellipse",
         "Similarity: 80.0%": "Polygon",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Similarity: 1.0%": False,
+        "Similarity: 2.0%": False,
+        "Similarity: 3.0%": True,
+        "Similarity: 4.0%": True,
+        "Similarity: 5.0%": False,
+        "Similarity: 6.0%": False,
+        "Similarity: 7.0%": False,
+        "Similarity: 8.0%": False,
+        "Similarity: 9.0%": True,
+        "Similarity: 10.0%": False,
+        "Similarity: 11.0%": False,
+        "Similarity: 12.0%": False,
+        "Similarity: 13.0%": True,
+        "Similarity: 14.0%": False,
+        "Similarity: 15.0%": False,
+        "Similarity: 16.0%": True,
+        "Similarity: 17.0%": True,
+        "Similarity: 18.0%": True,
+        "Similarity: 19.0%": True,
+        "Similarity: 20.0%": False,
+        "Similarity: 21.0%": False,
+        "Similarity: 22.0%": True,
+        "Similarity: 23.0%": False,
+        "Similarity: 24.0%": False,
+        "Similarity: 25.0%": True,
+        "Similarity: 26.0%": False,
+        "Similarity: 27.0%": False,
+        "Similarity: 28.0%": True,
+        "Similarity: 29.0%": True,
+        "Similarity: 30.0%": False,
+        "Similarity: 31.0%": False,
+        "Similarity: 32.0%": False,
+        "Similarity: 33.0%": False,
+        "Similarity: 34.0%": False,
+        "Similarity: 35.0%": False,
+        "Similarity: 36.0%": False,
+        "Similarity: 37.0%": False,
+        "Similarity: 38.0%": False,
+        "Similarity: 39.0%": False,
+        "Similarity: 40.0%": False,
+        "Similarity: 41.0%": False,
+        "Similarity: 42.0%": False,
+        "Similarity: 43.0%": False,
+        "Similarity: 44.0%": False,
+        "Similarity: 45.0%": False,
+        "Similarity: 46.0%": False,
+        "Similarity: 47.0%": True,
+        "Similarity: 48.0%": False,
+        "Similarity: 49.0%": False,
+        "Similarity: 50.0%": False,
+        "Similarity: 50.5%": False,
+        "Similarity: 51.0%": False,
+        "Similarity: 51.5%": False,
+        "Similarity: 52.0%": False,
+        "Similarity: 52.5%": False,
+        "Similarity: 53.0%": True,
+        "Similarity: 53.5%": True,
+        "Similarity: 54.0%": False,
+        "Similarity: 54.5%": False,
+        "Similarity: 55.0%": False,
+        "Similarity: 55.5%": False,
+        "Similarity: 56.0%": False,
+        "Similarity: 56.5%": False,
+        "Similarity: 57.0%": False,
+        "Similarity: 57.5%": False,
+        "Similarity: 58.0%": True,
+        "Similarity: 58.5%": False,
+        "Similarity: 59.0%": False,
+        "Similarity: 59.5%": False,
+        "Similarity: 60.0%": True,
+        "Similarity: 60.5%": False,
+        "Similarity: 61.0%": False,
+        "Similarity: 61.5%": False,
+        "Similarity: 62.0%": False,
+        "Similarity: 62.5%": False,
+        "Similarity: 63.0%": False,
+        "Similarity: 63.5%": False,
+        "Similarity: 64.0%": False,
+        "Similarity: 64.5%": False,
+        "Similarity: 65.0%": False,
+        "Similarity: 65.5%": False,
+        "Similarity: 66.0%": False,
+        "Similarity: 66.5%": False,
+        "Similarity: 67.0%": True,
+        "Similarity: 67.5%": False,
+        "Similarity: 68.0%": False,
+        "Similarity: 68.5%": False,
+        "Similarity: 69.0%": True,
+        "Similarity: 69.5%": False,
+        "Similarity: 70.0%": False,
+        "Similarity: 70.25%": True,
+        "Similarity: 70.5%": False,
+        "Similarity: 70.75%": False,
+        "Similarity: 71.0%": False,
+        "Similarity: 71.25%": False,
+        "Similarity: 71.5%": False,
+        "Similarity: 71.75%": False,
+        "Similarity: 72.0%": False,
+        "Similarity: 72.25%": False,
+        "Similarity: 72.5%": False,
+        "Similarity: 72.75%": False,
+        "Similarity: 73.0%": True,
+        "Similarity: 73.25%": False,
+        "Similarity: 73.5%": False,
+        "Similarity: 73.75%": False,
+        "Similarity: 74.0%": False,
+        "Similarity: 74.25%": False,
+        "Similarity: 74.5%": True,
+        "Similarity: 74.75%": False,
+        "Similarity: 75.0%": False,
+        "Similarity: 75.25%": True,
+        "Similarity: 75.5%": False,
+        "Similarity: 75.75%": False,
+        "Similarity: 76.0%": False,
+        "Similarity: 76.25%": True,
+        "Similarity: 76.5%": True,
+        "Similarity: 76.75%": False,
+        "Similarity: 77.0%": False,
+        "Similarity: 77.25%": False,
+        "Similarity: 77.5%": False,
+        "Similarity: 77.75%": False,
+        "Similarity: 78.0%": False,
+        "Similarity: 78.25%": True,
+        "Similarity: 78.5%": False,
+        "Similarity: 78.75%": False,
+        "Similarity: 79.0%": False,
+        "Similarity: 79.25%": False,
+        "Similarity: 79.5%": False,
+        "Similarity: 79.75%": False,
+        "Similarity: 80.0%": False,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -335,14 +470,38 @@ class PaintWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = PaintWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = PaintWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = PaintWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -369,27 +528,81 @@ class PaintWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

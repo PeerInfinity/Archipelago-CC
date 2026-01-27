@@ -22,6 +22,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `not` | Logical negation | `condition` or `operand` | `{"type": "not", "condition": {...}}` |
 | `conditional` | Ternary if-then-else | `test`, `if_true`, `if_false` | `{"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}` |
 | `count_true` | True if N conditions pass | `conditions: []`, `count` | `{"type": "count_true", "conditions": [...], "count": 3}` |
+| `weighted_count_true` | True if weighted sum of conditions >= threshold | `conditions: []`, `weights: []`, `threshold` | `{"type": "weighted_count_true", ...}` |
 
 ### Item & Inventory Checks
 
@@ -29,8 +30,14 @@ Both layers must support a rule type for it to work end-to-end.
 |------|-------------|--------|---------|
 | `item_check` | Check if player has an item | `item`, `count` (optional) | `{"type": "item_check", "item": "Sword"}` |
 | `count_check` | Check if player has N of item | `item`, `count` | `{"type": "count_check", "item": "Key", "count": 3}` |
+| `CountCheck` | Check if player has N of item (Rule Builder) | `item`, `count` | `{"rule": "CountCheck", "args": {"item": "Key", "count": 3}}` |
+| `HasAllCounts` | Check all items have specific counts (Rule Builder) | `items` | `{"rule": "HasAllCounts", "args": {"items": {"Key": 3, "Sword": 1}}}` |
+| `HasAnyCount` | Check any item has specific count (Rule Builder) | `items` | `{"rule": "HasAnyCount", "args": {"items": {"Key": 3, "Sword": 1}}}` |
 | `group_check` | Check for N items from a group | `group`, `count` | `{"type": "group_check", "group": "swords", "count": 1}` |
+| `HasGroupUnique` | Check for N unique items from a group (Rule Builder) | `group`, `count` | `{"rule": "HasGroupUnique", "args": {"group": "relics", "count": 6}}` |
 | `group_count` | Get count of items in group (returns number) | `group` | `{"type": "group_count", "group": "keys"}` |
+| `CountGroup` | Get count of items in group (Rule Builder) | `group` | `{"rule": "CountGroup", "args": {"group": "keys"}}` |
+| `CountGroupUnique` | Get count of unique items in group (Rule Builder) | `group` | `{"rule": "CountGroupUnique", "args": {"group": "keys"}}` |
 | `counts` | Check if total of multiple items >= count | `items: []`, `count` | `{"type": "counts", "items": ["Item1", "Item2"], "count": 3}` |
 | `count_item` | Get item count as number | `item` | `{"type": "count_item", "item": "Rupee"}` |
 | `total_items_count` | Check total items collected | `count` | `{"type": "total_items_count", "count": 50}` |
@@ -118,6 +125,8 @@ Both layers must support a rule type for it to work end-to-end.
 | `negate` | Unary minus operation | `operand` | `{"type": "negate", "operand": {...}}` |
 | `min` | Return minimum of values | `args: []` or `iterable` | `{"type": "min", "args": [...]}` or `{"type": "min", "iterable": {...}}` |
 | `max` | Return maximum of values | `args: []` or `iterable` | `{"type": "max", "args": [...]}` or `{"type": "max", "iterable": {...}}` |
+| `MinValue` | Return minimum of two values (Rule Builder) | `left`, `right` | `{"rule": "MinValue", "args": {"left": {...}, "right": {...}}}` |
+| `MaxValue` | Return maximum of two values (Rule Builder) | `left`, `right` | `{"rule": "MaxValue", "args": {"left": {...}, "right": {...}}}` |
 
 **`min`/`max` forms:**
 - **Explicit args**: `min(a, b, c)` → `{"type": "min", "args": [...]}`
@@ -163,6 +172,7 @@ These types support complex helper functions with multi-statement bodies:
 |------|-------------|--------|---------|
 | `block` | Execute statements sequentially | `statements: []` | Multi-line helper body |
 | `assign` | Variable assignment | `name`, `value`, `op` | `count = 0` or `count += 1` |
+| `aug_assign` | Augmented assignment | `target`, `op`, `value` | `count += 1` (op is `+` not `+=`) |
 | `return` | Early return from block | `value` | `return True` |
 | `for_range` | Loop N times | `count`, `var`, `body: []` | `for i in range(5):` |
 | `for_iter` | Loop over iterable | `iterable`, `var`, `body: []` | `for item in list:` or `for a, b in pairs:` (tuple unpacking) |
@@ -189,10 +199,15 @@ The following `state.*` methods are recognized and converted to specific rule ty
 | `state.has(item, player, count)` | `count_check` | Item count check |
 | `state.has_any(items, player)` | `or` of `item_check` | Has any of the items |
 | `state.has_all(items, player)` | `and` of `item_check` | Has all items |
+| `state.has_all_counts(item_counts, player)` | `state_method` | Has all items with specified counts |
+| `state.has_from_list(items, player, count)` | `state_method` | Has count items from list (with duplicates) |
+| `state.has_from_list_unique(items, player, count)` | `state_method` | Has count unique items from list |
 | `state.has_group(group, player)` | `group_check` | Has item from group |
 | `state.has_group(group, player, count)` | `group_check` | Has N items from group |
 | `state.count(item, player)` | `count_item` | Get item count |
 | `state.count_group(group, player)` | `group_count` | Get group item count |
+| `state.count_from_list(items, player)` | `state_method` | Get sum of counts for items in list |
+| `state.count_from_list_unique(items, player)` | `state_method` | Get count of unique items from list |
 | `state.can_reach(region, ...)` | `can_reach` | Region reachability |
 | `state.can_reach_entrance(entrance)` | `can_reach_entrance` | Entrance reachability |
 
@@ -215,7 +230,28 @@ These types are used internally or as supporting structures:
 
 | Type | Description | Usage |
 |------|-------------|-------|
-| `comprehension_details` | Iterator details for comprehensions | Used in `iterator_info` field of `all_of`/`any_of` |
+| `comprehension_details` | Iterator details for comprehensions | Used in `iterator_info` field of `all_of`/`any_of`/`sum_of` |
+| `dict_lambda_lookup` | Dict-based conditional evaluation | ALttP glitch rules: `rule_map.get(key, default)(state)` pattern |
+| `Filtered` | Wrapper rule with option-based filtering (Rule Builder) | Wraps child rule, evaluates child directly |
 | `formatted_value` | Individual formatted part of an f-string | Used internally within `f_string` parts |
 | `unknown` | Placeholder for unhandled expressions | Generated when AST node cannot be converted |
+
+### `dict_lambda_lookup` Structure
+
+This type handles patterns like `rule_map.get(entrance.name, lambda s: False)(state)` where a dict maps keys to callable rules:
+
+```json
+{
+  "type": "dict_lambda_lookup",
+  "dict_name": "rule_map",
+  "key": {"type": "attribute", "object": {...}, "attr": "name"},
+  "cases": {
+    "Entrance A": {"type": "item_check", "item": "Key"},
+    "Entrance B": {"type": "and", "conditions": [...]}
+  },
+  "default": {"rule": "False_"}
+}
+```
+
+**Frontend implementation:** Evaluate `key`, look up result in `cases`, fall back to `default` if key not found.
 

@@ -8,9 +8,6 @@
   "player_names": {
     "1": "Player1"
   },
-  "world_classes": {
-    "1": "DLCqworld"
-  },
   "regions": {
     "1": {
       "Menu": {
@@ -1585,156 +1582,132 @@
         "name": "4 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "46 coins": {
         "name": "46 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "60 coins": {
         "name": "60 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "100 coins": {
         "name": "100 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "50 coins": {
         "name": "50 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "9 coins": {
         "name": "9 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "10 coins": {
         "name": "10 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "89 coins": {
         "name": "89 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "7 coins": {
         "name": "7 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "171 coins": {
         "name": "171 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "76 coins": {
         "name": "76 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "203 coins": {
         "name": "203 coins",
         "id": null,
         "groups": [
-          "coins"
+          "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": "coins",
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "Victory Basic": {
@@ -1825,37 +1798,37 @@
       "Movement Pack": "Movement Pack",
       "Animation Pack": "Psychological Warfare Pack",
       "Audio Pack": "Name Change Pack",
+      "Between Trees Sheep": "Name Change Pack",
+      "Hole in the Wall Sheep": "Name Change Pack",
+      "Sexy Outfits Pack": "Name Change Pack",
       "Pause Menu Pack": "Time is Money Pack",
       "Move Right coins": "4 coins",
       "Time is Money Pack": "Zombie Sheep",
       "Psychological Warfare Pack": "Animation Pack",
       "Armor for your Horse Pack": "Loading Screen",
-      "Shepherd Sheep": "Loading Screen",
-      "Movement Pack coins": "46 coins",
+      "Cutscene Sheep": "Loading Screen",
       "Double Jump Pack": "Loading Screen",
+      "Night Map Pack": "Loading Screen",
+      "Sexy Outfits Sheep": "Loading Screen",
+      "Shepherd Sheep": "Loading Screen",
+      "Top Hat Pack": "Loading Screen",
+      "Movement Pack coins": "46 coins",
       "Map Pack": "Armor for your Horse Pack",
-      "Between Trees Sheep": "Name Change Pack",
-      "Hole in the Wall Sheep": "Name Change Pack",
       "Behind Tree coins": "60 coins",
       "West Cave Sheep": "Double Jump Pack",
       "Psychological Warfare coins": "100 coins",
       "Pet Pack": "Map Pack",
-      "Top Hat Pack": "Loading Screen",
       "North West Alcove Sheep": "Audio Pack",
       "Double Jump Total Left coins": "50 coins",
       "Top Hat Sheep": "Pause Menu Pack",
       "Double Jump Total Left Cave coins": "9 coins",
       "North West Ceiling Sheep": "Pet Pack",
       "Double Jump Total Left Roof coins": "10 coins",
-      "Sexy Outfits Pack": "Name Change Pack",
       "Double Jump Alcove Sheep": "Night Map Pack",
-      "Sexy Outfits Sheep": "Loading Screen",
       "Double Jump Behind Tree coins": "89 coins",
       "Double Jump Floating Sheep": "Sexy Outfits Pack",
-      "Cutscene Sheep": "Loading Screen",
       "True Double Jump Behind Tree coins": "7 coins",
       "Gun Pack": "Temporary Spike",
-      "Night Map Pack": "Loading Screen",
       "The Forest coins": "171 coins",
       "The Zombie Pack": "Top Hat Pack",
       "Forest Low Sheep": "The Zombie Pack",
@@ -1875,6 +1848,8 @@
   "world": {
     "1": {
       "game": "DLCQuest WorldGen",
+      "world_class_name": "DLCqworld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "campaign": 0,
@@ -1937,7 +1912,7 @@
         },
         "death_link": {
           "type": "toggle",
-          "default": 0,
+          "default": false,
           "display_name": "Death Link"
         },
         "double_jump_glitch": {
@@ -2013,7 +1988,7 @@
         "item_shuffle": 0,
         "permanent_coins": 0,
         "coinbundlerange": 20,
-        "seed": 71185160
+        "seed": 3835831
       },
       "web": {
         "theme": "grass",
@@ -2045,12 +2020,8 @@
   },
   "exporter": {
     "1": {
-      "rule_format": {
-        "version": "1.0"
-      },
       "use_resolved_items": true,
-      "add_sphere_items_upfront": true,
-      "world_class_name": "DLCqworld"
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
@@ -2060,6 +2031,11 @@
           "pattern": "^(\\d+) coins?$",
           "extract_value": true,
           "target": " coins"
+        },
+        {
+          "pattern": "^(\\d+) coins? freemium$",
+          "extract_value": true,
+          "target": " coins freemium"
         }
       ],
       "prog_items_init": {

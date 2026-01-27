@@ -16,6 +16,12 @@ Run the fuzzer with a specific game:
 python fuzz.py -r <runs> -j <jobs> -g <game> -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
 
+**Important:** On Linux, use `exec` to avoid module caching issues (see [Troubleshooting](#module-caching-with-code-changes)):
+
+```bash
+exec python fuzz.py -r <runs> -j <jobs> -g <game> -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+```
+
 ### Parameters
 
 | Parameter | Description |
@@ -43,8 +49,11 @@ python fuzz.py -r 50 -j 8 -g adventure -n 1 --hook worlds.tracker.fuzzer_hook:Ho
 ### ALttP Testing
 
 ```bash
-python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+# Use exec to ensure fresh module imports (avoids caching issues)
+exec python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 ```
+
+**Expected pass rate:** ~60-70% due to entrance shuffle and glitch mode limitations (see [Known Limitations](#alttp)).
 
 ### Testing with Specific Options
 
@@ -152,14 +161,23 @@ rm -rf frontend/presets/*/AP_*
 | Mode | Pass Rate | Notes |
 |------|-----------|-------|
 | `vanilla` | 100% | Default, fully supported |
-| `dungeons_simple` | 100% | Fully supported |
-| `dungeons_full` | 100% | Fully supported |
-| `simple` | 100% | Fully supported |
-| `restricted` | 100% | Fully supported |
-| `full` | 100% | Fully supported |
-| `dungeons_crossed` | ~60% | Cross-world dungeon entrance tracking issues |
-| `crossed` | ~60% | Cross-world entrance tracking issues |
+| `dungeons_simple` | ~50-90% | Affected by er_seed regeneration - key rules differ |
+| `dungeons_full` | ~50-90% | Affected by er_seed regeneration - key rules differ |
+| `simple` | ~70-90% | Affected by er_seed regeneration when combined with glitches |
+| `restricted` | ~70-90% | Affected by er_seed regeneration - Turtle Rock key rules differ |
+| `full` | ~50-70% | Affected by er_seed regeneration when combined with inverted/glitches |
+| `dungeons_crossed` | ~40-60% | Cross-world dungeon entrance tracking + er_seed issues |
+| `crossed` | ~40-60% | Cross-world entrance tracking + er_seed issues |
 | `insanity` | ~20% | Severe entrance tracking issues |
+
+**Note:** Pass rates vary based on combinations with `mode` and `glitches_required`. The underlying cause is that the ALttP world's `er_seed` is not included in slot_data, causing TrackerCore to regenerate with different entrance connections. See "Root Cause - Entrance Shuffle Regeneration" below.
+
+**Mode Interactions:**
+
+| Combination | Pass Rate | Notes |
+|-------------|-----------|-------|
+| `entrance_shuffle` + `mode=inverted` | ~90% | Inverted mode may affect dungeon entrance rules |
+| `entrance_shuffle` + `glitches_required` | Varies | Combined failures stack - test separately first |
 
 **Glitches Required Compatibility:**
 
@@ -203,6 +221,55 @@ from ~10% to ~45%, then to ~70% with the bunny revival fixes.
 - `CanReachRegion`: Direct glitch rules (mire_clip, hera_clip) use region reachability
 - Combined or-rules now export both the original and glitch alternative paths
 - Fallback rules are used for dungeon entrance patterns when analysis fails
+
+**Root Cause - Entrance Shuffle Regeneration:**
+
+The fundamental issue with entrance shuffle failures is that the ALttP world's `er_seed` (entrance random seed) is not included in slot_data. When TrackerCore regenerates the world:
+
+1. It uses the same `entrance_shuffle` option (e.g., "restricted")
+2. But generates a DIFFERENT random `er_seed`
+3. This causes different entrance connections
+4. Which causes `set_trock_key_rules` to evaluate `can_reach_back` differently
+5. Leading to different key requirements for Turtle Rock (and other dungeons)
+
+For example, with `entrance_shuffle=restricted` and `glitches_required=overworld_glitches`:
+- Original world: Glitch paths might make `can_reach_back = True` → Turtle Rock Chain Chomp Room (South) requires 5 keys
+- Regenerated world: Different entrance shuffle → `can_reach_back = False` → Requires 3 keys if Big Key is in front
+- Result: Locations accessible in one world but not the other
+
+**Fixes Applied:**
+
+1. **Numeric entrance_shuffle_seed generation** (`fuzz.py`): The fuzzer's `get_random_value()` always generates a numeric string for `entrance_shuffle_seed` instead of random Unicode garbage or "random". This ensures consistent entrance connections between original and regenerated worlds.
+
+2. **er_seed pre-generation safety net** (`fuzzer_hook.py`): As a backup, the fuzzer hook validates that `entrance_shuffle_seed` is numeric before generation runs. If it finds "random" or invalid values, it pre-generates a numeric seed. This catches edge cases like manually-created YAMLs.
+
+3. **Turtle Rock key rule location fix** (`exporter/games/official/alttp.py`): The exporter now computes TR reachability (`can_reach_back`, `front_locked_locations`) at export time and fixes empty `locations` arrays in conditional key rules. When `set_trock_key_rules` creates rules with `front_locked_locations.union({...})`, the `.union()` call wasn't being evaluated during AST analysis - this fix properly populates the locations.
+
+4. **Shop price rule generation** (`exporter/games/official/alttp.py`): When `randomize_cost_types` is enabled, shop locations can require Hearts, Bombs, or Arrows instead of Rupees. The exporter's `post_process_location_data` method generates appropriate access rules:
+   - Hearts (type 1): `has_hearts` helper with count = (price // 8) + 1
+   - Bombs (type 3): `can_use_bombs` helper with count = price
+   - Arrows (type 4): `can_hold_arrows` helper with count = price
+   - Rupees/Magic (types 0, 2): No rule needed (always accessible)
+
+**Remaining Issues:**
+
+Some entrance shuffle failures still occur due to:
+- Complex region accessibility differences between original and worldgen worlds
+- Inverted mode interactions with entrance shuffle
+- Glitch mode rules that depend on specific entrance configurations
+
+**Workaround:**
+
+Use `--default-options entrance_shuffle` to test with vanilla entrance shuffle, which has deterministic connections:
+
+```bash
+python fuzz.py -r 10 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook \
+    --default-options entrance_shuffle
+```
+
+**Note on er_seed:**
+
+The `er_seed` propagation is already handled by `fuzzer_hook.py`, which captures the original world's `er_seed` and rewrites YAML files so TrackerCore regenerates with the same entrance connections. The remaining failures are due to the exporter not fully capturing entrance-dependent logic (like `set_trock_key_rules` computations) at export time.
 
 **Other Notes:**
 - Bunny rules are simplified to Moon Pearl requirements

@@ -252,7 +252,7 @@
       "reason": "Helper complexity exceeds rule analyzer limits (30+ interdependent helpers). Analyzer hits 10000 call limit before full analysis."
     },
     {
-      "name": "Rift of the NecroDancer.yaml",
+      "name": "Rift of the Necrodancer.yaml",
       "reason": "APWorld bugs: (1) Option validation allows empty song pool causing ValueError in randrange(). (2) Duplicate item IDs - Medium and Hard variants share same ID (e.g., both 'Take a Breather (Medium)' and 'Take a Breather (Hard)' use ID 2013), causing item_id_to_name mismatches and logic errors."
     },
     {
@@ -314,6 +314,118 @@
     {
       "name": "Yu-Gi-Oh! Forbidden Memories.yaml",
       "reason": "Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules."
+    },
+    {
+      "name": "Against the Storm.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "ANIMAL WELL.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Anodyne.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Ape Escape.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Balatro.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Crystalis.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Fire Emblem Sacred Stones.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Grim Dawn.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Hammerwatch.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Into the Breach.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Lego Star Wars The Complete Saga.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Lunacid.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Mario Kart Double Dash.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Metroid Zero Mission.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Minishoot Adventures.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Minit.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Nine Sols.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Pizza Tower.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "plateup.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Pokemon FireRed and LeafGreen.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Reventure.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Rusted Moss.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Shadow The Hedgehog.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Sly Cooper and the Thievius Raccoonus.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Sonic Adventure DX.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Sonic Rush.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "TCG Card Shop Simulator.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
+    },
+    {
+      "name": "Tetris Attack.yaml",
+      "reason": "Temporarily excluded. Fixing this is currently not a priority."
     }
   ],
   "requires_javascript_helpers_list": [

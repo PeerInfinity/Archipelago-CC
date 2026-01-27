@@ -980,6 +980,26 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         ]);
         const allowUndefinedArgs = helpersAllowingUndefinedArgs.has(rule.name);
 
+        // Check if the helper name is actually a bound variable from iterator context
+        // This handles cases like all_of/any_of where element_rule is {"type": "helper", "name": "rule"}
+        // and "rule" is bound to an actual rule object from the iterator
+        if (context && typeof context.resolveName === 'function') {
+          const boundValue = context.resolveName(rule.name);
+          if (boundValue !== undefined) {
+            // If the bound value is a rule object (has a 'type' property), evaluate it recursively
+            if (boundValue && typeof boundValue === 'object' && boundValue.type) {
+              log('debug', `[evaluateRule] Helper '${rule.name}' resolved to bound rule object, evaluating recursively`);
+              result = evaluateRule(boundValue, context, depth + 1, localScope);
+              break;
+            }
+            // If it's a simple value, return it directly
+            if (typeof boundValue !== 'object' || boundValue === null) {
+              result = boundValue;
+              break;
+            }
+          }
+        }
+
         if (!allowUndefinedArgs && args.some((arg) => arg === undefined)) {
           result = undefined;
         } else if (isValidContext) {
@@ -1208,6 +1228,35 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           result = rule.if_false === null
             ? false
             : evaluateRule(rule.if_false, context, depth + 1, localScope);
+        }
+        break;
+      }
+
+      case 'dict_lambda_lookup': {
+        // Dict-based conditional evaluation
+        // Pattern: rule_map.get(key, default)(state) where dict maps keys to callable rules
+        // Used in ALttP glitch rules
+        if (!rule.key || !rule.cases) {
+          log('warn', '[evaluateRule] Malformed dict_lambda_lookup rule:', rule);
+          result = undefined;
+          break;
+        }
+
+        const lookupKey = evaluateRule(rule.key, context, depth + 1, localScope);
+
+        if (lookupKey === undefined) {
+          // Can't evaluate the key, result is undefined
+          result = undefined;
+        } else if (rule.cases.hasOwnProperty(lookupKey)) {
+          // Key exists in cases, evaluate that case's rule
+          result = evaluateRule(rule.cases[lookupKey], context, depth + 1, localScope);
+        } else if (rule.default !== undefined) {
+          // Key not found, use default
+          result = evaluateRule(rule.default, context, depth + 1, localScope);
+        } else {
+          // No default, return undefined
+          log('debug', `[evaluateRule] dict_lambda_lookup key '${lookupKey}' not found and no default`);
+          result = undefined;
         }
         break;
       }
@@ -3746,18 +3795,57 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       }
 
       case 'can_reach': {
-        // Check if a region is reachable
-        const regionName = evaluateRule(rule.region, context, depth + 1, localScope);
-        if (regionName === undefined) {
+        // Check if a region, entrance, or location is reachable
+        // Supports two formats:
+        // 1. Legacy: { type: 'can_reach', region: 'RegionName' }
+        // 2. New: { type: 'can_reach', target: 'Name', target_type: 'Region'|'Entrance'|'Location' }
+        let targetName;
+        let targetType = 'Region'; // Default to region for backwards compatibility
+
+        if (rule.target !== undefined) {
+          // New format with target and target_type
+          targetName = typeof rule.target === 'string'
+            ? rule.target
+            : evaluateRule(rule.target, context, depth + 1, localScope);
+          targetType = rule.target_type || 'Region';
+        } else if (rule.region !== undefined) {
+          // Legacy format with just region
+          targetName = evaluateRule(rule.region, context, depth + 1, localScope);
+        } else {
+          log('warn', '[evaluateRule] can_reach rule missing both target and region');
           result = undefined;
-        } else if (typeof context.isRegionReachable === 'function') {
-          result = context.isRegionReachable(regionName);
-          if (result === undefined) {
-            log('debug', `[evaluateRule] Region ${regionName} reachability could not be determined`);
+          break;
+        }
+
+        if (targetName === undefined) {
+          result = undefined;
+        } else if (targetType === 'Entrance') {
+          // Check entrance reachability
+          if (typeof context.isEntranceReachable === 'function') {
+            result = context.isEntranceReachable(targetName);
+          } else {
+            log('warn', '[evaluateRule] context.isEntranceReachable is not a function for can_reach Entrance');
+            result = undefined;
+          }
+        } else if (targetType === 'Location') {
+          // Check location accessibility
+          if (typeof context.isLocationAccessible === 'function') {
+            result = context.isLocationAccessible(targetName);
+          } else {
+            log('warn', '[evaluateRule] context.isLocationAccessible is not a function for can_reach Location');
+            result = undefined;
           }
         } else {
-          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach.');
-          result = undefined;
+          // Default: Check region reachability
+          if (typeof context.isRegionReachable === 'function') {
+            result = context.isRegionReachable(targetName);
+            if (result === undefined) {
+              log('debug', `[evaluateRule] Region ${targetName} reachability could not be determined`);
+            }
+          } else {
+            log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach.');
+            result = undefined;
+          }
         }
         break;
       }
@@ -4198,6 +4286,39 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         } else {
           // Simple assignment
           localScope[varName] = value;
+        }
+        result = localScope[varName];
+        break;
+      }
+
+      case 'aug_assign': {
+        // Augmented assignment (+=, -=, *=, /=) in the format exported by Python analyzer
+        // Uses 'target' for variable name and 'op' without the '=' (e.g., '+' not '+=')
+        const varName = rule.target;
+        if (!varName) {
+          result = undefined;
+          break;
+        }
+
+        if (localScope === null) {
+          log('warn', '[evaluateRule] aug_assign used without local scope');
+          result = undefined;
+          break;
+        }
+
+        let value = evaluateRule(rule.value, context, depth + 1, localScope);
+        const currentVal = localScope[varName] || 0;
+
+        switch (rule.op) {
+          case '+': localScope[varName] = currentVal + value; break;
+          case '-': localScope[varName] = currentVal - value; break;
+          case '*': localScope[varName] = currentVal * value; break;
+          case '/': localScope[varName] = currentVal / value; break;
+          case '//': localScope[varName] = Math.floor(currentVal / value); break;
+          case '%': localScope[varName] = currentVal % value; break;
+          default:
+            log('warn', `[evaluateRule] Unknown aug_assign operator: ${rule.op}`);
+            localScope[varName] = value;
         }
         result = localScope[varName];
         break;

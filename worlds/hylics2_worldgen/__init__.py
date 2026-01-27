@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -166,139 +166,278 @@ class Hylics2World(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Afterlife: Mangled Wayne": "BURRITO",
+        "Arcade 2: Cave Burrito": "BURRITO",
+        "Foglast: TV": "BURRITO",
+        "Hylemxylem: Drained Lower Reservoir Burrito 2": "BURRITO",
+        "Juice Ranch: Ledge Rancher": "BURRITO",
+        "New Muldul: Pot near Vault": "BURRITO",
+        "New Muldul: Vault Bomb": "BURRITO",
+        "Sage Labyrinth: Motor Hunter Sarcophagus": "BURRITO",
+        "Sage Labyrinth: Sage Right Leg": "BURRITO",
+        "Viewax's Edifice: Defeat Viewax": "BURRITO",
+        "Viewax's Edifice: Tower Chest": "BURRITO",
         "Afterlife: Jar near Mangled Wayne": "CLOUD GERM",
+        "New Muldul: Juice Trade": "CLOUD GERM",
+        "New Muldul: Rescued Blerol 1": "CLOUD GERM",
         "Afterlife: Jar under Pool": "COOKIE",
+        "Drill Castle: Roof Banana": "COOKIE",
+        "Foglast: Cave Fridge": "COOKIE",
         "Afterlife: TV": "BANANA",
-        "Waynehouse: Toilet": "CLICKER",
-        "Waynehouse: Basement Pot 1": "MULTI STEM CELL",
-        "Waynehouse: Basement Pot 2": "MULTI SOUL SPONGE",
-        "Waynehouse: Basement Pot 3": "JUICE",
+        "Arcade 2: Flying Machine Banana": "BANANA",
+        "Hylemxylem: Upper Chamber Banana": "BANANA",
+        "Juice Ranch: Battle with Somsnosa": "BANANA",
+        "Juice Ranch: TV": "BANANA",
+        "New Muldul: Basement Suitcase": "BANANA",
+        "New Muldul: Rescued Blerol 2": "BANANA",
+        "Sage Airship: TV": "BANANA",
+        "Sage Labyrinth: Boss Secret Chest 1": "BANANA",
+        "Sage Labyrinth: Boss Secret Chest 2": "BANANA",
+        "Viewax's Edifice: Cave Sarcophagus": "BANANA",
+        "Viewax's Edifice: TV": "BANANA",
+        "Viewax's Edifice: Tower Pot": "BANANA",
         "Waynehouse: Sarcophagus": "BANANA",
+        "Waynehouse: Toilet": "CLICKER",
+        "Arcade 2: Double Banana 2": "MULTI STEM CELL",
+        "Foglast: Sage Item 2": "MULTI STEM CELL",
+        "Waynehouse: Basement Pot 1": "MULTI STEM CELL",
+        "Drill Castle: Ledge Banana": "MULTI SOUL SPONGE",
+        "Foglast: Buy Clicker": "MULTI SOUL SPONGE",
+        "Foglast: Under Lair Sarcophagus 2": "MULTI SOUL SPONGE",
+        "Foglast: Underground Sarcophagus": "MULTI SOUL SPONGE",
+        "Sage Labyrinth: B1 Double Chest 2": "MULTI SOUL SPONGE",
+        "Waynehouse: Basement Pot 2": "MULTI SOUL SPONGE",
+        "Hylemxylem: Across Upper Reservoir Chest": "JUICE",
+        "Hylemxylem: Drained Upper Reservoir Burrito 1": "JUICE",
+        "Hylemxylem: Fountain Banana": "JUICE",
+        "Sage Labyrinth: 1F Chest Near Fountain": "JUICE",
+        "Sage Labyrinth: 1F Four Statues Chest 2": "JUICE",
+        "Waynehouse: Basement Pot 3": "JUICE",
         "Waynehouse: TV": "SINGLE GLOVE",
         "New Muldul: Shop Ceiling Pot 1": "UPPER HOUSE KEY",
         "New Muldul: Shop Ceiling Pot 2": "BOOTS",
         "New Muldul: Flag Banana": "WORM ROOM KEY",
-        "New Muldul: Pot near Vault": "BURRITO",
         "New Muldul: Pot above Vault": "FATE SANDBOX",
+        "Foglast: Under Lair Sarcophagus 3": "MULTI-JUICE",
         "New Muldul: Underground Pot": "MULTI-JUICE",
+        "Sage Labyrinth: B2 Hidden Sarcophagus 1": "MULTI-JUICE",
+        "Sage Labyrinth: Sage Right Arm": "MULTI-JUICE",
+        "Foglast: Sage Sarcophagus": "MUSCLE APPLIQUE",
+        "Hylemxylem: Drained Lower Reservoir Burrito 1": "MUSCLE APPLIQUE",
+        "Hylemxylem: Jar": "MUSCLE APPLIQUE",
+        "Hylemxylem: Lower Reservoir Hole Pot 1": "MUSCLE APPLIQUE",
+        "Juice Ranch: Fridge": "MUSCLE APPLIQUE",
         "New Muldul: Underground Chest": "MUSCLE APPLIQUE",
-        "New Muldul: Juice Trade": "CLOUD GERM",
-        "New Muldul: Basement Suitcase": "BANANA",
+        "Sage Labyrinth: 1F Four Statues Chest 1": "MUSCLE APPLIQUE",
         "New Muldul: Upper House Chest 1": "SKULL BOMB",
         "New Muldul: Upper House Chest 2": "BOMBO - GENESIS",
+        "Foglast: Roof Sarcophagus": "STEM CELL",
         "New Muldul: Talk to Pongorma": "STEM CELL",
-        "New Muldul: Rescued Blerol 1": "CLOUD GERM",
-        "New Muldul: Rescued Blerol 2": "BANANA",
         "New Muldul: TV": "TARP",
+        "Viewax's Edifice: Canopic Jar": "TARP",
+        "Arcade 2: Peak Muscle Applique": "SAGE TOKEN",
         "New Muldul: Vault Left Chest": "SAGE TOKEN",
+        "Sage Labyrinth: B1 Hole Chest": "SAGE TOKEN",
         "New Muldul: Vault Right Chest": "MATERIEL MITTS",
-        "New Muldul: Vault Bomb": "BURRITO",
         "Viewax's Edifice: Fountain Banana": "DUBIOUS BERRY",
+        "Foglast: Sage Item 1": "CUPCAKE",
+        "Sage Labyrinth: B1 Double Chest 1": "CUPCAKE",
         "Viewax's Edifice: Dedusmuln's Suitcase": "CUPCAKE",
+        "Arcade Island: Shielded Key": "LONG GLOVES",
+        "Drill Castle: TV": "LONG GLOVES",
+        "Foglast: Shielded Chest": "LONG GLOVES",
+        "Foglast: Shielded Key": "LONG GLOVES",
         "Viewax's Edifice: Dedusmuln's Campfire": "LONG GLOVES",
         "Viewax's Edifice: Talk to Dedusmuln": "JAIL KEY",
-        "Viewax's Edifice: Canopic Jar": "TARP",
-        "Viewax's Edifice: Cave Sarcophagus": "BANANA",
         "Viewax's Edifice: Shielded Key": "LINK MOLLUSC",
-        "Viewax's Edifice: Tower Pot": "BANANA",
         "Viewax's Edifice: Tower Jar": "SOUL CRISPER",
-        "Viewax's Edifice: Tower Chest": "BURRITO",
         "Viewax's Edifice: Sage Fridge": "TENDRIL HAND",
+        "Arcade 1: Burrito Alcove 2": "PAPER CUP",
+        "Arcade 1: Coin Dash": "PAPER CUP",
         "Viewax's Edifice: Sage Item 1": "PAPER CUP",
         "Viewax's Edifice: Sage Item 2": "50 Bones",
+        "Hylemxylem: East Island Chest": "SOUL SPONGE",
+        "Hylemxylem: Lower Reservoir Hole Pot 3": "SOUL SPONGE",
+        "Hylemxylem: Lower Reservoir Hole Sarcophagus": "SOUL SPONGE",
+        "Hylemxylem: Upper Reservoir Hole Key": "SOUL SPONGE",
+        "Juice Ranch: Juice 3": "SOUL SPONGE",
         "Viewax's Edifice: Viewax Pot": "SOUL SPONGE",
-        "Viewax's Edifice: Defeat Viewax": "BURRITO",
         "Arcade 1: Key": "FADED PONCHO",
-        "Arcade 1: Coin Dash": "PAPER CUP",
         "Arcade 1: Burrito Alcove 1": "LOOPED DOME",
-        "Arcade 1: Burrito Alcove 2": "PAPER CUP",
+        "Hylemxylem: Drained Upper Reservoir Burrito 2": "LOOPED DOME",
         "Arcade 1: Behind Spikes Banana": "ORGAN FORT",
         "Arcade 1: Pyramid Banana": "POOLWINE",
         "Arcade 1: Moving Platforms Muscle Applique": "NEMATODE INTERFACE",
         "Arcade 1: Bed Banana": "CONVERTER WORM",
-        "Viewax's Edifice: TV": "BANANA",
         "Airship: Talk to Somsnosa": "CHARGE UP",
-        "Arcade Island: Shielded Key": "LONG GLOVES",
-        "Arcade 2: Flying Machine Banana": "BANANA",
         "Arcade 2: Paper Cup Detour": "TELEDENUDATE",
-        "Arcade 2: Peak Muscle Applique": "SAGE TOKEN",
         "Arcade 2: Double Banana 1": "VESSEL ROOM KEY",
-        "Arcade 2: Double Banana 2": "MULTI STEM CELL",
-        "Arcade 2: Cave Burrito": "BURRITO",
         "TV Island: TV": "UPPER CHAMBER KEY",
         "Juice Ranch: Juice 1": "PEPTIDE BODKINS",
         "Juice Ranch: Juice 2": "DUCTILE HABIT",
-        "Juice Ranch: Juice 3": "SOUL SPONGE",
-        "Juice Ranch: Ledge Rancher": "BURRITO",
-        "Juice Ranch: Battle with Somsnosa": "BANANA",
-        "Juice Ranch: Fridge": "MUSCLE APPLIQUE",
-        "Juice Ranch: TV": "BANANA",
         "Worm Pod: Key": "PLEATHER GAGE",
         "Foglast: West Sarcophagus": "PNEUMATOPHORE",
-        "Foglast: Underground Sarcophagus": "MULTI SOUL SPONGE",
-        "Foglast: Shielded Key": "LONG GLOVES",
-        "Foglast: Buy Clicker": "MULTI SOUL SPONGE",
-        "Foglast: Shielded Chest": "LONG GLOVES",
-        "Foglast: Cave Fridge": "COOKIE",
-        "Foglast: Roof Sarcophagus": "STEM CELL",
         "Foglast: Under Lair Sarcophagus 1": "TIME SIGIL",
-        "Foglast: Under Lair Sarcophagus 2": "MULTI SOUL SPONGE",
-        "Foglast: Under Lair Sarcophagus 3": "MULTI-JUICE",
-        "Foglast: Sage Sarcophagus": "MUSCLE APPLIQUE",
-        "Foglast: Sage Item 1": "CUPCAKE",
-        "Foglast: Sage Item 2": "MULTI STEM CELL",
-        "Foglast: TV": "BURRITO",
-        "Drill Castle: Ledge Banana": "MULTI SOUL SPONGE",
         "Drill Castle: Island Banana": "TOWER KEY",
         "Drill Castle: Island Pot": "POROMER BLEB",
         "Drill Castle: Cave Sarcophagus": "PSYCHIC KNUCKLE",
-        "Drill Castle: Roof Banana": "COOKIE",
-        "Drill Castle: TV": "LONG GLOVES",
-        "Sage Labyrinth: 1F Chest Near Fountain": "JUICE",
         "Sage Labyrinth: 1F Hidden Sarcophagus": "TELESCOPIC SLEEVE",
-        "Sage Labyrinth: 1F Four Statues Chest 1": "MUSCLE APPLIQUE",
-        "Sage Labyrinth: 1F Four Statues Chest 2": "JUICE",
-        "Sage Labyrinth: B1 Double Chest 1": "CUPCAKE",
-        "Sage Labyrinth: B1 Double Chest 2": "MULTI SOUL SPONGE",
+        "Sage Airship: Bottom Level Pot": "MEAT",
         "Sage Labyrinth: B1 Single Chest": "MEAT",
         "Sage Labyrinth: B1 Enemy Chest": "PADDLE",
         "Sage Labyrinth: B1 Hidden Sarcophagus": "100 Bones",
-        "Sage Labyrinth: B1 Hole Chest": "SAGE TOKEN",
-        "Sage Labyrinth: B2 Hidden Sarcophagus 1": "MULTI-JUICE",
         "Sage Labyrinth: B2 Hidden Sarcophagus 2": "DEEP KEY",
         "Sage Labyrinth: 2F Sarcophagus": "CAVE KEY",
-        "Sage Labyrinth: Boss Secret Chest 1": "BANANA",
-        "Sage Labyrinth: Boss Secret Chest 2": "BANANA",
-        "Sage Labyrinth: Motor Hunter Sarcophagus": "BURRITO",
         "Sage Labyrinth: Sage Item 1": "DOCK KEY",
         "Sage Labyrinth: Sage Item 2": "BRIDGE KEY",
         "Sage Labyrinth: Sage Left Arm": "BRAIN DIGITS",
-        "Sage Labyrinth: Sage Right Arm": "MULTI-JUICE",
         "Sage Labyrinth: Sage Left Leg": "COFFEE",
-        "Sage Labyrinth: Sage Right Leg": "BURRITO",
-        "Sage Airship: Bottom Level Pot": "MEAT",
         "Sage Airship: Flesh Pot": "JUMPSUIT",
         "Sage Airship: Top Jar": "RANCHER PONCHO",
-        "Sage Airship: TV": "BANANA",
-        "Hylemxylem: Jar": "MUSCLE APPLIQUE",
         "Hylemxylem: Lower Reservoir Key": "MULTI-COFFEE",
-        "Hylemxylem: Fountain Banana": "JUICE",
         "Hylemxylem: East Island Banana": "BOTTOMLESS JUICE",
-        "Hylemxylem: East Island Chest": "SOUL SPONGE",
-        "Hylemxylem: Upper Chamber Banana": "BANANA",
-        "Hylemxylem: Across Upper Reservoir Chest": "JUICE",
         "Hylemxylem: Drained Lower Reservoir Chest": "CURSED GLOVES",
-        "Hylemxylem: Drained Lower Reservoir Burrito 1": "MUSCLE APPLIQUE",
-        "Hylemxylem: Drained Lower Reservoir Burrito 2": "BURRITO",
-        "Hylemxylem: Lower Reservoir Hole Pot 1": "MUSCLE APPLIQUE",
         "Hylemxylem: Lower Reservoir Hole Pot 2": "HOUSE KEY",
-        "Hylemxylem: Lower Reservoir Hole Pot 3": "SOUL SPONGE",
-        "Hylemxylem: Lower Reservoir Hole Sarcophagus": "SOUL SPONGE",
-        "Hylemxylem: Drained Upper Reservoir Burrito 1": "JUICE",
-        "Hylemxylem: Drained Upper Reservoir Burrito 2": "LOOPED DOME",
         "Hylemxylem: Drained Upper Reservoir Burrito 3": "COFFEE CHIP",
-        "Hylemxylem: Upper Reservoir Hole Key": "SOUL SPONGE",
         "Defeat Gibby": "Victory",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Afterlife: Mangled Wayne": False,
+        "Afterlife: Jar near Mangled Wayne": False,
+        "Afterlife: Jar under Pool": False,
+        "Afterlife: TV": False,
+        "Waynehouse: Toilet": True,
+        "Waynehouse: Basement Pot 1": False,
+        "Waynehouse: Basement Pot 2": False,
+        "Waynehouse: Basement Pot 3": False,
+        "Waynehouse: Sarcophagus": False,
+        "Waynehouse: TV": False,
+        "New Muldul: Shop Ceiling Pot 1": True,
+        "New Muldul: Shop Ceiling Pot 2": False,
+        "New Muldul: Flag Banana": True,
+        "New Muldul: Pot near Vault": False,
+        "New Muldul: Pot above Vault": False,
+        "New Muldul: Underground Pot": False,
+        "New Muldul: Underground Chest": False,
+        "New Muldul: Juice Trade": False,
+        "New Muldul: Basement Suitcase": False,
+        "New Muldul: Upper House Chest 1": True,
+        "New Muldul: Upper House Chest 2": False,
+        "New Muldul: Talk to Pongorma": False,
+        "New Muldul: Rescued Blerol 1": False,
+        "New Muldul: Rescued Blerol 2": False,
+        "New Muldul: TV": False,
+        "New Muldul: Vault Left Chest": True,
+        "New Muldul: Vault Right Chest": False,
+        "New Muldul: Vault Bomb": False,
+        "Viewax's Edifice: Fountain Banana": False,
+        "Viewax's Edifice: Dedusmuln's Suitcase": False,
+        "Viewax's Edifice: Dedusmuln's Campfire": False,
+        "Viewax's Edifice: Talk to Dedusmuln": True,
+        "Viewax's Edifice: Canopic Jar": False,
+        "Viewax's Edifice: Cave Sarcophagus": False,
+        "Viewax's Edifice: Shielded Key": False,
+        "Viewax's Edifice: Tower Pot": False,
+        "Viewax's Edifice: Tower Jar": False,
+        "Viewax's Edifice: Tower Chest": False,
+        "Viewax's Edifice: Sage Fridge": False,
+        "Viewax's Edifice: Sage Item 1": True,
+        "Viewax's Edifice: Sage Item 2": False,
+        "Viewax's Edifice: Viewax Pot": False,
+        "Viewax's Edifice: Defeat Viewax": False,
+        "Arcade 1: Key": False,
+        "Arcade 1: Coin Dash": True,
+        "Arcade 1: Burrito Alcove 1": False,
+        "Arcade 1: Burrito Alcove 2": True,
+        "Arcade 1: Behind Spikes Banana": False,
+        "Arcade 1: Pyramid Banana": False,
+        "Arcade 1: Moving Platforms Muscle Applique": False,
+        "Arcade 1: Bed Banana": False,
+        "Viewax's Edifice: TV": False,
+        "Airship: Talk to Somsnosa": True,
+        "Arcade Island: Shielded Key": False,
+        "Arcade 2: Flying Machine Banana": False,
+        "Arcade 2: Paper Cup Detour": False,
+        "Arcade 2: Peak Muscle Applique": True,
+        "Arcade 2: Double Banana 1": True,
+        "Arcade 2: Double Banana 2": False,
+        "Arcade 2: Cave Burrito": False,
+        "TV Island: TV": True,
+        "Juice Ranch: Juice 1": False,
+        "Juice Ranch: Juice 2": False,
+        "Juice Ranch: Juice 3": False,
+        "Juice Ranch: Ledge Rancher": False,
+        "Juice Ranch: Battle with Somsnosa": False,
+        "Juice Ranch: Fridge": False,
+        "Juice Ranch: TV": False,
+        "Worm Pod: Key": False,
+        "Foglast: West Sarcophagus": True,
+        "Foglast: Underground Sarcophagus": False,
+        "Foglast: Shielded Key": False,
+        "Foglast: Buy Clicker": False,
+        "Foglast: Shielded Chest": False,
+        "Foglast: Cave Fridge": False,
+        "Foglast: Roof Sarcophagus": False,
+        "Foglast: Under Lair Sarcophagus 1": False,
+        "Foglast: Under Lair Sarcophagus 2": False,
+        "Foglast: Under Lair Sarcophagus 3": False,
+        "Foglast: Sage Sarcophagus": False,
+        "Foglast: Sage Item 1": False,
+        "Foglast: Sage Item 2": False,
+        "Foglast: TV": False,
+        "Drill Castle: Ledge Banana": False,
+        "Drill Castle: Island Banana": True,
+        "Drill Castle: Island Pot": False,
+        "Drill Castle: Cave Sarcophagus": False,
+        "Drill Castle: Roof Banana": False,
+        "Drill Castle: TV": False,
+        "Sage Labyrinth: 1F Chest Near Fountain": False,
+        "Sage Labyrinth: 1F Hidden Sarcophagus": False,
+        "Sage Labyrinth: 1F Four Statues Chest 1": False,
+        "Sage Labyrinth: 1F Four Statues Chest 2": False,
+        "Sage Labyrinth: B1 Double Chest 1": False,
+        "Sage Labyrinth: B1 Double Chest 2": False,
+        "Sage Labyrinth: B1 Single Chest": False,
+        "Sage Labyrinth: B1 Enemy Chest": True,
+        "Sage Labyrinth: B1 Hidden Sarcophagus": False,
+        "Sage Labyrinth: B1 Hole Chest": True,
+        "Sage Labyrinth: B2 Hidden Sarcophagus 1": False,
+        "Sage Labyrinth: B2 Hidden Sarcophagus 2": True,
+        "Sage Labyrinth: 2F Sarcophagus": True,
+        "Sage Labyrinth: Boss Secret Chest 1": False,
+        "Sage Labyrinth: Boss Secret Chest 2": False,
+        "Sage Labyrinth: Motor Hunter Sarcophagus": False,
+        "Sage Labyrinth: Sage Item 1": True,
+        "Sage Labyrinth: Sage Item 2": True,
+        "Sage Labyrinth: Sage Left Arm": False,
+        "Sage Labyrinth: Sage Right Arm": False,
+        "Sage Labyrinth: Sage Left Leg": False,
+        "Sage Labyrinth: Sage Right Leg": False,
+        "Sage Airship: Bottom Level Pot": False,
+        "Sage Airship: Flesh Pot": False,
+        "Sage Airship: Top Jar": False,
+        "Sage Airship: TV": False,
+        "Hylemxylem: Jar": False,
+        "Hylemxylem: Lower Reservoir Key": False,
+        "Hylemxylem: Fountain Banana": False,
+        "Hylemxylem: East Island Banana": False,
+        "Hylemxylem: East Island Chest": False,
+        "Hylemxylem: Upper Chamber Banana": False,
+        "Hylemxylem: Across Upper Reservoir Chest": False,
+        "Hylemxylem: Drained Lower Reservoir Chest": False,
+        "Hylemxylem: Drained Lower Reservoir Burrito 1": False,
+        "Hylemxylem: Drained Lower Reservoir Burrito 2": False,
+        "Hylemxylem: Lower Reservoir Hole Pot 1": False,
+        "Hylemxylem: Lower Reservoir Hole Pot 2": True,
+        "Hylemxylem: Lower Reservoir Hole Pot 3": False,
+        "Hylemxylem: Lower Reservoir Hole Sarcophagus": False,
+        "Hylemxylem: Drained Upper Reservoir Burrito 1": False,
+        "Hylemxylem: Drained Upper Reservoir Burrito 2": False,
+        "Hylemxylem: Drained Upper Reservoir Burrito 3": False,
+        "Hylemxylem: Upper Reservoir Hole Key": False,
+        "Defeat Gibby": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -424,14 +563,38 @@ class Hylics2World(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = Hylics2WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = Hylics2WorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = Hylics2WorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -476,27 +639,81 @@ class Hylics2World(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

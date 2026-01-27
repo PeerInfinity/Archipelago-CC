@@ -763,7 +763,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification_counts": {
+          "progression": 2,
+          "useful": 4
+        }
       },
       "Clip Extension": {
         "name": "Clip Extension",
@@ -775,7 +779,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification_counts": {
+          "useful": 4,
+          "progression": 2
+        }
       },
       "Faster Reload": {
         "name": "Faster Reload",
@@ -787,7 +795,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification_counts": {
+          "progression": 4,
+          "useful": 2
+        }
       },
       "Special Extension": {
         "name": "Special Extension",

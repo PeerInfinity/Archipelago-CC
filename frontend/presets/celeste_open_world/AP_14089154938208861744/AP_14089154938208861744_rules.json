@@ -37369,7 +37369,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 45
+        "max_count": 45,
+        "classification_counts": {
+          "progression_skip_balancing": 40,
+          "useful": 5
+        }
       },
       "Raspberry": {
         "name": "Raspberry",
@@ -40355,7 +40359,7 @@
           "47": 47
         },
         "require_cassettes": 0,
-        "chosen_poem": 67
+        "chosen_poem": 3
       },
       "web": {
         "theme": "ice",

@@ -236,8 +236,54 @@ class ExpressionVisitorMixin:
                     pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
-                    # Convert to list for JSON serialization
                     list_value = list(value) if isinstance(value, tuple) else value
+                    # Check if the list contains callables (like entrance access rules)
+                    # If so, analyze each callable to get proper rule structures
+                    if list_value and all(callable(item) for item in list_value):
+                        logging.debug(f"visit_Name: '{name}' is a list of {len(list_value)} callables, analyzing each")
+                        # Import analyze_rule to avoid circular dependency
+                        from ..analysis import analyze_rule
+                        from ..cache import callable_list_cache
+                        analyzed_items = []
+                        for idx, item_func in enumerate(list_value):
+                            try:
+                                # Check cache first using function ID
+                                func_id = id(item_func)
+                                if func_id in callable_list_cache:
+                                    logging.debug(f"visit_Name: Cache hit for callable {idx} in list '{name}'")
+                                    item_result = callable_list_cache[func_id]
+                                else:
+                                    item_result = analyze_rule(
+                                        rule_func=item_func,
+                                        closure_vars=self.closure_vars.copy(),
+                                        seen_funcs=self.seen_funcs,
+                                        game_handler=self.game_handler,
+                                        player_context=self.player_context,
+                                        rule_target_name=getattr(self, 'rule_target_name', None),
+                                        target_type=getattr(self, 'target_type', None)
+                                    )
+                                    # Cache successful results
+                                    if item_result and item_result.get('type') != 'error':
+                                        callable_list_cache[func_id] = item_result
+
+                                if item_result and item_result.get('type') != 'error':
+                                    analyzed_items.append(item_result)
+                                else:
+                                    logging.debug(f"visit_Name: Could not analyze callable item {idx} in list '{name}'")
+                                    analyzed_items = None
+                                    break
+                            except Exception as e:
+                                logging.debug(f"visit_Name: Error analyzing callable item {idx} in list '{name}': {e}")
+                                analyzed_items = None
+                                break
+
+                        if analyzed_items is not None:
+                            logging.debug(f"visit_Name: Successfully analyzed {len(analyzed_items)} callables from '{name}'")
+                            return {'type': 'constant', 'value': analyzed_items}
+                        else:
+                            logging.debug(f"visit_Name: Failed to analyze callable list '{name}', falling back to string representation")
+
+                    # Convert to list for JSON serialization
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
                 # Handle set/frozenset values - resolve to constant for 'in' / 'not in' comparisons

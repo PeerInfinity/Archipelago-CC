@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -24,6 +24,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Balancer": 1,
     "Belt Reader": 1,
     "Big Belt Upgrade": 9,
     "Big Miner Upgrade": 12,
@@ -53,6 +54,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Small Painting Upgrade": 7,
     "Small Processors Upgrade": 10,
     "Stacker": 1,
+    "Storage": 1,
     "Switch": 1,
     "Trash": 1,
     "Tunnel": 1,
@@ -64,8 +66,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Level 1": "Balancer",
-    "Level 1 Additional": "Storage",
     "Goal": "Goal",
 }
 
@@ -170,144 +170,289 @@ class ShapezWorld(RuleWorldMixin, World):
     canonical_placements: ClassVar[Dict[str, str]] = {
         "My eyes no longer hurt": "Switch",
         "Getting into it": "Quad Painter",
+        "Belt Upgrade Tier V": "Small Processors Upgrade",
         "GPS": "Small Processors Upgrade",
-        "I need trains": "Big Processors Upgrade",
-        "Level 1": "Balancer",
-        "Level 1 Additional": "Storage",
-        "Level 2": "Small Painting Upgrade",
-        "Level 3": "Big Belt Upgrade",
-        "Belt Upgrade Tier II": "Small Miner Upgrade",
-        "Miner Upgrade Tier II": "Blueprint Shapes Bundle",
-        "Processors Upgrade Tier II": "Wires",
-        "Painting Upgrade Tier II": "Level Shapes Bundle",
-        "It's a mess": "Virtual Processing",
-        "Oops": "Item Filter",
-        "Level 4": "Big Miner Upgrade",
-        "Level 5": "Big Processors Upgrade",
-        "Level 6": "Small Belt Upgrade",
-        "Level 7": "Big Processors Upgrade",
-        "Level 8": "Upgrade Shapes Bundle",
-        "Level 9": "Big Miner Upgrade",
-        "Level 10": "Stacker",
-        "Level 11": "Small Painting Upgrade",
-        "Level 12": "Level Shapes Bundle",
-        "Level 13": "Small Belt Upgrade",
-        "Level 14": "Level Shapes Bundle",
-        "Level 15": "Big Painting Upgrade",
-        "Level 16": "Big Processors Upgrade",
-        "Level 17": "Big Painting Upgrade",
-        "Level 18": "Small Belt Upgrade",
-        "Level 19": "Big Miner Upgrade",
-        "Level 20 Additional": "Small Belt Upgrade",
-        "Level 20 Additional 2": "Tunnel Tier II",
         "Level 20": "Small Processors Upgrade",
         "Level 21": "Small Processors Upgrade",
-        "Level 22": "Big Belt Upgrade",
-        "Level 23": "Small Painting Upgrade",
-        "Level 24": "Big Miner Upgrade",
-        "Level 25": "Small Belt Upgrade",
-        "Wires": "Big Belt Upgrade",
-        "Goal": "Goal",
-        "Belt Upgrade Tier III": "Small Belt Upgrade",
-        "Miner Upgrade Tier III": "Small Miner Upgrade",
-        "Processors Upgrade Tier III": "Big Processors Upgrade",
-        "Painting Upgrade Tier III": "Blueprint Shapes Bundle",
-        "Belt Upgrade Tier IV": "Blueprint Shapes Bundle",
-        "Miner Upgrade Tier IV": "Upgrade Shapes Bundle",
-        "Processors Upgrade Tier IV": "Level Shapes Bundle",
-        "Painting Upgrade Tier IV": "Big Processors Upgrade",
-        "Belt Upgrade Tier V": "Small Processors Upgrade",
-        "Miner Upgrade Tier V": "Blueprint Shapes Bundle",
-        "Processors Upgrade Tier V": "Compact Merger",
         "Painting Upgrade Tier V": "Small Processors Upgrade",
-        "Faster": "Small Miner Upgrade",
-        "Belt Upgrade Tier VI": "Big Miner Upgrade",
-        "Miner Upgrade Tier VI": "Small Belt Upgrade",
-        "Processors Upgrade Tier VI": "Upgrade Shapes Bundle",
-        "Painting Upgrade Tier VI": "Painter",
+        "Painting Upgrade Tier VIII": "Small Processors Upgrade",
+        "Shapesanity 16": "Small Processors Upgrade",
+        "Shapesanity 43": "Small Processors Upgrade",
+        "Shapesanity 5": "Small Processors Upgrade",
+        "SpaceY": "Small Processors Upgrade",
         "Belt Upgrade Tier VII": "Big Processors Upgrade",
-        "Miner Upgrade Tier VII": "Level Shapes Bundle",
-        "Processors Upgrade Tier VII": "Chaining Extractor",
+        "Even faster": "Big Processors Upgrade",
+        "I need trains": "Big Processors Upgrade",
+        "Level 16": "Big Processors Upgrade",
+        "Level 5": "Big Processors Upgrade",
+        "Level 7": "Big Processors Upgrade",
+        "Painting Upgrade Tier IV": "Big Processors Upgrade",
+        "Processors Upgrade Tier III": "Big Processors Upgrade",
+        "Shapesanity 27": "Big Processors Upgrade",
+        "Shapesanity 31": "Big Processors Upgrade",
+        "Shapesanity 32": "Big Processors Upgrade",
+        "To the moon": "Big Processors Upgrade",
+        "Level 1": "Balancer",
+        "Level 1 Additional": "Storage",
+        "Efficiency 1": "Small Painting Upgrade",
+        "Level 11": "Small Painting Upgrade",
+        "Level 2": "Small Painting Upgrade",
+        "Level 23": "Small Painting Upgrade",
+        "Rotater": "Small Painting Upgrade",
+        "Shapesanity 17": "Small Painting Upgrade",
+        "Shapesanity 50": "Small Painting Upgrade",
+        "Cutter": "Big Belt Upgrade",
+        "Level 22": "Big Belt Upgrade",
+        "Level 3": "Big Belt Upgrade",
+        "Preparing to launch": "Big Belt Upgrade",
+        "Shapesanity 28": "Big Belt Upgrade",
+        "Shapesanity 4": "Big Belt Upgrade",
+        "Shapesanity 42": "Big Belt Upgrade",
+        "Storage": "Big Belt Upgrade",
+        "Wires": "Big Belt Upgrade",
+        "Belt Upgrade Tier II": "Small Miner Upgrade",
+        "Faster": "Small Miner Upgrade",
+        "It's piling up": "Small Miner Upgrade",
+        "Miner Upgrade Tier III": "Small Miner Upgrade",
+        "Perfectionist": "Small Miner Upgrade",
+        "Shapesanity 11": "Small Miner Upgrade",
+        "Shapesanity 15": "Small Miner Upgrade",
+        "Shapesanity 21": "Small Miner Upgrade",
+        "Shapesanity 29": "Small Miner Upgrade",
+        "Shapesanity 41": "Small Miner Upgrade",
+        "Shapesanity 49": "Small Miner Upgrade",
+        "Shapesanity 8": "Small Miner Upgrade",
+        "The logo!": "Small Miner Upgrade",
+        "Belt Upgrade Tier IV": "Blueprint Shapes Bundle",
+        "Branding specialist 1": "Blueprint Shapes Bundle",
+        "Miner Upgrade Tier II": "Blueprint Shapes Bundle",
+        "Miner Upgrade Tier V": "Blueprint Shapes Bundle",
+        "Painter": "Blueprint Shapes Bundle",
+        "Painting Upgrade Tier III": "Blueprint Shapes Bundle",
         "Painting Upgrade Tier VII": "Blueprint Shapes Bundle",
+        "Shapesanity 26": "Blueprint Shapes Bundle",
+        "Shapesanity 3": "Blueprint Shapes Bundle",
+        "Shapesanity 36": "Blueprint Shapes Bundle",
+        "Processors Upgrade Tier II": "Wires",
+        "Level 12": "Level Shapes Bundle",
+        "Level 14": "Level Shapes Bundle",
+        "Miner Upgrade Tier VII": "Level Shapes Bundle",
+        "Painting Upgrade Tier II": "Level Shapes Bundle",
+        "Processors Upgrade Tier IV": "Level Shapes Bundle",
+        "Shapesanity 38": "Level Shapes Bundle",
+        "Shapesanity 45": "Level Shapes Bundle",
+        "Stack overflow": "Level Shapes Bundle",
+        "It's a mess": "Virtual Processing",
+        "Oops": "Item Filter",
+        "Belt Upgrade Tier VI": "Big Miner Upgrade",
+        "Level 19": "Big Miner Upgrade",
+        "Level 24": "Big Miner Upgrade",
+        "Level 4": "Big Miner Upgrade",
+        "Level 9": "Big Miner Upgrade",
+        "Now it's easy": "Big Miner Upgrade",
+        "Shapesanity 1": "Big Miner Upgrade",
+        "Shapesanity 19": "Big Miner Upgrade",
+        "Shapesanity 30": "Big Miner Upgrade",
+        "Shapesanity 46": "Big Miner Upgrade",
+        "The next dimension": "Big Miner Upgrade",
+        "Wait, they stack?": "Big Miner Upgrade",
+        "Belt Upgrade Tier III": "Small Belt Upgrade",
+        "Level 13": "Small Belt Upgrade",
+        "Level 18": "Small Belt Upgrade",
+        "Level 20 Additional": "Small Belt Upgrade",
+        "Level 25": "Small Belt Upgrade",
+        "Level 6": "Small Belt Upgrade",
+        "Miner Upgrade Tier VI": "Small Belt Upgrade",
+        "Shapesanity 10": "Small Belt Upgrade",
+        "Shapesanity 2": "Small Belt Upgrade",
+        "Shapesanity 23": "Small Belt Upgrade",
+        "Shapesanity 25": "Small Belt Upgrade",
+        "Shapesanity 40": "Small Belt Upgrade",
+        "Shapesanity 9": "Small Belt Upgrade",
+        "Efficiency 2": "Upgrade Shapes Bundle",
+        "Level 8": "Upgrade Shapes Bundle",
+        "Miner Upgrade Tier IV": "Upgrade Shapes Bundle",
+        "Processors Upgrade Tier VI": "Upgrade Shapes Bundle",
+        "Shapesanity 14": "Upgrade Shapes Bundle",
+        "Shapesanity 24": "Upgrade Shapes Bundle",
+        "Shapesanity 37": "Upgrade Shapes Bundle",
+        "Shapesanity 6": "Upgrade Shapes Bundle",
+        "Level 10": "Stacker",
         "Belt Upgrade Tier VIII": "Big Painting Upgrade",
+        "Copy-Pasta": "Big Painting Upgrade",
+        "Get rid of them": "Big Painting Upgrade",
+        "Level 15": "Big Painting Upgrade",
+        "Level 17": "Big Painting Upgrade",
+        "Shapesanity 18": "Big Painting Upgrade",
+        "Shapesanity 33": "Big Painting Upgrade",
+        "Shapesanity 47": "Big Painting Upgrade",
+        "Shapesanity 48": "Big Painting Upgrade",
+        "Shapesanity 7": "Big Painting Upgrade",
+        "Level 20 Additional 2": "Tunnel Tier II",
+        "Goal": "Goal",
+        "Processors Upgrade Tier V": "Compact Merger",
+        "Painting Upgrade Tier VI": "Painter",
+        "Processors Upgrade Tier VII": "Chaining Extractor",
         "Miner Upgrade Tier VIII": "Rotator (180°)",
         "Processors Upgrade Tier VIII": "Blueprints",
-        "Painting Upgrade Tier VIII": "Small Processors Upgrade",
-        "Even faster": "Big Processors Upgrade",
-        "Painter": "Blueprint Shapes Bundle",
-        "Cutter": "Big Belt Upgrade",
-        "Rotater": "Small Painting Upgrade",
-        "Wait, they stack?": "Big Miner Upgrade",
-        "Stack overflow": "Level Shapes Bundle",
-        "Storage": "Big Belt Upgrade",
-        "Get rid of them": "Big Painting Upgrade",
-        "Now it's easy": "Big Miner Upgrade",
-        "Copy-Pasta": "Big Painting Upgrade",
         "Computer Guy": "Color Mixer",
-        "The next dimension": "Big Miner Upgrade",
-        "Perfectionist": "Small Miner Upgrade",
-        "The logo!": "Small Miner Upgrade",
-        "To the moon": "Big Processors Upgrade",
-        "It's piling up": "Small Miner Upgrade",
         "I'll use it later": "Constant Signal",
         "I've seen that before ...": "Double Painter",
         "Memories from the past": "Tunnel",
-        "Preparing to launch": "Big Belt Upgrade",
-        "SpaceY": "Small Processors Upgrade",
-        "Efficiency 1": "Small Painting Upgrade",
-        "Branding specialist 1": "Blueprint Shapes Bundle",
-        "Efficiency 2": "Upgrade Shapes Bundle",
         "Branding specialist 2": "Compact Splitter",
-        "Shapesanity 1": "Big Miner Upgrade",
-        "Shapesanity 2": "Small Belt Upgrade",
-        "Shapesanity 3": "Blueprint Shapes Bundle",
         "Shapesanity 22": "Cutter",
-        "Shapesanity 25": "Small Belt Upgrade",
-        "Shapesanity 10": "Small Belt Upgrade",
-        "Shapesanity 17": "Small Painting Upgrade",
-        "Shapesanity 7": "Big Painting Upgrade",
         "Shapesanity 20": "Logic Gates",
         "Shapesanity 13": "Quad Cutter",
-        "Shapesanity 14": "Upgrade Shapes Bundle",
-        "Shapesanity 24": "Upgrade Shapes Bundle",
-        "Shapesanity 8": "Small Miner Upgrade",
-        "Shapesanity 9": "Small Belt Upgrade",
-        "Shapesanity 18": "Big Painting Upgrade",
-        "Shapesanity 36": "Blueprint Shapes Bundle",
-        "Shapesanity 11": "Small Miner Upgrade",
         "Shapesanity 12": "Display",
-        "Shapesanity 19": "Big Miner Upgrade",
-        "Shapesanity 21": "Small Miner Upgrade",
-        "Shapesanity 23": "Small Belt Upgrade",
-        "Shapesanity 29": "Small Miner Upgrade",
-        "Shapesanity 31": "Big Processors Upgrade",
-        "Shapesanity 32": "Big Processors Upgrade",
-        "Shapesanity 6": "Upgrade Shapes Bundle",
-        "Shapesanity 15": "Small Miner Upgrade",
-        "Shapesanity 27": "Big Processors Upgrade",
-        "Shapesanity 30": "Big Miner Upgrade",
-        "Shapesanity 33": "Big Painting Upgrade",
         "Shapesanity 34": "Belt Reader",
         "Shapesanity 35": "Rotator",
-        "Shapesanity 38": "Level Shapes Bundle",
-        "Shapesanity 40": "Small Belt Upgrade",
-        "Shapesanity 41": "Small Miner Upgrade",
-        "Shapesanity 42": "Big Belt Upgrade",
-        "Shapesanity 43": "Small Processors Upgrade",
         "Shapesanity 44": "Trash",
-        "Shapesanity 45": "Level Shapes Bundle",
-        "Shapesanity 46": "Big Miner Upgrade",
-        "Shapesanity 47": "Big Painting Upgrade",
-        "Shapesanity 48": "Big Painting Upgrade",
-        "Shapesanity 4": "Big Belt Upgrade",
-        "Shapesanity 16": "Small Processors Upgrade",
-        "Shapesanity 5": "Small Processors Upgrade",
-        "Shapesanity 37": "Upgrade Shapes Bundle",
-        "Shapesanity 49": "Small Miner Upgrade",
-        "Shapesanity 50": "Small Painting Upgrade",
-        "Shapesanity 26": "Blueprint Shapes Bundle",
-        "Shapesanity 28": "Big Belt Upgrade",
         "Shapesanity 39": "Rotator (CCW)",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "My eyes no longer hurt": True,
+        "Getting into it": True,
+        "GPS": False,
+        "I need trains": False,
+        "Level 1": True,
+        "Level 1 Additional": True,
+        "Level 2": False,
+        "Level 3": True,
+        "Belt Upgrade Tier II": False,
+        "Miner Upgrade Tier II": False,
+        "Processors Upgrade Tier II": True,
+        "Painting Upgrade Tier II": False,
+        "It's a mess": False,
+        "Oops": False,
+        "Level 4": False,
+        "Level 5": False,
+        "Level 6": False,
+        "Level 7": False,
+        "Level 8": False,
+        "Level 9": False,
+        "Level 10": True,
+        "Level 11": False,
+        "Level 12": False,
+        "Level 13": False,
+        "Level 14": False,
+        "Level 15": False,
+        "Level 16": False,
+        "Level 17": False,
+        "Level 18": False,
+        "Level 19": False,
+        "Level 20 Additional": False,
+        "Level 20 Additional 2": False,
+        "Level 20": False,
+        "Level 21": False,
+        "Level 22": True,
+        "Level 23": False,
+        "Level 24": False,
+        "Level 25": False,
+        "Wires": True,
+        "Goal": True,
+        "Belt Upgrade Tier III": False,
+        "Miner Upgrade Tier III": False,
+        "Processors Upgrade Tier III": False,
+        "Painting Upgrade Tier III": False,
+        "Belt Upgrade Tier IV": False,
+        "Miner Upgrade Tier IV": False,
+        "Processors Upgrade Tier IV": False,
+        "Painting Upgrade Tier IV": False,
+        "Belt Upgrade Tier V": False,
+        "Miner Upgrade Tier V": False,
+        "Processors Upgrade Tier V": True,
+        "Painting Upgrade Tier V": False,
+        "Faster": False,
+        "Belt Upgrade Tier VI": False,
+        "Miner Upgrade Tier VI": False,
+        "Processors Upgrade Tier VI": False,
+        "Painting Upgrade Tier VI": True,
+        "Belt Upgrade Tier VII": False,
+        "Miner Upgrade Tier VII": False,
+        "Processors Upgrade Tier VII": False,
+        "Painting Upgrade Tier VII": False,
+        "Belt Upgrade Tier VIII": False,
+        "Miner Upgrade Tier VIII": True,
+        "Processors Upgrade Tier VIII": True,
+        "Painting Upgrade Tier VIII": False,
+        "Even faster": False,
+        "Painter": False,
+        "Cutter": True,
+        "Rotater": False,
+        "Wait, they stack?": False,
+        "Stack overflow": False,
+        "Storage": True,
+        "Get rid of them": False,
+        "Now it's easy": False,
+        "Copy-Pasta": False,
+        "Computer Guy": True,
+        "The next dimension": False,
+        "Perfectionist": False,
+        "The logo!": False,
+        "To the moon": False,
+        "It's piling up": False,
+        "I'll use it later": True,
+        "I've seen that before ...": True,
+        "Memories from the past": True,
+        "Preparing to launch": True,
+        "SpaceY": False,
+        "Efficiency 1": False,
+        "Branding specialist 1": False,
+        "Efficiency 2": False,
+        "Branding specialist 2": True,
+        "Shapesanity 1": False,
+        "Shapesanity 2": False,
+        "Shapesanity 3": False,
+        "Shapesanity 22": True,
+        "Shapesanity 25": False,
+        "Shapesanity 10": False,
+        "Shapesanity 17": False,
+        "Shapesanity 7": False,
+        "Shapesanity 20": False,
+        "Shapesanity 13": True,
+        "Shapesanity 14": False,
+        "Shapesanity 24": False,
+        "Shapesanity 8": False,
+        "Shapesanity 9": False,
+        "Shapesanity 18": False,
+        "Shapesanity 36": False,
+        "Shapesanity 11": False,
+        "Shapesanity 12": False,
+        "Shapesanity 19": False,
+        "Shapesanity 21": False,
+        "Shapesanity 23": False,
+        "Shapesanity 29": False,
+        "Shapesanity 31": False,
+        "Shapesanity 32": False,
+        "Shapesanity 6": False,
+        "Shapesanity 15": False,
+        "Shapesanity 27": False,
+        "Shapesanity 30": False,
+        "Shapesanity 33": False,
+        "Shapesanity 34": False,
+        "Shapesanity 35": True,
+        "Shapesanity 38": False,
+        "Shapesanity 40": False,
+        "Shapesanity 41": False,
+        "Shapesanity 42": True,
+        "Shapesanity 43": False,
+        "Shapesanity 44": True,
+        "Shapesanity 45": False,
+        "Shapesanity 46": False,
+        "Shapesanity 47": False,
+        "Shapesanity 48": False,
+        "Shapesanity 4": True,
+        "Shapesanity 16": False,
+        "Shapesanity 5": False,
+        "Shapesanity 37": False,
+        "Shapesanity 49": False,
+        "Shapesanity 50": False,
+        "Shapesanity 26": False,
+        "Shapesanity 28": True,
+        "Shapesanity 39": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -416,14 +561,38 @@ class ShapezWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = shapezWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = shapezWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = shapezWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -450,27 +619,81 @@ class ShapezWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

@@ -131,7 +131,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
-        And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 12), Has('Hammer'))
+        And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 12), Has('Hammer'))
     )
 
     world.set_rule(
@@ -171,7 +171,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
-        And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 8), Has('Press'))
+        And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8), Has('Press'))
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
@@ -316,117 +316,117 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Numberman Code 09", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 10", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 11", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 12", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 13", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 14", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 15", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 16", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 2)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 2)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 17", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 18", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 19", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 20", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 21", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 22", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 23", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 24", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 4)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 4)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 25", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 8)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 26", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 8)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 27", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 8)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 28", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 8)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 29", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 10)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 10)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 30", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 10)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 10)
     )
 
     world.set_rule(
         multiworld.get_location("Numberman Code 31", player),
-        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score"), ">", 10)
+        Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 10)
     )
 
     world.set_rule(
@@ -436,7 +436,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("ACDC 1 PMD", player),
-        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_www_id, helper_name="has_www_id"))
+        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_www_id, helper_name="has_www_id", body_rule=Has("WWW ID")))
     )
 
     world.set_rule(
@@ -616,7 +616,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Yoka 1 PMD", player),
-        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_press, helper_name="has_press"))
+        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_press, helper_name="has_press", body_rule=Has("Press")))
     )
 
     world.set_rule(

@@ -229,7 +229,10 @@ def run_fuzzer_test(
     runs: int,
     jobs: int,
     timeout: int,
-    seed: Optional[int]
+    seed: Optional[int],
+    default_options: Optional[str] = None,
+    disallow_options: Optional[str] = None,
+    fractional_spheres: bool = False
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -240,6 +243,9 @@ def run_fuzzer_test(
         jobs: Number of parallel jobs
         timeout: Timeout per generation in seconds
         seed: Random seed for reproducibility (None = random)
+        default_options: Comma-separated options to leave at defaults
+        disallow_options: Options to disallow (format: option=value1,value2;option2=value)
+        fractional_spheres: Enable fractional sphere logic for UT comparison
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -282,16 +288,46 @@ def run_fuzzer_test(
     if seed is not None:
         cmd.extend(["--seed", str(seed)])
 
+    if default_options:
+        cmd.extend(["--default-options", default_options])
+
+    if disallow_options:
+        cmd.extend(["--disallow-options", disallow_options])
+
+    if fractional_spheres:
+        cmd.append("--fractional-spheres")
+
     print(f"  Running: {' '.join(cmd[:10])}...")
 
     try:
-        proc = subprocess.run(
+        # Stream output in real-time for progress visibility
+        # Use Popen to capture stderr while streaming stdout
+        proc = subprocess.Popen(
             cmd,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=runs * timeout + 300,  # Allow extra time for overhead
             cwd=str(PROJECT_ROOT)
         )
+
+        # Read and print stdout in real-time
+        stdout_lines = []
+        while True:
+            line = proc.stdout.readline()
+            if line:
+                print(f"    {line.rstrip()}")
+                stdout_lines.append(line)
+                sys.stdout.flush()
+            elif proc.poll() is not None:
+                # Process finished, read any remaining output
+                for remaining_line in proc.stdout:
+                    print(f"    {remaining_line.rstrip()}")
+                    stdout_lines.append(remaining_line)
+                break
+
+        # Get stderr after process completes
+        stderr_output = proc.stderr.read()
+        returncode = proc.returncode
 
         # Check for report.json
         report_file = FUZZ_OUTPUT_DIR / "report.json"
@@ -320,18 +356,18 @@ def run_fuzzer_test(
             # No report file - check for errors
             error_details = []
             error_details.append("Report file not found")
-            if proc.returncode != 0:
-                error_details.append(f"Exit code: {proc.returncode}")
-            if proc.stderr:
-                stderr = proc.stderr.strip()
+            if returncode != 0:
+                error_details.append(f"Exit code: {returncode}")
+            if stderr_output:
+                stderr = stderr_output.strip()
                 if len(stderr) > 1000:
                     stderr = "..." + stderr[-1000:]
                 error_details.append(f"stderr: {stderr}")
-            if proc.stdout:
-                stdout = proc.stdout.strip()
-                if len(stdout) > 1000:
-                    stdout = "..." + stdout[-1000:]
-                error_details.append(f"stdout: {stdout}")
+            stdout_text = ''.join(stdout_lines)
+            if stdout_text:
+                if len(stdout_text) > 1000:
+                    stdout_text = "..." + stdout_text[-1000:]
+                error_details.append(f"stdout: {stdout_text}")
             result["error"] = " | ".join(error_details)
 
     except subprocess.TimeoutExpired:
@@ -442,6 +478,29 @@ def main():
         dest='prefer_native_ut',
         action='store_false',
         help='Disable native UT preference, use worldgen-based tracking for all worlds'
+    )
+
+    # Fuzzer options passed through to fuzz.py
+    parser.add_argument(
+        '--default-options',
+        type=str,
+        default=None,
+        help='Comma-separated list of option names to leave at defaults instead of randomizing. '
+             'Example: --default-options mode,entrance_shuffle,glitches_required'
+    )
+    parser.add_argument(
+        '--disallow-options',
+        type=str,
+        default=None,
+        help='Disallow specific values for options. Format: option=value1,value2;option2=value. '
+             'Example: --disallow-options glitches_required=minor_glitches,overworld_glitches;mode=inverted'
+    )
+    parser.add_argument(
+        '--fractional-spheres',
+        action='store_true',
+        default=False,
+        help='Enable fractional sphere logic for UT comparison. Handles cascading item dependencies '
+             'within spheres by iterating until no new locations become accessible.'
     )
 
     args = parser.parse_args()
@@ -624,7 +683,10 @@ def main():
             runs=args.runs,
             jobs=args.jobs,
             timeout=args.timeout,
-            seed=args.seed
+            seed=args.seed,
+            default_options=args.default_options,
+            disallow_options=args.disallow_options,
+            fractional_spheres=args.fractional_spheres
         )
 
         # Store result

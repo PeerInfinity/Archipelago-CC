@@ -348,7 +348,7 @@
             "item": {
               "name": "Strawberry",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -666,7 +666,7 @@
             "item": {
               "name": "Strawberry",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1050,7 +1050,7 @@
             "item": {
               "name": "Strawberry",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1140,7 +1140,7 @@
             "item": {
               "name": "Strawberry",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1257,7 +1257,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 20,
+        "classification_counts": {
+          "progression_skip_balancing": 16,
+          "filler": 4
+        }
       },
       "Dash Refills": {
         "name": "Dash Refills",
@@ -1550,45 +1554,45 @@
   },
   "canonical_placements": {
     "1": {
+      "Badeline Island Cassette Strawberry": "Strawberry",
+      "Badeline Tower Bottom Strawberry": "Strawberry",
+      "Breakable Blocks Strawberry": "Strawberry",
+      "Cassette Hidden in the House Strawberry": "Strawberry",
+      "Distant Feather Cassette Strawberry": "Strawberry",
+      "Double Dash Puzzle Strawberry": "Strawberry",
+      "Double Dash Spring Strawberry": "Strawberry",
+      "Fall Through Spike Floor Strawberry": "Strawberry",
+      "Falling Blocks Strawberry": "Strawberry",
+      "Feather Arches Cassette Strawberry": "Strawberry",
+      "Feather Chain Strawberry": "Strawberry",
+      "Feather Maze Strawberry": "Strawberry",
       "First Strawberry": "Strawberry",
+      "Girders Strawberry": "Strawberry",
+      "Troll Strawberry": "Strawberry",
+      "You Are Ready Cassette Strawberry": "Strawberry",
+      "Badeline Tower Breakable Bottom Strawberry": "Strawberry",
+      "Badeline Tower Cassette Strawberry": "Strawberry",
+      "Theo Tower Lower Cassette Strawberry": "Strawberry",
+      "Traffic Block Strawberry": "Strawberry",
       "Intro Checkpoint": "Intro Checkpoint",
       "Floating Blocks Strawberry": "Breakable Blocks",
       "South-East Tower Top Strawberry": "Dash Refills",
+      "Double Dash Spike Climb Strawberry": "Raspberry",
       "Theo Strawberry": "Raspberry",
-      "Fall Through Spike Floor Strawberry": "Strawberry",
       "South-West Dash Refills Strawberry": "Cassettes",
       "South-East Tower Side Strawberry": "Double Dash Refills",
-      "Theo Tower Lower Cassette Strawberry": "Strawberry",
       "Theo Tower Upper Cassette Strawberry": "Traffic Blocks",
-      "You Are Ready Cassette Strawberry": "Strawberry",
       "Granny Checkpoint": "Granny Checkpoint",
       "South-East Tower Checkpoint": "South-East Tower Checkpoint",
       "Climb Sign Checkpoint": "Climb Sign Checkpoint",
-      "Troll Strawberry": "Strawberry",
-      "Falling Blocks Strawberry": "Strawberry",
-      "Girders Strawberry": "Strawberry",
-      "Breakable Blocks Strawberry": "Strawberry",
       "South End of Bridge Cassette Strawberry": "Springs",
       "North End of Bridge Cassette Strawberry": "Feathers",
       "Freeway Checkpoint": "Freeway Checkpoint",
       "Freeway Feather Checkpoint": "Freeway Feather Checkpoint",
-      "Traffic Block Strawberry": "Strawberry",
-      "Feather Maze Strawberry": "Strawberry",
-      "Feather Chain Strawberry": "Strawberry",
       "Feather Hidden Strawberry": "Coins",
-      "Distant Feather Cassette Strawberry": "Strawberry",
-      "Feather Arches Cassette Strawberry": "Strawberry",
       "Feather Maze Checkpoint": "Feather Maze Checkpoint",
-      "Double Dash Puzzle Strawberry": "Strawberry",
-      "Double Dash Spike Climb Strawberry": "Raspberry",
-      "Double Dash Spring Strawberry": "Strawberry",
-      "Cassette Hidden in the House Strawberry": "Strawberry",
       "Double Dash House Checkpoint": "Double Dash House Checkpoint",
-      "Badeline Tower Bottom Strawberry": "Strawberry",
-      "Badeline Tower Breakable Bottom Strawberry": "Strawberry",
-      "Badeline Tower Cassette Strawberry": "Strawberry",
       "Badeline Tower Checkpoint": "Badeline Tower Checkpoint",
-      "Badeline Island Cassette Strawberry": "Strawberry",
       "Badeline Island Checkpoint": "Badeline Island Checkpoint"
     }
   },
@@ -1607,6 +1611,7 @@
     "1": {
       "game": "Celeste 64 WorldGen",
       "world_class_name": "Celeste64World",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "badeline_chaser_frequency": 0,

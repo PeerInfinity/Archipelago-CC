@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -28,6 +28,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Advanced AI": 1,
     "Advanced Ballistics": 1,
     "Advanced Power Cells": 1,
+    "Animal Husbandry": 1,
     "Archery": 1,
     "Astronomy": 1,
     "Ballistics": 1,
@@ -62,6 +63,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Faith: Medium": 2,
     "Faith: Small": 1,
     "Feudalism": 1,
+    "Foreign Trade": 1,
     "Future Civic": 1,
     "Future Tech": 1,
     "Global Warming Mitigation": 1,
@@ -76,6 +78,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Ideology": 1,
     "Information Warfare": 1,
     "Iron Working": 1,
+    "Irrigation": 1,
     "Lasers": 1,
     "Machinery": 1,
     "Masonry": 1,
@@ -87,6 +90,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Military Tactics": 1,
     "Military Tradition": 1,
     "Military Training": 1,
+    "Mining": 1,
     "Mobilization": 1,
     "Nationalism": 1,
     "Naval Tradition": 1,
@@ -100,13 +104,13 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Predictive Systems": 1,
     "Printing": 1,
     "Progressive Aerodrome": 2,
-    "Progressive Campus": 2,
+    "Progressive Campus": 3,
     "Progressive Commercial Hub": 3,
     "Progressive Diplomatic Quarter": 2,
-    "Progressive Encampment": 2,
+    "Progressive Encampment": 3,
     "Progressive Entertainment Complex": 3,
     "Progressive Harbor": 2,
-    "Progressive Holy Site": 1,
+    "Progressive Holy Site": 2,
     "Progressive Industrial Zone": 4,
     "Progressive Neighborhood": 3,
     "Progressive Preserve": 2,
@@ -118,6 +122,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Reformed Church": 1,
     "Rifling": 1,
     "Robotics": 1,
+    "Sailing": 1,
     "Sanitation": 1,
     "Scientific Theory": 1,
     "Scorched Earth": 1,
@@ -128,6 +133,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Social Media": 1,
     "Space Race": 1,
     "Square Rigging": 1,
+    "State Workforce": 1,
     "Stealth Technology": 1,
     "Steam Power": 1,
     "Steel": 1,
@@ -143,15 +149,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "TECH_AP_ANCIENT_01": "State Workforce",
-    "TECH_AP_ANCIENT_02": "Mining",
-    "TECH_AP_ANCIENT_03": "Sailing",
-    "TECH_AP_ANCIENT_05": "Animal Husbandry",
-    "TECH_AP_ANCIENT_06": "Irrigation",
-    "TECH_AP_ANCIENT_07": "Progressive Holy Site",
-    "TECH_AP_ANCIENT_08": "Progressive Campus",
-    "CIVIC_AP_ANCIENT_04": "Progressive Encampment",
-    "CIVIC_AP_ANCIENT_06": "Foreign Trade",
     "Complete a victory type": "Victory",
 }
 
@@ -211,48 +208,60 @@ class CivVIWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "CIVIC_AP_RENAISSANCE_23": "Progressive Theater",
         "TECH_AP_ANCIENT_00": "Progressive Theater",
+        "TECH_AP_MODERN_47": "Progressive Theater",
         "TECH_AP_ANCIENT_01": "State Workforce",
         "TECH_AP_ANCIENT_02": "Mining",
         "TECH_AP_ANCIENT_03": "Sailing",
         "TECH_AP_ANCIENT_04": "Shipbuilding",
         "TECH_AP_ANCIENT_05": "Animal Husbandry",
         "TECH_AP_ANCIENT_06": "Irrigation",
+        "CIVIC_AP_CLASSICAL_11": "Progressive Holy Site",
         "TECH_AP_ANCIENT_07": "Progressive Holy Site",
+        "CIVIC_AP_CLASSICAL_12": "Progressive Campus",
         "TECH_AP_ANCIENT_08": "Progressive Campus",
+        "TECH_AP_MODERN_48": "Progressive Campus",
         "TECH_AP_ANCIENT_09": "Sanitation",
         "TECH_AP_ANCIENT_10": "Military Tactics",
         "CIVIC_AP_ANCIENT_00": "Stirrups",
         "CIVIC_AP_ANCIENT_01": "Progressive Neighborhood",
+        "CIVIC_AP_INDUSTRIAL_29": "Progressive Neighborhood",
+        "TECH_AP_RENAISSANCE_30": "Progressive Neighborhood",
         "CIVIC_AP_ANCIENT_02": "Recorded History",
         "CIVIC_AP_ANCIENT_03": "Political Philosophy",
         "CIVIC_AP_ANCIENT_04": "Progressive Encampment",
+        "CIVIC_AP_INDUSTRIAL_32": "Progressive Encampment",
+        "CIVIC_AP_MEDIEVAL_14": "Progressive Encampment",
         "CIVIC_AP_ANCIENT_05": "Progressive Diplomatic Quarter",
+        "TECH_AP_RENAISSANCE_28": "Progressive Diplomatic Quarter",
         "CIVIC_AP_ANCIENT_06": "Foreign Trade",
         "GOODY_HUT_1": "Faith: Large",
         "GOODY_HUT_2": "Gold: Small",
         "GOODY_HUT_3": "Faith: Small",
+        "GOODY_HUT_10": "Gold: Medium",
         "GOODY_HUT_4": "Gold: Medium",
         "GOODY_HUT_5": "Gold: Medium",
         "GOODY_HUT_6": "Additional Population",
         "GOODY_HUT_7": "Faith: Medium",
         "GOODY_HUT_8": "Faith: Medium",
         "GOODY_HUT_9": "Governor Title",
-        "GOODY_HUT_10": "Gold: Medium",
         "TECH_AP_CLASSICAL_11": "Ballistics",
         "TECH_AP_CLASSICAL_12": "Early Empire",
         "TECH_AP_CLASSICAL_13": "Progressive Commercial Hub",
         "TECH_AP_CLASSICAL_14": "Progressive Commercial Hub",
+        "TECH_AP_MEDIEVAL_25": "Progressive Commercial Hub",
         "TECH_AP_CLASSICAL_15": "Gunpowder",
         "TECH_AP_CLASSICAL_16": "Progressive Harbor",
+        "TECH_AP_RENAISSANCE_31": "Progressive Harbor",
         "TECH_AP_CLASSICAL_17": "Computers",
         "TECH_AP_CLASSICAL_18": "Steel",
         "CIVIC_AP_CLASSICAL_07": "Information Warfare",
         "CIVIC_AP_CLASSICAL_08": "Progressive Entertainment Complex",
+        "TECH_AP_INDUSTRIAL_41": "Progressive Entertainment Complex",
+        "TECH_AP_MODERN_46": "Progressive Entertainment Complex",
         "CIVIC_AP_CLASSICAL_09": "Predictive Systems",
         "CIVIC_AP_CLASSICAL_10": "Rapid Deployment",
-        "CIVIC_AP_CLASSICAL_11": "Progressive Holy Site",
-        "CIVIC_AP_CLASSICAL_12": "Progressive Campus",
         "CIVIC_AP_CLASSICAL_13": "Totalitarianism",
         "TECH_AP_MEDIEVAL_19": "Divine Right",
         "TECH_AP_MEDIEVAL_20": "Rifling",
@@ -260,55 +269,45 @@ class CivVIWorld(RuleWorldMixin, World):
         "TECH_AP_MEDIEVAL_22": "Combined Arms",
         "TECH_AP_MEDIEVAL_23": "Cybernetics",
         "TECH_AP_MEDIEVAL_24": "Composites",
-        "TECH_AP_MEDIEVAL_25": "Progressive Commercial Hub",
         "TECH_AP_MEDIEVAL_67": "Exploration",
-        "CIVIC_AP_MEDIEVAL_14": "Progressive Encampment",
         "CIVIC_AP_MEDIEVAL_15": "Social Media",
         "CIVIC_AP_MEDIEVAL_16": "Printing",
         "CIVIC_AP_MEDIEVAL_17": "Progressive Industrial Zone",
+        "CIVIC_AP_MODERN_34": "Progressive Industrial Zone",
+        "CIVIC_AP_MODERN_35": "Progressive Industrial Zone",
+        "TECH_AP_INDUSTRIAL_38": "Progressive Industrial Zone",
         "CIVIC_AP_MEDIEVAL_18": "Engineering",
         "CIVIC_AP_MEDIEVAL_19": "Guidance Systems",
         "CIVIC_AP_MEDIEVAL_20": "Refining",
         "TECH_AP_RENAISSANCE_26": "Colonialism",
         "TECH_AP_RENAISSANCE_27": "Exodus Imperative",
-        "TECH_AP_RENAISSANCE_28": "Progressive Diplomatic Quarter",
         "TECH_AP_RENAISSANCE_29": "Advanced Ballistics",
-        "TECH_AP_RENAISSANCE_30": "Progressive Neighborhood",
-        "TECH_AP_RENAISSANCE_31": "Progressive Harbor",
         "TECH_AP_RENAISSANCE_32": "Cartography",
         "TECH_AP_RENAISSANCE_33": "Reformed Church",
         "TECH_AP_RENAISSANCE_34": "Digital Democracy",
         "CIVIC_AP_RENAISSANCE_21": "Suffrage",
         "CIVIC_AP_RENAISSANCE_22": "Square Rigging",
-        "CIVIC_AP_RENAISSANCE_23": "Progressive Theater",
         "CIVIC_AP_RENAISSANCE_24": "Civil Service",
         "CIVIC_AP_RENAISSANCE_25": "Guilds",
         "CIVIC_AP_RENAISSANCE_26": "The Wheel",
         "TECH_AP_INDUSTRIAL_35": "Defensive Tactics",
         "TECH_AP_INDUSTRIAL_36": "Nationalism",
         "TECH_AP_INDUSTRIAL_37": "Nuclear Fusion",
-        "TECH_AP_INDUSTRIAL_38": "Progressive Industrial Zone",
         "TECH_AP_INDUSTRIAL_39": "Naval Tradition",
         "TECH_AP_INDUSTRIAL_40": "Global Warming Mitigation",
-        "TECH_AP_INDUSTRIAL_41": "Progressive Entertainment Complex",
         "TECH_AP_INDUSTRIAL_42": "Advanced AI",
         "CIVIC_AP_INDUSTRIAL_27": "Globalization",
         "CIVIC_AP_INDUSTRIAL_28": "Lasers",
-        "CIVIC_AP_INDUSTRIAL_29": "Progressive Neighborhood",
         "CIVIC_AP_INDUSTRIAL_30": "The Enlightenment",
         "CIVIC_AP_INDUSTRIAL_31": "Progressive Preserve",
-        "CIVIC_AP_INDUSTRIAL_32": "Progressive Encampment",
+        "TECH_AP_ATOMIC_53": "Progressive Preserve",
         "CIVIC_AP_INDUSTRIAL_33": "Civil Engineering",
         "TECH_AP_MODERN_43": "Opera and Ballet",
         "TECH_AP_MODERN_44": "Castles",
         "TECH_AP_MODERN_45": "Class Struggle",
-        "TECH_AP_MODERN_46": "Progressive Entertainment Complex",
-        "TECH_AP_MODERN_47": "Progressive Theater",
-        "TECH_AP_MODERN_48": "Progressive Campus",
+        "TECH_AP_ATOMIC_50": "Progressive Aerodrome",
         "TECH_AP_MODERN_49": "Progressive Aerodrome",
         "TECH_AP_MODERN_68": "Future Tech",
-        "CIVIC_AP_MODERN_34": "Progressive Industrial Zone",
-        "CIVIC_AP_MODERN_35": "Progressive Industrial Zone",
         "CIVIC_AP_MODERN_36": "Mobilization",
         "CIVIC_AP_MODERN_37": "Mercantilism",
         "CIVIC_AP_MODERN_38": "Military Tradition",
@@ -316,11 +315,12 @@ class CivVIWorld(RuleWorldMixin, World):
         "CIVIC_AP_MODERN_40": "Mass Media",
         "CIVIC_AP_MODERN_41": "Robotics",
         "CIVIC_AP_MODERN_42": "Stealth Technology",
-        "TECH_AP_ATOMIC_50": "Progressive Aerodrome",
         "TECH_AP_ATOMIC_51": "Ideology",
+        "CIVIC_AP_FUTURE_57": "Progressive Space Port",
+        "CIVIC_AP_INFORMATION_49": "Progressive Space Port",
         "TECH_AP_ATOMIC_52": "Progressive Space Port",
-        "TECH_AP_ATOMIC_53": "Progressive Preserve",
         "TECH_AP_ATOMIC_54": "Progressive Space Port",
+        "TECH_AP_INFORMATION_64": "Progressive Space Port",
         "TECH_AP_ATOMIC_55": "Smart Power Doctrine",
         "TECH_AP_ATOMIC_56": "Near Future Governance",
         "TECH_AP_ATOMIC_57": "Nuclear Program",
@@ -335,11 +335,9 @@ class CivVIWorld(RuleWorldMixin, World):
         "TECH_AP_INFORMATION_61": "Synthetic Materials",
         "TECH_AP_INFORMATION_62": "Cultural Hegemony",
         "TECH_AP_INFORMATION_63": "Medieval Faires",
-        "TECH_AP_INFORMATION_64": "Progressive Space Port",
         "TECH_AP_INFORMATION_65": "Cold War",
         "TECH_AP_INFORMATION_66": "Corporate Libertarianism",
         "CIVIC_AP_INFORMATION_48": "Advanced Power Cells",
-        "CIVIC_AP_INFORMATION_49": "Progressive Space Port",
         "CIVIC_AP_INFORMATION_51": "Steam Power",
         "CIVIC_AP_INFORMATION_52": "Synthetic Technocracy",
         "CIVIC_AP_INFORMATION_53": "Siege Tactics",
@@ -355,11 +353,164 @@ class CivVIWorld(RuleWorldMixin, World):
         "TECH_AP_FUTURE_76": "Combustion",
         "CIVIC_AP_FUTURE_50": "Scorched Earth",
         "CIVIC_AP_FUTURE_56": "Cultural Heritage",
-        "CIVIC_AP_FUTURE_57": "Progressive Space Port",
         "CIVIC_AP_FUTURE_58": "Archery",
         "CIVIC_AP_FUTURE_59": "Seasteads",
         "CIVIC_AP_FUTURE_60": "Telecommunications",
         "Complete a victory type": "Victory",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "TECH_AP_ANCIENT_00": True,
+        "TECH_AP_ANCIENT_01": True,
+        "TECH_AP_ANCIENT_02": True,
+        "TECH_AP_ANCIENT_03": True,
+        "TECH_AP_ANCIENT_04": True,
+        "TECH_AP_ANCIENT_05": True,
+        "TECH_AP_ANCIENT_06": True,
+        "TECH_AP_ANCIENT_07": True,
+        "TECH_AP_ANCIENT_08": True,
+        "TECH_AP_ANCIENT_09": False,
+        "TECH_AP_ANCIENT_10": False,
+        "CIVIC_AP_ANCIENT_00": False,
+        "CIVIC_AP_ANCIENT_01": False,
+        "CIVIC_AP_ANCIENT_02": False,
+        "CIVIC_AP_ANCIENT_03": True,
+        "CIVIC_AP_ANCIENT_04": True,
+        "CIVIC_AP_ANCIENT_05": True,
+        "CIVIC_AP_ANCIENT_06": True,
+        "GOODY_HUT_1": False,
+        "GOODY_HUT_2": False,
+        "GOODY_HUT_3": False,
+        "GOODY_HUT_4": False,
+        "GOODY_HUT_5": False,
+        "GOODY_HUT_6": False,
+        "GOODY_HUT_7": False,
+        "GOODY_HUT_8": False,
+        "GOODY_HUT_9": False,
+        "GOODY_HUT_10": False,
+        "TECH_AP_CLASSICAL_11": False,
+        "TECH_AP_CLASSICAL_12": False,
+        "TECH_AP_CLASSICAL_13": True,
+        "TECH_AP_CLASSICAL_14": True,
+        "TECH_AP_CLASSICAL_15": False,
+        "TECH_AP_CLASSICAL_16": True,
+        "TECH_AP_CLASSICAL_17": False,
+        "TECH_AP_CLASSICAL_18": False,
+        "CIVIC_AP_CLASSICAL_07": False,
+        "CIVIC_AP_CLASSICAL_08": True,
+        "CIVIC_AP_CLASSICAL_09": False,
+        "CIVIC_AP_CLASSICAL_10": False,
+        "CIVIC_AP_CLASSICAL_11": True,
+        "CIVIC_AP_CLASSICAL_12": True,
+        "CIVIC_AP_CLASSICAL_13": True,
+        "TECH_AP_MEDIEVAL_19": True,
+        "TECH_AP_MEDIEVAL_20": False,
+        "TECH_AP_MEDIEVAL_21": False,
+        "TECH_AP_MEDIEVAL_22": True,
+        "TECH_AP_MEDIEVAL_23": False,
+        "TECH_AP_MEDIEVAL_24": False,
+        "TECH_AP_MEDIEVAL_25": True,
+        "TECH_AP_MEDIEVAL_67": True,
+        "CIVIC_AP_MEDIEVAL_14": True,
+        "CIVIC_AP_MEDIEVAL_15": False,
+        "CIVIC_AP_MEDIEVAL_16": False,
+        "CIVIC_AP_MEDIEVAL_17": True,
+        "CIVIC_AP_MEDIEVAL_18": False,
+        "CIVIC_AP_MEDIEVAL_19": False,
+        "CIVIC_AP_MEDIEVAL_20": True,
+        "TECH_AP_RENAISSANCE_26": False,
+        "TECH_AP_RENAISSANCE_27": False,
+        "TECH_AP_RENAISSANCE_28": True,
+        "TECH_AP_RENAISSANCE_29": False,
+        "TECH_AP_RENAISSANCE_30": False,
+        "TECH_AP_RENAISSANCE_31": True,
+        "TECH_AP_RENAISSANCE_32": True,
+        "TECH_AP_RENAISSANCE_33": True,
+        "TECH_AP_RENAISSANCE_34": True,
+        "CIVIC_AP_RENAISSANCE_21": True,
+        "CIVIC_AP_RENAISSANCE_22": False,
+        "CIVIC_AP_RENAISSANCE_23": True,
+        "CIVIC_AP_RENAISSANCE_24": False,
+        "CIVIC_AP_RENAISSANCE_25": False,
+        "CIVIC_AP_RENAISSANCE_26": False,
+        "TECH_AP_INDUSTRIAL_35": False,
+        "TECH_AP_INDUSTRIAL_36": True,
+        "TECH_AP_INDUSTRIAL_37": False,
+        "TECH_AP_INDUSTRIAL_38": True,
+        "TECH_AP_INDUSTRIAL_39": False,
+        "TECH_AP_INDUSTRIAL_40": False,
+        "TECH_AP_INDUSTRIAL_41": True,
+        "TECH_AP_INDUSTRIAL_42": False,
+        "CIVIC_AP_INDUSTRIAL_27": False,
+        "CIVIC_AP_INDUSTRIAL_28": False,
+        "CIVIC_AP_INDUSTRIAL_29": False,
+        "CIVIC_AP_INDUSTRIAL_30": False,
+        "CIVIC_AP_INDUSTRIAL_31": False,
+        "CIVIC_AP_INDUSTRIAL_32": True,
+        "CIVIC_AP_INDUSTRIAL_33": False,
+        "TECH_AP_MODERN_43": False,
+        "TECH_AP_MODERN_44": False,
+        "TECH_AP_MODERN_45": True,
+        "TECH_AP_MODERN_46": True,
+        "TECH_AP_MODERN_47": True,
+        "TECH_AP_MODERN_48": True,
+        "TECH_AP_MODERN_49": True,
+        "TECH_AP_MODERN_68": False,
+        "CIVIC_AP_MODERN_34": True,
+        "CIVIC_AP_MODERN_35": True,
+        "CIVIC_AP_MODERN_36": False,
+        "CIVIC_AP_MODERN_37": False,
+        "CIVIC_AP_MODERN_38": False,
+        "CIVIC_AP_MODERN_39": True,
+        "CIVIC_AP_MODERN_40": False,
+        "CIVIC_AP_MODERN_41": False,
+        "CIVIC_AP_MODERN_42": False,
+        "TECH_AP_ATOMIC_50": True,
+        "TECH_AP_ATOMIC_51": False,
+        "TECH_AP_ATOMIC_52": True,
+        "TECH_AP_ATOMIC_53": False,
+        "TECH_AP_ATOMIC_54": True,
+        "TECH_AP_ATOMIC_55": False,
+        "TECH_AP_ATOMIC_56": False,
+        "TECH_AP_ATOMIC_57": False,
+        "CIVIC_AP_ATOMIC_43": False,
+        "CIVIC_AP_ATOMIC_44": False,
+        "CIVIC_AP_ATOMIC_45": False,
+        "CIVIC_AP_ATOMIC_46": False,
+        "CIVIC_AP_ATOMIC_47": False,
+        "TECH_AP_INFORMATION_58": False,
+        "TECH_AP_INFORMATION_59": False,
+        "TECH_AP_INFORMATION_60": False,
+        "TECH_AP_INFORMATION_61": False,
+        "TECH_AP_INFORMATION_62": False,
+        "TECH_AP_INFORMATION_63": False,
+        "TECH_AP_INFORMATION_64": True,
+        "TECH_AP_INFORMATION_65": False,
+        "TECH_AP_INFORMATION_66": True,
+        "CIVIC_AP_INFORMATION_48": False,
+        "CIVIC_AP_INFORMATION_49": True,
+        "CIVIC_AP_INFORMATION_51": False,
+        "CIVIC_AP_INFORMATION_52": True,
+        "CIVIC_AP_INFORMATION_53": False,
+        "CIVIC_AP_INFORMATION_54": False,
+        "CIVIC_AP_INFORMATION_55": False,
+        "TECH_AP_FUTURE_69": False,
+        "TECH_AP_FUTURE_70": False,
+        "TECH_AP_FUTURE_71": False,
+        "TECH_AP_FUTURE_72": False,
+        "TECH_AP_FUTURE_73": False,
+        "TECH_AP_FUTURE_74": False,
+        "TECH_AP_FUTURE_75": False,
+        "TECH_AP_FUTURE_76": False,
+        "CIVIC_AP_FUTURE_50": False,
+        "CIVIC_AP_FUTURE_56": False,
+        "CIVIC_AP_FUTURE_57": True,
+        "CIVIC_AP_FUTURE_58": False,
+        "CIVIC_AP_FUTURE_59": False,
+        "CIVIC_AP_FUTURE_60": False,
+        "Complete a victory type": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -460,14 +611,38 @@ class CivVIWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = CivilizationVIWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = CivilizationVIWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = CivilizationVIWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -512,27 +687,81 @@ class CivVIWorld(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

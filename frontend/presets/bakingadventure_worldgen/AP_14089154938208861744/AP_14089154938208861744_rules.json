@@ -682,6 +682,7 @@
     "1": {
       "game": "Baking Adventure WorldGen",
       "world_class_name": "BakingAdventureWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],

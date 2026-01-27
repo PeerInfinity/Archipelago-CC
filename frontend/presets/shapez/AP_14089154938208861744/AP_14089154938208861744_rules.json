@@ -5900,16 +5900,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "state_method",
-                "method": "count",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Rising Belt Upgrade"
-                  }
-                ]
-              },
               "body": [
                 {
                   "type": "assign",
@@ -5921,6 +5911,16 @@
                   }
                 }
               ],
+              "count": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Rising Belt Upgrade"
+                  }
+                ]
+              },
               "var": "_"
             },
             {

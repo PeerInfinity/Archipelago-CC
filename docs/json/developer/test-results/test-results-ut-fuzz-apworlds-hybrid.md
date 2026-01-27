@@ -1,10 +1,12 @@
 # Universal Tracker Fuzz Test Results (Hybrid)
 
-[<- Back to Test Results Summary](./test-results-summary.md)
+[<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
 [View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)
 
-**Generated:** 2026-01-24 12:58:42
+[📖 Learn about fuzz tests](../tests/test-fuzz.md)
+
+**Generated:** 2026-01-27 03:02:51
 
 **Source Data Created:** 2026-01-23T07:07:32.793827
 
