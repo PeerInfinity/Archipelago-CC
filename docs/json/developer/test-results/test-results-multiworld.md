@@ -8,9 +8,7 @@
 
 [View APWorld Template Results](./test-results-multiworld-apworld.md)
 
-[View WorldGen Template Results](./test-results-multiworld-worldgen.md)
-
-**Generated:** 2026-01-25 11:02:12
+**Generated:** 2026-01-27 22:55:57
 
 ## Summary
 
@@ -35,7 +33,7 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 147.3KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 120.3KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -58,7 +56,7 @@
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 13.4KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
