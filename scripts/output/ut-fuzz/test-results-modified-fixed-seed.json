@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-26T22:26:46.269130",
-    "last_updated": "2026-01-26T22:26:46.269138",
+    "created": "2026-01-27T03:02:51.695728",
+    "last_updated": "2026-01-27T03:02:51.695737",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -16,1019 +16,33 @@
   "results": {
     "A Hat in Time.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            3,
-            2,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-01-26T22:22:55.119851",
+      "timestamp": "2026-01-27T02:59:16.440746",
       "explain_stats": {
-        "game": "A Hat in Time",
-        "total_locations": 299,
-        "locations_with_explain": 0,
-        "locations_default_rule": 195,
-        "locations_without_explain": 104,
-        "explain_coverage_percent": 0.0,
-        "locations_without_explain_list": [
-          {
-            "name": "Mafia Boss Shop Item",
-            "region": "Spaceship"
-          },
-          {
-            "name": "Act Completion (Time Rift - Gallery)",
-            "region": "Time Rift - Gallery"
-          },
-          {
-            "name": "Mafia HQ - Hallway Brewing Crate",
-            "region": "Down with the Mafia!"
-          },
-          {
-            "name": "Mafia HQ - Secret Room",
-            "region": "Down with the Mafia!"
-          },
-          {
-            "name": "Act Completion (Cheating the Race)",
-            "region": "Cheating the Race"
-          },
-          {
-            "name": "Act Completion (Dead Bird Studio)",
-            "region": "Dead Bird Studio"
-          },
-          {
-            "name": "Murder on the Owl Express - Raven Suite Room",
-            "region": "Murder on the Owl Express"
-          },
-          {
-            "name": "Act Completion (Train Rush)",
-            "region": "Train Rush"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Window Platform",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Cardboard Conductor",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Above Conductor Sign",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Logo Wall",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Disco Room",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Small Room",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Vent Pipe",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Tightrope",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Cameras",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio Basement - Locked Room",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Act Completion (Dead Bird Studio Basement)",
-            "region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "Dead Bird Studio - DJ Grooves Sign Chest",
-            "region": "Dead Bird Studio - Post Elevator Area"
-          },
-          {
-            "name": "Dead Bird Studio - Tightrope Chest",
-            "region": "Dead Bird Studio - Post Elevator Area"
-          },
-          {
-            "name": "Dead Bird Studio - Tepee Chest",
-            "region": "Dead Bird Studio - Post Elevator Area"
-          },
-          {
-            "name": "Dead Bird Studio - Conductor Chest",
-            "region": "Dead Bird Studio - Post Elevator Area"
-          },
-          {
-            "name": "Subcon Well - Hookshot Badge Chest",
-            "region": "The Subcon Well"
-          },
-          {
-            "name": "Subcon Well - Above Chest",
-            "region": "The Subcon Well"
-          },
-          {
-            "name": "Subcon Well - On Pipe",
-            "region": "The Subcon Well"
-          },
-          {
-            "name": "Subcon Well - Mushroom",
-            "region": "The Subcon Well"
-          },
-          {
-            "name": "Act Completion (The Subcon Well)",
-            "region": "The Subcon Well"
-          },
-          {
-            "name": "Act Completion (Toilet of Doom)",
-            "region": "Toilet of Doom"
-          },
-          {
-            "name": "Queen Vanessa's Manor - Cellar",
-            "region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Queen Vanessa's Manor - Bedroom Chest",
-            "region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Queen Vanessa's Manor - Hall Chest",
-            "region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Queen Vanessa's Manor - Chandelier",
-            "region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Act Completion (Queen Vanessa's Manor)",
-            "region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Act Completion (Mail Delivery Service)",
-            "region": "Mail Delivery Service"
-          },
-          {
-            "name": "Alpine Skyline - The Purrloined Village: Horned Stone",
-            "region": "Alpine Skyline Area"
-          },
-          {
-            "name": "Alpine Skyline - The Purrloined Village: Chest Reward",
-            "region": "Alpine Skyline Area"
-          },
-          {
-            "name": "Alpine Skyline - Mystifying Time Mesa: Zipline",
-            "region": "Alpine Skyline Area"
-          },
-          {
-            "name": "Alpine Skyline - Mystifying Time Mesa: Gate Puzzle",
-            "region": "Alpine Skyline Area"
-          },
-          {
-            "name": "Alpine Skyline - The Twilight Path",
-            "region": "Alpine Skyline Area"
-          },
-          {
-            "name": "Alpine Skyline - Goat Refinery",
-            "region": "Alpine Skyline Area (TIHS)"
-          },
-          {
-            "name": "Alpine Skyline - Bird Pass Fork",
-            "region": "Alpine Skyline Area (TIHS)"
-          },
-          {
-            "name": "Alpine Skyline - Yellow Band Hills",
-            "region": "Alpine Skyline Area (TIHS)"
-          },
-          {
-            "name": "Alpine Skyline - Ember Summit",
-            "region": "Alpine Skyline Area (TIHS)"
-          },
-          {
-            "name": "Alpine Skyline - Goat Outpost Horn",
-            "region": "Alpine Skyline Area (TIHS)"
-          },
-          {
-            "name": "Alpine Skyline - Windy Passage",
-            "region": "Alpine Skyline Area (TIHS)"
-          },
-          {
-            "name": "Alpine Skyline - The Birdhouse: Dweller Platforms Relic",
-            "region": "The Birdhouse"
-          },
-          {
-            "name": "Act Completion (The Twilight Bell)",
-            "region": "The Twilight Bell"
-          },
-          {
-            "name": "Act Completion (The Illness has Spread)",
-            "region": "The Illness has Spread"
-          },
-          {
-            "name": "Act Completion (Time Rift - The Twilight Bell)",
-            "region": "Time Rift - The Twilight Bell"
-          },
-          {
-            "name": "Act Completion (Time Rift - Curly Tail Trail)",
-            "region": "Time Rift - Curly Tail Trail"
-          },
-          {
-            "name": "Mafia Town - Old Man (Seaside Spaghetti)",
-            "region": "Mafia Town Area"
-          },
-          {
-            "name": "Mafia Town - Old Man (Steel Beams)",
-            "region": "Mafia Town Area"
-          },
-          {
-            "name": "Mafia Town - Blue Vault Brewing Crate",
-            "region": "Mafia Town Area"
-          },
-          {
-            "name": "Mafia Town - Ice Hat Cage",
-            "region": "Mafia Town Area"
-          },
-          {
-            "name": "Mafia Town - On Scaffolding",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Top of Ruined Tower",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Hot Air Balloon",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Secret Cave",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Above Boats",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Clock Tower Chest",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Top of Lighthouse",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Mafia Geek Platform",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Mafia Town - Behind HQ Chest",
-            "region": "Mafia Town Area (HUMT)"
-          },
-          {
-            "name": "Subcon Forest - Swamp Gravestone",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Noose Treehouse",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Long Tree Climb Chest",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Manor Rooftop",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Infinite Yarn Bush",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Magnet Badge Bush",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Dweller Stump",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Dweller Floating Rocks",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Dweller Platforming Tree B",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Dweller Shack",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Subcon Forest - Tall Tree Hookshot Swing",
-            "region": "Subcon Forest Area"
-          },
-          {
-            "name": "Act Completion (Your Contract has Expired)",
-            "region": "Your Contract has Expired - Post Fight"
-          },
-          {
-            "name": "Act Completion (Time Rift - Pipe)",
-            "region": "Time Rift - Pipe"
-          },
-          {
-            "name": "Act Completion (Time Rift - Village)",
-            "region": "Time Rift - Village"
-          },
-          {
-            "name": "Act Completion (The Finale)",
-            "region": "The Finale"
-          },
-          {
-            "name": "The Arctic Cruise - Toilet",
-            "region": "Cruise Ship"
-          },
-          {
-            "name": "Act Completion (Bon Voyage!)",
-            "region": "Bon Voyage!"
-          },
-          {
-            "name": "Rock the Boat - Post Captain Rescue",
-            "region": "Rock the Boat"
-          },
-          {
-            "name": "Act Completion (Rock the Boat)",
-            "region": "Rock the Boat"
-          },
-          {
-            "name": "Act Completion (Time Rift - Balcony)",
-            "region": "Time Rift - Balcony"
-          },
-          {
-            "name": "Act Completion (Time Rift - Deep Sea)",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Deep Sea - Page: Big Castle",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Deep Sea - Page: Castle Top Chest",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Deep Sea - Page: Urchin Ledge",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Deep Sea - Page: Hidden Castle Chest",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Deep Sea - Page: Falling Platform",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Deep Sea - Page: Lava Starfish",
-            "region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "Act Completion (Rush Hour)",
-            "region": "Rush Hour"
-          },
-          {
-            "name": "Yellow Overpass Station - Brewing Crate",
-            "region": "Yellow Overpass Station"
-          },
-          {
-            "name": "Act Completion (Yellow Overpass Station)",
-            "region": "Yellow Overpass Station"
-          },
-          {
-            "name": "Pink Paw Station - Cat Vacuum",
-            "region": "Pink Paw Station"
-          },
-          {
-            "name": "Pink Paw Station - Behind Fan",
-            "region": "Pink Paw Station"
-          },
-          {
-            "name": "Act Completion (Pink Paw Station)",
-            "region": "Pink Paw Station"
-          },
-          {
-            "name": "Pink Paw Station - Pink Ticket Booth",
-            "region": "Pink Paw Station"
-          },
-          {
-            "name": "Act Completion (Yellow Overpass Manhole)",
-            "region": "Yellow Overpass Manhole"
-          },
-          {
-            "name": "Act Completion (Green Clean Manhole)",
-            "region": "Green Clean Manhole"
-          },
-          {
-            "name": "Act Completion (Pink Paw Manhole)",
-            "region": "Pink Paw Manhole"
-          },
-          {
-            "name": "Green Clean Station Thug B - Item 1",
-            "region": "Green Clean Station"
-          },
-          {
-            "name": "Pink Paw Station Thug - Item 1",
-            "region": "Pink Paw Station"
-          },
-          {
-            "name": "Pink Paw Station Thug - Item 2",
-            "region": "Pink Paw Station"
-          }
-        ],
+        "game": "A Hat in Time WorldGen_79645483297583998146",
+        "total_locations": 301,
+        "locations_with_explain": 67,
+        "locations_default_rule": 234,
+        "locations_without_explain": 0,
+        "explain_coverage_percent": 100.0,
+        "locations_without_explain_list": [],
         "total_entrances": 157,
-        "entrances_with_explain": 0,
-        "entrances_default_rule": 46,
-        "entrances_without_explain": 111,
-        "entrance_explain_coverage_percent": 0.0,
-        "entrances_without_explain_list": [
-          {
-            "name": "Telescope -> Mafia Town",
-            "from_region": "Spaceship",
-            "to_region": "Mafia Town"
-          },
-          {
-            "name": "Telescope -> Battle of the Birds",
-            "from_region": "Spaceship",
-            "to_region": "Battle of the Birds"
-          },
-          {
-            "name": "Telescope -> Subcon Forest",
-            "from_region": "Spaceship",
-            "to_region": "Subcon Forest"
-          },
-          {
-            "name": "Telescope -> Alpine Skyline",
-            "from_region": "Spaceship",
-            "to_region": "Alpine Skyline"
-          },
-          {
-            "name": "Telescope -> Time's End",
-            "from_region": "Spaceship",
-            "to_region": "Time's End"
-          },
-          {
-            "name": "Telescope -> Arctic Cruise",
-            "from_region": "Spaceship",
-            "to_region": "The Arctic Cruise"
-          },
-          {
-            "name": "Telescope -> Nyakuza Metro",
-            "from_region": "Spaceship",
-            "to_region": "Nyakuza Metro"
-          },
-          {
-            "name": "Time Rift - The Lab Portal - Entrance 1",
-            "from_region": "Spaceship",
-            "to_region": "Barrel Battle"
-          },
-          {
-            "name": "Time Rift - Gallery Portal - Entrance 1",
-            "from_region": "Spaceship",
-            "to_region": "Time Rift - Sleepy Subcon"
-          },
-          {
-            "name": "The Arctic Cruise - Act 2: Connection 1",
-            "from_region": "Time Rift - Gallery",
-            "to_region": "Time Rift - Balcony"
-          },
-          {
-            "name": "Mafia Town - Act 4",
-            "from_region": "Mafia Town",
-            "to_region": "Down with the Mafia!"
-          },
-          {
-            "name": "Mafia Town - Act 7",
-            "from_region": "Mafia Town",
-            "to_region": "Train Rush"
-          },
-          {
-            "name": "Mafia Town - Act 2",
-            "from_region": "Mafia Town",
-            "to_region": "Time Rift - Bazaar"
-          },
-          {
-            "name": "Mafia Town - Act 3",
-            "from_region": "Mafia Town",
-            "to_region": "The Big Parade"
-          },
-          {
-            "name": "Mafia Town - Act 6",
-            "from_region": "Mafia Town",
-            "to_region": "Cheating the Race"
-          },
-          {
-            "name": "Mafia Town - Act 5",
-            "from_region": "Mafia Town",
-            "to_region": "Contractual Obligations"
-          },
-          {
-            "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
-            "from_region": "Welcome to Mafia Town",
-            "to_region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 1",
-            "from_region": "Welcome to Mafia Town",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 1",
-            "from_region": "Welcome to Mafia Town",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Subcon Forest - Finale: Connection 5",
-            "from_region": "Welcome to Mafia Town",
-            "to_region": "Rush Hour"
-          },
-          {
-            "name": "Time Rift - Mafia of Cooks Portal - Entrance 2",
-            "from_region": "Barrel Battle",
-            "to_region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 2",
-            "from_region": "Barrel Battle",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 2",
-            "from_region": "Barrel Battle",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Time Rift - Mafia of Cooks Portal - Entrance 3",
-            "from_region": "She Came from Outer Space",
-            "to_region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 3",
-            "from_region": "She Came from Outer Space",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 3",
-            "from_region": "She Came from Outer Space",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Time Rift - Mafia of Cooks Portal - Entrance 4",
-            "from_region": "Down with the Mafia!",
-            "to_region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 4",
-            "from_region": "Down with the Mafia!",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 4",
-            "from_region": "Down with the Mafia!",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Mafia Town - Act 6: Connection 1",
-            "from_region": "Down with the Mafia!",
-            "to_region": "Cheating the Race"
-          },
-          {
-            "name": "Mafia Town - Act 7: Connection 1",
-            "from_region": "Down with the Mafia!",
-            "to_region": "Train Rush"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 6",
-            "from_region": "Heating Up Mafia Town",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 6",
-            "from_region": "Heating Up Mafia Town",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Subcon Forest - Finale: Connection 1",
-            "from_region": "Heating Up Mafia Town",
-            "to_region": "Rush Hour"
-          },
-          {
-            "name": "Time Rift - Mafia of Cooks Portal - Entrance 5",
-            "from_region": "Cheating the Race",
-            "to_region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 5",
-            "from_region": "Cheating the Race",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 5",
-            "from_region": "Cheating the Race",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Mafia Town - Act 5: Connection 1",
-            "from_region": "Cheating the Race",
-            "to_region": "Contractual Obligations"
-          },
-          {
-            "name": "Time Rift - Mafia of Cooks Portal - Entrance 6",
-            "from_region": "The Golden Vault",
-            "to_region": "Queen Vanessa's Manor"
-          },
-          {
-            "name": "Time Rift - Bazaar Portal - Entrance 7",
-            "from_region": "The Golden Vault",
-            "to_region": "Picture Perfect"
-          },
-          {
-            "name": "Time Rift - Sewers Portal - Entrance 7",
-            "from_region": "The Golden Vault",
-            "to_region": "Time Rift - Village"
-          },
-          {
-            "name": "Subcon Forest - Finale: Connection 2",
-            "from_region": "The Golden Vault",
-            "to_region": "Rush Hour"
-          },
-          {
-            "name": "Battle of the Birds - Finale A",
-            "from_region": "Battle of the Birds",
-            "to_region": "Award Ceremony"
-          },
-          {
-            "name": "Battle of the Birds - Finale B",
-            "from_region": "Battle of the Birds",
-            "to_region": "Bon Voyage!"
-          },
-          {
-            "name": "Battle of the Birds - Act 2",
-            "from_region": "Battle of the Birds",
-            "to_region": "Time Rift - The Moon"
-          },
-          {
-            "name": "Battle of the Birds - Act 5",
-            "from_region": "Battle of the Birds",
-            "to_region": "Mail Delivery Service"
-          },
-          {
-            "name": "Battle of the Birds - Act 3",
-            "from_region": "Battle of the Birds",
-            "to_region": "The Subcon Well"
-          },
-          {
-            "name": "Battle of the Birds - Act 4",
-            "from_region": "Battle of the Birds",
-            "to_region": "Time Rift - Alpine Skyline"
-          },
-          {
-            "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
-            "from_region": "Dead Bird Studio",
-            "to_region": "She Came from Outer Space"
-          },
-          {
-            "name": "Time Rift - The Owl Express Portal - Entrance 1",
-            "from_region": "Murder on the Owl Express",
-            "to_region": "Rock the Boat"
-          },
-          {
-            "name": "Subcon Forest - Finale: Connection 4",
-            "from_region": "Murder on the Owl Express",
-            "to_region": "Rush Hour"
-          },
-          {
-            "name": "Time Rift - The Moon Portal - Entrance 1",
-            "from_region": "Picture Perfect",
-            "to_region": "Time Rift - Curly Tail Trail"
-          },
-          {
-            "name": "Mafia Town - Act 5: Connection 2",
-            "from_region": "Train Rush",
-            "to_region": "Contractual Obligations"
-          },
-          {
-            "name": "Time Rift - The Moon Portal - Entrance 2",
-            "from_region": "The Big Parade",
-            "to_region": "Time Rift - Curly Tail Trail"
-          },
-          {
-            "name": "Mafia Town - Act 4: Connection 2",
-            "from_region": "The Big Parade",
-            "to_region": "Down with the Mafia!"
-          },
-          {
-            "name": "Battle of the Birds - Finale B: Connection 1",
-            "from_region": "Award Ceremony",
-            "to_region": "Bon Voyage!"
-          },
-          {
-            "name": "Time Rift - Dead Bird Studio Portal - Entrance 2",
-            "from_region": "Dead Bird Studio Basement",
-            "to_region": "She Came from Outer Space"
-          },
-          {
-            "name": "Battle of the Birds - Act 4: Connection 1",
-            "from_region": "Time Rift - The Moon",
-            "to_region": "Time Rift - Alpine Skyline"
-          },
-          {
-            "name": "Battle of the Birds - Act 5: Connection 1",
-            "from_region": "Time Rift - The Moon",
-            "to_region": "Mail Delivery Service"
-          },
-          {
-            "name": "Subcon Forest - Finale",
-            "from_region": "Subcon Forest",
-            "to_region": "Rush Hour"
-          },
-          {
-            "name": "Subcon Forest - Act 2",
-            "from_region": "Subcon Forest",
-            "to_region": "The Golden Vault"
-          },
-          {
-            "name": "Subcon Forest - Act 3",
-            "from_region": "Subcon Forest",
-            "to_region": "Alpine Free Roam"
-          },
-          {
-            "name": "Subcon Forest - Act 4",
-            "from_region": "Subcon Forest",
-            "to_region": "Murder on the Owl Express"
-          },
-          {
-            "name": "Subcon Forest - Act 5",
-            "from_region": "Subcon Forest",
-            "to_region": "Welcome to Mafia Town"
-          },
-          {
-            "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
-            "from_region": "Contractual Obligations",
-            "to_region": "Time Rift - Dead Bird Studio"
-          },
-          {
-            "name": "Time Rift - Pipe Portal - Entrance 1",
-            "from_region": "Contractual Obligations",
-            "to_region": "Time Rift - The Twilight Bell"
-          },
-          {
-            "name": "Time Rift - Village Portal - Entrance 1",
-            "from_region": "Contractual Obligations",
-            "to_region": "Nyakuza Free Roam"
-          },
-          {
-            "name": "Time Rift - Sleepy Subcon Portal - Entrance 2",
-            "from_region": "The Subcon Well",
-            "to_region": "Time Rift - Dead Bird Studio"
-          },
-          {
-            "name": "Time Rift - Pipe Portal - Entrance 2",
-            "from_region": "The Subcon Well",
-            "to_region": "Time Rift - The Twilight Bell"
-          },
-          {
-            "name": "Time Rift - Village Portal - Entrance 2",
-            "from_region": "The Subcon Well",
-            "to_region": "Nyakuza Free Roam"
-          },
-          {
-            "name": "Battle of the Birds - Act 4: Connection 2",
-            "from_region": "The Subcon Well",
-            "to_region": "Time Rift - Alpine Skyline"
-          },
-          {
-            "name": "Battle of the Birds - Act 5: Connection 2",
-            "from_region": "The Subcon Well",
-            "to_region": "Mail Delivery Service"
-          },
-          {
-            "name": "Time Rift - Sleepy Subcon Portal - Entrance 3",
-            "from_region": "Toilet of Doom",
-            "to_region": "Time Rift - Dead Bird Studio"
-          },
-          {
-            "name": "Time Rift - Pipe Portal - Entrance 3",
-            "from_region": "Toilet of Doom",
-            "to_region": "Time Rift - The Twilight Bell"
-          },
-          {
-            "name": "Time Rift - Village Portal - Entrance 3",
-            "from_region": "Toilet of Doom",
-            "to_region": "Nyakuza Free Roam"
-          },
-          {
-            "name": "Mafia Town - Act 2: Connection 1",
-            "from_region": "Toilet of Doom",
-            "to_region": "Time Rift - Bazaar"
-          },
-          {
-            "name": "Mafia Town - Act 3: Connection 1",
-            "from_region": "Toilet of Doom",
-            "to_region": "The Big Parade"
-          },
-          {
-            "name": "Time Rift - Sleepy Subcon Portal - Entrance 4",
-            "from_region": "Queen Vanessa's Manor",
-            "to_region": "Time Rift - Dead Bird Studio"
-          },
-          {
-            "name": "Time Rift - Pipe Portal - Entrance 4",
-            "from_region": "Queen Vanessa's Manor",
-            "to_region": "Time Rift - The Twilight Bell"
-          },
-          {
-            "name": "Time Rift - Village Portal - Entrance 4",
-            "from_region": "Queen Vanessa's Manor",
-            "to_region": "Nyakuza Free Roam"
-          },
-          {
-            "name": "Time Rift - Sleepy Subcon Portal - Entrance 5",
-            "from_region": "Mail Delivery Service",
-            "to_region": "Time Rift - Dead Bird Studio"
-          },
-          {
-            "name": "Time Rift - Pipe Portal - Entrance 5",
-            "from_region": "Mail Delivery Service",
-            "to_region": "Time Rift - The Twilight Bell"
-          },
-          {
-            "name": "Time Rift - Village Portal - Entrance 5",
-            "from_region": "Mail Delivery Service",
-            "to_region": "Nyakuza Free Roam"
-          },
-          {
-            "name": "Battle of the Birds - Finale A: Connection 2",
-            "from_region": "Mail Delivery Service",
-            "to_region": "Award Ceremony"
-          },
-          {
-            "name": "Alpine Skyline - Finale",
-            "from_region": "Alpine Skyline",
-            "to_region": "The Illness has Spread"
-          },
-          {
-            "name": "AFR -> Alpine Skyline Area",
-            "from_region": "Alpine Free Roam",
-            "to_region": "Alpine Skyline Area"
-          },
-          {
-            "name": "Time Rift - Curly Tail Trail Portal - Entrance 1",
-            "from_region": "Alpine Free Roam",
-            "to_region": "Time Rift - The Lab"
-          },
-          {
-            "name": "Time Rift - The Twilight Bell Portal - Entrance 1",
-            "from_region": "Alpine Free Roam",
-            "to_region": "Ship Shape"
-          },
-          {
-            "name": "Time Rift - Alpine Skyline Portal - Entrance 1",
-            "from_region": "Alpine Free Roam",
-            "to_region": "Time Rift - The Owl Express"
-          },
-          {
-            "name": "Subcon Forest - Finale: Connection 3",
-            "from_region": "Alpine Free Roam",
-            "to_region": "Rush Hour"
-          },
-          {
-            "name": "-> The Birdhouse",
-            "from_region": "Alpine Skyline Area",
-            "to_region": "The Birdhouse"
-          },
-          {
-            "name": "-> The Lava Cake",
-            "from_region": "Alpine Skyline Area",
-            "to_region": "The Lava Cake"
-          },
-          {
-            "name": "-> The Windmill",
-            "from_region": "Alpine Skyline Area",
-            "to_region": "The Windmill"
-          },
-          {
-            "name": "-> The Twilight Bell",
-            "from_region": "Alpine Skyline Area",
-            "to_region": "The Twilight Bell"
-          },
-          {
-            "name": "Time Rift - Alpine Skyline Portal - Entrance 2",
-            "from_region": "The Illness has Spread",
-            "to_region": "Time Rift - The Owl Express"
-          },
-          {
-            "name": "Battle of the Birds - Finale A: Connection 1",
-            "from_region": "Time Rift - Alpine Skyline",
-            "to_region": "Award Ceremony"
-          },
-          {
-            "name": "Mafia Town - Act 4: Connection 1",
-            "from_region": "Time Rift - Bazaar",
-            "to_region": "Down with the Mafia!"
-          },
-          {
-            "name": "SF Area -> SF Behind Boss Firewall",
-            "from_region": "Subcon Forest Area",
-            "to_region": "Subcon Forest Behind Boss Firewall"
-          },
-          {
-            "name": "SF Behind Boss Firewall -> SF Boss Arena",
-            "from_region": "Subcon Forest Behind Boss Firewall",
-            "to_region": "Subcon Forest Boss Arena"
-          },
-          {
-            "name": "Battle of the Birds - Act 2: Connection 1",
-            "from_region": "Time Rift - Pipe",
-            "to_region": "Time Rift - The Moon"
-          },
-          {
-            "name": "Battle of the Birds - Act 3: Connection 1",
-            "from_region": "Time Rift - Pipe",
-            "to_region": "The Subcon Well"
-          },
-          {
-            "name": "The Arctic Cruise - Finale",
-            "from_region": "The Arctic Cruise",
-            "to_region": "Your Contract has Expired"
-          },
-          {
-            "name": "The Arctic Cruise - Act 2",
-            "from_region": "The Arctic Cruise",
-            "to_region": "Time Rift - Balcony"
-          },
-          {
-            "name": "Time Rift - Balcony Portal - Entrance 1",
-            "from_region": "Cruise Ship",
-            "to_region": "Time Rift - Sewers"
-          },
-          {
-            "name": "Cruise Ship Entrance BV",
-            "from_region": "Bon Voyage!",
-            "to_region": "Cruise Ship"
-          },
-          {
-            "name": "Time Rift - Deep Sea Portal - Entrance 1",
-            "from_region": "Bon Voyage!",
-            "to_region": "Time Rift - Deep Sea"
-          },
-          {
-            "name": "The Arctic Cruise - Finale: Connection 1",
-            "from_region": "Time Rift - Balcony",
-            "to_region": "Your Contract has Expired"
-          },
-          {
-            "name": "Nyakuza Metro - Finale",
-            "from_region": "Nyakuza Metro",
-            "to_region": "Dead Bird Studio Basement"
-          },
-          {
-            "name": "-> Pink Paw Station",
-            "from_region": "Nyakuza Free Roam",
-            "to_region": "Pink Paw Station"
-          },
-          {
-            "name": "-> Bluefin Tunnel",
-            "from_region": "Nyakuza Free Roam",
-            "to_region": "Bluefin Tunnel"
-          },
-          {
-            "name": "Time Rift - Rumbi Factory Portal - Entrance 1",
-            "from_region": "Nyakuza Free Roam",
-            "to_region": "Dead Bird Studio"
-          }
-        ]
+        "entrances_with_explain": 96,
+        "entrances_default_rule": 61,
+        "entrances_without_explain": 0,
+        "entrance_explain_coverage_percent": 100.0,
+        "entrances_without_explain_list": []
       }
     },
     "Castlevania - Circle of the Moon.yaml": {
@@ -1045,7 +59,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-01-26T22:23:02.124831",
+      "timestamp": "2026-01-27T02:59:23.362925",
       "explain_stats": {
         "game": "Castlevania - Circle of the Moon WorldGen_79645483297583998146",
         "total_locations": 123,
@@ -1076,7 +90,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-01-26T22:23:11.014797",
+      "timestamp": "2026-01-27T02:59:32.353646",
       "explain_stats": {
         "game": "DOOM II WorldGen_79645483297583998146",
         "total_locations": 479,
@@ -1107,7 +121,7 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-01-26T22:23:17.332703",
+      "timestamp": "2026-01-27T02:59:38.667909",
       "explain_stats": {
         "game": "Inscryption WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -1138,7 +152,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-01-26T22:23:22.817233",
+      "timestamp": "2026-01-27T02:59:44.047535",
       "explain_stats": {
         "game": "Math Adventure WorldGen_79645483297583998146",
         "total_locations": 10,
@@ -1169,7 +183,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-01-26T22:23:29.617537",
+      "timestamp": "2026-01-27T02:59:50.957715",
       "explain_stats": {
         "game": "Paint WorldGen_79645483297583998146",
         "total_locations": 89,
@@ -1207,17 +221,17 @@
           "File 3-0.yaml is invalid. Please fix your yaml.": [
             3
           ],
-          "File 4-0.yaml is invalid. Please fix your yaml.": [
-            4
-          ],
           "File 5-0.yaml is invalid. Please fix your yaml.": [
             5
           ],
-          "File 7-0.yaml is invalid. Please fix your yaml.": [
-            7
+          "File 4-0.yaml is invalid. Please fix your yaml.": [
+            4
           ],
           "File 6-0.yaml is invalid. Please fix your yaml.": [
             6
+          ],
+          "File 7-0.yaml is invalid. Please fix your yaml.": [
+            7
           ],
           "File 9-0.yaml is invalid. Please fix your yaml.": [
             9
@@ -1228,7 +242,7 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-01-26T22:23:40.412943"
+      "timestamp": "2026-01-27T03:00:23.959710"
     },
     "TUNIC.yaml": {
       "ut_fuzz": {
@@ -1253,7 +267,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-01-26T22:24:56.532439",
+      "timestamp": "2026-01-27T03:01:40.950534",
       "explain_stats": {
         "game": "TUNIC WorldGen_79645483297583998146",
         "total_locations": 6804,
@@ -1286,8 +300,8 @@
             2,
             5,
             4,
-            7,
             6,
+            7,
             8,
             9
           ]
@@ -1297,7 +311,7 @@
         "game_name": "Yacht Dice",
         "world_directory": "yachtdice"
       },
-      "timestamp": "2026-01-26T22:25:06.003304",
+      "timestamp": "2026-01-27T03:01:50.726746",
       "explain_stats": {
         "game": "Yacht Dice WorldGen_79645483297583998146",
         "total_locations": 63,
@@ -1328,7 +342,7 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-01-26T22:22:44.072839",
+      "timestamp": "2026-01-27T02:59:05.530237",
       "explain_stats": {
         "game": "Bumper Stickers WorldGen_79645483297583998146",
         "total_locations": 100,
@@ -1359,7 +373,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-01-26T22:22:51.752846",
+      "timestamp": "2026-01-27T02:59:13.378769",
       "explain_stats": {
         "game": "DOOM 1993 WorldGen_79645483297583998146",
         "total_locations": 474,
@@ -1390,7 +404,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-01-26T22:22:58.705055",
+      "timestamp": "2026-01-27T02:59:20.540548",
       "explain_stats": {
         "game": "Hylics 2 WorldGen_22708164196567875238",
         "total_locations": 166,
@@ -1421,7 +435,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-01-26T22:23:08.663749",
+      "timestamp": "2026-01-27T02:59:30.954687",
       "explain_stats": {
         "game": "Mario & Luigi Superstar Saga WorldGen_79645483297583998146",
         "total_locations": 555,
@@ -1468,7 +482,7 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-01-26T22:23:14.215995",
+      "timestamp": "2026-01-27T02:59:36.472511",
       "explain_stats": {
         "game": "Overcooked! 2 WorldGen_79645483297583998146",
         "total_locations": 35,
@@ -1499,7 +513,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-01-26T22:23:41.227492",
+      "timestamp": "2026-01-27T03:00:03.593050",
       "explain_stats": {
         "game": "Sonic Adventure 2 Battle WorldGen_22708164196567875238",
         "total_locations": 708,
@@ -1530,7 +544,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-01-26T22:23:47.107850",
+      "timestamp": "2026-01-27T03:00:09.691614",
       "explain_stats": {
         "game": "TOEM rule builder WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -1561,7 +575,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-01-26T22:23:53.644041",
+      "timestamp": "2026-01-27T03:00:16.313237",
       "explain_stats": {
         "game": "Wargroove WorldGen_79645483297583998146",
         "total_locations": 38,
@@ -1600,14 +614,14 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-01-26T22:23:23.234445",
+      "timestamp": "2026-01-27T02:59:31.166462",
       "explain_stats": {
         "game": "A Link to the Past WorldGen_22708164196567875238",
         "total_locations": 242,
-        "locations_with_explain": 128,
-        "locations_default_rule": 86,
+        "locations_with_explain": 131,
+        "locations_default_rule": 83,
         "locations_without_explain": 28,
-        "explain_coverage_percent": 82.05,
+        "explain_coverage_percent": 82.39,
         "locations_without_explain_list": [
           {
             "name": "Desert Palace - Boss",
@@ -1723,10 +737,10 @@
           }
         ],
         "total_entrances": 461,
-        "entrances_with_explain": 207,
-        "entrances_default_rule": 243,
+        "entrances_with_explain": 208,
+        "entrances_default_rule": 242,
         "entrances_without_explain": 11,
-        "entrance_explain_coverage_percent": 94.95,
+        "entrance_explain_coverage_percent": 94.98,
         "entrances_without_explain_list": [
           {
             "name": "Sewers Door",
@@ -1800,7 +814,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-01-26T22:23:32.168302",
+      "timestamp": "2026-01-27T02:59:40.378571",
       "explain_stats": {
         "game": "Castlevania 64 WorldGen_79645483297583998146",
         "total_locations": 339,
@@ -1831,7 +845,7 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-01-26T22:23:46.314417",
+      "timestamp": "2026-01-27T02:59:55.711095",
       "explain_stats": {
         "game": "Dark Souls III WorldGen_79645483297583998146",
         "total_locations": 1469,
@@ -1875,7 +889,7 @@
         "game_name": "Jak and Daxter: The Precursor Legacy",
         "world_directory": "jakanddaxter"
       },
-      "timestamp": "2026-01-26T22:23:56.966934",
+      "timestamp": "2026-01-27T03:00:07.100165",
       "explain_stats": {
         "game": "Jak and Daxter: The Precursor Legacy WorldGen_79645483297583998146",
         "total_locations": 289,
@@ -1906,7 +920,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-01-26T22:24:04.187246",
+      "timestamp": "2026-01-27T03:00:14.799532",
       "explain_stats": {
         "game": "Mega Man 2 WorldGen_79645483297583998146",
         "total_locations": 51,
@@ -1951,7 +965,7 @@
         "game_name": "Pokemon Emerald",
         "world_directory": "pokemon_emerald"
       },
-      "timestamp": "2026-01-26T22:24:23.782932",
+      "timestamp": "2026-01-27T03:00:34.516944",
       "explain_stats": {
         "game": "Pokemon Emerald WorldGen_55977854110148887761",
         "total_locations": 695,
@@ -2100,14 +1114,14 @@
         "errors": {
           "None": [
             1,
-            0,
             2,
-            4,
+            0,
             3,
+            4,
             6,
             5,
-            7,
             8,
+            7,
             9
           ]
         }
@@ -2116,11 +1130,11 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-01-26T22:24:58.204079",
+      "timestamp": "2026-01-27T03:01:10.826627",
       "explain_stats": {
         "game": "Stardew Valley WorldGen_22708164196567875238",
-        "total_locations": 1062,
-        "locations_with_explain": 922,
+        "total_locations": 1068,
+        "locations_with_explain": 928,
         "locations_default_rule": 140,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -2147,7 +1161,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-01-26T22:25:06.635593",
+      "timestamp": "2026-01-27T03:01:19.208903",
       "explain_stats": {
         "game": "Terraria WorldGen_79645483297583998146",
         "total_locations": 128,
@@ -2178,7 +1192,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-01-26T22:25:21.479792",
+      "timestamp": "2026-01-27T03:01:34.454177",
       "explain_stats": {
         "game": "Yoshi's Island WorldGen_79645483297583998146",
         "total_locations": 221,
@@ -2209,7 +1223,7 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-01-26T22:22:56.631543",
+      "timestamp": "2026-01-27T02:59:09.530947",
       "explain_stats": {
         "game": "A Short Hike WorldGen_79645483297583998146",
         "total_locations": 131,
@@ -2253,7 +1267,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-01-26T22:23:21.618079",
+      "timestamp": "2026-01-27T02:59:32.892063",
       "explain_stats": {
         "game": "Celeste (Open World) WorldGen_79645483297583998146",
         "total_locations": 1035,
@@ -2284,7 +1298,7 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-01-26T22:23:28.976152",
+      "timestamp": "2026-01-27T02:59:39.830605",
       "explain_stats": {
         "game": "Donkey Kong Country 3 WorldGen_79645483297583998146",
         "total_locations": 220,
@@ -2361,7 +1375,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-01-26T22:23:42.130366",
+      "timestamp": "2026-01-27T02:59:52.637147",
       "explain_stats": {
         "game": "Kingdom Hearts 2 WorldGen_79645483297583998146",
         "total_locations": 643,
@@ -2513,7 +1527,7 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-01-26T22:23:49.683482",
+      "timestamp": "2026-01-27T02:59:59.733514",
       "explain_stats": {
         "game": "MegaMan Battle Network 3 WorldGen_79645483297583998146",
         "total_locations": 263,
@@ -2556,7 +1570,7 @@
         "game_name": "Pokemon Red and Blue",
         "world_directory": "pokemon_rb"
       },
-      "timestamp": "2026-01-26T22:24:40.604053",
+      "timestamp": "2026-01-27T03:00:46.677267",
       "explain_stats": {
         "game": "Pokemon Red and Blue WorldGen_11408892729106005028",
         "total_locations": 578,
@@ -3310,11 +2324,11 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-01-26T22:24:51.254297",
+      "timestamp": "2026-01-27T03:00:56.937219",
       "explain_stats": {
-        "game": "Subnautica WorldGen_22708164196567875238",
-        "total_locations": 161,
-        "locations_with_explain": 161,
+        "game": "Subnautica WorldGen_79645483297583998146",
+        "total_locations": 147,
+        "locations_with_explain": 147,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -3341,7 +2355,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-01-26T22:25:01.487580",
+      "timestamp": "2026-01-27T03:01:06.847947",
       "explain_stats": {
         "game": "The Legend of Zelda WorldGen_22708164196567875238",
         "total_locations": 155,
@@ -3385,7 +2399,7 @@
         "game_name": "Yu-Gi-Oh! 2006",
         "world_directory": "yugioh06"
       },
-      "timestamp": "2026-01-26T22:25:15.561955",
+      "timestamp": "2026-01-27T03:01:20.180588",
       "explain_stats": {
         "game": "Yu-Gi-Oh! 2006 WorldGen_79645483297583998146",
         "total_locations": 151,
@@ -3416,7 +2430,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-01-26T22:22:44.855720",
+      "timestamp": "2026-01-27T02:59:08.917747",
       "explain_stats": {
         "game": "APQuest WorldGen_22708164196567875238",
         "total_locations": 7,
@@ -3447,7 +2461,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-01-26T22:22:50.173296",
+      "timestamp": "2026-01-27T02:59:14.740820",
       "explain_stats": {
         "game": "Celeste 64 WorldGen_79645483297583998146",
         "total_locations": 40,
@@ -3478,11 +2492,11 @@
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-01-26T22:23:01.507059",
+      "timestamp": "2026-01-27T02:59:26.639489",
       "explain_stats": {
-        "game": "Factorio WorldGen_79645483297583998146",
-        "total_locations": 251,
-        "locations_with_explain": 251,
+        "game": "Factorio WorldGen_22708164196567875238",
+        "total_locations": 264,
+        "locations_with_explain": 264,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -3521,7 +2535,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-01-26T22:23:31.038755",
+      "timestamp": "2026-01-27T02:59:57.712917",
       "explain_stats": {
         "game": "Kingdom Hearts WorldGen_79645483297583998146",
         "total_locations": 523,
@@ -3552,7 +2566,7 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-01-26T22:23:36.575457",
+      "timestamp": "2026-01-27T03:00:03.304538",
       "explain_stats": {
         "game": "Meritous WorldGen_79645483297583998146",
         "total_locations": 104,
@@ -3583,7 +2597,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-01-26T22:23:43.564307",
+      "timestamp": "2026-01-27T03:00:10.323305",
       "explain_stats": {
         "game": "Raft",
         "total_locations": 154,
@@ -4277,7 +3291,7 @@
         "game_name": "Sudoku",
         "world_directory": "apsudoku"
       },
-      "timestamp": "2026-01-26T22:23:48.202429",
+      "timestamp": "2026-01-27T03:00:15.058730",
       "explain_stats": {
         "game": "Sudoku",
         "total_locations": 0,
@@ -4308,7 +3322,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-01-26T22:23:56.139369",
+      "timestamp": "2026-01-27T03:00:23.459995",
       "explain_stats": {
         "game": "The Messenger WorldGen_79645483297583998146",
         "total_locations": 136,
@@ -4347,8 +3361,8 @@
             4,
             5,
             7,
-            8,
-            9
+            9,
+            8
           ],
           "<class 'AssertionError'>": [
             3
@@ -4359,7 +3373,7 @@
         "game_name": "Zillion",
         "world_directory": "zillion"
       },
-      "timestamp": "2026-01-26T22:25:26.715439",
+      "timestamp": "2026-01-27T03:02:07.410092",
       "explain_stats": {
         "game": "Zillion WorldGen_22708164196567875238",
         "total_locations": 147,
@@ -4390,7 +3404,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-01-26T22:22:46.034328",
+      "timestamp": "2026-01-27T02:59:03.986435",
       "explain_stats": {
         "game": "Adventure WorldGen_79645483297583998146",
         "total_locations": 21,
@@ -4421,7 +3435,7 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-01-26T22:22:50.764141",
+      "timestamp": "2026-01-27T02:59:08.298435",
       "explain_stats": {
         "game": "ChecksFinder WorldGen_22708164196567875238",
         "total_locations": 25,
@@ -4452,7 +3466,7 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-01-26T22:22:56.480024",
+      "timestamp": "2026-01-27T02:59:13.652779",
       "explain_stats": {
         "game": "Faxanadu WorldGen_79645483297583998146",
         "total_locations": 110,
@@ -4483,7 +3497,7 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-01-26T22:23:10.483413",
+      "timestamp": "2026-01-27T02:59:26.900437",
       "explain_stats": {
         "game": "Kirby's Dream Land 3 WorldGen_79645483297583998146",
         "total_locations": 832,
@@ -4535,18 +3549,18 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-01-26T22:24:20.325653",
+      "timestamp": "2026-01-27T03:00:29.649831",
       "explain_stats": {
-        "game": "Metamath WorldGen_79645483297583998146",
-        "total_locations": 3,
-        "locations_with_explain": 1,
-        "locations_default_rule": 2,
+        "game": "Metamath WorldGen_22708164196567875238",
+        "total_locations": 6,
+        "locations_with_explain": 3,
+        "locations_default_rule": 3,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 6,
-        "entrances_with_explain": 3,
-        "entrances_default_rule": 3,
+        "total_entrances": 12,
+        "entrances_with_explain": 6,
+        "entrances_default_rule": 6,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -4566,7 +3580,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-01-26T22:24:29.098304",
+      "timestamp": "2026-01-27T03:00:37.986232",
       "explain_stats": {
         "game": "Risk of Rain 2 WorldGen_79645483297583998146",
         "total_locations": 159,
@@ -4597,7 +3611,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-01-26T22:24:36.258170",
+      "timestamp": "2026-01-27T03:00:44.800910",
       "explain_stats": {
         "game": "Super Mario 64 WorldGen_79645483297583998146",
         "total_locations": 164,
@@ -4628,7 +3642,7 @@
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-01-26T22:24:48.883360",
+      "timestamp": "2026-01-27T03:00:56.545667",
       "explain_stats": {
         "game": "The Wind Waker WorldGen_81209627519868761947",
         "total_locations": 228,
@@ -4724,7 +3738,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-01-26T22:24:57.587443",
+      "timestamp": "2026-01-27T03:01:04.560411",
       "explain_stats": {
         "game": "shapez WorldGen_22708164196567875238",
         "total_locations": 1267,
@@ -4755,7 +3769,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-01-26T22:22:55.923655",
+      "timestamp": "2026-01-27T02:59:12.862854",
       "explain_stats": {
         "game": "Aquaria WorldGen_79645483297583998146",
         "total_locations": 218,
@@ -4786,9 +3800,9 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-01-26T22:23:02.671202",
+      "timestamp": "2026-01-27T02:59:19.788916",
       "explain_stats": {
-        "game": "Choo-Choo Charles WorldGen_22708164196567875238",
+        "game": "Choo-Choo Charles WorldGen_79645483297583998146",
         "total_locations": 691,
         "locations_with_explain": 64,
         "locations_default_rule": 627,
@@ -4808,9 +3822,9 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 8,
+        "failure": 7,
         "timeout": 1,
-        "ignored": 1,
+        "ignored": 2,
         "errors": {
           "None": [
             0,
@@ -4819,11 +3833,10 @@
             4,
             5,
             7,
-            8,
             9
           ],
           "<class 'TimeoutError'>": [
-            2
+            8
           ]
         }
       },
@@ -4831,7 +3844,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-01-26T22:24:08.882240",
+      "timestamp": "2026-01-27T03:00:32.430549",
       "explain_stats": {
         "game": "Final Fantasy Mystic Quest WorldGen_79645483297583998146",
         "total_locations": 251,
@@ -4841,8 +3854,8 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 484,
-        "entrances_with_explain": 175,
-        "entrances_default_rule": 309,
+        "entrances_with_explain": 171,
+        "entrances_default_rule": 313,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -4862,7 +3875,7 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-01-26T22:24:16.838935",
+      "timestamp": "2026-01-27T03:00:40.428967",
       "explain_stats": {
         "game": "Landstalker - The Treasures of King Nole WorldGen_79645483297583998146",
         "total_locations": 291,
@@ -4893,7 +3906,7 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-01-26T22:24:26.387226",
+      "timestamp": "2026-01-27T03:00:50.559427",
       "explain_stats": {
         "game": "Muse Dash WorldGen_79645483297583998146",
         "total_locations": 776,
@@ -4920,12 +3933,12 @@
         "ignored": 0,
         "errors": {
           "None": [
-            1,
             0,
-            3,
+            1,
             2,
-            4,
+            3,
             5,
+            4,
             6,
             7,
             8,
@@ -4937,9 +3950,9 @@
         "game_name": "SMZ3",
         "world_directory": "smz3"
       },
-      "timestamp": "2026-01-26T22:24:40.726215",
+      "timestamp": "2026-01-27T03:01:05.564959",
       "explain_stats": {
-        "game": "SMZ3 WorldGen_22708164196567875238",
+        "game": "SMZ3 WorldGen_79645483297583998146",
         "total_locations": 316,
         "locations_with_explain": 316,
         "locations_default_rule": 0,
@@ -4974,7 +3987,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-01-26T22:24:54.867055",
+      "timestamp": "2026-01-27T03:01:20.389061",
       "explain_stats": {
         "game": "Super Mario Land 2 WorldGen_22708164196567875238",
         "total_locations": 2018,
@@ -5015,7 +4028,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-01-26T22:25:06.266017",
+      "timestamp": "2026-01-27T03:01:32.624538",
       "explain_stats": {
         "game": "The Witness WorldGen_79645483297583998146",
         "total_locations": 133,
@@ -5046,9 +4059,9 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-01-26T22:22:42.023472",
+      "timestamp": "2026-01-27T02:59:02.975989",
       "explain_stats": {
-        "game": "Baking Adventure WorldGen_79645483297583998146",
+        "game": "Baking Adventure WorldGen_22708164196567875238",
         "total_locations": 15,
         "locations_with_explain": 8,
         "locations_default_rule": 7,
@@ -5077,7 +4090,7 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-01-26T22:22:48.812173",
+      "timestamp": "2026-01-27T02:59:09.071130",
       "explain_stats": {
         "game": "Civilization VI WorldGen_22708164196567875238",
         "total_locations": 268,
@@ -5108,7 +4121,7 @@
         "game_name": "Final Fantasy",
         "world_directory": "ff1"
       },
-      "timestamp": "2026-01-26T22:22:53.691868",
+      "timestamp": "2026-01-27T02:59:13.470715",
       "explain_stats": {
         "game": "Final Fantasy WorldGen_79645483297583998146",
         "total_locations": 0,
@@ -5145,7 +4158,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-01-26T22:23:02.322582",
+      "timestamp": "2026-01-27T02:59:21.208412",
       "explain_stats": {
         "game": "Lingo WorldGen_79645483297583998146",
         "total_locations": 165,
@@ -5176,7 +4189,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-01-26T22:23:08.424381",
+      "timestamp": "2026-01-27T02:59:26.710940",
       "explain_stats": {
         "game": "Noita WorldGen_79645483297583998146",
         "total_locations": 303,
@@ -5207,7 +4220,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-01-26T22:23:14.453355",
+      "timestamp": "2026-01-27T02:59:32.168825",
       "explain_stats": {
         "game": "Saving Princess WorldGen_79645483297583998146",
         "total_locations": 24,
@@ -5238,7 +4251,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-01-26T22:23:44.092877",
+      "timestamp": "2026-01-27T02:59:58.731584",
       "explain_stats": {
         "game": "Super Mario World WorldGen_79645483297583998146",
         "total_locations": 708,
@@ -5280,7 +4293,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-01-26T22:24:00.350030",
+      "timestamp": "2026-01-27T03:00:13.448562",
       "explain_stats": {
         "game": "Timespinner WorldGen_22708164196567875238",
         "total_locations": 684,
@@ -7154,8 +6167,8 @@
           "None": [
             6,
             3,
-            8,
-            7
+            7,
+            8
           ]
         }
       },
@@ -7163,7 +6176,7 @@
         "game_name": "Blasphemous",
         "world_directory": "blasphemous"
       },
-      "timestamp": "2026-01-26T22:22:56.309380",
+      "timestamp": "2026-01-27T02:59:19.073472",
       "explain_stats": {
         "game": "Blasphemous WorldGen_55977854110148887761",
         "total_locations": 305,
@@ -7308,7 +6321,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-01-26T22:23:01.351902",
+      "timestamp": "2026-01-27T02:59:24.501640",
       "explain_stats": {
         "game": "Coding Adventure WorldGen_79645483297583998146",
         "total_locations": 61,
@@ -7339,7 +6352,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-01-26T22:23:10.809219",
+      "timestamp": "2026-01-27T02:59:34.599404",
       "explain_stats": {
         "game": "Heretic WorldGen_79645483297583998146",
         "total_locations": 691,
@@ -7370,7 +6383,7 @@
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-01-26T22:23:37.856551",
+      "timestamp": "2026-01-27T03:00:03.429753",
       "explain_stats": {
         "game": "Links Awakening DX WorldGen_22708164196567875238",
         "total_locations": 220,
@@ -7403,8 +6416,8 @@
             3,
             4,
             6,
-            7,
             8,
+            7,
             9
           ]
         }
@@ -7413,7 +6426,7 @@
         "game_name": "Ocarina of Time",
         "world_directory": "oot"
       },
-      "timestamp": "2026-01-26T22:24:07.457473"
+      "timestamp": "2026-01-27T03:00:35.656571"
     },
     "Secret of Evermore.yaml": {
       "ut_fuzz": {
@@ -7428,8 +6441,8 @@
             0,
             1,
             2,
-            3,
             4,
+            3,
             5,
             6,
             7,
@@ -7442,7 +6455,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-01-26T22:24:18.192705",
+      "timestamp": "2026-01-27T03:00:47.780445",
       "explain_stats": {
         "game": "Secret of Evermore WorldGen_79645483297583998146",
         "total_locations": 913,
@@ -7475,8 +6488,8 @@
           "None": [
             2,
             0,
-            4,
             3,
+            4,
             9,
             6
           ]
@@ -7486,7 +6499,7 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-01-26T22:24:45.092588",
+      "timestamp": "2026-01-27T03:01:17.033521",
       "explain_stats": {
         "game": "Super Metroid WorldGen_22708164196567875238",
         "total_locations": 57,
@@ -7517,7 +6530,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-01-26T22:24:52.545215",
+      "timestamp": "2026-01-27T03:01:25.304961",
       "explain_stats": {
         "game": "Undertale WorldGen_22708164196567875238",
         "total_locations": 106,
@@ -7567,7 +6580,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-01-26T22:22:57.227489",
+      "timestamp": "2026-01-27T02:59:15.019910",
       "explain_stats": {
         "game": "Bomb Rush Cyberfunk WorldGen_79645483297583998146",
         "total_locations": 230,
@@ -7598,11 +6611,11 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-01-26T22:23:05.968822",
+      "timestamp": "2026-01-27T02:59:23.763735",
       "explain_stats": {
-        "game": "DLCQuest WorldGen_22708164196567875238",
-        "total_locations": 38,
-        "locations_with_explain": 25,
+        "game": "DLCQuest WorldGen_79645483297583998146",
+        "total_locations": 29,
+        "locations_with_explain": 16,
         "locations_default_rule": 13,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -7642,7 +6655,7 @@
         "game_name": "Hollow Knight",
         "world_directory": "hk"
       },
-      "timestamp": "2026-01-26T22:24:40.207985",
+      "timestamp": "2026-01-27T03:00:52.203622",
       "explain_stats": {
         "game": "Hollow Knight WorldGen_22708164196567875238",
         "total_locations": 712,
@@ -7673,7 +6686,7 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-01-26T22:24:49.281073",
+      "timestamp": "2026-01-27T03:01:01.222379",
       "explain_stats": {
         "game": "Lufia II Ancient Cave WorldGen_79645483297583998146",
         "total_locations": 66,
@@ -7704,7 +6717,7 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-01-26T22:25:02.115826",
+      "timestamp": "2026-01-27T03:01:13.035714",
       "explain_stats": {
         "game": "Old School Runescape WorldGen_79645483297583998146",
         "total_locations": 62,
@@ -7735,7 +6748,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-01-26T22:26:15.824010",
+      "timestamp": "2026-01-27T03:02:26.262726",
       "explain_stats": {
         "game": "Shivers WorldGen_79645483297583998146",
         "total_locations": 113,
@@ -7787,7 +6800,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-01-26T22:26:22.723866",
+      "timestamp": "2026-01-27T03:02:32.993285",
       "explain_stats": {
         "game": "TOEM original WorldGen_79645483297583998146",
         "total_locations": 191,
@@ -7818,7 +6831,7 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-01-26T22:26:29.522784",
+      "timestamp": "2026-01-27T03:02:39.689817",
       "explain_stats": {
         "game": "VVVVVV WorldGen_79645483297583998146",
         "total_locations": 20,
