@@ -937,11 +937,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         return False
 
     def _replace_small_key_checks(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Replace dungeon-specific small key checks with can_buy_unlimited helper.
+        """Replace dungeon-specific small key checks with True when universal keys enabled.
 
         When small_key_shuffle is 'universal', the server uses can_buy_unlimited
         which checks if any shop with unlimited universal keys is reachable.
-        We emit a helper call so the worldgen can properly evaluate shop reachability.
+        Since universal key shops are accessible in normal gameplay and this method
+        is only called when universal keys are enabled, we expand directly to True.
 
         Recursively processes the rule tree to replace all small key checks.
         """
@@ -950,15 +951,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Check if this is a small key check that should be replaced
         if self._is_dungeon_small_key_check(rule):
-            # Return a helper call to can_buy_unlimited instead of True_
-            # This allows proper evaluation of shop reachability
-            return {
-                'type': 'helper',
-                'name': 'can_buy_unlimited',
-                'args': [
-                    {'type': 'constant', 'value': 'Small Key (Universal)'}
-                ]
-            }
+            # With universal keys enabled, shops selling unlimited keys are accessible
+            # in normal gameplay, so we can safely expand to True.
+            # Note: This method is only called when self._is_universal_keys is True
+            # (checked at call sites in post_process_data).
+            return {'rule': 'True_'}
 
         # Handle Or/And conditions - recursively process and simplify
         if rule.get('type') in ('or', 'and'):
