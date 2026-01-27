@@ -71,7 +71,26 @@ BUNNY_ACCESSIBLE_LOCATIONS = {
 }
 
 # Glitch modes that enable superbunny accessibility
-GLITCH_MODES_WITH_SUPERBUNNY = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+# Derived dynamically from GlitchesRequired options - all modes except no_glitches
+def _get_glitch_modes_with_superbunny() -> Set[str]:
+    """Get the set of glitch modes that enable superbunny accessibility.
+
+    Derives this dynamically from the GlitchesRequired class in Options.py.
+    All glitch modes except 'no_glitches' enable superbunny accessibility.
+    """
+    try:
+        from worlds.alttp.Options import GlitchesRequired
+        # Get all option_* attributes and extract mode names (excluding no_glitches)
+        return {
+            key.replace('option_', '') for key, value in vars(GlitchesRequired).items()
+            if key.startswith('option_') and key != 'option_no_glitches'
+        }
+    except ImportError:
+        logger.warning("Could not import ALttP Options, using fallback glitch modes list")
+        return {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+
+
+GLITCH_MODES_WITH_SUPERBUNNY = _get_glitch_modes_with_superbunny()
 
 # Locations with mandatory superbunny paths that work in glitch modes
 # These are locations where the superbunny entrance path is always available
