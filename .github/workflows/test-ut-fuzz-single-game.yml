@@ -43,6 +43,21 @@ on:
           - original
         default: modified
 
+      default_options:
+        description: 'Options to leave at defaults (comma-separated, e.g., "mode,entrance_shuffle")'
+        required: false
+        type: string
+
+      disallow_options:
+        description: 'Disallow option values (e.g., "glitches_required=no_logic;mode=inverted")'
+        required: false
+        type: string
+
+      fractional_spheres:
+        description: 'Enable fractional sphere logic for more precise UT comparison'
+        type: boolean
+        default: false
+
 permissions:
   contents: write
 
@@ -127,6 +142,9 @@ jobs:
           echo "Timeout: ${{ inputs.timeout }}s"
           echo "Seed: ${{ inputs.seed || 'random' }}"
           echo "UT Version: ${{ inputs.ut_version }}"
+          echo "Default Options: ${{ inputs.default_options || '(none)' }}"
+          echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
+          echo "Fractional Spheres: ${{ inputs.fractional_spheres }}"
           echo "========================================"
 
           # Determine UT version flags
@@ -144,6 +162,9 @@ jobs:
             --jobs ${{ inputs.jobs }} \
             --timeout ${{ inputs.timeout }} \
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
+            ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }} \
+            ${{ inputs.disallow_options && format('--disallow-options {0}', inputs.disallow_options) || '' }} \
+            ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }} \
             $UT_FLAGS
 
       - name: Generate branch name
@@ -184,6 +205,9 @@ jobs:
           Runs: ${{ inputs.runs }}
           Jobs: ${{ inputs.jobs }}
           Timeout: ${{ inputs.timeout }}s
+          Default Options: ${{ inputs.default_options || '(none)' }}
+          Disallow Options: ${{ inputs.disallow_options || '(none)' }}
+          Fractional Spheres: ${{ inputs.fractional_spheres }}
           "
             git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
             echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
@@ -216,5 +240,14 @@ jobs:
           echo "**UT Version:** ${{ inputs.ut_version }}" >> $GITHUB_STEP_SUMMARY
           echo "**Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
           echo "**Seed:** ${{ inputs.seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ inputs.default_options }}" ]; then
+            echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ inputs.disallow_options }}" ]; then
+            echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ inputs.fractional_spheres }}" = "true" ]; then
+            echo "**Fractional Spheres:** enabled" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY

@@ -229,7 +229,10 @@ def run_fuzzer_test(
     runs: int,
     jobs: int,
     timeout: int,
-    seed: Optional[int]
+    seed: Optional[int],
+    default_options: Optional[str] = None,
+    disallow_options: Optional[str] = None,
+    fractional_spheres: bool = False
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -240,6 +243,9 @@ def run_fuzzer_test(
         jobs: Number of parallel jobs
         timeout: Timeout per generation in seconds
         seed: Random seed for reproducibility (None = random)
+        default_options: Comma-separated options to leave at defaults
+        disallow_options: Options to disallow (format: option=value1,value2;option2=value)
+        fractional_spheres: Enable fractional sphere logic for UT comparison
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -281,6 +287,15 @@ def run_fuzzer_test(
 
     if seed is not None:
         cmd.extend(["--seed", str(seed)])
+
+    if default_options:
+        cmd.extend(["--default-options", default_options])
+
+    if disallow_options:
+        cmd.extend(["--disallow-options", disallow_options])
+
+    if fractional_spheres:
+        cmd.append("--fractional-spheres")
 
     print(f"  Running: {' '.join(cmd[:10])}...")
 
@@ -442,6 +457,29 @@ def main():
         dest='prefer_native_ut',
         action='store_false',
         help='Disable native UT preference, use worldgen-based tracking for all worlds'
+    )
+
+    # Fuzzer options passed through to fuzz.py
+    parser.add_argument(
+        '--default-options',
+        type=str,
+        default=None,
+        help='Comma-separated list of option names to leave at defaults instead of randomizing. '
+             'Example: --default-options mode,entrance_shuffle,glitches_required'
+    )
+    parser.add_argument(
+        '--disallow-options',
+        type=str,
+        default=None,
+        help='Disallow specific values for options. Format: option=value1,value2;option2=value. '
+             'Example: --disallow-options glitches_required=minor_glitches,overworld_glitches;mode=inverted'
+    )
+    parser.add_argument(
+        '--fractional-spheres',
+        action='store_true',
+        default=False,
+        help='Enable fractional sphere logic for UT comparison. Handles cascading item dependencies '
+             'within spheres by iterating until no new locations become accessible.'
     )
 
     args = parser.parse_args()
@@ -624,7 +662,10 @@ def main():
             runs=args.runs,
             jobs=args.jobs,
             timeout=args.timeout,
-            seed=args.seed
+            seed=args.seed,
+            default_options=args.default_options,
+            disallow_options=args.disallow_options,
+            fractional_spheres=args.fractional_spheres
         )
 
         # Store result
