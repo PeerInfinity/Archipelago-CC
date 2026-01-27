@@ -24,6 +24,16 @@ logger = logging.getLogger(__name__)
 # factory function execution and callable list analysis
 ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
 
+# Feature flag for mixed region Moon Pearl cleanup
+# When True, removes Moon Pearl requirements from locations/exits in "mixed" regions
+# (regions accessible from both Light World and Dark World, which only occur with
+# entrance shuffle enabled). The theory is that Light World paths don't require
+# Moon Pearl, so it's redundant in mixed regions.
+# DISABLED by default: With entrance shuffle disabled (the default), no regions are
+# ever marked as both is_light_world and is_dark_world, so this code never triggers.
+# The analyzer should handle mixed region bunny rules correctly via any_of rules.
+ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP = False
+
 
 # --- Dynamic imports from original ALttP code ---
 # These functions allow us to stay in sync with the original code rather than
@@ -1667,7 +1677,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     # because removing Moon Pearl would change the game logic.
                     # The _remove_moon_pearl_from_rule() function handles this distinction
                     # by only removing pure Moon Pearl requirements or filtering from HasAny/Or.
-                    if is_mixed_region and access_rule:
+                    #
+                    # DISABLED by default: The analyzer should handle mixed region bunny rules
+                    # correctly via any_of rules. Enable ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP
+                    # if issues are found with entrance shuffle enabled.
+                    if ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP and is_mixed_region and access_rule:
                         location_data['access_rule'] = self._remove_moon_pearl_from_rule(
                             access_rule, location_name
                         )
@@ -1736,7 +1750,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             (is_bunny_impassable and self._is_inverted_mode) or
                             (dest_is_pure_bunny_territory and not dest_all_bunny_accessible)
                         )
-                        if is_mixed_region and not should_keep_moon_pearl:
+                        if ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP and is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
