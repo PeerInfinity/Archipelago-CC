@@ -186,28 +186,135 @@ class FFMQGameExportHandler(GenericGameExportHandler):
                         else:
                             return {'rule': 'HasAll', 'args': {'items': list(access_items)}}
 
-            # Check for always True rule (lambda state: True)
-            # These usually have no closure and just return True
-            if not closure and not defaults:
-                # Try to detect if this is a simple True return
-                # The code name is usually '<lambda>'
-                return {'rule': 'True_'}
+            # Check for has_all pattern in bytecode: state.has_all([items], player)
+            # This handles nested functions like hard_boss_logic that don't match
+            # the lambda patterns above (e.g., defined as named functions with 'self' closure)
+            # Run this BEFORE constant return check since it's more specific
+            result = self._analyze_has_all_bytecode(rule_func)
+            if result is not None:
+                return result
 
-            # Fallback: check for lambda state: False (dead end crest warps)
-            # These have no closure and return False
-            if 'Regions.py' in code.co_filename and not closure:
-                # Could be either True or False lambda - check source
-                try:
-                    import inspect
-                    source = inspect.getsource(rule_func)
-                    if 'False' in source:
-                        return {'rule': 'False_'}
-                except:
-                    pass
-                return {'rule': 'True_'}  # Default to True for unknown
+            # Check for simple constant return lambdas (lambda state: True or lambda state: False)
+            # These have no closure and no defaults, and just return a constant
+            # Use bytecode analysis to determine the return value
+            if not closure and not defaults:
+                result = self._analyze_constant_return_lambda(rule_func)
+                if result is not None:
+                    return result
 
         except Exception as e:
             logger.debug(f"FFMQ _analyze_single_ffmq_rule failed: {e}")
+
+        return None
+
+    def _analyze_constant_return_lambda(self, rule_func: Callable) -> Optional[Dict[str, Any]]:
+        """Analyze a lambda that returns a constant True or False.
+
+        FFMQ uses:
+        - lambda state: True (always accessible)
+        - lambda state: False (blocked crest warps in non-expert logic)
+
+        Uses bytecode analysis to reliably detect the return value.
+        """
+        try:
+            code = rule_func.__code__
+
+            # Check the bytecode for constant return pattern
+            # For lambda state: False, the bytecode contains LOAD_CONST with False
+            # For lambda state: True, the bytecode contains LOAD_CONST with True
+            co_consts = code.co_consts
+
+            # Simple lambdas like "lambda state: False" have bytecode:
+            # RESUME, LOAD_CONST (False), RETURN_VALUE
+            # The constant False or True will be in co_consts
+
+            # Check if False is in constants (indicates lambda state: False)
+            if False in co_consts:
+                return {'rule': 'False_'}
+
+            # Check if True is in constants (indicates lambda state: True)
+            if True in co_consts:
+                return {'rule': 'True_'}
+
+            # Fallback: try to execute the lambda with a mock state to determine value
+            # This is safe because FFMQ's constant lambdas don't use the state
+            try:
+                result = rule_func(None)
+                if result is False:
+                    return {'rule': 'False_'}
+                elif result is True:
+                    return {'rule': 'True_'}
+            except:
+                pass
+
+            # Default to True if we can't determine
+            logger.debug(f"FFMQ: Could not determine constant return value, defaulting to True_")
+            return {'rule': 'True_'}
+
+        except Exception as e:
+            logger.debug(f"FFMQ _analyze_constant_return_lambda failed: {e}")
+            return None
+
+    def _analyze_has_all_bytecode(self, rule_func: Callable) -> Optional[Dict[str, Any]]:
+        """Analyze a function for has_all patterns using bytecode analysis.
+
+        This handles cases like the hard_boss_logic function:
+            def hard_boss_logic(state):
+                return state.has_all(["River Coin", "Sand Coin"], self.player)
+
+        The items list is built at runtime from LOAD_CONST instructions followed by BUILD_LIST.
+        """
+        try:
+            import dis
+            code = rule_func.__code__
+
+            # First check if has_all is called
+            if 'has_all' not in code.co_names:
+                return None
+
+            # Look for lists of strings in co_consts (pre-compiled tuple literal)
+            for const in code.co_consts:
+                if isinstance(const, (list, tuple)) and const:
+                    if all(isinstance(item, str) for item in const):
+                        return {'rule': 'HasAll', 'args': {'items': list(const)}}
+
+            # If no list constant, check for BUILD_LIST pattern
+            # The bytecode pattern is: LOAD_CONST (item1), LOAD_CONST (item2), ..., BUILD_LIST n
+            instructions = list(dis.get_instructions(code))
+            items = []
+
+            for i, instr in enumerate(instructions):
+                if instr.opname == 'BUILD_LIST' and instr.arg and instr.arg > 0:
+                    # Look back for LOAD_CONST instructions before BUILD_LIST
+                    num_items = instr.arg
+                    start_idx = i - num_items
+
+                    if start_idx >= 0:
+                        potential_items = []
+                        all_strings = True
+
+                        for j in range(start_idx, i):
+                            prev_instr = instructions[j]
+                            if prev_instr.opname == 'LOAD_CONST':
+                                const_val = code.co_consts[prev_instr.arg]
+                                if isinstance(const_val, str):
+                                    potential_items.append(const_val)
+                                else:
+                                    all_strings = False
+                                    break
+                            else:
+                                all_strings = False
+                                break
+
+                        if all_strings and len(potential_items) == num_items:
+                            items = potential_items
+                            break
+
+            if items:
+                return {'rule': 'HasAll', 'args': {'items': items}}
+
+        except Exception as e:
+            logger.debug(f"FFMQ _analyze_has_all_bytecode failed: {e}")
 
         return None
 

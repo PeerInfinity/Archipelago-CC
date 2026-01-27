@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, Compare, HasAll, HelperCall
+from rule_builder import True_, False_, And, CanReachLocation, Compare, Has, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -849,17 +849,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Neptune Launch", player),
-        And(Compare(HelperCall(helper_func=get_max_depth, helper_name="get_max_depth"), ">=", 1444), HelperCall(helper_func=has_cyclops_shield, helper_name="has_cyclops_shield"), HelperCall(helper_func=has_mobile_vehicle_bay, helper_name="has_mobile_vehicle_bay"), HasAll('Ion Battery', 'Ion Power Cell', 'Neptune Boosters', 'Neptune Cockpit', 'Neptune Fuel Reserve', 'Neptune Gantry', 'Neptune Launch Platform'))
+        And(Compare(HelperCall(helper_func=get_max_depth, helper_name="get_max_depth", args=()), ">=", 1444), HelperCall(helper_func=has_cyclops_shield, helper_name="has_cyclops_shield"), HelperCall(helper_func=has_mobile_vehicle_bay, helper_name="has_mobile_vehicle_bay", body_rule=Has("Mobile Vehicle Bay Fragment", 3)), HasAll('Ion Battery', 'Ion Power Cell', 'Neptune Boosters', 'Neptune Cockpit', 'Neptune Fuel Reserve', 'Neptune Gantry', 'Neptune Launch Platform'))
     )
 
     world.set_rule(
         multiworld.get_location("Disable Quarantine", player),
-        Compare(HelperCall(helper_func=get_max_depth, helper_name="get_max_depth"), ">=", 1444)
+        Compare(HelperCall(helper_func=get_max_depth, helper_name="get_max_depth", args=()), ">=", 1444)
     )
 
     world.set_rule(
         multiworld.get_location("Full Infection", player),
-        Compare(HelperCall(helper_func=get_max_depth, helper_name="get_max_depth"), ">=", 900)
+        Compare(HelperCall(helper_func=get_max_depth, helper_name="get_max_depth", args=()), ">=", 900)
     )
 
     world.set_rule(

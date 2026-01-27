@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -24,13 +24,23 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Badeline Island Checkpoint": 1,
+    "Badeline Tower Checkpoint": 1,
     "Breakable Blocks": 1,
     "Cassettes": 1,
+    "Climb Sign Checkpoint": 1,
     "Coins": 1,
     "Dash Refills": 1,
+    "Double Dash House Checkpoint": 1,
     "Double Dash Refills": 1,
+    "Feather Maze Checkpoint": 1,
     "Feathers": 1,
+    "Freeway Checkpoint": 1,
+    "Freeway Feather Checkpoint": 1,
+    "Granny Checkpoint": 1,
+    "Intro Checkpoint": 1,
     "Raspberry": 2,
+    "South-East Tower Checkpoint": 1,
     "Springs": 1,
     "Strawberry": 20,
     "Traffic Blocks": 1,
@@ -38,16 +48,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Intro Checkpoint": "Intro Checkpoint",
-    "Granny Checkpoint": "Granny Checkpoint",
-    "South-East Tower Checkpoint": "South-East Tower Checkpoint",
-    "Climb Sign Checkpoint": "Climb Sign Checkpoint",
-    "Freeway Checkpoint": "Freeway Checkpoint",
-    "Freeway Feather Checkpoint": "Freeway Feather Checkpoint",
-    "Feather Maze Checkpoint": "Feather Maze Checkpoint",
-    "Double Dash House Checkpoint": "Double Dash House Checkpoint",
-    "Badeline Tower Checkpoint": "Badeline Tower Checkpoint",
-    "Badeline Island Checkpoint": "Badeline Island Checkpoint",
+
 }
 
 # Starting items - items the player begins with (precollected)
@@ -109,46 +110,91 @@ class Celeste64World(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "Badeline Island Cassette Strawberry": "Strawberry",
+        "Badeline Tower Bottom Strawberry": "Strawberry",
+        "Breakable Blocks Strawberry": "Strawberry",
+        "Cassette Hidden in the House Strawberry": "Strawberry",
+        "Distant Feather Cassette Strawberry": "Strawberry",
+        "Double Dash Puzzle Strawberry": "Strawberry",
+        "Double Dash Spring Strawberry": "Strawberry",
+        "Fall Through Spike Floor Strawberry": "Strawberry",
+        "Falling Blocks Strawberry": "Strawberry",
+        "Feather Arches Cassette Strawberry": "Strawberry",
+        "Feather Chain Strawberry": "Strawberry",
+        "Feather Maze Strawberry": "Strawberry",
         "First Strawberry": "Strawberry",
+        "Girders Strawberry": "Strawberry",
+        "Troll Strawberry": "Strawberry",
+        "You Are Ready Cassette Strawberry": "Strawberry",
+        "Badeline Tower Breakable Bottom Strawberry": "Strawberry",
+        "Badeline Tower Cassette Strawberry": "Strawberry",
+        "Theo Tower Lower Cassette Strawberry": "Strawberry",
+        "Traffic Block Strawberry": "Strawberry",
         "Intro Checkpoint": "Intro Checkpoint",
         "Floating Blocks Strawberry": "Breakable Blocks",
         "South-East Tower Top Strawberry": "Dash Refills",
+        "Double Dash Spike Climb Strawberry": "Raspberry",
         "Theo Strawberry": "Raspberry",
-        "Fall Through Spike Floor Strawberry": "Strawberry",
         "South-West Dash Refills Strawberry": "Cassettes",
         "South-East Tower Side Strawberry": "Double Dash Refills",
-        "Theo Tower Lower Cassette Strawberry": "Strawberry",
         "Theo Tower Upper Cassette Strawberry": "Traffic Blocks",
-        "You Are Ready Cassette Strawberry": "Strawberry",
         "Granny Checkpoint": "Granny Checkpoint",
         "South-East Tower Checkpoint": "South-East Tower Checkpoint",
         "Climb Sign Checkpoint": "Climb Sign Checkpoint",
-        "Troll Strawberry": "Strawberry",
-        "Falling Blocks Strawberry": "Strawberry",
-        "Girders Strawberry": "Strawberry",
-        "Breakable Blocks Strawberry": "Strawberry",
         "South End of Bridge Cassette Strawberry": "Springs",
         "North End of Bridge Cassette Strawberry": "Feathers",
         "Freeway Checkpoint": "Freeway Checkpoint",
         "Freeway Feather Checkpoint": "Freeway Feather Checkpoint",
-        "Traffic Block Strawberry": "Strawberry",
-        "Feather Maze Strawberry": "Strawberry",
-        "Feather Chain Strawberry": "Strawberry",
         "Feather Hidden Strawberry": "Coins",
-        "Distant Feather Cassette Strawberry": "Strawberry",
-        "Feather Arches Cassette Strawberry": "Strawberry",
         "Feather Maze Checkpoint": "Feather Maze Checkpoint",
-        "Double Dash Puzzle Strawberry": "Strawberry",
-        "Double Dash Spike Climb Strawberry": "Raspberry",
-        "Double Dash Spring Strawberry": "Strawberry",
-        "Cassette Hidden in the House Strawberry": "Strawberry",
         "Double Dash House Checkpoint": "Double Dash House Checkpoint",
-        "Badeline Tower Bottom Strawberry": "Strawberry",
-        "Badeline Tower Breakable Bottom Strawberry": "Strawberry",
-        "Badeline Tower Cassette Strawberry": "Strawberry",
         "Badeline Tower Checkpoint": "Badeline Tower Checkpoint",
-        "Badeline Island Cassette Strawberry": "Strawberry",
         "Badeline Island Checkpoint": "Badeline Island Checkpoint",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "First Strawberry": True,
+        "Intro Checkpoint": True,
+        "Floating Blocks Strawberry": True,
+        "South-East Tower Top Strawberry": True,
+        "Theo Strawberry": False,
+        "Fall Through Spike Floor Strawberry": True,
+        "South-West Dash Refills Strawberry": True,
+        "South-East Tower Side Strawberry": True,
+        "Theo Tower Lower Cassette Strawberry": False,
+        "Theo Tower Upper Cassette Strawberry": True,
+        "You Are Ready Cassette Strawberry": True,
+        "Granny Checkpoint": True,
+        "South-East Tower Checkpoint": True,
+        "Climb Sign Checkpoint": True,
+        "Troll Strawberry": True,
+        "Falling Blocks Strawberry": True,
+        "Girders Strawberry": True,
+        "Breakable Blocks Strawberry": True,
+        "South End of Bridge Cassette Strawberry": True,
+        "North End of Bridge Cassette Strawberry": True,
+        "Freeway Checkpoint": True,
+        "Freeway Feather Checkpoint": True,
+        "Traffic Block Strawberry": False,
+        "Feather Maze Strawberry": True,
+        "Feather Chain Strawberry": True,
+        "Feather Hidden Strawberry": True,
+        "Distant Feather Cassette Strawberry": True,
+        "Feather Arches Cassette Strawberry": True,
+        "Feather Maze Checkpoint": True,
+        "Double Dash Puzzle Strawberry": True,
+        "Double Dash Spike Climb Strawberry": False,
+        "Double Dash Spring Strawberry": True,
+        "Cassette Hidden in the House Strawberry": True,
+        "Double Dash House Checkpoint": True,
+        "Badeline Tower Bottom Strawberry": True,
+        "Badeline Tower Breakable Bottom Strawberry": False,
+        "Badeline Tower Cassette Strawberry": False,
+        "Badeline Tower Checkpoint": True,
+        "Badeline Island Cassette Strawberry": True,
+        "Badeline Island Checkpoint": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -249,14 +295,38 @@ class Celeste64World(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = Celeste64WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = Celeste64WorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = Celeste64WorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -283,32 +353,114 @@ class Celeste64World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = Celeste64WorldGenItem(name, data.classification, data.id, self.player)
+        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = Celeste64WorldGenItem(name, classification, data.id, self.player)
+        else:
+            item = Celeste64WorldGenItem(name, data.classification, data.id, self.player)
         if data.hint_text:
             item._hint_text = data.hint_text
         return item

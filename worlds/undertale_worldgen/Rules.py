@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def _undertale_has_plot(state: "CollectionState", player: int, item = None) -> bool:
-    return (state.has('Complete Skeleton', player) if (item == 'Complete Skeleton') else (state.has('Fish', player) if (item == 'Fish') else (state.has('Mettaton Plush', player) if (item == 'Mettaton Plush') else (state.has('DT Extractor', player) if (item == 'DT Extractor') else None))))
+    return (state.has('Complete Skeleton', player) if (item == 'Complete Skeleton') else (state.has('Fish', player) if (item == 'Fish') else (state.has('Mettaton Plush', player) if (item == 'Mettaton Plush') else (state.has('DT Extractor', player) if (item == 'DT Extractor') else True))))
 
 
 def set_rules(world: "World") -> None:

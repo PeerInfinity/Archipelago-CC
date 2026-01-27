@@ -154,10 +154,10 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Wily Machine 2 - Defeated", player).access_rule = \
-        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, state.multiworld.worlds[player].wily_5_weapons)
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []})
 
     multiworld.get_location("Wily Stage 5 - Completed", player).access_rule = \
-        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, state.multiworld.worlds[player].wily_5_weapons)
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []})
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),

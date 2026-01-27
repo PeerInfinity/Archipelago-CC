@@ -20,7 +20,19 @@ logger = logging.getLogger(__name__)
 
 # Feature flag for dynamic bunny rule analysis
 # When True, attempts to analyze bunny rules dynamically before falling back to workaround
-ENABLE_DYNAMIC_BUNNY_ANALYSIS = True
+# EXPERIMENTAL: Set to False to let the main analyzer handle bunny rules via
+# factory function execution and callable list analysis
+ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
+
+# Feature flag for mixed region Moon Pearl cleanup
+# When True, removes Moon Pearl requirements from locations/exits in "mixed" regions
+# (regions accessible from both Light World and Dark World, which only occur with
+# entrance shuffle enabled). The theory is that Light World paths don't require
+# Moon Pearl, so it's redundant in mixed regions.
+# DISABLED by default: With entrance shuffle disabled (the default), no regions are
+# ever marked as both is_light_world and is_dark_world, so this code never triggers.
+# The analyzer should handle mixed region bunny rules correctly via any_of rules.
+ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP = False
 
 
 # --- Dynamic imports from original ALttP code ---
@@ -71,7 +83,26 @@ BUNNY_ACCESSIBLE_LOCATIONS = {
 }
 
 # Glitch modes that enable superbunny accessibility
-GLITCH_MODES_WITH_SUPERBUNNY = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+# Derived dynamically from GlitchesRequired options - all modes except no_glitches
+def _get_glitch_modes_with_superbunny() -> Set[str]:
+    """Get the set of glitch modes that enable superbunny accessibility.
+
+    Derives this dynamically from the GlitchesRequired class in Options.py.
+    All glitch modes except 'no_glitches' enable superbunny accessibility.
+    """
+    try:
+        from worlds.alttp.Options import GlitchesRequired
+        # Get all option_* attributes and extract mode names (excluding no_glitches)
+        return {
+            key.replace('option_', '') for key, value in vars(GlitchesRequired).items()
+            if key.startswith('option_') and key != 'option_no_glitches'
+        }
+    except ImportError:
+        logger.warning("Could not import ALttP Options, using fallback glitch modes list")
+        return {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+
+
+GLITCH_MODES_WITH_SUPERBUNNY = _get_glitch_modes_with_superbunny()
 
 # Locations with mandatory superbunny paths that work in glitch modes
 # These are locations where the superbunny entrance path is always available
@@ -129,6 +160,14 @@ ALL_INVALID_BUNNY_REVIVAL_DUNGEONS = (
 # OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
 # For these, the rule is: Moon Pearl OR Magic Mirror
 MIRROR_SUPERBUNNY_LOCATIONS = _get_superbunny_accessible_locations() - MANDATORY_SUPERBUNNY_LOCATIONS
+
+# Regions that contain ONLY superbunny-accessible locations.
+# In glitch modes, exits to these regions should not require Moon Pearl.
+# These regions are specifically accessible via superbunny state.
+MANDATORY_SUPERBUNNY_REGIONS = {
+    'Superbunny Cave (Top)',      # Contains: Superbunny Cave - Top, Superbunny Cave - Bottom
+    'Kakariko Well (top)',        # Contains: Kakariko Well - Left/Middle/Right/Bottom
+}
 
 # Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
 # These are regions where bunnies cannot pass through - if you enter as a bunny,
@@ -929,11 +968,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         return False
 
     def _replace_small_key_checks(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Replace dungeon-specific small key checks with can_buy_unlimited helper.
+        """Replace dungeon-specific small key checks with True when universal keys enabled.
 
         When small_key_shuffle is 'universal', the server uses can_buy_unlimited
         which checks if any shop with unlimited universal keys is reachable.
-        We emit a helper call so the worldgen can properly evaluate shop reachability.
+        Since universal key shops are accessible in normal gameplay and this method
+        is only called when universal keys are enabled, we expand directly to True.
 
         Recursively processes the rule tree to replace all small key checks.
         """
@@ -942,13 +982,21 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Check if this is a small key check that should be replaced
         if self._is_dungeon_small_key_check(rule):
-            # Return a helper call to can_buy_unlimited instead of True_
-            # This allows proper evaluation of shop reachability
+            # With universal keys enabled, replace dungeon small key checks with
+            # can_buy_unlimited('Small Key (Universal)') - this requires actually
+            # reaching a shop that sells unlimited universal keys.
+            # Note: This method is only called when self._is_universal_keys is True
+            # (checked at call sites in post_process_data).
             return {
-                'type': 'helper',
-                'name': 'can_buy_unlimited',
+                'rule': 'can_buy_unlimited',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
                 'args': [
-                    {'type': 'constant', 'value': 'Small Key (Universal)'}
+                    {
+                        'rule': 'Constant',
+                        'args': {'value': 'Small Key (Universal)'},
+                        '_converted_from_ast': True
+                    }
                 ]
             }
 
@@ -1087,7 +1135,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             location_name = rule_target_name or self._current_location_context or ''
             logger.debug(f"ALttP: Detected bunny rule for '{location_name}'")
 
-            # Attempt dynamic analysis if enabled
+            # Attempt dynamic analysis if enabled (legacy path using ClosureFunctionAnalyzer)
             if ENABLE_DYNAMIC_BUNNY_ANALYSIS:
                 try:
                     analyzed_result = self._try_dynamic_bunny_analysis(rule_func, location_name)
@@ -1098,9 +1146,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 except Exception as e:
                     logger.debug(f"ALttP: Dynamic bunny rule analysis failed: {e}, using workaround")
 
-            # Fall back to pre-computed workaround
-            logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
-            return self._get_bunny_replacement_rule(location_name)
+                # Fall back to pre-computed workaround
+                logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
+                return self._get_bunny_replacement_rule(location_name)
+
+            # When ENABLE_DYNAMIC_BUNNY_ANALYSIS is False, let the main analyzer handle
+            # bunny rules via factory function execution and callable list analysis
+            logger.debug(f"ALttP: Letting main analyzer handle bunny rule for '{location_name}'")
+            return None
 
         # All other rules are handled by the generic analyzer
         return None
@@ -1218,12 +1271,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if base_result is not None:
             return base_result
 
-        # Handle can_buy_unlimited for universal keys
-        # When small_key_shuffle is 'universal', shops with unlimited universal keys
-        # are accessible in normal gameplay. We expand this to True for simplicity.
-        if helper_name == 'can_buy_unlimited' and self._is_universal_keys:
-            logger.debug("ALttP: Expanding can_buy_unlimited to True (universal keys enabled)")
-            return {'type': 'constant', 'value': True}
+        # Note: can_buy_unlimited is NOT expanded to True anymore.
+        # When small_key_shuffle is 'universal', rules that check for dungeon small keys
+        # are replaced with can_buy_unlimited('Small Key (Universal)'), which requires
+        # actually reaching a shop that sells unlimited universal keys.
+        # The can_buy_unlimited helper is exported to the worldgen world's Rules.py
+        # and evaluates shop reachability at runtime.
 
         # Helper for creating item check rules
         def _item(name: str) -> Dict[str, Any]:
@@ -1321,96 +1374,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 location_data['access_rule'], location_name
             )
 
-        # Handle shop price rules:
-        # 1. Always remove the broken shop_price_rules helper that references 'location'
-        # 2. For Hearts/Bombs/Arrows types, add the appropriate replacement rule
-        # 3. For Rupees (type 0), just removing the helper is enough (no item requirement)
-        existing_rule = location_data.get('access_rule')
-        if existing_rule:
-            existing_rule = self._remove_shop_price_rules_helper(existing_rule)
-            location_data['access_rule'] = existing_rule
-
-        # Generate shop price rules for non-Rupee types
-        shop_price_rule = self._generate_shop_price_rule(location_data)
-        if shop_price_rule:
-            existing_rule = location_data.get('access_rule')
-            if existing_rule and existing_rule != {'rule': 'True_'}:
-                # Combine with existing rule using AND
-                location_data['access_rule'] = {
-                    'rule': 'And',
-                    'children': [existing_rule, shop_price_rule]
-                }
-            else:
-                location_data['access_rule'] = shop_price_rule
-            logger.debug(f"ALttP: Added shop price rule for '{location_name}'")
+        # Shop price rules are now fully handled by the analyzer:
+        # - Hearts/Bombs/Arrows types: Inlined to has_hearts/can_use_bombs/can_hold_arrows
+        # - Rupees (type 0): Returns True (no access rule needed)
 
         return location_data
-
-    def _remove_shop_price_rules_helper(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Remove shop_price_rules helper calls from a rule tree.
-
-        The original shop_price_rules helper references 'location' which doesn't exist
-        in the rule context. We replace it with True_ since we generate a proper rule
-        in _generate_shop_price_rule.
-
-        Returns True_ if the rule is entirely a shop_price_rules call,
-        otherwise returns the rule with shop_price_rules calls removed.
-        """
-        if not isinstance(rule, dict):
-            return rule
-
-        # Check if this is a shop_price_rules helper call (multiple formats exist)
-        # Format 1: {"rule": "shop_price_rules", "_original_ast_type": "helper", ...}
-        # Format 2: {"type": "helper", "name": "shop_price_rules", ...}
-        is_shop_price_rules = (
-            rule.get('rule') == 'shop_price_rules' or
-            (rule.get('_original_ast_type') == 'helper' and rule.get('rule') == 'shop_price_rules') or
-            (rule.get('type') == 'helper' and rule.get('name') == 'shop_price_rules')
-        )
-        if is_shop_price_rules:
-            logger.debug("ALttP: Removing broken shop_price_rules helper call")
-            return {'rule': 'True_'}
-
-        # Handle And rules - recursively process and filter out True_
-        if rule.get('rule') == 'And':
-            children = rule.get('children', [])
-            processed = [self._remove_shop_price_rules_helper(c) for c in children]
-            # Filter out True_ results
-            filtered = [c for c in processed if c != {'rule': 'True_'}]
-            if not filtered:
-                return {'rule': 'True_'}
-            elif len(filtered) == 1:
-                return filtered[0]
-            else:
-                return {'rule': 'And', 'children': filtered}
-
-        # Handle Or rules
-        if rule.get('rule') == 'Or':
-            children = rule.get('children', [])
-            processed = [self._remove_shop_price_rules_helper(c) for c in children]
-            # If any became True_, the whole Or is True_
-            if any(c == {'rule': 'True_'} for c in processed):
-                return {'rule': 'True_'}
-            return {'rule': 'Or', 'children': processed}
-
-        # Handle AST-style and/or rules
-        if rule.get('type') in ('and', 'or'):
-            conditions = rule.get('conditions', [])
-            processed = [self._remove_shop_price_rules_helper(c) for c in conditions]
-            if rule.get('type') == 'and':
-                filtered = [c for c in processed if c != {'rule': 'True_'}]
-                if not filtered:
-                    return {'rule': 'True_'}
-                elif len(filtered) == 1:
-                    return filtered[0]
-                else:
-                    return {'type': 'and', 'conditions': filtered}
-            else:  # or
-                if any(c == {'rule': 'True_'} for c in processed):
-                    return {'rule': 'True_'}
-                return {'type': 'or', 'conditions': processed}
-
-        return rule
 
     def _generate_shop_price_rule(self, location_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Generate an access rule for shop price requirements.
@@ -1672,8 +1640,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     access_rule = location_data.get('access_rule', {})
 
                     # In no_logic single-player mode, all locations should be trivially accessible
+                    # EXCEPT for shop price rules, which are enforced even in no_logic mode.
+                    # Shop price rules are added in create_shops() via add_rule(), not in
+                    # set_rules(), so the no_logic early return doesn't affect them.
                     if self._is_no_logic_single_player:
-                        location_data['access_rule'] = {}
+                        # Check if this location has shop price requirements
+                        # ShopPriceType: 1=Hearts, 3=Bombs, 4=Arrows (0=Rupees, 2=Magic need no rule)
+                        shop_price_type = location_data.get('shop_price_type')
+                        if shop_price_type in (1, 3, 4):
+                            # Regenerate the shop price rule to ensure it's preserved
+                            shop_rule = self._generate_shop_price_rule(location_data)
+                            location_data['access_rule'] = shop_rule if shop_rule else {}
+                        else:
+                            location_data['access_rule'] = {}
                         continue
 
                     # Resolve OptionValue comparisons first (e.g., mode checks, small_key_shuffle checks)
@@ -1698,7 +1677,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     # because removing Moon Pearl would change the game logic.
                     # The _remove_moon_pearl_from_rule() function handles this distinction
                     # by only removing pure Moon Pearl requirements or filtering from HasAny/Or.
-                    if is_mixed_region and access_rule:
+                    #
+                    # DISABLED by default: The analyzer should handle mixed region bunny rules
+                    # correctly via any_of rules. Enable ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP
+                    # if issues are found with entrance shuffle enabled.
+                    if ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP and is_mixed_region and access_rule:
                         location_data['access_rule'] = self._remove_moon_pearl_from_rule(
                             access_rule, location_name
                         )
@@ -1767,7 +1750,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             (is_bunny_impassable and self._is_inverted_mode) or
                             (dest_is_pure_bunny_territory and not dest_all_bunny_accessible)
                         )
-                        if is_mixed_region and not should_keep_moon_pearl:
+                        if ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP and is_mixed_region and not should_keep_moon_pearl:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
@@ -1869,6 +1852,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # (see Rules.py get_rule_to_add() line ~1700-1701).
                         # This allows Magic Mirror bunny revival inside dungeons.
                         if self._is_glitch_mode and region_type == 4:  # 4 = Dungeon
+                            exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                                exit_data['access_rule'], exit_name
+                            )
+                        # In glitch modes, exits TO mandatory superbunny regions don't require
+                        # Moon Pearl. The superbunny entrances to these regions are mandatory
+                        # connections that are never shuffled, allowing access in bunny form.
+                        if self._is_glitch_mode and connected_region_name in MANDATORY_SUPERBUNNY_REGIONS:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )

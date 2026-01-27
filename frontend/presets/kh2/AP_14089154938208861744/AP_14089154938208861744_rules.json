@@ -32416,36 +32416,36 @@
         "hitlist": [],
         "PoptrackerVersionCheck": 4.3,
         "KeybladeAbilities": {
-          "Scan": 0,
+          "Scan": 1,
           "Aerial Recovery": 2,
           "Combo Master": 1,
           "Combo Plus": 3,
           "Air Combo Plus": 3,
-          "Combo Boost": 0,
+          "Combo Boost": 1,
           "Air Combo Boost": 0,
-          "Reaction Boost": 1,
+          "Reaction Boost": 2,
           "Finishing Plus": 3,
           "Negative Combo": 2,
           "Berserk Charge": 2,
           "Damage Drive": 0,
-          "Drive Boost": 0,
+          "Drive Boost": 1,
           "Form Boost": 3,
           "Summon Boost": 1,
-          "Experience Boost": 0,
-          "Draw": 0,
-          "Jackpot": 0,
-          "Lucky Lucky": 0,
+          "Experience Boost": 1,
+          "Draw": 1,
+          "Jackpot": 1,
+          "Lucky Lucky": 1,
           "Drive Converter": 2,
-          "Fire Boost": 0,
+          "Fire Boost": 1,
           "Blizzard Boost": 2,
           "Thunder Boost": 0,
           "Item Boost": 2,
-          "MP Rage": 0,
-          "MP Haste": 0,
+          "MP Rage": 1,
+          "MP Haste": 1,
           "MP Hastera": 0,
           "MP Hastega": 1,
           "Defender": 2,
-          "Damage Control": 0,
+          "Damage Control": 1,
           "No Experience": 0,
           "Light & Darkness": 1,
           "Magic Lock-On": 0,
@@ -32632,6 +32632,34 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
                   }
                 ]
@@ -32660,7 +32688,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },
@@ -32717,34 +32745,6 @@
                   {
                     "type": "constant",
                     "value": "(BC2) Xaldin Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },

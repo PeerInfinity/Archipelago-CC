@@ -4,11 +4,12 @@
 
 This document outlines how to add native analyzer support for ALttP's bunny rules, replacing the current pre-computed workaround with full dynamic path analysis.
 
-**Status**: Implemented
-**Priority**: Low (current workaround is functional)
+**Status**: Implemented (Phase 2 - Main Analyzer Integration)
+**Priority**: Low (current implementation is functional)
 **Complexity**: High
 **Date**: 2026-01-26
 **Implementation Date**: 2026-01-26
+**Updated**: 2026-01-27 (Main analyzer integration)
 
 ## Problem Statement
 
@@ -549,11 +550,170 @@ The pre-computed workaround remains as a safety net, ensuring functionality even
 
 Set `ENABLE_DYNAMIC_BUNNY_ANALYSIS = False` in `alttp.py` to disable dynamic analysis and use only the pre-computed workaround.
 
+## Phase 2 Implementation (2026-01-27)
+
+### Summary
+
+The main analyzer was enhanced to handle bunny rules directly, making the legacy `ClosureFunctionAnalyzer` path unnecessary. Two key features were added:
+
+1. **Factory Function Execution**: Execute factory functions like `path_to_access_rule(path, entrance)` at analysis time and analyze the returned lambda
+2. **Callable List Analysis**: When a closure variable contains a list of callables (like the `path` list), analyze each callable to produce proper rule structures
+
+### Key Changes
+
+#### 1. Factory Function Execution (`call_visitor.py`)
+
+Added `_try_execute_factory_function()` method that:
+- Detects when a function call doesn't pass `state` as argument (not a rule check)
+- Attempts to resolve all arguments to concrete values
+- Executes the factory function to get the returned callable
+- Recursively analyzes the returned callable
+
+This handles `path_to_access_rule(path, entrance)` which returns:
+```python
+lambda state: state.can_reach(entrance.name, 'Entrance', entrance.player) and all(rule(state) for rule in path)
+```
+
+#### 2. Callable List Analysis (`expression_visitors.py`)
+
+Enhanced `visit_Name` to detect lists of callables in closure variables:
+```python
+if list_value and all(callable(item) for item in list_value):
+    # Analyze each callable to get proper rule structures
+    for item_func in list_value:
+        item_result = analyze_rule(rule_func=item_func, ...)
+        analyzed_items.append(item_result)
+    return {'type': 'constant', 'value': analyzed_items}
+```
+
+This converts `path = [<lambda>, <lambda>, ...]` into:
+```json
+{
+  "type": "constant",
+  "value": [
+    {"type": "state_method", "method": "can_reach", "args": [...]},
+    {"type": "item_check", "item": "Crystal 5"},
+    ...
+  ]
+}
+```
+
+#### 3. Callable List Cache (`cache.py`)
+
+Added `callable_list_cache` to prevent repeated analysis of the same lambda:
+- Key: function ID (`id(func)`)
+- Value: analyzed rule dict
+
+This dramatically reduces `analyze_rule` calls:
+- Before: 50,000+ calls, ~87 seconds
+- After: ~few thousand calls, ~9 seconds
+
+#### 4. Increased Safety Limit (`constants.py`)
+
+Increased `MAX_ANALYZE_RULE_CALLS` from 10,000 to 20,000 to accommodate complex games while the cache prevents actual infinite loops.
+
+#### 5. Disabled Legacy Path (`alttp.py`)
+
+Set `ENABLE_DYNAMIC_BUNNY_ANALYSIS = False` which:
+- Lets bunny rules pass through to the main analyzer
+- Bypasses the `ClosureFunctionAnalyzer` and pre-computed workarounds
+- Produces more accurate, detailed rule structures
+
+### Results
+
+Exported bunny rules now contain fully analyzed structures:
+```json
+{
+  "rule": "Or",
+  "children": [
+    {"rule": "Has", "args": {"item_name": "Moon Pearl"}},
+    {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "all_of",
+          "element_rule": {"type": "helper", "name": "rule"},
+          "iterator_info": {
+            "iterator": {
+              "type": "constant",
+              "value": [
+                {"type": "state_method", "method": "can_reach", "args": [...]},
+                {"type": "item_check", "item": "Crystal 5"},
+                ...
+              ]
+            }
+          }
+        },
+        {"type": "state_method", "method": "can_reach", "args": [...]}
+      ]
+    }
+  ]
+}
+```
+
+### Files Modified
+
+- `exporter/analyzer/ast_visitors/call_visitor.py`
+  - Added `_try_resolve_arg_to_value()` method
+  - Added `_try_execute_factory_function()` method
+  - Integrated factory function execution after `has_state_arg` check
+
+- `exporter/analyzer/ast_visitors/expression_visitors.py`
+  - Enhanced `visit_Name` to analyze callable lists in closures
+  - Added cache lookup/storage for analyzed callables
+
+- `exporter/analyzer/cache.py`
+  - Added `callable_list_cache` dictionary
+  - Updated `clear_caches()` to include new cache
+
+- `exporter/constants.py`
+  - Increased `MAX_ANALYZE_RULE_CALLS` from 10,000 to 20,000
+
+- `exporter/games/official/alttp.py`
+  - Set `ENABLE_DYNAMIC_BUNNY_ANALYSIS = False`
+  - Updated `override_rule_analysis` to return None for bunny rules when flag is False
+
+## Remaining Work
+
+### Potential Future Cleanup
+
+The following code is no longer actively used but remains as a safety net:
+
+1. **`_try_dynamic_bunny_analysis` method** - Uses legacy `ClosureFunctionAnalyzer`
+2. **`_process_bunny_rules` in post-processing** - Handles serialized bunny strings (no longer generated)
+3. **`_get_bunny_replacement_rule` and pre-computed rules** - Workaround rules
+4. **`ClosureFunctionAnalyzer` module** - May still be useful for other patterns
+5. **Bunny-related constants** (`BUNNY_ACCESSIBLE_LOCATIONS`, etc.) - May be used elsewhere
+
+**Recommendation**: Keep legacy code until main analyzer proves reliable across all configurations:
+- Various glitch modes (minor_glitches, overworld_glitches, hybrid_major_glitches, no_logic)
+- Entrance shuffle modes (simple, restricted, full, crossed, insanity)
+- Inverted mode
+- Universal keys
+
+### Frontend Evaluation
+
+The frontend needs to handle the new rule structures:
+- `all_of` with analyzed iterator values
+- `state_method` with `can_reach`
+- Nested `and`/`or` conditions
+
+This may already work via existing rule evaluation, but should be tested.
+
+### Testing
+
+Run fuzzer tests with ALttP glitch configurations to verify:
+```bash
+npm test -- --mode=test-fuzzer --game=alttp --seed-range=1-100
+```
+
 ## References
 
 - `worlds/alttp/Rules.py` lines 1653-1783: Original `set_bunny_rules()` implementation
-- `exporter/analyzer/closure_function_analyzer.py`: New closure function analyzer
-- `exporter/games/official/alttp.py`: ALttP handler with dynamic analysis
-- `exporter/analyzer/ast_visitors/call_visitor.py`: Generator expression handling with fallback
+- `exporter/analyzer/closure_function_analyzer.py`: Legacy closure function analyzer
+- `exporter/games/official/alttp.py`: ALttP handler with dynamic analysis disabled
+- `exporter/analyzer/ast_visitors/call_visitor.py`: Factory function execution
+- `exporter/analyzer/ast_visitors/expression_visitors.py`: Callable list analysis
+- `exporter/analyzer/cache.py`: Callable list cache
 - `frontend/modules/shared/ruleEngine.js`: Enhanced can_reach rule evaluation
 - `frontend/modules/shared/stateInterface.js`: Frontend rule evaluation

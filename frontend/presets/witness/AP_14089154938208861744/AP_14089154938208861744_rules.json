@@ -15464,214 +15464,214 @@
         "hunt_entities": [],
         "log_ids_to_hints": {
           "4807": [
-            "",
-            -1,
-            -1
+            "Progressive Dots can be found at Town RGB House Entry Panel.",
+            158225,
+            1
           ],
           "207358": [
-            "Mountain Floor 1 Back Row 3 contains Speed Boost.",
-            158423,
+            "Progressive Dots can be found at Town RGB House Entry Panel.",
+            158225,
             1
           ],
           "211767": [
-            "In the Bunker area, you will find 1 progression item.",
-            "hinted_area:Bunker",
+            "Progressive Dots can be found at Town RGB House Entry Panel.",
+            158225,
             1
           ],
           "1889": [
-            "Progressive Dots can be found at Town RGB House Entry Panel.",
-            158225,
-            1
-          ],
-          "246028": [
-            "",
-            -1,
-            -1
-          ],
-          "246018": [
-            "In the Mountain (Outside) area, you will find no progression items.",
-            "hinted_area:Mountain (Outside)",
-            0
-          ],
-          "211711": [
-            "",
-            -1,
-            -1
-          ],
-          "246013": [
-            "",
-            -1,
-            -1
-          ],
-          "207368": [
-            "Town Cargo Box Entry Panel contains Speed Boost.",
-            158219,
-            1
-          ],
-          "211159": [
-            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel.",
-            158011,
-            1
-          ],
-          "211146": [
-            "Mountain Floor 1 Back Row 3 contains Speed Boost.",
-            158423,
-            1
-          ],
-          "246003": [
-            "In the Symmetry Island area, you will find no progression items.",
-            "hinted_area:Symmetry Island",
-            0
-          ],
-          "207370": [
-            "Triangles can be found at Desert Flood Room 6.",
-            158110,
-            1
-          ],
-          "246022": [
             "Boat can be found at Town Wooden Rooftop.",
             158240,
             1
           ],
+          "246028": [
+            "Boat can be found at Town Wooden Rooftop.",
+            158240,
+            1
+          ],
+          "246018": [
+            "Boat can be found at Town Wooden Rooftop.",
+            158240,
+            1
+          ],
+          "211711": [
+            "Rotated Shapers can be found at Swamp Entry Panel.",
+            158287,
+            1
+          ],
+          "246013": [
+            "Rotated Shapers can be found at Swamp Entry Panel.",
+            158287,
+            1
+          ],
+          "207368": [
+            "Rotated Shapers can be found at Swamp Entry Panel.",
+            158287,
+            1
+          ],
+          "211159": [
+            "Quarry Stoneworks Control Room Left contains Speed Boost.",
+            158143,
+            1
+          ],
+          "211146": [
+            "Quarry Stoneworks Control Room Left contains Speed Boost.",
+            158143,
+            1
+          ],
+          "246003": [
+            "Quarry Stoneworks Control Room Left contains Speed Boost.",
+            158143,
+            1
+          ],
+          "207370": [
+            "Swamp Purple Underwater contains Speed Boost.",
+            158333,
+            1
+          ],
+          "246022": [
+            "Swamp Purple Underwater contains Speed Boost.",
+            158333,
+            1
+          ],
           "246027": [
-            "Town RGB House Upstairs Right contains Puzzle Skip.",
-            158246,
+            "Swamp Purple Underwater contains Speed Boost.",
+            158333,
             1
           ],
           "246007": [
-            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel.",
-            158011,
-            1
-          ],
-          "246019": [
-            "In the Mountain (Outside) area, you will find no progression items.",
-            "hinted_area:Mountain (Outside)",
-            0
-          ],
-          "246004": [
-            "In the Monastery area, you will find no progression items.",
-            "hinted_area:Monastery",
-            0
-          ],
-          "246015": [
-            "Progressive Dots can be found at Town RGB House Entry Panel.",
-            158225,
-            1
-          ],
-          "211133": [
-            "",
-            -1,
-            -1
-          ],
-          "246030": [
-            "In the Monastery area, you will find no progression items.",
-            "hinted_area:Monastery",
-            0
-          ],
-          "246026": [
             "In the Bunker area, you will find 1 progression item.",
             "hinted_area:Bunker",
             1
           ],
+          "246019": [
+            "In the Bunker area, you will find 1 progression item.",
+            "hinted_area:Bunker",
+            1
+          ],
+          "246004": [
+            "In the Bunker area, you will find 1 progression item.",
+            "hinted_area:Bunker",
+            1
+          ],
+          "246015": [
+            "In the Desert area, you will find 1 progression item.",
+            "hinted_area:Desert",
+            1
+          ],
+          "211133": [
+            "In the Desert area, you will find 1 progression item.",
+            "hinted_area:Desert",
+            1
+          ],
+          "246030": [
+            "In the Desert area, you will find 1 progression item.",
+            "hinted_area:Desert",
+            1
+          ],
+          "246026": [
+            "In the Jungle area, you will find 1 progression item.",
+            "hinted_area:Jungle",
+            1
+          ],
           "4601": [
-            "",
-            -1,
-            -1
+            "In the Jungle area, you will find 1 progression item.",
+            "hinted_area:Jungle",
+            1
           ],
           "1871": [
-            "",
-            -1,
-            -1
+            "In the Jungle area, you will find 1 progression item.",
+            "hinted_area:Jungle",
+            1
           ],
           "5559": [
-            "Progressive Dots can be found at Town RGB House Entry Panel.",
-            158225,
+            "In the Quarry area, you will find 1 progression item.",
+            "hinted_area:Quarry",
             1
           ],
           "211137": [
-            "",
-            -1,
-            -1
+            "In the Quarry area, you will find 1 progression item.",
+            "hinted_area:Quarry",
+            1
           ],
           "5568": [
-            "",
-            -1,
-            -1
+            "In the Quarry area, you will find 1 progression item.",
+            "hinted_area:Quarry",
+            1
           ],
           "246021": [
-            "In the Symmetry Island area, you will find no progression items.",
-            "hinted_area:Symmetry Island",
-            0
+            "Sound Dots can be found at Orchard Apple Tree 5.",
+            158075,
+            1
           ],
           "1891": [
-            "Mountain Floor 1 Back Row 3 contains Speed Boost.",
-            158423,
+            "Sound Dots can be found at Orchard Apple Tree 5.",
+            158075,
             1
           ],
           "207360": [
-            "",
-            -1,
-            -1
+            "Sound Dots can be found at Orchard Apple Tree 5.",
+            158075,
+            1
           ],
           "5569": [
-            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel.",
-            158011,
+            "Treehouse Left Orange Bridge 15 contains Slowness.",
+            158390,
             1
           ],
           "246029": [
-            "Town Cargo Box Entry Panel contains Speed Boost.",
-            158219,
+            "Treehouse Left Orange Bridge 15 contains Slowness.",
+            158390,
             1
           ],
           "211766": [
+            "Treehouse Left Orange Bridge 15 contains Slowness.",
+            158390,
+            1
+          ],
+          "246025": [
             "Triangles can be found at Desert Flood Room 6.",
             158110,
             1
           ],
-          "246025": [
+          "207367": [
+            "Triangles can be found at Desert Flood Room 6.",
+            158110,
+            1
+          ],
+          "246023": [
+            "Triangles can be found at Desert Flood Room 6.",
+            158110,
+            1
+          ],
+          "211145": [
             "",
             -1,
             -1
           ],
-          "207367": [
-            "Quarry Stoneworks Control Room Left contains Speed Boost.",
-            158143,
-            1
-          ],
-          "246023": [
-            "In the Mountain (Outside) area, you will find no progression items.",
-            "hinted_area:Mountain (Outside)",
-            0
-          ],
-          "211145": [
-            "Quarry Stoneworks Control Room Left contains Speed Boost.",
-            158143,
-            1
-          ],
           "211368": [
-            "Town RGB House Upstairs Right contains Puzzle Skip.",
-            158246,
-            1
+            "",
+            -1,
+            -1
           ],
           "246017": [
-            "Triangles can be found at Desert Flood Room 6.",
-            158110,
-            1
+            "",
+            -1,
+            -1
           ],
           "246069": [
-            "Quarry Stoneworks Control Room Left contains Speed Boost.",
-            158143,
-            1
+            "",
+            -1,
+            -1
           ],
           "246020": [
-            "Boat can be found at Town Wooden Rooftop.",
-            158240,
-            1
+            "",
+            -1,
+            -1
           ],
           "1290": [
-            "Town RGB House Upstairs Right contains Puzzle Skip.",
-            158246,
-            1
+            "",
+            -1,
+            -1
           ],
           "246016": [
             "",
@@ -15684,29 +15684,29 @@
             -1
           ],
           "207359": [
-            "In the Symmetry Island area, you will find no progression items.",
-            "hinted_area:Symmetry Island",
-            0
+            "",
+            -1,
+            -1
           ],
           "211369": [
-            "In the Monastery area, you will find no progression items.",
-            "hinted_area:Monastery",
-            0
+            "",
+            -1,
+            -1
           ],
           "246014": [
-            "Boat can be found at Town Wooden Rooftop.",
-            158240,
-            1
+            "",
+            -1,
+            -1
           ],
           "2575": [
-            "Town Cargo Box Entry Panel contains Speed Boost.",
-            158219,
-            1
+            "",
+            -1,
+            -1
           ],
           "207374": [
-            "In the Bunker area, you will find 1 progression item.",
-            "hinted_area:Bunker",
-            1
+            "",
+            -1,
+            -1
           ]
         },
         "laser_ids_to_hints": {},

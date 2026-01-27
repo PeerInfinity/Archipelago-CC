@@ -43,6 +43,116 @@ class CallVisitorMixin:
         - _substitute_variable_in_rule(): Substitutes variables in rules
     """
 
+    def _try_resolve_arg_to_value(self, arg_result: Dict[str, Any]) -> tuple:
+        """
+        Try to resolve an analyzed argument dict to a concrete Python value.
+
+        This is used for factory function execution, where we need to convert
+        analyzed argument structures back to actual values to call the function.
+
+        Args:
+            arg_result: The analyzed argument dict from visiting an AST node
+
+        Returns:
+            A tuple (success: bool, value: Any). If success is False, value is None.
+        """
+        if not isinstance(arg_result, dict):
+            # If it's already a concrete value (shouldn't happen normally)
+            return (True, arg_result)
+
+        arg_type = arg_result.get('type')
+
+        # Handle constant values - already resolved
+        if arg_type == 'constant':
+            return (True, arg_result.get('value'))
+
+        # Handle name references - look up in closure vars
+        if arg_type == 'name':
+            name = arg_result.get('name')
+            if name in self.closure_vars:
+                return (True, self.closure_vars[name])
+            # Try expression resolver as fallback
+            resolved = self.expression_resolver.resolve_variable(name)
+            if resolved is not None:
+                return (True, resolved)
+            return (False, None)
+
+        # Handle attribute access - use expression resolver
+        if arg_type == 'attribute':
+            resolved = self.expression_resolver.resolve_expression(arg_result)
+            if resolved is not None:
+                return (True, resolved)
+            return (False, None)
+
+        # Handle subscript - use expression resolver
+        if arg_type == 'subscript':
+            resolved = self.expression_resolver.resolve_expression(arg_result)
+            if resolved is not None:
+                return (True, resolved)
+            return (False, None)
+
+        # For other types (item_check, state_method, etc.), we can't resolve to a value
+        logging.debug(f"Cannot resolve arg type '{arg_type}' to concrete value")
+        return (False, None)
+
+    def _try_execute_factory_function(self, actual_func, args_with_nodes, func_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Try to execute a factory function (one that returns a callable) and analyze the result.
+
+        Factory functions like path_to_access_rule(path, entrance) return lambdas.
+        If we can resolve all arguments to concrete values, we can execute the function
+        and analyze the returned lambda directly.
+
+        Args:
+            actual_func: The factory function to execute
+            args_with_nodes: List of (ast_node, analyzed_result) tuples for arguments
+            func_name: Name of the function (for logging)
+
+        Returns:
+            Analyzed rule dict if successful, None otherwise
+        """
+        # Try to resolve all arguments to concrete values
+        resolved_args = []
+        for ast_node, arg_result in args_with_nodes:
+            success, value = self._try_resolve_arg_to_value(arg_result)
+            if not success:
+                logging.debug(f"Factory function {func_name}: Could not resolve arg to value")
+                return None
+            resolved_args.append(value)
+
+        # Execute the factory function with resolved arguments
+        try:
+            logging.debug(f"Executing factory function {func_name} with {len(resolved_args)} resolved args")
+            result = actual_func(*resolved_args)
+        except Exception as e:
+            logging.debug(f"Factory function {func_name} execution failed: {e}")
+            return None
+
+        # Check if the result is callable (a lambda/function)
+        if not callable(result):
+            logging.debug(f"Factory function {func_name} returned non-callable: {type(result)}")
+            return None
+
+        # Analyze the returned callable
+        logging.debug(f"Factory function {func_name} returned callable, analyzing it")
+        from ..analysis import analyze_rule
+        analyzed_result = analyze_rule(
+            rule_func=result,
+            closure_vars=self.closure_vars.copy(),
+            seen_funcs=self.seen_funcs,
+            game_handler=self.game_handler,
+            player_context=self.player_context,
+            rule_target_name=getattr(self, 'rule_target_name', None),
+            target_type=getattr(self, 'target_type', None)
+        )
+
+        if analyzed_result and analyzed_result.get('type') != 'error':
+            logging.debug(f"Factory function {func_name}: Successfully analyzed returned callable")
+            return analyzed_result
+
+        logging.debug(f"Factory function {func_name}: analyze_rule returned error")
+        return None
+
     def visit_Call(self, node):
         """
         Visit a function call node.
@@ -539,6 +649,20 @@ class CallVisitorMixin:
                  except Exception as e:
                       logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
+
+                 # --- Factory function execution logic ---
+                 # If the function doesn't take 'state' as an argument but returns a callable,
+                 # it might be a "factory function" like path_to_access_rule(path, entrance).
+                 # Try to execute it with resolved arguments and analyze the returned callable.
+                 if callable(actual_func):
+                     factory_result = self._try_execute_factory_function(
+                         actual_func, args_with_nodes, closure_func_name or func_name
+                     )
+                     if factory_result is not None:
+                         logging.debug(f"Factory function execution successful for {func_name}")
+                         return factory_result
+                 # --- END Factory function execution logic ---
+
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
             # *** Special handling for all(GeneratorExp) ***

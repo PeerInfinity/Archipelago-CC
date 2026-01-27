@@ -210,16 +210,22 @@
             "name": "Act Completion (Time Rift - Gallery)",
             "id": 2000312758,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -320,16 +326,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -420,16 +421,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 2",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -520,16 +516,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 3",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -613,16 +604,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 4",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -697,16 +683,22 @@
             "name": "Mafia HQ - Hallway Brewing Crate",
             "id": 2000305387,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -734,16 +726,22 @@
             "name": "Mafia HQ - Secret Room",
             "id": 2000304979,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Relic (Red Crayon)",
@@ -890,16 +888,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 5",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -950,16 +943,22 @@
             "name": "Act Completion (Cheating the Race)",
             "id": 2000312318,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -985,16 +984,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 6",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -1154,16 +1148,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Train"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -1315,16 +1304,22 @@
             "name": "Murder on the Owl Express - Raven Suite Room",
             "id": 2000305701,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "No Bonk Badge",
@@ -1554,8 +1549,14 @@
             "name": "Act Completion (Train Rush)",
             "id": 2000312481,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -1681,16 +1682,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 2",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Train"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -1723,8 +1719,14 @@
             "name": "Dead Bird Studio Basement - Window Platform",
             "id": 2000305432,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -1738,8 +1740,14 @@
             "name": "Dead Bird Studio Basement - Cardboard Conductor",
             "id": 2000305059,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "50 Pons",
@@ -1753,8 +1761,14 @@
             "name": "Dead Bird Studio Basement - Above Conductor Sign",
             "id": 2000305057,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -1782,8 +1796,14 @@
             "name": "Dead Bird Studio Basement - Disco Room",
             "id": 2000305061,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "50 Pons",
@@ -1825,8 +1845,14 @@
             "name": "Dead Bird Studio Basement - Tightrope",
             "id": 2000305058,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Time Piece",
@@ -1840,8 +1866,14 @@
             "name": "Dead Bird Studio Basement - Cameras",
             "id": 2000305431,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -1855,8 +1887,14 @@
             "name": "Dead Bird Studio Basement - Locked Room",
             "id": 2000305819,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -1870,8 +1908,14 @@
             "name": "Act Completion (Dead Bird Studio Basement)",
             "id": 2000312253,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Relic (Burger Cushion)",
@@ -2313,16 +2357,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2434,16 +2473,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 2",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2522,8 +2556,14 @@
             "name": "Subcon Well - On Pipe",
             "id": 2000324311,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -2551,8 +2591,14 @@
             "name": "Act Completion (The Subcon Well)",
             "id": 2000311160,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Time Piece",
@@ -2578,16 +2624,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 3",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2769,16 +2810,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 4",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2935,16 +2971,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 5",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -3045,16 +3076,22 @@
             "name": "Act Completion (Mail Delivery Service)",
             "id": 2000312032,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 0
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -3117,8 +3154,14 @@
             "name": "Alpine Skyline - Finale",
             "connected_region": "Cheating the Race",
             "access_rule": {
-              "rule": "can_clear_alpine",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "clear_alpine",
+                "inferred": true,
+                "description": "Requires ability to clear alpine",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -3138,8 +3181,14 @@
             "name": "AFR -> Alpine Skyline Area",
             "connected_region": "Alpine Skyline Area",
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -3167,16 +3216,11 @@
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "has_relic_combo",
-                  "_original_ast_type": "helper",
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Crayon"
-                      }
-                    }
-                  ]
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
                 }
               ]
             }
@@ -3257,16 +3301,28 @@
             "name": "-> The Lava Cake",
             "connected_region": "The Lava Cake",
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "-> The Windmill",
             "connected_region": "The Windmill",
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -3382,16 +3438,22 @@
             "name": "Alpine Skyline - The Twilight Path",
             "id": 2000334434,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -3486,8 +3548,14 @@
             "name": "Alpine Skyline - Bird Pass Fork",
             "id": 2000335911,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Fast Hatter Badge",
@@ -3533,8 +3601,14 @@
             "name": "Alpine Skyline - Ember Summit",
             "id": 2000336311,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -3548,8 +3622,14 @@
             "name": "Alpine Skyline - Goat Outpost Horn",
             "id": 2000334760,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -3563,8 +3643,14 @@
             "name": "Alpine Skyline - Windy Passage",
             "id": 2000334776,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -3598,16 +3684,22 @@
             "name": "Alpine Skyline - The Birdhouse: Dweller Platforms Relic",
             "id": 2000336497,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "50 Pons",
@@ -3967,16 +4059,11 @@
             "name": "Time Rift - Alpine Skyline Portal - Entrance 2",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Crayon"
-                  }
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Crayon",
+                "count": 4
+              }
             }
           }
         ],
@@ -3985,8 +4072,14 @@
             "name": "Act Completion (The Illness has Spread)",
             "id": 2000312022,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Time Piece",
@@ -4112,16 +4205,22 @@
             "name": "Act Completion (Time Rift - The Twilight Bell)",
             "id": 2000312399,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Relic (Blue Crayon)",
@@ -4141,16 +4240,22 @@
             "name": "Act Completion (Time Rift - Curly Tail Trail)",
             "id": 2000313335,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "50 Pons",
@@ -4319,16 +4424,22 @@
             "name": "Mafia Town - Blue Vault Brewing Crate",
             "id": 2000305572,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "50 Pons",
@@ -4426,16 +4537,22 @@
             "name": "Mafia Town - Ice Hat Cage",
             "id": 2000304831,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Health Pon",
@@ -4655,16 +4772,22 @@
             "name": "Mafia Town - Top of Ruined Tower",
             "id": 2000304607,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Time Piece",
@@ -4678,16 +4801,22 @@
             "name": "Mafia Town - Hot Air Balloon",
             "id": 2000304829,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 2
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -4845,8 +4974,14 @@
             "name": "Mafia Town - Clock Tower Chest",
             "id": 2000303481,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Health Pon",
@@ -4860,8 +4995,14 @@
             "name": "Mafia Town - Top of Lighthouse",
             "id": 2000304213,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Item Magnet Badge",
@@ -5116,19 +5257,10 @@
             "name": "SF Area -> SF Behind Boss Firewall",
             "connected_region": "Subcon Forest Behind Boss Firewall",
             "access_rule": {
-              "rule": "has_paintings",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
-                  }
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Paintings"
+              }
             }
           },
           {
@@ -5242,16 +5374,22 @@
             "name": "Subcon Forest - Swamp Gravestone",
             "id": 2000326296,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -5447,8 +5585,14 @@
             "name": "Subcon Forest - Noose Treehouse",
             "id": 2000324856,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "50 Pons",
@@ -5462,16 +5606,22 @@
             "name": "Subcon Forest - Long Tree Climb Chest",
             "id": 2000323734,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -5499,16 +5649,22 @@
             "name": "Subcon Forest - Infinite Yarn Bush",
             "id": 2000325478,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "100 Pons",
@@ -5522,16 +5678,22 @@
             "name": "Subcon Forest - Magnet Badge Bush",
             "id": 2000325479,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 1
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Relic (Green Crayon)",
@@ -5545,16 +5707,22 @@
             "name": "Subcon Forest - Dweller Stump",
             "id": 2000324767,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -5568,16 +5736,22 @@
             "name": "Subcon Forest - Dweller Floating Rocks",
             "id": 2000324464,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -5605,16 +5779,22 @@
             "name": "Subcon Forest - Dweller Platforming Tree B",
             "id": 2000324855,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -5670,16 +5850,22 @@
             "name": "Subcon Forest - Dweller Shack",
             "id": 2000324463,
             "access_rule": {
-              "rule": "can_use_hat",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hat",
+                "inferred": true,
+                "description": "Requires ability to use hat",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
                   }
-                }
-              ]
+                ],
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Time Piece",
@@ -5693,8 +5879,14 @@
             "name": "Subcon Forest - Tall Tree Hookshot Swing",
             "id": 2000324766,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -5982,8 +6174,14 @@
             "name": "Act Completion (Time Rift - Pipe)",
             "id": 2000313069,
             "access_rule": {
-              "rule": "can_use_hookshot",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "use_hookshot",
+                "inferred": true,
+                "description": "Requires ability to use hookshot",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -6229,7 +6427,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 50,
+        "classification_counts": {
+          "progression_skip_balancing": 40,
+          "progression": 10
+        }
       },
       "Time Piece": {
         "name": "Time Piece",
@@ -6240,7 +6442,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 40
+        "max_count": 40,
+        "classification_counts": {
+          "progression": 14,
+          "progression_skip_balancing": 26
+        }
       },
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",
@@ -7042,237 +7248,237 @@
   },
   "canonical_placements": {
     "1": {
-      "Spaceship - Rumbi Abuse": "25 Pons",
-      "Mafia Boss Shop Item": "Relic (Cool Cow)",
-      "Act Completion (Time Rift - Gallery)": "Random Cosmetic",
-      "Act Completion (Time Rift - The Lab)": "Time Piece",
-      "Welcome to Mafia Town - Umbrella": "25 Pons",
-      "Act Completion (Welcome to Mafia Town)": "Time Piece",
-      "Act Completion (Barrel Battle)": "25 Pons",
-      "Act Completion (She Came from Outer Space)": "Relic (Tin-foil Hat Cow)",
-      "Mafia HQ - Hallway Brewing Crate": "Random Cosmetic",
-      "Mafia HQ - Freezer Chest": "Yarn",
-      "Mafia HQ - Secret Room": "Relic (Red Crayon)",
-      "Mafia HQ - Bathroom Stall Chest": "25 Pons",
-      "Act Completion (Down with the Mafia!)": "Random Cosmetic",
-      "Act Completion (Heating Up Mafia Town)": "25 Pons",
-      "HUMT Access": "HUMT Access",
-      "Act Completion (Cheating the Race)": "Random Cosmetic",
-      "Act Completion (The Golden Vault)": "Random Cosmetic",
-      "Act Completion (Dead Bird Studio)": "100 Pons",
-      "Murder on the Owl Express - Cafeteria": "Hookshot Badge",
-      "Murder on the Owl Express - Luggage Room Top": "50 Pons",
-      "Murder on the Owl Express - Luggage Room Bottom": "Yarn",
-      "Murder on the Owl Express - Raven Suite Room": "No Bonk Badge",
-      "Murder on the Owl Express - Raven Suite Top": "Time Piece",
-      "Murder on the Owl Express - Lounge Chest": "25 Pons",
-      "Act Completion (Murder on the Owl Express)": "Time Piece",
-      "Picture Perfect - Behind Badge Seller": "Time Piece",
-      "Picture Perfect - Hats Buy Building": "50 Pons",
-      "Act Completion (Picture Perfect)": "Yarn",
-      "Act Completion (Train Rush)": "Yarn",
-      "Act Completion (The Big Parade)": "Yarn",
       "Act Completion (Award Ceremony)": "25 Pons",
-      "Dead Bird Studio Basement - Window Platform": "Yarn",
-      "Dead Bird Studio Basement - Cardboard Conductor": "50 Pons",
+      "Act Completion (Barrel Battle)": "25 Pons",
+      "Act Completion (Heating Up Mafia Town)": "25 Pons",
+      "Act Completion (Mail Delivery Service)": "25 Pons",
+      "Act Completion (Time Rift - Alpine Skyline)": "25 Pons",
+      "Act Completion (Time Rift - Dead Bird Studio)": "25 Pons",
+      "Act Completion (Time Rift - Sleepy Subcon)": "25 Pons",
+      "Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge": "25 Pons",
+      "Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet": "25 Pons",
+      "Alpine Skyline - The Birdhouse: Hay Bale": "25 Pons",
+      "Alpine Skyline - The Purrloined Village: Horned Stone": "25 Pons",
+      "Alpine Skyline - Windy Passage": "25 Pons",
+      "Badge Seller - Item 1": "25 Pons",
+      "Badge Seller - Item 4": "25 Pons",
+      "Contractual Obligations - Cherry Bomb Bone Cage": "25 Pons",
+      "Dead Bird Studio (Rift) - Page: Behind Cardboard Planet": "25 Pons",
+      "Dead Bird Studio (Rift) - Page: Green Screen": "25 Pons",
+      "Dead Bird Studio (Rift) - Page: Near Time Rift Gate": "25 Pons",
+      "Dead Bird Studio Basement - Locked Room": "25 Pons",
+      "Dead Bird Studio Basement - Vent Pipe": "25 Pons",
+      "Mafia HQ - Bathroom Stall Chest": "25 Pons",
+      "Mafia Town - Behind HQ Chest": "25 Pons",
+      "Mafia Town - Dweller Boxes": "25 Pons",
+      "Mafia Town - Green Vault": "25 Pons",
+      "Mafia Town - Hidden Buttons Chest": "25 Pons",
+      "Mafia Town - Old Man (Seaside Spaghetti)": "25 Pons",
+      "Mafia of Cooks - Page: Beside Red Building": "25 Pons",
+      "Murder on the Owl Express - Lounge Chest": "25 Pons",
+      "Queen Vanessa's Manor - Hall Chest": "25 Pons",
+      "Sleepy Subcon - Page: Behind 2nd Rift Gate": "25 Pons",
+      "Sleepy Subcon - Page: Near Wrecking Ball": "25 Pons",
+      "Spaceship - Rumbi Abuse": "25 Pons",
+      "Subcon Forest - Burning Tree Climb": "25 Pons",
+      "Subcon Forest - Giant Time Piece": "25 Pons",
+      "Subcon Forest - Long Tree Climb Chest": "25 Pons",
+      "Subcon Forest - Swamp Tree A": "25 Pons",
+      "Subcon Forest - Triple Spider Bounce": "25 Pons",
+      "Subcon Village - Ice Cube House": "25 Pons",
+      "Welcome to Mafia Town - Umbrella": "25 Pons",
+      "Mafia Boss Shop Item": "Relic (Cool Cow)",
+      "Act Completion (Cheating the Race)": "Random Cosmetic",
+      "Act Completion (Down with the Mafia!)": "Random Cosmetic",
+      "Act Completion (The Golden Vault)": "Random Cosmetic",
+      "Act Completion (Time Rift - Gallery)": "Random Cosmetic",
+      "Alpine Skyline (Rift) - Page: Windmill Island Ledge": "Random Cosmetic",
+      "Alpine Skyline - Goat Outpost Horn": "Random Cosmetic",
+      "Alpine Skyline - Goat Refinery": "Random Cosmetic",
+      "Alpine Skyline - The Lava Cake: Center Fence Cage": "Random Cosmetic",
+      "Alpine Skyline - The Lava Cake: Top Cake": "Random Cosmetic",
+      "Alpine Skyline - The Windmill: Dropdown": "Random Cosmetic",
+      "Badge Seller - Item 2": "Random Cosmetic",
+      "Dead Bird Studio - Up the Ladder": "Random Cosmetic",
       "Dead Bird Studio Basement - Above Conductor Sign": "Random Cosmetic",
       "Dead Bird Studio Basement - Logo Wall": "Random Cosmetic",
-      "Dead Bird Studio Basement - Disco Room": "50 Pons",
-      "Dead Bird Studio Basement - Small Room": "Yarn",
-      "Dead Bird Studio Basement - Vent Pipe": "25 Pons",
-      "Dead Bird Studio Basement - Tightrope": "Time Piece",
-      "Dead Bird Studio Basement - Cameras": "Yarn",
-      "Dead Bird Studio Basement - Locked Room": "25 Pons",
-      "Act Completion (Dead Bird Studio Basement)": "Relic (Burger Cushion)",
-      "Act Completion (Time Rift - Dead Bird Studio)": "25 Pons",
-      "Dead Bird Studio (Rift) - Page: Behind Cardboard Planet": "25 Pons",
-      "Dead Bird Studio (Rift) - Page: Near Time Rift Gate": "25 Pons",
-      "Dead Bird Studio (Rift) - Page: Top of Metal Bar": "Yarn",
-      "Dead Bird Studio (Rift) - Page: Lava Lamp": "Time Piece",
-      "Dead Bird Studio (Rift) - Page: Above Horse Picture": "Yarn",
-      "Dead Bird Studio (Rift) - Page: Green Screen": "25 Pons",
-      "Dead Bird Studio (Rift) - Page: In The Corner": "Time Piece",
-      "Dead Bird Studio (Rift) - Page: Above TV Room": "Yarn",
-      "Act Completion (Time Rift - The Owl Express)": "Yarn",
-      "Act Completion (Time Rift - The Moon)": "Time Piece",
-      "Dead Bird Studio - Up the Ladder": "Random Cosmetic",
-      "Dead Bird Studio - Red Building Top": "Snatcher's Contract - The Subcon Well",
-      "Dead Bird Studio - Behind Water Tower": "Time Piece",
-      "Dead Bird Studio - Side of House": "Yarn",
-      "Dead Bird Studio - DJ Grooves Sign Chest": "Time Piece",
-      "Dead Bird Studio - Tightrope Chest": "100 Pons",
-      "Dead Bird Studio - Tepee Chest": "Snatcher's Contract - Mail Delivery Service",
-      "Dead Bird Studio - Conductor Chest": "100 Pons",
-      "Contractual Obligations - Cherry Bomb Bone Cage": "25 Pons",
-      "Act Completion (Contractual Obligations)": "Time Piece",
-      "Snatcher's Contract - The Subcon Well": "Time Piece",
-      "Subcon Well - Hookshot Badge Chest": "Projectile Badge",
-      "Subcon Well - Above Chest": "Health Pon",
-      "Subcon Well - On Pipe": "Random Cosmetic",
-      "Subcon Well - Mushroom": "Time Piece",
-      "Act Completion (The Subcon Well)": "Time Piece",
-      "Act Completion (Toilet of Doom)": "Relic (UFO)",
-      "TOD Access": "TOD Access",
-      "Queen Vanessa's Manor - Cellar": "Yarn",
-      "Queen Vanessa's Manor - Bedroom Chest": "Yarn",
-      "Queen Vanessa's Manor - Hall Chest": "25 Pons",
-      "Queen Vanessa's Manor - Chandelier": "Health Pon",
-      "Act Completion (Queen Vanessa's Manor)": "100 Pons",
-      "Act Completion (Mail Delivery Service)": "25 Pons",
-      "AFR Access": "AFR Access",
-      "Alpine Skyline - The Purrloined Village: Horned Stone": "25 Pons",
-      "Alpine Skyline - The Purrloined Village: Chest Reward": "Time Piece",
-      "Alpine Skyline - Mystifying Time Mesa: Zipline": "Time Piece",
-      "Alpine Skyline - Mystifying Time Mesa: Gate Puzzle": "Badge Pin",
-      "Alpine Skyline - The Twilight Path": "Yarn",
-      "Alpine Skyline - Goat Village: Below Hookpoint": "Relic (Mountain Set)",
-      "Alpine Skyline - Goat Village: Hidden Branch": "Time Piece",
-      "Alpine Skyline - Goat Refinery": "Random Cosmetic",
-      "Alpine Skyline - Bird Pass Fork": "Fast Hatter Badge",
-      "Alpine Skyline - Yellow Band Hills": "Scooter Badge",
-      "Alpine Skyline - Ember Summit": "Yarn",
-      "Alpine Skyline - Goat Outpost Horn": "Random Cosmetic",
-      "Alpine Skyline - Windy Passage": "25 Pons",
-      "Alpine Skyline - The Birdhouse: Triple Crow Chest": "Health Pon",
-      "Alpine Skyline - The Birdhouse: Dweller Platforms Relic": "50 Pons",
-      "Alpine Skyline - The Birdhouse: Brewing Crate House": "Time Piece",
-      "Alpine Skyline - The Birdhouse: Hay Bale": "25 Pons",
-      "Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet": "25 Pons",
-      "Alpine Skyline - The Birdhouse: Outer Edge": "Yarn",
-      "Act Completion (The Birdhouse)": "Umbrella",
-      "Birdhouse Cleared": "Birdhouse Cleared",
-      "Alpine Skyline - The Lava Cake: Center Fence Cage": "Random Cosmetic",
-      "Alpine Skyline - The Lava Cake: Outer Island Chest": "Yarn",
-      "Alpine Skyline - The Lava Cake: Dweller Pillars": "Snatcher's Contract - Toilet of Doom",
-      "Alpine Skyline - The Lava Cake: Top Cake": "Random Cosmetic",
-      "Act Completion (The Lava Cake)": "Yarn",
-      "Lava Cake Cleared": "Lava Cake Cleared",
-      "Alpine Skyline - The Windmill: Inside Pon Cluster": "Yarn",
-      "Alpine Skyline - The Windmill: Entrance": "Health Pon",
-      "Alpine Skyline - The Windmill: Dropdown": "Random Cosmetic",
-      "Alpine Skyline - The Windmill: House Window": "Hover Badge",
-      "Act Completion (The Windmill)": "Health Pon",
-      "Windmill Cleared": "Windmill Cleared",
-      "Alpine Skyline - The Twilight Bell: Wide Purple Platform": "Time Piece",
-      "Alpine Skyline - The Twilight Bell: Ice Platform": "Health Pon",
-      "Act Completion (The Twilight Bell)": "Yarn",
-      "Twilight Bell Cleared": "Twilight Bell Cleared",
-      "Act Completion (The Illness has Spread)": "Time Piece",
-      "TIHS Access": "TIHS Access",
-      "Act Completion (Time Rift - Alpine Skyline)": "25 Pons",
-      "Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge": "25 Pons",
-      "Alpine Skyline (Rift) - Page: Windmill Island Ledge": "Random Cosmetic",
-      "Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar": "Relic (Burger Patty)",
-      "Alpine Skyline (Rift) - Page: Lonely Birdhouse Top": "Yarn",
-      "Alpine Skyline (Rift) - Page: Below Aqueduct": "Yarn",
-      "Act Completion (Time Rift - The Twilight Bell)": "Relic (Blue Crayon)",
-      "Act Completion (Time Rift - Curly Tail Trail)": "50 Pons",
-      "Mafia Town - Old Man (Seaside Spaghetti)": "25 Pons",
-      "Mafia Town - Old Man (Steel Beams)": "Random Cosmetic",
-      "Mafia Town - Blue Vault": "Time Piece",
-      "Mafia Town - Green Vault": "25 Pons",
-      "Mafia Town - Red Vault": "50 Pons",
-      "Mafia Town - Blue Vault Brewing Crate": "50 Pons",
-      "Mafia Town - Plaza Under Boxes": "Yarn",
-      "Mafia Town - Small Boat": "100 Pons",
-      "Mafia Town - Staircase Pon Cluster": "Health Pon",
-      "Mafia Town - Palm Tree": "50 Pons",
-      "Mafia Town - Port": "Yarn",
-      "Mafia Town - Docks Chest": "Random Cosmetic",
-      "Mafia Town - Ice Hat Cage": "Health Pon",
-      "Mafia Town - Hidden Buttons Chest": "25 Pons",
-      "Mafia Town - Dweller Boxes": "25 Pons",
-      "Mafia Town - Ledge Chest": "Random Cosmetic",
-      "Mafia Town - Yellow Sphere Building Chest": "Yarn",
-      "Mafia Town - Beneath Scaffolding": "Random Cosmetic",
-      "Mafia Town - On Scaffolding": "Random Cosmetic",
-      "Mafia Town - Cargo Ship": "50 Pons",
-      "Mafia Town - Beach Alcove": "Time Piece",
-      "Mafia Town - Wood Cage": "Yarn",
+      "Mafia HQ - Hallway Brewing Crate": "Random Cosmetic",
       "Mafia Town - Beach Patio": "Random Cosmetic",
-      "Mafia Town - Steel Beam Nest": "Yarn",
-      "Mafia Town - Top of Ruined Tower": "Time Piece",
+      "Mafia Town - Beneath Scaffolding": "Random Cosmetic",
+      "Mafia Town - Docks Chest": "Random Cosmetic",
       "Mafia Town - Hot Air Balloon": "Random Cosmetic",
-      "Mafia Town - Camera Badge 1": "Time Piece",
-      "Mafia Town - Camera Badge 2": "Relic (Crayon Box)",
-      "Mafia Town - Chest Beneath Aqueduct": "Time Piece",
-      "Mafia Town - Secret Cave": "Yarn",
-      "Mafia Town - Crow Chest": "Time Piece",
-      "Mafia Town - Above Boats": "Health Pon",
-      "Mafia Town - Slip Slide Chest": "Health Pon",
-      "Mafia Town - Behind Faucet": "Time Piece",
-      "Mafia Town - Clock Tower Chest": "Health Pon",
-      "Mafia Town - Top of Lighthouse": "Item Magnet Badge",
-      "Mafia Town - Mafia Geek Platform": "Yarn",
-      "Mafia Town - Behind HQ Chest": "25 Pons",
-      "Act Completion (Time Rift - Mafia of Cooks)": "50 Pons",
-      "Mafia of Cooks - Page: Fish Pile": "Health Pon",
-      "Mafia of Cooks - Page: Trash Mound": "50 Pons",
-      "Mafia of Cooks - Page: Beside Red Building": "25 Pons",
-      "Mafia of Cooks - Page: Behind Shipping Containers": "Badge Pin",
-      "Mafia of Cooks - Page: Top of Boat": "Yarn",
-      "Mafia of Cooks - Page: Below Dock": "Time Piece",
-      "Act Completion (Time Rift - Sewers)": "Health Pon",
-      "Act Completion (Time Rift - Bazaar)": "Yarn",
-      "Subcon Village - Tree Top Ice Cube": "50 Pons",
-      "Subcon Village - Graveyard Ice Cube": "Health Pon",
-      "Subcon Village - House Top": "Random Cosmetic",
-      "Subcon Village - Ice Cube House": "25 Pons",
-      "Subcon Village - Stump Platform Chest": "Time Piece",
-      "Subcon Forest - Giant Tree Climb": "Time Piece",
-      "Subcon Forest - Ice Cube Shack": "50 Pons",
-      "Subcon Forest - Swamp Gravestone": "Yarn",
-      "Subcon Forest - Swamp Near Well": "Random Cosmetic",
-      "Subcon Forest - Swamp Tree A": "25 Pons",
-      "Subcon Forest - Swamp Tree B": "Random Cosmetic",
-      "Subcon Forest - Swamp Ice Wall": "Time Piece",
-      "Subcon Forest - Swamp Treehouse": "Yarn",
-      "Subcon Forest - Swamp Tree Chest": "Time Piece",
+      "Mafia Town - Ledge Chest": "Random Cosmetic",
+      "Mafia Town - Old Man (Steel Beams)": "Random Cosmetic",
+      "Mafia Town - On Scaffolding": "Random Cosmetic",
+      "Snatcher's Contract - Mail Delivery Service": "Random Cosmetic",
+      "Snatcher's Contract - Toilet of Doom": "Random Cosmetic",
       "Subcon Forest - Burning House": "Random Cosmetic",
-      "Subcon Forest - Burning Tree Climb": "25 Pons",
-      "Subcon Forest - Burning Stump Chest": "Snatcher's Contract - Queen Vanessa's Manor",
-      "Subcon Forest - Burning Forest Treehouse": "50 Pons",
-      "Subcon Forest - Spider Bone Cage A": "Yarn",
       "Subcon Forest - Spider Bone Cage B": "Random Cosmetic",
-      "Subcon Forest - Triple Spider Bounce": "25 Pons",
-      "Subcon Forest - Noose Treehouse": "50 Pons",
-      "Subcon Forest - Long Tree Climb Chest": "25 Pons",
-      "Subcon Forest - Manor Rooftop": "Yarn",
-      "Subcon Forest - Infinite Yarn Bush": "100 Pons",
-      "Subcon Forest - Magnet Badge Bush": "Relic (Green Crayon)",
-      "Subcon Forest - Dweller Stump": "Yarn",
+      "Subcon Forest - Swamp Near Well": "Random Cosmetic",
+      "Subcon Forest - Swamp Tree B": "Random Cosmetic",
+      "Subcon Village - House Top": "Random Cosmetic",
+      "Subcon Well - On Pipe": "Random Cosmetic",
+      "Act Completion (Contractual Obligations)": "Time Piece",
+      "Act Completion (Murder on the Owl Express)": "Time Piece",
+      "Act Completion (The Illness has Spread)": "Time Piece",
+      "Act Completion (The Subcon Well)": "Time Piece",
+      "Act Completion (Time Rift - The Lab)": "Time Piece",
+      "Act Completion (Time Rift - The Moon)": "Time Piece",
+      "Act Completion (Welcome to Mafia Town)": "Time Piece",
+      "Alpine Skyline - Goat Village: Hidden Branch": "Time Piece",
+      "Alpine Skyline - Mystifying Time Mesa: Zipline": "Time Piece",
+      "Alpine Skyline - The Birdhouse: Brewing Crate House": "Time Piece",
+      "Alpine Skyline - The Purrloined Village: Chest Reward": "Time Piece",
+      "Alpine Skyline - The Twilight Bell: Wide Purple Platform": "Time Piece",
+      "Badge Seller - Item 3": "Time Piece",
+      "Dead Bird Studio (Rift) - Page: In The Corner": "Time Piece",
+      "Dead Bird Studio (Rift) - Page: Lava Lamp": "Time Piece",
+      "Dead Bird Studio - Behind Water Tower": "Time Piece",
+      "Dead Bird Studio - DJ Grooves Sign Chest": "Time Piece",
+      "Dead Bird Studio Basement - Tightrope": "Time Piece",
+      "Mafia Town - Beach Alcove": "Time Piece",
+      "Mafia Town - Behind Faucet": "Time Piece",
+      "Mafia Town - Blue Vault": "Time Piece",
+      "Mafia Town - Camera Badge 1": "Time Piece",
+      "Mafia Town - Chest Beneath Aqueduct": "Time Piece",
+      "Mafia Town - Crow Chest": "Time Piece",
+      "Mafia Town - Top of Ruined Tower": "Time Piece",
+      "Mafia of Cooks - Page: Below Dock": "Time Piece",
+      "Murder on the Owl Express - Raven Suite Top": "Time Piece",
+      "Picture Perfect - Behind Badge Seller": "Time Piece",
+      "Sleepy Subcon - Page: Behind 3rd Rift Gate": "Time Piece",
+      "Sleepy Subcon - Page: Rotating Platform": "Time Piece",
+      "Sleepy Subcon - Page: Secret Library": "Time Piece",
+      "Snatcher's Contract - The Subcon Well": "Time Piece",
+      "Subcon Forest - Boss Arena Chest": "Time Piece",
+      "Subcon Forest - Dweller Shack": "Time Piece",
+      "Subcon Forest - Giant Tree Climb": "Time Piece",
+      "Subcon Forest - Swamp Ice Wall": "Time Piece",
+      "Subcon Forest - Swamp Tree Chest": "Time Piece",
+      "Subcon Village - Stump Platform Chest": "Time Piece",
+      "Subcon Well - Mushroom": "Time Piece",
+      "The Finale - Frozen Item": "Time Piece",
+      "Act Completion (She Came from Outer Space)": "Relic (Tin-foil Hat Cow)",
+      "Act Completion (Picture Perfect)": "Yarn",
+      "Act Completion (The Big Parade)": "Yarn",
+      "Act Completion (The Finale)": "Yarn",
+      "Act Completion (The Lava Cake)": "Yarn",
+      "Act Completion (The Twilight Bell)": "Yarn",
+      "Act Completion (Time Rift - Bazaar)": "Yarn",
+      "Act Completion (Time Rift - Pipe)": "Yarn",
+      "Act Completion (Time Rift - The Owl Express)": "Yarn",
+      "Act Completion (Time Rift - Village)": "Yarn",
+      "Act Completion (Train Rush)": "Yarn",
+      "Act Completion (Your Contract has Expired)": "Yarn",
+      "Alpine Skyline (Rift) - Page: Below Aqueduct": "Yarn",
+      "Alpine Skyline (Rift) - Page: Lonely Birdhouse Top": "Yarn",
+      "Alpine Skyline - Ember Summit": "Yarn",
+      "Alpine Skyline - The Birdhouse: Outer Edge": "Yarn",
+      "Alpine Skyline - The Lava Cake: Outer Island Chest": "Yarn",
+      "Alpine Skyline - The Twilight Path": "Yarn",
+      "Alpine Skyline - The Windmill: Inside Pon Cluster": "Yarn",
+      "Dead Bird Studio (Rift) - Page: Above Horse Picture": "Yarn",
+      "Dead Bird Studio (Rift) - Page: Above TV Room": "Yarn",
+      "Dead Bird Studio (Rift) - Page: Top of Metal Bar": "Yarn",
+      "Dead Bird Studio - Side of House": "Yarn",
+      "Dead Bird Studio Basement - Cameras": "Yarn",
+      "Dead Bird Studio Basement - Small Room": "Yarn",
+      "Dead Bird Studio Basement - Window Platform": "Yarn",
+      "Mafia HQ - Freezer Chest": "Yarn",
+      "Mafia Town - Mafia Geek Platform": "Yarn",
+      "Mafia Town - Plaza Under Boxes": "Yarn",
+      "Mafia Town - Port": "Yarn",
+      "Mafia Town - Secret Cave": "Yarn",
+      "Mafia Town - Steel Beam Nest": "Yarn",
+      "Mafia Town - Wood Cage": "Yarn",
+      "Mafia Town - Yellow Sphere Building Chest": "Yarn",
+      "Mafia of Cooks - Page: Top of Boat": "Yarn",
+      "Murder on the Owl Express - Luggage Room Bottom": "Yarn",
+      "Queen Vanessa's Manor - Bedroom Chest": "Yarn",
+      "Queen Vanessa's Manor - Cellar": "Yarn",
+      "Sleepy Subcon - Page: Behind Entrance Area": "Yarn",
+      "Sleepy Subcon - Page: Wrecked Treehouse": "Yarn",
+      "Snatcher's Contract - Queen Vanessa's Manor": "Yarn",
       "Subcon Forest - Dweller Floating Rocks": "Yarn",
       "Subcon Forest - Dweller Platforming Tree A": "Yarn",
       "Subcon Forest - Dweller Platforming Tree B": "Yarn",
-      "Subcon Forest - Giant Time Piece": "25 Pons",
-      "Subcon Forest - Gallows": "50 Pons",
+      "Subcon Forest - Dweller Stump": "Yarn",
       "Subcon Forest - Green and Purple Dweller Rocks": "Yarn",
-      "Subcon Forest - Dweller Shack": "Time Piece",
+      "Subcon Forest - Manor Rooftop": "Yarn",
+      "Subcon Forest - Spider Bone Cage A": "Yarn",
+      "Subcon Forest - Swamp Gravestone": "Yarn",
+      "Subcon Forest - Swamp Treehouse": "Yarn",
       "Subcon Forest - Tall Tree Hookshot Swing": "Yarn",
-      "Snatcher's Contract - Toilet of Doom": "Random Cosmetic",
-      "Snatcher's Contract - Queen Vanessa's Manor": "Yarn",
-      "Snatcher's Contract - Mail Delivery Service": "Random Cosmetic",
-      "Subcon Village - Snatcher Statue Chest": "Relic (Cow)",
-      "Subcon Forest - Boss Arena Chest": "Time Piece",
-      "Act Completion (Your Contract has Expired)": "Yarn",
-      "Act Completion (Time Rift - Sleepy Subcon)": "25 Pons",
-      "Sleepy Subcon - Page: Behind Entrance Area": "Yarn",
-      "Sleepy Subcon - Page: Near Wrecking Ball": "25 Pons",
+      "Mafia HQ - Secret Room": "Relic (Red Crayon)",
+      "HUMT Access": "HUMT Access",
+      "Act Completion (Dead Bird Studio)": "100 Pons",
+      "Act Completion (Queen Vanessa's Manor)": "100 Pons",
+      "Dead Bird Studio - Conductor Chest": "100 Pons",
+      "Dead Bird Studio - Tightrope Chest": "100 Pons",
+      "Mafia Town - Small Boat": "100 Pons",
+      "Subcon Forest - Infinite Yarn Bush": "100 Pons",
+      "Murder on the Owl Express - Cafeteria": "Hookshot Badge",
+      "Act Completion (Time Rift - Curly Tail Trail)": "50 Pons",
+      "Act Completion (Time Rift - Mafia of Cooks)": "50 Pons",
+      "Alpine Skyline - The Birdhouse: Dweller Platforms Relic": "50 Pons",
+      "Dead Bird Studio Basement - Cardboard Conductor": "50 Pons",
+      "Dead Bird Studio Basement - Disco Room": "50 Pons",
+      "Mafia Town - Blue Vault Brewing Crate": "50 Pons",
+      "Mafia Town - Cargo Ship": "50 Pons",
+      "Mafia Town - Palm Tree": "50 Pons",
+      "Mafia Town - Red Vault": "50 Pons",
+      "Mafia of Cooks - Page: Trash Mound": "50 Pons",
+      "Murder on the Owl Express - Luggage Room Top": "50 Pons",
+      "Picture Perfect - Hats Buy Building": "50 Pons",
+      "Subcon Forest - Burning Forest Treehouse": "50 Pons",
+      "Subcon Forest - Gallows": "50 Pons",
+      "Subcon Forest - Ice Cube Shack": "50 Pons",
+      "Subcon Forest - Noose Treehouse": "50 Pons",
+      "Subcon Village - Tree Top Ice Cube": "50 Pons",
+      "Murder on the Owl Express - Raven Suite Room": "No Bonk Badge",
+      "Act Completion (Dead Bird Studio Basement)": "Relic (Burger Cushion)",
+      "Dead Bird Studio - Red Building Top": "Snatcher's Contract - The Subcon Well",
+      "Dead Bird Studio - Tepee Chest": "Snatcher's Contract - Mail Delivery Service",
+      "Subcon Well - Hookshot Badge Chest": "Projectile Badge",
+      "Act Completion (The Windmill)": "Health Pon",
+      "Act Completion (Time Rift - Sewers)": "Health Pon",
+      "Alpine Skyline - The Birdhouse: Triple Crow Chest": "Health Pon",
+      "Alpine Skyline - The Twilight Bell: Ice Platform": "Health Pon",
+      "Alpine Skyline - The Windmill: Entrance": "Health Pon",
+      "Mafia Town - Above Boats": "Health Pon",
+      "Mafia Town - Clock Tower Chest": "Health Pon",
+      "Mafia Town - Ice Hat Cage": "Health Pon",
+      "Mafia Town - Slip Slide Chest": "Health Pon",
+      "Mafia Town - Staircase Pon Cluster": "Health Pon",
+      "Mafia of Cooks - Page: Fish Pile": "Health Pon",
+      "Queen Vanessa's Manor - Chandelier": "Health Pon",
       "Sleepy Subcon - Page: Behind Crane": "Health Pon",
-      "Sleepy Subcon - Page: Wrecked Treehouse": "Yarn",
-      "Sleepy Subcon - Page: Behind 2nd Rift Gate": "25 Pons",
-      "Sleepy Subcon - Page: Rotating Platform": "Time Piece",
-      "Sleepy Subcon - Page: Behind 3rd Rift Gate": "Time Piece",
+      "Subcon Village - Graveyard Ice Cube": "Health Pon",
+      "Subcon Well - Above Chest": "Health Pon",
+      "Act Completion (Toilet of Doom)": "Relic (UFO)",
+      "TOD Access": "TOD Access",
+      "AFR Access": "AFR Access",
+      "Alpine Skyline - Mystifying Time Mesa: Gate Puzzle": "Badge Pin",
+      "Mafia of Cooks - Page: Behind Shipping Containers": "Badge Pin",
+      "Alpine Skyline - Goat Village: Below Hookpoint": "Relic (Mountain Set)",
+      "Alpine Skyline - Bird Pass Fork": "Fast Hatter Badge",
+      "Alpine Skyline - Yellow Band Hills": "Scooter Badge",
+      "Act Completion (The Birdhouse)": "Umbrella",
+      "Birdhouse Cleared": "Birdhouse Cleared",
+      "Alpine Skyline - The Lava Cake: Dweller Pillars": "Snatcher's Contract - Toilet of Doom",
+      "Lava Cake Cleared": "Lava Cake Cleared",
+      "Alpine Skyline - The Windmill: House Window": "Hover Badge",
+      "Windmill Cleared": "Windmill Cleared",
+      "Twilight Bell Cleared": "Twilight Bell Cleared",
+      "TIHS Access": "TIHS Access",
+      "Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar": "Relic (Burger Patty)",
+      "Act Completion (Time Rift - The Twilight Bell)": "Relic (Blue Crayon)",
+      "Mafia Town - Camera Badge 2": "Relic (Crayon Box)",
+      "Mafia Town - Top of Lighthouse": "Item Magnet Badge",
+      "Subcon Forest - Burning Stump Chest": "Snatcher's Contract - Queen Vanessa's Manor",
+      "Subcon Forest - Magnet Badge Bush": "Relic (Green Crayon)",
+      "Subcon Village - Snatcher Statue Chest": "Relic (Cow)",
       "Sleepy Subcon - Page: Frozen Tree": "Relic (Train)",
-      "Sleepy Subcon - Page: Secret Library": "Time Piece",
-      "Act Completion (Time Rift - Pipe)": "Yarn",
-      "Act Completion (Time Rift - Village)": "Yarn",
-      "Badge Seller - Item 1": "25 Pons",
-      "Badge Seller - Item 2": "Random Cosmetic",
-      "Badge Seller - Item 3": "Time Piece",
-      "Badge Seller - Item 4": "25 Pons",
-      "The Finale - Frozen Item": "Time Piece",
-      "Act Completion (The Finale)": "Yarn",
       "Time Piece Cluster": "Time Piece Cluster"
     }
   },
@@ -7288,6 +7494,7 @@
     "1": {
       "game": "A Hat in Time WorldGen",
       "world_class_name": "HatInTimeWorld",
+      "count_non_advancement_items": true,
       "options": {
         "ActRandomizer": 1,
         "BabyTrapWeight": 40,
@@ -8481,8 +8688,12 @@
                 "value": true
               },
               "if_false": {
-                "type": "constant",
-                "value": null
+                "type": "item_check",
+                "item": "Progressive Painting Unlock",
+                "count": {
+                  "type": "name",
+                  "name": "count"
+                }
               }
             },
             "if_false": {
@@ -8497,35 +8708,6 @@
         },
         "defaults": {
           "allow_skip": true
-        }
-      },
-      "has_relic_combo": {
-        "params": [
-          "relic"
-        ],
-        "body": {
-          "type": "group_check",
-          "group": {
-            "type": "name",
-            "name": "relic"
-          },
-          "count": {
-            "type": "helper",
-            "name": "len",
-            "args": [
-              {
-                "type": "subscript",
-                "value": {
-                  "type": "world_attribute",
-                  "attribute": "item_name_groups"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "relic"
-                }
-              }
-            ]
-          }
         }
       },
       "painting_logic": {

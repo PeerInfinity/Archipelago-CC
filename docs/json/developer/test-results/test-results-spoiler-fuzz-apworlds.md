@@ -2,7 +2,9 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
-**Generated:** 2026-01-25 04:56:06
+[📖 Learn about fuzz tests](../tests/test-fuzz.md)
+
+**Generated:** 2026-01-27 20:12:46
 
 **Source Data Created:** 2026-01-25T04:56:06.693744
 

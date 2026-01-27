@@ -10,10 +10,10 @@ on:
         default: 10
 
       jobs:
-        description: 'Number of parallel fuzzer jobs (per runner)'
-        required: true
+        description: 'Number of parallel fuzzer jobs (per runner). Leave empty to use CPU count.'
+        required: false
         type: number
-        default: 2
+        default: 4
 
       timeout:
         description: 'Timeout per generation in seconds'
@@ -323,7 +323,7 @@ jobs:
 
           python scripts/test/test-all-ut-fuzz.py \
             --runs ${{ inputs.runs_per_game }} \
-            --jobs ${{ inputs.jobs }} \
+            ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }} \
             --timeout ${{ inputs.timeout }} \
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
             --every-nth ${{ matrix.split_total }} \

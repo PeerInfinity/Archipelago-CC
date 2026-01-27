@@ -966,6 +966,57 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
+                "helper_args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "option_value",
+                      "option": "wily_5_requirement"
+                    },
+                    "attr": "value"
+                  },
+                  {
+                    "type": "constant",
+                    "value": {
+                      "0": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "1": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "2": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "3": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "4": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "5": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "6": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "7": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "12": {
+                        "type": "list",
+                        "value": []
+                      }
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -987,6 +1038,57 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
+                "helper_args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "option_value",
+                      "option": "wily_5_requirement"
+                    },
+                    "attr": "value"
+                  },
+                  {
+                    "type": "constant",
+                    "value": {
+                      "0": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "1": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "2": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "3": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "4": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "5": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "6": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "7": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "12": {
+                        "type": "list",
+                        "value": []
+                      }
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1432,37 +1534,44 @@
   },
   "canonical_placements": {
     "1": {
-      "Heat Man - Defeated": "Weapon Energy (L)",
-      "Atomic Fire - Received": "Wood Man Access Codes",
-      "Item 1 - Received": "1-Up",
-      "Heat Man Stage - 1-Up": "Flash Man Access Codes",
-      "Air Man - Defeated": "Metal Man Access Codes",
       "Air Shooter - Received": "Weapon Energy (L)",
-      "Item 2 - Received": "Item 3 - Bouncy",
-      "Wood Man - Defeated": "Atomic Fire",
-      "Leaf Shield - Received": "Weapon Energy (L)",
-      "Bubble Man - Defeated": "Item 2 - Rocket",
       "Bubble Lead - Received": "Weapon Energy (L)",
-      "Quick Man - Defeated": "1-Up",
+      "Crash Bomber - Received": "Weapon Energy (L)",
+      "Crash Man - Defeated": "Weapon Energy (L)",
+      "Crash Man Stage - 1-Up": "Weapon Energy (L)",
+      "Heat Man - Defeated": "Weapon Energy (L)",
+      "Item 3 - Received": "Weapon Energy (L)",
+      "Leaf Shield - Received": "Weapon Energy (L)",
+      "Metal Man Stage - E-Tank 1": "Weapon Energy (L)",
       "Quick Boomerang - Received": "Weapon Energy (L)",
       "Quick Man Stage - 1-Up 1": "Weapon Energy (L)",
       "Quick Man Stage - E-Tank": "Weapon Energy (L)",
-      "Quick Man Stage - 1-Up 2": "Health Energy (L)",
+      "Wily Stage 2 - 1-Up 2": "Weapon Energy (L)",
+      "Wily Stage 3 - E-Tank": "Weapon Energy (L)",
+      "Atomic Fire - Received": "Wood Man Access Codes",
+      "Guts Tank - Defeated": "1-Up",
+      "Item 1 - Received": "1-Up",
+      "Metal Man Stage - 1-Up": "1-Up",
+      "Quick Man - Defeated": "1-Up",
       "Quick Man Stage - 1-Up 3": "1-Up",
+      "Heat Man Stage - 1-Up": "Flash Man Access Codes",
+      "Air Man - Defeated": "Metal Man Access Codes",
+      "Item 2 - Received": "Item 3 - Bouncy",
+      "Wood Man - Defeated": "Atomic Fire",
+      "Bubble Man - Defeated": "Item 2 - Rocket",
+      "Metal Man - Defeated": "Health Energy (L)",
+      "Quick Man Stage - 1-Up 2": "Health Energy (L)",
+      "Wily Stage 4 - 1-Up 1": "Health Energy (L)",
+      "Boobeam Trap - Defeated": "E-Tank",
       "Flash Man - Defeated": "E-Tank",
+      "Wily Machine 2 - Defeated": "E-Tank",
+      "Wily Stage 4 - E-Tank 1": "E-Tank",
       "Time Stopper - Received": "Bubble Lead",
-      "Item 3 - Received": "Weapon Energy (L)",
       "Flash Man Stage - 1-Up": "Metal Blade",
       "Flash Man Stage - E-Tank": "Crash Bomber",
-      "Metal Man - Defeated": "Health Energy (L)",
       "Metal Blade - Received": "Item 1 - Propeller",
-      "Metal Man Stage - E-Tank 1": "Weapon Energy (L)",
-      "Metal Man Stage - 1-Up": "1-Up",
       "Metal Man Stage - E-Tank 2": "Bubble Man Access Codes",
-      "Crash Man - Defeated": "Weapon Energy (L)",
-      "Crash Bomber - Received": "Weapon Energy (L)",
       "Crash Man Stage - E-Tank": "Quick Boomerang",
-      "Crash Man Stage - 1-Up": "Weapon Energy (L)",
       "Mecha Dragon - Defeated": "Crash Man Access Codes",
       "Wily Stage 1 - Completed": "Wily Stage 1 - Completed",
       "Wily Stage 1 - 1-Up": "Heat Man Access Codes",
@@ -1470,16 +1579,9 @@
       "Wily Stage 2 - Completed": "Wily Stage 2 - Completed",
       "Wily Stage 2 - E-Tank 1": "Air Shooter",
       "Wily Stage 2 - 1-Up 1": "Time Stopper",
-      "Wily Stage 2 - 1-Up 2": "Weapon Energy (L)",
       "Wily Stage 2 - E-Tank 2": "Leaf Shield",
-      "Guts Tank - Defeated": "1-Up",
       "Wily Stage 3 - Completed": "Wily Stage 3 - Completed",
-      "Wily Stage 3 - E-Tank": "Weapon Energy (L)",
-      "Boobeam Trap - Defeated": "E-Tank",
       "Wily Stage 4 - Completed": "Wily Stage 4 - Completed",
-      "Wily Stage 4 - 1-Up 1": "Health Energy (L)",
-      "Wily Stage 4 - E-Tank 1": "E-Tank",
-      "Wily Machine 2 - Defeated": "E-Tank",
       "Wily Stage 5 - Completed": "Wily Stage 5 - Completed",
       "Dr. Wily (Alien) - Defeated": "Victory"
     }
@@ -1496,6 +1598,7 @@
     "1": {
       "game": "Mega Man 2 WorldGen",
       "world_class_name": "MM2World",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "consumables": 1,
@@ -1822,6 +1925,7 @@
         "12": []
       },
       "world_description": "In the year 200X, following his prior defeat by Mega Man, the evil Dr. Wily has returned to take over the world with\nhis own group of Robot Masters. Mega Man once again sets out to defeat the eight Robot Masters and stop Dr. Wily.",
+      "wily_5_requirement": 8,
       "slot_data": {
         "death_link": 0,
         "weapon_damage": {
@@ -2155,8 +2259,7 @@
           ]
         },
         "param_mappings": {
-          "required": "wily_5_requirement",
-          "boss_requirements": "wily_5_weapons"
+          "required": "wily_5_requirement"
         }
       }
     }

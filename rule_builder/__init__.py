@@ -94,9 +94,6 @@ from .pathfinding import (
     check_region_property,
     # Entrance chain conditions
     EntranceChainCondition,
-    # ALttP-specific helpers
-    BunnyAccessibilityCheck,
-    can_reach_via_bunny_path,
 )
 
 __all__ = [
@@ -157,6 +154,4 @@ __all__ = [
     'ALTTP_REGION_PROPERTIES',
     'check_region_property',
     'EntranceChainCondition',
-    'BunnyAccessibilityCheck',
-    'can_reach_via_bunny_path',
 ]

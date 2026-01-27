@@ -52433,6 +52433,7 @@
     "1": {
       "game": "Starcraft 2 WorldGen",
       "world_class_name": "Starcraft2WorldGenWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],

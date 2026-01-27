@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def has_minions(state: "CollectionState", player: int, required_count = None) -> bool:
-    return (((1 + (0 if any(state.has(armor, player) for armor in state.multiworld.worlds[player].armor_minions.keys()) else 0)) + sum([bonus for (acc, bonus) in state.multiworld.worlds[player].accessory_minions.items()])) >= required_count)
+    return (((1 + (max([bonus for (armor, bonus) in state.multiworld.worlds[player].armor_minions.items() if state.has(armor, player)]) if any(state.has(armor, player) for armor in state.multiworld.worlds[player].armor_minions.keys()) else 0)) + sum([bonus for (acc, bonus) in state.multiworld.worlds[player].accessory_minions.items() if state.has(acc, player)])) >= required_count)
 
 
 def set_rules(world: "World") -> None:

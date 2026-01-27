@@ -655,30 +655,13 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Not",
-                      "args": {
-                        "condition": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      }
-                    },
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "Ring Eastern Bell",
-                          "Ring Western Bell"
-                        ]
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ring Eastern Bell",
+                      "Ring Western Bell"
+                    ]
+                  }
                 },
                 {
                   "rule": "has_ice_grapple_logic",
@@ -6938,94 +6921,46 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
+                          "rule": "has_ladder",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true,
+                          "args": [
+                            {
                               "rule": "Constant",
                               "args": {
-                                "value": 0
+                                "value": "Ladders in South Atoll"
                               },
                               "_converted_from_ast": true
                             }
-                          }
+                          ]
                         },
                         {
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Compare",
-                                  "args": {
-                                    "left": 0,
-                                    "op": ">=",
-                                    "right": 3,
-                                    "_original_ast_type": "compare"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "can_ladder_storage",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magic Wand"
-                                  }
-                                }
-                              ]
+                              "rule": "has_sword",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true
                             },
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "has_ladder",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Ladders in South Atoll"
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "has_sword",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "HasAny",
-                                      "args": {
-                                        "items": [
-                                          "Gun",
-                                          "Magic Wand"
-                                        ]
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "HasAny",
-                                  "args": {
-                                    "items": [
-                                      "Hero's Laurels",
-                                      "Magic Orb"
-                                    ]
-                                  }
-                                }
-                              ]
+                              "rule": "HasAny",
+                              "args": {
+                                "items": [
+                                  "Gun",
+                                  "Magic Wand"
+                                ]
+                              }
                             }
                           ]
+                        },
+                        {
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Hero's Laurels",
+                              "Magic Orb"
+                            ]
+                          }
                         }
                       ]
                     }
@@ -11838,18 +11773,6 @@
                       "rule": "has_sword",
                       "_original_ast_type": "helper",
                       "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Not",
-                      "args": {
-                        "condition": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
-                      }
                     }
                   ]
                 },
@@ -12460,128 +12383,10 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Not",
+                      "rule": "Has",
                       "args": {
-                        "condition": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 0
-                          },
-                          "_converted_from_ast": true
-                        }
+                        "item_name": "Hero's Laurels"
                       }
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Compare",
-                              "args": {
-                                "left": 0,
-                                "op": ">=",
-                                "right": 3,
-                                "_original_ast_type": "compare"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "can_ladder_storage",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Or",
-                              "children": [
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "CanReachRegion",
-                                      "args": {
-                                        "region_name": "Overworld Beach"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Ladder to Ruined Atoll"
-                                      }
-                                    }
-                                  ]
-                                },
-                                {
-                                  "rule": "Not",
-                                  "args": {
-                                    "condition": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  }
-                                },
-                                {
-                                  "rule": "HasAny",
-                                  "args": {
-                                    "items": [
-                                      "Ladders in Overworld Town",
-                                      "Ladder to Swamp",
-                                      "Ladders near Weathervane"
-                                    ]
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magic Wand"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Hero's Laurels"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "has_combat_reqs",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true,
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": "Swamp"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 0
-                              },
-                              "_converted_from_ast": true
-                            }
-                          }
-                        }
-                      ]
                     }
                   ]
                 },
@@ -17347,7 +17152,7 @@
       "author": "SilentSR & ScipioWright",
       "world_description": "Explore a land filled with lost legends, ancient powers, and ferocious monsters in TUNIC, an isometric action game\nabout a small fox on a big adventure. Stranded on a mysterious beach, armed with only your own curiosity, you will\nconfront colossal beasts, collect strange and powerful items, and unravel long-lost secrets. Be brave, tiny fox!",
       "slot_data": {
-        "seed": 749489738,
+        "seed": 1218988168,
         "start_with_sword": 0,
         "keys_behind_bosses": 0,
         "sword_progression": 1,
@@ -17532,10 +17337,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "def_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17556,6 +17357,10 @@
                   }
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "def_upgrades"
+              },
               "var": "_"
             },
             {
@@ -17568,10 +17373,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "sp_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17592,6 +17393,10 @@
                   }
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "sp_upgrades"
+              },
               "var": "_"
             },
             {
@@ -17736,10 +17541,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "hp_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17760,6 +17561,10 @@
                   }
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "hp_upgrades"
+              },
               "var": "_"
             },
             {
@@ -17772,10 +17577,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "potion_upgrades"
-              },
               "body": [
                 {
                   "type": "assign",
@@ -17850,6 +17651,10 @@
                   ]
                 }
               ],
+              "count": {
+                "type": "name",
+                "name": "potion_upgrades"
+              },
               "var": "_"
             },
             {
@@ -20074,10 +19879,6 @@
           },
           {
             "type": "for_range",
-            "count": {
-              "type": "name",
-              "name": "effigy_count"
-            },
             "body": [
               {
                 "type": "assign",
@@ -20114,6 +19915,10 @@
                 }
               }
             ],
+            "count": {
+              "type": "name",
+              "name": "effigy_count"
+            },
             "var": "_"
           },
           {
@@ -23085,10 +22890,6 @@
                         },
                         {
                           "type": "for_range",
-                          "count": {
-                            "type": "name",
-                            "name": "paid_mp"
-                          },
                           "body": [
                             {
                               "type": "assign",
@@ -23109,6 +22910,10 @@
                               }
                             }
                           ],
+                          "count": {
+                            "type": "name",
+                            "name": "paid_mp"
+                          },
                           "var": "_"
                         }
                       ]
@@ -23203,10 +23008,6 @@
                 },
                 {
                   "type": "for_range",
-                  "count": {
-                    "type": "name",
-                    "name": "paid_att"
-                  },
                   "body": [
                     {
                       "type": "assign",
@@ -23227,6 +23028,10 @@
                       }
                     }
                   ],
+                  "count": {
+                    "type": "name",
+                    "name": "paid_att"
+                  },
                   "var": "_"
                 }
               ]
@@ -23430,10 +23235,6 @@
                         },
                         {
                           "type": "for_range",
-                          "count": {
-                            "type": "constant",
-                            "value": 0
-                          },
                           "body": [
                             {
                               "type": "assign",
@@ -23523,6 +23324,39 @@
                               ]
                             }
                           ],
+                          "start": {
+                            "type": "constant",
+                            "value": 0
+                          },
+                          "stop": {
+                            "type": "min",
+                            "args": [
+                              {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "name",
+                                  "name": "def_offerings"
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              },
+                              {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "name",
+                                  "name": "stats_to_buy"
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              }
+                            ]
+                          },
                           "var": "paid_def"
                         },
                         {
@@ -23782,17 +23616,9 @@
                     },
                     {
                       "type": "for_range",
-                      "count": {
-                        "type": "constant",
-                        "value": 0
-                      },
                       "body": [
                         {
                           "type": "for_range",
-                          "count": {
-                            "type": "constant",
-                            "value": 0
-                          },
                           "body": [
                             {
                               "type": "if_statement",
@@ -23879,9 +23705,33 @@
                               ]
                             }
                           ],
+                          "start": {
+                            "type": "constant",
+                            "value": 0
+                          },
+                          "stop": {
+                            "type": "name",
+                            "name": "lowest_hp_added"
+                          },
                           "var": "paid_hp"
                         }
                       ],
+                      "start": {
+                        "type": "constant",
+                        "value": 0
+                      },
+                      "stop": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "potion_offerings"
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      },
                       "var": "paid_potion"
                     },
                     {

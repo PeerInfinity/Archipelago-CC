@@ -1577,9 +1577,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1609,9 +1617,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1641,9 +1657,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1673,9 +1697,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1705,9 +1737,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1737,9 +1777,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1769,9 +1817,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1801,9 +1857,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1833,9 +1897,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1865,9 +1937,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1897,9 +1977,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -1929,9 +2017,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Constant",
+                  "rule": "Attribute",
                   "args": {
-                    "value": 3
+                    "object": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 3
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "attr": "value",
+                    "_original_ast_type": "attribute"
                   },
                   "_converted_from_ast": true
                 }
@@ -26273,10 +26369,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "constant",
-                "value": 13
-              },
               "body": [
                 {
                   "type": "if_statement",
@@ -26647,6 +26739,10 @@
                   ]
                 }
               ],
+              "count": {
+                "type": "constant",
+                "value": 13
+              },
               "var": "i"
             },
             {

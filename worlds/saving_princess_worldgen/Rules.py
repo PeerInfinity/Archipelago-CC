@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, Has, HelperCall, Or
+from rule_builder import True_, False_, Has, HasAll, HasAny, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -68,7 +68,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Electrical (Power On) entrance", player),
-        HelperCall(helper_func=is_power_on, helper_name="is_power_on")
+        HelperCall(helper_func=is_power_on, helper_name="is_power_on", body_rule=Has("System Power"))
     )
     # Location rules
     world.set_rule(
@@ -83,17 +83,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Volcanic: Hot coals", player),
-        Or(HelperCall(helper_func=can_hover, helper_name="can_hover"), Has('Ice Spreadshot'))
+        Or(HelperCall(helper_func=can_hover, helper_name="can_hover", body_rule=(Has("Faster Reload", 4)) & (HasAny('Flamethrower', 'Ice Spreadshot', 'Volt Laser'))), Has('Ice Spreadshot'))
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Flamethrower chest", player),
-        HelperCall(helper_func=nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check", body_rule=(Has("Life Extension")) & (Has("Clip Extension")) & (Has("Faster Reload", 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Cliff (Boss)", player),
-        HelperCall(helper_func=nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check", body_rule=(Has("Life Extension")) & (Has("Clip Extension")) & (Has("Faster Reload", 2)))
     )
 
     world.set_rule(
@@ -103,7 +103,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ice Spreadshot chest", player),
-        HelperCall(helper_func=nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check", body_rule=(Has("Life Extension")) & (Has("Clip Extension")) & (Has("Faster Reload", 2)))
     )
 
     world.set_rule(
@@ -113,7 +113,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ace (Boss)", player),
-        HelperCall(helper_func=nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check", body_rule=(Has("Life Extension")) & (Has("Clip Extension")) & (Has("Faster Reload", 2)))
     )
 
     world.set_rule(
@@ -128,17 +128,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp: Bramble room", player),
-        HelperCall(helper_func=can_hover, helper_name="can_hover")
+        HelperCall(helper_func=can_hover, helper_name="can_hover", body_rule=(Has("Faster Reload", 4)) & (HasAny('Flamethrower', 'Ice Spreadshot', 'Volt Laser')))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Special Extension chest", player),
-        HelperCall(helper_func=nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check", body_rule=(Has("Life Extension")) & (Has("Clip Extension")) & (Has("Faster Reload", 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Snake (Boss)", player),
-        HelperCall(helper_func=nice_check, helper_name="nice_check")
+        HelperCall(helper_func=nice_check, helper_name="nice_check", body_rule=(Has("Life Extension")) & (Has("Clip Extension")) & (Has("Faster Reload", 2)))
     )
 
     world.set_rule(
@@ -148,10 +148,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Electrical: BRAINOS (Boss)", player),
-        HelperCall(helper_func=all_weapons, helper_name="all_weapons")
+        HelperCall(helper_func=all_weapons, helper_name="all_weapons", body_rule=HasAll('Flamethrower', 'Ice Spreadshot', 'Volt Laser'))
     )
 
     world.set_rule(
         multiworld.get_location("Mission objective", player),
-        HelperCall(helper_func=all_weapons, helper_name="all_weapons")
+        HelperCall(helper_func=all_weapons, helper_name="all_weapons", body_rule=HasAll('Flamethrower', 'Ice Spreadshot', 'Volt Laser'))
     )
