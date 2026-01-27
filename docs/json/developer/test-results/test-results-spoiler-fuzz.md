@@ -2,11 +2,13 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-**Generated:** 2026-01-25 04:56:06
+[📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Source Data Created:** 2026-01-25T04:04:32.787189
+**Generated:** 2026-01-27 20:12:46
 
-**Source Data Last Updated:** 2026-01-25T04:04:32.787197
+**Source Data Created:** 2026-01-27T20:12:46.405361
+
+**Source Data Last Updated:** 2026-01-27T20:12:46.405369
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -22,9 +24,9 @@
 - **Games with 100% Pass Rate:** 48 (65.8%)
 - **Games with Failures:** 25 (34.2%)
 - **Total Fuzz Runs:** 730
-- **Successful Runs:** 595 (81.5%)
+- **Successful Runs:** 577 (79.0%)
 - **Generation Failures:** 49
-- **Test Failures:** 86
+- **Test Failures:** 104
 - **Timed Out Runs:** 0
 
 ## Test Results
@@ -32,13 +34,13 @@
 | Game Name | Result | Total | Success | Gen Fail | Test Fail | Timeout | Success Rate | Rules Size |
 |-----------|:------:|:-----:|:-------:|:--------:|:---------:|:-------:|:------------:|:----------:|
 | A Hat in Time | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 235.0KB |
-| A Link to the Past | ❌ | 10 | 7 | 1 | 2 | 0 | ⚠️ 70.0% | 654.1KB |
+| A Link to the Past | ❌ | 10 | 3 | 1 | 6 | 0 | ❌ 30.0% | 654.1KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 26.0KB |
 | Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 275.4KB |
 | Baking Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 18.2KB |
-| Bomb Rush Cyberfunk | ❌ | 10 | 8 | 0 | 2 | 0 | ⚠️ 80.0% | 329.0KB |
+| Bomb Rush Cyberfunk | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 329.0KB |
 | Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 94.4KB |
 | Castlevania 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 138.5KB |
@@ -63,7 +65,7 @@
 | Kingdom Hearts 2 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 1675.2KB |
 | Kirby's Dream Land 3 | ❌ | 10 | 5 | 0 | 5 | 0 | ⚠️ 50.0% | 688.9KB |
 | Landstalker - The Treasures of King Nole | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 210.3KB |
-| Lingo | ❌ | 10 | 2 | 7 | 1 | 0 | ❌ 20.0% | 946.3KB |
+| Lingo | ❌ | 10 | 0 | 7 | 3 | 0 | ❌ 0.0% | 946.3KB |
 | Links Awakening DX | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 714.5KB |
 | Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 398.5KB |
@@ -80,14 +82,14 @@
 | Raft | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 205.9KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 146.1KB |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 33.5KB |
-| Secret of Evermore | ❌ | 10 | 4 | 0 | 6 | 0 | ❌ 40.0% | 418.7KB |
+| Secret of Evermore | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 418.7KB |
 | Shivers | ❌ | 10 | 4 | 0 | 6 | 0 | ❌ 40.0% | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 266.1KB |
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1136.1KB |
-| Stardew Valley | ❌ | 10 | 1 | 0 | 9 | 0 | ❌ 10.0% | 2430.1KB |
+| Stardew Valley | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 2430.1KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 207.8KB |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 92.9KB |
-| Super Mario Land 2 | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 875.0KB |
+| Super Mario Land 2 | ❌ | 10 | 8 | 0 | 2 | 0 | ⚠️ 80.0% | 875.0KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 178.2KB |
 | Super Metroid | ❌ | 10 | 0 | 5 | 5 | 0 | ❌ 0.0% | 625.1KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
