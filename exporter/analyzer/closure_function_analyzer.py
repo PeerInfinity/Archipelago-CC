@@ -355,20 +355,48 @@ class ClosureFunctionAnalyzer:
             for instr in bytecode:
                 if instr.opname in ('JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_TRUE'):
                     is_or_pattern = True
-                elif instr.opname in ('JUMP_IF_FALSE_OR_POP', 'POP_JUMP_IF_FALSE'):
+                elif instr.opname in ('JUMP_IF_FALSE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_FORWARD_IF_FALSE'):
                     is_and_pattern = True
         except Exception:
             pass  # Fall back to heuristics if bytecode analysis fails
 
+        # Known ALttP items that appear in bunny/access rules
+        alttp_items = {
+            'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
+            'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
+            'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
+            'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
+        }
+
+        # Check for combined patterns: (item AND has_sword) OR item
+        # This is the Tower of Hera pattern used in glitch modes
+        if 'has' in names and 'has_sword' in names and is_or_pattern and is_and_pattern:
+            item_names = []
+            for const in consts:
+                if isinstance(const, str) and const and not const.startswith('<'):
+                    if const not in ('Entrance', 'Region', 'Location'):
+                        if const in alttp_items:
+                            item_names.append(const)
+
+            if len(item_names) >= 2:
+                # Pattern: (first_item AND has_sword) OR second_item
+                # The bytecode order is: item1 check -> AND jump -> has_sword -> OR jump -> item2
+                # Convert has_sword to actual item checks
+                has_sword_rule = {
+                    'rule': 'HasAny',
+                    'args': {'items': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']}
+                }
+                first_item = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+                second_item = {'rule': 'Has', 'args': {'item_name': item_names[1]}}
+
+                and_part = {'rule': 'And', 'children': [first_item, has_sword_rule]}
+                result = {'rule': 'Or', 'children': [and_part, second_item]}
+
+                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found (item AND has_sword) OR item pattern: {item_names}")
+                return result
+
         # Check for state.has() pattern - collect ALL item names first
         if 'has' in names:
-            # Known ALttP items that appear in bunny/access rules
-            alttp_items = {
-                'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
-                'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
-                'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
-                'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
-            }
             item_names = []
             for const in consts:
                 if isinstance(const, str) and const and not const.startswith('<'):
@@ -383,15 +411,15 @@ class ClosureFunctionAnalyzer:
             elif len(item_names) > 1:
                 # Multiple items - use bytecode analysis to determine OR vs AND
                 item_checks = [{'rule': 'Has', 'args': {'item_name': name}} for name in item_names]
-                if is_or_pattern:
+                if is_or_pattern and not is_and_pattern:
                     logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern with items: {item_names}")
                     return {'rule': 'Or', 'children': item_checks}
-                elif is_and_pattern:
+                elif is_and_pattern and not is_or_pattern:
                     logger.debug(f"ClosureFunctionAnalyzer: Bytecode found AND pattern with items: {item_names}")
                     return {'rule': 'And', 'children': item_checks}
                 else:
-                    # Default to OR for bunny rules (most common pattern)
-                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found multiple items (assuming OR): {item_names}")
+                    # Both AND and OR detected but no has_sword - default to OR
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found mixed pattern, defaulting to OR: {item_names}")
                     return {'rule': 'Or', 'children': item_checks}
 
         # Check for state.can_reach() pattern
@@ -416,9 +444,14 @@ class ClosureFunctionAnalyzer:
                 return {'rule': 'CanReachEntrance', 'args': {'entrance_name': entrance_name}}
 
         # Check for has_sword helper (used in superbunny rules)
+        # Convert to actual item checks since frontend doesn't have has_sword handler
         if 'has_sword' in names:
-            logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has_sword()")
-            return {'rule': 'has_sword', '_original_ast_type': 'helper', '_converted_from_ast': True}
+            logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has_sword(), converting to item checks")
+            # has_sword checks for any of the four sword tiers
+            return {
+                'rule': 'HasAny',
+                'args': {'items': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']}
+            }
 
         return None
 
@@ -429,6 +462,7 @@ class ClosureFunctionAnalyzer:
         Handles patterns like:
         - lambda state: state.has('Moon Pearl', player)
         - lambda state: state.has('Magic Mirror', player)
+        - lambda state: state.has('Magic Mirror', player) and has_sword(state, player) or state.has('Moon Pearl', player)
 
         Args:
             func: The function to analyze
@@ -448,6 +482,12 @@ class ClosureFunctionAnalyzer:
         if 'has' not in names:
             return None
 
+        # If this pattern includes has_sword or multiple items with AND/OR,
+        # delegate to _analyze_via_bytecode which handles complex patterns
+        if 'has_sword' in names:
+            logger.debug(f"ClosureFunctionAnalyzer: Complex pattern with has_sword, using bytecode analysis")
+            return self._analyze_via_bytecode(func)
+
         # Extract item name from constants - it's the string argument to has()
         # Filter out None and code objects, look for item-like strings
         item_candidates = []
@@ -455,26 +495,15 @@ class ClosureFunctionAnalyzer:
             if isinstance(const, str) and const and not const.startswith('<'):
                 item_candidates.append(const)
 
+        # If we have multiple items, also delegate to bytecode analysis
+        # to properly detect OR vs AND patterns
+        if len(item_candidates) > 1:
+            logger.debug(f"ClosureFunctionAnalyzer: Multiple items found, using bytecode analysis")
+            return self._analyze_via_bytecode(func)
+
         if len(item_candidates) == 1:
             item_name = item_candidates[0]
             logger.debug(f"ClosureFunctionAnalyzer: Detected has() check for '{item_name}'")
-            return {'rule': 'Has', 'args': {'item_name': item_name}}
-
-        # Multiple string constants - try to identify the item
-        # Common ALttP items that appear in bunny rules
-        alttp_items = {
-            'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
-            'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow'
-        }
-        for const in item_candidates:
-            if const in alttp_items:
-                logger.debug(f"ClosureFunctionAnalyzer: Detected has() check for '{const}'")
-                return {'rule': 'Has', 'args': {'item_name': const}}
-
-        # If we have candidates but couldn't identify, use first one
-        if item_candidates:
-            item_name = item_candidates[0]
-            logger.debug(f"ClosureFunctionAnalyzer: Using first constant as item: '{item_name}'")
             return {'rule': 'Has', 'args': {'item_name': item_name}}
 
         return None
