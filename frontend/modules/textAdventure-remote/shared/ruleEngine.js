@@ -4320,6 +4320,39 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'aug_assign': {
+        // Augmented assignment (+=, -=, *=, /=) in the format exported by Python analyzer
+        // Uses 'target' for variable name and 'op' without the '=' (e.g., '+' not '+=')
+        const varName = rule.target;
+        if (!varName) {
+          result = undefined;
+          break;
+        }
+
+        if (localScope === null) {
+          log('warn', '[evaluateRule] aug_assign used without local scope');
+          result = undefined;
+          break;
+        }
+
+        let value = evaluateRule(rule.value, context, depth + 1, localScope);
+        const currentVal = localScope[varName] || 0;
+
+        switch (rule.op) {
+          case '+': localScope[varName] = currentVal + value; break;
+          case '-': localScope[varName] = currentVal - value; break;
+          case '*': localScope[varName] = currentVal * value; break;
+          case '/': localScope[varName] = currentVal / value; break;
+          case '//': localScope[varName] = Math.floor(currentVal / value); break;
+          case '%': localScope[varName] = currentVal % value; break;
+          default:
+            log('warn', `[evaluateRule] Unknown aug_assign operator: ${rule.op}`);
+            localScope[varName] = value;
+        }
+        result = localScope[varName];
+        break;
+      }
+
       case 'return': {
         // Early return from a block
         // Uses a marker object to propagate the return value up
