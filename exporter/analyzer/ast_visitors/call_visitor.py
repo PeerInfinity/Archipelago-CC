@@ -11,9 +11,10 @@ This is the largest visitor method and handles various call patterns including:
 
 import ast
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from ..utils import is_simple_value, make_json_serializable
+from ..closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 
 
 class CallVisitorMixin:
@@ -41,6 +42,116 @@ class CallVisitorMixin:
         - _convert_generator_exp_to_any_of(): Converts generator to any_of
         - _substitute_variable_in_rule(): Substitutes variables in rules
     """
+
+    def _try_resolve_arg_to_value(self, arg_result: Dict[str, Any]) -> tuple:
+        """
+        Try to resolve an analyzed argument dict to a concrete Python value.
+
+        This is used for factory function execution, where we need to convert
+        analyzed argument structures back to actual values to call the function.
+
+        Args:
+            arg_result: The analyzed argument dict from visiting an AST node
+
+        Returns:
+            A tuple (success: bool, value: Any). If success is False, value is None.
+        """
+        if not isinstance(arg_result, dict):
+            # If it's already a concrete value (shouldn't happen normally)
+            return (True, arg_result)
+
+        arg_type = arg_result.get('type')
+
+        # Handle constant values - already resolved
+        if arg_type == 'constant':
+            return (True, arg_result.get('value'))
+
+        # Handle name references - look up in closure vars
+        if arg_type == 'name':
+            name = arg_result.get('name')
+            if name in self.closure_vars:
+                return (True, self.closure_vars[name])
+            # Try expression resolver as fallback
+            resolved = self.expression_resolver.resolve_variable(name)
+            if resolved is not None:
+                return (True, resolved)
+            return (False, None)
+
+        # Handle attribute access - use expression resolver
+        if arg_type == 'attribute':
+            resolved = self.expression_resolver.resolve_expression(arg_result)
+            if resolved is not None:
+                return (True, resolved)
+            return (False, None)
+
+        # Handle subscript - use expression resolver
+        if arg_type == 'subscript':
+            resolved = self.expression_resolver.resolve_expression(arg_result)
+            if resolved is not None:
+                return (True, resolved)
+            return (False, None)
+
+        # For other types (item_check, state_method, etc.), we can't resolve to a value
+        logging.debug(f"Cannot resolve arg type '{arg_type}' to concrete value")
+        return (False, None)
+
+    def _try_execute_factory_function(self, actual_func, args_with_nodes, func_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Try to execute a factory function (one that returns a callable) and analyze the result.
+
+        Factory functions like path_to_access_rule(path, entrance) return lambdas.
+        If we can resolve all arguments to concrete values, we can execute the function
+        and analyze the returned lambda directly.
+
+        Args:
+            actual_func: The factory function to execute
+            args_with_nodes: List of (ast_node, analyzed_result) tuples for arguments
+            func_name: Name of the function (for logging)
+
+        Returns:
+            Analyzed rule dict if successful, None otherwise
+        """
+        # Try to resolve all arguments to concrete values
+        resolved_args = []
+        for ast_node, arg_result in args_with_nodes:
+            success, value = self._try_resolve_arg_to_value(arg_result)
+            if not success:
+                logging.debug(f"Factory function {func_name}: Could not resolve arg to value")
+                return None
+            resolved_args.append(value)
+
+        # Execute the factory function with resolved arguments
+        try:
+            logging.debug(f"Executing factory function {func_name} with {len(resolved_args)} resolved args")
+            result = actual_func(*resolved_args)
+        except Exception as e:
+            logging.debug(f"Factory function {func_name} execution failed: {e}")
+            return None
+
+        # Check if the result is callable (a lambda/function)
+        if not callable(result):
+            logging.debug(f"Factory function {func_name} returned non-callable: {type(result)}")
+            return None
+
+        # Analyze the returned callable
+        logging.debug(f"Factory function {func_name} returned callable, analyzing it")
+        from ..analysis import analyze_rule
+        analyzed_result = analyze_rule(
+            rule_func=result,
+            closure_vars=self.closure_vars.copy(),
+            seen_funcs=self.seen_funcs,
+            game_handler=self.game_handler,
+            player_context=self.player_context,
+            rule_target_name=getattr(self, 'rule_target_name', None),
+            target_type=getattr(self, 'target_type', None)
+        )
+
+        if analyzed_result and analyzed_result.get('type') != 'error':
+            logging.debug(f"Factory function {func_name}: Successfully analyzed returned callable")
+            return analyzed_result
+
+        logging.debug(f"Factory function {func_name}: analyze_rule returned error")
+        return None
 
     def visit_Call(self, node):
         """
@@ -538,6 +649,20 @@ class CallVisitorMixin:
                  except Exception as e:
                       logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
+
+                 # --- Factory function execution logic ---
+                 # If the function doesn't take 'state' as an argument but returns a callable,
+                 # it might be a "factory function" like path_to_access_rule(path, entrance).
+                 # Try to execute it with resolved arguments and analyze the returned callable.
+                 if callable(actual_func):
+                     factory_result = self._try_execute_factory_function(
+                         actual_func, args_with_nodes, closure_func_name or func_name
+                     )
+                     if factory_result is not None:
+                         logging.debug(f"Factory function execution successful for {func_name}")
+                         return factory_result
+                 # --- END Factory function execution logic ---
+
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
             # *** Special handling for all(GeneratorExp) ***
@@ -585,13 +710,33 @@ class CallVisitorMixin:
                                     if item_result and item_result.get('type') != 'error':
                                         analyzed_items.append(item_result)
                                     else:
-                                        logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
-                                        analyzed_items = None
-                                        break
+                                        # Try ClosureFunctionAnalyzer as fallback for bunny rules
+                                        logging.debug(f"all(GeneratorExp): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"all(GeneratorExp): ClosureFunctionAnalyzer succeeded")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
+                                            analyzed_items = None
+                                            break
                                 except Exception as e:
                                     logging.debug(f"Error analyzing item in {iterator_name}: {e}")
-                                    analyzed_items = None
-                                    break
+                                    # Try ClosureFunctionAnalyzer as fallback
+                                    try:
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"all(GeneratorExp): ClosureFunctionAnalyzer fallback succeeded after exception")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            analyzed_items = None
+                                            break
+                                    except Exception as fallback_e:
+                                        logging.debug(f"all(GeneratorExp): ClosureFunctionAnalyzer also failed: {fallback_e}")
+                                        analyzed_items = None
+                                        break
 
                             if analyzed_items:
                                 # Successfully analyzed all items - return an 'and' of all items
@@ -699,13 +844,33 @@ class CallVisitorMixin:
                                     if item_result and item_result.get('type') != 'error':
                                         analyzed_items.append(item_result)
                                     else:
-                                        logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
-                                        analyzed_items = None
-                                        break
+                                        # Try ClosureFunctionAnalyzer as fallback for bunny rules
+                                        logging.debug(f"any(GeneratorExp): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"any(GeneratorExp): ClosureFunctionAnalyzer succeeded")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
+                                            analyzed_items = None
+                                            break
                                 except Exception as e:
                                     logging.debug(f"Error analyzing item in {iterator_name}: {e}")
-                                    analyzed_items = None
-                                    break
+                                    # Try ClosureFunctionAnalyzer as fallback
+                                    try:
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"any(GeneratorExp): ClosureFunctionAnalyzer fallback succeeded after exception")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            analyzed_items = None
+                                            break
+                                    except Exception as fallback_e:
+                                        logging.debug(f"any(GeneratorExp): ClosureFunctionAnalyzer also failed: {fallback_e}")
+                                        analyzed_items = None
+                                        break
 
                             if analyzed_items:
                                 # Successfully analyzed all items - return an 'or' of all items (different from 'all')
@@ -743,13 +908,33 @@ class CallVisitorMixin:
                                             if item_result and item_result.get('type') != 'error':
                                                 inner_conditions.append(item_result)
                                             else:
-                                                logging.debug(f"Could not analyze item in nested list, falling back to unresolved")
-                                                analysis_failed = True
-                                                break
+                                                # Try ClosureFunctionAnalyzer as fallback
+                                                logging.debug(f"any(GeneratorExp nested): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                                closure_analyzer = ClosureFunctionAnalyzer(self)
+                                                fallback_result = closure_analyzer.analyze_function(item_func)
+                                                if fallback_result:
+                                                    logging.debug(f"any(GeneratorExp nested): ClosureFunctionAnalyzer succeeded")
+                                                    inner_conditions.append(fallback_result)
+                                                else:
+                                                    logging.debug(f"Could not analyze item in nested list, falling back to unresolved")
+                                                    analysis_failed = True
+                                                    break
                                         except Exception as e:
                                             logging.debug(f"Error analyzing item in nested list: {e}")
-                                            analysis_failed = True
-                                            break
+                                            # Try ClosureFunctionAnalyzer as fallback
+                                            try:
+                                                closure_analyzer = ClosureFunctionAnalyzer(self)
+                                                fallback_result = closure_analyzer.analyze_function(item_func)
+                                                if fallback_result:
+                                                    logging.debug(f"any(GeneratorExp nested): ClosureFunctionAnalyzer fallback succeeded")
+                                                    inner_conditions.append(fallback_result)
+                                                else:
+                                                    analysis_failed = True
+                                                    break
+                                            except Exception as fallback_e:
+                                                logging.debug(f"any(GeneratorExp nested): ClosureFunctionAnalyzer also failed: {fallback_e}")
+                                                analysis_failed = True
+                                                break
 
                                     if analysis_failed:
                                         break
@@ -1571,6 +1756,54 @@ class CallVisitorMixin:
                     else:
                         logging.debug(f"list.index argument is not a constant, keeping as method_call")
 
+                # Handle set-like methods on lists (sets from closures are converted to lists)
+                # This enables evaluation of patterns like: front_locked_locations.union({...})
+                elif method_name == 'union' and len(args) >= 1:
+                    # Evaluate set.union(other) at analysis time
+                    # Treat the list as a set and combine with the argument
+                    other_arg = args[0]
+                    other_elements = self._extract_set_elements(other_arg)
+                    if other_elements is not None:
+                        # Convert to sets for proper union (handles duplicates)
+                        base_set = set(tuple(x) if isinstance(x, list) else x for x in list_value)
+                        other_set = set(tuple(x) if isinstance(x, list) else x for x in other_elements)
+                        # Perform union and convert back to sorted list
+                        union_result = base_set | other_set
+                        # Convert tuples back to lists for JSON serialization
+                        result_list = sorted([list(x) if isinstance(x, tuple) else x for x in union_result], key=lambda x: str(x))
+                        logging.debug(f"Evaluated list.union(...) = {result_list}")
+                        return {'type': 'constant', 'value': result_list}
+                    else:
+                        logging.debug(f"list.union argument could not be resolved, keeping as method_call")
+
+                elif method_name == 'intersection' and len(args) >= 1:
+                    # Evaluate set.intersection(other) at analysis time
+                    other_arg = args[0]
+                    other_elements = self._extract_set_elements(other_arg)
+                    if other_elements is not None:
+                        base_set = set(tuple(x) if isinstance(x, list) else x for x in list_value)
+                        other_set = set(tuple(x) if isinstance(x, list) else x for x in other_elements)
+                        intersection_result = base_set & other_set
+                        result_list = sorted([list(x) if isinstance(x, tuple) else x for x in intersection_result], key=lambda x: str(x))
+                        logging.debug(f"Evaluated list.intersection(...) = {result_list}")
+                        return {'type': 'constant', 'value': result_list}
+                    else:
+                        logging.debug(f"list.intersection argument could not be resolved, keeping as method_call")
+
+                elif method_name == 'difference' and len(args) >= 1:
+                    # Evaluate set.difference(other) at analysis time
+                    other_arg = args[0]
+                    other_elements = self._extract_set_elements(other_arg)
+                    if other_elements is not None:
+                        base_set = set(tuple(x) if isinstance(x, list) else x for x in list_value)
+                        other_set = set(tuple(x) if isinstance(x, list) else x for x in other_elements)
+                        difference_result = base_set - other_set
+                        result_list = sorted([list(x) if isinstance(x, tuple) else x for x in difference_result], key=lambda x: str(x))
+                        logging.debug(f"Evaluated list.difference(...) = {result_list}")
+                        return {'type': 'constant', 'value': result_list}
+                    else:
+                        logging.debug(f"list.difference argument could not be resolved, keeping as method_call")
+
                 # For other list methods or when we can't evaluate, create a method_call structure
                 result = {
                     'type': 'method_call',
@@ -1650,3 +1883,105 @@ class CallVisitorMixin:
             result['args'] = filtered_args
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
+
+    def _extract_set_elements(self, arg: Dict[str, Any]) -> list:
+        """Extract a list of elements from a set/tuple/list/constant structure.
+
+        This handles various representations of collections in the AST:
+        - {'type': 'constant', 'value': [...]} - direct constant value
+        - {'type': 'set', 'elements': [...]} - set literal from AST
+        - {'type': 'tuple', 'elements': [...]} - tuple literal from AST
+        - {'type': 'list', 'value': [...]} - list literal from AST
+
+        For set operations like union/intersection/difference, we need to extract
+        the actual values to perform the operation at analysis time.
+
+        Args:
+            arg: The analyzed argument structure
+
+        Returns:
+            A list of extracted values, or None if extraction failed
+        """
+        if not isinstance(arg, dict):
+            return None
+
+        arg_type = arg.get('type')
+
+        # Handle constant values (already resolved)
+        if arg_type == 'constant':
+            value = arg.get('value')
+            if isinstance(value, (list, tuple)):
+                return list(value)
+            else:
+                return [value]
+
+        # Handle set literals: {'type': 'set', 'elements': [...]}
+        if arg_type == 'set':
+            elements = arg.get('elements', [])
+            return self._extract_elements_to_values(elements)
+
+        # Handle tuple literals: {'type': 'tuple', 'elements': [...]}
+        if arg_type == 'tuple':
+            elements = arg.get('elements', [])
+            extracted = self._extract_elements_to_values(elements)
+            if extracted is not None:
+                # Return as a single tuple element
+                return [tuple(extracted)]
+            return None
+
+        # Handle list literals: {'type': 'list', 'value': [...]}
+        if arg_type == 'list':
+            elements = arg.get('value', [])
+            return self._extract_elements_to_values(elements)
+
+        logging.debug(f"_extract_set_elements: Cannot extract from type '{arg_type}'")
+        return None
+
+    def _extract_elements_to_values(self, elements: list) -> list:
+        """Extract values from a list of element structures.
+
+        Args:
+            elements: List of element dicts from set/tuple/list
+
+        Returns:
+            List of extracted values, or None if any element couldn't be extracted
+        """
+        result = []
+        for elem in elements:
+            if not isinstance(elem, dict):
+                return None
+
+            elem_type = elem.get('type')
+
+            if elem_type == 'constant':
+                result.append(elem.get('value'))
+            elif elem_type == 'tuple':
+                # Recursively extract tuple elements
+                inner = self._extract_elements_to_values(elem.get('elements', []))
+                if inner is None:
+                    return None
+                result.append(tuple(inner))
+            elif elem_type == 'list':
+                # Recursively extract list elements
+                inner = self._extract_elements_to_values(elem.get('value', []))
+                if inner is None:
+                    return None
+                result.append(inner)
+            elif elem_type == 'name':
+                # Try to resolve the name from closure/defaults
+                name = elem.get('name')
+                if name == 'player':
+                    # player is typically 1 for single-player exports
+                    result.append(1)
+                else:
+                    resolved = self.expression_resolver.resolve_variable(name)
+                    if resolved is not None:
+                        result.append(resolved)
+                    else:
+                        logging.debug(f"_extract_elements_to_values: Cannot resolve name '{name}'")
+                        return None
+            else:
+                logging.debug(f"_extract_elements_to_values: Cannot extract from element type '{elem_type}'")
+                return None
+
+        return result

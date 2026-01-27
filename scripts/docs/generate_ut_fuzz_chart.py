@@ -187,6 +187,8 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | "
         md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)\n\n"
 
+    md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
+
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
@@ -631,6 +633,8 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
     else:
         md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | "
     md_content += "[Main Test Results](./test-results-summary.md)\n\n"
+
+    md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
 
     # Add links to individual result docs
     md_content += "### Individual Test Results\n\n"

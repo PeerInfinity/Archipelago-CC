@@ -157,6 +157,8 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += "[<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | "
     md_content += "[Main Test Results](./test-results-summary.md)\n\n"
 
+    md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
+
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"

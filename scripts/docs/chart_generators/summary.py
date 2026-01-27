@@ -8,7 +8,7 @@ from typing import Dict, Any, List, Optional
 from .utils import format_file_size, get_rules_json_size
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None, variant_type: Optional[str] = None, version_links: Optional[Dict[str, str]] = None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None, variant_type: Optional[str] = None, version_links: Optional[Dict[str, str]] = None) -> str:
     """Generate a combined summary chart with all test results.
 
     Args:
@@ -72,6 +72,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     elif variant_type == "apworld":
         md_content += "\nAdditional test results:\n"
         md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-apworld.md)\n"
+
+    # Add additional information links
+    md_content += "\nAdditional information:\n"
+    md_content += "- **Template Types:** Understanding original, WorldGen, and APWorld templates - [Learn More](../tests/template-types.md)\n"
+    md_content += "- **Custom Exporters and Logic:** Understanding the Exporter and GameLogic columns - [Learn More](../tests/custom-exporters-and-logic.md)\n"
 
     md_content += "\n"
 
@@ -398,15 +403,6 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             md_content += "|------|-----------|----------------|\n"
             for rank, (game_name, size) in enumerate(logic_sizes, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
-
-    # Add UT Comparison section links if data exists (only for original, not variants)
-    if variant_type is None and (has_ut_random or has_ut_fixed):
-        md_content += "\n## Universal Tracker Comparison\n\n"
-        md_content += "These tests compare Universal Tracker results with our spoiler test results.\n\n"
-        if has_ut_random:
-            md_content += "- [UT Comparison - Random Seed](./test-results-ut-comparison-random-seed.md)\n"
-        if has_ut_fixed:
-            md_content += "- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)\n"
 
     # Add Fuzz Tests section (only for original, not variants)
     if variant_type is None:

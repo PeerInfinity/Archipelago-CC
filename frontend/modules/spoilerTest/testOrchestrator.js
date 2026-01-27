@@ -45,10 +45,6 @@ export class TestOrchestrator {
     this.testStateInitialized = false;
     this.abortController = null;
 
-    // UT comparison callback - called after each event if set
-    // Signature: (pythonEvent, sphereIndex, playerId) => void
-    this.utComparisonCallback = null;
-
     // Worker-side spoiler test configuration
     // When true, runs the entire test in the worker thread for better performance
     this.useWorkerSideSpoilerTest = true;
@@ -57,14 +53,6 @@ export class TestOrchestrator {
     this._workerMessageHandler = null;
 
     logger.debug('TestOrchestrator constructor called');
-  }
-
-  /**
-   * Set a callback for UT comparison that will be called after each event.
-   * @param {Function|null} callback - Callback function or null to disable
-   */
-  setUtComparisonCallback(callback) {
-    this.utComparisonCallback = callback;
   }
 
   /**
@@ -653,27 +641,6 @@ export class TestOrchestrator {
           details: eventProcessingResult?.details || null
         };
         sphereResults.push(sphereResult);
-
-        // Call UT comparison callback if set
-        let utComparisonPassed = true;
-        if (this.utComparisonCallback) {
-          try {
-            utComparisonPassed = this.utComparisonCallback(event, sphereIndex, playerId);
-          } catch (utError) {
-            logger.warn(`UT comparison callback error: ${utError.message}`);
-            utComparisonPassed = false;
-          }
-        }
-
-        // Check for UT mismatch and stop if configured
-        if (!utComparisonPassed && this.stateConfig.stopOnFirstError) {
-          allEventsPassedSuccessfully = false;
-          this.uiCallbacks.log(
-            'warn',
-            'Test run halted due to UT comparison mismatch and "Stop on first error" being enabled.'
-          );
-          break;
-        }
 
         if (eventProcessingResult && eventProcessingResult.error) {
           allEventsPassedSuccessfully = false;

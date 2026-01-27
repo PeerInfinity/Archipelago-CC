@@ -141,13 +141,8 @@ export class TextAdventureUI {
             }, 'textAdventureUI');
             this.unsubscribeHandles.push(historyClearedUnsubscribe);
 
-            // Subscribe to rules loaded event to show initial message
-            const rulesUnsubscribe = eventBus.subscribe('stateManager:rulesLoaded', () => {
-                // Clear and show initial message, but let logic handle region display
-                this.clearDisplay();
-                this.displayMessage('Rules loaded! Your adventure begins...');
-            }, 'textAdventureUI');
-            this.unsubscribeHandles.push(rulesUnsubscribe);
+            // Note: Rules loaded message and region display are now handled by TextAdventureLogic
+            // This ensures proper message ordering (Rules loaded -> Region info)
         }
     }
 
