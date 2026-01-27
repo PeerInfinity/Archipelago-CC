@@ -1364,87 +1364,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 location_data['access_rule'], location_name
             )
 
-        # Handle shop price rules:
-        # The analyzer now correctly inlines shop_price_rules for Hearts/Bombs/Arrows types,
-        # producing the appropriate helper calls (has_hearts, can_use_bombs, can_hold_arrows).
-        # For Rupees (type 0), the analyzer returns a shop_price_rules helper call which we
-        # clean up here since Rupees don't require any access rule.
-        existing_rule = location_data.get('access_rule')
-        if existing_rule:
-            existing_rule = self._remove_shop_price_rules_helper(existing_rule)
-            location_data['access_rule'] = existing_rule
+        # Shop price rules are now fully handled by the analyzer:
+        # - Hearts/Bombs/Arrows types: Inlined to has_hearts/can_use_bombs/can_hold_arrows
+        # - Rupees (type 0): Returns True (no access rule needed)
 
         return location_data
-
-    def _remove_shop_price_rules_helper(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Remove shop_price_rules helper calls from a rule tree.
-
-        The analyzer now correctly inlines shop_price_rules for Hearts/Bombs/Arrows
-        price types, producing the appropriate helper calls. However, for Rupees
-        (type 0), the analyzer returns a shop_price_rules helper call because the
-        function's 'return True' fallback doesn't produce a rule structure.
-
-        This method cleans up those fallback cases by replacing shop_price_rules
-        calls with True_ (since Rupees don't require any access rule).
-
-        Returns True_ if the rule is entirely a shop_price_rules call,
-        otherwise returns the rule with shop_price_rules calls removed.
-        """
-        if not isinstance(rule, dict):
-            return rule
-
-        # Check if this is a shop_price_rules helper call (multiple formats exist)
-        # Format 1: {"rule": "shop_price_rules", "_original_ast_type": "helper", ...}
-        # Format 2: {"type": "helper", "name": "shop_price_rules", ...}
-        is_shop_price_rules = (
-            rule.get('rule') == 'shop_price_rules' or
-            (rule.get('_original_ast_type') == 'helper' and rule.get('rule') == 'shop_price_rules') or
-            (rule.get('type') == 'helper' and rule.get('name') == 'shop_price_rules')
-        )
-        if is_shop_price_rules:
-            logger.debug("ALttP: Removing broken shop_price_rules helper call")
-            return {'rule': 'True_'}
-
-        # Handle And rules - recursively process and filter out True_
-        if rule.get('rule') == 'And':
-            children = rule.get('children', [])
-            processed = [self._remove_shop_price_rules_helper(c) for c in children]
-            # Filter out True_ results
-            filtered = [c for c in processed if c != {'rule': 'True_'}]
-            if not filtered:
-                return {'rule': 'True_'}
-            elif len(filtered) == 1:
-                return filtered[0]
-            else:
-                return {'rule': 'And', 'children': filtered}
-
-        # Handle Or rules
-        if rule.get('rule') == 'Or':
-            children = rule.get('children', [])
-            processed = [self._remove_shop_price_rules_helper(c) for c in children]
-            # If any became True_, the whole Or is True_
-            if any(c == {'rule': 'True_'} for c in processed):
-                return {'rule': 'True_'}
-            return {'rule': 'Or', 'children': processed}
-
-        # Handle AST-style and/or rules
-        if rule.get('type') in ('and', 'or'):
-            conditions = rule.get('conditions', [])
-            processed = [self._remove_shop_price_rules_helper(c) for c in conditions]
-            if rule.get('type') == 'and':
-                filtered = [c for c in processed if c != {'rule': 'True_'}]
-                if not filtered:
-                    return {'rule': 'True_'}
-                elif len(filtered) == 1:
-                    return filtered[0]
-                else:
-                    return {'type': 'and', 'conditions': filtered}
-            else:  # or
-                if any(c == {'rule': 'True_'} for c in processed):
-                    return {'rule': 'True_'}
-                return {'type': 'or', 'conditions': processed}
-
-        return rule
 
     def _generate_shop_price_rule(self, location_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Generate an access rule for shop price requirements.
