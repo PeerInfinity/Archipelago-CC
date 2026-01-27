@@ -1680,8 +1680,19 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     access_rule = location_data.get('access_rule', {})
 
                     # In no_logic single-player mode, all locations should be trivially accessible
+                    # EXCEPT for shop price rules, which are enforced even in no_logic mode.
+                    # Shop price rules are added in create_shops() via add_rule(), not in
+                    # set_rules(), so the no_logic early return doesn't affect them.
                     if self._is_no_logic_single_player:
-                        location_data['access_rule'] = {}
+                        # Check if this location has shop price requirements
+                        # ShopPriceType: 1=Hearts, 3=Bombs, 4=Arrows (0=Rupees, 2=Magic need no rule)
+                        shop_price_type = location_data.get('shop_price_type')
+                        if shop_price_type in (1, 3, 4):
+                            # Regenerate the shop price rule to ensure it's preserved
+                            shop_rule = self._generate_shop_price_rule(location_data)
+                            location_data['access_rule'] = shop_rule if shop_rule else {}
+                        else:
+                            location_data['access_rule'] = {}
                         continue
 
                     # Resolve OptionValue comparisons first (e.g., mode checks, small_key_shuffle checks)
