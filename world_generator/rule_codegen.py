@@ -1314,7 +1314,10 @@ class RuleCodeGenerator:
     def _convert_rule_builder_format(self, rule: Dict[str, Any], rb_rule: str, rule_type: str) -> str:
         """Convert Rule Builder format rules (with 'rule' key) to Python expressions."""
         args = rule.get('args', {})
+        # Support both 'children' at top level and 'rules' inside args (exporter format)
         children = rule.get('children', [])
+        if not children and isinstance(args, dict):
+            children = args.get('rules', [])
 
         if rb_rule == 'True_':
             return self._make_bool_constant(True)
@@ -5298,9 +5301,40 @@ class RuleCodeGenerator:
                         self.required_imports.add('Or')
                         return f'Or({", ".join(checks)})'
 
+            # Case 5: element_rule is a helper with name "rule" - items ARE the rules to evaluate
+            # This pattern: any(rule(state) for rule in [rule1_ast, rule2_ast, ...])
+            # Where each rule in the list is itself an AST expression
+            if (element_rule.get('type') == 'helper' and element_rule.get('name') == 'rule' and
+                    all(isinstance(item, dict) and 'type' in item for item in items)):
+                # Each item is an AST rule - recursively process them
+                checks = []
+                for item in items:
+                    # Items already have 'type' key, pass directly to _convert_rule
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
             # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
+                # Check if item is an AST expression (dict with 'type' key)
+                if isinstance(item, dict) and 'type' in item:
+                    return self._convert_rule(item)
                 item_escaped = self._escape_string(str(item), "'")
                 self.required_imports.add('Has')
                 return f"Has('{item_escaped}')"
@@ -5308,9 +5342,14 @@ class RuleCodeGenerator:
                 # Multiple items - use Or with Has for each
                 has_checks = []
                 for item in items:
-                    item_escaped = self._escape_string(str(item), "'")
-                    has_checks.append(f"Has('{item_escaped}')")
-                self.required_imports.add('Has')
+                    # Check if item is an AST expression (dict with 'type' key)
+                    if isinstance(item, dict) and 'type' in item:
+                        check = self._convert_rule(item)
+                        has_checks.append(check)
+                    else:
+                        item_escaped = self._escape_string(str(item), "'")
+                        has_checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
                 self.required_imports.add('Or')
                 return f'Or({", ".join(has_checks)})'
 
@@ -7468,7 +7507,16 @@ class HelperCodeGenerator:
                     helper_name = f'can_{capability}'
                     func_name = self.get_function_name(helper_name)
 
-                    # Get helper data including param_mappings
+                    # Check if helper_args were preserved from the original helper call
+                    # This is critical for helpers like can_use_hat(state, player, hat_id)
+                    # where the specific argument value matters
+                    helper_args = args.get('helper_args', [])
+                    if helper_args:
+                        # Use the preserved helper arguments
+                        arg_exprs = [self._generate_expression(arg) for arg in helper_args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+
+                    # Fall back to param_mappings for helpers that use world attributes
                     helper_info = self.helper_data.get(helper_name, {})
                     params = helper_info.get('params', [])
                     param_mappings = helper_info.get('param_mappings', {})
@@ -7485,7 +7533,7 @@ class HelperCodeGenerator:
                             # Access as world attribute for all param_mapping values
                             arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
                         else:
-                            # No mapping, use None as default
+                            # No mapping and no preserved args - use None as default
                             arg_exprs.append('None')
 
                     if arg_exprs:

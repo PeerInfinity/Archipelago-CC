@@ -417,8 +417,8 @@ def main():
     parser.add_argument(
         '-j', '--jobs',
         type=int,
-        default=2,
-        help='Number of parallel jobs (default: 2)'
+        default=os.cpu_count() or 4,
+        help=f'Number of parallel jobs (default: {os.cpu_count() or 4} = CPU count)'
     )
     parser.add_argument(
         '-t', '--timeout',

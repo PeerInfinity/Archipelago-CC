@@ -283,6 +283,11 @@
                 "capability": "build_mam",
                 "inferred": true,
                 "description": "Requires ability to build mam",
+                "helper_args": [
+                  {
+                    "rule": "False_"
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -406,6 +411,11 @@
                 "capability": "make_stitched_shape",
                 "inferred": true,
                 "description": "Requires ability to make stitched shape",
+                "helper_args": [
+                  {
+                    "rule": "False_"
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true

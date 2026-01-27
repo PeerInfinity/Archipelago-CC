@@ -1248,19 +1248,19 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Mini Moldorm Cave - Far Left", player).access_rule = \
-        lambda state: can_kill_most_things(state, player, None)
+        lambda state: can_kill_most_things(state, player, 4)
 
     multiworld.get_location("Mini Moldorm Cave - Left", player).access_rule = \
-        lambda state: can_kill_most_things(state, player, None)
+        lambda state: can_kill_most_things(state, player, 4)
 
     multiworld.get_location("Mini Moldorm Cave - Right", player).access_rule = \
-        lambda state: can_kill_most_things(state, player, None)
+        lambda state: can_kill_most_things(state, player, 4)
 
     multiworld.get_location("Mini Moldorm Cave - Far Right", player).access_rule = \
-        lambda state: can_kill_most_things(state, player, None)
+        lambda state: can_kill_most_things(state, player, 4)
 
     multiworld.get_location("Mini Moldorm Cave - Generous Guy", player).access_rule = \
-        lambda state: can_kill_most_things(state, player, None)
+        lambda state: can_kill_most_things(state, player, 4)
 
     world.set_rule(
         multiworld.get_location("Library", player),
@@ -1283,7 +1283,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Desert Palace - Big Key Chest", player).access_rule = \
-        lambda state: can_kill_most_things(state, player, None)
+        lambda state: can_kill_most_things(state, player, 3)
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Beamos Hall Pot Key", player),
