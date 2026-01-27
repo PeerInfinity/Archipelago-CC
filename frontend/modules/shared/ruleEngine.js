@@ -980,6 +980,26 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         ]);
         const allowUndefinedArgs = helpersAllowingUndefinedArgs.has(rule.name);
 
+        // Check if the helper name is actually a bound variable from iterator context
+        // This handles cases like all_of/any_of where element_rule is {"type": "helper", "name": "rule"}
+        // and "rule" is bound to an actual rule object from the iterator
+        if (context && typeof context.resolveName === 'function') {
+          const boundValue = context.resolveName(rule.name);
+          if (boundValue !== undefined) {
+            // If the bound value is a rule object (has a 'type' property), evaluate it recursively
+            if (boundValue && typeof boundValue === 'object' && boundValue.type) {
+              log('debug', `[evaluateRule] Helper '${rule.name}' resolved to bound rule object, evaluating recursively`);
+              result = evaluateRule(boundValue, context, depth + 1, localScope);
+              break;
+            }
+            // If it's a simple value, return it directly
+            if (typeof boundValue !== 'object' || boundValue === null) {
+              result = boundValue;
+              break;
+            }
+          }
+        }
+
         if (!allowUndefinedArgs && args.some((arg) => arg === undefined)) {
           result = undefined;
         } else if (isValidContext) {
