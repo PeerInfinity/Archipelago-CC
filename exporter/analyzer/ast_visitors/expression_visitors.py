@@ -243,18 +243,29 @@ class ExpressionVisitorMixin:
                         logging.debug(f"visit_Name: '{name}' is a list of {len(list_value)} callables, analyzing each")
                         # Import analyze_rule to avoid circular dependency
                         from ..analysis import analyze_rule
+                        from ..cache import callable_list_cache
                         analyzed_items = []
                         for idx, item_func in enumerate(list_value):
                             try:
-                                item_result = analyze_rule(
-                                    rule_func=item_func,
-                                    closure_vars=self.closure_vars.copy(),
-                                    seen_funcs=self.seen_funcs,
-                                    game_handler=self.game_handler,
-                                    player_context=self.player_context,
-                                    rule_target_name=getattr(self, 'rule_target_name', None),
-                                    target_type=getattr(self, 'target_type', None)
-                                )
+                                # Check cache first using function ID
+                                func_id = id(item_func)
+                                if func_id in callable_list_cache:
+                                    logging.debug(f"visit_Name: Cache hit for callable {idx} in list '{name}'")
+                                    item_result = callable_list_cache[func_id]
+                                else:
+                                    item_result = analyze_rule(
+                                        rule_func=item_func,
+                                        closure_vars=self.closure_vars.copy(),
+                                        seen_funcs=self.seen_funcs,
+                                        game_handler=self.game_handler,
+                                        player_context=self.player_context,
+                                        rule_target_name=getattr(self, 'rule_target_name', None),
+                                        target_type=getattr(self, 'target_type', None)
+                                    )
+                                    # Cache successful results
+                                    if item_result and item_result.get('type') != 'error':
+                                        callable_list_cache[func_id] = item_result
+
                                 if item_result and item_result.get('type') != 'error':
                                     analyzed_items.append(item_result)
                                 else:
