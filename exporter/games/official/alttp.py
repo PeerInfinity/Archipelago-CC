@@ -1365,36 +1365,27 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             )
 
         # Handle shop price rules:
-        # 1. Always remove the broken shop_price_rules helper that references 'location'
-        # 2. For Hearts/Bombs/Arrows types, add the appropriate replacement rule
-        # 3. For Rupees (type 0), just removing the helper is enough (no item requirement)
+        # The analyzer now correctly inlines shop_price_rules for Hearts/Bombs/Arrows types,
+        # producing the appropriate helper calls (has_hearts, can_use_bombs, can_hold_arrows).
+        # For Rupees (type 0), the analyzer returns a shop_price_rules helper call which we
+        # clean up here since Rupees don't require any access rule.
         existing_rule = location_data.get('access_rule')
         if existing_rule:
             existing_rule = self._remove_shop_price_rules_helper(existing_rule)
             location_data['access_rule'] = existing_rule
-
-        # Generate shop price rules for non-Rupee types
-        shop_price_rule = self._generate_shop_price_rule(location_data)
-        if shop_price_rule:
-            existing_rule = location_data.get('access_rule')
-            if existing_rule and existing_rule != {'rule': 'True_'}:
-                # Combine with existing rule using AND
-                location_data['access_rule'] = {
-                    'rule': 'And',
-                    'children': [existing_rule, shop_price_rule]
-                }
-            else:
-                location_data['access_rule'] = shop_price_rule
-            logger.debug(f"ALttP: Added shop price rule for '{location_name}'")
 
         return location_data
 
     def _remove_shop_price_rules_helper(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Remove shop_price_rules helper calls from a rule tree.
 
-        The original shop_price_rules helper references 'location' which doesn't exist
-        in the rule context. We replace it with True_ since we generate a proper rule
-        in _generate_shop_price_rule.
+        The analyzer now correctly inlines shop_price_rules for Hearts/Bombs/Arrows
+        price types, producing the appropriate helper calls. However, for Rupees
+        (type 0), the analyzer returns a shop_price_rules helper call because the
+        function's 'return True' fallback doesn't produce a rule structure.
+
+        This method cleans up those fallback cases by replacing shop_price_rules
+        calls with True_ (since Rupees don't require any access rule).
 
         Returns True_ if the rule is entirely a shop_price_rules call,
         otherwise returns the rule with shop_price_rules calls removed.
