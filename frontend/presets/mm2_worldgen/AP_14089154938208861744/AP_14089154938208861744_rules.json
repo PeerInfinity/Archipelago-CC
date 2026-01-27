@@ -966,6 +966,57 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
+                "helper_args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "option_value",
+                      "option": "wily_5_requirement"
+                    },
+                    "attr": "value"
+                  },
+                  {
+                    "type": "constant",
+                    "value": {
+                      "0": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "1": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "2": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "3": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "4": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "5": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "6": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "7": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "12": {
+                        "type": "list",
+                        "value": []
+                      }
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -987,6 +1038,57 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
+                "helper_args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "option_value",
+                      "option": "wily_5_requirement"
+                    },
+                    "attr": "value"
+                  },
+                  {
+                    "type": "constant",
+                    "value": {
+                      "0": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "1": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "2": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "3": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "4": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "5": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "6": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "7": {
+                        "type": "list",
+                        "value": []
+                      },
+                      "12": {
+                        "type": "list",
+                        "value": []
+                      }
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -2157,8 +2259,7 @@
           ]
         },
         "param_mappings": {
-          "required": "wily_5_requirement",
-          "boss_requirements": "wily_5_weapons"
+          "required": "wily_5_requirement"
         }
       }
     }

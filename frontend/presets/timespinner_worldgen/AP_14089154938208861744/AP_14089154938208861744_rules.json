@@ -2064,30 +2064,8 @@
             "name": "Main Lab -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Genza"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "has_forwarddash_doublejump",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2167,19 +2145,7 @@
             "name": "Lab: Trash jump room",
             "id": 1337070,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Max Sand",
@@ -2193,21 +2159,7 @@
             "name": "Lab: Experiment #13",
             "id": 1337073,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lab Access Experiment"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Trendy Jacket",
@@ -2221,50 +2173,10 @@
             "name": "Lab: Sentry platform terminal (Origins)",
             "id": 1337167,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "can_teleport_to",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Time"
-                          }
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "GateDadsTower"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Genza"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tablet"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Tablet"
+              }
             },
             "item": {
               "name": "Silence Ring",
@@ -2318,30 +2230,7 @@
             "name": "Lab: Dynamo Works",
             "id": 1337071,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_upwarddash",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Dynamo"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
               "name": "Meyef",
@@ -3152,25 +3041,7 @@
             "name": "Forest -> Castle Ramparts",
             "connected_region": "Castle Ramparts",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "False_"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Drawbridge Key"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           }
         ],
@@ -4297,28 +4168,8 @@
             "name": "Castle Keep -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "has_pink",
-                      "_original_ast_type": "helper"
-                    },
-                    {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "has_doublejump",
+              "_original_ast_type": "helper"
             }
           },
           {
