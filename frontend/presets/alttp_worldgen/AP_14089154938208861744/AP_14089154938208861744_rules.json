@@ -2204,6 +2204,14 @@
                 "capability": "kill_most_things",
                 "inferred": true,
                 "description": "Requires ability to kill most things",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -2228,6 +2236,14 @@
                 "capability": "kill_most_things",
                 "inferred": true,
                 "description": "Requires ability to kill most things",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -2252,6 +2268,14 @@
                 "capability": "kill_most_things",
                 "inferred": true,
                 "description": "Requires ability to kill most things",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -2276,6 +2300,14 @@
                 "capability": "kill_most_things",
                 "inferred": true,
                 "description": "Requires ability to kill most things",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -2300,6 +2332,14 @@
                 "capability": "kill_most_things",
                 "inferred": true,
                 "description": "Requires ability to kill most things",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 4
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -2923,6 +2963,14 @@
                 "capability": "kill_most_things",
                 "inferred": true,
                 "description": "Requires ability to kill most things",
+                "helper_args": [
+                  {
+                    "rule": "Constant",
+                    "args": {
+                      "value": 3
+                    }
+                  }
+                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true

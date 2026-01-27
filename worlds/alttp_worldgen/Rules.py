@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 from worlds.generic.Rules import location_item_name, item_name_in_location_names
 from BaseClasses import CollectionState
-from rule_builder.pathfinding import can_reach_via_bunny_path
 
 from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or
 
@@ -259,64 +258,10 @@ def _can_defeat_Ganons_Tower_top(state: "CollectionState", player: int) -> bool:
 _can_defeat_Ganons_Tower_top._internal_function = True
 
 
-# Bunny accessibility helper for ALttP-style path-dependent rules
-def check_bunny_accessibility(state: "CollectionState", player: int, location_name: str = None, target_region: str = None) -> bool:
-    """Check if a location/region is accessible considering bunny form.
-
-    Returns True if:
-    1. Player has Moon Pearl, OR
-    2. There's a path from a link region without needing Moon Pearl
-
-    Reads inverted mode and glitch mode from world options at evaluation time.
-    """
-    # Quick check: Moon Pearl always allows access
-    if state.has('Moon Pearl', player):
-        return True
-
-    # Get options from world
-    world = state.multiworld.worlds[player]
-    is_inverted = getattr(world.options, 'mode', None)
-    if is_inverted is not None:
-        is_inverted = str(is_inverted) == 'inverted' or getattr(is_inverted, 'value', 0) == 2
-    else:
-        is_inverted = False
-
-    glitch_mode = getattr(world.options, 'glitches_required', None)
-    if glitch_mode is not None:
-        glitch_value = getattr(glitch_mode, 'value', 0)
-        glitch_names = {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches',
-                       3: 'hybrid_major_glitches', 4: 'no_logic'}
-        glitch_mode = glitch_names.get(glitch_value, 'no_glitches')
-    else:
-        glitch_mode = 'no_glitches'
-
-    # Determine target region for pathfinding
-    region_name = target_region
-    if not region_name and location_name:
-        try:
-            location = state.multiworld.get_location(location_name, player)
-            region_name = location.parent_region.name
-        except (KeyError, AttributeError):
-            return False
-
-    if not region_name:
-        return False
-
-    return can_reach_via_bunny_path(state, player, region_name, is_inverted, glitch_mode)
-check_bunny_accessibility._internal_function = True
-
-
 def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
     multiworld = world.multiworld
-
-    # For no_logic mode, skip all rules (for single-player)
-    if hasattr(world.options, 'glitches_required') and world.options.glitches_required.value == 4:
-        if multiworld.players == 1:
-            for exit in multiworld.get_region('Menu', player).exits:
-                exit.hide_path = True
-            return
 
     # Entrance rules
     world.set_rule(
@@ -905,7 +850,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Exit (South)", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Hookshot Cave Exit (South)",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -985,17 +930,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Left) Door to Right", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Skull Woods First Section (Left) Door to Right",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Top) One-Way Path", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Skull Woods First Section (Top) One-Way Path",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section (Drop)", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Skull Woods Second Section (Drop)",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1055,7 +1000,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Exit (Front)", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Turtle Rock Exit (Front)",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1090,7 +1035,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Chain Chomp Staircase", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Turtle Rock Chain Chomp Staircase",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1115,7 +1060,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Ledge Exit (East)", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Turtle Rock Ledge Exit (East)",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1140,7 +1085,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Dark Room (South)", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Turtle Rock Dark Room (South)",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1564,7 +1509,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catfish", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Catfish",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1614,37 +1559,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Left", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Pyramid Fairy - Left",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Right", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Pyramid Fairy - Right",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Brewery", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Brewery",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("C-Shaped House", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("C-Shaped House",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Chest Game", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Chest Game",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Left", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Mire Shed - Left",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Right", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Mire Shed - Right",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1687,7 +1632,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Entrance",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1697,7 +1642,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Pot Row Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Pot Row Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1710,7 +1655,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Compass Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Compass Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1720,37 +1665,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 2 Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Trench 2 Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Big Key Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Big Key Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - West Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - West Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Left", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Flooded Room - Left",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Right", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Flooded Room - Right",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterway Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Waterway Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterfall Room", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Swamp Palace - Waterfall Room",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Swamp Palace - Boss", player).access_rule = \
@@ -1761,22 +1706,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Key Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Thieves' Town - Big Key Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Map Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Thieves' Town - Map Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Compass Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Thieves' Town - Compass Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Ambush Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Thieves' Town - Ambush Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1789,7 +1734,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Thieves' Town - Hallway Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1843,12 +1788,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Bridge Room", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Skull Woods - Bridge Room",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Spike Corner Key Drop", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Skull Woods - Spike Corner Key Drop",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Skull Woods - Boss", player).access_rule = \
@@ -1869,17 +1814,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Conveyor Key Drop", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Conveyor Key Drop",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Freezor Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Freezor Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Many Pots Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Many Pots Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1889,27 +1834,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Iced T Room", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Iced T Room",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Spike Room", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Spike Room",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Big Key Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Big Key Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Map Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Map Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Hammer Block Key Drop", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ice Palace - Hammer Block Key Drop",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Ice Palace - Boss", player).access_rule = \
@@ -1935,7 +1880,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Bridge Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Misery Mire - Bridge Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1945,7 +1890,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spikes Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Misery Mire - Spikes Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2047,7 +1992,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Shooter Room", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Shooter Room",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2062,7 +2007,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Key Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Big Key Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2072,12 +2017,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Map Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Map Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Compass Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Compass Chest",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2092,12 +2037,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Top", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Dark Maze - Top",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Bottom", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Dark Maze - Bottom",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2107,7 +2052,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Harmless Hellway", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Palace of Darkness - Harmless Hellway",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Palace of Darkness - Boss", player).access_rule = \
@@ -2123,22 +2068,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Left", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Hope Room - Left",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Right", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Hope Room - Right",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Conveyor Cross Pot Key", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Conveyor Cross Pot Key",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Tile Room", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Tile Room",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Ganons Tower - Compass Room - Top Left", player).access_rule = \
@@ -2183,7 +2128,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Map Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Map Chest",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Ganons Tower - Firesnake Room", player).access_rule = \
@@ -2222,12 +2167,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Left", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Mini Helmasaur Room - Left",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Right", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Mini Helmasaur Room - Right",))
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2242,7 +2187,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Validation Chest", player),
-        HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("Ganons Tower - Validation Chest",))
+        Has('Moon Pearl', 1)
     )
 
     multiworld.get_location("Agahnim 2", player).access_rule = \
