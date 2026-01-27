@@ -130,6 +130,14 @@ ALL_INVALID_BUNNY_REVIVAL_DUNGEONS = (
 # For these, the rule is: Moon Pearl OR Magic Mirror
 MIRROR_SUPERBUNNY_LOCATIONS = _get_superbunny_accessible_locations() - MANDATORY_SUPERBUNNY_LOCATIONS
 
+# Regions that contain ONLY superbunny-accessible locations.
+# In glitch modes, exits to these regions should not require Moon Pearl.
+# These regions are specifically accessible via superbunny state.
+MANDATORY_SUPERBUNNY_REGIONS = {
+    'Superbunny Cave (Top)',      # Contains: Superbunny Cave - Top, Superbunny Cave - Bottom
+    'Kakariko Well (top)',        # Contains: Kakariko Well - Left/Middle/Right/Bottom
+}
+
 # Bunny-impassable caves (from set_bunny_rules in ALttP Rules.py)
 # These are regions where bunnies cannot pass through - if you enter as a bunny,
 # you cannot exit. In inverted mode, these regions require Moon Pearl to exit
@@ -1869,6 +1877,13 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # (see Rules.py get_rule_to_add() line ~1700-1701).
                         # This allows Magic Mirror bunny revival inside dungeons.
                         if self._is_glitch_mode and region_type == 4:  # 4 = Dungeon
+                            exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
+                                exit_data['access_rule'], exit_name
+                            )
+                        # In glitch modes, exits TO mandatory superbunny regions don't require
+                        # Moon Pearl. The superbunny entrances to these regions are mandatory
+                        # connections that are never shuffled, allowing access in bunny form.
+                        if self._is_glitch_mode and connected_region_name in MANDATORY_SUPERBUNNY_REGIONS:
                             exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
                                 exit_data['access_rule'], exit_name
                             )
