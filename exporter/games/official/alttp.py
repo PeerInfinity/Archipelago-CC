@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 
 # Feature flag for dynamic bunny rule analysis
 # When True, attempts to analyze bunny rules dynamically before falling back to workaround
-ENABLE_DYNAMIC_BUNNY_ANALYSIS = True
+# EXPERIMENTAL: Set to False to let the main analyzer handle bunny rules via
+# factory function execution and callable list analysis
+ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
 
 
 # --- Dynamic imports from original ALttP code ---
@@ -1123,7 +1125,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             location_name = rule_target_name or self._current_location_context or ''
             logger.debug(f"ALttP: Detected bunny rule for '{location_name}'")
 
-            # Attempt dynamic analysis if enabled
+            # Attempt dynamic analysis if enabled (legacy path using ClosureFunctionAnalyzer)
             if ENABLE_DYNAMIC_BUNNY_ANALYSIS:
                 try:
                     analyzed_result = self._try_dynamic_bunny_analysis(rule_func, location_name)
@@ -1134,9 +1136,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 except Exception as e:
                     logger.debug(f"ALttP: Dynamic bunny rule analysis failed: {e}, using workaround")
 
-            # Fall back to pre-computed workaround
-            logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
-            return self._get_bunny_replacement_rule(location_name)
+                # Fall back to pre-computed workaround
+                logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
+                return self._get_bunny_replacement_rule(location_name)
+
+            # When ENABLE_DYNAMIC_BUNNY_ANALYSIS is False, let the main analyzer handle
+            # bunny rules via factory function execution and callable list analysis
+            logger.debug(f"ALttP: Letting main analyzer handle bunny rule for '{location_name}'")
+            return None
 
         # All other rules are handled by the generic analyzer
         return None
