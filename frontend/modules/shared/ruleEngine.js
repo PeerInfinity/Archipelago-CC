@@ -1232,6 +1232,35 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'dict_lambda_lookup': {
+        // Dict-based conditional evaluation
+        // Pattern: rule_map.get(key, default)(state) where dict maps keys to callable rules
+        // Used in ALttP glitch rules
+        if (!rule.key || !rule.cases) {
+          log('warn', '[evaluateRule] Malformed dict_lambda_lookup rule:', rule);
+          result = undefined;
+          break;
+        }
+
+        const lookupKey = evaluateRule(rule.key, context, depth + 1, localScope);
+
+        if (lookupKey === undefined) {
+          // Can't evaluate the key, result is undefined
+          result = undefined;
+        } else if (rule.cases.hasOwnProperty(lookupKey)) {
+          // Key exists in cases, evaluate that case's rule
+          result = evaluateRule(rule.cases[lookupKey], context, depth + 1, localScope);
+        } else if (rule.default !== undefined) {
+          // Key not found, use default
+          result = evaluateRule(rule.default, context, depth + 1, localScope);
+        } else {
+          // No default, return undefined
+          log('debug', `[evaluateRule] dict_lambda_lookup key '${lookupKey}' not found and no default`);
+          result = undefined;
+        }
+        break;
+      }
+
       case 'count_true': {
         // Count how many conditions evaluate to true
         // Returns true if at least rule.count conditions are true

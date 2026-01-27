@@ -215,7 +215,27 @@ These types are used internally or as supporting structures:
 
 | Type | Description | Usage |
 |------|-------------|-------|
-| `comprehension_details` | Iterator details for comprehensions | Used in `iterator_info` field of `all_of`/`any_of` |
+| `comprehension_details` | Iterator details for comprehensions | Used in `iterator_info` field of `all_of`/`any_of`/`sum_of` |
+| `dict_lambda_lookup` | Dict-based conditional evaluation | ALttP glitch rules: `rule_map.get(key, default)(state)` pattern |
 | `formatted_value` | Individual formatted part of an f-string | Used internally within `f_string` parts |
 | `unknown` | Placeholder for unhandled expressions | Generated when AST node cannot be converted |
+
+### `dict_lambda_lookup` Structure
+
+This type handles patterns like `rule_map.get(entrance.name, lambda s: False)(state)` where a dict maps keys to callable rules:
+
+```json
+{
+  "type": "dict_lambda_lookup",
+  "dict_name": "rule_map",
+  "key": {"type": "attribute", "object": {...}, "attr": "name"},
+  "cases": {
+    "Entrance A": {"type": "item_check", "item": "Key"},
+    "Entrance B": {"type": "and", "conditions": [...]}
+  },
+  "default": {"rule": "False_"}
+}
+```
+
+**Frontend implementation:** Evaluate `key`, look up result in `cases`, fall back to `default` if key not found.
 
