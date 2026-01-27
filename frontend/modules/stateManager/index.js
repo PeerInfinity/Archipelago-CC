@@ -210,6 +210,10 @@ async function initialize(moduleId, priorityIndex, initializationApi) {
   if (eventBus) {
     eventBus.subscribe('settings:changed', handleSettingsChanged, moduleId);
     log('info', '[StateManager Module] Subscribed to settings:changed events');
+
+    // Subscribe to editor snapshot Apply events
+    eventBus.subscribe('editor:snapshotApply', handleEditorSnapshotApply, moduleId);
+    log('info', '[StateManager Module] Subscribed to editor:snapshotApply events');
   }
 
   log(
@@ -530,7 +534,7 @@ function handleSettingsChanged(eventData) {
   // Check if the change involves logging settings
   if (eventData.key && (eventData.key.startsWith('logging') || eventData.key === '*')) {
     log('info', '[StateManagerModule] Logging settings changed, updating worker configuration');
-    
+
     // Get the current logging configuration from the logger
     if (typeof window !== 'undefined' && window.logger) {
       const newLoggingConfig = window.logger.getConfig();
@@ -539,4 +543,46 @@ function handleSettingsChanged(eventData) {
       log('warn', '[StateManagerModule] Window logger not available for worker config update');
     }
   }
+}
+
+/**
+ * Handle editor snapshot Apply events
+ * Allows users to edit the snapshot in the editor and apply changes to the state manager
+ * @param {Object} eventData - Event data containing the edited snapshot
+ */
+function handleEditorSnapshotApply(eventData) {
+  log('info', '[StateManagerModule] Editor snapshot Apply requested', eventData);
+
+  if (!eventData || !eventData.snapshot) {
+    log('warn', '[StateManagerModule] No snapshot data in editor:snapshotApply event');
+    return;
+  }
+
+  const snapshot = eventData.snapshot;
+
+  // Build the runtime state data from the edited snapshot
+  // Only include fields that can be safely applied
+  const runtimeStateData = {};
+
+  // Apply inventory if present
+  if (snapshot.inventory && typeof snapshot.inventory === 'object') {
+    runtimeStateData.inventory = snapshot.inventory;
+    log('info', '[StateManagerModule] Applying inventory from edited snapshot');
+  }
+
+  // Apply checked locations if present
+  if (snapshot.checkedLocations && Array.isArray(snapshot.checkedLocations)) {
+    runtimeStateData.checkedLocations = snapshot.checkedLocations;
+    log('info', '[StateManagerModule] Applying checkedLocations from edited snapshot');
+  }
+
+  // Only proceed if we have something to apply
+  if (Object.keys(runtimeStateData).length === 0) {
+    log('warn', '[StateManagerModule] No applicable data found in edited snapshot (need inventory or checkedLocations)');
+    return;
+  }
+
+  // Apply the runtime state via the proxy
+  stateManagerProxySingleton.applyRuntimeStateData(runtimeStateData);
+  log('info', '[StateManagerModule] Applied edited snapshot data to state manager');
 }

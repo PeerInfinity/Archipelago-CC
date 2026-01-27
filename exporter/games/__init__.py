@@ -1,12 +1,17 @@
-"""Game-specific rule helper functions."""
+"""Game-specific rule helper functions.
+
+This package organizes game export handlers into three categories:
+- base/: Base classes (BaseGameExportHandler) and generic handler (GenericGameExportHandler)
+- official/: Handlers for games included in the official Archipelago distribution
+- unofficial/: Handlers for community-created .apworld packages
+"""
 
 import os
 import importlib
 import inspect
 import logging
 from typing import Dict, Type, Optional, Tuple
-from .base import BaseGameExportHandler
-from .generic import GenericGameExportHandler
+from .base import BaseGameExportHandler, GenericGameExportHandler
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +21,9 @@ _handler_cache: Dict[Tuple[str, Optional[int]], BaseGameExportHandler] = {}
 # Handlers registered by module name (matches world directory)
 # e.g., 'alttp' -> ALttPGameExportHandler
 GAME_HANDLERS: Dict[str, Type[BaseGameExportHandler]] = {}
+
+# Handler subdirectories to scan for automatic discovery
+HANDLER_DIRECTORIES = ['official', 'unofficial']
 
 
 def _get_world_directory(world) -> Optional[str]:
@@ -46,14 +54,13 @@ def _get_world_directory(world) -> Optional[str]:
             # For worldgen worlds, check if a specific worldgen handler exists first.
             # If so, use the worldgen handler; otherwise fall back to parent game's handler.
             if world_dir.endswith('_worldgen'):
-                # Check if a specific worldgen handler is registered
-                # We can't call GAME_HANDLERS here as it's not defined yet during init,
-                # but we can check if the handler module exists
-                import os
-                handler_path = os.path.join(os.path.dirname(__file__), f'{world_dir}.py')
-                if os.path.exists(handler_path):
-                    # Use the worldgen-specific handler
-                    return world_dir
+                # Check if a specific worldgen handler is registered in any handler directory
+                current_dir = os.path.dirname(__file__)
+                for subdir in HANDLER_DIRECTORIES:
+                    handler_path = os.path.join(current_dir, subdir, f'{world_dir}.py')
+                    if os.path.exists(handler_path):
+                        # Use the worldgen-specific handler
+                        return world_dir
                 # Fall back to parent game's handler
                 world_dir = world_dir[:-9]  # Remove '_worldgen' (9 chars)
             return world_dir
@@ -63,37 +70,31 @@ def _get_world_directory(world) -> Optional[str]:
     return None
 
 
-def _discover_handlers():
+def _discover_handlers_in_directory(directory_path: str, package_name: str) -> Dict[str, Type[BaseGameExportHandler]]:
     """
-    Automatically discover all game export handlers in this directory.
+    Discover all game export handlers in a specific directory.
 
-    Scans all Python files in the exporter/games directory and looks for classes
-    that inherit from BaseGameExportHandler. Handlers are registered by their
-    module name (filename without .py), which matches the world directory name.
-
-    For example:
-    - exporter/games/alttp.py -> registered as 'alttp'
-    - exporter/games/oot.py -> registered as 'oot'
+    Args:
+        directory_path: Absolute path to the directory to scan
+        package_name: Python package name for imports (e.g., 'exporter.games.official')
 
     Returns:
         Dict mapping module names to handler classes
     """
     handlers = {}
 
-    current_dir = os.path.dirname(__file__)
+    if not os.path.isdir(directory_path):
+        return handlers
 
-    # Iterate through all .py files in this directory
-    for filename in os.listdir(current_dir):
+    for filename in os.listdir(directory_path):
         if not filename.endswith('.py') or filename.startswith('_'):
-            continue
-        if filename in ['base.py', 'generic.py']:  # Skip base classes
             continue
 
         module_name = filename[:-3]  # Remove .py extension
 
         try:
             # Import the module
-            module = importlib.import_module(f'.{module_name}', package='exporter.games')
+            module = importlib.import_module(f'.{module_name}', package=package_name)
 
             # Find all classes that inherit from BaseGameExportHandler
             for name, obj in inspect.getmembers(module, inspect.isclass):
@@ -103,19 +104,59 @@ def _discover_handlers():
 
                     # Register by module name (which matches world directory)
                     handlers[module_name] = obj
-                    logger.debug(f"Registered handler '{module_name}': {name}")
+                    logger.debug(f"Registered handler '{module_name}': {name} from {package_name}")
                     break  # Only one handler per module
 
         except Exception as e:
             # Log but don't fail - allows for graceful degradation
             logger.warning(
-                f"Failed to load game handler from {filename}: {e}"
+                f"Failed to load game handler from {package_name}.{module_name}: {e}"
             )
 
     return handlers
 
+
+def _discover_handlers() -> Dict[str, Type[BaseGameExportHandler]]:
+    """
+    Automatically discover all game export handlers in all handler directories.
+
+    Scans the official/ and unofficial/ subdirectories for Python files containing
+    classes that inherit from BaseGameExportHandler. Handlers are registered by their
+    module name (filename without .py), which matches the world directory name.
+
+    For example:
+    - exporter/games/official/alttp.py -> registered as 'alttp'
+    - exporter/games/unofficial/minit.py -> registered as 'minit'
+
+    If a handler exists in multiple directories, the first one found takes precedence
+    (official before unofficial).
+
+    Returns:
+        Dict mapping module names to handler classes
+    """
+    handlers = {}
+    current_dir = os.path.dirname(__file__)
+
+    for subdir in HANDLER_DIRECTORIES:
+        subdir_path = os.path.join(current_dir, subdir)
+        package_name = f'exporter.games.{subdir}'
+
+        subdir_handlers = _discover_handlers_in_directory(subdir_path, package_name)
+
+        # Only add handlers that aren't already registered (first takes precedence)
+        for name, handler_class in subdir_handlers.items():
+            if name not in handlers:
+                handlers[name] = handler_class
+            else:
+                logger.debug(f"Handler '{name}' already registered, skipping from {package_name}")
+
+    logger.info(f"Discovered {len(handlers)} game export handlers")
+    return handlers
+
+
 # Populate handlers on module import
 GAME_HANDLERS = _discover_handlers()
+
 
 def get_game_export_handler(game_name: str = None, world=None, world_directory: str = None) -> BaseGameExportHandler:
     """

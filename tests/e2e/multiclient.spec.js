@@ -76,14 +76,51 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     serverProc.stderr.pipe(logStream);
 
     // Wait for server to start
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // Note: Loading 70+ apworlds can take significant time on CI runners,
+    // so we use 120 seconds and poll for the server to be ready
+    const startTime = Date.now();
+    const maxWaitTime = 120000; // 120 seconds
+    let serverReady = false;
 
-    // Check if server is still running
-    if (serverProc.exitCode !== null) {
-      throw new Error('Server failed to start');
+    while (Date.now() - startTime < maxWaitTime) {
+      // Check if server process has exited
+      if (serverProc.exitCode !== null) {
+        throw new Error('Server failed to start - process exited');
+      }
+
+      // Try to connect to see if server is ready
+      try {
+        const net = require('net');
+        await new Promise((resolve, reject) => {
+          const socket = new net.Socket();
+          socket.setTimeout(500);
+          socket.on('connect', () => {
+            socket.destroy();
+            resolve();
+          });
+          socket.on('timeout', () => {
+            socket.destroy();
+            reject(new Error('timeout'));
+          });
+          socket.on('error', (err) => {
+            socket.destroy();
+            reject(err);
+          });
+          socket.connect(serverPort, 'localhost');
+        });
+        serverReady = true;
+        break;
+      } catch (e) {
+        // Server not ready yet, wait and retry
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
 
-    console.log(`Server started on port ${serverPort}`);
+    if (!serverReady) {
+      throw new Error('Server failed to start - timeout waiting for port');
+    }
+
+    console.log(`Server started on port ${serverPort} after ${Date.now() - startTime}ms`);
     return serverProc;
   }
 

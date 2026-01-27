@@ -206,7 +206,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['generation']['note'] = 'Skipped in test-only mode'
 
     # Check if rules file exists (files are actually in frontend/presets/)
-    # Use world_directory from world_info if available (for multitemplate mode),
+    # Use world_directory from world_info if available,
     # otherwise fall back to game_name_from_filename
     preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
     rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
@@ -326,6 +326,41 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
                 print(f"ERROR: Could not list test results directory: {e}")
 
         test_results = parse_multiclient_test_results(test_results_dir, single_client=single_client)
+
+        # If test failed, print diagnostic info
+        if test_return_code != 0:
+            # Check if .archipelago file exists at expected path
+            expected_arch_path = os.path.join(project_root, 'frontend', 'presets', preset_dir, seed_id, f'{seed_id}.archipelago')
+            if os.path.exists(expected_arch_path):
+                print(f"DEBUG: .archipelago file exists at: {expected_arch_path}")
+                print(f"DEBUG: .archipelago file size: {os.path.getsize(expected_arch_path)} bytes")
+            else:
+                print(f"DEBUG: .archipelago file NOT FOUND at: {expected_arch_path}")
+                # Check what's in the preset directory
+                preset_path = os.path.join(project_root, 'frontend', 'presets', preset_dir)
+                if os.path.exists(preset_path):
+                    print(f"DEBUG: Preset directory contents: {os.listdir(preset_path)}")
+                    seed_path = os.path.join(preset_path, seed_id)
+                    if os.path.exists(seed_path):
+                        print(f"DEBUG: Seed directory contents: {os.listdir(seed_path)}")
+                else:
+                    print(f"DEBUG: Preset directory NOT FOUND: {preset_path}")
+
+            # Print server log if it exists
+            server_log_path = os.path.join(project_root, 'server_log.txt')
+            if os.path.exists(server_log_path):
+                print(f"DEBUG: Server log contents:")
+                try:
+                    with open(server_log_path, 'r') as f:
+                        log_content = f.read()
+                        # Print last 50 lines
+                        lines = log_content.strip().split('\n')
+                        for line in lines[-50:]:
+                            print(f"  SERVER: {line}")
+                except Exception as e:
+                    print(f"DEBUG: Could not read server log: {e}")
+            else:
+                print(f"DEBUG: Server log not found at: {server_log_path}")
 
         result['multiclient_test'].update({
             'success': test_results['success'],

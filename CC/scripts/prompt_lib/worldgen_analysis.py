@@ -271,3 +271,241 @@ def categorize_seed_generation_error(error_msg):
         return ('attribute_error', {'message': error_msg})
 
     return ('other', {'message': error_msg})
+
+
+def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fixed', world_source='bundled'):
+    """Load the UT fuzz test results JSON file.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original' or 'modified'
+        seed_mode: 'fixed' or 'random'
+        world_source: 'bundled' or 'apworlds'
+
+    Returns:
+        Dict with 'metadata' and 'results' keys, or empty dict if not found
+    """
+    # Build filename based on parameters
+    # For bundled worlds: test-results-{ut_version}-{seed_mode}-seed.json
+    # For apworlds: test-results-{world_source}-{ut_version}-{seed_mode}-seed.json
+    if world_source == 'bundled':
+        filename = f'test-results-{ut_version}-{seed_mode}-seed.json'
+    else:
+        filename = f'test-results-{world_source}-{ut_version}-{seed_mode}-seed.json'
+
+    results_file = Path(project_root) / 'scripts' / 'output' / 'ut-fuzz' / filename
+    if not results_file.exists():
+        return {}
+
+    try:
+        with open(results_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading UT fuzz test results: {e}", file=sys.stderr)
+        return {}
+
+
+def load_worldgen_exclude_list(project_root, include_all_excludes=False):
+    """Load the worldgen_test_exclude_list from template-exclude-list.json.
+
+    Args:
+        project_root: Path to the project root
+        include_all_excludes: If True, also include exclude_list and main_test_exclude_list
+
+    Returns a set of template names that are excluded from worldgen tests.
+    """
+    exclude_file = Path(project_root) / 'scripts' / 'data' / 'template-exclude-list.json'
+    if not exclude_file.exists():
+        return set()
+
+    try:
+        with open(exclude_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        worldgen_excludes = data.get('worldgen_test_exclude_list', [])
+        result = {item['name'] for item in worldgen_excludes}
+
+        if include_all_excludes:
+            # Also include permanent excludes and main test excludes
+            permanent_excludes = data.get('exclude_list', [])
+            main_excludes = data.get('main_test_exclude_list', [])
+            result.update({item['name'] for item in permanent_excludes})
+            result.update({item['name'] for item in main_excludes})
+
+        return result
+    except Exception as e:
+        print(f"Error loading worldgen exclude list: {e}", file=sys.stderr)
+        return set()
+
+
+def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worldgen_test_mode='canonical'):
+    """Get games that fail UT fuzz test, excluding those in exclude lists.
+
+    This identifies games where:
+    - The game fails UT fuzz testing (logic mismatches)
+    - The game is NOT in worldgen_test_exclude_list, exclude_list, or main_test_exclude_list
+
+    Returns list of dicts with game_name, template, ut_fuzz stats.
+    """
+    # Load UT fuzz results and combined exclude list (worldgen + permanent + main test excludes)
+    ut_fuzz_data = load_ut_fuzz_test_results(project_root, ut_version=ut_version)
+    worldgen_exclude_list = load_worldgen_exclude_list(project_root, include_all_excludes=True)
+
+    ut_results = ut_fuzz_data.get('results', {})
+
+    failures = []
+
+    for template_name, ut_result in ut_results.items():
+        ut_fuzz = ut_result.get('ut_fuzz', {})
+        world_info = ut_result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+
+        # Skip if UT fuzz test passed
+        if ut_fuzz.get('passed', False):
+            continue
+
+        # Skip if the only "failures" are timeouts (no actual logic failures)
+        actual_failures = ut_fuzz.get('failure', 0)
+        if actual_failures == 0:
+            continue
+
+        # Skip games that are in the worldgen exclude list
+        if template_name in worldgen_exclude_list:
+            continue
+
+        # This game fails UT fuzz and is not excluded - add to failures
+        failures.append({
+            'game_name': game_name,
+            'template': template_name,
+            'world_directory': world_info.get('world_directory'),
+            'ut_fuzz': {
+                'total': ut_fuzz.get('total', 0),
+                'success': ut_fuzz.get('success', 0),
+                'failure': ut_fuzz.get('failure', 0),
+                'timeout': ut_fuzz.get('timeout', 0),
+                'success_rate': (ut_fuzz.get('success', 0) / ut_fuzz.get('total', 1)) * 100,
+                'error_types': list(ut_fuzz.get('errors', {}).keys()),
+                'error_runs': ut_fuzz.get('errors', {}),
+            },
+        })
+
+    return failures
+
+
+def categorize_ut_fuzz_error(error_types):
+    """Categorize UT fuzz error types.
+
+    The UT fuzz test reports error types like:
+    - 'None': Logic mismatch (UT and server disagree on accessible locations)
+    - Other: Python exception type
+
+    Returns a tuple of (category, details).
+    """
+    if not error_types:
+        return ('unknown', None)
+
+    if 'None' in error_types:
+        # Logic mismatch is the primary issue
+        other_types = [t for t in error_types if t != 'None']
+        if other_types:
+            return ('logic_mismatch_with_errors', {
+                'logic_mismatches': True,
+                'exception_types': other_types
+            })
+        return ('logic_mismatch', None)
+
+    # Only exception-based errors
+    return ('exceptions', {'types': error_types})
+
+
+def load_ut_fuzz_apworld_exclude_list(project_root):
+    """Load the ut_fuzz_apworld_exclude_list from template-exclude-list.json.
+
+    Returns a set of template names that are excluded from UT fuzz apworld tests.
+    """
+    exclude_file = Path(project_root) / 'scripts' / 'data' / 'template-exclude-list.json'
+    if not exclude_file.exists():
+        return set()
+
+    try:
+        with open(exclude_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        excludes = data.get('ut_fuzz_apworld_exclude_list', [])
+        return {item['name'] for item in excludes}
+    except Exception as e:
+        print(f"Error loading UT fuzz apworld exclude list: {e}", file=sys.stderr)
+        return set()
+
+
+def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode='fixed'):
+    """Get apworlds that fail the UT fuzz test.
+
+    This identifies apworlds (community-built .apworld files) that fail the
+    Universal Tracker fuzz test with the specified UT version.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original' or 'modified' (default: 'modified')
+        seed_mode: 'fixed' or 'random' (default: 'fixed')
+
+    Returns:
+        List of dicts with game_name, template, world_directory, download_url,
+        ut_fuzz stats, and error information.
+    """
+    # Load apworld test results for the specified version
+    ut_fuzz_data = load_ut_fuzz_test_results(
+        project_root,
+        ut_version=ut_version,
+        seed_mode=seed_mode,
+        world_source='apworlds'
+    )
+
+    # Load the exclusion list for apworld UT fuzz tests
+    exclude_list = load_ut_fuzz_apworld_exclude_list(project_root)
+
+    ut_results = ut_fuzz_data.get('results', {})
+    failures = []
+
+    for template_name, ut_result in ut_results.items():
+        ut_fuzz = ut_result.get('ut_fuzz', {})
+        world_info = ut_result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+
+        # Skip if UT fuzz test passed
+        if ut_fuzz.get('passed', False):
+            continue
+
+        # Skip if in the exclusion list
+        if template_name in exclude_list:
+            continue
+
+        # Build failure entry
+        failure_entry = {
+            'game_name': game_name,
+            'template': template_name,
+            'world_directory': world_info.get('world_directory'),
+            'apworld_download_url': world_info.get('apworld_download_url'),
+            'ut_fuzz': {
+                'total': ut_fuzz.get('total', 0),
+                'success': ut_fuzz.get('success', 0),
+                'failure': ut_fuzz.get('failure', 0),
+                'timeout': ut_fuzz.get('timeout', 0),
+                'ignored': ut_fuzz.get('ignored', 0),
+                'success_rate': (ut_fuzz.get('success', 0) / max(ut_fuzz.get('total', 1), 1)) * 100,
+                'error_types': list(ut_fuzz.get('errors', {}).keys()),
+                'error_runs': ut_fuzz.get('errors', {}),
+            },
+        }
+
+        # Categorize the error type
+        error_category, error_details = categorize_ut_fuzz_error(
+            failure_entry['ut_fuzz']['error_types']
+        )
+        failure_entry['error_category'] = error_category
+        failure_entry['error_details'] = error_details
+
+        failures.append(failure_entry)
+
+    # Sort by success rate (lowest first) so worst failures come first
+    failures.sort(key=lambda x: x['ut_fuzz']['success_rate'])
+
+    return failures

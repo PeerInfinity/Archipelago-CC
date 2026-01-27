@@ -7,7 +7,7 @@ used by all AST visitor mixins.
 
 import ast
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 class BaseVisitorMixin:
@@ -72,18 +72,21 @@ class BaseVisitorMixin:
         if param_mappings:
             self.game_handler.register_discovered_param_mapping(helper_name, param_mappings)
 
-    def _make_helper_rule(self, name: str, args: List[Any]) -> Dict[str, Any]:
+    def _make_helper_rule(self, name: str, args: List[Any], kwargs: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Create a helper rule, omitting empty args to reduce JSON size.
+        Create a helper rule, omitting empty args/kwargs to reduce JSON size.
 
         Args:
             name: The helper function name
-            args: The arguments to pass to the helper
+            args: The positional arguments to pass to the helper
+            kwargs: The keyword arguments to pass to the helper (optional)
 
         Returns:
-            A helper rule dict with 'type', 'name', and optionally 'args'
+            A helper rule dict with 'type', 'name', and optionally 'args' and 'kwargs'
         """
         result: Dict[str, Any] = {'type': 'helper', 'name': name}
         if args:
             result['args'] = args
+        if kwargs:
+            result['kwargs'] = kwargs
         return result

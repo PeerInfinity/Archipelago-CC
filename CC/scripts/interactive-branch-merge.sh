@@ -14,9 +14,7 @@ NC='\033[0m' # No Color
 PAGE_SIZE=40
 
 # Function to get unfetched branches (remote branches without local counterpart or with updates)
-# Args: $1 = limit_date (YYYY-MM-DD format, empty for no limit)
 get_unfetched_branches() {
-    local limit_date="$1"
     local unfetched=()
 
     # Get all remote branches directly from the remote server (without fetching)
@@ -28,17 +26,11 @@ get_unfetched_branches() {
     # Batch: Load all local branch info in one command
     echo -e "${BLUE}Loading local branch data...${NC}" >&2
     declare -A local_hashes
-    declare -A local_dates
-    while IFS='|' read -r branch hash date; do
+    while IFS='|' read -r branch hash; do
         local_hashes["$branch"]="$hash"
-        local_dates["$branch"]="$date"
-    done < <(git for-each-ref --format='%(refname:short)|%(objectname)|%(committerdate:short)' refs/heads/)
+    done < <(git for-each-ref --format='%(refname:short)|%(objectname)' refs/heads/)
 
-    if [ -n "$limit_date" ]; then
-        echo -e "${BLUE}Comparing $branch_count remote branches (limiting to commits after $limit_date)...${NC}" >&2
-    else
-        echo -e "${BLUE}Comparing $branch_count remote branches...${NC}" >&2
-    fi
+    echo -e "${BLUE}Comparing $branch_count remote branches...${NC}" >&2
 
     while IFS=$'\t' read -r remote_hash ref; do
         # Extract branch name from refs/heads/branch_name
@@ -47,24 +39,8 @@ get_unfetched_branches() {
         # Check if local branch exists (using associative array lookup - no subprocess)
         if [ -z "${local_hashes[$branch_name]+isset}" ]; then
             # Branch doesn't exist locally at all
-            # For new branches, check if we can get the commit date (if commit exists locally from other branches)
-            if [ -n "$limit_date" ]; then
-                local commit_date=$(git show -s --format=%cs "$remote_hash" 2>/dev/null)
-                if [ -n "$commit_date" ] && [[ "$commit_date" < "$limit_date" ]]; then
-                    continue
-                fi
-                # If commit doesn't exist locally, include it (we can't know its date)
-            fi
             unfetched+=("$branch_name [new]")
         else
-            # Branch exists locally
-            local branch_date="${local_dates[$branch_name]}"
-
-            # Apply date filter based on local branch date
-            if [ -n "$limit_date" ] && [ -n "$branch_date" ] && [[ "$branch_date" < "$limit_date" ]]; then
-                continue
-            fi
-
             local local_hash="${local_hashes[$branch_name]}"
             if [ "$local_hash" != "$remote_hash" ]; then
                 # Remote has different commits (could be ahead, behind, or diverged)
@@ -87,16 +63,10 @@ get_unfetched_branches() {
 
 # Function to get local branches from origin (except current), sorted by most recent commit
 # Output format: branch_name|date_short|date_relative
-# Args: $1 = limit_date (YYYY-MM-DD format, empty for no limit)
 get_local_origin_branches() {
-    local limit_date="$1"
     local current_branch=$(git branch --show-current)
 
-    if [ -n "$limit_date" ]; then
-        echo -e "${BLUE}Loading local branches (limiting to commits after $limit_date)...${NC}" >&2
-    else
-        echo -e "${BLUE}Loading local branches...${NC}" >&2
-    fi
+    echo -e "${BLUE}Loading local branches...${NC}" >&2
 
     # Batch: Load all origin remote branch names in one command
     declare -A origin_branches
@@ -109,16 +79,9 @@ get_local_origin_branches() {
     # Only include branches that have a corresponding remote on origin
     git for-each-ref --sort=-committerdate --format='%(refname:short)|%(committerdate:short)|%(committerdate:relative)' refs/heads/ | while read -r line; do
         local branch="${line%%|*}"
-        local rest="${line#*|}"
-        local date_short="${rest%%|*}"
 
         # Skip current branch
         if [ "$branch" = "$current_branch" ]; then
-            continue
-        fi
-
-        # Apply date filter
-        if [ -n "$limit_date" ] && [[ "$date_short" < "$limit_date" ]]; then
             continue
         fi
 
@@ -348,6 +311,20 @@ perform_merge() {
                 git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
+            # Clear contents of fuzz_output/
+            if [ -d "fuzz_output" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^fuzz_output/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
+                git reset -- fuzz_output/ 2>/dev/null || true
+                git checkout -- fuzz_output/ 2>/dev/null || true
+                git clean -fd fuzz_output/ 2>/dev/null || true
+                # Also remove any untracked files not caught by git clean
+                rm -rf fuzz_output/* 2>/dev/null || true
+            fi
+
             # Remove text and log files in project root directory
             shopt -s nullglob
             for txtfile in *.txt *.log; do
@@ -436,6 +413,22 @@ perform_merge() {
             esac
         fi
 
+        # Ask if user wants to abort the merge
+        echo
+        read -p "Do you want to abort the merge? [y/N]: " abort_confirm
+
+        # Default to N if user just presses enter
+        if [ -z "$abort_confirm" ]; then
+            abort_confirm="N"
+        fi
+
+        if [[ "$abort_confirm" =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}Aborting merge...${NC}"
+            git merge --abort
+            echo -e "${GREEN}Merge aborted.${NC}"
+            return 1
+        fi
+
         return 0
     else
         echo -e "${BLUE}Skipped merge.${NC}"
@@ -464,15 +457,11 @@ fetch_and_merge() {
 }
 
 # Function to select mode
-# Returns: mode|limit_date (e.g., "fetch|2025-01-01" or "merge|")
+# Returns: fetch or merge
 select_mode() {
-    local one_week_ago=$(date -d "1 week ago" +%Y-%m-%d)
-
     echo -e "${BLUE}=== Select Mode ===${NC}" >&2
-    echo "1. Fetch and merge unfetched branches - last week (default)" >&2
-    echo "2. Fetch and merge unfetched branches - all" >&2
-    echo "3. Merge existing local branches - last week" >&2
-    echo "4. Merge existing local branches - all" >&2
+    echo "1. Fetch and merge unfetched branches (default)" >&2
+    echo "2. Merge existing local branches" >&2
     echo >&2
 
     read -p "Select mode [1]: " mode_choice >&2
@@ -483,20 +472,14 @@ select_mode() {
 
     case "$mode_choice" in
         1)
-            echo "fetch|$one_week_ago"
+            echo "fetch"
             ;;
         2)
-            echo "fetch|"
-            ;;
-        3)
-            echo "merge|$one_week_ago"
-            ;;
-        4)
-            echo "merge|"
+            echo "merge"
             ;;
         *)
             # Default to option 1
-            echo "fetch|$one_week_ago"
+            echo "fetch"
             ;;
     esac
 }
@@ -508,17 +491,15 @@ main() {
     echo -e "${BLUE}========================================${NC}"
     echo
 
-    # Select mode (returns "mode_type|limit_date")
-    local mode_result=$(select_mode)
-    local mode_type="${mode_result%%|*}"
-    local limit_date="${mode_result#*|}"
+    # Select mode
+    local mode_type=$(select_mode)
     echo
 
     if [ "$mode_type" = "fetch" ]; then
         # Fetch and merge unfetched branches
         while true; do
             # Get unfetched branches (refresh list)
-            mapfile -t unfetched_branches < <(get_unfetched_branches "$limit_date")
+            mapfile -t unfetched_branches < <(get_unfetched_branches)
 
             # If no branches with updates, switch to merge mode
             if [ "${#unfetched_branches[@]}" -eq 0 ]; then
@@ -567,7 +548,7 @@ main() {
 
         while true; do
             # Get local branches from origin
-            mapfile -t local_branches < <(get_local_origin_branches "$limit_date")
+            mapfile -t local_branches < <(get_local_origin_branches)
 
             if [ "${#local_branches[@]}" -eq 0 ]; then
                 echo -e "${GREEN}No local branches from origin available to merge.${NC}"

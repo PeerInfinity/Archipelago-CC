@@ -45,3 +45,14 @@ This section is for developers who want to understand, modify, or contribute to 
 This section provides detailed, auto-generated, or manually written documentation for each individual frontend module. It is an essential technical reference for understanding the specific responsibilities and interactions of each component in the application.
 
 - **[Module Index](./modules/README.md)**: An overview and index of all documented frontend modules.
+
+### 4. Source-Level Documentation
+
+READMEs in the source directories provide quick-start guides for each major component:
+
+| Component | README | Description |
+|-----------|--------|-------------|
+| Frontend | [frontend/README.md](../../frontend/README.md) | Web client overview, directory structure, development setup |
+| Exporter | [exporter/README.md](../../exporter/README.md) | Python rule export pipeline, game handlers, analyzer |
+| World Generator | [world_generator/README.md](../../world_generator/README.md) | JSON to Python world conversion |
+| Rule Builder | [rule_builder/README.md](../../rule_builder/README.md) | Declarative rule definition system |

@@ -365,6 +365,15 @@ class RuleExpansionMixin:
             if 'right' in rule and isinstance(rule['right'], dict):
                 rule['right'] = self.expand_rule(rule['right'], _depth + 1)
 
+        # Handle max/min types (contain args array that needs expansion)
+        # This ensures self.options.xxx references inside max/min calls get resolved
+        elif rule_type in ('max', 'min'):
+            if 'args' in rule and isinstance(rule['args'], list):
+                rule['args'] = [
+                    self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
+                    for arg in rule['args']
+                ]
+
         # Handle comparison type (alias for compare, contains left and right)
         elif rule_type == 'comparison':
             if 'left' in rule and isinstance(rule['left'], dict):

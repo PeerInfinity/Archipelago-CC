@@ -1482,7 +1482,6 @@ export default {
     kerrigan_levels,
     two_kerrigan_actives,
 
-    marine_medic_upgrade,
     can_nuke: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData, snapshot);
 

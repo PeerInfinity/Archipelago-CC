@@ -8,7 +8,7 @@ import json
 import os
 import inspect
 import shutil
-from functools import lru_cache
+from functools import lru_cache, partial
 from typing import Any, Dict, List, Set, Optional, Tuple
 from collections import defaultdict
 
@@ -17,7 +17,7 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB_BASE, MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
 from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
 
@@ -103,6 +103,50 @@ _rule_analysis_cache: Dict[Tuple[int, int, Optional[int], Optional[str]], Any] =
 def clear_rule_cache():
     """Clear the rule analysis cache. Call between generations."""
     _rule_analysis_cache.clear()
+
+
+# Cache for skip-export-games list to avoid repeated file reads
+_skip_export_games_cache: Optional[Set[str]] = None
+
+
+def _load_skip_export_games_list() -> Set[str]:
+    """Load the list of games to skip export for from skip-export-games.json.
+
+    The file is expected to be in the same directory as this module.
+    Returns a set of game names that should skip rule export.
+    """
+    global _skip_export_games_cache
+    if _skip_export_games_cache is not None:
+        return _skip_export_games_cache
+
+    skip_list_path = os.path.join(os.path.dirname(__file__), 'skip-export-games.json')
+    games = set()
+
+    if os.path.exists(skip_list_path):
+        try:
+            with open(skip_list_path, 'r') as f:
+                data = json.load(f)
+                # Support both flat list and categorized format
+                if isinstance(data, list):
+                    games = set(data)
+                elif isinstance(data, dict):
+                    # Combine all categories (bundled, apworlds, etc.)
+                    if 'games' in data:
+                        for category_games in data['games'].values():
+                            games.update(category_games)
+                    else:
+                        # Direct category keys
+                        for key, value in data.items():
+                            if isinstance(value, list):
+                                games.update(value)
+            logger.debug(f"Loaded {len(games)} games from skip-export-games.json")
+        except (json.JSONDecodeError, IOError) as e:
+            logger.warning(f"Failed to load skip-export-games.json: {e}")
+    else:
+        logger.warning(f"skip-export-games.json not found at {skip_list_path}")
+
+    _skip_export_games_cache = games
+    return games
 
 
 def _insert_hint_text(item_data: dict, hint_text: str) -> None:
@@ -371,9 +415,29 @@ def get_world_directory_name(game_name: str) -> str:
                     if game_name in mapping:
                         world_dir = mapping[game_name].get('world_directory')
                         if world_dir:
+                            logger.info(f"Found world directory '{world_dir}' for game '{game_name}' in world-mapping.json")
                             return world_dir
+                    else:
+                        logger.debug(f"Game '{game_name}' not found in world-mapping.json (has {len(mapping)} entries)")
             except (IOError, json.JSONDecodeError) as e:
                 logger.debug(f"Could not read world mapping file: {e}")
+
+        # Also check world-mapping-unofficial.json for apworld entries
+        unofficial_mapping_file = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'data', 'world-mapping-unofficial.json')
+        if os.path.exists(unofficial_mapping_file):
+            try:
+                with open(unofficial_mapping_file, 'r', encoding='utf-8') as f:
+                    import json
+                    mapping = json.load(f)
+                    if game_name in mapping:
+                        world_dir = mapping[game_name].get('world_directory')
+                        if world_dir:
+                            logger.info(f"Found world directory '{world_dir}' for game '{game_name}' in world-mapping-unofficial.json")
+                            return world_dir
+                    else:
+                        logger.debug(f"Game '{game_name}' not found in world-mapping-unofficial.json (has {len(mapping)} entries)")
+            except (IOError, json.JSONDecodeError) as e:
+                logger.debug(f"Could not read unofficial world mapping file: {e}")
 
         # Fall back to scanning worlds directory
         # Get path to worlds directory relative to this file (exporter/exporter.py)
@@ -525,8 +589,10 @@ def get_world_directory_name(game_name: str) -> str:
                 continue
         
         # If no matching world found, fall back to old logic
-        return game_name.lower().replace(' ', '_').replace(':', '_')
-        
+        fallback_dir = game_name.lower().replace(' ', '_').replace(':', '_')
+        logger.warning(f"Could not find world directory for game '{game_name}' in mappings or worlds directory, using fallback: '{fallback_dir}'")
+        return fallback_dir
+
     except Exception as e:
         logger.error(f"Error finding world directory for game '{game_name}': {e}")
         return game_name.lower().replace(' ', '_').replace(':', '_')
@@ -919,6 +985,12 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             try:
                 helper_definitions = game_handler.get_helper_definitions(world)
                 if helper_definitions:
+                    # Allow game handlers to post-process helper definitions
+                    if hasattr(game_handler, 'postprocess_helper'):
+                        for helper_name in list(helper_definitions.keys()):
+                            helper_definitions[helper_name] = game_handler.postprocess_helper(
+                                helper_name, helper_definitions[helper_name]
+                            )
                     export_data['helpers'][player_str] = helper_definitions
                     logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
             except Exception as e:
@@ -1178,6 +1250,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     rb_dict = rule_func.to_dict()
                     # Recursively convert nested Resolved objects to their dict form
                     rb_dict = _make_rule_dict_serializable(rb_dict)
+                    # Allow game handlers to transform Rule Builder format rules
+                    # This enables handlers to resolve unresolved references (e.g., variable names)
+                    if game_handler and hasattr(game_handler, 'expand_rule'):
+                        rb_dict = game_handler.expand_rule(rb_dict)
                     # Cache and return Rule Builder format directly
                     _rule_analysis_cache[cache_key] = rb_dict
                     logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
@@ -1199,8 +1275,34 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     _rule_analysis_cache[cache_key] = override_result
                     return override_result
 
+            # Unwrap functools.partial objects to get the underlying function
+            # Many apworlds (e.g., Metroid Zero Mission) use partial to bind parameters
+            partial_bound_vars = {}
+            if isinstance(rule_func, partial):
+                inner_func = rule_func.func
+                bound_args = rule_func.args
+                bound_keywords = rule_func.keywords or {}
+
+                # Map positional bound args to parameter names
+                if hasattr(inner_func, '__code__'):
+                    param_names = inner_func.__code__.co_varnames[:inner_func.__code__.co_argcount]
+                    for i, value in enumerate(bound_args):
+                        if i < len(param_names):
+                            partial_bound_vars[param_names[i]] = value
+                            logger.debug(f"Partial unwrap: bound {param_names[i]} = {value}")
+
+                # Add keyword bound args
+                partial_bound_vars.update(bound_keywords)
+
+                # Use the inner function for analysis
+                rule_func = inner_func
+                logger.debug(f"Unwrapped functools.partial: inner_func={inner_func}, bound_vars={list(partial_bound_vars.keys())}")
+
             # Extract closure variables from the rule function
             closure_vars = {}
+
+            # Add partial-bound variables first (may be overridden by closure vars)
+            closure_vars.update(partial_bound_vars)
 
             # Add globals from the function (for module-level imports like ChapterIndex)
             if hasattr(rule_func, '__globals__'):
@@ -1243,7 +1345,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 rule_target_name=rule_target_name,
                 target_type=target_type
             )
-            
+
             if analysis_result and analysis_result.get('type') != 'error':
 
                 # Set context for A Hat In Time telescope rule processing
@@ -1698,10 +1800,17 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     original_type = extract_type_value(getattr(location.item, 'type', None))
                                     effective_type = game_handler.get_effective_item_type(item_name, original_type) if game_handler and item_name else original_type
 
+                                    # Check for canonical_placement_advancements to preserve original advancement values
+                                    # This ensures cross-validation works correctly for worldgen worlds
+                                    advancement = getattr(location.item, 'advancement', False)
+                                    canonical_advancements = getattr(world.__class__, 'canonical_placement_advancements', None)
+                                    if canonical_advancements and location_name in canonical_advancements:
+                                        advancement = canonical_advancements[location_name]
+
                                     location_data['item'] = {
                                         'name': item_name,
                                         'player': getattr(location.item, 'player', None),
-                                        'advancement': getattr(location.item, 'advancement', False),
+                                        'advancement': advancement,
                                         'type': effective_type
                                     }
 
@@ -1713,6 +1822,18 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             except Exception as e:
                                 logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
 
+                # Allow game handler to add extra locations that weren't created for this seed
+                # This is useful for games like Sims 4 where locations depend on DLC options
+                if game_handler and hasattr(game_handler, 'get_extra_locations_for_region'):
+                    try:
+                        existing_location_names = [loc['name'] for loc in region_data['locations']]
+                        extra_locations = game_handler.get_extra_locations_for_region(region.name, existing_location_names)
+                        if extra_locations:
+                            logger.debug(f"Adding {len(extra_locations)} extra locations to region '{region.name}'")
+                            region_data['locations'].extend(extra_locations)
+                    except Exception as e:
+                        logger.error(f"Error getting extra locations for region '{region.name}': {str(e)}")
+
                 # Auto-mark regions with no locations and no exits as dynamically_added
                 # These are structural regions that exist for navigation but have no content
                 if (not region_data.get('dynamically_added') and
@@ -1722,26 +1843,30 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 regions_data[region.name] = region_data
 
-                # Size check every 10 regions to catch runaway data growth
-                if region_count % 10 == 0:
+                # Size check every 50 regions to catch runaway data growth
+                # Using make_serializable for accurate measurement, so check less frequently for performance
+                if region_count % 50 == 0:
                     try:
-                        # Use a custom encoder that handles non-string dict keys
-                        # by converting them to string representations
-                        def stringify_keys(obj):
-                            if isinstance(obj, dict):
-                                return {str(k): stringify_keys(v) for k, v in obj.items()}
-                            elif isinstance(obj, list):
-                                return [stringify_keys(item) for item in obj]
-                            return obj
-                        serializable_data = stringify_keys(regions_data)
-                        current_size = len(json.dumps(serializable_data, default=str))
+                        # Use make_serializable to get an accurate size measurement
+                        # that matches what the final export will produce.
+                        # This is important because default=str can produce much larger
+                        # output for Python objects that will be converted to compact
+                        # representations by make_serializable in the final export.
+                        serializable_data = make_serializable(regions_data)
+                        current_size = len(json.dumps(serializable_data))
                         current_size_mb = current_size / (1024 * 1024)
-                        if current_size_mb > MAX_EXPORT_SIZE_MB:
+                        # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
+                        num_players = getattr(multiworld, 'players', 1)
+                        max_size_mb = MAX_EXPORT_SIZE_MB_BASE + (MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+                        if current_size_mb > max_size_mb:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
-                                        f"({MAX_EXPORT_SIZE_MB} MB) after processing region '{region_name}'. "
-                                        f"This likely indicates a rule analysis loop. Aborting export.")
+                                        f"({max_size_mb} MB) after processing region '{region_name}'. "
+                                        f"This may indicate a rule analysis loop or exceptionally large game data.")
                             logger.error(error_msg)
-                            raise RuntimeError(error_msg)
+                            # Return partial data instead of raising - allow export to complete with what we have
+                            logger.warning(f"Stopping region processing for this player due to size limit. "
+                                          f"Processed {region_count} regions before limit.")
+                            return regions_data, dungeons_data
                     except (TypeError, ValueError, RecursionError) as e:
                         # If serialization fails, just log and continue
                         logger.warning(f"Could not check export size: {e}")
@@ -2006,6 +2131,43 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
     except Exception as e:
         logger.warning(f"Could not count starting items for player {player}: {e}")
 
+    # Count items by classification (for items with mixed classifications like Faxanadu's Red Potion)
+    # This tracks how many of each classification exist for each item type
+    classification_counts: Dict[str, Dict[str, int]] = {}
+    try:
+        # Count from placements
+        for location in multiworld.get_locations():
+            if location.item and location.item.player == player:
+                item_name = location.item.name
+                item_classification = classification_to_string(
+                    getattr(location.item, 'classification', ItemClassification.filler)
+                )
+                if item_name not in classification_counts:
+                    classification_counts[item_name] = {}
+                classification_counts[item_name][item_classification] = \
+                    classification_counts[item_name].get(item_classification, 0) + 1
+
+        # Also count starting items
+        for starting_item in multiworld.precollected_items.get(player, []):
+            if hasattr(starting_item, 'name'):
+                item_name = starting_item.name
+                item_classification = classification_to_string(
+                    getattr(starting_item, 'classification', ItemClassification.filler)
+                )
+                if item_name not in classification_counts:
+                    classification_counts[item_name] = {}
+                classification_counts[item_name][item_classification] = \
+                    classification_counts[item_name].get(item_classification, 0) + 1
+
+        # Add classification_counts to items that have mixed classifications
+        # (i.e., more than one classification type with non-zero count)
+        for item_name, counts in classification_counts.items():
+            if item_name in items_data and len(counts) > 1:
+                # Item has mixed classifications - add the counts
+                items_data[item_name]['classification_counts'] = counts
+    except Exception as e:
+        logger.warning(f"Could not count item classifications for player {player}: {e}")
+
     # Update max_count based on actual placements (use max of current max_count and placements)
     for item_name, item_data in items_data.items():
         placement_count = placement_counts.get(item_name, 0)
@@ -2216,7 +2378,28 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     Returns:
         Dict containing paths to generated files
     """
-    
+
+    # For single-world multiworlds, optionally skip rule export.
+    # This is controlled by the skip_export_for_native_ut setting (default: False).
+    # When skip_export_from_list is also True, use a list of games from skip-export-games.json
+    # instead of checking ut_can_gen_without_yaml.
+    from settings import get_settings
+    settings = get_settings()
+    if getattr(settings.general_options, 'skip_export_for_native_ut', False):
+        if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
+            world = list(multiworld.worlds.values())[0]
+
+            if getattr(settings.general_options, 'skip_export_from_list', False):
+                # Use the skip list instead of checking ut_can_gen_without_yaml
+                skip_list = _load_skip_export_games_list()
+                if world.game in skip_list:
+                    logger.info(f"Skipping rule export for {world.game}: game is in skip-export-games.json list")
+                    return {}
+            elif getattr(world.__class__, "ut_can_gen_without_yaml", False):
+                # Fall back to checking ut_can_gen_without_yaml
+                logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
+                return {}
+
     os.makedirs(output_dir, exist_ok=True)
 
     # --- Configuration for Excluded Fields (now defined globally) ---

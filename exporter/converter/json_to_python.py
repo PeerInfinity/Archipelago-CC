@@ -604,12 +604,31 @@ class JSONToPython:
             return f"{name} {op} {value_code}"
 
     def _convert_for_range(self, rule: Dict, context: str) -> str:
-        """Convert for_range rule to for loop over range()."""
+        """Convert for_range rule to for loop over range().
+
+        Supports:
+        - range(count) - old format with 'count' key
+        - range(start, stop) - new format with 'start' and 'stop' keys
+        - range(start, stop, step) - new format with 'start', 'stop', and 'step' keys
+        """
         var = rule.get('var', 'i')
-        count = rule.get('count', {})
         body = rule.get('body', [])
 
-        count_code = self._convert_rule(count)
+        # Determine range() arguments
+        if 'start' in rule and 'stop' in rule:
+            # New format: range(start, stop) or range(start, stop, step)
+            start_code = self._convert_rule(rule['start'])
+            stop_code = self._convert_rule(rule['stop'])
+            if 'step' in rule:
+                step_code = self._convert_rule(rule['step'])
+                range_code = f"range({start_code}, {stop_code}, {step_code})"
+            else:
+                range_code = f"range({start_code}, {stop_code})"
+        else:
+            # Old format: range(count)
+            count = rule.get('count', {})
+            count_code = self._convert_rule(count)
+            range_code = f"range({count_code})"
 
         body_lines = []
         for stmt in body:
@@ -617,7 +636,7 @@ class JSONToPython:
             body_lines.append(self._indent(code))
 
         body_str = '\n'.join(body_lines) if body_lines else self._indent('pass')
-        return f"for {var} in range({count_code}):\n{body_str}"
+        return f"for {var} in {range_code}:\n{body_str}"
 
     def _convert_for_iter(self, rule: Dict, context: str) -> str:
         """Convert for_iter rule to for loop over iterable."""

@@ -392,8 +392,9 @@ Add the module containing item constants to `ITEM_NAME_MODULES`.
 - **Helper discovery**: `exporter/games/base/helper_discovery.py` - Auto-discovery logic
 - **World data**: `exporter/games/base/world_data.py` - World/option export
 - **Rule expansion**: `exporter/games/base/rule_expansion.py` - Rule transformation
-- **Generic handler**: `exporter/games/generic.py` - Recommended base class
-- **Game exporter**: `exporter/games/<game>.py` - Game-specific configuration
+- **Generic handler**: `exporter/games/base/generic.py` - Recommended base class
+- **Official exporters**: `exporter/games/official/<game>.py` - Official game configurations
+- **Unofficial exporters**: `exporter/games/unofficial/<game>.py` - Community apworld configurations
 - **Frontend helpers**: `frontend/modules/shared/gameLogic/<game>/helpers.js`
 - **Rule engine**: `frontend/modules/shared/ruleEngine.js` - Helper definition lookup
 - **State interface**: `frontend/modules/shared/stateInterface.js` - getStaticData()

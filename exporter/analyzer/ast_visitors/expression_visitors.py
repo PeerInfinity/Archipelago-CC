@@ -143,6 +143,13 @@ class ExpressionVisitorMixin:
                             list_value = list(resolved_attr)
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
+                        elif callable(resolved_attr) and hasattr(obj_value, '_fields'):
+                            # Handle callable attributes on NamedTuples (e.g., LocationData.access_rule)
+                            # When used in boolean context (if loc.access_rule:), this should be True
+                            # This enables the conditional optimization to inline the callable
+                            # The actual call will be handled by call_visitor's early NamedTuple callable detection
+                            logging.debug(f"visit_Attribute: {var_name}.{attr_name} is a callable on NamedTuple, returning True for boolean context")
+                            return {'type': 'constant', 'value': True}
                     except AttributeError:
                         # If attribute doesn't exist, fall through to normal processing
                         logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")
@@ -229,9 +236,62 @@ class ExpressionVisitorMixin:
                     pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
-                    # Convert to list for JSON serialization
                     list_value = list(value) if isinstance(value, tuple) else value
+                    # Check if the list contains callables (like entrance access rules)
+                    # If so, analyze each callable to get proper rule structures
+                    if list_value and all(callable(item) for item in list_value):
+                        logging.debug(f"visit_Name: '{name}' is a list of {len(list_value)} callables, analyzing each")
+                        # Import analyze_rule to avoid circular dependency
+                        from ..analysis import analyze_rule
+                        from ..cache import callable_list_cache
+                        analyzed_items = []
+                        for idx, item_func in enumerate(list_value):
+                            try:
+                                # Check cache first using function ID
+                                func_id = id(item_func)
+                                if func_id in callable_list_cache:
+                                    logging.debug(f"visit_Name: Cache hit for callable {idx} in list '{name}'")
+                                    item_result = callable_list_cache[func_id]
+                                else:
+                                    item_result = analyze_rule(
+                                        rule_func=item_func,
+                                        closure_vars=self.closure_vars.copy(),
+                                        seen_funcs=self.seen_funcs,
+                                        game_handler=self.game_handler,
+                                        player_context=self.player_context,
+                                        rule_target_name=getattr(self, 'rule_target_name', None),
+                                        target_type=getattr(self, 'target_type', None)
+                                    )
+                                    # Cache successful results
+                                    if item_result and item_result.get('type') != 'error':
+                                        callable_list_cache[func_id] = item_result
+
+                                if item_result and item_result.get('type') != 'error':
+                                    analyzed_items.append(item_result)
+                                else:
+                                    logging.debug(f"visit_Name: Could not analyze callable item {idx} in list '{name}'")
+                                    analyzed_items = None
+                                    break
+                            except Exception as e:
+                                logging.debug(f"visit_Name: Error analyzing callable item {idx} in list '{name}': {e}")
+                                analyzed_items = None
+                                break
+
+                        if analyzed_items is not None:
+                            logging.debug(f"visit_Name: Successfully analyzed {len(analyzed_items)} callables from '{name}'")
+                            return {'type': 'constant', 'value': analyzed_items}
+                        else:
+                            logging.debug(f"visit_Name: Failed to analyze callable list '{name}', falling back to string representation")
+
+                    # Convert to list for JSON serialization
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
+                    return {'type': 'constant', 'value': list_value}
+                # Handle set/frozenset values - resolve to constant for 'in' / 'not in' comparisons
+                # This enables proper evaluation of patterns like: "item" not in randomized_items
+                elif isinstance(value, (set, frozenset)):
+                    # Convert to sorted list for JSON serialization and deterministic ordering
+                    list_value = sorted(value, key=lambda x: str(x))
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant set (as list): {list_value}")
                     return {'type': 'constant', 'value': list_value}
                 # Handle dict values - resolve to constant for subscript access and .items() iteration
                 elif isinstance(value, dict):
@@ -597,11 +657,26 @@ class ExpressionVisitorMixin:
             if resolved_container is not None and resolved_index is not None:
                 try:
                     # Try to perform the subscript operation
-                    if isinstance(resolved_container, (dict, list, tuple)):
+                    if isinstance(resolved_container, dict):
+                        # For dictionaries, handle the case where keys may have been stringified
+                        # for JSON serialization (e.g., {0: val} -> {"0": val})
+                        if resolved_index in resolved_container:
+                            subscript_result = resolved_container[resolved_index]
+                        elif isinstance(resolved_index, int) and str(resolved_index) in resolved_container:
+                            # Fallback: try string version of integer key
+                            subscript_result = resolved_container[str(resolved_index)]
+                            logging.debug(f"Used stringified key '{resolved_index}' -> '{str(resolved_index)}' for dict subscript")
+                        else:
+                            raise KeyError(resolved_index)
+                        logging.debug(f"Successfully resolved subscript operation: dict[{resolved_index}] = {subscript_result}")
+                    elif isinstance(resolved_container, (list, tuple)):
                         subscript_result = resolved_container[resolved_index]
                         logging.debug(f"Successfully resolved subscript operation: {type(resolved_container).__name__}[{resolved_index}] = {subscript_result}")
+                    else:
+                        subscript_result = None
 
-                        # Return as a constant if it's a simple value
+                    # Return as a constant if it's a simple value
+                    if subscript_result is not None:
                         if isinstance(subscript_result, (int, float, str, bool, type(None))):
                             return {'type': 'constant', 'value': subscript_result}
                         # Handle enum values
@@ -722,3 +797,94 @@ class ExpressionVisitorMixin:
         except Exception as e:
             logging.error(f"Error in visit_BoolOp: {e}")
             return None
+
+    def visit_Starred(self, node):
+        """
+        Handle starred expressions (*args unpacking) in function calls.
+
+        This handles patterns like:
+            needed_for_words(state, player, *(rules_for_difficulty["pointShop"]))
+
+        When the starred value resolves to a list/tuple, we return a special
+        'starred' type that the call visitor will unpack into individual arguments.
+        """
+        logging.debug(f"\nvisit_Starred called:")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+
+        # Visit the value inside the starred expression
+        value_result = self.visit(node.value)
+
+        if value_result is None:
+            logging.error(f"Failed to analyze starred expression value: {ast.dump(node.value)}")
+            return None
+
+        logging.debug(f"Starred value result: {value_result}")
+
+        # Try to resolve the value to an actual list/tuple
+        resolved_value = None
+
+        if value_result.get('type') == 'constant':
+            resolved_value = value_result.get('value')
+        elif value_result.get('type') == 'name':
+            resolved_value = self.expression_resolver.resolve_variable(value_result['name'])
+        elif value_result.get('type') == 'subscript':
+            resolved_value = self.expression_resolver.resolve_expression(value_result)
+        elif value_result.get('type') == 'attribute':
+            resolved_value = self.expression_resolver.resolve_expression(value_result)
+
+        # If we resolved to a list/tuple, return each element as an unpacked argument
+        if resolved_value is not None and isinstance(resolved_value, (list, tuple)):
+            logging.debug(f"Resolved starred expression to list/tuple with {len(resolved_value)} items: {resolved_value}")
+            # Convert each element to a constant
+            unpacked_args = []
+            for item in resolved_value:
+                if isinstance(item, (int, float, str, bool, type(None))):
+                    unpacked_args.append({'type': 'constant', 'value': item})
+                elif hasattr(item, 'value') and isinstance(item.value, (int, float, str, bool)):
+                    # Handle enum values
+                    unpacked_args.append({'type': 'constant', 'value': item.value})
+                else:
+                    logging.warning(f"Starred item is not a simple value: {type(item).__name__}")
+                    unpacked_args.append({'type': 'constant', 'value': item})
+
+            return {
+                'type': 'starred',
+                'unpacked_args': unpacked_args
+            }
+
+        # If we couldn't resolve, return a starred marker with the unresolved value
+        # The call visitor may still be able to handle this at a later stage
+        logging.debug(f"Could not resolve starred expression to list/tuple, returning unresolved starred")
+        return {
+            'type': 'starred',
+            'value': value_result
+        }
+
+    def visit_NamedExpr(self, node: ast.NamedExpr):
+        """
+        Handle named expressions (walrus operator := ).
+
+        The walrus operator `x := expr` evaluates `expr`, assigns it to `x`,
+        and returns the value of `expr`. For rule analysis purposes, we only
+        care about the value, not the assignment.
+
+        Example patterns:
+            - lambda state: (total := self.cyb_mod_count(state)) >= 6
+            - lambda state: func(x, y, result := helper(state))
+
+        We simply evaluate and return the value expression.
+        """
+        logging.debug(f"\nvisit_NamedExpr called:")
+        logging.debug(f"Target: {node.target.id if hasattr(node.target, 'id') else node.target}")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+
+        # Visit the value expression - this is what the walrus operator returns
+        value_result = self.visit(node.value)
+
+        if value_result is None:
+            logging.warning(f"Failed to analyze walrus operator value: {ast.dump(node.value)}")
+            # Return None to signal that analysis failed
+            return None
+
+        logging.debug(f"NamedExpr value result: {value_result}")
+        return value_result

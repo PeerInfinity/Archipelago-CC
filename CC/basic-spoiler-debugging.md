@@ -88,8 +88,8 @@ The analysis shows which sphere failed and what locations were affected.
 
 2. **Configure the game exporter** - Add the helper to a whitelist. If no exporter exists yet, create one:
    ```python
-   # exporter/games/gamename.py
-   from .generic import GenericGameExportHandler
+   # exporter/games/official/gamename.py (or unofficial/ for apworlds)
+   from ..base import GenericGameExportHandler
 
    class GameNameExportHandler(GenericGameExportHandler):
        GAME_NAME = 'GameName'
@@ -235,8 +235,8 @@ Some issues require changes to core infrastructure:
 | Rule not exported correctly | `exporter/analyzer.py` |
 | Helper not discovered | `exporter/analyzer.py` |
 | Rule evaluates wrong | `frontend/modules/shared/ruleEngine.js` |
-| Item/location name mismatch | `exporter/games/generic.py` |
-| Missing settings | Game-specific exporter (create or modify) |
+| Item/location name mismatch | `exporter/games/base/generic.py` |
+| Missing settings | Game-specific exporter (create or modify in `official/` or `unofficial/`) |
 
 ## Quick Reference
 

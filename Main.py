@@ -294,6 +294,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
 
                 for slot in multiworld.player_ids:
                     slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
+                    # Cache slot_data on the world for the exporter to use
+                    # This avoids calling fill_slot_data twice
+                    multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
 
                 def precollect_hint(location: Location, auto_status: HintStatus):
                     entrance = er_hint_data.get(location.player, {}).get(location.address, "")
@@ -401,9 +404,13 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
         if args.spoiler:
             multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
 
-        # New: export the rules data to a json file
+        # Export rules data after create_playthrough so sphere_log.jsonl is included.
+        # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
+        # so it won't repopulate caches that were cleared by stage_modify_multidata.
         settings = get_settings()
         if settings.general_options.save_rules_json:
+            from exporter import clear_rule_cache
+            from exporter.games import clear_handler_cache
             export_game_rules(
                 multiworld,
                 temp_dir,
@@ -412,6 +419,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                 settings.general_options.skip_preset_copy_if_rules_identical,
                 settings.general_options.rules_json_format
             )
+            # Clear exporter caches to allow GC
+            clear_rule_cache()
+            clear_handler_cache()
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")

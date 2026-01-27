@@ -4,7 +4,7 @@ This directory contains diff files showing changes made to this repository compa
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (151 lines)
+### 1. `core-files.diff` (178 lines)
 Changes to the main Archipelago core files:
 - **BaseClasses.py** - Core data structures and sphere logging modifications
 - **Main.py** - Main generation logic, vanilla placement trigger, JSON export, and workflow changes
@@ -12,7 +12,7 @@ Changes to the main Archipelago core files:
 
 These are the most significant changes that affect core Archipelago functionality.
 
-### 2. `config-files.diff` (144 lines)
+### 2. `config-files.diff` (151 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (added permissions)
@@ -68,8 +68,8 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 
 ## Notes
 
-- These diffs were last updated on 2025-12-16 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
-- Total lines changed across all diffs: 789 lines (151 + 144 + 494)
+- These diffs were last updated on 2026-01-14 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
+- Total lines changed across all diffs: 823 lines (178 + 151 + 494)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
@@ -79,6 +79,64 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 **Contributing to upstream Archipelago or maintaining your own clean fork:** Fork the [main ArchipelagoMW repository](https://github.com/ArchipelagoMW/Archipelago), copy the new directories from this repository, and apply these diffs.
 
 **Contributing to this project (Archipelago-CC):** You don't need these diffs. Just clone or fork normally. The commit history contains large files which will increase clone size, but won't affect your work.
+
+## Alternative: JSON Tools Installer APWorld
+
+If you just want to **use** the JSON Tools with an existing Archipelago installation (rather than maintaining a fork), there's an easier option: the **JSON Tools Installer APWorld**.
+
+### What It Does
+
+The JSON Tools Installer is a packaged APWorld that automatically:
+- Downloads the JSON Tools suite (exporter, rule builder, world generator, frontend)
+- Patches your Archipelago core files with backup/restore capability
+- Integrates with the Archipelago Launcher (adds GUI components)
+- Detects your AP version and applies compatible patches
+
+### Quick Start
+
+1. Download [`json_tools_installer.apworld`](https://github.com/PeerInfinity/Archipelago-CC/blob/main/apworlds/json_tools_installer.apworld)
+2. Place it in your Archipelago `worlds/` directory
+3. Restart Archipelago
+4. Use the new "JSON Tools Installer" component in the Launcher
+
+Or via command line:
+```bash
+# Install stable version
+python -m worlds.json_tools_installer install
+
+# Install development version with all components
+python -m worlds.json_tools_installer install --version dev --all
+
+# Check status
+python -m worlds.json_tools_installer status
+```
+
+### Components Available
+
+| Component | Description | Default |
+|-----------|-------------|---------|
+| `core` | Exporter, rule_builder, world_generator modules | Yes |
+| `scripts` | Utility scripts (setup, test, build) | Yes |
+| `frontend` | Web-based frontend for presets | No |
+| `presets` | Preset configurations (requires frontend) | No |
+| `docs` | Documentation files | No |
+
+### Version Sources
+
+- **Stable**: `PeerInfinity/Archipelago` @ `JSONExport` branch
+- **Development**: `PeerInfinity/Archipelago-CC` @ `main` branch
+
+### When to Use the Installer vs Diffs
+
+| Use Case | Recommended Approach |
+|----------|---------------------|
+| End user wanting JSON export features | JSON Tools Installer |
+| Maintaining your own fork of Archipelago | Apply diffs manually |
+| Contributing to upstream Archipelago | Apply diffs manually |
+| Development/testing on vanilla AP | JSON Tools Installer |
+| CI/CD pipelines | Either (installer supports CLI) |
+
+For full documentation, see [worlds/json_tools_installer/README.md](../../../../worlds/json_tools_installer/README.md).
 
 ## Diff Generation Command
 
@@ -90,3 +148,8 @@ git diff 886cc68051f23d6049f8d846379b193aa0415e24 HEAD -- [files...] > [output.d
 ## Related Documentation
 
 - **[repository-changes.md](./repository-changes.md)** - Complete overview of all changes from upstream
+- **[fuzzer-modifications.md](./fuzzer-modifications.md)** - Changes made to the Archipelago fuzzer
+- **[universal-tracker-modifications.md](./universal-tracker-modifications.md)** - Changes made to Universal Tracker
+- **[rule-builder-modifications.md](./rule-builder-modifications.md)** - Changes made to Rule Builder
+- **[JSON Tools Installer](../../../../worlds/json_tools_installer/README.md)** - APWorld for automated installation on vanilla Archipelago
+- **[Main README](../../../../README.md)** - Project overview and getting started guide

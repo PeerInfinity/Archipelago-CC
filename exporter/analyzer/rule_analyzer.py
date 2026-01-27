@@ -112,7 +112,7 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
     def _is_state_or_player_or_world_arg(self, arg_node, arg_result):
         """
-        Check if an argument is the 'state', 'player', or 'world' parameter.
+        Check if an argument is the 'state', 'player', 'world', or 'self' parameter.
 
         Args:
             arg_node: The AST node for the argument
@@ -120,11 +120,13 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
         Returns:
             Tuple of (is_state, is_player, is_world) booleans
+            Note: 'self' is treated the same as 'world' since both represent the world instance
         """
-        # Check for direct 'state', 'player', or 'world' names
+        # Check for direct 'state', 'player', 'world', or 'self' names
         if isinstance(arg_node, ast.Name):
             name = arg_node.id
-            return (name == 'state', name == 'player', name == 'world')
+            # 'self' represents the world object in methods, treat it same as 'world'
+            return (name == 'state', name == 'player', name in ('world', 'self'))
 
         # Check for attribute access like 'world.player', 'self.player', etc.
         if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
@@ -162,6 +164,29 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             is_state, is_player, is_world = self._is_state_or_player_or_world_arg(arg_node, arg_result)
             if not (is_state or is_player or is_world):
                 filtered.append(arg_result)
+        return filtered
+
+    def _filter_special_kwargs(self, kwargs_with_nodes):
+        """
+        Filter out state, player, and world keyword arguments.
+
+        Args:
+            kwargs_with_nodes: List of (ast.keyword, arg_result) tuples
+
+        Returns:
+            Dict of kwarg_name -> arg_result with state/player/world filtered out
+        """
+        filtered = {}
+        for kw_node, kw_result in kwargs_with_nodes:
+            kw_name = kw_node.arg
+            # Skip keyword arguments with names like 'state', 'player', 'world'
+            if kw_name in ('state', 'player', 'world'):
+                logging.debug(f"_filter_special_kwargs: Filtering out keyword arg '{kw_name}'")
+                continue
+            # Also check if the value is a reference to state/player/world
+            is_state, is_player, is_world = self._is_state_or_player_or_world_arg(kw_node.value, kw_result)
+            if not (is_state or is_player or is_world):
+                filtered[kw_name] = kw_result
         return filtered
 
     def _build_parameter_mapping(self, func, args_with_nodes):

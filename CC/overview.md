@@ -207,7 +207,7 @@ Each subdirectory in `frontend/modules/` represents a distinct, self-contained f
 -   **`client/`**: Implements the standard Archipelago client functionality, including WebSocket connection and message handling.
 -   **`commonUI/`**: Provides shared, reusable UI utility functions, such as rendering logic trees.
 -   **`dungeons/`**: Displays dungeon-specific information, such as bosses and medallion requirements.
--   **`editor/`**: A simple JSON viewer for inspecting application data. Alternative implementations (`editor-codemirror`, `editor-vanilla-jsoneditor`) also exist.
+-   **`editor/`**: A simple JSON viewer for inspecting application data. An alternative implementation (`editor-codemirror`) also exists.
 -   **`events/`**: A developer-focused debug panel for inspecting the `eventBus` and `eventDispatcher`.
 -   **`exits/`**: Displays all region exits and their real-time accessibility status.
 -   **`inventory/`**: Displays and manages the player's item inventory.

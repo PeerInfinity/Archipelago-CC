@@ -8,38 +8,75 @@ from typing import Dict, Any, List, Optional
 from .utils import format_file_size, get_rules_json_size
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None) -> str:
-    """Generate a combined summary chart with all test results."""
-    title_suffix = " (WorldGen)" if is_worldgen else ""
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None, variant_type: Optional[str] = None, version_links: Optional[Dict[str, str]] = None) -> str:
+    """Generate a combined summary chart with all test results.
+
+    Args:
+        variant_type: None for original, "worldgen" for WorldGen, "apworld" for APWorld
+        version_links: Dict mapping variant names to links, e.g. {"worldgen": "./file.md", "apworld": "./file.md"}
+        is_worldgen: Deprecated, use variant_type="worldgen" instead
+        other_version_link: Deprecated, use version_links instead
+    """
+    # Handle backward compatibility: convert old parameters to new format
+    if variant_type is None and is_worldgen:
+        variant_type = "worldgen"
+    if version_links is None and other_version_link:
+        if variant_type in ("worldgen", "apworld"):
+            version_links = {"original": other_version_link}
+        else:
+            version_links = {"worldgen": other_version_link}
+
+    # Determine title suffix based on variant type
+    if variant_type == "worldgen":
+        title_suffix = " (WorldGen)"
+    elif variant_type == "apworld":
+        title_suffix = " (APWorld)"
+    else:
+        title_suffix = ""
+
     md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
-    # Add cross-link to other version (original <-> worldgen)
-    if other_version_link:
-        if is_worldgen:
-            md_content += f"[View Original Template Results]({other_version_link})\n\n"
-        else:
-            md_content += f"[View WorldGen Template Results]({other_version_link})\n\n"
+    # Add cross-links to other versions
+    if version_links:
+        for variant, link in sorted(version_links.items()):
+            if variant == "worldgen":
+                md_content += f"[View WorldGen Template Results]({link})\n\n"
+            elif variant == "apworld":
+                md_content += f"[View APWorld Template Results]({link})\n\n"
+            elif variant == "original":
+                md_content += f"[View Original Template Results]({link})\n\n"
 
     # Build test types list dynamically
-    wg_suffix = "-worldgen" if is_worldgen else ""
+    variant_suffix = f"-{variant_type}" if variant_type else ""
     test_types = [
-        ("Minimal Spoiler Test", "Tests with advancement items only", f"./test-results-spoilers-minimal{wg_suffix}.md"),
-        ("Full Spoiler Test", "Tests with all locations", f"./test-results-spoilers-full{wg_suffix}.md"),
-        ("Multiclient Test", "Tests in multiclient mode", f"./test-results-multiclient{wg_suffix}.md"),
+        ("Minimal Spoiler Test", "Tests with advancement items only", f"./test-results-spoilers-minimal{variant_suffix}.md"),
+        ("Full Spoiler Test", "Tests with all locations", f"./test-results-spoilers-full{variant_suffix}.md"),
+        ("Multiclient Test", "Tests in multiclient mode", f"./test-results-multiclient{variant_suffix}.md"),
     ]
     if multiworld_data is not None:
-        test_types.append(("Multiworld Test", "Tests in multiworld mode with multiple games", f"./test-results-multiworld{wg_suffix}.md"))
+        test_types.append(("Multiworld Test", "Tests in multiworld mode with multiple games", f"./test-results-multiworld{variant_suffix}.md"))
 
     md_content += f"This summary combines results from {len(test_types)} types of tests:\n"
     for name, desc, link in test_types:
         md_content += f"- **{name}:** {desc} - [View Details]({link})\n"
 
-    # Add additional test results links (only for original, not worldgen)
-    if not is_worldgen:
+    # Add additional test results links
+    if variant_type is None:
         md_content += "\nAdditional test results:\n"
         md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
         md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times.md)\n"
+    elif variant_type == "worldgen":
+        md_content += "\nAdditional test results:\n"
+        md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-worldgen.md)\n"
+    elif variant_type == "apworld":
+        md_content += "\nAdditional test results:\n"
+        md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-apworld.md)\n"
+
+    # Add additional information links
+    md_content += "\nAdditional information:\n"
+    md_content += "- **Template Types:** Understanding original, WorldGen, and APWorld templates - [Learn More](../tests/template-types.md)\n"
+    md_content += "- **Custom Exporters and Logic:** Understanding the Exporter and GameLogic columns - [Learn More](../tests/custom-exporters-and-logic.md)\n"
 
     md_content += "\n"
 
@@ -160,13 +197,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         md_content += f"- **Multiworld Test:** {multiworld_games_count} game(s), {multiworld_total_count} total failure(s)\n"
 
     md_content += "\n### Combined Test Results\n\n"
-    md_content += f"- **Templates passing all {num_tests} tests:** {passed_all}/{total_templates} ({passed_all/total_templates*100:.1f}%)\n"
+    if total_templates > 0:
+        md_content += f"- **Templates passing all {num_tests} tests:** {passed_all}/{total_templates} ({passed_all/total_templates*100:.1f}%)\n"
 
-    for i in range(num_tests - 1, -1, -1):
-        if i > 0:
-            md_content += f"- **Templates passing {i} test{'s' if i > 1 else ''}:** {passed_counts[i]}/{total_templates} ({passed_counts[i]/total_templates*100:.1f}%)\n"
-        else:
-            md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
+        for i in range(num_tests - 1, -1, -1):
+            if i > 0:
+                md_content += f"- **Templates passing {i} test{'s' if i > 1 else ''}:** {passed_counts[i]}/{total_templates} ({passed_counts[i]/total_templates*100:.1f}%)\n"
+            else:
+                md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
+    else:
+        md_content += "- **No test data available**\n"
 
     # Calculate generic exporter/logic statistics for games passing all tests
     # For worldgen summaries, look up the original game name to get exporter/logic data
@@ -176,9 +216,9 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
 
     for game in all_games:
         if tests_passed_count.get(game, 0) == num_tests:
-            # For worldgen, look up original game's exporter/logic data from world_mapping
+            # For variants, look up original game's exporter/logic data from world_mapping
             lookup_game = game
-            if is_worldgen and game.endswith(' WorldGen'):
+            if variant_type == "worldgen" and game.endswith(' WorldGen'):
                 lookup_game = game[:-9]  # len(' WorldGen') == 9
             if world_mapping and lookup_game in world_mapping:
                 has_exporter = world_mapping[lookup_game].get('has_custom_exporter', False)
@@ -193,13 +233,13 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                 passed_all_with_both_generic += 1
 
     # Calculate combined file sizes from world_mapping
-    # For worldgen summaries, look up the original game name to get file sizes
+    # For variant summaries, look up the original game name to get file sizes
     total_exporter_size = 0
     total_logic_size = 0
     if world_mapping:
         for game in all_games:
             lookup_game = game
-            if is_worldgen and game.endswith(' WorldGen'):
+            if variant_type == "worldgen" and game.endswith(' WorldGen'):
                 lookup_game = game[:-9]  # len(' WorldGen') == 9
             if lookup_game in world_mapping:
                 total_exporter_size += world_mapping[lookup_game].get('exporter_size', 0)
@@ -241,10 +281,10 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         multiworld_result = games_multiworld.get(game, "N/A") if multiworld_data is not None else None
 
         # Get exporter/logic info - use file sizes from world_mapping if available
-        # For worldgen summaries, look up the original game name to get exporter/logic data
+        # For variant summaries, look up the original game name to get exporter/logic data
         has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
         lookup_game = game
-        if is_worldgen and game.endswith(' WorldGen'):
+        if variant_type == "worldgen" and game.endswith(' WorldGen'):
             # Strip " WorldGen" suffix to look up original game's exporter/logic data
             lookup_game = game[:-9]  # len(' WorldGen') == 9
         if world_mapping and lookup_game in world_mapping:
@@ -325,7 +365,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         exporter_sizes = []
         for game in all_games:
             lookup_game = game
-            if is_worldgen and game.endswith(' WorldGen'):
+            if variant_type == "worldgen" and game.endswith(' WorldGen'):
                 lookup_game = game[:-9]  # Strip " WorldGen" suffix
             if lookup_game in world_mapping:
                 exporter_size = world_mapping[lookup_game].get('exporter_size', 0)
@@ -347,7 +387,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         logic_sizes = []
         for game in all_games:
             lookup_game = game
-            if is_worldgen and game.endswith(' WorldGen'):
+            if variant_type == "worldgen" and game.endswith(' WorldGen'):
                 lookup_game = game[:-9]  # Strip " WorldGen" suffix
             if lookup_game in world_mapping:
                 logic_size = world_mapping[lookup_game].get('game_logic_size', 0)
@@ -364,52 +404,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             for rank, (game_name, size) in enumerate(logic_sizes, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
-    # Add Multi-Template Results section if data exists
-    if multitemplate_minimal_data or multitemplate_full_data:
-        md_content += "\n## Multi-Template Test Results\n\n"
-        md_content += "These tests check multiple template configurations for the same game.\n\n"
-
-        # Collect all games with multitemplate data
-        mt_games = set()
-        if multitemplate_minimal_data:
-            mt_games.update(multitemplate_minimal_data.keys())
-        if multitemplate_full_data:
-            mt_games.update(multitemplate_full_data.keys())
-
-        md_content += "| Game Name | Minimal (Advancement Items Only) | Full (All Locations) |\n"
-        md_content += "|-----------|----------------------------------|-------------------------------|\n"
-
-        for game in sorted(mt_games):
-            # Calculate stats for minimal
-            mtmin_link = "❓ N/A"
-            if multitemplate_minimal_data and game in multitemplate_minimal_data:
-                templates = multitemplate_minimal_data[game]
-                passed = sum(1 for _, pf, *_ in templates if pf.lower() == 'passed')
-                total = len(templates)
-                mtmin_link = f"✅ {passed}/{total}" if passed == total else f"❌ {passed}/{total}"
-
-            # Calculate stats for full
-            mtfull_link = "❓ N/A"
-            if multitemplate_full_data and game in multitemplate_full_data:
-                templates = multitemplate_full_data[game]
-                passed = sum(1 for _, pf, *_ in templates if pf.lower() == 'passed')
-                total = len(templates)
-                mtfull_link = f"✅ {passed}/{total}" if passed == total else f"❌ {passed}/{total}"
-
-            md_content += f"| {game} | {mtmin_link} | {mtfull_link} |\n"
-
-        md_content += "\nView detailed results:\n"
-        md_content += "- [Multi-Template Minimal](./test-results-multitemplate-minimal.md)\n"
-        md_content += "- [Multi-Template Full](./test-results-multitemplate-full.md)\n"
-
-    # Add UT Comparison section links if data exists (only for original, not worldgen)
-    if not is_worldgen and (has_ut_random or has_ut_fixed):
-        md_content += "\n## Universal Tracker Comparison\n\n"
-        md_content += "These tests compare Universal Tracker results with our spoiler test results.\n\n"
-        if has_ut_random:
-            md_content += "- [UT Comparison - Random Seed](./test-results-ut-comparison-random-seed.md)\n"
-        if has_ut_fixed:
-            md_content += "- [UT Comparison - Fixed Seed](./test-results-ut-comparison-fixed-seed.md)\n"
+    # Add Fuzz Tests section (only for original, not variants)
+    if variant_type is None:
+        md_content += "\n## Fuzz Tests\n\n"
+        md_content += "Fuzz tests validate game configurations across randomized option combinations.\n\n"
+        md_content += "- **[Fuzz Test Summary](./test-results-fuzz-summary.md)** - Combined view of all fuzz test results\n\n"
+        md_content += "Individual fuzz test results:\n"
+        md_content += "- [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)\n"
+        md_content += "- [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)\n"
+        md_content += "- [UT Fuzz Results - Hybrid](./test-results-ut-fuzz-hybrid.md)\n"
+        md_content += "- [Spoiler Fuzz Results](./test-results-spoiler-fuzz.md)\n"
 
     # Add Excluded Templates section if data exists
     if excluded_games:

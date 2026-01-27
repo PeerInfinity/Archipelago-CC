@@ -19,7 +19,7 @@ This installer allows vanilla Archipelago users to easily install the JSON Tools
 
 ### Option 1: Install as APWorld
 
-1. Download `json_tools_installer.apworld` from releases
+1. Download `json_tools_installer.apworld` from the [`apworlds/`](../../apworlds/) directory in this repository
 2. Place in your Archipelago `worlds/` directory (or use the APWorld installer)
 3. Restart Archipelago
 
@@ -80,11 +80,19 @@ The installer can install these components:
 
 | Component | Description | Default |
 |-----------|-------------|---------|
-| `core` | Exporter, rule_builder, world_generator modules | Yes |
-| `scripts` | Utility scripts (setup, test, build) | Yes |
-| `frontend` | Web-based frontend for presets | No |
-| `presets` | Preset configurations (requires frontend) | No |
-| `docs` | Documentation files | No |
+| `exporter` | Export game logic to JSON format | Yes |
+| `rule_builder` | Build access rules from JSON definitions | Yes |
+| `world_generator` | Generate world packages from JSON rules | Yes |
+| `frontend` | Web UI for viewing game logic (excludes presets) | Yes |
+| `presets` | Pre-generated game data (~75MB, requires frontend) | No |
+| `docs` | JSON Tools documentation | Yes |
+| `scripts` | Utility scripts for testing and setup | Yes |
+| `main_patches` | Patched core files for JSON export support | Yes |
+| `romless_patches` | Patched world files for generation without ROMs | Yes |
+| `demo_worlds` | Example worlds (bakingadventure, codingadventure, etc.) | Yes |
+| `tracker` | PopTracker integration world for auto-tracking | No |
+| `testing` | Test config files (package.json, playwright, vitest) | No |
+| `worldgen_worlds` | Auto-generated world packages from JSON rules (~15MB) | No |
 
 ## Version Sources
 
@@ -99,22 +107,40 @@ python -m worlds.json_tools_installer config --dev-repo owner/repo --dev-branch 
 
 ## Patching Methods
 
-The installer supports three patching approaches:
+The installer supports three patching modes:
 
-### 1. Archive Patches (Default)
-Extracts patched files from the downloaded archive. Best for matching versions.
-
-### 2. Bundled Patches
-Uses pre-made patches bundled with the installer for specific AP versions:
+### 1. Monkey Patching (Default)
+Runtime patching that hooks into Archipelago's core functions without modifying any files. This is the safest option and works across AP versions:
 ```bash
-python -m worlds.json_tools_installer install --use-bundled-patches
+# Default - no flag needed
+python -m worlds.json_tools_installer install
 ```
 
-### 3. Monkey Patching
-Runtime patching without modifying files. Used as fallback for unsupported versions:
+### 2. File-Based Patching
+Replaces core Archipelago files with patched versions. Original files are backed up and can be restored. Requires confirmation before applying:
 ```bash
-python -m worlds.json_tools_installer install --monkey-patch
+python -m worlds.json_tools_installer install --file-patch
+
+# Skip confirmation prompt
+python -m worlds.json_tools_installer install --file-patch --yes
 ```
+
+**Files modified by file-based patching:**
+- `Main.py` - Entry point for seed generation
+- `BaseClasses.py` - Core Archipelago classes
+- `settings.py` - Settings management
+
+### 3. No Patching
+Skip all patching. JSON export will not work without manual setup:
+```bash
+python -m worlds.json_tools_installer install --no-patch
+```
+
+### GUI Patch Options
+In the installer GUI, you'll see three checkboxes under "Apply patches after download:":
+- **Monkey patch** (checked by default) - Runtime hooks
+- **Main patches** - File-based patching (mutually exclusive with monkey patch)
+- **ROM-less patches** - Additional patches for testing without ROM files
 
 ## Backup and Restore
 
@@ -129,23 +155,27 @@ Configuration is stored in `json_tools_config.json`:
 
 ```json
 {
-  "stable_source": {
-    "repo": "PeerInfinity/Archipelago",
-    "branch": "JSONExport"
-  },
-  "dev_source": {
-    "repo": "PeerInfinity/Archipelago-CC",
-    "branch": "main"
+  "sources": {
+    "stable": {
+      "repo": "PeerInfinity/Archipelago",
+      "branch": "JSONExport"
+    },
+    "dev": {
+      "repo": "PeerInfinity/Archipelago-CC",
+      "branch": "main"
+    }
   },
   "installation": {
     "version": "stable",
-    "components": ["core", "scripts"],
+    "components": ["exporter", "rule_builder", "world_generator", "frontend", "docs", "scripts"],
     "installed_at": "2025-01-04T12:00:00",
     "commit_hash": "abc123..."
   },
   "patches": {
-    "method": "file",
-    "backups": [...]
+    "method": "monkey",
+    "backups": [],
+    "applied_at": null,
+    "romless_applied": false
   }
 }
 ```
@@ -165,9 +195,9 @@ Configuration is stored in `json_tools_config.json`:
 Check your internet connection. The installer needs to download files from GitHub.
 
 ### "No bundled patches for version X"
-Your AP version doesn't have pre-made patches. Try:
-- Use `--monkey-patch` for runtime patching
-- Download from archive instead of using bundled patches
+Your AP version doesn't have pre-made patches. This is fine - monkey patching (the default) works across all versions. If you specifically need file-based patches:
+- Use the default monkey patching (no flags needed)
+- Or check if patches are available for your version in `json_tools_patches/`
 
 ### "File already patched"
 Use `--revert-patches` first, then reinstall:
@@ -207,23 +237,33 @@ worlds/json_tools_installer/
 ├── archipelago.json      # APWorld manifest
 ├── config.py             # Configuration management
 ├── components.py         # Launcher components
+├── requirements.txt      # Python dependencies for this module
+├── README.md             # This file
 ├── installer/
+│   ├── __init__.py
 │   ├── version_detector.py  # AP version detection
 │   ├── downloader.py        # GitHub download
 │   ├── extractor.py         # Archive extraction
-│   ├── patcher.py           # File patching
-│   └── patches/             # Bundled patch files
-│       └── 0.6.5/
+│   ├── patcher.py           # Main file patching
+│   └── romless_patcher.py   # ROM-less world patching
 ├── cli/
+│   ├── __init__.py
 │   ├── install.py        # Install CLI
 │   └── status.py         # Status CLI
 ├── gui/
+│   ├── __init__.py
 │   ├── installer_gui.py  # Install/update GUI
 │   ├── status_gui.py     # Status GUI
 │   └── scripts_gui.py    # Scripts GUI
 └── monkey_patches/
     ├── __init__.py
     └── hooks.py          # Runtime patching hooks
+
+# Patches are downloaded to (not bundled in the module):
+json_tools_patches/
+└── 0.6.5/
+    ├── main/             # Main patches (Main.py, BaseClasses.py, settings.py)
+    └── romless/          # ROM-less world patches
 ```
 
 ## License

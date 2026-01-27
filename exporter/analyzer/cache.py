@@ -25,6 +25,12 @@ unparsed_lambda_cache: Dict[Tuple[str, int], Optional[str]] = {}
 # This avoids re-analyzing the same helper function multiple times
 parameterless_func_cache: Dict[Tuple[str, int], Dict[str, Any]] = {}
 
+# Cache for callable list item analysis results
+# Key: function ID (int) -> analyzed rule dict
+# This avoids re-analyzing the same lambda when it appears in multiple path lists
+# (common in ALttP bunny rules where entrance access rules are shared)
+callable_list_cache: Dict[int, Dict[str, Any]] = {}
+
 
 def clear_caches():
     """
@@ -37,3 +43,4 @@ def clear_caches():
     clean_source_cache.clear()
     unparsed_lambda_cache.clear()
     parameterless_func_cache.clear()
+    callable_list_cache.clear()

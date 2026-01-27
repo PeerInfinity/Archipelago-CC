@@ -206,6 +206,7 @@ class MarioLand2World(RuleWorldMixin, World):
         self.coin_fragments_required = 1
         self.world_description = "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival."
         self.slot_data = types.SimpleNamespace(energy_link=1)
+        self.sprite_computations = types.SimpleNamespace(mario_zone_3_claw_set_len=1, turtle_zone_1_sharks=0)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -323,14 +324,37 @@ class MarioLand2World(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = SuperMarioLand2WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = SuperMarioLand2WorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = SuperMarioLand2WorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -357,8 +381,12 @@ class MarioLand2World(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
             self._place_original_items()
 
     def _place_original_items(self) -> None:

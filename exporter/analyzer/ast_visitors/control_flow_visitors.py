@@ -472,22 +472,47 @@ class ControlFlowVisitorMixin:
             if (isinstance(node.iter, ast.Call) and
                     isinstance(node.iter.func, ast.Name) and
                     node.iter.func.id == 'range'):
-                # Get the count argument for range()
+                # Get the arguments for range()
+                # Supports: range(stop), range(start, stop), range(start, stop, step)
                 if not node.iter.args:
                     logging.error("visit_For: range() called without arguments")
                     return None
 
-                count_arg = node.iter.args[0]
-                count_result = self.visit(count_arg)
-                if count_result is None:
-                    logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
-                    return None
-
                 result = {
                     'type': 'for_range',
-                    'count': count_result,
                     'body': body_results
                 }
+
+                if len(node.iter.args) == 1:
+                    # range(stop) - iterate from 0 to stop-1
+                    count_arg = node.iter.args[0]
+                    count_result = self.visit(count_arg)
+                    if count_result is None:
+                        logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
+                        return None
+                    result['count'] = count_result
+                elif len(node.iter.args) >= 2:
+                    # range(start, stop) or range(start, stop, step)
+                    start_arg = node.iter.args[0]
+                    stop_arg = node.iter.args[1]
+                    start_result = self.visit(start_arg)
+                    stop_result = self.visit(stop_arg)
+                    if start_result is None:
+                        logging.error(f"visit_For: Failed to analyze range start: {ast.dump(start_arg)}")
+                        return None
+                    if stop_result is None:
+                        logging.error(f"visit_For: Failed to analyze range stop: {ast.dump(stop_arg)}")
+                        return None
+                    result['start'] = start_result
+                    result['stop'] = stop_result
+                    if len(node.iter.args) >= 3:
+                        step_arg = node.iter.args[2]
+                        step_result = self.visit(step_arg)
+                        if step_result is None:
+                            logging.error(f"visit_For: Failed to analyze range step: {ast.dump(step_arg)}")
+                            return None
+                        result['step'] = step_result
+
                 # Use 'vars' for tuple unpacking, 'var' for simple variable
                 if var_names is not None:
                     result['vars'] = var_names

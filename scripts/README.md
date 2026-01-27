@@ -89,11 +89,6 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   python scripts/build/build-world-mapping.py
   ```
 
-- **`build/generate-multitemplate-configs.py`** - Generate multiple template variations for testing
-  ```bash
-  python scripts/build/generate-multitemplate-configs.py --game "A Link to the Past"
-  ```
-
 - **`build/pack_apworld.py`** - Package world directories into .apworld files
   ```bash
   python scripts/build/pack_apworld.py <world_name>
@@ -175,8 +170,6 @@ Test results are organized under `scripts/output/` by test type:
 - **`output/spoiler-full/`** - Results for all locations tests
 - **`output/multiplayer/`** - Results for multiplayer tests
 - **`output/multiworld/`** - Results for multiworld tests
-- **`output/multitemplate-minimal/`** - Results for multi-template minimal tests
-- **`output/multitemplate-full/`** - Results for multi-template full tests
 
 Each directory contains:
 - `test-results.json` - Latest test results
@@ -241,16 +234,6 @@ python scripts/test/test-all-templates.py --multiplayer      # Multiclient
 
 # Then run multiworld tests
 python scripts/test/test-all-templates.py --multiworld
-```
-
-#### Multi-Template Testing
-Test multiple configurations of the same game:
-```bash
-# Generate template variations
-python scripts/build/generate-multitemplate-configs.py --game "A Link to the Past"
-
-# Test all variations
-python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate
 ```
 
 ## Configuration Files
@@ -371,7 +354,6 @@ scripts/
 ├── test/                         # Testing scripts
 │   ├── test-all-templates.py    # Main test runner
 │   ├── test-all-templates-README.md  # Detailed test runner docs
-│   ├── README-multitemplate-alttp.md  # Multi-template testing docs
 │   ├── run-tests.js             # Test runner wrapper
 │   ├── test-seed-range.js       # Seed range testing
 │   ├── test-health-check.js     # Environment validation
@@ -385,7 +367,6 @@ scripts/
 │
 ├── build/                        # Build and generation
 │   ├── build-world-mapping.py   # World mapping generation
-│   ├── generate-multitemplate-configs.py  # Template variations
 │   └── pack_apworld.py          # APWorld packaging
 │
 ├── docs/                         # Documentation generation
@@ -405,9 +386,7 @@ scripts/
 │   ├── spoiler-minimal/
 │   ├── spoiler-full/
 │   ├── multiplayer/
-│   ├── multiworld/
-│   ├── multitemplate-minimal/
-│   └── multitemplate-full/
+│   └── multiworld/
 └── README.md                     # This file
 ```
 

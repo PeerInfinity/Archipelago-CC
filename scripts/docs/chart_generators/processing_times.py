@@ -3,7 +3,7 @@ Processing times chart data extraction and markdown generation.
 """
 
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 def extract_processing_times_data(minimal_results: Dict, full_results: Dict, multiclient_results: Dict, multiworld_results: Dict) -> Dict[str, Any]:
@@ -148,11 +148,40 @@ def extract_processing_times_data(minimal_results: Dict, full_results: Dict, mul
     }
 
 
-def generate_processing_times_markdown(processing_data: Dict[str, Any]) -> str:
-    """Generate markdown content for processing times chart."""
-    md_content = "# Processing Times Chart\n\n"
+def generate_processing_times_markdown(processing_data: Dict[str, Any],
+                                        variant_type: Optional[str] = None,
+                                        version_links: Optional[Dict[str, str]] = None) -> str:
+    """Generate markdown content for processing times chart.
+
+    Args:
+        processing_data: Dict with processing times data from extract_processing_times_data
+        variant_type: None for original, "worldgen" for WorldGen, "apworld" for APWorld
+        version_links: Dict mapping variant names to links, e.g. {"worldgen": "./file.md", "apworld": "./file.md"}
+    """
+    # Determine title suffix based on variant type
+    if variant_type == "worldgen":
+        title_suffix = " (WorldGen)"
+    elif variant_type == "apworld":
+        title_suffix = " (APWorld)"
+    else:
+        title_suffix = ""
+
+    md_content = f"# Processing Times Chart{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-    md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add link to summary document
+    summary_suffix = f"-{variant_type}" if variant_type else ""
+    md_content += f"[← Back to Test Results Summary](./test-results-summary{summary_suffix}.md)\n\n"
+
+    # Add cross-links to other versions
+    if version_links:
+        for variant, link in sorted(version_links.items()):
+            if variant == "worldgen":
+                md_content += f"[View WorldGen Processing Times]({link})\n\n"
+            elif variant == "apworld":
+                md_content += f"[View APWorld Processing Times]({link})\n\n"
+            elif variant == "original":
+                md_content += f"[View Original Processing Times]({link})\n\n"
 
     md_content += "This chart shows processing times for each test phase. "
     md_content += "Times are in seconds. For tests with multiple seeds, only the first seed's time is shown.\n\n"

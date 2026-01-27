@@ -16,13 +16,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from lib.test_utils import load_template_exclude_list
 
-# Import UT comparison functions from the dedicated script
-from generate_ut_comparison_chart import (
-    extract_ut_comparison_chart_data,
-    generate_ut_comparison_markdown,
-    load_world_mapping
-)
-
 # Import from the chart_generators package
 from chart_generators import (
     load_full_world_mapping,
@@ -33,8 +26,6 @@ from chart_generators import (
     generate_multiclient_markdown,
     extract_multiworld_chart_data,
     generate_multiworld_markdown,
-    extract_multitemplate_chart_data,
-    generate_multitemplate_markdown,
     extract_processing_times_data,
     generate_processing_times_markdown,
     generate_summary_chart,
@@ -45,7 +36,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test results charts from template test results')
     parser.add_argument('--input-file', type=str, help='Input JSON file path (processes only this file)')
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
-    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'multitemplate-minimal', 'multitemplate-full', 'ut-comparison'],
+    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld'],
                        help='Test type when using --input-file')
     parser.add_argument('--include-timing', action='store_true', default=False,
                        help='Include test timing data in output (default: off)')
@@ -88,14 +79,6 @@ def main():
                 'seed': results.get('seed')
             }
             md_content = generate_multiclient_markdown(chart_data, metadata, top_level)
-        elif args.test_type in ['multitemplate-minimal', 'multitemplate-full']:
-            chart_data = extract_multitemplate_chart_data(results)
-            subtitle = "Multi-Template Test - Advancement Items Only" if args.test_type == 'multitemplate-minimal' else "Multi-Template Test - All Locations"
-            md_content = generate_multitemplate_markdown(chart_data, metadata, subtitle)
-        elif args.test_type == 'ut-comparison':
-            chart_data = extract_ut_comparison_chart_data(results)
-            world_mapping = load_world_mapping(project_root)
-            md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
         else:  # multiworld
             full_world_mapping = load_full_world_mapping(project_root)
             chart_data = extract_multiworld_chart_data(results, full_world_mapping)
@@ -132,25 +115,38 @@ def main():
     mp_wg_data = []
     mw_wg_data = None
 
-    # Load minimal spoiler test results (original and WorldGen)
+    # Initialize apworld data variables (will be populated if files exist)
+    minimal_ap_data = []
+    full_ap_data = []
+    mp_ap_data = []
+    mw_ap_data = None
+
+    # Load minimal spoiler test results (original, WorldGen, and APWorld)
     minimal_input = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
     minimal_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal.md')
     minimal_wg_input = os.path.join(project_root, 'scripts/output/spoiler-minimal-worldgen/test-results.json')
     minimal_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal-worldgen.md')
+    minimal_ap_input = os.path.join(project_root, 'scripts/output/spoiler-minimal-apworld/test-results.json')
+    minimal_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal-apworld.md')
 
     has_minimal = os.path.exists(minimal_input)
     has_minimal_wg = os.path.exists(minimal_wg_input)
+    has_minimal_ap = os.path.exists(minimal_ap_input)
 
     if has_minimal:
         minimal_results = load_test_results(minimal_input)
         minimal_data = extract_spoiler_chart_data(minimal_results)
-        # Cross-link to WorldGen version if it exists
-        wg_link = './test-results-spoilers-minimal-worldgen.md' if has_minimal_wg else None
+        # Build version links for cross-linking
+        version_links = {}
+        if has_minimal_wg:
+            version_links['worldgen'] = './test-results-spoilers-minimal-worldgen.md'
+        if has_minimal_ap:
+            version_links['apworld'] = './test-results-spoilers-minimal-apworld.md'
         minimal_md = generate_spoiler_markdown(minimal_data, minimal_results.get('metadata', {}),
                                               "Spoiler Test - Advancement Items Only",
-                                              is_worldgen=False, other_version_link=wg_link,
                                               world_mapping=full_world_mapping,
-                                              include_timing=args.include_timing)
+                                              include_timing=args.include_timing,
+                                              version_links=version_links if version_links else None)
         os.makedirs(os.path.dirname(minimal_output), exist_ok=True)
         with open(minimal_output, 'w') as f:
             f.write(minimal_md)
@@ -161,37 +157,63 @@ def main():
     if has_minimal_wg:
         minimal_wg_results = load_test_results(minimal_wg_input)
         minimal_wg_data = extract_spoiler_chart_data(minimal_wg_results)
-        # Cross-link to original version if it exists
+        # Cross-link to original version
         orig_link = './test-results-spoilers-minimal.md' if has_minimal else None
         minimal_wg_md = generate_spoiler_markdown(minimal_wg_data, minimal_wg_results.get('metadata', {}),
                                                   "Spoiler Test - Advancement Items Only (WorldGen)",
-                                                  is_worldgen=True, other_version_link=orig_link,
                                                   world_mapping=full_world_mapping,
-                                                  include_timing=args.include_timing)
+                                                  include_timing=args.include_timing,
+                                                  variant_type="worldgen",
+                                                  version_links={"original": orig_link} if orig_link else None)
         os.makedirs(os.path.dirname(minimal_wg_output), exist_ok=True)
         with open(minimal_wg_output, 'w') as f:
             f.write(minimal_wg_md)
     else:
         print(f"Info: WorldGen minimal spoiler test results not found: {minimal_wg_input}")
 
-    # Load full spoiler test results (original and WorldGen)
+    if has_minimal_ap:
+        minimal_ap_results = load_test_results(minimal_ap_input)
+        minimal_ap_data = extract_spoiler_chart_data(minimal_ap_results)
+        # Cross-link to original version
+        orig_link = './test-results-spoilers-minimal.md' if has_minimal else None
+        minimal_ap_md = generate_spoiler_markdown(minimal_ap_data, minimal_ap_results.get('metadata', {}),
+                                                  "Spoiler Test - Advancement Items Only (APWorld)",
+                                                  world_mapping=full_world_mapping,
+                                                  include_timing=args.include_timing,
+                                                  variant_type="apworld",
+                                                  version_links={"original": orig_link} if orig_link else None)
+        os.makedirs(os.path.dirname(minimal_ap_output), exist_ok=True)
+        with open(minimal_ap_output, 'w') as f:
+            f.write(minimal_ap_md)
+    else:
+        print(f"Info: APWorld minimal spoiler test results not found: {minimal_ap_input}")
+
+    # Load full spoiler test results (original, WorldGen, and APWorld)
     full_input = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
     full_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-full.md')
     full_wg_input = os.path.join(project_root, 'scripts/output/spoiler-full-worldgen/test-results.json')
     full_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-full-worldgen.md')
+    full_ap_input = os.path.join(project_root, 'scripts/output/spoiler-full-apworld/test-results.json')
+    full_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-full-apworld.md')
 
     has_full = os.path.exists(full_input)
     has_full_wg = os.path.exists(full_wg_input)
+    has_full_ap = os.path.exists(full_ap_input)
 
     if has_full:
         full_results = load_test_results(full_input)
         full_data = extract_spoiler_chart_data(full_results)
-        wg_link = './test-results-spoilers-full-worldgen.md' if has_full_wg else None
+        # Build version links for cross-linking
+        version_links = {}
+        if has_full_wg:
+            version_links['worldgen'] = './test-results-spoilers-full-worldgen.md'
+        if has_full_ap:
+            version_links['apworld'] = './test-results-spoilers-full-apworld.md'
         full_md = generate_spoiler_markdown(full_data, full_results.get('metadata', {}),
                                            "Spoiler Test - All Locations",
-                                           is_worldgen=False, other_version_link=wg_link,
                                            world_mapping=full_world_mapping,
-                                           include_timing=args.include_timing)
+                                           include_timing=args.include_timing,
+                                           version_links=version_links if version_links else None)
         os.makedirs(os.path.dirname(full_output), exist_ok=True)
         with open(full_output, 'w') as f:
             f.write(full_md)
@@ -205,23 +227,43 @@ def main():
         orig_link = './test-results-spoilers-full.md' if has_full else None
         full_wg_md = generate_spoiler_markdown(full_wg_data, full_wg_results.get('metadata', {}),
                                                "Spoiler Test - All Locations (WorldGen)",
-                                               is_worldgen=True, other_version_link=orig_link,
                                                world_mapping=full_world_mapping,
-                                               include_timing=args.include_timing)
+                                               include_timing=args.include_timing,
+                                               variant_type="worldgen",
+                                               version_links={"original": orig_link} if orig_link else None)
         os.makedirs(os.path.dirname(full_wg_output), exist_ok=True)
         with open(full_wg_output, 'w') as f:
             f.write(full_wg_md)
     else:
         print(f"Info: WorldGen full spoiler test results not found: {full_wg_input}")
 
-    # Load multiclient test results (original and WorldGen)
+    if has_full_ap:
+        full_ap_results = load_test_results(full_ap_input)
+        full_ap_data = extract_spoiler_chart_data(full_ap_results)
+        orig_link = './test-results-spoilers-full.md' if has_full else None
+        full_ap_md = generate_spoiler_markdown(full_ap_data, full_ap_results.get('metadata', {}),
+                                               "Spoiler Test - All Locations (APWorld)",
+                                               world_mapping=full_world_mapping,
+                                               include_timing=args.include_timing,
+                                               variant_type="apworld",
+                                               version_links={"original": orig_link} if orig_link else None)
+        os.makedirs(os.path.dirname(full_ap_output), exist_ok=True)
+        with open(full_ap_output, 'w') as f:
+            f.write(full_ap_md)
+    else:
+        print(f"Info: APWorld full spoiler test results not found: {full_ap_input}")
+
+    # Load multiclient test results (original, WorldGen, and APWorld)
     mp_input = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
     mp_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient.md')
     mp_wg_input = os.path.join(project_root, 'scripts/output/multiclient-worldgen/test-results.json')
     mp_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient-worldgen.md')
+    mp_ap_input = os.path.join(project_root, 'scripts/output/multiclient-apworld/test-results.json')
+    mp_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient-apworld.md')
 
     has_mp = os.path.exists(mp_input)
     has_mp_wg = os.path.exists(mp_wg_input)
+    has_mp_ap = os.path.exists(mp_ap_input)
 
     if has_mp:
         mp_results = load_test_results(mp_input)
@@ -232,10 +274,15 @@ def main():
             'test_mode': mp_results.get('test_mode'),
             'seed': mp_results.get('seed')
         }
-        wg_link = './test-results-multiclient-worldgen.md' if has_mp_wg else None
+        # Build version links for cross-linking
+        version_links = {}
+        if has_mp_wg:
+            version_links['worldgen'] = './test-results-multiclient-worldgen.md'
+        if has_mp_ap:
+            version_links['apworld'] = './test-results-multiclient-apworld.md'
         mp_md = generate_multiclient_markdown(mp_data, mp_results.get('metadata', {}), top_level_mp,
-                                              is_worldgen=False, other_version_link=wg_link,
-                                              world_mapping=full_world_mapping)
+                                              world_mapping=full_world_mapping,
+                                              version_links=version_links if version_links else None)
         os.makedirs(os.path.dirname(mp_output), exist_ok=True)
         with open(mp_output, 'w') as f:
             f.write(mp_md)
@@ -254,22 +301,46 @@ def main():
         }
         orig_link = './test-results-multiclient.md' if has_mp else None
         mp_wg_md = generate_multiclient_markdown(mp_wg_data, mp_wg_results.get('metadata', {}), top_level_mp_wg,
-                                                  is_worldgen=True, other_version_link=orig_link,
-                                                  world_mapping=full_world_mapping)
+                                                  world_mapping=full_world_mapping,
+                                                  variant_type="worldgen",
+                                                  version_links={"original": orig_link} if orig_link else None)
         os.makedirs(os.path.dirname(mp_wg_output), exist_ok=True)
         with open(mp_wg_output, 'w') as f:
             f.write(mp_wg_md)
     else:
         print(f"Info: WorldGen multiclient test results not found: {mp_wg_input}")
 
-    # Load multiworld test results (original and WorldGen)
+    if has_mp_ap:
+        mp_ap_results = load_test_results(mp_ap_input)
+        mp_ap_data = extract_multiclient_chart_data(mp_ap_results)
+        top_level_mp_ap = {
+            'timestamp': mp_ap_results.get('timestamp'),
+            'test_type': mp_ap_results.get('test_type'),
+            'test_mode': mp_ap_results.get('test_mode'),
+            'seed': mp_ap_results.get('seed')
+        }
+        orig_link = './test-results-multiclient.md' if has_mp else None
+        mp_ap_md = generate_multiclient_markdown(mp_ap_data, mp_ap_results.get('metadata', {}), top_level_mp_ap,
+                                                  world_mapping=full_world_mapping,
+                                                  variant_type="apworld",
+                                                  version_links={"original": orig_link} if orig_link else None)
+        os.makedirs(os.path.dirname(mp_ap_output), exist_ok=True)
+        with open(mp_ap_output, 'w') as f:
+            f.write(mp_ap_md)
+    else:
+        print(f"Info: APWorld multiclient test results not found: {mp_ap_input}")
+
+    # Load multiworld test results (original, WorldGen, and APWorld)
     mw_input = os.path.join(project_root, 'scripts/output/multiworld/test-results.json')
     mw_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiworld.md')
     mw_wg_input = os.path.join(project_root, 'scripts/output/multiworld-worldgen/test-results.json')
     mw_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiworld-worldgen.md')
+    mw_ap_input = os.path.join(project_root, 'scripts/output/multiworld-apworld/test-results.json')
+    mw_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiworld-apworld.md')
 
     has_mw = os.path.exists(mw_input)
     has_mw_wg = os.path.exists(mw_wg_input)
+    has_mw_ap = os.path.exists(mw_ap_input)
 
     mw_data = None
     if has_mw:
@@ -279,9 +350,14 @@ def main():
             'timestamp': mw_results.get('timestamp'),
             'seed': mw_results.get('seed')
         }
-        wg_link = './test-results-multiworld-worldgen.md' if has_mw_wg else None
+        # Build version links for cross-linking
+        version_links = {}
+        if has_mw_wg:
+            version_links['worldgen'] = './test-results-multiworld-worldgen.md'
+        if has_mw_ap:
+            version_links['apworld'] = './test-results-multiworld-apworld.md'
         mw_md = generate_multiworld_markdown(mw_data, mw_results.get('metadata', {}), top_level_mw,
-                                             is_worldgen=False, other_version_link=wg_link)
+                                             version_links=version_links if version_links else None)
         os.makedirs(os.path.dirname(mw_output), exist_ok=True)
         with open(mw_output, 'w') as f:
             f.write(mw_md)
@@ -297,101 +373,36 @@ def main():
         }
         orig_link = './test-results-multiworld.md' if has_mw else None
         mw_wg_md = generate_multiworld_markdown(mw_wg_data, mw_wg_results.get('metadata', {}), top_level_mw_wg,
-                                                 is_worldgen=True, other_version_link=orig_link)
+                                                 variant_type="worldgen",
+                                                 version_links={"original": orig_link} if orig_link else None)
         os.makedirs(os.path.dirname(mw_wg_output), exist_ok=True)
         with open(mw_wg_output, 'w') as f:
             f.write(mw_wg_md)
     else:
         print(f"Info: WorldGen multiworld test results not found: {mw_wg_input}")
 
-    # Load multitemplate minimal test results
-    mtmin_input = os.path.join(project_root, 'scripts/output/multitemplate-minimal/test-results.json')
-    mtmin_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multitemplate-minimal.md')
-
-    mtmin_data = None
-    if os.path.exists(mtmin_input):
-        mtmin_results = load_test_results(mtmin_input)
-        mtmin_data = extract_multitemplate_chart_data(mtmin_results)
-        mtmin_md = generate_multitemplate_markdown(mtmin_data, mtmin_results.get('metadata', {}),
-                                                   "Multi-Template Test - Advancement Items Only")
-        os.makedirs(os.path.dirname(mtmin_output), exist_ok=True)
-        with open(mtmin_output, 'w') as f:
-            f.write(mtmin_md)
+    if has_mw_ap:
+        mw_ap_results = load_test_results(mw_ap_input)
+        mw_ap_data = extract_multiworld_chart_data(mw_ap_results, full_world_mapping)
+        top_level_mw_ap = {
+            'timestamp': mw_ap_results.get('timestamp'),
+            'seed': mw_ap_results.get('seed')
+        }
+        orig_link = './test-results-multiworld.md' if has_mw else None
+        mw_ap_md = generate_multiworld_markdown(mw_ap_data, mw_ap_results.get('metadata', {}), top_level_mw_ap,
+                                                 variant_type="apworld",
+                                                 version_links={"original": orig_link} if orig_link else None)
+        os.makedirs(os.path.dirname(mw_ap_output), exist_ok=True)
+        with open(mw_ap_output, 'w') as f:
+            f.write(mw_ap_md)
     else:
-        print(f"Info: Multitemplate minimal test results not found: {mtmin_input}")
+        print(f"Info: APWorld multiworld test results not found: {mw_ap_input}")
 
-    # Load multitemplate full test results
-    mtfull_input = os.path.join(project_root, 'scripts/output/multitemplate-full/test-results.json')
-    mtfull_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multitemplate-full.md')
-
-    mtfull_data = None
-    if os.path.exists(mtfull_input):
-        mtfull_results = load_test_results(mtfull_input)
-        mtfull_data = extract_multitemplate_chart_data(mtfull_results)
-        mtfull_md = generate_multitemplate_markdown(mtfull_data, mtfull_results.get('metadata', {}),
-                                                    "Multi-Template Test - All Locations")
-        os.makedirs(os.path.dirname(mtfull_output), exist_ok=True)
-        with open(mtfull_output, 'w') as f:
-            f.write(mtfull_md)
-    else:
-        print(f"Info: Multitemplate full test results not found: {mtfull_input}")
-
-    # Load UT comparison test results (both random and fixed seed)
-    ut_random_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-random-seed.json')
-    ut_fixed_input = os.path.join(project_root, 'scripts/output/ut-comparison/test-results-fixed-seed.json')
-    ut_output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
-
-    ut_random_data = None
-    ut_fixed_data = None
-    world_mapping = load_world_mapping(project_root)
-
-    has_random = os.path.exists(ut_random_input)
-    has_fixed = os.path.exists(ut_fixed_input)
-
-    if has_random:
-        ut_random_results = load_test_results(ut_random_input)
-        ut_random_data = extract_ut_comparison_chart_data(ut_random_results)
-        other_link = './test-results-ut-comparison-fixed-seed.md' if has_fixed else None
-        ut_random_md = generate_ut_comparison_markdown(
-            ut_random_data,
-            ut_random_results.get('metadata', {}),
-            world_mapping,
-            seed_type="random",
-            other_results_link=other_link
-        )
-        ut_random_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-random-seed.md')
-        os.makedirs(ut_output_dir, exist_ok=True)
-        with open(ut_random_output, 'w') as f:
-            f.write(ut_random_md)
-    else:
-        print(f"Info: UT comparison random seed results not found: {ut_random_input}")
-
-    if has_fixed:
-        ut_fixed_results = load_test_results(ut_fixed_input)
-        ut_fixed_data = extract_ut_comparison_chart_data(ut_fixed_results)
-        other_link = './test-results-ut-comparison-random-seed.md' if has_random else None
-        ut_fixed_md = generate_ut_comparison_markdown(
-            ut_fixed_data,
-            ut_fixed_results.get('metadata', {}),
-            world_mapping,
-            seed_type="fixed",
-            other_results_link=other_link
-        )
-        ut_fixed_output = os.path.join(ut_output_dir, 'test-results-ut-comparison-fixed-seed.md')
-        os.makedirs(ut_output_dir, exist_ok=True)
-        with open(ut_fixed_output, 'w') as f:
-            f.write(ut_fixed_md)
-    else:
-        print(f"Info: UT comparison fixed seed results not found: {ut_fixed_input}")
-
-    # For the summary, use fixed seed data if available, otherwise random
-    ut_data = ut_fixed_data if ut_fixed_data else ut_random_data
-
-    # Generate summary charts (original and WorldGen)
-    if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
+    # Generate summary charts (original, WorldGen, and APWorld)
+    if minimal_data or full_data or mp_data or mw_data:
         # Load the exclude list with reasons for main tests
         # Convert list of dicts to dict for generate_summary_chart
-        excluded_list = load_template_exclude_list(project_root, include_reasons=True, test_type='main')
+        excluded_list = load_template_exclude_list(project_root, include_reasons=True, test_type='main', skip_worldgen_variants=True)
         excluded_games_main = {item['name']: item['reason'] for item in excluded_list}
 
         # Get metadata for intermittent failures
@@ -400,13 +411,20 @@ def main():
         mp_meta = mp_results.get('metadata', {}) if 'mp_results' in locals() else None
         mw_meta = mw_results.get('metadata', {}) if 'mw_results' in locals() else None
 
-        # Check if we have worldgen data for the summary
+        # Check if we have worldgen/apworld data for the summary
         has_wg_summary = minimal_wg_data or full_wg_data or mp_wg_data or mw_wg_data
+        has_ap_summary = minimal_ap_data or full_ap_data or mp_ap_data or mw_ap_data
 
-        # Generate original summary with cross-link to worldgen if available
+        # Build version links for original summary
+        summary_version_links = {}
+        if has_wg_summary:
+            summary_version_links['worldgen'] = './test-results-summary-worldgen.md'
+        if has_ap_summary:
+            summary_version_links['apworld'] = './test-results-summary-apworld.md'
+
+        # Generate original summary with cross-links to variants
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        wg_summary_link = './test-results-summary-worldgen.md' if has_wg_summary else None
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link, project_root=project_root)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, excluded_games_main, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, world_mapping=full_world_mapping, project_root=project_root, version_links=summary_version_links if summary_version_links else None)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 
@@ -414,7 +432,7 @@ def main():
     if minimal_wg_data or full_wg_data or mp_wg_data or mw_wg_data:
         # Load the exclude list with reasons for worldgen tests (includes main + worldgen exclusions)
         # Convert list of dicts to dict for generate_summary_chart
-        excluded_list_wg = load_template_exclude_list(project_root, include_reasons=True, test_type='all')
+        excluded_list_wg = load_template_exclude_list(project_root, include_reasons=True, test_type='all', skip_worldgen_variants=True)
         excluded_games_worldgen = {item['name']: item['reason'] for item in excluded_list_wg}
 
         # Get metadata for intermittent failures from worldgen results
@@ -424,13 +442,42 @@ def main():
         mw_wg_meta = mw_wg_results.get('metadata', {}) if 'mw_wg_results' in locals() else None
 
         summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
-        orig_summary_link = './test-results-summary.md'
-        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link, project_root=project_root)
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, excluded_games_worldgen, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, world_mapping=full_world_mapping, project_root=project_root, variant_type="worldgen", version_links={"original": "./test-results-summary.md"})
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
 
-    # Generate processing times chart if we have any results
-    if 'minimal_results' in locals() or 'full_results' in locals() or 'mp_results' in locals() or 'mw_results' in locals():
+    # Generate APWorld summary chart if we have any apworld data
+    if minimal_ap_data or full_ap_data or mp_ap_data or mw_ap_data:
+        # Load the exclude list with reasons for apworld tests
+        # Use ut_fuzz_apworld test type since apworlds have their own exclude list
+        # Convert list of dicts to dict for generate_summary_chart
+        excluded_list_ap = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
+        excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_ap}
+
+        # Get metadata for intermittent failures from apworld results
+        minimal_ap_meta = minimal_ap_results.get('metadata', {}) if 'minimal_ap_results' in locals() else None
+        full_ap_meta = full_ap_results.get('metadata', {}) if 'full_ap_results' in locals() else None
+        mp_ap_meta = mp_ap_results.get('metadata', {}) if 'mp_ap_results' in locals() else None
+        mw_ap_meta = mw_ap_results.get('metadata', {}) if 'mw_ap_results' in locals() else None
+
+        summary_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-apworld.md')
+        summary_ap_md = generate_summary_chart(minimal_ap_data, full_ap_data, mp_ap_data, mw_ap_data, excluded_games_apworld, minimal_ap_meta, full_ap_meta, multiclient_metadata=mp_ap_meta, multiworld_metadata=mw_ap_meta, world_mapping=full_world_mapping, project_root=project_root, variant_type="apworld", version_links={"original": "./test-results-summary.md"})
+        with open(summary_ap_output, 'w') as f:
+            f.write(summary_ap_md)
+
+    # Generate processing times charts (original, worldgen, apworld)
+    has_original_times = 'minimal_results' in locals() or 'full_results' in locals() or 'mp_results' in locals() or 'mw_results' in locals()
+    has_wg_times = 'minimal_wg_results' in locals() or 'full_wg_results' in locals() or 'mp_wg_results' in locals() or 'mw_wg_results' in locals()
+    has_ap_times = 'minimal_ap_results' in locals() or 'full_ap_results' in locals() or 'mp_ap_results' in locals() or 'mw_ap_results' in locals()
+
+    # Build version links for processing times cross-linking
+    pt_version_links = {}
+    if has_wg_times:
+        pt_version_links['worldgen'] = './test-results-processing-times-worldgen.md'
+    if has_ap_times:
+        pt_version_links['apworld'] = './test-results-processing-times-apworld.md'
+
+    if has_original_times:
         processing_times_data = extract_processing_times_data(
             minimal_results if 'minimal_results' in locals() else {},
             full_results if 'full_results' in locals() else {},
@@ -438,10 +485,49 @@ def main():
             mw_results if 'mw_results' in locals() else {}
         )
         processing_times_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-processing-times.md')
-        processing_times_md = generate_processing_times_markdown(processing_times_data)
+        processing_times_md = generate_processing_times_markdown(
+            processing_times_data,
+            version_links=pt_version_links if pt_version_links else None
+        )
         with open(processing_times_output, 'w') as f:
             f.write(processing_times_md)
         print(f"Generated: {processing_times_output}")
+
+    # Generate WorldGen processing times chart
+    if has_wg_times:
+        processing_times_wg_data = extract_processing_times_data(
+            minimal_wg_results if 'minimal_wg_results' in locals() else {},
+            full_wg_results if 'full_wg_results' in locals() else {},
+            mp_wg_results if 'mp_wg_results' in locals() else {},
+            mw_wg_results if 'mw_wg_results' in locals() else {}
+        )
+        processing_times_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-processing-times-worldgen.md')
+        processing_times_wg_md = generate_processing_times_markdown(
+            processing_times_wg_data,
+            variant_type="worldgen",
+            version_links={"original": "./test-results-processing-times.md"}
+        )
+        with open(processing_times_wg_output, 'w') as f:
+            f.write(processing_times_wg_md)
+        print(f"Generated: {processing_times_wg_output}")
+
+    # Generate APWorld processing times chart
+    if has_ap_times:
+        processing_times_ap_data = extract_processing_times_data(
+            minimal_ap_results if 'minimal_ap_results' in locals() else {},
+            full_ap_results if 'full_ap_results' in locals() else {},
+            mp_ap_results if 'mp_ap_results' in locals() else {},
+            mw_ap_results if 'mw_ap_results' in locals() else {}
+        )
+        processing_times_ap_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-processing-times-apworld.md')
+        processing_times_ap_md = generate_processing_times_markdown(
+            processing_times_ap_data,
+            variant_type="apworld",
+            version_links={"original": "./test-results-processing-times.md"}
+        )
+        with open(processing_times_ap_output, 'w') as f:
+            f.write(processing_times_ap_md)
+        print(f"Generated: {processing_times_ap_output}")
 
     print("\n=== Chart Generation Complete ===")
     return 0

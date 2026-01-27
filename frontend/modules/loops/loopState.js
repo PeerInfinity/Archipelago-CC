@@ -54,6 +54,11 @@ export class LoopState {
     this.autoRestartQueue = false; // Flag to auto-restart queue when complete
     this.gameSpeed = 10; // Multiplier for processing speed
 
+    // Test mode flags
+    this.instantMode = false; // When true, actions complete in one frame
+    this.noManaDepletionReset = false; // When true, don't reset loop when mana reaches 0
+    this.manaDebt = 0; // Track how negative mana went (for testing)
+
     // REMOVED: Discovery tracking
     // this.discoveredRegions = new Set(['Menu']); // Start with Menu discovered
     // this.discoveredLocations = new Set();
@@ -450,7 +455,7 @@ export class LoopState {
    */
   startProcessing() {
     const queue = this.getActionQueue();
-    
+
     if (this.isPaused || this.isProcessing) {
       return;
     }
@@ -469,17 +474,14 @@ export class LoopState {
 
     // If there are no real actions, don't start processing
     if (firstActionIndex >= queue.length) {
-      log('info', 'No actions to process (only initial start region in queue)');
       return;
     }
 
     this.isProcessing = true;
-    
-    // Set the current action index to the first real action if not already set
-    if (this.currentActionIndex === 0 || this.currentActionIndex === undefined) {
-      this.currentActionIndex = firstActionIndex;
-      log('info', `Setting currentActionIndex to ${firstActionIndex} (skipping initial start region: ${firstActionIndex === 1})`);
-    }
+
+    // Always reset currentActionIndex when starting fresh
+    // This ensures we start from the beginning of the queue
+    this.currentActionIndex = firstActionIndex;
 
     // Make sure the index is valid
     if (this.currentActionIndex >= queue.length) {
@@ -561,6 +563,18 @@ export class LoopState {
     } else {
       const queue = this.getActionQueue();
       if (queue.length > 0) {
+        // Check if we need to reset the loop before resuming
+        // This handles the case where the queue finished and user unpauses
+        const needsReset = this._shouldResetOnResume(queue);
+
+        if (needsReset) {
+          // Reset loop to refill mana and reset action progress
+          this._resetLoop();
+          // _resetLoop will pause if autoRestartQueue is false,
+          // so we need to unpause again
+          this.isPaused = false;
+        }
+
         this.startProcessing();
         this.eventBus.publish('loopState:resumed', { isPaused: false }, 'loops');
       } else {
@@ -573,11 +587,66 @@ export class LoopState {
   }
 
   /**
+   * Check if we should reset the loop when resuming from pause
+   * Returns true if all actions are completed or if we've reached the end of the queue
+   * @param {Array} queue - The action queue
+   * @returns {boolean} - Whether to reset
+   */
+  _shouldResetOnResume(queue) {
+    if (!queue || queue.length === 0) {
+      return false;
+    }
+
+    // Find the first real action index (skip initial start region)
+    let firstRealActionIndex = 0;
+    if (this.isInitialStartEntry(queue[0])) {
+      firstRealActionIndex = 1;
+    }
+
+    // If there are no real actions, no need to reset
+    if (firstRealActionIndex >= queue.length) {
+      return false;
+    }
+
+    // Check if all real actions are completed
+    let allCompleted = true;
+    for (let i = firstRealActionIndex; i < queue.length; i++) {
+      const action = queue[i];
+      // Skip checkLocation actions for already-checked locations
+      if (action.type === 'checkLocation') {
+        const snapshot = this.stateManager.getLatestStateSnapshot();
+        const isChecked = snapshot?.checkedLocations?.includes(action.locationName);
+        if (isChecked) {
+          continue; // This one doesn't count, it's already done
+        }
+      }
+      // Check if action is completed
+      if (!action.completed && action.progress < 100) {
+        allCompleted = false;
+        break;
+      }
+    }
+
+    // Also reset if currentActionIndex is past the end of the queue
+    // (this means we finished processing)
+    if (this.currentActionIndex >= queue.length) {
+      return true;
+    }
+
+    return allCompleted;
+  }
+
+  /**
    * Set game speed multiplier
    * @param {number} speed - Speed multiplier (1.0 = normal speed)
    */
   setGameSpeed(speed) {
-    this.gameSpeed = Math.max(0.1, Math.min(100, speed));
+    // Allow Infinity for instant mode, otherwise cap at 100
+    if (speed === Infinity) {
+      this.gameSpeed = Infinity;
+    } else {
+      this.gameSpeed = Math.max(0.1, Math.min(100, speed));
+    }
 
     // Reset the _lastFrameTime to ensure smooth speed transitions
     if (this.isProcessing) {
@@ -585,6 +654,39 @@ export class LoopState {
     }
 
     this.eventBus.publish('loopState:speedChanged', { speed: this.gameSpeed }, 'loops');
+  }
+
+  /**
+   * Set instant mode - actions complete in one frame
+   * @param {boolean} enabled - Whether to enable instant mode
+   */
+  setInstantMode(enabled) {
+    this.instantMode = enabled;
+    log('info', `[LoopState] Instant mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  /**
+   * Set no-mana-depletion-reset mode - don't reset loop when mana reaches 0
+   * @param {boolean} enabled - Whether to enable no-reset mode
+   */
+  setNoManaDepletionReset(enabled) {
+    this.noManaDepletionReset = enabled;
+    log('info', `[LoopState] No-mana-depletion-reset mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  /**
+   * Get the current mana debt (how negative mana went)
+   * @returns {number} The mana debt
+   */
+  getManaDebt() {
+    return this.manaDebt;
+  }
+
+  /**
+   * Reset mana debt tracking
+   */
+  resetManaDebt() {
+    this.manaDebt = 0;
   }
 
   /**
@@ -648,18 +750,35 @@ export class LoopState {
 
       // Process current action
       const actionCost = this._calculateActionCost(this.currentAction);
-      // Slow down the action for better visibility - use 20 instead of 100
-      const progressIncrement = (deltaTime / 1000) * (20 / actionCost);
+
+      // Calculate progress increment
+      let progressIncrement;
+      const currentProgress = this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
+
+      if (this.instantMode) {
+        // In instant mode, complete action in one frame
+        progressIncrement = 100 - currentProgress;
+      } else {
+        // Slow down the action for better visibility - use 20 instead of 100
+        progressIncrement = (deltaTime / 1000) * (20 / actionCost);
+      }
 
       // Update progress in our tracking Map
-      const currentProgress = this.actionQueueManager.getProgress(this.currentAction.pathIndex) || 0;
       const newProgress = currentProgress + progressIncrement;
       this.actionQueueManager.setProgress(this.currentAction.pathIndex, newProgress);
       this.currentAction.progress = newProgress;
 
       // Reduce mana based on progress
       const manaCost = (progressIncrement / 100) * actionCost;
-      this.currentMana = Math.max(0, this.currentMana - manaCost);
+      const newMana = this.currentMana - manaCost;
+
+      // Track mana debt if mana goes negative
+      if (newMana < 0 && this.noManaDepletionReset) {
+        this.manaDebt = Math.max(this.manaDebt, Math.abs(newMana));
+        this.currentMana = newMana; // Allow negative mana for tracking
+      } else {
+        this.currentMana = Math.max(0, newMana);
+      }
 
       // Publish mana changed event immediately after update
       this.eventBus.publish('loopState:manaChanged', {
@@ -701,7 +820,7 @@ export class LoopState {
       }
 
       // Check for loop reset (out of mana)
-      if (this.currentMana <= 0) {
+      if (this.currentMana <= 0 && !this.noManaDepletionReset) {
         //log('info', 'Loop reset: out of mana');
         this._resetLoop();
         this._animationFrameId = requestAnimationFrame(
@@ -803,23 +922,27 @@ export class LoopState {
       const nextAction = queue[this.currentActionIndex];
 
       // Check if it's a checkLocation action for an already checked location
-      if (
-        nextAction.type === 'checkLocation' &&
-        this.stateManager.instance.isLocationChecked(nextAction.locationName)
-      ) {
-        //log('info',
-        //  `Skipping already checked location: ${nextAction.locationName}.`
-        //);
-        // Mark as completed since it's already checked
-        this.actionQueueManager.markCompleted(nextAction.pathIndex);
-        this.actionQueueManager.setProgress(nextAction.pathIndex, 100);
-        
-        // Skip to next action
-        this.currentActionIndex++;
-        
-        // Continue the loop to check the next action at the current index
+      if (nextAction.type === 'checkLocation') {
+        const snapshot = this.stateManager.getLatestStateSnapshot();
+        const isChecked = snapshot?.checkedLocations?.includes(nextAction.locationName);
+        if (isChecked) {
+          //log('info',
+          //  `Skipping already checked location: ${nextAction.locationName}.`
+          //);
+          // Mark as completed since it's already checked
+          this.actionQueueManager.markCompleted(nextAction.pathIndex);
+          this.actionQueueManager.setProgress(nextAction.pathIndex, 100);
+
+          // Skip to next action
+          this.currentActionIndex++;
+
+          // Continue the loop to check the next action at the current index
+        } else {
+          // Location not checked, this is a valid action
+          break;
+        }
       } else {
-        // Found a valid action to process
+        // Found a valid action to process (not a checkLocation)
         break;
       }
     }
@@ -915,20 +1038,11 @@ export class LoopState {
       );
       return;
     }
-    // Mark location as checked
+    // Mark location as checked via stateManager proxy
     const locationName = action.locationName;
-    // Use this.stateManager
-    this.stateManager.instance.checkLocation(locationName);
-
-    // Get item from location if available
-    // Use this.stateManager
-    const location = this.stateManager.instance.locations.find(
-      (loc) => loc.name === locationName
-    );
-    if (location && location.item) {
-      // Use this.stateManager
-      this.stateManager.instance.addItemToInventory(location.item.name);
-    }
+    // The checkLocation method on the proxy handles both marking as checked
+    // and adding items to inventory (when addItems=true, which is default)
+    this.stateManager.checkLocation(locationName);
 
     // No XP bonus on completion - XP is awarded continuously during the action
   }
@@ -967,11 +1081,15 @@ export class LoopState {
 
   /**
    * Reset progress for all actions in the queue
+   * Also resets currentActionIndex so next startProcessing() starts fresh
    */
   _resetActionsProgress() {
     if (!this.actionQueueManager) return;
     // Clear all progress tracking
     this.actionQueueManager.resetProgress();
+    // Reset current action index so startProcessing() starts from the beginning
+    this.currentActionIndex = 0;
+    this.currentAction = null;
   }
 
   /**
@@ -981,13 +1099,17 @@ export class LoopState {
     // Restore mana to full
     this.currentMana = this.maxMana;
 
+    // Always reset action progress tracking when loop resets
+    // This ensures a fresh start when the queue is rebuilt
+    this._resetActionsProgress();
+
     // If autoRestartQueue is false (pause when queue complete mode),
-    // just pause processing instead of resetting
+    // just pause processing instead of continuing
     if (!this.autoRestartQueue) {
       // Pause processing
       this.setPaused(true);
 
-      // Notify loop reset but don't reset progress
+      // Notify loop reset
       this.eventBus.publish('loopState:loopReset', {
         mana: {
           current: this.currentMana,

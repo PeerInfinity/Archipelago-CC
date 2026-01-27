@@ -330,14 +330,37 @@ class FaxanaduWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = FaxanaduWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = FaxanaduWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = FaxanaduWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -364,8 +387,12 @@ class FaxanaduWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
             self._place_original_items()
 
     def _place_original_items(self) -> None:
@@ -377,14 +404,36 @@ class FaxanaduWorld(RuleWorldMixin, World):
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Prefer progression items first since they may be needed for accessibility
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Use progression item first if available, otherwise filler
+            chosen_idx = progression_idx if progression_idx is not None else filler_idx
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

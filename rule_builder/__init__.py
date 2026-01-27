@@ -29,7 +29,8 @@ See docs/json/developer/guides/format-converter.md for format details.
 """
 
 from .rules import (
-    # World mixin
+    # Logic and World mixins
+    RuleBuilderLogicMixin,
     RuleWorldMixin,
     # Option filtering
     OptionFilter,
@@ -63,6 +64,8 @@ from .rules import (
     ASTRule,
     Not,
     CountItem,
+    CountFromList,
+    CountGroup,
     Compare,
     Arithmetic,
     MinValue,
@@ -78,8 +81,24 @@ from .ast_format import (
     parse_ast_rule,
 )
 
+from .pathfinding import (
+    # Core pathfinding
+    PathExistsToRegion,
+    find_paths_to_region,
+    # Hypothetical state
+    HypotheticalState,
+    create_hypothetical_state,
+    # Region properties
+    RegionProperty,
+    ALTTP_REGION_PROPERTIES,
+    check_region_property,
+    # Entrance chain conditions
+    EntranceChainCondition,
+)
+
 __all__ = [
-    # World mixin
+    # Logic and World mixins
+    'RuleBuilderLogicMixin',
     'RuleWorldMixin',
     # Option filtering
     'OptionFilter',
@@ -113,6 +132,8 @@ __all__ = [
     'ASTRule',
     'Not',
     'CountItem',
+    'CountFromList',
+    'CountGroup',
     'Compare',
     'Arithmetic',
     'MinValue',
@@ -124,4 +145,13 @@ __all__ = [
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',
+    # Pathfinding tools
+    'PathExistsToRegion',
+    'find_paths_to_region',
+    'HypotheticalState',
+    'create_hypothetical_state',
+    'RegionProperty',
+    'ALTTP_REGION_PROPERTIES',
+    'check_region_property',
+    'EntranceChainCondition',
 ]

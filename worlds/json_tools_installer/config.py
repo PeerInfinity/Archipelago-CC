@@ -59,7 +59,7 @@ class InstallationInfo:
 @dataclass
 class PatchInfo:
     """Information about applied patches."""
-    method: str = "file"  # "file" or "monkey"
+    method: str = "monkey"  # "none", "monkey", or "file"
     backups: List[BackupInfo] = field(default_factory=list)
     applied_at: Optional[str] = None
     romless_applied: bool = False
@@ -128,7 +128,7 @@ class InstallerConfig:
             BackupInfo(**b) for b in patches.get("backups", [])
         ]
         config.patches = PatchInfo(
-            method=patches.get("method", "file"),
+            method=patches.get("method", "monkey"),
             backups=backups,
             applied_at=patches.get("applied_at"),
             romless_applied=patches.get("romless_applied", False),

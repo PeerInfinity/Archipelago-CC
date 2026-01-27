@@ -271,6 +271,20 @@ export function executeStateMethod(manager, method, ...args) {
       return uniqueItemsFound >= count;
     }
 
+    // 2e. Handle count_from_list - returns the total count of items from a list (sums all quantities)
+    // Used by SC2 for weapon/armor upgrade counting
+    if (method === 'count_from_list' && args.length >= 1) {
+      const items = args[0];
+      if (!Array.isArray(items)) return 0;
+
+      // Sum all item counts from the list
+      let totalCount = 0;
+      for (const itemName of items) {
+        totalCount += (manager.inventory[itemName] || 0);
+      }
+      return totalCount;
+    }
+
     // 3. Check for game-specific state methods (e.g., has_from_list_unique for Mario Land 2)
     if (manager.stateMethods && typeof manager.stateMethods[method] === 'function') {
       const snapshot = manager.getSnapshot();

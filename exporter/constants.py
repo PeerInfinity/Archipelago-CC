@@ -11,7 +11,9 @@ to prevent infinite loops and runaway resource usage.
 
 # Maximum number of times analyze_rule can be called in a single export.
 # This catches infinite loops where rules keep spawning new analyze_rule calls.
-MAX_ANALYZE_RULE_CALLS = 10000
+# NOTE: ALttP with glitch modes can require many calls due to bunny rules, but
+# the callable_list_cache helps reduce repeated analysis significantly.
+MAX_ANALYZE_RULE_CALLS = 20000
 
 # Maximum number of AST node visits within a single RuleAnalyzer instance.
 # This catches infinite loops within a single rule's AST traversal.
@@ -33,9 +35,12 @@ MAX_HELPER_DISCOVERY_ITERATIONS = 10
 # Rules larger than this likely indicate runaway expansion.
 MAX_RULE_SIZE_KB = 100
 
-# Maximum size of total export data in megabytes.
+# Maximum size of total export data in megabytes (per game).
 # Checked periodically during region processing.
-MAX_EXPORT_SIZE_MB = 10
+# The effective limit is: BASE + (EXTRA_PER_GAME * (num_players - 1))
+# This allows larger exports for multiworld while still catching loops.
+MAX_EXPORT_SIZE_MB_BASE = 10
+MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
 
 # =============================================================================
 # Sorting Configuration

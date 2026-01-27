@@ -7,6 +7,13 @@
 
 import eventBus from '../../app/core/eventBus.js';
 import { editorDataService, EDITOR_EVENTS } from '../editorCore/index.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+
+// Modes that support the Apply button
+const APPLY_SUPPORTED_MODES = ['rules', 'localStorageMode', 'dataForExport', 'metaGameJsFile', 'latestSnapshot'];
+
+// localStorage prefix for mode data (matches jsonUI.js and init.js)
+const G_LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
 import {
   EditorView,
   keymap,
@@ -177,9 +184,9 @@ class CodeMirror6UI {
     });
     controlsDiv.appendChild(this.updateNowButton);
 
-    // Create Apply button (only visible for 'rules' source)
+    // Create Apply button (visible for supported modes)
     this.applyButton = this._createButton('Apply', this._handleApplyClick);
-    this.applyButton.title = 'Apply edited rules (Ctrl+Enter)';
+    this.applyButton.title = 'Apply changes (Ctrl+Enter)';
     controlsDiv.appendChild(this.applyButton);
 
     // Update Apply button visibility based on current source
@@ -251,8 +258,8 @@ class CodeMirror6UI {
         key: 'Ctrl-Enter',
         run: () => {
           const currentSourceKey = editorDataService.getCurrentSourceKey();
-          if (currentSourceKey === 'rules') {
-            log('info', '[CodeMirror6UI] Ctrl+Enter shortcut detected, applying rules...');
+          if (APPLY_SUPPORTED_MODES.includes(currentSourceKey)) {
+            log('info', `[CodeMirror6UI] Ctrl+Enter shortcut detected, applying ${currentSourceKey}...`);
             this._handleApplyClick();
             return true;
           }
@@ -353,63 +360,206 @@ class CodeMirror6UI {
     if (!this.editorView || !this.applyButton) return;
 
     const currentSourceKey = editorDataService.getCurrentSourceKey();
-    if (currentSourceKey !== 'rules') {
-      log('warn', '[CodeMirror6UI] Apply clicked but not on rules source');
+    if (!APPLY_SUPPORTED_MODES.includes(currentSourceKey)) {
+      log('warn', `[CodeMirror6UI] Apply clicked but mode '${currentSourceKey}' not supported`);
       return;
     }
 
     try {
       const jsonText = this.editorView.state.doc.toString();
-      const rulesData = JSON.parse(jsonText);
 
-      log('info', '[CodeMirror6UI] Applying edited rules...');
-
-      // Publish the files:jsonLoaded event to trigger rules loading
-      eventBus.publish('files:jsonLoaded', {
-        jsonData: rulesData,
-        selectedPlayerId: '1',
-        sourceName: 'editorApply'
-      }, 'editorCodeMirror6');
+      // Route to appropriate handler based on mode
+      switch (currentSourceKey) {
+        case 'rules':
+          await this._applyRules(jsonText);
+          break;
+        case 'localStorageMode':
+          await this._applyLocalStorageMode(jsonText);
+          break;
+        case 'dataForExport':
+          await this._applyDataForExport(jsonText);
+          break;
+        case 'metaGameJsFile':
+          await this._applyMetaGameJsFile(jsonText);
+          break;
+        case 'latestSnapshot':
+          await this._applyLatestSnapshot(jsonText);
+          break;
+        default:
+          throw new Error(`Unknown mode: ${currentSourceKey}`);
+      }
 
       // Visual feedback - success
-      const originalText = this.applyButton.textContent;
-      const originalBg = this.applyButton.style.backgroundColor;
+      this._showApplyFeedback(true);
+      log('info', `[CodeMirror6UI] ${currentSourceKey} applied successfully`);
+    } catch (error) {
+      log('error', `[CodeMirror6UI] Error applying ${currentSourceKey}:`, error);
+      this._showApplyFeedback(false);
+      alert(`Error applying: ${error.message}`);
+    }
+  }
+
+  _showApplyFeedback(success) {
+    if (!this.applyButton) return;
+
+    const originalText = this.applyButton.textContent;
+    const originalBg = this.applyButton.style.backgroundColor;
+
+    if (success) {
       this.applyButton.textContent = 'Applied!';
       this.applyButton.style.backgroundColor = '#4CAF50';
-
-      setTimeout(() => {
-        if (this.applyButton) {
-          this.applyButton.textContent = originalText;
-          this.applyButton.style.backgroundColor = originalBg;
-        }
-      }, 1000);
-
-      log('info', '[CodeMirror6UI] Rules applied successfully');
-    } catch (error) {
-      log('error', '[CodeMirror6UI] Error applying rules:', error);
-
-      // Visual feedback - error
-      const originalText = this.applyButton.textContent;
-      const originalBg = this.applyButton.style.backgroundColor;
+    } else {
       this.applyButton.textContent = 'Error!';
       this.applyButton.style.backgroundColor = '#f44336';
-
-      setTimeout(() => {
-        if (this.applyButton) {
-          this.applyButton.textContent = originalText;
-          this.applyButton.style.backgroundColor = originalBg;
-        }
-      }, 2000);
-
-      alert(`Error applying rules: ${error.message}`);
     }
+
+    setTimeout(() => {
+      if (this.applyButton) {
+        this.applyButton.textContent = originalText;
+        this.applyButton.style.backgroundColor = originalBg;
+      }
+    }, success ? 1000 : 2000);
+  }
+
+  async _applyRules(jsonText) {
+    const rulesData = JSON.parse(jsonText);
+    log('info', '[CodeMirror6UI] Applying edited rules...');
+
+    // Publish the files:jsonLoaded event to trigger rules loading
+    eventBus.publish('files:jsonLoaded', {
+      jsonData: rulesData,
+      selectedPlayerId: '1',
+      sourceName: 'editorApply'
+    }, 'editorCodeMirror6');
+  }
+
+  async _applyLocalStorageMode(jsonText) {
+    // Remove any comment lines at the beginning (// Data Sources: comments)
+    const cleanedJsonText = jsonText.replace(/^\/\/.*\n/gm, '').trim();
+    const modeData = JSON.parse(cleanedJsonText);
+
+    log('info', '[CodeMirror6UI] Applying localStorage mode data...');
+
+    // Get the mode name from the data or use default
+    const modeName = modeData.modeName || 'default';
+
+    // Update timestamp
+    modeData.savedTimestamp = new Date().toISOString();
+
+    // Save to localStorage
+    localStorage.setItem(
+      `${G_LOCAL_STORAGE_MODE_PREFIX}${modeName}`,
+      JSON.stringify(modeData)
+    );
+
+    // Set as last active mode
+    localStorage.setItem('archipelagoToolSuite_lastActiveMode', modeName);
+
+    log('info', `[CodeMirror6UI] Saved mode '${modeName}' to localStorage, reloading...`);
+
+    // Reload the page to apply changes
+    window.location.reload();
+  }
+
+  async _applyDataForExport(jsonText) {
+    const loadedData = JSON.parse(jsonText);
+    log('info', '[CodeMirror6UI] Applying data for export...');
+
+    // Apply data using the same logic as jsonUI._applyNonReloadData
+    const handlers = centralRegistry.getAllJsonDataHandlers();
+
+    for (const dataKey in loadedData) {
+      if (dataKey === 'modeName' || dataKey === 'savedTimestamp') continue;
+
+      if (dataKey === 'rulesConfig' && loadedData.rulesConfig) {
+        // Apply rules directly
+        eventBus.publish('files:jsonLoaded', {
+          jsonData: loadedData.rulesConfig,
+          selectedPlayerId: '1',
+          sourceName: 'editorApplyExport'
+        }, 'editorCodeMirror6');
+        log('info', '[CodeMirror6UI] Applied rulesConfig from export data');
+      } else if (dataKey === 'userSettings' && loadedData.userSettings) {
+        // Apply user settings via settings manager
+        if (window.settingsManager) {
+          await window.settingsManager.updateSettings(loadedData.userSettings);
+          log('info', '[CodeMirror6UI] Applied userSettings from export data');
+        }
+      } else if (handlers.has(dataKey)) {
+        const handler = handlers.get(dataKey);
+        if (!handler.requiresReload && handler.applyLoadedDataFunction) {
+          try {
+            handler.applyLoadedDataFunction(loadedData[dataKey]);
+            log('info', `[CodeMirror6UI] Applied ${dataKey} from export data`);
+          } catch (e) {
+            log('error', `[CodeMirror6UI] Error applying ${dataKey}:`, e);
+          }
+        }
+      }
+    }
+  }
+
+  async _applyMetaGameJsFile(jsText) {
+    log('info', '[CodeMirror6UI] Applying metaGame JS file...');
+
+    // Try to extract and apply the metaGameConfiguration object from the JS
+    // Look for: export const metaGameConfiguration = { ... }
+    const configMatch = jsText.match(/export\s+const\s+metaGameConfiguration\s*=\s*(\{[\s\S]*?\});?\s*(?:export|$)/);
+
+    if (configMatch) {
+      try {
+        // Try to evaluate the configuration object
+        // This is a simplified approach - we evaluate just the object literal
+        const configStr = configMatch[1];
+        // Use Function constructor to safely evaluate the object
+        const evalConfig = new Function(`return ${configStr}`)();
+
+        // Publish event for metaGame to update its configuration
+        eventBus.publish('editor:metaGameConfigApply', {
+          configuration: evalConfig,
+          sourceName: 'editorApply'
+        }, 'editorCodeMirror6');
+
+        log('info', '[CodeMirror6UI] MetaGame configuration extracted and applied');
+      } catch (evalError) {
+        log('warn', '[CodeMirror6UI] Could not evaluate metaGameConfiguration, trying JSON parse...', evalError);
+        // If direct evaluation fails, try to parse as JSON-like structure
+        throw new Error('Cannot evaluate JavaScript configuration. Edit the JSON configuration in the MetaGame Panel instead.');
+      }
+    } else {
+      throw new Error('Could not find metaGameConfiguration export in the JS file. Use the MetaGame Panel to edit JSON configuration.');
+    }
+  }
+
+  async _applyLatestSnapshot(jsonText) {
+    const snapshotData = JSON.parse(jsonText);
+    log('info', '[CodeMirror6UI] Applying edited snapshot...');
+
+    // Publish event for state manager to apply the snapshot
+    eventBus.publish('editor:snapshotApply', {
+      snapshot: snapshotData,
+      sourceName: 'editorApply'
+    }, 'editorCodeMirror6');
   }
 
   _updateApplyButtonVisibility() {
     if (!this.applyButton) return;
 
     const currentSourceKey = editorDataService.getCurrentSourceKey();
-    this.applyButton.style.display = currentSourceKey === 'rules' ? 'inline-block' : 'none';
+    const showApply = APPLY_SUPPORTED_MODES.includes(currentSourceKey);
+    this.applyButton.style.display = showApply ? 'inline-block' : 'none';
+
+    // Update tooltip based on mode
+    if (showApply) {
+      const tooltips = {
+        rules: 'Apply edited rules (Ctrl+Enter)',
+        localStorageMode: 'Save to localStorage and reload (Ctrl+Enter)',
+        dataForExport: 'Apply edited data to application (Ctrl+Enter)',
+        metaGameJsFile: 'Apply JSON configuration from JS file (Ctrl+Enter)',
+        latestSnapshot: 'Apply edited snapshot to state manager (Ctrl+Enter)',
+      };
+      this.applyButton.title = tooltips[currentSourceKey] || 'Apply (Ctrl+Enter)';
+    }
   }
 
   onPanelResize(width, height) {

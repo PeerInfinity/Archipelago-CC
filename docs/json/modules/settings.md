@@ -15,7 +15,7 @@
 
 #### Responsibilities
 
-- **Render Settings Editor:** The primary responsibility is to create a dynamic form/editor for all settings. It uses the **`json-editor/json-editor`** library to automatically generate a UI based on the application's settings object.
+- **Render Settings Editor:** The primary responsibility is to create a JSON editor for all settings. It uses a textarea with JSON formatting to display and edit the settings object.
 - **Load Current Settings:** On initialization, it fetches the current, complete settings object from the `settingsManager`.
 - **Update Settings Live:** When a user changes a value in the editor UI, the `SettingsUI` immediately calls `settingsManager.updateSettings()` to update the central settings object.
 - **Trigger Application-Wide Updates:** By calling `settingsManager.updateSettings()`, it causes the `settingsManager` to publish a `settings:changed` event on the `eventBus`. This allows any other module to listen for and react to settings changes in real-time.
@@ -29,7 +29,7 @@ This module does not publish its own unique events. It triggers the `settingsMan
 
 #### Events Subscribed To
 
-The `SettingsUI` does not need to subscribe to `settings:changed` itself, as it is the source of the changes and directly controls the `json-editor` instance. It gets its initial data on creation and pushes updates outward.
+The `SettingsUI` does not need to subscribe to `settings:changed` itself, as it is the source of the changes and directly controls the textarea editor. It gets its initial data on creation and pushes updates outward.
 
 #### Public Functions (`centralRegistry`)
 
@@ -38,6 +38,4 @@ This module does not register any public functions.
 #### Dependencies & Interactions
 
 - **`settingsManager`**: This is the module's most critical dependency. The `SettingsUI` reads the initial settings from it and writes all changes back to it. It is the UI frontend for the `settingsManager` service.
-- **`json-editor/json-editor` library**: The UI is built using this external library, which dynamically creates the form from a JSON object.
-- **`settings.schema.json`**: (Planned/Future) For a more advanced implementation, the `SettingsUI` will load and provide this schema to the `json-editor` library. This will enable automatic validation, descriptions, default values, and better input controls (e.g., dropdowns for enums) directly in the UI.
 - **JSON Module**: The `Settings` panel provides a user-friendly way to modify the `userSettings` portion of the application state, which can then be saved permanently as part of a "mode" using the `JSON` module.
