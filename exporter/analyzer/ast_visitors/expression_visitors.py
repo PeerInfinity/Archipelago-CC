@@ -143,6 +143,11 @@ class ExpressionVisitorMixin:
                             list_value = list(resolved_attr)
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
+                        elif hasattr(resolved_attr, 'value') and isinstance(resolved_attr.value, (int, float, str, bool)):
+                            # Handle enum values by extracting their .value attribute
+                            # This enables constant folding for comparisons like location.shop_price_type == ShopPriceType.Hearts
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to enum constant: {resolved_attr.value}")
+                            return {'type': 'constant', 'value': resolved_attr.value}
                         elif callable(resolved_attr) and hasattr(obj_value, '_fields'):
                             # Handle callable attributes on NamedTuples (e.g., LocationData.access_rule)
                             # When used in boolean context (if loc.access_rule:), this should be True
