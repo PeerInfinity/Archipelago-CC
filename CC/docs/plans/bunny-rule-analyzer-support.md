@@ -4,10 +4,11 @@
 
 This document outlines how to add native analyzer support for ALttP's bunny rules, replacing the current pre-computed workaround with full dynamic path analysis.
 
-**Status**: Planning / Not Started
+**Status**: Implemented
 **Priority**: Low (current workaround is functional)
 **Complexity**: High
 **Date**: 2026-01-26
+**Implementation Date**: 2026-01-26
 
 ## Problem Statement
 
@@ -511,22 +512,48 @@ Analyze what we can, fall back to pre-computed for the rest:
 
 ## Recommendation
 
-**Defer implementation** unless there is a specific need for path-accurate bunny rules.
+**Implementation complete.** The hybrid approach (Alternative 3) was chosen:
+- Dynamic analysis is attempted first using `ClosureFunctionAnalyzer`
+- Falls back to pre-computed workaround if dynamic analysis fails
+- Feature flag `ENABLE_DYNAMIC_BUNNY_ANALYSIS` controls behavior
 
-The current workaround:
-- Is functional and well-tested
-- Captures the essential gameplay requirement (Moon Pearl for bunny territory)
-- Is significantly simpler to maintain
-- Has no known issues in practice
+The pre-computed workaround remains as a safety net, ensuring functionality even if dynamic analysis encounters edge cases.
 
-Full analyzer support would be a significant undertaking with marginal practical benefit. Consider implementing only if:
-- Users report incorrect reachability in entrance shuffle
-- Other games need similar dynamic path analysis
-- The analyzer architecture is being refactored anyway
+## Implementation Notes
+
+### Files Created
+
+- `exporter/analyzer/closure_function_analyzer.py` - New module for analyzing closure functions
+  - `ClosureFunctionAnalyzer` class: Analyzes function objects from closures
+  - `BunnyRulePatternMatcher` class: Identifies bunny rule patterns
+
+### Files Modified
+
+- `exporter/analyzer/ast_visitors/call_visitor.py`
+  - Added import for `ClosureFunctionAnalyzer`
+  - Updated `all(GeneratorExp)` handling to use closure analyzer as fallback
+  - Updated `any(GeneratorExp)` handling to use closure analyzer as fallback
+  - Updated nested comprehension handling to use closure analyzer as fallback
+
+- `exporter/games/official/alttp.py`
+  - Added import for `ClosureFunctionAnalyzer`
+  - Added `ENABLE_DYNAMIC_BUNNY_ANALYSIS` feature flag
+  - Updated `override_rule_analysis()` to try dynamic analysis first
+  - Added `_try_dynamic_bunny_analysis()` method
+
+- `frontend/modules/shared/ruleEngine.js`
+  - Enhanced `can_reach` rule type to support both legacy format and new format
+  - Added support for `target` and `target_type` properties for different reachability checks
+
+### Feature Flag
+
+Set `ENABLE_DYNAMIC_BUNNY_ANALYSIS = False` in `alttp.py` to disable dynamic analysis and use only the pre-computed workaround.
 
 ## References
 
 - `worlds/alttp/Rules.py` lines 1653-1783: Original `set_bunny_rules()` implementation
-- `exporter/games/official/alttp.py`: Current bunny rule workaround
-- `exporter/analyzer/ast_visitors/call_visitor.py`: Existing generator expression handling
+- `exporter/analyzer/closure_function_analyzer.py`: New closure function analyzer
+- `exporter/games/official/alttp.py`: ALttP handler with dynamic analysis
+- `exporter/analyzer/ast_visitors/call_visitor.py`: Generator expression handling with fallback
+- `frontend/modules/shared/ruleEngine.js`: Enhanced can_reach rule evaluation
 - `frontend/modules/shared/stateInterface.js`: Frontend rule evaluation

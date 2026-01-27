@@ -12,10 +12,15 @@ This exporter handles ALttP-specific patterns:
 
 from typing import Dict, Any, Optional, List, Set, Callable
 from ..base import GenericGameExportHandler
+from exporter.analyzer.closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 import logging
 import re
 
 logger = logging.getLogger(__name__)
+
+# Feature flag for dynamic bunny rule analysis
+# When True, attempts to analyze bunny rules dynamically before falling back to workaround
+ENABLE_DYNAMIC_BUNNY_ANALYSIS = True
 
 
 # --- Dynamic imports from original ALttP code ---
@@ -1058,12 +1063,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Intercept complex rules before standard analysis.
 
-        Currently only handles bunny rules, which have complex nested lambdas and
-        dynamic path lookups that can't be properly analyzed.
+        Currently handles bunny rules, which have complex nested lambdas and
+        dynamic path lookups. The analyzer now attempts to analyze these dynamically
+        using the ClosureFunctionAnalyzer before falling back to pre-computed workarounds.
 
         All other rule patterns (dungeon_reentry_rules, underworld_glitches_rules,
-        dict lookups, closure function calls, etc.) are now handled by the generic
-        analyzer.
+        dict lookups, closure function calls, etc.) are handled by the generic analyzer.
         """
         if rule_func is None:
             return None
@@ -1072,11 +1077,66 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         func_qualname = getattr(rule_func, '__qualname__', '')
         if 'set_bunny_rules' in func_qualname:
             location_name = rule_target_name or self._current_location_context or ''
-            logger.debug(f"ALttP: Intercepting bunny rule for '{location_name}'")
+            logger.debug(f"ALttP: Detected bunny rule for '{location_name}'")
+
+            # Attempt dynamic analysis if enabled
+            if ENABLE_DYNAMIC_BUNNY_ANALYSIS:
+                try:
+                    analyzed_result = self._try_dynamic_bunny_analysis(rule_func, location_name)
+                    if analyzed_result is not None:
+                        logger.debug(f"ALttP: Dynamic bunny rule analysis succeeded for '{location_name}'")
+                        return analyzed_result
+                    logger.debug(f"ALttP: Dynamic analysis returned None, using workaround")
+                except Exception as e:
+                    logger.debug(f"ALttP: Dynamic bunny rule analysis failed: {e}, using workaround")
+
+            # Fall back to pre-computed workaround
+            logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
             return self._get_bunny_replacement_rule(location_name)
 
         # All other rules are handled by the generic analyzer
         return None
+
+    def _try_dynamic_bunny_analysis(self, rule_func: Callable, location_name: str) -> Optional[Dict[str, Any]]:
+        """Attempt to dynamically analyze a bunny rule function.
+
+        This method uses the ClosureFunctionAnalyzer to extract the actual logic
+        from bunny rule lambdas, including their nested options and path patterns.
+
+        Args:
+            rule_func: The bunny rule lambda function
+            location_name: Name of the location for context
+
+        Returns:
+            Analyzed rule dict if successful, None otherwise
+        """
+        # Create a mock analyzer context for the ClosureFunctionAnalyzer
+        # We need to provide enough context for it to work
+        class MockAnalyzerContext:
+            def __init__(self, handler):
+                self.closure_vars = {}
+                self.seen_funcs = {}
+                self.game_handler = handler
+                self.player_context = None
+
+        mock_context = MockAnalyzerContext(self)
+
+        closure_analyzer = ClosureFunctionAnalyzer(mock_context)
+        result = closure_analyzer.analyze_function(rule_func)
+
+        if result is None:
+            return None
+
+        # Validate the result is reasonable
+        result_type = result.get('type')
+        if result_type in ('item_check', 'and', 'or', 'constant', 'can_reach'):
+            return result
+
+        # For other types, check if they make sense
+        if result_type == 'error':
+            return None
+
+        return result
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Get helper definitions with mode-dependent helpers resolved.
