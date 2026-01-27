@@ -951,11 +951,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         # Check if this is a small key check that should be replaced
         if self._is_dungeon_small_key_check(rule):
-            # With universal keys enabled, shops selling unlimited keys are accessible
-            # in normal gameplay, so we can safely expand to True.
+            # With universal keys enabled, replace dungeon small key checks with
+            # can_buy_unlimited('Small Key (Universal)') - this requires actually
+            # reaching a shop that sells unlimited universal keys.
             # Note: This method is only called when self._is_universal_keys is True
             # (checked at call sites in post_process_data).
-            return {'rule': 'True_'}
+            return {
+                'rule': 'can_buy_unlimited',
+                '_original_ast_type': 'helper',
+                '_converted_from_ast': True,
+                'args': [
+                    {
+                        'rule': 'Constant',
+                        'args': {'value': 'Small Key (Universal)'},
+                        '_converted_from_ast': True
+                    }
+                ]
+            }
 
         # Handle Or/And conditions - recursively process and simplify
         if rule.get('type') in ('or', 'and'):
@@ -1223,12 +1235,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         if base_result is not None:
             return base_result
 
-        # Handle can_buy_unlimited for universal keys
-        # When small_key_shuffle is 'universal', shops with unlimited universal keys
-        # are accessible in normal gameplay. We expand this to True for simplicity.
-        if helper_name == 'can_buy_unlimited' and self._is_universal_keys:
-            logger.debug("ALttP: Expanding can_buy_unlimited to True (universal keys enabled)")
-            return {'type': 'constant', 'value': True}
+        # Note: can_buy_unlimited is NOT expanded to True anymore.
+        # When small_key_shuffle is 'universal', rules that check for dungeon small keys
+        # are replaced with can_buy_unlimited('Small Key (Universal)'), which requires
+        # actually reaching a shop that sells unlimited universal keys.
+        # The can_buy_unlimited helper is exported to the worldgen world's Rules.py
+        # and evaluates shop reachability at runtime.
 
         # Helper for creating item check rules
         def _item(name: str) -> Dict[str, Any]:
