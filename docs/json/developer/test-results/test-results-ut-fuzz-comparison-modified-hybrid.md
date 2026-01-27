@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-26 22:26:46
+**Generated:** 2026-01-27 03:02:51
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -17,9 +17,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 - **Total Games Tested:** 85
 - **Passing Both:** 60 (70.6%)
-- **Passing Modified Only:** 1 (1.2%)
+- **Passing Modified Only:** 2 (2.4%)
 - **Passing Hybrid Only:** 1 (1.2%)
-- **Passing Neither:** 23 (27.1%)
+- **Passing Neither:** 22 (25.9%)
 - **Passing Hybrid with no custom code:** 39 (45.9%)
 - **Passing Hybrid Only with no custom code:** 0 (0.0%)
 
@@ -27,7 +27,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 | Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ 0.0% | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
+| A Hat in Time | ✅ 100.0% | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
 | A Link to the Past | ❌ 30.0% | ⚠️ 70.0% | 147.3KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
@@ -180,12 +180,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 283.2KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Modified Only (1)
+## Games Passing Modified Only (2)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| A Hat in Time | 18.0KB | ✅ | 235.0KB |
 | Timespinner | 2.2KB | ✅ | 267.3KB |
 
 ## Games Passing Hybrid Only (1)
@@ -196,13 +197,12 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 |-----------|:--------:|:---------:|:----------:|
 | TUNIC | 3.1KB | ✅ | 711.6KB |
 
-## Games Passing Neither (23)
+## Games Passing Neither (22)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Hat in Time | 18.0KB | ✅ | 235.0KB |
 | A Link to the Past | 147.3KB | ✅ | 654.1KB |
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |

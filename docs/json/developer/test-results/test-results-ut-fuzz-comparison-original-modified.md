@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified
 
-**Generated:** 2026-01-26 22:26:46
+**Generated:** 2026-01-27 03:02:51
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -18,8 +18,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 85
 - **Passing Both:** 33 (38.8%)
 - **Passing Original Only:** 5 (5.9%)
-- **Passing Modified Only:** 28 (32.9%)
-- **Passing Neither:** 19 (22.4%)
+- **Passing Modified Only:** 29 (34.1%)
+- **Passing Neither:** 18 (21.2%)
 - **Passing Modified with no custom code:** 39 (45.9%)
 - **Passing Modified Only with no custom code:** 13 (15.3%)
 
@@ -27,7 +27,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ 17.0% | ❌ 0.0% | 18.0KB | ✅ | 235.0KB |
+| A Hat in Time | ❌ 17.0% | ✅ 100.0% | 18.0KB | ✅ | 235.0KB |
 | A Link to the Past | ❌ 0.0% | ❌ 30.0% | 147.3KB | ✅ | 654.1KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
@@ -165,12 +165,13 @@ These games pass in the Original UT but fail in the Modified UT.
 | TUNIC | 3.1KB | ✅ | 711.6KB |
 | The Witness | 14.1KB | ✅ | 401.3KB |
 
-## Games Passing Modified Only (28)
+## Games Passing Modified Only (29)
 
 These games pass in the Modified UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| A Hat in Time | 18.0KB | ✅ | 235.0KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | DLCQuest | 1.2KB | ✅ | 51.3KB |
@@ -200,13 +201,12 @@ These games pass in the Modified UT but fail in the Original UT.
 | Yoshi's Island | 9.2KB | ✅ | 283.2KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Neither (19)
+## Games Passing Neither (18)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Hat in Time | 18.0KB | ✅ | 235.0KB |
 | A Link to the Past | 147.3KB | ✅ | 654.1KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.3KB |
 | Final Fantasy Mystic Quest | ✅ | ✅ | 1302.5KB |
