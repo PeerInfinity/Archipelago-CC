@@ -427,3 +427,31 @@ def find_paths_to_region(
             queue.append((parent, new_path))
 
     return valid_paths
+
+
+def can_reach_via_bunny_path(
+    state: CollectionState,
+    player: int,
+    region_name: str,
+    is_inverted: bool = False,
+    glitch_mode: int = 0
+) -> bool:
+    """
+    Check if a region is reachable via a "bunny-safe" path in ALttP.
+
+    This is used when checking if Link can access certain locations while
+    transformed into a bunny (without Moon Pearl).
+
+    Args:
+        state: The collection state
+        player: The player
+        region_name: Name of the target region
+        is_inverted: Whether inverted mode is enabled
+        glitch_mode: The glitches_required setting value
+
+    Returns:
+        True if the region can be reached via a bunny-safe path
+    """
+    # For now, use simple region reachability as a fallback
+    # Full implementation would need to trace paths through light world regions only
+    return state.can_reach_region(region_name, player)

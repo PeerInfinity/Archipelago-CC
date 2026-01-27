@@ -1314,7 +1314,10 @@ class RuleCodeGenerator:
     def _convert_rule_builder_format(self, rule: Dict[str, Any], rb_rule: str, rule_type: str) -> str:
         """Convert Rule Builder format rules (with 'rule' key) to Python expressions."""
         args = rule.get('args', {})
+        # Support both 'children' at top level and 'rules' inside args (exporter format)
         children = rule.get('children', [])
+        if not children and isinstance(args, dict):
+            children = args.get('rules', [])
 
         if rb_rule == 'True_':
             return self._make_bool_constant(True)
