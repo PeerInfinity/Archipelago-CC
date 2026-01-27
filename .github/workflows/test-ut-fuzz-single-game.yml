@@ -156,19 +156,24 @@ jobs:
             UT_FLAGS="--ut-version modified --no-prefer-native-ut"
           fi
 
-          python scripts/test/test-all-ut-fuzz.py \
-            --include-list "${{ inputs.game }}" \
-            --runs ${{ inputs.runs }} \
-            --jobs ${{ inputs.jobs }} \
-            --timeout ${{ inputs.timeout }} \
-            ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
-            ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }} \
-            ${{ inputs.disallow_options && format('--disallow-options {0}', inputs.disallow_options) || '' }} \
-            ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }} \
-            $UT_FLAGS
+          # Build command with optional arguments
+          CMD="python scripts/test/test-all-ut-fuzz.py"
+          CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --runs ${{ inputs.runs }}"
+          CMD="$CMD --jobs ${{ inputs.jobs }}"
+          CMD="$CMD --timeout ${{ inputs.timeout }}"
+          CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
+          CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
+          CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
+          CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
+          CMD="$CMD $UT_FLAGS"
+
+          echo "Running: $CMD"
+          eval $CMD
 
       - name: Generate branch name
         id: branch-name
+        if: ${{ !cancelled() }}
         run: |
           # Sanitize game name for branch name (replace spaces and special chars)
           GAME_SLUG=$(echo "${{ inputs.game }}" | sed 's/\.yaml$//' | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
