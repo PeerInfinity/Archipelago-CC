@@ -15,6 +15,8 @@ import logging
 import textwrap
 from typing import Any, Dict, List, Optional, Set, Callable, TYPE_CHECKING
 
+from .cache import closure_aware_cache, get_closure_aware_cache_key
+
 if TYPE_CHECKING:
     from .rule_analyzer import RuleAnalyzer
 
@@ -35,6 +37,11 @@ class ClosureFunctionAnalyzer:
 
     # Maximum recursion depth to prevent infinite loops
     MAX_DEPTH = 10
+
+    # Maximum depth for bunny rule path expansion
+    # Beyond this depth, use conservative approximation to prevent exponential growth
+    # Lower values prevent exponential growth but may produce less accurate rules
+    MAX_BUNNY_PATH_DEPTH = 1
 
     # Patterns recognized by closure variable names
     KNOWN_PATTERNS = {
@@ -72,6 +79,13 @@ class ClosureFunctionAnalyzer:
             logger.warning(f"ClosureFunctionAnalyzer: Max depth {self.max_depth} exceeded")
             return None
 
+        # Check closure-aware cache first for semantically equivalent lambdas
+        # This is critical for ALttP bunny rules where the same pattern appears many times
+        closure_key = get_closure_aware_cache_key(func)
+        if closure_key and closure_key in closure_aware_cache:
+            logger.debug(f"ClosureFunctionAnalyzer: Cache hit for {closure_key[0]}:{closure_key[1]}")
+            return closure_aware_cache[closure_key]
+
         func_id = id(func)
         if func_id in self._seen_functions:
             logger.debug(f"ClosureFunctionAnalyzer: Circular reference detected for func id {func_id}")
@@ -88,12 +102,18 @@ class ClosureFunctionAnalyzer:
             result = self._analyze_via_closure_pattern(func, depth)
             if result is not None:
                 logger.debug(f"ClosureFunctionAnalyzer: Closure pattern analysis succeeded")
+                # Cache the result
+                if closure_key and result.get('type') != 'error':
+                    closure_aware_cache[closure_key] = result
                 return result
 
             # Method 2: Try to get source and parse AST
             result = self._analyze_via_source(func, depth)
             if result is not None:
                 logger.debug(f"ClosureFunctionAnalyzer: Source analysis succeeded")
+                # Cache the result
+                if closure_key and result.get('type') != 'error':
+                    closure_aware_cache[closure_key] = result
                 return result
 
             logger.debug(f"ClosureFunctionAnalyzer: All analysis methods failed for {func_qualname}")
@@ -226,6 +246,13 @@ class ClosureFunctionAnalyzer:
             # Empty options list - any([]) is False
             return {'rule': 'False_'}
 
+        # If we're too deep in bunny rule recursion, use conservative approximation
+        # This prevents exponential growth in complex entrance shuffle scenarios
+        if depth > self.MAX_BUNNY_PATH_DEPTH:
+            logger.debug(f"ClosureFunctionAnalyzer: Options depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using Moon Pearl fallback")
+            # Return Moon Pearl check - the base case for all bunny rules
+            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+
         analyzed_options = []
         failed_count = 0
 
@@ -289,10 +316,26 @@ class ClosureFunctionAnalyzer:
             'args': {'entrance_name': entrance_name}
         }
 
+        # If we're too deep in bunny rule recursion, use conservative approximation
+        # This prevents exponential growth in complex entrance shuffle scenarios
+        if depth > self.MAX_BUNNY_PATH_DEPTH:
+            logger.debug(f"ClosureFunctionAnalyzer: Depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using conservative approximation")
+            # Return just the can_reach check - conservative but prevents explosion
+            return can_reach
+
         # Analyze each rule in path
         path_conditions = []
         for i, rule_func in enumerate(path):
             if callable(rule_func):
+                # Check if this is another bunny rule (nested options/path pattern)
+                # If so, and we're at depth limit, skip it to prevent exponential growth
+                if depth >= self.MAX_BUNNY_PATH_DEPTH - 1:
+                    closure_vars = self._extract_closure_vars(rule_func)
+                    if closure_vars and ('options' in closure_vars or 'path' in closure_vars):
+                        logger.debug(f"ClosureFunctionAnalyzer: Skipping nested bunny rule at depth {depth}")
+                        # Skip nested bunny rules at depth limit
+                        continue
+
                 result = self.analyze_function(rule_func, depth + 1)
                 if result is not None:
                     path_conditions.append(result)

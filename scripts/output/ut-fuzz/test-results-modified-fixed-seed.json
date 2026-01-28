@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-28T07:40:51.137595",
-    "last_updated": "2026-01-28T07:40:51.137601",
+    "created": "2026-01-28T19:16:56.405766",
+    "last_updated": "2026-01-28T19:16:56.405772",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -16,32 +16,19 @@
   "results": {
     "A Hat in Time.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            3,
-            1,
-            2,
-            4,
-            6,
-            5,
-            7,
-            9,
-            8
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-01-28T07:37:42.442925",
+      "timestamp": "2026-01-28T19:13:35.751602",
       "explain_stats": {
         "game": "A Hat in Time WorldGen_11408892729106005028",
         "total_locations": 273,
@@ -78,9 +65,9 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-01-28T07:37:49.231981",
+      "timestamp": "2026-01-28T19:13:42.100721",
       "explain_stats": {
-        "game": "Castlevania - Circle of the Moon WorldGen_55977854110148887761",
+        "game": "Castlevania - Circle of the Moon WorldGen_11408892729106005028",
         "total_locations": 124,
         "locations_with_explain": 46,
         "locations_default_rule": 78,
@@ -109,7 +96,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-01-28T07:37:57.234682",
+      "timestamp": "2026-01-28T19:13:49.598156",
       "explain_stats": {
         "game": "DOOM II WorldGen_11408892729106005028",
         "total_locations": 453,
@@ -140,9 +127,9 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-01-28T07:38:03.386154",
+      "timestamp": "2026-01-28T19:13:55.291015",
       "explain_stats": {
-        "game": "Inscryption WorldGen_55977854110148887761",
+        "game": "Inscryption WorldGen_79645483297583998146",
         "total_locations": 100,
         "locations_with_explain": 65,
         "locations_default_rule": 35,
@@ -150,8 +137,8 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 4,
-        "entrances_with_explain": 0,
-        "entrances_default_rule": 4,
+        "entrances_with_explain": 3,
+        "entrances_default_rule": 1,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -171,9 +158,9 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-01-28T07:38:08.585121",
+      "timestamp": "2026-01-28T19:14:00.143701",
       "explain_stats": {
-        "game": "Math Adventure WorldGen_11408892729106005028",
+        "game": "Math Adventure WorldGen_55977854110148887761",
         "total_locations": 10,
         "locations_with_explain": 5,
         "locations_default_rule": 5,
@@ -202,7 +189,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-01-28T07:38:14.995085",
+      "timestamp": "2026-01-28T19:14:06.130295",
       "explain_stats": {
         "game": "Paint WorldGen_55977854110148887761",
         "total_locations": 167,
@@ -246,11 +233,11 @@
           "File 5-0.yaml is invalid. Please fix your yaml.": [
             5
           ],
-          "File 7-0.yaml is invalid. Please fix your yaml.": [
-            7
-          ],
           "File 8-0.yaml is invalid. Please fix your yaml.": [
             8
+          ],
+          "File 7-0.yaml is invalid. Please fix your yaml.": [
+            7
           ],
           "File 6-0.yaml is invalid. Please fix your yaml.": [
             6
@@ -264,7 +251,7 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-01-28T07:38:24.482626"
+      "timestamp": "2026-01-28T19:14:15.104988"
     },
     "TUNIC.yaml": {
       "ut_fuzz": {
@@ -284,7 +271,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-01-28T07:39:39.110325",
+      "timestamp": "2026-01-28T19:15:27.833394",
       "explain_stats": {
         "game": "TUNIC WorldGen_11408892729106005028",
         "total_locations": 6837,
@@ -327,8 +314,8 @@
             1,
             2,
             6,
-            5,
             4,
+            5,
             7,
             8,
             9
@@ -339,7 +326,7 @@
         "game_name": "Yacht Dice",
         "world_directory": "yachtdice"
       },
-      "timestamp": "2026-01-28T07:39:48.316163",
+      "timestamp": "2026-01-28T19:15:36.772071",
       "explain_stats": {
         "game": "Yacht Dice WorldGen_11408892729106005028",
         "total_locations": 58,
@@ -358,34 +345,21 @@
     },
     "Bumper Stickers.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            3,
-            1,
-            2,
-            4,
-            6,
-            5,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-01-28T07:37:34.893900",
+      "timestamp": "2026-01-28T19:13:20.427126",
       "explain_stats": {
-        "game": "Bumper Stickers WorldGen_11408892729106005028",
+        "game": "Bumper Stickers WorldGen_79645483297583998146",
         "total_locations": 100,
         "locations_with_explain": 38,
         "locations_default_rule": 62,
@@ -414,7 +388,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-01-28T07:37:42.023048",
+      "timestamp": "2026-01-28T19:13:27.485381",
       "explain_stats": {
         "game": "DOOM 1993 WorldGen_79645483297583998146",
         "total_locations": 474,
@@ -445,7 +419,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-01-28T07:37:48.868355",
+      "timestamp": "2026-01-28T19:13:34.266976",
       "explain_stats": {
         "game": "Hylics 2 WorldGen_11408892729106005028",
         "total_locations": 166,
@@ -476,7 +450,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-01-28T07:37:57.874667",
+      "timestamp": "2026-01-28T19:13:43.024151",
       "explain_stats": {
         "game": "Mario & Luigi Superstar Saga WorldGen_11408892729106005028",
         "total_locations": 598,
@@ -528,7 +502,7 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-01-28T07:38:03.346816",
+      "timestamp": "2026-01-28T19:13:48.380836",
       "explain_stats": {
         "game": "Overcooked! 2 WorldGen_86998726363870010506",
         "total_locations": 43,
@@ -547,32 +521,19 @@
     },
     "Sonic Adventure 2 Battle.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            2,
-            0,
-            1,
-            4,
-            3,
-            6,
-            7,
-            5,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-01-28T07:38:27.803558",
+      "timestamp": "2026-01-28T19:14:12.436912",
       "explain_stats": {
         "game": "Sonic Adventure 2 Battle WorldGen_55977854110148887761",
         "total_locations": 1046,
@@ -603,7 +564,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-01-28T07:38:33.617819",
+      "timestamp": "2026-01-28T19:14:18.085839",
       "explain_stats": {
         "game": "TOEM rule builder WorldGen_11408892729106005028",
         "total_locations": 214,
@@ -634,7 +595,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-01-28T07:38:40.078626",
+      "timestamp": "2026-01-28T19:14:24.271065",
       "explain_stats": {
         "game": "Wargroove WorldGen_11408892729106005028",
         "total_locations": 38,
@@ -672,7 +633,7 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-01-28T07:37:47.478380",
+      "timestamp": "2026-01-28T19:13:41.170694",
       "explain_stats": {
         "game": "A Link to the Past WorldGen_11408892729106005028",
         "total_locations": 270,
@@ -883,29 +844,19 @@
     },
     "Castlevania 64.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 3,
-        "failure": 7,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            4,
-            5,
-            6,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-01-28T07:37:55.899986",
+      "timestamp": "2026-01-28T19:13:49.445882",
       "explain_stats": {
         "game": "Castlevania 64 WorldGen_11408892729106005028",
         "total_locations": 294,
@@ -945,32 +896,19 @@
     },
     "Dark Souls III.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            3,
-            2,
-            1,
-            4,
-            6,
-            5,
-            7,
-            9,
-            8
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-01-28T07:38:07.498180",
+      "timestamp": "2026-01-28T19:14:01.225369",
       "explain_stats": {
         "game": "Dark Souls III WorldGen_79645483297583998146",
         "total_locations": 1469,
@@ -1001,12 +939,12 @@
             2,
             1,
             3,
-            4,
             6,
             5,
+            4,
             7,
-            8,
-            9
+            9,
+            8
           ]
         }
       },
@@ -1014,7 +952,7 @@
         "game_name": "Jak and Daxter: The Precursor Legacy",
         "world_directory": "jakanddaxter"
       },
-      "timestamp": "2026-01-28T07:38:16.912344",
+      "timestamp": "2026-01-28T19:14:10.666813",
       "explain_stats": {
         "game": "Jak and Daxter: The Precursor Legacy WorldGen_55977854110148887761",
         "total_locations": 439,
@@ -1033,32 +971,19 @@
     },
     "Mega Man 2.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            2,
-            1,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-01-28T07:38:23.833251",
+      "timestamp": "2026-01-28T19:14:17.630489",
       "explain_stats": {
         "game": "Mega Man 2 WorldGen_55977854110148887761",
         "total_locations": 44,
@@ -1103,7 +1028,7 @@
         "game_name": "Pokemon Emerald",
         "world_directory": "pokemon_emerald"
       },
-      "timestamp": "2026-01-28T07:38:41.176965",
+      "timestamp": "2026-01-28T19:14:35.191038",
       "explain_stats": {
         "game": "Pokemon Emerald WorldGen_81209627519868761947",
         "total_locations": 817,
@@ -1260,11 +1185,11 @@
             2,
             3,
             0,
-            4,
             6,
+            4,
             5,
-            7,
             8,
+            7,
             9
           ]
         }
@@ -1273,12 +1198,12 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-01-28T07:39:12.048745",
+      "timestamp": "2026-01-28T19:15:05.176645",
       "explain_stats": {
         "game": "Stardew Valley WorldGen_22708164196567875238",
-        "total_locations": 1079,
-        "locations_with_explain": 935,
-        "locations_default_rule": 144,
+        "total_locations": 1068,
+        "locations_with_explain": 926,
+        "locations_default_rule": 142,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -1304,7 +1229,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-01-28T07:39:19.936880",
+      "timestamp": "2026-01-28T19:15:13.000655",
       "explain_stats": {
         "game": "Terraria WorldGen_79645483297583998146",
         "total_locations": 128,
@@ -1335,7 +1260,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-01-28T07:39:33.546988",
+      "timestamp": "2026-01-28T19:15:27.007907",
       "explain_stats": {
         "game": "Yoshi's Island WorldGen_79645483297583998146",
         "total_locations": 221,
@@ -1354,32 +1279,272 @@
     },
     "A Short Hike.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 8,
-        "failure": 2,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            3,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-01-28T07:37:34.941280",
+      "timestamp": "2026-01-28T19:13:22.716013",
       "explain_stats": {
         "game": "A Short Hike WorldGen_55977854110148887761",
         "total_locations": 131,
-        "locations_with_explain": 82,
+        "locations_with_explain": 21,
         "locations_default_rule": 49,
-        "locations_without_explain": 0,
-        "explain_coverage_percent": 100.0,
-        "locations_without_explain_list": [],
+        "locations_without_explain": 61,
+        "explain_coverage_percent": 25.61,
+        "locations_without_explain_list": [
+          {
+            "name": "West River Seashell",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "West Riverbank Seashell",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Stone Tower Riverbank Seashell",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Meteor Lake Seashell",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Good Creek Path Seashell",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Tough Bird Salesman Golden Feather 1",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Tough Bird Salesman Golden Feather 2",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Tough Bird Salesman Golden Feather 3",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Tough Bird Salesman Golden Feather 4",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Tough Bird Salesman (400 Coins)",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Hawk Peak Bucket Rock",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Bill the Walrus Fisherman",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Catch All Fish Reward",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Permit Guy Bribe",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Catch Fish with Permit",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Return Camping Permit",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Blackwood Trail Lookout Toy Shovel",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Blackwood Trail Rock Toy Shovel",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Below Lighthouse Walkway Stick",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Cliff Overlooking West River Waterfall Stick",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Trail to Tough Bird Salesman Stick",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Outlook Point Dog Gift",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Taylor the Turtle Headband Gift",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Sue the Rabbit Shoes Reward",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Blackwood Forest Golden Feather",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Artist Golden Feather",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Visitor Camp Rock Golden Feather",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Outlook Cliff Golden Feather",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Meteor Lake Cliff Golden Feather",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Secret Island Peak",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Lighthouse Golden Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Outlook Golden Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Stone Tower Golden Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "North Cliff Golden Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Blackwood Cliff Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Shirley's Point Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "King Buried Treasure Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Good Creek Path Buried Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Good Creek Path West Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Good Creek Path East Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Stone Tower West Cliff Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Bucket Path Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Bucket Cliff Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "In Her Shadow Buried Treasure Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Meteor Lake Buried Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Meteor Lake Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "West River Waterfall Head Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Old Building Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Old Building West Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Old Building East Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Hawk Peak West Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Hawk Peak East Buried Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Hawk Peak Northeast Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Northern East Coast Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "North Coast Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Secret Island Treehouse Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Orange Islands North Buried Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Orange Islands Ruins Buried Chest",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Lighthouse Race Reward",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Old Building Race Reward",
+            "region": "Hawk Peak"
+          },
+          {
+            "name": "Hawk Peak Race Reward",
+            "region": "Hawk Peak"
+          }
+        ],
         "total_entrances": 1,
         "entrances_with_explain": 0,
         "entrances_default_rule": 1,
@@ -1415,7 +1580,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-01-28T07:37:54.089986",
+      "timestamp": "2026-01-28T19:13:42.172564",
       "explain_stats": {
         "game": "Celeste (Open World) WorldGen_79645483297583998146",
         "total_locations": 1035,
@@ -1434,31 +1599,19 @@
     },
     "Donkey Kong Country 3.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 1,
-        "failure": 9,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            3,
-            2,
-            1,
-            4,
-            5,
-            6,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-01-28T07:38:00.645942",
+      "timestamp": "2026-01-28T19:13:48.433281",
       "explain_stats": {
         "game": "Donkey Kong Country 3 WorldGen_79645483297583998146",
         "total_locations": 220,
@@ -1535,7 +1688,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-01-28T07:38:12.436239",
+      "timestamp": "2026-01-28T19:14:00.070827",
       "explain_stats": {
         "game": "Kingdom Hearts 2 WorldGen_79645483297583998146",
         "total_locations": 643,
@@ -1687,7 +1840,7 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-01-28T07:38:19.010104",
+      "timestamp": "2026-01-28T19:14:06.457529",
       "explain_stats": {
         "game": "MegaMan Battle Network 3 WorldGen_79645483297583998146",
         "total_locations": 263,
@@ -1714,13 +1867,13 @@
         "ignored": 1,
         "errors": {
           "None": [
-            3,
             0,
+            3,
             2,
             4,
+            6,
             5,
             7,
-            6,
             8,
             9
           ]
@@ -1730,7 +1883,7 @@
         "game_name": "Pokemon Red and Blue",
         "world_directory": "pokemon_rb"
       },
-      "timestamp": "2026-01-28T07:39:01.796085",
+      "timestamp": "2026-01-28T19:14:48.990353",
       "explain_stats": {
         "game": "Pokemon Red and Blue WorldGen_86998726363870010506",
         "total_locations": 280,
@@ -2288,23 +2441,19 @@
     },
     "Subnautica.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 9,
-        "failure": 1,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            2
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-01-28T07:39:09.437592",
+      "timestamp": "2026-01-28T19:14:56.463683",
       "explain_stats": {
         "game": "Subnautica WorldGen_11408892729106005028",
         "total_locations": 161,
@@ -2323,30 +2472,19 @@
     },
     "The Legend of Zelda.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 2,
-        "failure": 8,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            3,
-            0,
-            2,
-            4,
-            6,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-01-28T07:39:16.317636",
+      "timestamp": "2026-01-28T19:15:03.318126",
       "explain_stats": {
         "game": "The Legend of Zelda WorldGen_11408892729106005028",
         "total_locations": 155,
@@ -2374,12 +2512,12 @@
         "errors": {
           "None": [
             3,
-            0,
             2,
+            0,
             1,
             4,
-            6,
             7,
+            6,
             5,
             8,
             9
@@ -2390,7 +2528,7 @@
         "game_name": "Yu-Gi-Oh! 2006",
         "world_directory": "yugioh06"
       },
-      "timestamp": "2026-01-28T07:39:27.785914",
+      "timestamp": "2026-01-28T19:15:14.841737",
       "explain_stats": {
         "game": "Yu-Gi-Oh! 2006 WorldGen_79645483297583998146",
         "total_locations": 151,
@@ -2400,8 +2538,8 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 151,
-        "entrances_with_explain": 144,
-        "entrances_default_rule": 7,
+        "entrances_with_explain": 122,
+        "entrances_default_rule": 29,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -2421,12 +2559,12 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-01-28T07:37:36.827846",
+      "timestamp": "2026-01-28T19:13:37.755745",
       "explain_stats": {
-        "game": "APQuest WorldGen_55977854110148887761",
-        "total_locations": 7,
+        "game": "APQuest WorldGen_11408892729106005028",
+        "total_locations": 6,
         "locations_with_explain": 1,
-        "locations_default_rule": 6,
+        "locations_default_rule": 5,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -2440,43 +2578,30 @@
     },
     "Celeste 64.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            3,
-            1,
-            2,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-01-28T07:37:42.735856",
+      "timestamp": "2026-01-28T19:13:43.747502",
       "explain_stats": {
         "game": "Celeste 64 WorldGen_11408892729106005028",
         "total_locations": 54,
-        "locations_with_explain": 0,
-        "locations_default_rule": 54,
+        "locations_with_explain": 21,
+        "locations_default_rule": 33,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 36,
-        "entrances_with_explain": 0,
-        "entrances_default_rule": 36,
+        "entrances_with_explain": 18,
+        "entrances_default_rule": 18,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -2484,31 +2609,19 @@
     },
     "Factorio.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 1,
-        "failure": 9,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            2,
-            4,
-            6,
-            5,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-01-28T07:37:52.439665",
+      "timestamp": "2026-01-28T19:13:53.673159",
       "explain_stats": {
         "game": "Factorio WorldGen_11408892729106005028",
         "total_locations": 309,
@@ -2535,12 +2648,12 @@
         "ignored": 0,
         "errors": {
           "None": [
+            3,
             2,
             0,
-            3,
             1,
-            5,
             6,
+            5,
             4,
             7,
             8,
@@ -2552,7 +2665,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-01-28T07:38:15.820440",
+      "timestamp": "2026-01-28T19:14:14.947262",
       "explain_stats": {
         "game": "Kingdom Hearts WorldGen_79645483297583998146",
         "total_locations": 523,
@@ -2583,9 +2696,9 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-01-28T07:38:21.864364",
+      "timestamp": "2026-01-28T19:14:20.633521",
       "explain_stats": {
-        "game": "Meritous WorldGen_79645483297583998146",
+        "game": "Meritous WorldGen_11408892729106005028",
         "total_locations": 104,
         "locations_with_explain": 0,
         "locations_default_rule": 104,
@@ -2614,7 +2727,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-01-28T07:38:29.099000",
+      "timestamp": "2026-01-28T19:14:27.356855",
       "explain_stats": {
         "game": "Raft",
         "total_locations": 154,
@@ -3308,7 +3421,7 @@
         "game_name": "Sudoku",
         "world_directory": "apsudoku"
       },
-      "timestamp": "2026-01-28T07:38:34.403563",
+      "timestamp": "2026-01-28T19:14:32.335047",
       "explain_stats": {
         "game": "Sudoku",
         "total_locations": 0,
@@ -3339,7 +3452,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-01-28T07:38:43.106042",
+      "timestamp": "2026-01-28T19:14:40.549307",
       "explain_stats": {
         "game": "The Messenger WorldGen_11408892729106005028",
         "total_locations": 136,
@@ -3409,7 +3522,7 @@
         "game_name": "Zillion",
         "world_directory": "zillion"
       },
-      "timestamp": "2026-01-28T07:40:27.915493",
+      "timestamp": "2026-01-28T19:16:08.955981",
       "explain_stats": {
         "game": "Zillion WorldGen_11408892729106005028",
         "total_locations": 147,
@@ -3440,18 +3553,18 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-01-28T07:37:33.538612",
+      "timestamp": "2026-01-28T19:13:24.427551",
       "explain_stats": {
-        "game": "Adventure WorldGen_55977854110148887761",
-        "total_locations": 21,
-        "locations_with_explain": 0,
+        "game": "Adventure WorldGen_11408892729106005028",
+        "total_locations": 24,
+        "locations_with_explain": 3,
         "locations_default_rule": 21,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 17,
-        "entrances_with_explain": 8,
-        "entrances_default_rule": 9,
+        "entrances_with_explain": 4,
+        "entrances_default_rule": 13,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3459,34 +3572,21 @@
     },
     "ChecksFinder.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            3,
-            2,
-            1,
-            4,
-            6,
-            5,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-01-28T07:37:37.765033",
+      "timestamp": "2026-01-28T19:13:28.934878",
       "explain_stats": {
-        "game": "ChecksFinder WorldGen_79645483297583998146",
+        "game": "ChecksFinder WorldGen_55977854110148887761",
         "total_locations": 25,
         "locations_with_explain": 20,
         "locations_default_rule": 5,
@@ -3515,12 +3615,12 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-01-28T07:37:42.947415",
+      "timestamp": "2026-01-28T19:13:34.358910",
       "explain_stats": {
-        "game": "Faxanadu WorldGen_11408892729106005028",
+        "game": "Faxanadu WorldGen_79645483297583998146",
         "total_locations": 110,
-        "locations_with_explain": 25,
-        "locations_default_rule": 85,
+        "locations_with_explain": 24,
+        "locations_default_rule": 86,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -3534,32 +3634,19 @@
     },
     "Kirby's Dream Land 3.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            2,
-            0,
-            1,
-            3,
-            4,
-            6,
-            7,
-            5,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-01-28T07:37:53.700296",
+      "timestamp": "2026-01-28T19:13:45.683682",
       "explain_stats": {
         "game": "Kirby's Dream Land 3 WorldGen_55977854110148887761",
         "total_locations": 832,
@@ -3590,8 +3677,8 @@
           }
         ],
         "total_entrances": 534,
-        "entrances_with_explain": 5,
-        "entrances_default_rule": 529,
+        "entrances_with_explain": 12,
+        "entrances_default_rule": 522,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3599,42 +3686,30 @@
     },
     "Metamath.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 1,
-        "failure": 9,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            2,
-            3,
-            4,
-            5,
-            7,
-            6,
-            0,
-            9,
-            8
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-01-28T07:38:29.596636",
+      "timestamp": "2026-01-28T19:14:42.455132",
       "explain_stats": {
-        "game": "Metamath WorldGen_79645483297583998146",
-        "total_locations": 3,
-        "locations_with_explain": 1,
-        "locations_default_rule": 2,
+        "game": "Metamath WorldGen_22708164196567875238",
+        "total_locations": 6,
+        "locations_with_explain": 3,
+        "locations_default_rule": 3,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 6,
-        "entrances_with_explain": 3,
-        "entrances_default_rule": 3,
+        "total_entrances": 12,
+        "entrances_with_explain": 6,
+        "entrances_default_rule": 6,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3654,7 +3729,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-01-28T07:38:37.193544",
+      "timestamp": "2026-01-28T19:14:50.274363",
       "explain_stats": {
         "game": "Risk of Rain 2 WorldGen_11408892729106005028",
         "total_locations": 672,
@@ -3685,7 +3760,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-01-28T07:38:43.599460",
+      "timestamp": "2026-01-28T19:14:57.019278",
       "explain_stats": {
         "game": "Super Mario 64 WorldGen_79645483297583998146",
         "total_locations": 164,
@@ -3704,27 +3779,19 @@
     },
     "The Wind Waker.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 5,
+        "success": 5,
+        "failure": 0,
         "timeout": 0,
         "ignored": 5,
-        "errors": {
-          "None": [
-            8,
-            3,
-            7,
-            5,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-01-28T07:38:53.377402",
+      "timestamp": "2026-01-28T19:15:08.908439",
       "explain_stats": {
         "game": "The Wind Waker WorldGen_81209627519868761947",
         "total_locations": 228,
@@ -3820,7 +3887,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-01-28T07:39:00.764282",
+      "timestamp": "2026-01-28T19:15:16.722007",
       "explain_stats": {
         "game": "shapez WorldGen_81209627519868761947",
         "total_locations": 1032,
@@ -3851,7 +3918,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-01-28T07:37:39.617808",
+      "timestamp": "2026-01-28T19:13:28.279868",
       "explain_stats": {
         "game": "Aquaria WorldGen_11408892729106005028",
         "total_locations": 218,
@@ -3882,7 +3949,7 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-01-28T07:37:45.815428",
+      "timestamp": "2026-01-28T19:13:34.308513",
       "explain_stats": {
         "game": "Choo-Choo Charles WorldGen_55977854110148887761",
         "total_locations": 691,
@@ -3905,13 +3972,12 @@
         "total": 10,
         "success": 6,
         "failure": 0,
-        "timeout": 3,
-        "ignored": 1,
+        "timeout": 2,
+        "ignored": 2,
         "errors": {
           "<class 'TimeoutError'>": [
             0,
-            1,
-            2
+            3
           ]
         }
       },
@@ -3919,18 +3985,18 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-01-28T07:38:49.675818",
+      "timestamp": "2026-01-28T19:14:37.894427",
       "explain_stats": {
-        "game": "Final Fantasy Mystic Quest WorldGen_55977854110148887761",
+        "game": "Final Fantasy Mystic Quest WorldGen_86998726363870010506",
         "total_locations": 251,
-        "locations_with_explain": 60,
-        "locations_default_rule": 191,
+        "locations_with_explain": 63,
+        "locations_default_rule": 188,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 489,
-        "entrances_with_explain": 186,
-        "entrances_default_rule": 303,
+        "entrances_with_explain": 177,
+        "entrances_default_rule": 312,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3950,18 +4016,18 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-01-28T07:38:57.098416",
+      "timestamp": "2026-01-28T19:14:44.325397",
       "explain_stats": {
-        "game": "Landstalker - The Treasures of King Nole WorldGen_55977854110148887761",
+        "game": "Landstalker - The Treasures of King Nole WorldGen_79645483297583998146",
         "total_locations": 291,
         "locations_with_explain": 1,
         "locations_default_rule": 290,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 121,
-        "entrances_with_explain": 52,
-        "entrances_default_rule": 69,
+        "total_entrances": 131,
+        "entrances_with_explain": 60,
+        "entrances_default_rule": 71,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3969,32 +4035,19 @@
     },
     "Muse Dash.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            2,
-            5,
-            1,
-            3,
-            6,
-            4,
-            7,
-            9,
-            8
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-01-28T07:39:05.518502",
+      "timestamp": "2026-01-28T19:14:52.627238",
       "explain_stats": {
         "game": "Muse Dash WorldGen_55977854110148887761",
         "total_locations": 828,
@@ -4026,8 +4079,8 @@
             1,
             3,
             4,
-            6,
             5,
+            6,
             7,
             8,
             9
@@ -4038,7 +4091,7 @@
         "game_name": "SMZ3",
         "world_directory": "smz3"
       },
-      "timestamp": "2026-01-28T07:39:17.568854",
+      "timestamp": "2026-01-28T19:15:05.101606",
       "explain_stats": {
         "game": "SMZ3 WorldGen_55977854110148887761",
         "total_locations": 316,
@@ -4063,32 +4116,19 @@
     },
     "Super Mario Land 2.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            3,
-            1,
-            4,
-            0,
-            5,
-            6,
-            7,
-            8,
-            9,
-            2
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-01-28T07:39:28.080317",
+      "timestamp": "2026-01-28T19:15:16.938946",
       "explain_stats": {
         "game": "Super Mario Land 2 WorldGen_11408892729106005028",
         "total_locations": 2652,
@@ -4129,7 +4169,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-01-28T07:39:38.459750",
+      "timestamp": "2026-01-28T19:15:26.559372",
       "explain_stats": {
         "game": "The Witness WorldGen_11408892729106005028",
         "total_locations": 269,
@@ -4160,9 +4200,9 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-01-28T07:37:39.166331",
+      "timestamp": "2026-01-28T19:13:22.843376",
       "explain_stats": {
-        "game": "Baking Adventure WorldGen_55977854110148887761",
+        "game": "Baking Adventure WorldGen_11408892729106005028",
         "total_locations": 15,
         "locations_with_explain": 8,
         "locations_default_rule": 7,
@@ -4179,32 +4219,19 @@
     },
     "Civilization VI.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            1,
-            2,
-            0,
-            3,
-            6,
-            4,
-            5,
-            7,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-01-28T07:37:44.824111",
+      "timestamp": "2026-01-28T19:13:28.567331",
       "explain_stats": {
         "game": "Civilization VI WorldGen_55977854110148887761",
         "total_locations": 270,
@@ -4235,9 +4262,9 @@
         "game_name": "Final Fantasy",
         "world_directory": "ff1"
       },
-      "timestamp": "2026-01-28T07:37:49.404206",
+      "timestamp": "2026-01-28T19:13:33.144531",
       "explain_stats": {
-        "game": "Final Fantasy WorldGen_79645483297583998146",
+        "game": "Final Fantasy WorldGen_11408892729106005028",
         "total_locations": 0,
         "locations_with_explain": 0,
         "locations_default_rule": 0,
@@ -4272,7 +4299,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-01-28T07:37:57.185876",
+      "timestamp": "2026-01-28T19:13:40.959897",
       "explain_stats": {
         "game": "Lingo WorldGen_86998726363870010506",
         "total_locations": 800,
@@ -4303,7 +4330,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-01-28T07:38:02.796164",
+      "timestamp": "2026-01-28T19:13:46.500866",
       "explain_stats": {
         "game": "Noita WorldGen_11408892729106005028",
         "total_locations": 376,
@@ -4334,7 +4361,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-01-28T07:38:08.290902",
+      "timestamp": "2026-01-28T19:13:51.909942",
       "explain_stats": {
         "game": "Saving Princess WorldGen_11408892729106005028",
         "total_locations": 36,
@@ -4365,7 +4392,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-01-28T07:38:34.246794",
+      "timestamp": "2026-01-28T19:14:17.888460",
       "explain_stats": {
         "game": "Super Mario World WorldGen_55977854110148887761",
         "total_locations": 743,
@@ -4407,7 +4434,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-01-28T07:38:48.026706",
+      "timestamp": "2026-01-28T19:14:31.558963",
       "explain_stats": {
         "game": "Timespinner WorldGen_55977854110148887761",
         "total_locations": 725,
@@ -6354,18 +6381,22 @@
         "game_name": "Blasphemous",
         "world_directory": "blasphemous"
       },
-      "timestamp": "2026-01-28T07:37:40.093430",
+      "timestamp": "2026-01-28T19:13:35.649383",
       "explain_stats": {
         "game": "Blasphemous WorldGen_91109154915326795643",
         "total_locations": 305,
-        "locations_with_explain": 119,
+        "locations_with_explain": 115,
         "locations_default_rule": 181,
-        "locations_without_explain": 5,
-        "explain_coverage_percent": 95.97,
+        "locations_without_explain": 9,
+        "explain_coverage_percent": 92.74,
         "locations_without_explain_list": [
           {
             "name": "WotBC: Cliffside Child of Moonlight",
             "region": "D01Z03S07"
+          },
+          {
+            "name": "CoOLotCV: Lower west statue",
+            "region": "D02Z03S12"
           },
           {
             "name": "MotED: Blood platform alcove",
@@ -6380,15 +6411,27 @@
             "region": "D03Z03S06"
           },
           {
+            "name": "GA: Blood bridge Child of Moonlight",
+            "region": "D03Z03S08"
+          },
+          {
             "name": "LotNW: Hidden floor",
             "region": "D05Z01S05"
+          },
+          {
+            "name": "WotHP: Lower west room, bottom gold cell",
+            "region": "D09Z01S09[Cell21]"
+          },
+          {
+            "name": "WotHP: Lower east room, bottom silver cell",
+            "region": "D09Z01S10[Cell11]"
           }
         ],
         "total_entrances": 2646,
-        "entrances_with_explain": 1137,
+        "entrances_with_explain": 946,
         "entrances_default_rule": 1474,
-        "entrances_without_explain": 35,
-        "entrance_explain_coverage_percent": 97.01,
+        "entrances_without_explain": 226,
+        "entrance_explain_coverage_percent": 80.72,
         "entrances_without_explain_list": [
           {
             "name": "D01Z05S05[NE] -> RESCUED_CHERUB_13",
@@ -6396,9 +6439,24 @@
             "to_region": "RESCUED_CHERUB_13"
           },
           {
+            "name": "D02Z01S06[E] -> D02Z01S04[-N]",
+            "from_region": "D02Z01S06[E]",
+            "to_region": "D02Z01S04[-N]"
+          },
+          {
             "name": "D02Z01S06[E] -> QI59",
             "from_region": "D02Z01S06[E]",
             "to_region": "QI59"
+          },
+          {
+            "name": "D02Z01S06[E] -> RB10",
+            "from_region": "D02Z01S06[E]",
+            "to_region": "RB10"
+          },
+          {
+            "name": "D02Z01S06[E] -> QI68",
+            "from_region": "D02Z01S06[E]",
+            "to_region": "QI68"
           },
           {
             "name": "D02Z01S06[E] -> D02Z01S02[E]",
@@ -6406,9 +6464,24 @@
             "to_region": "D02Z01S02[E]"
           },
           {
+            "name": "D02Z01S09[-CherubsR] -> D02Z01S04[-N]",
+            "from_region": "D02Z01S09[-CherubsR]",
+            "to_region": "D02Z01S04[-N]"
+          },
+          {
             "name": "D02Z01S09[-CherubsR] -> QI59",
             "from_region": "D02Z01S09[-CherubsR]",
             "to_region": "QI59"
+          },
+          {
+            "name": "D02Z01S09[-CherubsR] -> RB10",
+            "from_region": "D02Z01S09[-CherubsR]",
+            "to_region": "RB10"
+          },
+          {
+            "name": "D02Z01S09[-CherubsR] -> QI68",
+            "from_region": "D02Z01S09[-CherubsR]",
+            "to_region": "QI68"
           },
           {
             "name": "D02Z01S09[-CherubsR] -> D02Z01S02[E]",
@@ -6416,9 +6489,64 @@
             "to_region": "D02Z01S02[E]"
           },
           {
+            "name": "D01Z04S09[E] -> D01Z04S13[SE]",
+            "from_region": "D01Z04S09[E]",
+            "to_region": "D01Z04S13[SE]"
+          },
+          {
+            "name": "D01Z04S09[E] -> CO21",
+            "from_region": "D01Z04S09[E]",
+            "to_region": "CO21"
+          },
+          {
+            "name": "D01Z04S14[E] -> D01Z04S13[SE]",
+            "from_region": "D01Z04S14[E]",
+            "to_region": "D01Z04S13[SE]"
+          },
+          {
+            "name": "D01Z04S14[E] -> CO21",
+            "from_region": "D01Z04S14[E]",
+            "to_region": "CO21"
+          },
+          {
             "name": "D01Z04S16[W] -> D01Z04S13[SE]",
             "from_region": "D01Z04S16[W]",
             "to_region": "D01Z04S13[SE]"
+          },
+          {
+            "name": "D01Z05S14[W] -> RESCUED_CHERUB_12",
+            "from_region": "D01Z05S14[W]",
+            "to_region": "RESCUED_CHERUB_12"
+          },
+          {
+            "name": "D01Z05S14[W] -> D01Z05S04[W]",
+            "from_region": "D01Z05S14[W]",
+            "to_region": "D01Z05S04[W]"
+          },
+          {
+            "name": "D01Z05S14[W] -> D01Z05S16[N]",
+            "from_region": "D01Z05S14[W]",
+            "to_region": "D01Z05S16[N]"
+          },
+          {
+            "name": "D01Z05S20[W] -> RESCUED_CHERUB_22",
+            "from_region": "D01Z05S20[W]",
+            "to_region": "RESCUED_CHERUB_22"
+          },
+          {
+            "name": "D01Z05S20[W] -> D01Z05S25[W]",
+            "from_region": "D01Z05S20[W]",
+            "to_region": "D01Z05S25[W]"
+          },
+          {
+            "name": "D01Z05S20[W] -> D01Z05S25[E]",
+            "from_region": "D01Z05S20[W]",
+            "to_region": "D01Z05S25[E]"
+          },
+          {
+            "name": "D01Z05S21[W] -> D01Z05S25[W]",
+            "from_region": "D01Z05S21[W]",
+            "to_region": "D01Z05S25[W]"
           },
           {
             "name": "D01Z05S21[W] -> D01Z05S25[E]",
@@ -6426,9 +6554,84 @@
             "to_region": "D01Z05S25[E]"
           },
           {
+            "name": "D01Z05S23[E] -> D01Z05S25[E]",
+            "from_region": "D01Z05S23[E]",
+            "to_region": "D01Z05S25[E]"
+          },
+          {
+            "name": "D01Z05S23[E] -> RESCUED_CHERUB_22",
+            "from_region": "D01Z05S23[E]",
+            "to_region": "RESCUED_CHERUB_22"
+          },
+          {
+            "name": "D01Z05S26[W] -> RESCUED_CHERUB_22",
+            "from_region": "D01Z05S26[W]",
+            "to_region": "RESCUED_CHERUB_22"
+          },
+          {
+            "name": "D01Z05S26[W] -> D01Z05S25[W]",
+            "from_region": "D01Z05S26[W]",
+            "to_region": "D01Z05S25[W]"
+          },
+          {
+            "name": "D01Z05S26[W] -> D01Z05S25[E]",
+            "from_region": "D01Z05S26[W]",
+            "to_region": "D01Z05S25[E]"
+          },
+          {
+            "name": "D03Z03S17[E] -> RESCUED_CHERUB_22",
+            "from_region": "D03Z03S17[E]",
+            "to_region": "RESCUED_CHERUB_22"
+          },
+          {
+            "name": "D03Z03S17[E] -> D01Z05S25[W]",
+            "from_region": "D03Z03S17[E]",
+            "to_region": "D01Z05S25[W]"
+          },
+          {
+            "name": "D03Z03S17[E] -> D01Z05S25[E]",
+            "from_region": "D03Z03S17[E]",
+            "to_region": "D01Z05S25[E]"
+          },
+          {
+            "name": "D20Z01S09[E] -> D01Z05S25[W]",
+            "from_region": "D20Z01S09[E]",
+            "to_region": "D01Z05S25[W]"
+          },
+          {
+            "name": "D20Z01S09[E] -> D01Z05S25[E]",
+            "from_region": "D20Z01S09[E]",
+            "to_region": "D01Z05S25[E]"
+          },
+          {
+            "name": "D20Z01S10[W] -> D01Z05S25[W]",
+            "from_region": "D20Z01S10[W]",
+            "to_region": "D01Z05S25[W]"
+          },
+          {
+            "name": "D20Z01S10[W] -> D01Z05S25[E]",
+            "from_region": "D20Z01S10[W]",
+            "to_region": "D01Z05S25[E]"
+          },
+          {
+            "name": "D02Z01S01[SW] -> RESCUED_CHERUB_27",
+            "from_region": "D02Z01S01[SW]",
+            "to_region": "RESCUED_CHERUB_27"
+          },
+          {
+            "name": "D02Z01S02[] -> RESCUED_CHERUB_27",
+            "from_region": "D02Z01S02[]",
+            "to_region": "RESCUED_CHERUB_27"
+          },
+          {
             "name": "D02Z01S08[E] -> RESCUED_CHERUB_27",
             "from_region": "D02Z01S08[E]",
             "to_region": "RESCUED_CHERUB_27"
+          },
+          {
+            "name": "D02Z01S09 -> D02Z01S09[-CherubsR]",
+            "from_region": "D02Z01S09",
+            "to_region": "D02Z01S09[-CherubsR]"
           },
           {
             "name": "D02Z02S08[E] -> RESCUED_CHERUB_31",
@@ -6456,8 +6659,38 @@
             "to_region": "RESCUED_CHERUB_24"
           },
           {
+            "name": "D02Z02S03[SW] -> QI08",
+            "from_region": "D02Z02S03[SW]",
+            "to_region": "QI08"
+          },
+          {
+            "name": "D02Z02S05[SE] -> QI08",
+            "from_region": "D02Z02S05[SE]",
+            "to_region": "QI08"
+          },
+          {
+            "name": "D02Z02S05[SE] -> D02Z02S05[W]",
+            "from_region": "D02Z02S05[SE]",
+            "to_region": "D02Z02S05[W]"
+          },
+          {
+            "name": "D02Z02S04[E] -> D02Z02S05[W]",
+            "from_region": "D02Z02S04[E]",
+            "to_region": "D02Z02S05[W]"
+          },
+          {
             "name": "D02Z02S04[NE] -> D02Z02S05[W]",
             "from_region": "D02Z02S04[NE]",
+            "to_region": "D02Z02S05[W]"
+          },
+          {
+            "name": "D02Z02S07[E] -> D02Z02S05[W]",
+            "from_region": "D02Z02S07[E]",
+            "to_region": "D02Z02S05[W]"
+          },
+          {
+            "name": "D02Z02S10[W] -> D02Z02S05[W]",
+            "from_region": "D02Z02S10[W]",
             "to_region": "D02Z02S05[W]"
           },
           {
@@ -6496,6 +6729,51 @@
             "to_region": "D03Z02S05[W]"
           },
           {
+            "name": "D03Z02S04[NE] -> D03Z02S11[E]",
+            "from_region": "D03Z02S04[NE]",
+            "to_region": "D03Z02S11[E]"
+          },
+          {
+            "name": "D03Z02S15[W] -> HE06",
+            "from_region": "D03Z02S15[W]",
+            "to_region": "HE06"
+          },
+          {
+            "name": "D03Z02S15[W] -> RESCUED_CHERUB_37",
+            "from_region": "D03Z02S15[W]",
+            "to_region": "RESCUED_CHERUB_37"
+          },
+          {
+            "name": "D03Z02S15[W] -> D03Z02S04[NE]",
+            "from_region": "D03Z02S15[W]",
+            "to_region": "D03Z02S04[NE]"
+          },
+          {
+            "name": "D03Z03S13[W] -> D03Z03S04[NW]",
+            "from_region": "D03Z03S13[W]",
+            "to_region": "D03Z03S04[NW]"
+          },
+          {
+            "name": "D03Z03S13[W] -> D03Z03S05[NW]",
+            "from_region": "D03Z03S13[W]",
+            "to_region": "D03Z03S05[NW]"
+          },
+          {
+            "name": "D03Z03S13[W] -> D03Z03S05[SW]",
+            "from_region": "D03Z03S13[W]",
+            "to_region": "D03Z03S05[SW]"
+          },
+          {
+            "name": "D04Z01S01[N] -> D04Z01S05[N]",
+            "from_region": "D04Z01S01[N]",
+            "to_region": "D04Z01S05[N]"
+          },
+          {
+            "name": "D04Z01S06[Cherubs] -> D04Z01S05[N]",
+            "from_region": "D04Z01S06[Cherubs]",
+            "to_region": "D04Z01S05[N]"
+          },
+          {
             "name": "D04Z01S01 -> D04Z01S01[NE]",
             "from_region": "D04Z01S01",
             "to_region": "D04Z01S01[NE]"
@@ -6521,9 +6799,169 @@
             "to_region": "RB31"
           },
           {
+            "name": "D04Z01S06 -> D04Z01S06[E]",
+            "from_region": "D04Z01S06",
+            "to_region": "D04Z01S06[E]"
+          },
+          {
             "name": "D09Z01S09[SW] -> D04Z01S06[E]",
             "from_region": "D09Z01S09[SW]",
             "to_region": "D04Z01S06[E]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09BZ01S01[Cell19]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09BZ01S01[Cell17]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09BZ01S01[Cell13]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09Z01S02[N]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09Z01S02[N]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09Z01S02[Cell1]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09Z01S02[Cell6]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D04Z01S06[E] -> D09Z01S02[Cell22]",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "D09Z01S02[Cell22]"
+          },
+          {
+            "name": "D04Z01S06[E] -> RB11",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "RB11"
+          },
+          {
+            "name": "D04Z01S06[E] -> QI69",
+            "from_region": "D04Z01S06[E]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S07[SW] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S07[SW]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S12[E] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S12[E] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S12[E] -> D09Z01S02[N]",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "D09Z01S02[N]"
+          },
+          {
+            "name": "D09Z01S12[E] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S12[E] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S12[E] -> D09Z01S02[Cell22]",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "D09Z01S02[Cell22]"
+          },
+          {
+            "name": "D09Z01S12[E] -> RB11",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "RB11"
+          },
+          {
+            "name": "D09Z01S12[E] -> QI69",
+            "from_region": "D09Z01S12[E]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09BZ01S01[Cell19] -> D09BZ01S01[Cell17]",
+            "from_region": "D09BZ01S01[Cell19]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09BZ01S01[Cell19] -> D09BZ01S01[Cell13]",
+            "from_region": "D09BZ01S01[Cell19]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09BZ01S01[Cell19] -> D09Z01S02[Cell1]",
+            "from_region": "D09BZ01S01[Cell19]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09BZ01S01[Cell19] -> D09Z01S02[Cell6]",
+            "from_region": "D09BZ01S01[Cell19]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09BZ01S01[Cell19] -> QI69",
+            "from_region": "D09BZ01S01[Cell19]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> D09BZ01S01[Cell17]",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> D09BZ01S01[Cell13]",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> D09Z01S02[N]",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "D09Z01S02[N]"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> D09Z01S02[Cell1]",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> D09Z01S02[Cell6]",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> D09Z01S02[Cell22]",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "D09Z01S02[Cell22]"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> RB11",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "RB11"
+          },
+          {
+            "name": "D09BZ01S01[Cell24] -> QI69",
+            "from_region": "D09BZ01S01[Cell24]",
+            "to_region": "QI69"
           },
           {
             "name": "D04Z02S15[W] -> D04Z02S02[NE]",
@@ -6531,9 +6969,24 @@
             "to_region": "D04Z02S02[NE]"
           },
           {
+            "name": "D06Z01S02[S] -> D06Z01S08[N]",
+            "from_region": "D06Z01S02[S]",
+            "to_region": "D06Z01S08[N]"
+          },
+          {
+            "name": "D06Z01S20[W] -> D06Z01S04[Health]",
+            "from_region": "D06Z01S20[W]",
+            "to_region": "D06Z01S04[Health]"
+          },
+          {
             "name": "D05Z01S06[W] -> D05Z01S06[E]",
             "from_region": "D05Z01S06[W]",
             "to_region": "D05Z01S06[E]"
+          },
+          {
+            "name": "D05Z01S11 -> D05Z01S11[SW]",
+            "from_region": "D05Z01S11",
+            "to_region": "D05Z01S11[SW]"
           },
           {
             "name": "D05Z01S19[E] -> D05Z01S11[SW]",
@@ -6541,13 +6994,558 @@
             "to_region": "D05Z01S11[SW]"
           },
           {
+            "name": "D06Z01S01[SW] -> D06Z01S08[N]",
+            "from_region": "D06Z01S01[SW]",
+            "to_region": "D06Z01S08[N]"
+          },
+          {
+            "name": "D06Z01S04[NW] -> D06Z01S04[NE]",
+            "from_region": "D06Z01S04[NW]",
+            "to_region": "D06Z01S04[NE]"
+          },
+          {
+            "name": "D06Z01S04[NE] -> D06Z01S04[NW]",
+            "from_region": "D06Z01S04[NE]",
+            "to_region": "D06Z01S04[NW]"
+          },
+          {
+            "name": "D06Z01S01[NW] -> D06Z01S12[NE2]",
+            "from_region": "D06Z01S01[NW]",
+            "to_region": "D06Z01S12[NE2]"
+          },
+          {
+            "name": "D06Z01S09[-CherubsL] -> D06Z01S16[-CherubsR]",
+            "from_region": "D06Z01S09[-CherubsL]",
+            "to_region": "D06Z01S16[-CherubsR]"
+          },
+          {
+            "name": "D06Z01S09[-CherubsL] -> D06Z01S12[NE2]",
+            "from_region": "D06Z01S09[-CherubsL]",
+            "to_region": "D06Z01S12[NE2]"
+          },
+          {
+            "name": "D06Z01S09[-CherubsR] -> D06Z01S16[-CherubsL]",
+            "from_region": "D06Z01S09[-CherubsR]",
+            "to_region": "D06Z01S16[-CherubsL]"
+          },
+          {
+            "name": "D06Z01S09[-CherubsR] -> D06Z01S01[NW]",
+            "from_region": "D06Z01S09[-CherubsR]",
+            "to_region": "D06Z01S01[NW]"
+          },
+          {
+            "name": "D06Z01S09[-CherubsR] -> D06Z01S12[NE2]",
+            "from_region": "D06Z01S09[-CherubsR]",
+            "to_region": "D06Z01S12[NE2]"
+          },
+          {
             "name": "D06Z01S13[S] -> D06Z01S08[N]",
             "from_region": "D06Z01S13[S]",
             "to_region": "D06Z01S08[N]"
           },
           {
+            "name": "D06Z01S17[-Cherubs] -> D06Z01S04[NE]",
+            "from_region": "D06Z01S17[-Cherubs]",
+            "to_region": "D06Z01S04[NE]"
+          },
+          {
+            "name": "D09Z01S02[N] -> D09BZ01S01[Cell24]",
+            "from_region": "D09Z01S02[N]",
+            "to_region": "D09BZ01S01[Cell24]"
+          },
+          {
+            "name": "D09Z01S02[N] -> D09Z01S09[SW]",
+            "from_region": "D09Z01S02[N]",
+            "to_region": "D09Z01S09[SW]"
+          },
+          {
+            "name": "D09Z01S02[N] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S02[N]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S02[N] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S02[N]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S02[N] -> QI72",
+            "from_region": "D09Z01S02[N]",
+            "to_region": "QI72"
+          },
+          {
+            "name": "D09Z01S02[N] -> D09Z01S04[S]",
+            "from_region": "D09Z01S02[N]",
+            "to_region": "D09Z01S04[S]"
+          },
+          {
+            "name": "D09Z01S04[S] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S04[S] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S04[S] -> D09Z01S02[N]",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "D09Z01S02[N]"
+          },
+          {
+            "name": "D09Z01S04[S] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S04[S] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S04[S] -> D09Z01S02[Cell22]",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "D09Z01S02[Cell22]"
+          },
+          {
+            "name": "D09Z01S04[S] -> RB11",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "RB11"
+          },
+          {
+            "name": "D09Z01S04[S] -> QI69",
+            "from_region": "D09Z01S04[S]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S02[Cell1] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S02[Cell1]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S02[Cell1] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S02[Cell1]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S02[Cell1] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S02[Cell1]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S02[Cell1] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S02[Cell1]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S02[Cell1] -> QI69",
+            "from_region": "D09Z01S02[Cell1]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S02[Cell6] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S02[Cell6]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S02[Cell6] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S02[Cell6]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S02[Cell6] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S02[Cell6]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S02[Cell6] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S02[Cell6]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S02[Cell6] -> QI69",
+            "from_region": "D09Z01S02[Cell6]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S02[Cell22] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S02[Cell22]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S02[Cell22] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S02[Cell22]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S02[Cell22] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S02[Cell22]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S02[Cell22] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S02[Cell22]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S08[Cell7] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S08[Cell7]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S08[Cell7] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S08[Cell7]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S08[Cell7] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S08[Cell7]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S08[Cell7] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S08[Cell7]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S08[Cell7] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S08[Cell7]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S08[Cell7] -> QI69",
+            "from_region": "D09Z01S08[Cell7]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S08[Cell16] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S08[Cell16]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S08[Cell16] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S08[Cell16]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S08[Cell16] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S08[Cell16]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S08[Cell16] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S08[Cell16]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S08[Cell16] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S08[Cell16]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S08[Cell16] -> QI69",
+            "from_region": "D09Z01S08[Cell16]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S08[Cell18] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S08[Cell18]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S08[Cell18] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S08[Cell18]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S08[Cell18] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S08[Cell18]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S08[Cell18] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S08[Cell18]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S08[Cell18] -> QI69",
+            "from_region": "D09Z01S08[Cell18]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S09[Cell24] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S09[Cell24]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S09[Cell24] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S09[Cell24]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S09[Cell24] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S09[Cell24]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S09[Cell24] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S09[Cell24]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S09[Cell24] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S09[Cell24]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S09[Cell24] -> QI69",
+            "from_region": "D09Z01S09[Cell24]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S09[Cell21] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S09[Cell21]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S09[Cell21] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S09[Cell21]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S09[Cell21] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S09[Cell21]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S09[Cell21] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S09[Cell21]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S09[Cell21] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S09[Cell21]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S09[Cell21] -> QI69",
+            "from_region": "D09Z01S09[Cell21]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S10[Cell10] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S10[Cell10]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S10[Cell10] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S10[Cell10]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S10[Cell10] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S10[Cell10]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S10[Cell10] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S10[Cell10]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S10[Cell10] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S10[Cell10]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S10[Cell10] -> QI69",
+            "from_region": "D09Z01S10[Cell10]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S10[Cell11] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S10[Cell11]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S10[Cell11] -> D09BZ01S01[Cell17]",
+            "from_region": "D09Z01S10[Cell11]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09Z01S10[Cell11] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S10[Cell11]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S10[Cell11] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S10[Cell11]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S10[Cell11] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S10[Cell11]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S10[Cell11] -> QI69",
+            "from_region": "D09Z01S10[Cell11]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09Z01S05[NE] -> D09BZ01S01[Cell19]",
+            "from_region": "D09Z01S05[NE]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09Z01S05[NE] -> D09BZ01S01[Cell13]",
+            "from_region": "D09Z01S05[NE]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
+            "name": "D09Z01S05[NE] -> D09Z01S02[Cell1]",
+            "from_region": "D09Z01S05[NE]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09Z01S05[NE] -> D09Z01S02[Cell6]",
+            "from_region": "D09Z01S05[NE]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09Z01S05[NE] -> QI69",
+            "from_region": "D09Z01S05[NE]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S08[Cell16]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S08[Cell16]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S08[Cell18]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S08[Cell18]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> RESCUED_CHERUB_34",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "RESCUED_CHERUB_34"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S09[NW]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S09[NW]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S09[Cell24]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S09[Cell24]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> RB16",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "RB16"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09BZ01S01[Cell19]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S08[W]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S08[W]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S08[S]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S08[S]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S10[Cell10]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S10[Cell10]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> D09Z01S10[Cell11]",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "D09Z01S10[Cell11]"
+          },
+          {
+            "name": "D09BZ01S01[Cell17] -> CO27",
+            "from_region": "D09BZ01S01[Cell17]",
+            "to_region": "CO27"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> D09BZ01S01[Cell19]",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> D09BZ01S01[Cell17]",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> D09Z01S02[N]",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "D09Z01S02[N]"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> D09Z01S02[Cell1]",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "D09Z01S02[Cell1]"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> D09Z01S02[Cell6]",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "D09Z01S02[Cell6]"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> D09Z01S02[Cell22]",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "D09Z01S02[Cell22]"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> RB11",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "RB11"
+          },
+          {
+            "name": "D09BZ01S01[Cell13] -> QI69",
+            "from_region": "D09BZ01S01[Cell13]",
+            "to_region": "QI69"
+          },
+          {
+            "name": "D09BZ01S01[Cell5] -> D09BZ01S01[Cell19]",
+            "from_region": "D09BZ01S01[Cell5]",
+            "to_region": "D09BZ01S01[Cell19]"
+          },
+          {
+            "name": "D09BZ01S01[Cell5] -> D09BZ01S01[Cell17]",
+            "from_region": "D09BZ01S01[Cell5]",
+            "to_region": "D09BZ01S01[Cell17]"
+          },
+          {
+            "name": "D09BZ01S01[Cell5] -> D09BZ01S01[Cell13]",
+            "from_region": "D09BZ01S01[Cell5]",
+            "to_region": "D09BZ01S01[Cell13]"
+          },
+          {
             "name": "D20Z01S13[E] -> D20Z02S11[NW]",
             "from_region": "D20Z01S13[E]",
+            "to_region": "D20Z02S11[NW]"
+          },
+          {
+            "name": "D20Z01S13[E] -> D20Z02S11[E]",
+            "from_region": "D20Z01S13[E]",
+            "to_region": "D20Z02S11[E]"
+          },
+          {
+            "name": "D20Z02S10[W] -> D20Z02S11[NW]",
+            "from_region": "D20Z02S10[W]",
             "to_region": "D20Z02S11[NW]"
           },
           {
@@ -6582,7 +7580,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-01-28T07:37:45.085675",
+      "timestamp": "2026-01-28T19:13:40.620201",
       "explain_stats": {
         "game": "Coding Adventure WorldGen_11408892729106005028",
         "total_locations": 61,
@@ -6613,7 +7611,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-01-28T07:37:53.580053",
+      "timestamp": "2026-01-28T19:13:49.063770",
       "explain_stats": {
         "game": "Heretic WorldGen_79645483297583998146",
         "total_locations": 691,
@@ -6644,7 +7642,7 @@
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-01-28T07:38:15.264714",
+      "timestamp": "2026-01-28T19:14:14.789417",
       "explain_stats": {
         "game": "Links Awakening DX WorldGen_55977854110148887761",
         "total_locations": 220,
@@ -6672,13 +7670,13 @@
         "errors": {
           "<class 'AttributeError'>": [
             1,
-            0,
             3,
             2,
+            0,
             4,
             6,
-            8,
             9,
+            8,
             7
           ]
         }
@@ -6687,7 +7685,7 @@
         "game_name": "Ocarina of Time",
         "world_directory": "oot"
       },
-      "timestamp": "2026-01-28T07:38:42.142880"
+      "timestamp": "2026-01-28T19:14:45.958482"
     },
     "Secret of Evermore.yaml": {
       "ut_fuzz": {
@@ -6704,8 +7702,8 @@
             3,
             1,
             4,
-            5,
             6,
+            5,
             7,
             8,
             9
@@ -6716,7 +7714,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-01-28T07:38:50.927755",
+      "timestamp": "2026-01-28T19:14:54.728955",
       "explain_stats": {
         "game": "Secret of Evermore WorldGen_79645483297583998146",
         "total_locations": 913,
@@ -6738,9 +7736,9 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 8,
+        "failure": 7,
         "timeout": 0,
-        "ignored": 2,
+        "ignored": 3,
         "errors": {
           "varia_custom was chosen but varia_custom_preset is missing.": [
             1,
@@ -6748,11 +7746,10 @@
           ],
           "None": [
             2,
-            4,
             0,
             3,
-            9,
-            6
+            6,
+            9
           ]
         }
       },
@@ -6760,11 +7757,11 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-01-28T07:39:14.331363",
+      "timestamp": "2026-01-28T19:15:16.567705",
       "explain_stats": {
-        "game": "Super Metroid WorldGen_55977854110148887761",
-        "total_locations": 36,
-        "locations_with_explain": 36,
+        "game": "Super Metroid WorldGen_68350589630253845453",
+        "total_locations": 91,
+        "locations_with_explain": 91,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -6791,7 +7788,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-01-28T07:39:21.182130",
+      "timestamp": "2026-01-28T19:15:23.414989",
       "explain_stats": {
         "game": "Undertale WorldGen_11408892729106005028",
         "total_locations": 45,
@@ -6841,7 +7838,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-01-28T07:37:36.241016",
+      "timestamp": "2026-01-28T19:13:32.147941",
       "explain_stats": {
         "game": "Bomb Rush Cyberfunk WorldGen_55977854110148887761",
         "total_locations": 247,
@@ -6872,7 +7869,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-01-28T07:37:43.685953",
+      "timestamp": "2026-01-28T19:13:39.542756",
       "explain_stats": {
         "game": "DLCQuest WorldGen_11408892729106005028",
         "total_locations": 40,
@@ -6916,7 +7913,7 @@
         "game_name": "Hollow Knight",
         "world_directory": "hk"
       },
-      "timestamp": "2026-01-28T07:38:58.717850",
+      "timestamp": "2026-01-28T19:14:58.635029",
       "explain_stats": {
         "game": "Hollow Knight WorldGen_11408892729106005028",
         "total_locations": 731,
@@ -6935,32 +7932,19 @@
     },
     "Lufia II Ancient Cave.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 0,
-        "failure": 10,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            7,
-            6,
-            8,
-            9
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-01-28T07:39:06.084156",
+      "timestamp": "2026-01-28T19:15:05.928332",
       "explain_stats": {
         "game": "Lufia II Ancient Cave WorldGen_55977854110148887761",
         "total_locations": 77,
@@ -6988,13 +7972,13 @@
         "errors": {
           "None": [
             0,
-            1,
             3,
             2,
+            1,
             4,
             7,
-            5,
             6,
+            5,
             8,
             9
           ]
@@ -7004,12 +7988,12 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-01-28T07:39:15.796641",
+      "timestamp": "2026-01-28T19:15:15.748578",
       "explain_stats": {
-        "game": "Old School Runescape WorldGen_11408892729106005028",
-        "total_locations": 76,
-        "locations_with_explain": 68,
-        "locations_default_rule": 8,
+        "game": "Old School Runescape WorldGen_79645483297583998146",
+        "total_locations": 62,
+        "locations_with_explain": 49,
+        "locations_default_rule": 13,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -7035,7 +8019,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-01-28T07:40:21.189039",
+      "timestamp": "2026-01-28T19:16:27.182497",
       "explain_stats": {
         "game": "Shivers WorldGen_11408892729106005028",
         "total_locations": 76,
@@ -7087,18 +8071,18 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-01-28T07:40:27.184272",
+      "timestamp": "2026-01-28T19:16:33.091187",
       "explain_stats": {
-        "game": "TOEM original WorldGen_11408892729106005028",
-        "total_locations": 214,
+        "game": "TOEM original WorldGen_79645483297583998146",
+        "total_locations": 191,
         "locations_with_explain": 4,
-        "locations_default_rule": 210,
+        "locations_default_rule": 187,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 6,
+        "total_entrances": 5,
         "entrances_with_explain": 5,
-        "entrances_default_rule": 1,
+        "entrances_default_rule": 0,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -7118,9 +8102,9 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-01-28T07:40:33.084155",
+      "timestamp": "2026-01-28T19:16:38.842094",
       "explain_stats": {
-        "game": "VVVVVV WorldGen_79645483297583998146",
+        "game": "VVVVVV WorldGen_11408892729106005028",
         "total_locations": 20,
         "locations_with_explain": 2,
         "locations_default_rule": 18,
@@ -7128,8 +8112,8 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 4,
-        "entrances_with_explain": 4,
-        "entrances_default_rule": 0,
+        "entrances_with_explain": 0,
+        "entrances_default_rule": 4,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
