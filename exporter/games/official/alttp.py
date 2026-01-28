@@ -14,39 +14,10 @@ This exporter handles ALttP-specific patterns:
 
 from typing import Dict, Any, Optional, List, Set, Callable
 from ..base import GenericGameExportHandler
-from exporter.analyzer.closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 import logging
 import re
 
 logger = logging.getLogger(__name__)
-
-# Feature flag for legacy dynamic bunny rule analysis
-# When False (default), the main analyzer handles bunny rules via factory function
-# execution and callable list analysis, producing proper any_of rules.
-# When True, attempts legacy dynamic analysis using ClosureFunctionAnalyzer before
-# falling back to simplified Moon Pearl workarounds.
-# The default (False) is the preferred approach - legacy mode is kept for debugging.
-ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
-
-# Feature flag for mixed region Moon Pearl cleanup
-# When True, removes Moon Pearl requirements from locations/exits in "mixed" regions
-# (regions accessible from both Light World and Dark World, which only occur with
-# entrance shuffle enabled). The theory is that Light World paths don't require
-# Moon Pearl, so it's redundant in mixed regions.
-# DISABLED by default: With entrance shuffle disabled (the default), no regions are
-# ever marked as both is_light_world and is_dark_world, so this code never triggers.
-# The analyzer should handle mixed region bunny rules correctly via any_of rules.
-ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP = False
-
-# Feature flag for manual Moon Pearl addition to exits in entrance shuffle mode
-# When True, adds Moon Pearl requirements to exits from bunny territory to bunny
-# territory with non-bunny-accessible locations. This was intended as defense-in-depth
-# for entrance shuffle scenarios.
-# DISABLED by default: The location rules (from set_bunny_rules) should be sufficient
-# to block access - players would be blocked when trying to collect items, not at
-# the exit. The analyzer now properly serializes bunny rules as any_of rules.
-ENABLE_ENTRANCE_SHUFFLE_EXIT_MOON_PEARL = False
-
 
 # --- Dynamic imports from original ALttP code ---
 # These functions allow us to stay in sync with the original code rather than
@@ -160,14 +131,6 @@ STANDARD_MIRROR_REVIVAL_DUNGEONS = {
     'Sanctuary',
 }
 
-# All invalid bunny revival dungeons combined - these are the ONLY dungeons
-# that require Moon Pearl or Magic Mirror in glitch modes. All other dungeons
-# allow bunny revival without any item requirements.
-ALL_INVALID_BUNNY_REVIVAL_DUNGEONS = (
-    STANDARD_MIRROR_REVIVAL_DUNGEONS |
-    {SWAMP_PALACE_ENTRANCE, TOWER_OF_HERA_BOTTOM}
-)
-
 # Other superbunny accessible locations in glitch modes that require Magic Mirror
 # (in addition to Moon Pearl as an alternative). Computed dynamically from
 # OverworldGlitchRules.get_superbunny_accessible_locations() minus the mandatory ones.
@@ -230,7 +193,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Initialize with optional world reference."""
         super().__init__(world)
         self._current_location_context = None
-        self._bunny_accessible_locations = self._compute_bunny_accessible_locations(world)
         self._is_glitch_mode = self._check_glitch_mode(world)
         self._is_inverted_mode = self._check_inverted_mode(world)
         self._is_universal_keys = self._check_universal_keys(world)
@@ -1093,22 +1055,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def _compute_bunny_accessible_locations(self, world) -> Set[str]:
-        """Compute the set of bunny-accessible locations based on world options.
-
-        The bunny-accessible list is the set of locations that NEVER require Moon Pearl.
-        These are locations that can be accessed in bunny form regardless of game mode
-        or glitch settings. From ALttP Rules.py bunny_accessible_locations list.
-
-        Note: Superbunny accessible locations (from OverworldGlitchRules.get_superbunny_accessible_locations)
-        are NOT included here because they require EITHER Moon Pearl OR specific superbunny
-        entrance paths. Since we can't replicate the path-dependent logic in exports,
-        we conservatively require Moon Pearl for those locations.
-        """
-        # Return only the static bunny-accessible locations
-        # These locations can ALWAYS be collected in bunny form, no Moon Pearl needed
-        return set(BUNNY_ACCESSIBLE_LOCATIONS)
-
     def _is_bunny_rule_value(self, value) -> bool:
         """Check if a value is a bunny rule lambda (function object or string).
 
@@ -1132,46 +1078,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Intercept complex rules before standard analysis.
 
-        By default (ENABLE_DYNAMIC_BUNNY_ANALYSIS=False), this returns None for bunny
-        rules, letting the main analyzer handle them via factory function execution.
-        The analyzer produces proper any_of rules with Moon Pearl and path alternatives.
-
-        When ENABLE_DYNAMIC_BUNNY_ANALYSIS=True (legacy mode), attempts dynamic analysis
-        using ClosureFunctionAnalyzer before falling back to pre-computed workarounds.
-
-        All other rule patterns (dungeon_reentry_rules, underworld_glitches_rules,
-        dict lookups, closure function calls, etc.) are handled by the generic analyzer.
+        Currently returns None for all rules, letting the main analyzer handle them
+        via factory function execution. The analyzer produces proper any_of rules
+        for bunny rules with Moon Pearl and path alternatives.
         """
-        if rule_func is None:
-            return None
-
-        # Check if this is a bunny rule lambda by its qualified name
-        func_qualname = getattr(rule_func, '__qualname__', '')
-        if 'set_bunny_rules' in func_qualname:
-            location_name = rule_target_name or self._current_location_context or ''
-            logger.debug(f"ALttP: Detected bunny rule for '{location_name}'")
-
-            # Attempt dynamic analysis if enabled (legacy path using ClosureFunctionAnalyzer)
-            if ENABLE_DYNAMIC_BUNNY_ANALYSIS:
-                try:
-                    analyzed_result = self._try_dynamic_bunny_analysis(rule_func, location_name)
-                    if analyzed_result is not None:
-                        logger.debug(f"ALttP: Dynamic bunny rule analysis succeeded for '{location_name}'")
-                        return analyzed_result
-                    logger.debug(f"ALttP: Dynamic analysis returned None, using workaround")
-                except Exception as e:
-                    logger.debug(f"ALttP: Dynamic bunny rule analysis failed: {e}, using workaround")
-
-                # Fall back to pre-computed workaround
-                logger.debug(f"ALttP: Using pre-computed bunny rule workaround for '{location_name}'")
-                return self._get_bunny_replacement_rule(location_name)
-
-            # When ENABLE_DYNAMIC_BUNNY_ANALYSIS is False, let the main analyzer handle
-            # bunny rules via factory function execution and callable list analysis
-            logger.debug(f"ALttP: Letting main analyzer handle bunny rule for '{location_name}'")
-            return None
-
-        # All other rules are handled by the generic analyzer
+        # All rules are handled by the generic analyzer
         return None
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -1310,47 +1221,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     else:
                         new_args.append(item)
                 result['args'] = new_args
-
-        return result
-
-    def _try_dynamic_bunny_analysis(self, rule_func: Callable, location_name: str) -> Optional[Dict[str, Any]]:
-        """Attempt to dynamically analyze a bunny rule function.
-
-        This method uses the ClosureFunctionAnalyzer to extract the actual logic
-        from bunny rule lambdas, including their nested options and path patterns.
-
-        Args:
-            rule_func: The bunny rule lambda function
-            location_name: Name of the location for context
-
-        Returns:
-            Analyzed rule dict if successful, None otherwise
-        """
-        # Create a mock analyzer context for the ClosureFunctionAnalyzer
-        # We need to provide enough context for it to work
-        class MockAnalyzerContext:
-            def __init__(self, handler):
-                self.closure_vars = {}
-                self.seen_funcs = {}
-                self.game_handler = handler
-                self.player_context = None
-
-        mock_context = MockAnalyzerContext(self)
-
-        closure_analyzer = ClosureFunctionAnalyzer(mock_context)
-        result = closure_analyzer.analyze_function(rule_func)
-
-        if result is None:
-            return None
-
-        # Validate the result is reasonable
-        result_type = result.get('type')
-        if result_type in ('item_check', 'and', 'or', 'constant', 'can_reach'):
-            return result
-
-        # For other types, check if they make sense
-        if result_type == 'error':
-            return None
 
         return result
 
@@ -1690,51 +1560,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def _get_bunny_replacement_rule(self, location_name: str, region_name: str = None) -> Dict[str, Any]:
-        """Get the replacement rule for a bunny rule lambda (legacy fallback).
-
-        NOTE: This method is only used when ENABLE_DYNAMIC_BUNNY_ANALYSIS=True (legacy mode).
-        The default behavior is to let the main analyzer handle bunny rules via factory
-        function execution, which produces proper any_of rules with all path alternatives.
-
-        Bunny rules check if a location is accessible when in bunny form (Dark World
-        without Moon Pearl in standard mode). This legacy method uses a simplified
-        approximation:
-        - Locations in BUNNY_ACCESSIBLE_LOCATIONS are always accessible in bunny form
-        - In glitch modes, locations in MANDATORY_SUPERBUNNY_LOCATIONS are also accessible
-          without Moon Pearl (their superbunny entrance paths are mandatory connections)
-        - For other Dark World locations, require Moon Pearl since the player needs it
-          to not be a bunny and interact with most objects/NPCs
-        """
-        # Always-accessible locations (bunny can collect in any mode)
-        if location_name in self._bunny_accessible_locations:
-            logger.debug(f"ALttP: Location '{location_name}' is in bunny-accessible list")
-            return {'rule': 'True_'}
-
-        # In glitch modes, certain locations have mandatory superbunny paths
-        # that are never shuffled, so they don't require Moon Pearl
-        if self._is_glitch_mode and location_name in MANDATORY_SUPERBUNNY_LOCATIONS:
-            logger.debug(f"ALttP: Location '{location_name}' has mandatory superbunny path in glitch mode")
-            return {'rule': 'True_'}
-
-        # In glitch modes, other superbunny locations can be accessed with Mirror
-        # The rule is: Moon Pearl OR Magic Mirror (for superbunny revival)
-        if self._is_glitch_mode and location_name in MIRROR_SUPERBUNNY_LOCATIONS:
-            logger.debug(f"ALttP: Location '{location_name}' can use superbunny with mirror in glitch mode")
-            return {
-                'rule': 'Or',
-                'children': [
-                    {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
-                    {'rule': 'Has', 'args': {'item_name': 'Magic Mirror'}}
-                ]
-            }
-
-        # For other locations with bunny rules, require Moon Pearl.
-        # The bunny rule's existence means the location is in a Dark World region
-        # and the player needs Moon Pearl to not be a bunny.
-        logger.debug(f"ALttP: Replacing bunny rule for '{location_name}' with Moon Pearl requirement")
-        return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
-
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process entire export data to handle bunny rules and universal keys.
 
@@ -1822,39 +1647,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         location_data['access_rule'] = self._resolve_placement_conditionals(access_rule)
                         access_rule = location_data.get('access_rule', {})
 
-                    # For mixed regions (both Light World and Dark World accessible),
-                    # the bunny rule system adds Moon Pearl requirements via add_rule().
-                    # But since there are Light World paths available, Moon Pearl isn't
-                    # actually required - you can enter as Link from a Light World entrance.
-                    # Remove Moon Pearl from location rules in mixed regions.
-                    #
-                    # NOTE: This is different from game logic rules like Frog's
-                    # "can_lift_heavy_rocks AND (Moon Pearl OR Beat Agahnim 1)" where
-                    # Moon Pearl is one of multiple alternatives. Those are preserved
-                    # because removing Moon Pearl would change the game logic.
-                    # The _remove_moon_pearl_from_rule() function handles this distinction
-                    # by only removing pure Moon Pearl requirements or filtering from HasAny/Or.
-                    #
-                    # DISABLED by default: The analyzer should handle mixed region bunny rules
-                    # correctly via any_of rules. Enable ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP
-                    # if issues are found with entrance shuffle enabled.
-                    if ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP and is_mixed_region and access_rule:
-                        location_data['access_rule'] = self._remove_moon_pearl_from_rule(
-                            access_rule, location_name
-                        )
-                        access_rule = location_data.get('access_rule', {})
-
                     # Replace dungeon small key checks when universal keys are enabled
                     if self._is_universal_keys and access_rule:
                         location_data['access_rule'] = self._replace_small_key_checks(access_rule)
 
                 # Process exits
-                # Check if this is a bunny-impassable cave - these need Moon Pearl
-                # to exit, but ONLY in inverted mode where the player starts as a bunny.
-                # In standard mode, the player is always Link in Light World regions,
-                # so Moon Pearl is not needed for bunny-impassable caves.
-                is_bunny_impassable = region_name in BUNNY_IMPASSABLE_CAVES
-
                 for exit_data in region_data.get('exits', []):
                     exit_name = exit_data.get('name', region_name)
                     # In no_logic single-player mode, all exits should be trivially passable
@@ -1875,127 +1672,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         exit_data['access_rule'] = self._process_bunny_rules(
                             exit_data['access_rule'], exit_name
                         )
-                        # For exits from mixed regions, remove Moon Pearl requirement
-                        # since there are Link-state paths available.
-                        # Exceptions:
-                        # 1. Bunny-impassable caves in inverted mode still need Moon Pearl
-                        # 2. In inverted mode, exits to pure Light World (bunny territory)
-                        #    still require Moon Pearl to act in the destination
                         connected_region_name = exit_data.get('connected_region', '')
-                        connected_region = player_regions.get(connected_region_name, {})
-                        dest_is_light = connected_region.get('is_light_world', False)
-                        dest_is_dark = connected_region.get('is_dark_world', False)
-                        dest_is_pure_bunny_territory = False
-                        if self._is_inverted_mode:
-                            # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
-                            dest_is_pure_bunny_territory = dest_is_light and not dest_is_dark
-                        else:
-                            # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
-                            # Exiting from a mixed region to pure Dark World requires Moon Pearl
-                            dest_is_pure_bunny_territory = dest_is_dark and not dest_is_light
-
-                        # Check if all locations in the destination are bunny-accessible.
-                        # If so, we don't need Moon Pearl even in bunny territory since
-                        # bunnies can collect items at these locations.
-                        dest_locations = [loc.get('name', '') for loc in connected_region.get('locations', [])]
-                        dest_all_bunny_accessible = (
-                            len(dest_locations) > 0 and
-                            all(loc in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
-                        )
-
-                        should_keep_moon_pearl = (
-                            (is_bunny_impassable and self._is_inverted_mode) or
-                            (dest_is_pure_bunny_territory and not dest_all_bunny_accessible)
-                        )
-                        if ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP and is_mixed_region and not should_keep_moon_pearl:
-                            exit_data['access_rule'] = self._remove_moon_pearl_from_rule(
-                                exit_data['access_rule'], exit_name
-                            )
-
-                        # For exits FROM pure bunny territory (not mixed) to regions with
-                        # non-bunny-accessible locations, ADD Moon Pearl requirement.
-                        # This handles entrance shuffle cases where an exit from bunny
-                        # territory leads to a region that wasn't originally accessible
-                        # from that world.
-                        #
-                        # DISABLED by default (ENABLE_ENTRANCE_SHUFFLE_EXIT_MOON_PEARL=False):
-                        # The location rules from set_bunny_rules() should be sufficient -
-                        # players would be blocked when trying to collect items. The analyzer
-                        # now properly serializes bunny rules as any_of rules.
-                        #
-                        # Only applies in entrance shuffle modes. In vanilla mode, DW regions
-                        # like Dark Death Mountain (West Bottom) are directly reachable from
-                        # Light World via teleporter, so the player arrives in Link state.
-                        src_is_pure_bunny_territory = False
-                        if self._is_inverted_mode:
-                            # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
-                            src_is_pure_bunny_territory = is_light_world and not is_dark_world
-                        else:
-                            # Standard: pure Dark World (is_dark=True, is_light=False) is bunny
-                            src_is_pure_bunny_territory = is_dark_world and not is_light_world
-
-                        # Check if destination has any non-bunny-accessible locations
-                        dest_has_non_bunny_locs = (
-                            len(dest_locations) > 0 and
-                            any(loc not in BUNNY_ACCESSIBLE_LOCATIONS for loc in dest_locations)
-                        )
-
-                        # Add Moon Pearl if needed - but ONLY in entrance shuffle modes
-                        # Skip this in no_logic single-player mode where no rules are set
-                        #
-                        # IMPORTANT: In glitch modes, dungeons allow bunny revival, meaning
-                        # you can enter as a bunny and revive to Link state inside. Only
-                        # the invalid bunny revival dungeons (Swamp Palace, Tower of Hera,
-                        # Turtle Rock, Sanctuary) have special Moon Pearl requirements.
-                        # For all other dungeons, we skip adding Moon Pearl here.
-                        dest_is_dungeon = connected_region.get('type') == 4  # type 4 = Dungeon
-                        dest_allows_bunny_revival = (
-                            dest_is_dungeon and
-                            connected_region_name not in ALL_INVALID_BUNNY_REVIVAL_DUNGEONS
-                        )
-                        skip_moon_pearl_for_glitch_dungeon = (
-                            self._is_glitch_mode and dest_allows_bunny_revival
-                        )
-
-                        # IMPORTANT: Only add Moon Pearl if the destination IS bunny territory.
-                        # Regions created dynamically (like Take-Any caves from retro_caves)
-                        # may not have is_dark_world/is_light_world set because they're created
-                        # after mark_light_world_regions() runs. These regions don't require
-                        # Moon Pearl because is_bunny() returns False for them in the original
-                        # set_bunny_rules() code.
-                        dest_is_actually_bunny_territory = dest_is_pure_bunny_territory
-
-                        if (ENABLE_ENTRANCE_SHUFFLE_EXIT_MOON_PEARL and
-                            not self._is_no_logic_single_player and
-                            self._entrance_shuffle_mode != 'vanilla' and
-                            src_is_pure_bunny_territory and
-                            dest_is_actually_bunny_territory and
-                            dest_has_non_bunny_locs and
-                            not self._rule_contains_moon_pearl(exit_data.get('access_rule', {})) and
-                            not skip_moon_pearl_for_glitch_dungeon):
-                            current_rule = exit_data.get('access_rule', {})
-                            logger.debug(f"ALttP: Adding Moon Pearl to exit '{exit_name}' "
-                                         f"from bunny territory '{region_name}' to '{connected_region_name}'")
-                            # Check if rule is trivially true (Rule Builder True_ or AST constant=true)
-                            is_trivially_true = (
-                                current_rule.get('rule') == 'True_' or
-                                (current_rule.get('type') == 'constant' and current_rule.get('value') is True)
-                            )
-                            if is_trivially_true:
-                                # Replace trivial rule with just Moon Pearl
-                                exit_data['access_rule'] = {
-                                    'rule': 'Has',
-                                    'args': {'item_name': 'Moon Pearl'}
-                                }
-                            else:
-                                # AND Moon Pearl with existing rule
-                                exit_data['access_rule'] = {
-                                    'rule': 'And',
-                                    'children': [
-                                        {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}},
-                                        current_rule
-                                    ]
-                                }
 
                         # In glitch modes, exits to certain invalid bunny revival dungeons
                         # can use Magic Mirror for bunny revival instead of Moon Pearl.
@@ -2206,23 +1883,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"ALttP: Exported {len(shops_data)} shops with unlimited items")
 
         return game_info
-
-    def _is_bunny_moon_pearl_rule(self, rule: Dict[str, Any], location_name: str) -> bool:
-        """Check if this is a Moon Pearl rule added by bunny rule replacement.
-
-        Returns True if the entire rule is ONLY about Moon Pearl requirements
-        (either a simple Has(Moon Pearl) or a compound AND of Moon Pearl requirements).
-        This handles cases where multiple bunny rules were added to the same location.
-
-        Only applies to locations NOT in the bunny-accessible list.
-        """
-        if location_name in self._bunny_accessible_locations:
-            return False
-
-        if not isinstance(rule, dict):
-            return False
-
-        return self._is_pure_moon_pearl_rule(rule)
 
     def _is_pure_moon_pearl_rule(self, rule: Dict[str, Any]) -> bool:
         """Recursively check if a rule is purely about Moon Pearl.
