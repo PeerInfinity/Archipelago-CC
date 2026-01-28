@@ -40,14 +40,51 @@ callable_list_cache: Dict[int, Dict[str, Any]] = {}
 closure_aware_cache: Dict[Tuple[str, int, Tuple], Dict[str, Any]] = {}
 
 
-def _compute_closure_fingerprint(func: Callable) -> Optional[Tuple]:
+def _compute_callable_fingerprint(func: Callable, seen_ids: set) -> Tuple:
     """
-    Compute a hashable fingerprint of a function's closure variables.
+    Compute a stable fingerprint for a callable based on source location + closure.
 
-    This allows caching analysis results for lambdas at the same source location
-    that have equivalent closure values, even if they're different object instances.
+    Uses source location (filename, lineno) instead of id() for better cache hits
+    when the same lambda is created multiple times (common in ALttP bunny rules).
 
-    Returns None if the closure cannot be fingerprinted (unhashable values).
+    Args:
+        func: The callable to fingerprint
+        seen_ids: Set of function ids already visited (for cycle detection)
+
+    Returns:
+        A hashable tuple representing the callable's identity
+    """
+    func_id = id(func)
+
+    # Cycle detection
+    if func_id in seen_ids:
+        return ('cycle', func_id)
+
+    if hasattr(func, '__code__'):
+        code = func.__code__
+        filename = code.co_filename
+        lineno = code.co_firstlineno
+
+        # Recursively compute closure fingerprint for this callable
+        seen_ids_copy = seen_ids | {func_id}
+        closure_fp = _compute_closure_fingerprint_impl(func, seen_ids_copy)
+
+        return ('lambda', filename, lineno, closure_fp)
+    else:
+        # No code attribute, fall back to id
+        return ('callable_id', func_id)
+
+
+def _compute_closure_fingerprint_impl(func: Callable, seen_ids: set) -> Optional[Tuple]:
+    """
+    Implementation of closure fingerprint computation with cycle detection.
+
+    Args:
+        func: The function whose closure to fingerprint
+        seen_ids: Set of function ids already visited (for cycle detection)
+
+    Returns:
+        A hashable tuple representing the closure, or None if not fingerprrintable
     """
     if not hasattr(func, '__closure__') or not func.__closure__:
         return ()  # No closure, empty fingerprint
@@ -76,11 +113,13 @@ def _compute_closure_fingerprint(func: Callable) -> Optional[Tuple]:
                 fingerprint_parts.append((var_name, value))
             elif isinstance(value, list):
                 # For lists, create tuple of fingerprints
-                # For callables, use id(); for others, try to use the value
+                # For callables, use source location + recursive closure fingerprint
                 list_fp = []
                 for item in value:
                     if callable(item):
-                        list_fp.append(('callable', id(item)))
+                        # Use stable callable fingerprint instead of id()
+                        callable_fp = _compute_callable_fingerprint(item, seen_ids)
+                        list_fp.append(callable_fp)
                     elif isinstance(item, (int, str, bool, float, bytes, type(None))):
                         list_fp.append(('value', item))
                     elif hasattr(item, 'name'):
@@ -90,8 +129,9 @@ def _compute_closure_fingerprint(func: Callable) -> Optional[Tuple]:
                         list_fp.append(('id', id(item)))
                 fingerprint_parts.append((var_name, ('list', tuple(list_fp))))
             elif callable(value):
-                # For callables, use id (they should be cached separately)
-                fingerprint_parts.append((var_name, ('callable', id(value))))
+                # Use stable callable fingerprint instead of id()
+                callable_fp = _compute_callable_fingerprint(value, seen_ids)
+                fingerprint_parts.append((var_name, callable_fp))
             elif hasattr(value, 'name'):
                 # Objects with name attribute (Entrance, Region, Location, etc.)
                 fingerprint_parts.append((var_name, ('named', type(value).__name__, value.name)))
@@ -109,6 +149,22 @@ def _compute_closure_fingerprint(func: Callable) -> Optional[Tuple]:
         return tuple(fingerprint_parts)
     except Exception:
         return None
+
+
+def _compute_closure_fingerprint(func: Callable) -> Optional[Tuple]:
+    """
+    Compute a hashable fingerprint of a function's closure variables.
+
+    This allows caching analysis results for lambdas at the same source location
+    that have equivalent closure values, even if they're different object instances.
+
+    For callables in closures, uses source location + recursive closure fingerprint
+    instead of id() to enable cache hits when the same lambda is created multiple
+    times (common pattern in ALttP bunny rules with get_rule_to_add()).
+
+    Returns None if the closure cannot be fingerprinted (unhashable values).
+    """
+    return _compute_closure_fingerprint_impl(func, set())
 
 
 def get_closure_aware_cache_key(func: Callable) -> Optional[Tuple[str, int, Tuple]]:
