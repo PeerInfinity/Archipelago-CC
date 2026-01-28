@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-01-28 07:40:51
+**Generated:** 2026-01-28 19:16:56
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -29,7 +29,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
 | A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 119.3KB | ✅ | 648.6KB |
-| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 72.4KB |
+| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ 100.0% | ✅ 100.0% | 1.8KB | ✅ | 275.4KB |
@@ -119,7 +119,7 @@ These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Short Hike | ✅ | ✅ | 72.4KB |
+| A Short Hike | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | 11.0KB |
 | Aquaria | 1.8KB | ✅ | 275.4KB |
 | Baking Adventure | ✅ | ✅ | 18.2KB |
