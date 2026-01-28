@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-28 19:16:56
+**Generated:** 2026-01-28 20:39:22
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -16,9 +16,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 59 (69.4%)
+- **Passing Both:** 60 (70.6%)
 - **Passing Modified Only:** 2 (2.4%)
-- **Passing Hybrid Only:** 2 (2.4%)
+- **Passing Hybrid Only:** 1 (1.2%)
 - **Passing Neither:** 22 (25.9%)
 - **Passing Hybrid with no custom code:** 39 (45.9%)
 - **Passing Hybrid Only with no custom code:** 0 (0.0%)
@@ -75,7 +75,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Muse Dash | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 233.5KB |
 | Noita | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Old School Runescape | ❌ 0.0% | ✅ 100.0% | 1.0KB | ✅ | 308.9KB |
+| Old School Runescape | ✅ 100.0% | ✅ 100.0% | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | ✅ 50.0% | ✅ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ 100.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ 0.0% | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 60.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (59)
+## Games Passing Both (60)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -155,6 +155,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Metamath | ✅ | ✅ | 48.1KB |
 | Muse Dash | ✅ | ✅ | 233.5KB |
 | Noita | ✅ | ✅ | 74.6KB |
+| Old School Runescape | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | 28.5KB | ✅ | 489.2KB |
 | Paint | 2.7KB | ✅ | 123.7KB |
 | Raft | 5.4KB | ✅ | 485.4KB |
@@ -188,13 +189,12 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 
-## Games Passing Hybrid Only (2)
+## Games Passing Hybrid Only (1)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Old School Runescape | 1.0KB | ✅ | 308.9KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 
 ## Games Passing Neither (22)

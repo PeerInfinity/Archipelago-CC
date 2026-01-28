@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified
 
-**Generated:** 2026-01-28 19:16:56
+**Generated:** 2026-01-28 20:39:22
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -16,8 +16,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 32 (37.6%)
-- **Passing Original Only:** 6 (7.1%)
+- **Passing Both:** 33 (38.8%)
+- **Passing Original Only:** 5 (5.9%)
 - **Passing Modified Only:** 29 (34.1%)
 - **Passing Neither:** 18 (21.2%)
 - **Passing Modified with no custom code:** 39 (45.9%)
@@ -75,7 +75,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Muse Dash | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 233.5KB |
 | Noita | ❌ 22.0% | ✅ 100.0% | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
-| Old School Runescape | ✅ 91.0% | ❌ 0.0% | 1.0KB | ✅ | 308.9KB |
+| Old School Runescape | ✅ 91.0% | ✅ 100.0% | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | ❌ 12.0% | ✅ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ 98.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ⚠️ 59.0% | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
@@ -113,7 +113,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ 42.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (32)
+## Games Passing Both (33)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -142,6 +142,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Math Adventure | ✅ | ✅ | 12.6KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | ✅ | 57.2KB |
+| Old School Runescape | 1.0KB | ✅ | 308.9KB |
 | Paint | 2.7KB | ✅ | 123.7KB |
 | Raft | 5.4KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ | ✅ | 146.1KB |
@@ -152,7 +153,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Undertale | ✅ | ✅ | 58.0KB |
 | Wargroove | ✅ | ✅ | 44.7KB |
 
-## Games Passing Original Only (6)
+## Games Passing Original Only (5)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -160,7 +161,6 @@ These games pass in the Original UT but fail in the Modified UT.
 |-----------|:--------:|:---------:|:----------:|
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |
-| Old School Runescape | 1.0KB | ✅ | 308.9KB |
 | Secret of Evermore | 5.3KB | 6.9KB | 418.7KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 | The Witness | 14.1KB | ✅ | 401.1KB |
