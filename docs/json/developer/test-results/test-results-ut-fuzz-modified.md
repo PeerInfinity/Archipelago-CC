@@ -6,11 +6,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-01-28 02:25:03
+**Generated:** 2026-01-28 04:42:30
 
-**Source Data Created:** 2026-01-28T02:25:03.173485
+**Source Data Created:** 2026-01-28T04:42:30.085991
 
-**Source Data Last Updated:** 2026-01-28T02:25:03.173494
+**Source Data Last Updated:** 2026-01-28T04:42:30.086016
 
 **Universal Tracker Version:** Modified (worldgen-based tracking)
 
@@ -25,20 +25,20 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 62 (72.9%)
-- **Games with Failures:** 23 (27.1%)
+- **Games with 100% Pass Rate:** 41 (48.2%)
+- **Games with Failures:** 44 (51.8%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 623 (73.3%)
-- **Failed Runs:** 183
+- **Successful Runs:** 446 (52.5%)
+- **Failed Runs:** 360
 - **Timed Out Runs:** 2
 - **Ignored Runs:** 42
 
 ### Expected vs Unexpected Results
 
-- **Expected Passes:** 58 (not excluded, passed)
-- **Unexpected Passes:** 4 (excluded, but passed)
-- **Expected Failures:** 21 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 1 (not excluded, logic mismatch)
+- **Expected Passes:** 38 (not excluded, passed)
+- **Unexpected Passes:** 3 (excluded, but passed)
+- **Expected Failures:** 22 (excluded, failed as expected)
+- **Unexpected Failures (logic):** 21 (not excluded, logic mismatch)
 - **Unexpected Failures (timeout only):** 1 (not excluded, only timeouts)
 
 ### Explain Support Summary
@@ -46,18 +46,18 @@
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 1
-- **Locations with Explain Support:** 14,127
-- **Locations without Explain Support:** 744
-- **Locations with Default Rule:** 20,428
+- **Locations with Explain Support:** 14,058
+- **Locations without Explain Support:** 737
+- **Locations with Default Rule:** 20,385
 - **Overall Explain Coverage:** 95.0%
 
 ### Generic Exporter/Logic Statistics
 
-Of the 62 games with 100% pass rate:
+Of the 41 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 39/62 (62.9%)
-- **Passing with Generic Logic:** 62/62 (100.0%)
-- **Passing with Both Generic:** 39/62 (62.9%)
+- **Passing with Generic Exporter:** 26/41 (63.4%)
+- **Passing with Generic Logic:** 41/41 (100.0%)
+- **Passing with Both Generic:** 26/41 (63.4%)
 
 **Combined Custom Code Size:**
 
@@ -69,33 +69,33 @@ Of the 62 games with 100% pass rate:
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ | 10 | 2 | 5 | 1 | 2 | ❌ 20.0% | 119.3KB | ✅ | 648.6KB |
-| A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 72.4KB |
+| A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
+| A Link to the Past | ❌ | 10 | 4 | 4 | 0 | 2 | ❌ 40.0% | 119.3KB | ✅ | 648.6KB |
+| A Short Hike | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | ✅ | ✅ | 72.4KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |
 | Baking Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 18.2KB |
 | Blasphemous | ❌ | 10 | 0 | 4 | 0 | 6 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1.4KB | 40.3KB | 329.0KB |
-| Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 50.4KB |
+| Bumper Stickers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.0KB | ✅ | 94.4KB |
-| Castlevania 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 138.5KB |
+| Castlevania 64 | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | ✅ | ✅ | 138.5KB |
 | Celeste (Open World) | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 1043.4KB |
-| Celeste 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 4.1KB | ✅ | 53.8KB |
-| ChecksFinder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 16.2KB |
+| Celeste 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 4.1KB | ✅ | 53.8KB |
+| ChecksFinder | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 16.2KB |
 | Choo-Choo Charles | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 282.3KB |
-| Civilization VI | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 166.9KB |
+| Civilization VI | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 166.9KB |
 | Coding Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 54.9KB |
 | DLCQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.2KB | ✅ | 51.0KB |
 | DOOM 1993 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 280.1KB |
 | DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
-| Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
-| Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 497.8KB |
+| Dark Souls III | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 1062.0KB |
+| Donkey Kong Country 3 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 122.5KB |
+| Factorio | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 6 | 0 | 2 | 2 | ⚠️ 60.0% | 10.3KB | ✅ | 549.0KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
@@ -103,21 +103,21 @@ Of the 62 games with 100% pass rate:
 | Jak and Daxter: The Precursor Legacy | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 757.5KB |
 | Kingdom Hearts 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 19.5KB | ✅ | 1675.2KB |
-| Kirby's Dream Land 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 10.1KB | ✅ | 529.1KB |
+| Kirby's Dream Land 3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 3.6KB | ✅ | 210.5KB |
 | Lingo | ❌ | 10 | 0 | 3 | 0 | 7 | ❌ 0.0% | 38.0KB | 10.7KB | 946.3KB |
 | Links Awakening DX | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 7.4KB | ✅ | 714.5KB |
-| Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
+| Lufia II Ancient Cave | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
-| Mega Man 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 52.9KB |
+| Mega Man 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 52.9KB |
 | MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
-| Metamath | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 48.1KB |
-| Muse Dash | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 233.5KB |
+| Metamath | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% | ✅ | ✅ | 48.1KB |
+| Muse Dash | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 233.5KB |
 | Noita | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.0KB | ✅ | 308.9KB |
+| Old School Runescape | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
@@ -128,22 +128,22 @@ Of the 62 games with 100% pass rate:
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 151.3KB |
-| Sonic Adventure 2 Battle | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 266.2KB |
+| Sonic Adventure 2 Battle | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
 | Stardew Valley | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
-| Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 207.8KB |
+| Subnautica | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 92.5KB | ✅ | 976.7KB |
+| Super Mario Land 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 92.5KB | ✅ | 976.7KB |
 | Super Mario World | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% | 60.9KB | 114.5KB | 625.4KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
-| TUNIC | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% | 3.1KB | ✅ | 705.5KB |
+| TUNIC | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% | 3.1KB | ✅ | 705.5KB |
 | Terraria | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% | 16.8KB | ✅ | 283.0KB |
-| The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.6KB |
+| The Legend of Zelda | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% | ✅ | ✅ | 555.6KB |
 | The Messenger | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 14.7KB | ✅ | 211.8KB |
-| The Wind Waker | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 7.0KB | ✅ | 253.9KB |
+| The Wind Waker | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% | 14.1KB | ✅ | 401.1KB |
 | Timespinner | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 260.8KB |
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
@@ -165,37 +165,37 @@ This section shows which games have rules that support the `explain_json()` meth
 | Timespinner | 720 | 181 | 435 | 104 | 🔶 29% |
 | Pokemon Red and Blue | 280 | 79 | 58 | 143 | ⚠️ 58% |
 | Kingdom Hearts 2 | 643 | 46 | 30 | 567 | ⚠️ 61% |
-| A Link to the Past | 270 | 130 | 29 | 111 | ⚠️ 82% |
-| Blasphemous | 305 | 112 | 12 | 181 | ⚠️ 90% |
+| A Link to the Past | 270 | 132 | 29 | 109 | ⚠️ 82% |
 | The Wind Waker | 228 | 173 | 16 | 39 | ⚠️ 92% |
 | Pokemon Emerald | 817 | 17 | 1 | 799 | ⚠️ 94% |
 | Kirby's Dream Land 3 | 832 | 118 | 5 | 709 | ⚠️ 96% |
+| Blasphemous | 305 | 119 | 5 | 181 | ⚠️ 96% |
 | The Messenger | 136 | 52 | 2 | 82 | ⚠️ 96% |
 | Mega Man 2 | 44 | 29 | 1 | 14 | ⚠️ 97% |
 | TUNIC | 6837 | 595 | 1 | 6241 | ⚠️ 100% |
 | A Hat in Time | 273 | 90 | 0 | 183 | ✅ 100% |
 | A Short Hike | 131 | 82 | 0 | 49 | ✅ 100% |
-| APQuest | 7 | 1 | 0 | 6 | ✅ 100% |
+| APQuest | 6 | 1 | 0 | 5 | ✅ 100% |
 | Adventure | 21 | 0 | 0 | 21 | ✅ 100% |
 | Aquaria | 218 | 35 | 0 | 183 | ✅ 100% |
 | Baking Adventure | 15 | 8 | 0 | 7 | ✅ 100% |
 | Bomb Rush Cyberfunk | 247 | 136 | 0 | 111 | ✅ 100% |
 | Bumper Stickers | 100 | 38 | 0 | 62 | ✅ 100% |
-| Castlevania - Circle of the Moon | 124 | 46 | 0 | 78 | ✅ 100% |
+| Castlevania - Circle of the Moon | 123 | 45 | 0 | 78 | ✅ 100% |
 | Castlevania 64 | 294 | 0 | 0 | 294 | ✅ 100% |
 | Celeste (Open World) | 1035 | 125 | 0 | 910 | ✅ 100% |
-| Celeste 64 | 54 | 21 | 0 | 33 | ✅ 100% |
+| Celeste 64 | 40 | 40 | 0 | 0 | ✅ 100% |
 | ChecksFinder | 25 | 20 | 0 | 5 | ✅ 100% |
 | Choo-Choo Charles | 691 | 64 | 0 | 627 | ✅ 100% |
 | Civilization VI | 270 | 91 | 0 | 179 | ✅ 100% |
 | Coding Adventure | 61 | 43 | 0 | 18 | ✅ 100% |
 | DLCQuest | 40 | 31 | 0 | 9 | ✅ 100% |
 | DOOM 1993 | 474 | 0 | 0 | 474 | ✅ 100% |
-| DOOM II | 453 | 0 | 0 | 453 | ✅ 100% |
+| DOOM II | 479 | 0 | 0 | 479 | ✅ 100% |
 | Dark Souls III | 1469 | 228 | 0 | 1241 | ✅ 100% |
-| Donkey Kong Country 3 | 220 | 1 | 0 | 219 | ✅ 100% |
+| Donkey Kong Country 3 | 219 | 0 | 0 | 219 | ✅ 100% |
 | Factorio | 309 | 309 | 0 | 0 | ✅ 100% |
-| Faxanadu | 110 | 25 | 0 | 85 | ✅ 100% |
+| Faxanadu | 110 | 24 | 0 | 86 | ✅ 100% |
 | Final Fantasy | 0 | 0 | 0 | 0 | ✅ 100% |
 | Final Fantasy Mystic Quest | 251 | 63 | 0 | 188 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
@@ -207,12 +207,12 @@ This section shows which games have rules that support the `explain_json()` meth
 | Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
 | Lingo | 800 | 800 | 0 | 0 | ✅ 100% |
 | Links Awakening DX | 220 | 0 | 0 | 220 | ✅ 100% |
-| Lufia II Ancient Cave | 97 | 92 | 0 | 5 | ✅ 100% |
+| Lufia II Ancient Cave | 77 | 72 | 0 | 5 | ✅ 100% |
 | Mario & Luigi Superstar Saga | 598 | 372 | 0 | 226 | ✅ 100% |
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
+| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
 | Muse Dash | 828 | 828 | 0 | 0 | ✅ 100% |
 | Noita | 376 | 0 | 0 | 376 | ✅ 100% |
 | Old School Runescape | 76 | 68 | 0 | 8 | ✅ 100% |
@@ -220,28 +220,28 @@ This section shows which games have rules that support the `explain_json()` meth
 | Paint | 167 | 167 | 0 | 0 | ✅ 100% |
 | Risk of Rain 2 | 672 | 672 | 0 | 0 | ✅ 100% |
 | SMZ3 | 316 | 316 | 0 | 0 | ✅ 100% |
-| Saving Princess | 36 | 16 | 0 | 20 | ✅ 100% |
+| Saving Princess | 24 | 9 | 0 | 15 | ✅ 100% |
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 76 | 22 | 0 | 54 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1046 | 227 | 0 | 819 | ✅ 100% |
-| Stardew Valley | 1069 | 931 | 0 | 138 | ✅ 100% |
-| Subnautica | 136 | 136 | 0 | 0 | ✅ 100% |
+| Stardew Valley | 1069 | 927 | 0 | 142 | ✅ 100% |
+| Subnautica | 161 | 161 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
 | Super Mario Land 2 | 2652 | 2491 | 0 | 161 | ✅ 100% |
 | Super Mario World | 743 | 396 | 0 | 347 | ✅ 100% |
 | Super Metroid | 36 | 36 | 0 | 0 | ✅ 100% |
-| TOEM original | 214 | 4 | 0 | 210 | ✅ 100% |
+| TOEM original | 191 | 4 | 0 | 187 | ✅ 100% |
 | TOEM rule builder | 214 | 4 | 0 | 210 | ✅ 100% |
-| Terraria | 128 | 92 | 0 | 36 | ✅ 100% |
+| Terraria | 85 | 62 | 0 | 23 | ✅ 100% |
 | The Legend of Zelda | 155 | 151 | 0 | 4 | ✅ 100% |
 | The Witness | 269 | 260 | 0 | 9 | ✅ 100% |
-| Undertale | 106 | 95 | 0 | 11 | ✅ 100% |
+| Undertale | 48 | 39 | 0 | 9 | ✅ 100% |
 | VVVVVV | 20 | 2 | 0 | 18 | ✅ 100% |
 | Wargroove | 38 | 28 | 0 | 10 | ✅ 100% |
 | Yacht Dice | 58 | 58 | 0 | 0 | ✅ 100% |
 | Yoshi's Island | 221 | 121 | 0 | 100 | ✅ 100% |
-| Yu-Gi-Oh! 2006 | 151 | 63 | 0 | 88 | ✅ 100% |
+| Yu-Gi-Oh! 2006 | 157 | 63 | 0 | 94 | ✅ 100% |
 | Zillion | 147 | 147 | 0 | 0 | ✅ 100% |
 | shapez | 1032 | 9 | 0 | 1023 | ✅ 100% |
 
@@ -316,7 +316,6 @@ These templates are excluded from testing:
 ### Unexpected Passes
 
 - Final Fantasy
-- Kirby's Dream Land 3
 - Raft
 - Sudoku
 
@@ -324,7 +323,27 @@ These templates are excluded from testing:
 
 These games have actual logic mismatches between UT and Python:
 
+- A Hat in Time
 - A Link to the Past
+- A Short Hike
+- Bumper Stickers
+- Castlevania 64
+- Celeste 64
+- ChecksFinder
+- Civilization VI
+- Dark Souls III
+- Donkey Kong Country 3
+- Factorio
+- Lufia II Ancient Cave
+- Mega Man 2
+- Metamath
+- Muse Dash
+- Old School Runescape
+- Sonic Adventure 2 Battle
+- Subnautica
+- Super Mario Land 2
+- The Legend of Zelda
+- The Wind Waker
 
 ### Unexpected Failures (Timeout Only)
 
