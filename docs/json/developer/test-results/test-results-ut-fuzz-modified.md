@@ -6,11 +6,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-01-27 23:41:05
+**Generated:** 2026-01-28 02:25:03
 
-**Source Data Created:** 2026-01-27T23:41:05.127837
+**Source Data Created:** 2026-01-28T02:25:03.173485
 
-**Source Data Last Updated:** 2026-01-27T23:41:05.127842
+**Source Data Last Updated:** 2026-01-28T02:25:03.173494
 
 **Universal Tracker Version:** Modified (worldgen-based tracking)
 
@@ -25,39 +25,39 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 63 (74.1%)
-- **Games with Failures:** 22 (25.9%)
+- **Games with 100% Pass Rate:** 62 (72.9%)
+- **Games with Failures:** 23 (27.1%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 624 (73.4%)
+- **Successful Runs:** 623 (73.3%)
 - **Failed Runs:** 183
-- **Timed Out Runs:** 1
+- **Timed Out Runs:** 2
 - **Ignored Runs:** 42
 
 ### Expected vs Unexpected Results
 
-- **Expected Passes:** 59 (not excluded, passed)
+- **Expected Passes:** 58 (not excluded, passed)
 - **Unexpected Passes:** 4 (excluded, but passed)
 - **Expected Failures:** 21 (excluded, failed as expected)
 - **Unexpected Failures (logic):** 1 (not excluded, logic mismatch)
-- **Unexpected Failures (timeout only):** 0 (not excluded, only timeouts)
+- **Unexpected Failures (timeout only):** 1 (not excluded, only timeouts)
 
 ### Explain Support Summary
 
 - **Games with Explain Stats:** 83
 - **Games with 100% Explain Coverage:** 71
 - **Games with No Explain Support:** 1
-- **Locations with Explain Support:** 14,042
-- **Locations without Explain Support:** 757
-- **Locations with Default Rule:** 20,452
-- **Overall Explain Coverage:** 94.9%
+- **Locations with Explain Support:** 14,127
+- **Locations without Explain Support:** 744
+- **Locations with Default Rule:** 20,428
+- **Overall Explain Coverage:** 95.0%
 
 ### Generic Exporter/Logic Statistics
 
-Of the 63 games with 100% pass rate:
+Of the 62 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 39/63 (61.9%)
-- **Passing with Generic Logic:** 63/63 (100.0%)
-- **Passing with Both Generic:** 39/63 (61.9%)
+- **Passing with Generic Exporter:** 39/62 (62.9%)
+- **Passing with Generic Logic:** 62/62 (100.0%)
+- **Passing with Both Generic:** 39/62 (62.9%)
 
 **Combined Custom Code Size:**
 
@@ -95,7 +95,7 @@ Of the 63 games with 100% pass rate:
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ✅ | 10 | 8 | 0 | 0 | 2 | ⚠️ 80.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | 10.3KB | ✅ | 549.0KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
@@ -162,7 +162,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Game Name | Total Locs | With Explain | Without Explain | Default Rule | Coverage |
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
 | Raft | 154 | 0 | 154 | 0 | ❌ 0% |
-| Timespinner | 725 | 177 | 448 | 100 | 🔶 28% |
+| Timespinner | 720 | 181 | 435 | 104 | 🔶 29% |
 | Pokemon Red and Blue | 280 | 79 | 58 | 143 | ⚠️ 58% |
 | Kingdom Hearts 2 | 643 | 46 | 30 | 567 | ⚠️ 61% |
 | A Link to the Past | 270 | 130 | 29 | 111 | ⚠️ 82% |
@@ -176,7 +176,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | A Hat in Time | 273 | 90 | 0 | 183 | ✅ 100% |
 | A Short Hike | 131 | 82 | 0 | 49 | ✅ 100% |
 | APQuest | 7 | 1 | 0 | 6 | ✅ 100% |
-| Adventure | 24 | 3 | 0 | 21 | ✅ 100% |
+| Adventure | 21 | 0 | 0 | 21 | ✅ 100% |
 | Aquaria | 218 | 35 | 0 | 183 | ✅ 100% |
 | Baking Adventure | 15 | 8 | 0 | 7 | ✅ 100% |
 | Bomb Rush Cyberfunk | 247 | 136 | 0 | 111 | ✅ 100% |
@@ -191,11 +191,11 @@ This section shows which games have rules that support the `explain_json()` meth
 | Coding Adventure | 61 | 43 | 0 | 18 | ✅ 100% |
 | DLCQuest | 40 | 31 | 0 | 9 | ✅ 100% |
 | DOOM 1993 | 474 | 0 | 0 | 474 | ✅ 100% |
-| DOOM II | 479 | 0 | 0 | 479 | ✅ 100% |
+| DOOM II | 453 | 0 | 0 | 453 | ✅ 100% |
 | Dark Souls III | 1469 | 228 | 0 | 1241 | ✅ 100% |
 | Donkey Kong Country 3 | 220 | 1 | 0 | 219 | ✅ 100% |
 | Factorio | 309 | 309 | 0 | 0 | ✅ 100% |
-| Faxanadu | 110 | 24 | 0 | 86 | ✅ 100% |
+| Faxanadu | 110 | 25 | 0 | 85 | ✅ 100% |
 | Final Fantasy | 0 | 0 | 0 | 0 | ✅ 100% |
 | Final Fantasy Mystic Quest | 251 | 63 | 0 | 188 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
@@ -207,13 +207,13 @@ This section shows which games have rules that support the `explain_json()` meth
 | Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
 | Lingo | 800 | 800 | 0 | 0 | ✅ 100% |
 | Links Awakening DX | 220 | 0 | 0 | 220 | ✅ 100% |
-| Lufia II Ancient Cave | 77 | 72 | 0 | 5 | ✅ 100% |
+| Lufia II Ancient Cave | 97 | 92 | 0 | 5 | ✅ 100% |
 | Mario & Luigi Superstar Saga | 598 | 372 | 0 | 226 | ✅ 100% |
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
-| Muse Dash | 776 | 776 | 0 | 0 | ✅ 100% |
+| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
+| Muse Dash | 828 | 828 | 0 | 0 | ✅ 100% |
 | Noita | 376 | 0 | 0 | 376 | ✅ 100% |
 | Old School Runescape | 76 | 68 | 0 | 8 | ✅ 100% |
 | Overcooked! 2 | 43 | 9 | 0 | 34 | ✅ 100% |
@@ -224,7 +224,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 76 | 22 | 0 | 54 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1046 | 227 | 0 | 819 | ✅ 100% |
-| Stardew Valley | 1062 | 922 | 0 | 140 | ✅ 100% |
+| Stardew Valley | 1069 | 931 | 0 | 138 | ✅ 100% |
 | Subnautica | 136 | 136 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
@@ -325,3 +325,9 @@ These templates are excluded from testing:
 These games have actual logic mismatches between UT and Python:
 
 - A Link to the Past
+
+### Unexpected Failures (Timeout Only)
+
+These games failed only due to timeouts, not logic mismatches:
+
+- Final Fantasy Mystic Quest

@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-27 23:41:05
+**Generated:** 2026-01-28 02:25:03
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -17,9 +17,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 - **Total Games Tested:** 85
 - **Passing Both:** 60 (70.6%)
-- **Passing Modified Only:** 3 (3.5%)
+- **Passing Modified Only:** 2 (2.4%)
 - **Passing Hybrid Only:** 1 (1.2%)
-- **Passing Neither:** 21 (24.7%)
+- **Passing Neither:** 22 (25.9%)
 - **Passing Hybrid with no custom code:** 39 (45.9%)
 - **Passing Hybrid Only with no custom code:** 0 (0.0%)
 
@@ -53,7 +53,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Factorio | ✅ 100.0% | ✅ 100.0% | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ✅ 80.0% | ❌ 0.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ⚠️ 70.0% | ❌ 0.0% | 10.3KB | ✅ | 549.0KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
@@ -180,14 +180,13 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Modified Only (3)
+## Games Passing Modified Only (2)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
-| Final Fantasy Mystic Quest | 10.3KB | ✅ | 549.0KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 
 ## Games Passing Hybrid Only (1)
@@ -198,7 +197,7 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 |-----------|:--------:|:---------:|:----------:|
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 
-## Games Passing Neither (21)
+## Games Passing Neither (22)
 
 These games fail in both Universal Tracker versions.
 
@@ -208,6 +207,7 @@ These games fail in both Universal Tracker versions.
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
+| Final Fantasy Mystic Quest | 10.3KB | ✅ | 549.0KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ✅ | ✅ | 757.5KB |
