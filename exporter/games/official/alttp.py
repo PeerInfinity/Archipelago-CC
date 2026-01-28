@@ -49,11 +49,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'old_rule',  # The existing rule in add_rule combined lambdas
     }
 
-    # Enable auto-preservation for large helpers to catch any other helpers
-    # that might cause rule explosion
-    AUTO_PRESERVE_LARGE_HELPERS = True
-    HELPER_INLINE_THRESHOLD = 50  # Preserve helpers with more than 50 AST nodes
-
     # State method replacements for ALttP-specific state extensions
     # These are handled specially in the call_visitor but we can add
     # additional patterns here if needed
