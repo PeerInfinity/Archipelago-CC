@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-28 10:33:02
+**Generated:** 2026-01-28 10:46:56
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -110,8 +110,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Metamath | 13.5s | 2 | A Hat in Time.yaml, Metamath.yaml |
+| 2 | Super Metroid | 12.7s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml, Super Metroid.yaml |
+| 3 | Stardew Valley | 12.7s | 4 | APQuest.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Stardew Valley.yaml |
+| 4 | Timespinner | 12.6s | 6 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, Risk of Rain 2.yaml, Super Mario World.yaml (+1 more) |
+| 5 | Yoshi's Island | 12.1s | 4 | A Link to the Past.yaml, Landstalker - The Treasures of King Nole.yaml, TUNIC.yaml, Yoshi's Island.yaml |
+| 6 | The Wind Waker | 11.0s | 6 | Aquaria.yaml, Heretic.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml, Super Mario 64.yaml (+1 more) |
+| 7 | Super Mario World | 10.7s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, Risk of Rain 2.yaml, Super Mario World.yaml |
+| 8 | TUNIC | 10.4s | 3 | A Link to the Past.yaml, Landstalker - The Treasures of King Nole.yaml, TUNIC.yaml |
+| 9 | Sonic Adventure 2 Battle | 10.4s | 3 | A Link to the Past.yaml, Landstalker - The Treasures of King Nole.yaml, Sonic Adventure 2 Battle.yaml |
+| 10 | Kingdom Hearts | 10.4s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 118.1s | 4 | APQuest.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Stardew Valley.yaml |
+| 2 | Secret of Evermore | 90.9s | 4 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Meritous.yaml, Secret of Evermore.yaml |
+| 3 | Super Metroid | 53.2s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml, Super Metroid.yaml |
+| 4 | ChecksFinder | 47.2s | 2 | APQuest.yaml, ChecksFinder.yaml |
+| 5 | Kingdom Hearts 2 | 45.2s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml |
+| 6 | Celeste 64 | 45.1s | 2 | A Short Hike.yaml, Celeste 64.yaml |
+| 7 | Castlevania 64 | 44.3s | 2 | A Hat in Time.yaml, Castlevania 64.yaml |
+| 8 | Kingdom Hearts | 44.2s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml |
+| 9 | Celeste (Open World) | 44.1s | 2 | A Link to the Past.yaml, Celeste (Open World).yaml |
+| 10 | Civilization VI | 44.0s | 2 | Aquaria.yaml, Civilization VI.yaml |
