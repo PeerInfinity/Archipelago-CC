@@ -60,6 +60,7 @@ from .rules import (
     CanReachLocation,
     CanReachRegion,
     CanReachEntrance,
+    EntranceAccessRuleCall,
     # AST format support
     ASTRule,
     Not,
@@ -128,6 +129,7 @@ __all__ = [
     'CanReachLocation',
     'CanReachRegion',
     'CanReachEntrance',
+    'EntranceAccessRuleCall',
     # AST format support classes
     'ASTRule',
     'Not',
