@@ -1936,9 +1936,18 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                             self._is_glitch_mode and dest_allows_bunny_revival
                         )
 
+                        # IMPORTANT: Only add Moon Pearl if the destination IS bunny territory.
+                        # Regions created dynamically (like Take-Any caves from retro_caves)
+                        # may not have is_dark_world/is_light_world set because they're created
+                        # after mark_light_world_regions() runs. These regions don't require
+                        # Moon Pearl because is_bunny() returns False for them in the original
+                        # set_bunny_rules() code.
+                        dest_is_actually_bunny_territory = dest_is_pure_bunny_territory
+
                         if (not self._is_no_logic_single_player and
                             self._entrance_shuffle_mode != 'vanilla' and
                             src_is_pure_bunny_territory and
+                            dest_is_actually_bunny_territory and
                             dest_has_non_bunny_locs and
                             not self._rule_contains_moon_pearl(exit_data.get('access_rule', {})) and
                             not skip_moon_pearl_for_glitch_dungeon):
