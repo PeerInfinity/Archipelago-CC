@@ -248,14 +248,21 @@ class ExpressionVisitorMixin:
                         logging.debug(f"visit_Name: '{name}' is a list of {len(list_value)} callables, analyzing each")
                         # Import analyze_rule to avoid circular dependency
                         from ..analysis import analyze_rule
-                        from ..cache import callable_list_cache
+                        from ..cache import callable_list_cache, closure_aware_cache, get_closure_aware_cache_key
                         analyzed_items = []
                         for idx, item_func in enumerate(list_value):
                             try:
-                                # Check cache first using function ID
+                                # Check closure-aware cache first (for semantically equivalent lambdas)
+                                # This is critical for ALttP bunny rules where get_rule_to_add() creates
+                                # new lambda instances that are semantically equivalent
+                                closure_key = get_closure_aware_cache_key(item_func)
                                 func_id = id(item_func)
-                                if func_id in callable_list_cache:
-                                    logging.debug(f"visit_Name: Cache hit for callable {idx} in list '{name}'")
+
+                                if closure_key and closure_key in closure_aware_cache:
+                                    logging.debug(f"visit_Name: Closure-aware cache hit for callable {idx} in list '{name}'")
+                                    item_result = closure_aware_cache[closure_key]
+                                elif func_id in callable_list_cache:
+                                    logging.debug(f"visit_Name: ID cache hit for callable {idx} in list '{name}'")
                                     item_result = callable_list_cache[func_id]
                                 else:
                                     item_result = analyze_rule(
@@ -267,9 +274,11 @@ class ExpressionVisitorMixin:
                                         rule_target_name=getattr(self, 'rule_target_name', None),
                                         target_type=getattr(self, 'target_type', None)
                                     )
-                                    # Cache successful results
+                                    # Cache successful results in both caches
                                     if item_result and item_result.get('type') != 'error':
                                         callable_list_cache[func_id] = item_result
+                                        if closure_key:
+                                            closure_aware_cache[closure_key] = item_result
 
                                 if item_result and item_result.get('type') != 'error':
                                     analyzed_items.append(item_result)
