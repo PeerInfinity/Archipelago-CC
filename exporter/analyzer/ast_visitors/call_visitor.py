@@ -178,6 +178,13 @@ class CallVisitorMixin:
         if namedtuple_callable is not None:
             return namedtuple_callable
 
+        # *** Special handling for Entrance.access_rule() calls ***
+        # Pattern: dungeon_entrance.access_rule(fake_pearl_state(state, player))
+        # where dungeon_entrance is an Entrance object in closure_vars
+        entrance_access_rule = self._try_handle_entrance_access_rule(node)
+        if entrance_access_rule is not None:
+            return entrance_access_rule
+
         # *** Special handling for dict.get(key, default)(state) where dict contains lambdas ***
         # Pattern: rule_map.get(entrance.connected_region.name, lambda: False)(state)
         # Check this early to properly analyze each lambda in the dict
