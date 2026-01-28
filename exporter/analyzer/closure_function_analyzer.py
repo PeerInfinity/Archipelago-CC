@@ -41,8 +41,9 @@ class ClosureFunctionAnalyzer:
     # Maximum depth for bunny rule path expansion
     # Beyond this depth, use conservative approximation to prevent exponential growth
     # Lower values prevent exponential growth but may produce less accurate rules
-    # Kept at 1 - increasing to 2 doesn't significantly improve pass rate
-    # but DFS early termination and fixed dominance pruning prepare for future increases
+    # Testing showed depths 1, 2, and 10 all produce 74% pass rate - the remaining
+    # failures are due to bunny rule export issues, not insufficient depth.
+    # Using depth=1 as optimal balance (no timeouts, same pass rate)
     MAX_BUNNY_PATH_DEPTH = 1
 
     # Patterns recognized by closure variable names
