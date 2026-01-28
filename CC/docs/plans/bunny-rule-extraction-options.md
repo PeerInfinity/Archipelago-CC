@@ -371,6 +371,197 @@ case 'PrecomputedBunnyPaths':
 | **Entrance Shuffle Support** | Yes (full) | Partial | Yes (computed) |
 | **Nested Regions** | Yes | No | Partial |
 
+## Additional Optimization Strategies
+
+The three options above can be enhanced with these optimization techniques to reduce exponential growth.
+
+### Understanding the Exponential Growth
+
+The original `get_rule_to_add()` in `worlds/alttp/Rules.py:1690-1753` uses BFS to compute paths efficiently (O(V+E) where V=regions, E=entrances). The **exponential growth happens during analysis**, not during path computation:
+
+1. Each `options_to_access_rule` has N options (paths)
+2. Each `path_to_access_rule` contains M path rules
+3. Some path rules are themselves bunny rules (nested `options_to_access_rule`)
+4. This creates O(N^D) analysis calls where D = depth
+
+Current caching helps avoid re-analyzing the **same function**, but with entrance shuffle, paths go through different entrances, so functions differ.
+
+### Strategy A: DFS with Early Termination
+
+**Current approach** (BFS-like): Analyze all options at each depth level before going deeper.
+
+**DFS approach**: Fully analyze one path before moving to the next.
+
+**Key insight**: Bunny rules are OR conditions - if ANY path works, the location is accessible without Moon Pearl.
+
+```python
+def _analyze_options_pattern_dfs(self, options: List, depth: int) -> Optional[Dict[str, Any]]:
+    """DFS analysis with early termination on simple paths."""
+
+    # Sort options by "likely simplicity" - shorter paths first
+    sorted_options = self._sort_by_complexity(options)
+
+    best_result = None
+    best_complexity = float('inf')
+
+    for option_func in sorted_options:
+        result = self.analyze_function(option_func, depth + 1)
+        if result is None:
+            continue
+
+        complexity = self._compute_complexity(result)
+
+        # Early termination: if we find a path with just can_reach (no items), stop
+        if self._is_trivial_path(result):
+            return result  # Can't get simpler than this
+
+        # Track best (simplest) result
+        if complexity < best_complexity:
+            best_result = result
+            best_complexity = complexity
+
+        # Pruning: if remaining options can't be simpler, stop
+        if self._remaining_cannot_beat(sorted_options, complexity):
+            break
+
+    return best_result if best_result else {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+
+def _is_trivial_path(self, result: Dict) -> bool:
+    """Check if result is just a can_reach check with no item requirements."""
+    if result.get('rule') == 'CanReachEntrance':
+        return True
+    if result.get('rule') == 'And':
+        children = result.get('children', [])
+        return all(c.get('rule') == 'CanReachEntrance' for c in children)
+    return False
+```
+
+**Benefit**: If a simple path exists, we find it quickly and skip complex analysis.
+
+### Strategy B: Dominance Pruning
+
+If path A requires fewer items than path B, path A "dominates" path B.
+
+```python
+def _prune_dominated_options(self, analyzed_options: List[Dict]) -> List[Dict]:
+    """Remove options that are strictly harder than others."""
+
+    # Extract requirement sets from each option
+    def get_requirements(opt):
+        """Extract set of required items from analyzed rule."""
+        items = set()
+        self._collect_items(opt, items)
+        return items
+
+    requirement_sets = [(opt, get_requirements(opt)) for opt in analyzed_options]
+
+    # Remove dominated options (superset of requirements)
+    non_dominated = []
+    for opt, reqs in requirement_sets:
+        is_dominated = False
+        for other_opt, other_reqs in requirement_sets:
+            if opt is other_opt:
+                continue
+            # If other requires strictly fewer items, this is dominated
+            if other_reqs < reqs:  # Strict subset
+                is_dominated = True
+                break
+        if not is_dominated:
+            non_dominated.append(opt)
+
+    return non_dominated
+```
+
+**Benefit**: Reduces final OR size by eliminating redundant paths.
+
+### Strategy C: Region-Based Memoization
+
+Many locations in the same region have the same bunny rule (same `get_rule_to_add(region)` call). Cache by region name.
+
+```python
+# In ClosureFunctionAnalyzer
+_region_bunny_cache: Dict[str, Dict] = {}  # region_name -> analyzed_result
+
+def _analyze_with_region_cache(self, func: Callable, region_name: str, depth: int):
+    """Use region-based caching for bunny rules."""
+
+    cache_key = (region_name, depth)
+    if cache_key in self._region_bunny_cache:
+        return self._region_bunny_cache[cache_key]
+
+    result = self.analyze_function(func, depth)
+    self._region_bunny_cache[cache_key] = result
+    return result
+```
+
+**Caveat**: The `location` parameter to `get_rule_to_add()` affects superbunny checks in glitch modes. For non-glitch mode, region caching works perfectly.
+
+### Strategy D: Lazy/Deferred Expansion
+
+Export paths with "unexpanded" markers; let frontend expand lazily.
+
+```json
+{
+  "rule": "BunnyRule",
+  "region": "Sewers Secret Room",
+  "paths": [
+    {"entrance": "Hype Cave", "requirements": "deferred"},
+    {"entrance": "Sanctuary", "requirements": ["Lamp"]}
+  ]
+}
+```
+
+Frontend evaluates:
+1. Check if any path with known requirements works
+2. If not, and "deferred" paths exist, request expansion or assume Moon Pearl needed
+
+**Benefit**: Avoids analyzing complex nested paths unless actually needed.
+
+### Strategy E: Structural Deduplication
+
+Many paths have equivalent requirements even with different entrances.
+
+```python
+def _deduplicate_by_requirements(self, options: List[Dict]) -> List[Dict]:
+    """Keep one representative per unique requirement set."""
+
+    seen_reqs = {}
+    unique_options = []
+
+    for opt in options:
+        # Serialize requirements as hashable key
+        reqs_key = self._get_requirements_key(opt)
+
+        if reqs_key not in seen_reqs:
+            seen_reqs[reqs_key] = opt
+            unique_options.append(opt)
+
+    return unique_options
+```
+
+**Benefit**: Reduces N options to K equivalence classes where K << N.
+
+### Strategy Comparison
+
+| Strategy | Reduces Analysis Calls | Reduces Output Size | Implementation Effort |
+|----------|----------------------|---------------------|----------------------|
+| A: DFS + Early Term | High (if simple path exists) | No | Medium |
+| B: Dominance Pruning | No | Medium | Low |
+| C: Region Cache | High (for shared regions) | No | Low |
+| D: Lazy Expansion | High (defers to frontend) | Medium | High |
+| E: Deduplication | No | High | Low |
+
+### Recommended Combination
+
+1. **C: Region Cache** - Low effort, high impact for most cases
+2. **A: DFS + Early Termination** - Stop as soon as we find a simple path
+3. **E: Deduplication** - Keep output size manageable
+4. **B: Dominance Pruning** - Final cleanup of redundant options
+
+This combination addresses both analysis time AND output size.
+
+---
+
 ## Recommendation
 
 ### Short-term: Hybrid Approach (Options 1 + 2)
@@ -390,32 +581,52 @@ Pre-computed paths would be most accurate for entrance shuffle scenarios, but th
 
 ## Implementation Plan
 
-### Phase 1: Quick Win (2-4 hours)
+### Phase 1: Quick Win - Region Cache (2-4 hours)
 
-1. Increase `MAX_BUNNY_PATH_DEPTH` to 2
+1. Add region-based memoization (Strategy C)
+   - Cache bunny rule analysis by region name
+   - Clear cache per player/seed
+2. Run fuzzer tests to measure improvement
+3. Expected: Significant reduction in analysis calls for shared regions
+
+### Phase 2: DFS with Early Termination (4-6 hours)
+
+1. Implement `_analyze_options_pattern_dfs()` (Strategy A)
+   - Sort options by path length (shorter first)
+   - Stop when trivial path found (just can_reach, no items)
+2. Add `_is_trivial_path()` helper
+3. Test with entrance shuffle seeds
+
+### Phase 3: Deduplication and Pruning (4-6 hours)
+
+1. Implement `_deduplicate_by_requirements()` (Strategy E)
+   - Hash requirement sets
+   - Keep one representative per equivalence class
+2. Implement `_prune_dominated_options()` (Strategy B)
+   - Remove options with superset of requirements
+3. Apply after analysis, before building final OR
+
+### Phase 4: Increase Depth with Safeguards (2-4 hours)
+
+1. Increase `MAX_BUNNY_PATH_DEPTH` to 2 or 3
 2. Add rule size check (fail if > 1000 nodes)
-3. Run fuzzer tests to measure improvement
+3. Add per-location analysis timeout
+4. Test with various entrance shuffle modes
 
-### Phase 2: Raw Extraction Fallback (8-12 hours)
+### Phase 5: Raw Extraction Fallback (8-12 hours)
 
 1. Implement `extract_bunny_rule_data()` method
 2. Add `BunnyPathCheck` rule type to frontend
-3. Integrate as fallback when depth limit hit
+3. Use as fallback when depth/size limit hit
 4. Test with entrance shuffle insanity
 
-### Phase 3: Tuning (4-8 hours)
-
-1. Adjust depth limit based on performance data
-2. Tune rule size thresholds
-3. Add game handler configuration options
-4. Document configuration options
-
-### Phase 4: Validation (4-8 hours)
+### Phase 6: Validation (4-8 hours)
 
 1. Run full fuzzer suite (100+ seeds)
 2. Test all entrance shuffle modes
 3. Test inverted mode combinations
 4. Measure pass rate improvement
+5. Compare export time and JSON size
 
 ## Success Criteria
 
