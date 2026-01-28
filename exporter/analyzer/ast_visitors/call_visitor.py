@@ -1469,17 +1469,38 @@ class CallVisitorMixin:
                             items.append(item)
                     result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in items]}
                 elif method == '_lttp_has_key' and len(filtered_args) >= 1:
-                    # Unwrap item name if it's a constant
-                    item_arg = filtered_args[0]
-                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
-                        item_value = item_arg.get('value')
-                    elif isinstance(item_arg, str):
-                        item_value = item_arg
+                    # Check if universal key shuffle is enabled - if so, use can_buy_unlimited instead
+                    # ALttP's _lttp_has_key returns can_buy_unlimited('Small Key (Universal)') when
+                    # small_key_shuffle == universal (option value 5)
+                    world = self.closure_vars.get('world')
+                    use_universal_key = False
+                    if world and hasattr(world, 'options') and hasattr(world.options, 'small_key_shuffle'):
+                        small_key_opt = world.options.small_key_shuffle
+                        # option_universal = 5 in worlds/alttp/Options.py
+                        if hasattr(small_key_opt, 'value') and small_key_opt.value == 5:
+                            use_universal_key = True
+                            logging.debug("_lttp_has_key: universal key shuffle detected, using can_buy_unlimited")
+
+                    if use_universal_key:
+                        # With universal key shuffle, any small key check becomes can_buy_unlimited
+                        result = {
+                            'type': 'helper',
+                            'name': 'can_buy_unlimited',
+                            'args': [{'type': 'constant', 'value': 'Small Key (Universal)'}]
+                        }
                     else:
-                        item_value = item_arg
-                    # Count is now in position 1 after player is filtered
-                    count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-                    result = {'type': 'count_check', 'item': item_value, 'count': count}
+                        # Normal count-based check
+                        # Unwrap item name if it's a constant
+                        item_arg = filtered_args[0]
+                        if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
+                            item_value = item_arg.get('value')
+                        elif isinstance(item_arg, str):
+                            item_value = item_arg
+                        else:
+                            item_value = item_arg
+                        # Count is now in position 1 after player is filtered
+                        count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
+                        result = {'type': 'count_check', 'item': item_value, 'count': count}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object

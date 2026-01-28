@@ -32,20 +32,25 @@ parameterless_func_cache: Dict[Tuple[str, int], Dict[str, Any]] = {}
 # (common in ALttP bunny rules where entrance access rules are shared)
 callable_list_cache: Dict[int, Dict[str, Any]] = {}
 
-# Cache for lambda analysis results keyed by source location + closure fingerprint
-# Key: (filename, lineno, closure_fingerprint) -> analyzed rule dict
-# This allows caching lambdas at the same source location with equivalent closures,
+# Cache for lambda analysis results keyed by source location + closure fingerprint + defaults
+# Key: (filename, lineno, closure_fingerprint, defaults_fingerprint) -> analyzed rule dict
+# This allows caching lambdas at the same source location with equivalent closures and defaults,
 # even if they are different object instances (different id()).
 # Critical for ALttP bunny rules where get_rule_to_add() creates new lambdas per call.
-closure_aware_cache: Dict[Tuple[str, int, Tuple], Dict[str, Any]] = {}
+# The defaults_fingerprint is essential for AHIT painting rules that use default arguments.
+closure_aware_cache: Dict[Tuple[str, int, Tuple, Tuple], Dict[str, Any]] = {}
 
 
 def _compute_callable_fingerprint(func: Callable, seen_ids: set) -> Tuple:
     """
-    Compute a stable fingerprint for a callable based on source location + closure.
+    Compute a stable fingerprint for a callable based on source location + closure + defaults.
 
     Uses source location (filename, lineno) instead of id() for better cache hits
     when the same lambda is created multiple times (common in ALttP bunny rules).
+
+    Also includes the defaults fingerprint to distinguish lambdas with different
+    default argument values (critical for AHIT painting/hat rules that capture
+    values via default arguments like: lambda state, paintings=data.paintings: ...)
 
     Args:
         func: The callable to fingerprint
@@ -69,7 +74,13 @@ def _compute_callable_fingerprint(func: Callable, seen_ids: set) -> Tuple:
         seen_ids_copy = seen_ids | {func_id}
         closure_fp = _compute_closure_fingerprint_impl(func, seen_ids_copy)
 
-        return ('lambda', filename, lineno, closure_fp)
+        # Also compute defaults fingerprint for this callable
+        # This is critical for lambdas that capture values via default arguments
+        defaults_fp = _compute_defaults_fingerprint(func)
+        if defaults_fp is None:
+            defaults_fp = ()
+
+        return ('lambda', filename, lineno, closure_fp, defaults_fp)
     else:
         # No code attribute, fall back to id
         return ('callable_id', func_id)
@@ -167,11 +178,66 @@ def _compute_closure_fingerprint(func: Callable) -> Optional[Tuple]:
     return _compute_closure_fingerprint_impl(func, set())
 
 
-def get_closure_aware_cache_key(func: Callable) -> Optional[Tuple[str, int, Tuple]]:
+def _compute_defaults_fingerprint(func: Callable) -> Optional[Tuple]:
     """
-    Get a cache key for a function based on its source location and closure fingerprint.
+    Compute a hashable fingerprint of a function's default parameter values.
 
-    Returns (filename, lineno, closure_fingerprint) if cacheable, None otherwise.
+    This is critical for lambdas that use default arguments to capture values,
+    like AHIT's painting rules: lambda state, paintings=data.paintings: ...
+
+    These lambdas have no closure variables (empty __closure__) but different
+    __defaults__ values. Without including defaults in the cache key, they
+    would incorrectly share the same cache entry.
+
+    Returns a tuple of the defaults, or empty tuple if no defaults.
+    Returns None if defaults contain unhashable values.
+    """
+    if not hasattr(func, '__defaults__') or not func.__defaults__:
+        return ()
+
+    try:
+        defaults = func.__defaults__
+        fingerprint_parts = []
+
+        for value in defaults:
+            if value is None or isinstance(value, (int, str, bool, float, bytes)):
+                # Primitive types - use directly
+                fingerprint_parts.append(value)
+            elif isinstance(value, (tuple, frozenset)):
+                # Already hashable collections
+                fingerprint_parts.append(value)
+            elif hasattr(value, 'name'):
+                # Objects with name attribute (Location, Region, etc.)
+                fingerprint_parts.append(('named', type(value).__name__, value.name))
+            elif callable(value):
+                # Use stable callable fingerprint
+                callable_fp = _compute_callable_fingerprint(value, set())
+                fingerprint_parts.append(callable_fp)
+            else:
+                # Try to use the value directly if hashable
+                try:
+                    hash(value)
+                    fingerprint_parts.append(value)
+                except TypeError:
+                    # Unhashable value - can't fingerprint
+                    return None
+
+        return tuple(fingerprint_parts)
+    except Exception:
+        return None
+
+
+def get_closure_aware_cache_key(func: Callable) -> Optional[Tuple[str, int, Tuple, Tuple]]:
+    """
+    Get a cache key for a function based on its source location, closure fingerprint,
+    and default parameter fingerprint.
+
+    Returns (filename, lineno, closure_fingerprint, defaults_fingerprint) if cacheable,
+    None otherwise.
+
+    Note: The defaults_fingerprint is critical for lambdas that use default arguments
+    to capture values (like AHIT's painting rules). Without it, lambdas on the same
+    line with different default values would incorrectly share cache entries.
     """
     if not hasattr(func, '__code__'):
         return None
@@ -181,11 +247,15 @@ def get_closure_aware_cache_key(func: Callable) -> Optional[Tuple[str, int, Tupl
         filename = inspect.getfile(func)
         lineno = code.co_firstlineno
 
-        fingerprint = _compute_closure_fingerprint(func)
-        if fingerprint is None:
+        closure_fingerprint = _compute_closure_fingerprint(func)
+        if closure_fingerprint is None:
             return None
 
-        return (filename, lineno, fingerprint)
+        defaults_fingerprint = _compute_defaults_fingerprint(func)
+        if defaults_fingerprint is None:
+            return None
+
+        return (filename, lineno, closure_fingerprint, defaults_fingerprint)
     except (TypeError, OSError):
         return None
 
