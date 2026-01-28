@@ -2,12 +2,14 @@
 
 This exporter handles ALttP-specific patterns:
 - Bunny rules: Complex dynamic rules that check if locations are accessible
-  in bunny form (Dark World without Moon Pearl). These rules use lambdas
-  that can't be serialized. We detect both function objects (pre-serialization)
-  and their string representations (post-serialization) and replace them with
-  simplified True rules, indicating the location is potentially accessible.
+  in bunny form (Dark World without Moon Pearl). The main analyzer handles
+  these via factory function execution, producing any_of rules with Moon Pearl
+  and Light World path alternatives. For entrance shuffle modes, this exporter
+  also adds Moon Pearl requirements to exits where the shuffled connectivity
+  differs from the vanilla paths that the original rules assumed.
 - Shop price rules: Rules that check if the player has enough resources
-  to purchase items from shops.
+  to purchase items from shops. The analyzer handles these by resolving
+  enum comparisons and control flow to produce the correct item requirements.
 """
 
 from typing import Dict, Any, Optional, List, Set, Callable
@@ -18,10 +20,12 @@ import re
 
 logger = logging.getLogger(__name__)
 
-# Feature flag for dynamic bunny rule analysis
-# When True, attempts to analyze bunny rules dynamically before falling back to workaround
-# EXPERIMENTAL: Set to False to let the main analyzer handle bunny rules via
-# factory function execution and callable list analysis
+# Feature flag for legacy dynamic bunny rule analysis
+# When False (default), the main analyzer handles bunny rules via factory function
+# execution and callable list analysis, producing proper any_of rules.
+# When True, attempts legacy dynamic analysis using ClosureFunctionAnalyzer before
+# falling back to simplified Moon Pearl workarounds.
+# The default (False) is the preferred approach - legacy mode is kept for debugging.
 ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
 
 # Feature flag for mixed region Moon Pearl cleanup
@@ -33,6 +37,15 @@ ENABLE_DYNAMIC_BUNNY_ANALYSIS = False
 # ever marked as both is_light_world and is_dark_world, so this code never triggers.
 # The analyzer should handle mixed region bunny rules correctly via any_of rules.
 ENABLE_MIXED_REGION_MOON_PEARL_CLEANUP = False
+
+# Feature flag for manual Moon Pearl addition to exits in entrance shuffle mode
+# When True, adds Moon Pearl requirements to exits from bunny territory to bunny
+# territory with non-bunny-accessible locations. This was intended as defense-in-depth
+# for entrance shuffle scenarios.
+# DISABLED by default: The location rules (from set_bunny_rules) should be sufficient
+# to block access - players would be blocked when trying to collect items, not at
+# the exit. The analyzer now properly serializes bunny rules as any_of rules.
+ENABLE_ENTRANCE_SHUFFLE_EXIT_MOON_PEARL = False
 
 
 # --- Dynamic imports from original ALttP code ---
@@ -1119,9 +1132,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Intercept complex rules before standard analysis.
 
-        Currently handles bunny rules, which have complex nested lambdas and
-        dynamic path lookups. The analyzer now attempts to analyze these dynamically
-        using the ClosureFunctionAnalyzer before falling back to pre-computed workarounds.
+        By default (ENABLE_DYNAMIC_BUNNY_ANALYSIS=False), this returns None for bunny
+        rules, letting the main analyzer handle them via factory function execution.
+        The analyzer produces proper any_of rules with Moon Pearl and path alternatives.
+
+        When ENABLE_DYNAMIC_BUNNY_ANALYSIS=True (legacy mode), attempts dynamic analysis
+        using ClosureFunctionAnalyzer before falling back to pre-computed workarounds.
 
         All other rule patterns (dungeon_reentry_rules, underworld_glitches_rules,
         dict lookups, closure function calls, etc.) are handled by the generic analyzer.
@@ -1675,13 +1691,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         return rule
 
     def _get_bunny_replacement_rule(self, location_name: str, region_name: str = None) -> Dict[str, Any]:
-        """Get the replacement rule for a bunny rule lambda.
+        """Get the replacement rule for a bunny rule lambda (legacy fallback).
+
+        NOTE: This method is only used when ENABLE_DYNAMIC_BUNNY_ANALYSIS=True (legacy mode).
+        The default behavior is to let the main analyzer handle bunny rules via factory
+        function execution, which produces proper any_of rules with all path alternatives.
 
         Bunny rules check if a location is accessible when in bunny form (Dark World
-        without Moon Pearl in standard mode). The rules evaluate dynamically based on
-        available entrance paths.
-
-        Since we can't replicate the dynamic path evaluation, we use this approximation:
+        without Moon Pearl in standard mode). This legacy method uses a simplified
+        approximation:
         - Locations in BUNNY_ACCESSIBLE_LOCATIONS are always accessible in bunny form
         - In glitch modes, locations in MANDATORY_SUPERBUNNY_LOCATIONS are also accessible
           without Moon Pearl (their superbunny entrance paths are mandatory connections)
@@ -1900,11 +1918,14 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # territory leads to a region that wasn't originally accessible
                         # from that world.
                         #
-                        # IMPORTANT: Only apply this in entrance shuffle modes. In vanilla mode,
-                        # DW regions like Dark Death Mountain (West Bottom) are directly reachable
-                        # from Light World via teleporter, so the player arrives in Link state
-                        # and doesn't need Moon Pearl for exits. The original Python rules
-                        # account for these Light World paths via set_bunny_rules() path tracing.
+                        # DISABLED by default (ENABLE_ENTRANCE_SHUFFLE_EXIT_MOON_PEARL=False):
+                        # The location rules from set_bunny_rules() should be sufficient -
+                        # players would be blocked when trying to collect items. The analyzer
+                        # now properly serializes bunny rules as any_of rules.
+                        #
+                        # Only applies in entrance shuffle modes. In vanilla mode, DW regions
+                        # like Dark Death Mountain (West Bottom) are directly reachable from
+                        # Light World via teleporter, so the player arrives in Link state.
                         src_is_pure_bunny_territory = False
                         if self._is_inverted_mode:
                             # Inverted: pure Light World (is_light=True, is_dark=False) is bunny
@@ -1944,7 +1965,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         # set_bunny_rules() code.
                         dest_is_actually_bunny_territory = dest_is_pure_bunny_territory
 
-                        if (not self._is_no_logic_single_player and
+                        if (ENABLE_ENTRANCE_SHUFFLE_EXIT_MOON_PEARL and
+                            not self._is_no_logic_single_player and
                             self._entrance_shuffle_mode != 'vanilla' and
                             src_is_pure_bunny_territory and
                             dest_is_actually_bunny_territory and
