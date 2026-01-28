@@ -181,7 +181,12 @@ class _ShopWrapper:
         self.sram_offset = shop_data.get('sram_offset', 0)
 
     def has_unlimited(self, item: str) -> bool:
-        """Check if the shop has unlimited supply of an item."""
+        """Check if the shop has unlimited supply of an item.
+
+        In ALttP's shop system:
+        - max: 0 (or not present) means unlimited stock of the base item
+        - max: N (N > 0) means limited stock, switches to replacement after N sales
+        """
         # Check simplified unlimited_items list first (new format from ALttP exporter)
         if item in self.unlimited_items:
             return True
@@ -189,11 +194,15 @@ class _ShopWrapper:
         for inv in self.inventory:
             if inv is None:
                 continue
-            if inv.get('max'):
+            max_stock = inv.get('max', 0)
+            if max_stock == 0:
+                # Unlimited stock of the base item
+                if inv.get('item') == item:
+                    return True
+            else:
+                # Limited stock, but the replacement is unlimited after stock runs out
                 if inv.get('replacement') == item:
                     return True
-            elif inv.get('item') == item:
-                return True
         return False
 
     def has(self, item: str) -> bool:
