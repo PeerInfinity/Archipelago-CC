@@ -41,6 +41,8 @@ class ClosureFunctionAnalyzer:
     # Maximum depth for bunny rule path expansion
     # Beyond this depth, use conservative approximation to prevent exponential growth
     # Lower values prevent exponential growth but may produce less accurate rules
+    # Kept at 1 - increasing to 2 doesn't significantly improve pass rate
+    # but DFS early termination and fixed dominance pruning prepare for future increases
     MAX_BUNNY_PATH_DEPTH = 1
 
     # Patterns recognized by closure variable names
@@ -235,6 +237,9 @@ class ClosureFunctionAnalyzer:
         This pattern is used by ALttP's options_to_access_rule() which returns
         a lambda that evaluates multiple possible access paths.
 
+        Uses DFS with early termination: if we find a trivial path (just can_reach,
+        no item requirements), we return immediately without analyzing remaining options.
+
         Args:
             options: List of rule functions
             depth: Current recursion depth
@@ -253,10 +258,14 @@ class ClosureFunctionAnalyzer:
             # Return Moon Pearl check - the base case for all bunny rules
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
 
+        # Sort options by estimated complexity (shorter paths first)
+        # This increases chances of finding a simple path early
+        sorted_options = self._sort_options_by_complexity(options)
+
         analyzed_options = []
         failed_count = 0
 
-        for i, option_func in enumerate(options):
+        for i, option_func in enumerate(sorted_options):
             if not callable(option_func):
                 logger.warning(f"ClosureFunctionAnalyzer: Option {i} is not callable: {type(option_func)}")
                 failed_count += 1
@@ -264,11 +273,20 @@ class ClosureFunctionAnalyzer:
 
             result = self.analyze_function(option_func, depth + 1)
             if result is not None:
+                # Early termination: if we find a trivial path, return immediately
+                # A trivial path is one that only requires entrance reachability, no items
+                if self._is_trivial_path(result):
+                    logger.debug(f"ClosureFunctionAnalyzer: Found trivial path at option {i}, early termination")
+                    return result
+
                 analyzed_options.append(result)
             else:
                 # Try bytecode analysis as last resort
                 bytecode_result = self._analyze_via_bytecode(option_func)
                 if bytecode_result is not None:
+                    if self._is_trivial_path(bytecode_result):
+                        logger.debug(f"ClosureFunctionAnalyzer: Found trivial path via bytecode at option {i}")
+                        return bytecode_result
                     analyzed_options.append(bytecode_result)
                 else:
                     logger.debug(f"ClosureFunctionAnalyzer: Could not analyze option {i}")
@@ -288,11 +306,208 @@ class ClosureFunctionAnalyzer:
 
         # Simplify: remove duplicates and True constants
         simplified = self._simplify_or_conditions(analyzed_options)
+
+        # Apply dominance pruning: remove options that require a superset of items
+        simplified = self._prune_dominated_options(simplified)
+
         if len(simplified) == 0:
             return {'rule': 'False_'}
         elif len(simplified) == 1:
             return simplified[0]
         return {'rule': 'Or', 'children': simplified}
+
+    def _sort_options_by_complexity(self, options: List) -> List:
+        """Sort options by estimated complexity (simpler first).
+
+        Estimates complexity by:
+        1. Options with no closure (simple item checks) - lowest complexity
+        2. Options with 'path' closure (path_to_access_rule) - sorted by path length
+        3. Options with 'options' closure (nested bunny rules) - highest complexity
+
+        Args:
+            options: List of callable options
+
+        Returns:
+            Sorted list of options (simpler first)
+        """
+        def estimate_complexity(func):
+            if not callable(func):
+                return (3, 0)  # Non-callable last
+
+            closure_vars = self._extract_closure_vars(func)
+            var_names = set(closure_vars.keys())
+
+            # Simple item check (just player captured)
+            if var_names <= {'player'}:
+                return (0, 0)
+
+            # path_to_access_rule - complexity based on path length
+            if 'path' in var_names and 'entrance' in var_names:
+                path = closure_vars.get('path', [])
+                path_len = len(path) if isinstance(path, (list, tuple)) else 0
+                return (1, path_len)
+
+            # Nested options_to_access_rule - highest complexity
+            if 'options' in var_names:
+                opts = closure_vars.get('options', [])
+                opts_count = len(opts) if isinstance(opts, (list, tuple)) else 0
+                return (2, opts_count)
+
+            return (1, 0)  # Default medium complexity
+
+        return sorted(options, key=estimate_complexity)
+
+    def _is_trivial_path(self, result: Dict[str, Any]) -> bool:
+        """Check if a result is a trivial path (no item requirements).
+
+        A trivial path is one that only requires entrance/region reachability,
+        with no item checks. This is the "best case" for bunny rules.
+
+        Args:
+            result: Analyzed rule dict
+
+        Returns:
+            True if this is a trivial path (no items needed)
+        """
+        if not result or not isinstance(result, dict):
+            return False
+
+        rule_type = result.get('rule') or result.get('type')
+
+        # Direct can_reach is trivial
+        if rule_type in ('CanReachEntrance', 'CanReachRegion'):
+            return True
+
+        # True_ is trivial
+        if rule_type == 'True_':
+            return True
+        if rule_type == 'constant' and result.get('value') is True:
+            return True
+
+        # And of only can_reach checks is trivial
+        if rule_type == 'And':
+            children = result.get('children', [])
+            return all(self._is_trivial_path(c) for c in children)
+        if rule_type == 'and':
+            conditions = result.get('conditions', [])
+            return all(self._is_trivial_path(c) for c in conditions)
+
+        return False
+
+    def _extract_item_requirements(self, result: Dict[str, Any]) -> set:
+        """Extract item requirements from an analyzed rule.
+
+        Args:
+            result: Analyzed rule dict
+
+        Returns:
+            Set of item names required by this rule
+        """
+        items = set()
+        if not result or not isinstance(result, dict):
+            return items
+
+        rule_type = result.get('rule') or result.get('type')
+
+        # Direct item check
+        if rule_type == 'Has':
+            item = result.get('args', {}).get('item_name')
+            if item:
+                items.add(item)
+        elif rule_type == 'item_check':
+            item = result.get('item')
+            if item:
+                items.add(item)
+
+        # HasAny - all items are alternatives
+        if rule_type == 'HasAny':
+            for item in result.get('args', {}).get('items', []):
+                items.add(item)
+
+        # Recurse into children
+        for key in ('children', 'conditions'):
+            for child in result.get(key, []):
+                items.update(self._extract_item_requirements(child))
+
+        return items
+
+    def _prune_dominated_options(self, options: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Remove options that are strictly dominated by others.
+
+        An option A dominates option B if:
+        1. A requires a strict subset of B's items, AND
+        2. A doesn't rely on can_reach checks that B doesn't have
+
+        For bunny rules, we're conservative - we only prune if both options have
+        the same "type" of requirement (both item-only or both have can_reach).
+        This prevents incorrectly pruning Moon Pearl (which is always available if
+        you have the item) in favor of entrance-based options (which may not be accessible).
+
+        Args:
+            options: List of analyzed rule dicts
+
+        Returns:
+            List with dominated options removed
+        """
+        if len(options) <= 1:
+            return options
+
+        # Extract requirement info: (items, has_can_reach)
+        def get_requirements_info(opt):
+            items = self._extract_item_requirements(opt)
+            has_can_reach = self._has_can_reach_check(opt)
+            return items, has_can_reach
+
+        option_info = [(opt, *get_requirements_info(opt)) for opt in options]
+
+        # Remove dominated options
+        non_dominated = []
+        for opt, reqs, has_reach in option_info:
+            is_dominated = False
+            for other_opt, other_reqs, other_has_reach in option_info:
+                if opt is other_opt:
+                    continue
+
+                # Only compare options of the same "type":
+                # - Both have can_reach, or neither has can_reach
+                # This prevents pruning Moon Pearl in favor of entrance-based options
+                if has_reach != other_has_reach:
+                    continue
+
+                # Check if other strictly dominates this (other requires fewer items)
+                if other_reqs < reqs:  # Strict subset
+                    is_dominated = True
+                    logger.debug(f"ClosureFunctionAnalyzer: Pruning dominated option (requires {reqs}, dominated by {other_reqs})")
+                    break
+            if not is_dominated:
+                non_dominated.append(opt)
+
+        return non_dominated if non_dominated else options  # Never return empty
+
+    def _has_can_reach_check(self, result: Dict[str, Any]) -> bool:
+        """Check if a rule contains a can_reach check.
+
+        Args:
+            result: Analyzed rule dict
+
+        Returns:
+            True if the rule contains CanReachEntrance or CanReachRegion
+        """
+        if not result or not isinstance(result, dict):
+            return False
+
+        rule_type = result.get('rule') or result.get('type')
+
+        if rule_type in ('CanReachEntrance', 'CanReachRegion', 'can_reach'):
+            return True
+
+        # Recurse into children
+        for key in ('children', 'conditions'):
+            for child in result.get(key, []):
+                if self._has_can_reach_check(child):
+                    return True
+
+        return False
 
     def _analyze_path_pattern(self, path: List, entrance, depth: int) -> Optional[Dict[str, Any]]:
         """Analyze path_to_access_rule result.
