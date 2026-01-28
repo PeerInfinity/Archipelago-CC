@@ -1735,6 +1735,66 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         logger.debug(f"ALttP: Replacing bunny rule for '{location_name}' with Moon Pearl requirement")
         return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
 
+    def get_fallback_for_oversized_rule(
+        self, target_name: str, target_type: str, rule_size_kb: float
+    ) -> Optional[Dict[str, Any]]:
+        """Provide a fallback rule when rule analysis produces an oversized result.
+
+        This handles the case where complex bunny rules (especially with entrance_shuffle
+        and glitch modes) cause rule expansion to explode in size.
+
+        The oversized rules are typically from set_bunny_rules in Rules.py, which creates
+        complex path-based rules using options_to_access_rule and path_to_access_rule.
+        These rules search all possible paths from Light World to Dark World regions,
+        and with entrance shuffle enabled, this can create exponentially many paths.
+
+        Key insight: If a rule explodes in size, it's because the BFS found many possible
+        Light World paths to reach the location. This means the location IS reachable
+        without Moon Pearl via those paths. Therefore, for locations we use True_ as
+        the fallback (permissive), while for entrance rules we use Moon Pearl (conservative)
+        since exit rules block passage rather than item collection.
+
+        Args:
+            target_name: The name of the location or exit with the oversized rule
+            target_type: Either 'Location' or 'Entrance'
+            rule_size_kb: The size of the oversized rule in KB
+
+        Returns:
+            A fallback rule dict, or None to use default behavior (return None)
+        """
+        logger.info(f"ALttP: Getting fallback for oversized {target_type} rule: "
+                   f"'{target_name}' ({rule_size_kb:.1f} KB)")
+
+        # For location rules with oversized analysis, the large size indicates
+        # the BFS found many Light World paths to reach this location.
+        # This means the location IS accessible from Light World without Moon Pearl,
+        # so we use True_ as the fallback (relies on region access rules instead).
+        if target_type == 'Location':
+            # Check if this is a bunny-accessible location first
+            if target_name in self._bunny_accessible_locations:
+                logger.debug(f"ALttP: Location '{target_name}' is bunny-accessible, using True_")
+                return {'rule': 'True_'}
+
+            # For superbunny locations in glitch mode
+            if self._is_glitch_mode and target_name in MANDATORY_SUPERBUNNY_LOCATIONS:
+                logger.debug(f"ALttP: Location '{target_name}' has mandatory superbunny path, using True_")
+                return {'rule': 'True_'}
+
+            # For other locations with oversized rules, the explosion indicates
+            # Light World paths exist (otherwise rule would be simple Moon Pearl).
+            # Use True_ and rely on region access rules to gate access.
+            logger.debug(f"ALttP: Oversized rule for '{target_name}' indicates LW paths exist, using True_")
+            return {'rule': 'True_'}
+
+        # For entrance rules, default to Moon Pearl requirement
+        # These are exit rules that block passage through caves/dungeons
+        if target_type == 'Entrance':
+            logger.debug(f"ALttP: Using Moon Pearl fallback for entrance '{target_name}'")
+            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+
+        # For other target types, return None to use default behavior
+        return None
+
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process entire export data to handle bunny rules and universal keys.
 
@@ -1811,6 +1871,24 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                         else:
                             location_data['access_rule'] = {}
                         continue
+
+                    # If access_rule is True_ (from fallback or actual True), check if we need
+                    # to add shop price requirements. The fallback for oversized bunny rules
+                    # returns True_, but shop price rules should still be enforced.
+                    is_trivial_rule = (
+                        not access_rule or
+                        access_rule.get('rule') == 'True_' or
+                        (access_rule.get('type') == 'constant' and access_rule.get('value') == True)
+                    )
+                    shop_price_type = location_data.get('shop_price_type')
+                    if is_trivial_rule and shop_price_type in (1, 3, 4):
+                        # Location has trivial access rule but needs shop price requirements
+                        shop_rule = self._generate_shop_price_rule(location_data)
+                        if shop_rule:
+                            logger.debug(f"ALttP: Adding shop price rule for '{location_name}' "
+                                       f"(price_type={shop_price_type})")
+                            location_data['access_rule'] = shop_rule
+                            access_rule = shop_rule
 
                     # Resolve OptionValue comparisons first (e.g., mode checks, small_key_shuffle checks)
                     if access_rule:

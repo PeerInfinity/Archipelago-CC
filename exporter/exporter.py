@@ -1366,7 +1366,14 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         if rule_size_kb > MAX_RULE_SIZE_KB:
                             logger.error(f"Rule for {target_type} '{rule_target_name}' is too large "
                                         f"({rule_size_kb:.1f} KB > {MAX_RULE_SIZE_KB} KB). "
-                                        f"This likely indicates a rule analysis loop. Returning None.")
+                                        f"This likely indicates a rule analysis loop.")
+                            # Allow game handler to provide a fallback rule instead of returning None
+                            if hasattr(game_handler, 'get_fallback_for_oversized_rule'):
+                                fallback = game_handler.get_fallback_for_oversized_rule(
+                                    rule_target_name, target_type, rule_size_kb)
+                                if fallback:
+                                    logger.info(f"Using fallback rule for {target_type} '{rule_target_name}'")
+                                    return fallback
                             return None
                     except (TypeError, ValueError):
                         pass  # If serialization fails, continue anyway
