@@ -23061,10 +23061,10 @@
                 "value": true
               },
               "if_false": {
-                "type": "attribute",
-                "object": {
+                "type": "region_attribute",
+                "region": {
                   "type": "name",
-                  "name": "_r"
+                  "name": "region"
                 },
                 "attr": "is_light_world"
               }
@@ -23126,10 +23126,10 @@
                 "value": true
               },
               "if_false": {
-                "type": "attribute",
-                "object": {
+                "type": "region_attribute",
+                "region": {
                   "type": "name",
-                  "name": "_r"
+                  "name": "region"
                 },
                 "attr": "is_dark_world"
               }

@@ -395,6 +395,10 @@ class PatternDetectionMixin:
         This is used when a helper function takes a region as a parameter
         and accesses its attributes within the function body.
 
+        Also handles walrus operator patterns like:
+            (_r := region_lookup) is None else _r.is_light_world
+        In this case, _r is resolved to the original region parameter.
+
         Args:
             node: The AST Attribute node
             region_param_names: Set of parameter names that are known to be regions
@@ -418,16 +422,76 @@ class PatternDetectionMixin:
 
         param_name = node.value.id
 
+        # Check if this is a walrus operator variable that should be resolved
+        # to the original region parameter
+        if hasattr(self, 'walrus_assignments') and param_name in self.walrus_assignments:
+            walrus_value = self.walrus_assignments[param_name]
+            # Extract the region parameter from the walrus assignment
+            # The walrus value might be a conditional (isinstance check) or direct name
+            resolved_param = self._extract_region_param_from_walrus(walrus_value)
+            if resolved_param:
+                logging.debug(f"Resolved walrus variable {param_name} to region param {resolved_param}")
+                return resolved_param, attr_name
+
         # If we have a list of known region parameters, check against it
         if region_param_names is not None:
             if param_name not in region_param_names:
                 return None, None
         else:
             # Default known region parameter names
+            # Note: walrus operator variables like '_r' are handled by
+            # _extract_region_param_from_walrus above, so they don't need
+            # to be in this list
             if param_name not in ('region', 'cave', 'r', 'reg'):
                 return None, None
 
         return param_name, attr_name
+
+    def _extract_region_param_from_walrus(self, walrus_value: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract the original region parameter name from a walrus assignment value.
+
+        Handles patterns like:
+            - {"type": "name", "name": "region"} -> "region"
+            - {"type": "conditional", ..., "if_false": {"type": "name", "name": "region"}} -> "region"
+            - Nested function calls that reference region parameter
+
+        Returns the region parameter name if found, None otherwise.
+        """
+        if not isinstance(walrus_value, dict):
+            return None
+
+        value_type = walrus_value.get('type')
+
+        # Direct name reference
+        if value_type == 'name':
+            name = walrus_value.get('name', '')
+            if name in ('region', 'cave', 'r', 'reg'):
+                return name
+
+        # Conditional expression (isinstance check pattern)
+        # e.g., get_region(region, player) if isinstance(region, str) else region
+        if value_type == 'conditional':
+            # Check the if_false branch for the direct region reference
+            if_false = walrus_value.get('if_false', {})
+            if isinstance(if_false, dict) and if_false.get('type') == 'name':
+                name = if_false.get('name', '')
+                if name in ('region', 'cave', 'r', 'reg'):
+                    return name
+            # Also check if_true for the region name in function call args
+            if_true = walrus_value.get('if_true', {})
+            return self._extract_region_param_from_walrus(if_true)
+
+        # Function call (e.g., get_region(region, player))
+        if value_type == 'function_call':
+            args = walrus_value.get('args', [])
+            for arg in args:
+                if isinstance(arg, dict) and arg.get('type') == 'name':
+                    name = arg.get('name', '')
+                    if name in ('region', 'cave', 'r', 'reg'):
+                        return name
+
+        return None
 
     def _try_inline_namedtuple_callable(self, node) -> Optional[Dict[str, Any]]:
         """
