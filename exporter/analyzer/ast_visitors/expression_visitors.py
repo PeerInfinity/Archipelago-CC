@@ -870,17 +870,20 @@ class ExpressionVisitorMixin:
         Handle named expressions (walrus operator := ).
 
         The walrus operator `x := expr` evaluates `expr`, assigns it to `x`,
-        and returns the value of `expr`. For rule analysis purposes, we only
-        care about the value, not the assignment.
+        and returns the value of `expr`. We track the assignment so that later
+        references to `x` can be resolved to the original expression.
 
         Example patterns:
             - lambda state: (total := self.cyb_mod_count(state)) >= 6
             - lambda state: func(x, y, result := helper(state))
+            - lambda state: (_r := region_lookup) is None else _r.is_light_world
 
-        We simply evaluate and return the value expression.
+        We evaluate and return the value expression, and track the assignment
+        for later resolution.
         """
         logging.debug(f"\nvisit_NamedExpr called:")
-        logging.debug(f"Target: {node.target.id if hasattr(node.target, 'id') else node.target}")
+        target_name = node.target.id if hasattr(node.target, 'id') else None
+        logging.debug(f"Target: {target_name}")
         logging.debug(f"Value: {ast.dump(node.value)}")
 
         # Visit the value expression - this is what the walrus operator returns
@@ -890,6 +893,15 @@ class ExpressionVisitorMixin:
             logging.warning(f"Failed to analyze walrus operator value: {ast.dump(node.value)}")
             # Return None to signal that analysis failed
             return None
+
+        # Track the walrus operator assignment for later resolution
+        # This allows references to the target variable (e.g., _r) to be resolved
+        # to the original expression
+        if target_name:
+            if not hasattr(self, 'walrus_assignments'):
+                self.walrus_assignments = {}
+            self.walrus_assignments[target_name] = value_result
+            logging.debug(f"Tracked walrus assignment: {target_name} = {value_result}")
 
         logging.debug(f"NamedExpr value result: {value_result}")
         return value_result

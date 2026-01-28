@@ -395,6 +395,10 @@ class PatternDetectionMixin:
         This is used when a helper function takes a region as a parameter
         and accesses its attributes within the function body.
 
+        Also handles walrus operator patterns like:
+            (_r := region_lookup) is None else _r.is_light_world
+        In this case, _r is resolved to the original region parameter.
+
         Args:
             node: The AST Attribute node
             region_param_names: Set of parameter names that are known to be regions
@@ -418,16 +422,76 @@ class PatternDetectionMixin:
 
         param_name = node.value.id
 
+        # Check if this is a walrus operator variable that should be resolved
+        # to the original region parameter
+        if hasattr(self, 'walrus_assignments') and param_name in self.walrus_assignments:
+            walrus_value = self.walrus_assignments[param_name]
+            # Extract the region parameter from the walrus assignment
+            # The walrus value might be a conditional (isinstance check) or direct name
+            resolved_param = self._extract_region_param_from_walrus(walrus_value)
+            if resolved_param:
+                logging.debug(f"Resolved walrus variable {param_name} to region param {resolved_param}")
+                return resolved_param, attr_name
+
         # If we have a list of known region parameters, check against it
         if region_param_names is not None:
             if param_name not in region_param_names:
                 return None, None
         else:
             # Default known region parameter names
+            # Note: walrus operator variables like '_r' are handled by
+            # _extract_region_param_from_walrus above, so they don't need
+            # to be in this list
             if param_name not in ('region', 'cave', 'r', 'reg'):
                 return None, None
 
         return param_name, attr_name
+
+    def _extract_region_param_from_walrus(self, walrus_value: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract the original region parameter name from a walrus assignment value.
+
+        Handles patterns like:
+            - {"type": "name", "name": "region"} -> "region"
+            - {"type": "conditional", ..., "if_false": {"type": "name", "name": "region"}} -> "region"
+            - Nested function calls that reference region parameter
+
+        Returns the region parameter name if found, None otherwise.
+        """
+        if not isinstance(walrus_value, dict):
+            return None
+
+        value_type = walrus_value.get('type')
+
+        # Direct name reference
+        if value_type == 'name':
+            name = walrus_value.get('name', '')
+            if name in ('region', 'cave', 'r', 'reg'):
+                return name
+
+        # Conditional expression (isinstance check pattern)
+        # e.g., get_region(region, player) if isinstance(region, str) else region
+        if value_type == 'conditional':
+            # Check the if_false branch for the direct region reference
+            if_false = walrus_value.get('if_false', {})
+            if isinstance(if_false, dict) and if_false.get('type') == 'name':
+                name = if_false.get('name', '')
+                if name in ('region', 'cave', 'r', 'reg'):
+                    return name
+            # Also check if_true for the region name in function call args
+            if_true = walrus_value.get('if_true', {})
+            return self._extract_region_param_from_walrus(if_true)
+
+        # Function call (e.g., get_region(region, player))
+        if value_type == 'function_call':
+            args = walrus_value.get('args', [])
+            for arg in args:
+                if isinstance(arg, dict) and arg.get('type') == 'name':
+                    name = arg.get('name', '')
+                    if name in ('region', 'cave', 'r', 'reg'):
+                        return name
+
+        return None
 
     def _try_inline_namedtuple_callable(self, node) -> Optional[Dict[str, Any]]:
         """
@@ -495,6 +559,99 @@ class PatternDetectionMixin:
         else:
             logging.warning(f"_try_inline_namedtuple_callable: Failed to analyze {var_name}.{attr_name}")
             return None
+
+    def _try_handle_entrance_access_rule(self, node) -> Optional[Dict[str, Any]]:
+        """
+        Detect and handle the pattern: entrance_var.access_rule(...)
+        where entrance_var is an Entrance object in closure_vars.
+
+        This pattern appears in ALttP UnderworldGlitchRules.py:
+            dungeon_entrance = [r for r in world.get_region(...).entrances if r.name != clip.name][0]
+            add_rule(clip, lambda state: dungeon_entrance.access_rule(fake_pearl_state(state, player)))
+
+        The dungeon_entrance variable is a closure capture of an Entrance object.
+        We export this as an EntranceAccessRule that can be resolved at runtime
+        by looking up the entrance's access_rule from the exported region data.
+
+        Args:
+            node: The AST Call node to check
+
+        Returns:
+            An EntranceAccessRule dict if pattern matches, None otherwise
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check if func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute):
+            return None
+
+        attr_name = func.attr
+
+        # We're looking for .access_rule or .can_reach patterns
+        if attr_name not in ('access_rule', 'can_reach'):
+            return None
+
+        # Check if the object is a simple name (variable reference)
+        if not isinstance(func.value, ast.Name):
+            return None
+
+        var_name = func.value.id
+
+        # Check if the variable is in closure_vars
+        if not hasattr(self, 'closure_vars') or var_name not in self.closure_vars:
+            return None
+
+        closure_obj = self.closure_vars[var_name]
+
+        # Check if it's an Entrance object (has 'connected_region' attribute)
+        # This distinguishes Entrance from Location (which has parent_region but not connected_region)
+        if not hasattr(closure_obj, 'connected_region') or not hasattr(closure_obj, 'name'):
+            return None
+
+        entrance_name = closure_obj.name
+        logging.debug(f"_try_handle_entrance_access_rule: Detected {var_name}.{attr_name} on Entrance '{entrance_name}'")
+
+        # Check if any argument is a fake_pearl_state call
+        has_fake_pearl = False
+        for arg in node.args:
+            if isinstance(arg, ast.Call):
+                if isinstance(arg.func, ast.Name) and arg.func.id == 'fake_pearl_state':
+                    has_fake_pearl = True
+                    break
+                elif isinstance(arg.func, ast.Attribute) and arg.func.attr == 'fake_pearl_state':
+                    has_fake_pearl = True
+                    break
+
+        if attr_name == 'access_rule':
+            # Export as EntranceAccessRule
+            result = {
+                'rule': 'EntranceAccessRule',
+                'args': {
+                    'entrance_name': entrance_name,
+                    'fake_pearl': has_fake_pearl
+                }
+            }
+            logging.debug(f"_try_handle_entrance_access_rule: Exported as EntranceAccessRule: {result}")
+            return result
+        elif attr_name == 'can_reach':
+            # For can_reach, convert to state_method can_reach with Entrance type
+            # This is already handled elsewhere, but we can provide a consistent output
+            result = {
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': entrance_name},
+                    {'type': 'constant', 'value': 'Entrance'}
+                ]
+            }
+            if has_fake_pearl:
+                result['fake_pearl'] = True
+            logging.debug(f"_try_handle_entrance_access_rule: Converted can_reach to state_method: {result}")
+            return result
+
+        return None
 
     def _try_handle_dict_lambda_lookup(self, node) -> Optional[Dict[str, Any]]:
         """
