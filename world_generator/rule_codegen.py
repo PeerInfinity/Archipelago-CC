@@ -1134,6 +1134,7 @@ class RuleCodeGenerator:
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
+                    'EntranceAccessRule': 'entrance_access_rule',
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
@@ -1600,6 +1601,17 @@ class RuleCodeGenerator:
             entrance = self._extract_constant_value(args.get('entrance_name', ''), '')
             self.required_imports.add('CanReachEntrance')
             return f'CanReachEntrance({repr(entrance)})'
+
+        if rb_rule == 'EntranceAccessRule':
+            # EntranceAccessRule looks up an entrance's access_rule and evaluates it
+            # This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+            # is called with potentially a fake pearl state
+            entrance_name = self._extract_constant_value(args.get('entrance_name', ''), '')
+            fake_pearl = args.get('fake_pearl', False)
+            # Generate a call to EntranceAccessRuleCall which evaluates the entrance's access_rule
+            # The fake_pearl handling adds Moon Pearl to state before evaluation
+            self.required_imports.add('EntranceAccessRuleCall')
+            return f'EntranceAccessRuleCall({repr(entrance_name)}, fake_pearl={fake_pearl})'
 
         if rb_rule == 'Helper':
             # Convert to the format expected by _convert_helper

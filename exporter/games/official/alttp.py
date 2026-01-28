@@ -1158,6 +1158,145 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         # All other rules are handled by the generic analyzer
         return None
 
+    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process rules to handle dungeon_entrance closure variable references.
+
+        The UnderworldGlitchRules.py module creates rules that reference a closure
+        variable `dungeon_entrance` which is an entrance object captured at runtime.
+        These rules are emitted as-is by the analyzer but can't be evaluated in the
+        worldgen context because the closure variable doesn't exist.
+
+        Pattern detected:
+        - AST_function_call with function.object.name == "dungeon_entrance"
+        - Function calls to dungeon_entrance.access_rule(...)
+        - can_reach calls on dungeon_entrance
+
+        These are replaced with True_ since:
+        1. They depend on entrance shuffle configuration (runtime data)
+        2. Without entrance shuffle data, we can't determine actual requirements
+        3. True_ is conservative - it allows access when unsure
+
+        Returns:
+            Processed rule dict with dungeon_entrance references replaced
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Check if this rule contains dungeon_entrance references
+        if self._contains_dungeon_entrance_ref(rule):
+            logger.debug(f"ALttP: Replacing dungeon_entrance rule with True_")
+            return {'rule': 'True_'}
+
+        # Recursively process child rules
+        return self._postprocess_rule_recursive(rule)
+
+    def _contains_dungeon_entrance_ref(self, rule: Any) -> bool:
+        """Check if a rule tree contains references to dungeon_entrance closure variable.
+
+        Detects patterns like:
+        - {"type": "name", "name": "dungeon_entrance"}
+        - {"rule": "Name", "args": {"name": "dungeon_entrance"}}
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        # Check for AST format name reference
+        if rule.get('type') == 'name' and rule.get('name') == 'dungeon_entrance':
+            return True
+
+        # Check for Rule Builder format Name reference
+        if rule.get('rule') == 'Name':
+            args = rule.get('args', {})
+            if args.get('name') == 'dungeon_entrance':
+                return True
+
+        # Recursively check all values in the dict
+        for value in rule.values():
+            if isinstance(value, dict):
+                if self._contains_dungeon_entrance_ref(value):
+                    return True
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict) and self._contains_dungeon_entrance_ref(item):
+                        return True
+
+        return False
+
+    def _postprocess_rule_recursive(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively post-process a rule, replacing dungeon_entrance references.
+
+        Checks each child rule for dungeon_entrance references and replaces them
+        with True_.
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Make a copy to avoid modifying the original
+        result = dict(rule)
+
+        # Process Rule Builder format And/Or children
+        if result.get('rule') in ('And', 'Or'):
+            children = result.get('children', [])
+            new_children = []
+            for child in children:
+                if isinstance(child, dict):
+                    if self._contains_dungeon_entrance_ref(child):
+                        new_children.append({'rule': 'True_'})
+                    else:
+                        new_children.append(self._postprocess_rule_recursive(child))
+                else:
+                    new_children.append(child)
+            result['children'] = new_children
+
+        # Process AST format and/or conditions
+        if result.get('type') in ('and', 'or'):
+            conditions = result.get('conditions', [])
+            new_conditions = []
+            for cond in conditions:
+                if isinstance(cond, dict):
+                    if self._contains_dungeon_entrance_ref(cond):
+                        new_conditions.append({'type': 'constant', 'value': True})
+                    else:
+                        new_conditions.append(self._postprocess_rule_recursive(cond))
+                else:
+                    new_conditions.append(cond)
+            result['conditions'] = new_conditions
+
+        # Process args if present (for Rule Builder format)
+        if 'args' in result:
+            args = result['args']
+            if isinstance(args, dict):
+                new_args = {}
+                for key, value in args.items():
+                    if isinstance(value, dict):
+                        if self._contains_dungeon_entrance_ref(value):
+                            new_args[key] = {'rule': 'True_'}
+                        else:
+                            new_args[key] = self._postprocess_rule_recursive(value)
+                    elif isinstance(value, list):
+                        new_args[key] = [
+                            ({'rule': 'True_'} if isinstance(item, dict) and self._contains_dungeon_entrance_ref(item)
+                             else self._postprocess_rule_recursive(item) if isinstance(item, dict)
+                             else item)
+                            for item in value
+                        ]
+                    else:
+                        new_args[key] = value
+                result['args'] = new_args
+            elif isinstance(args, list):
+                new_args = []
+                for item in args:
+                    if isinstance(item, dict):
+                        if self._contains_dungeon_entrance_ref(item):
+                            new_args.append({'rule': 'True_'})
+                        else:
+                            new_args.append(self._postprocess_rule_recursive(item))
+                    else:
+                        new_args.append(item)
+                result['args'] = new_args
+
+        return result
+
     def _try_dynamic_bunny_analysis(self, rule_func: Callable, location_name: str) -> Optional[Dict[str, Any]]:
         """Attempt to dynamically analyze a bunny rule function.
 

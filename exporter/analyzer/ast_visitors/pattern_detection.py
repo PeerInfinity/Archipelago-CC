@@ -496,6 +496,99 @@ class PatternDetectionMixin:
             logging.warning(f"_try_inline_namedtuple_callable: Failed to analyze {var_name}.{attr_name}")
             return None
 
+    def _try_handle_entrance_access_rule(self, node) -> Optional[Dict[str, Any]]:
+        """
+        Detect and handle the pattern: entrance_var.access_rule(...)
+        where entrance_var is an Entrance object in closure_vars.
+
+        This pattern appears in ALttP UnderworldGlitchRules.py:
+            dungeon_entrance = [r for r in world.get_region(...).entrances if r.name != clip.name][0]
+            add_rule(clip, lambda state: dungeon_entrance.access_rule(fake_pearl_state(state, player)))
+
+        The dungeon_entrance variable is a closure capture of an Entrance object.
+        We export this as an EntranceAccessRule that can be resolved at runtime
+        by looking up the entrance's access_rule from the exported region data.
+
+        Args:
+            node: The AST Call node to check
+
+        Returns:
+            An EntranceAccessRule dict if pattern matches, None otherwise
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check if func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute):
+            return None
+
+        attr_name = func.attr
+
+        # We're looking for .access_rule or .can_reach patterns
+        if attr_name not in ('access_rule', 'can_reach'):
+            return None
+
+        # Check if the object is a simple name (variable reference)
+        if not isinstance(func.value, ast.Name):
+            return None
+
+        var_name = func.value.id
+
+        # Check if the variable is in closure_vars
+        if not hasattr(self, 'closure_vars') or var_name not in self.closure_vars:
+            return None
+
+        closure_obj = self.closure_vars[var_name]
+
+        # Check if it's an Entrance object (has 'connected_region' attribute)
+        # This distinguishes Entrance from Location (which has parent_region but not connected_region)
+        if not hasattr(closure_obj, 'connected_region') or not hasattr(closure_obj, 'name'):
+            return None
+
+        entrance_name = closure_obj.name
+        logging.debug(f"_try_handle_entrance_access_rule: Detected {var_name}.{attr_name} on Entrance '{entrance_name}'")
+
+        # Check if any argument is a fake_pearl_state call
+        has_fake_pearl = False
+        for arg in node.args:
+            if isinstance(arg, ast.Call):
+                if isinstance(arg.func, ast.Name) and arg.func.id == 'fake_pearl_state':
+                    has_fake_pearl = True
+                    break
+                elif isinstance(arg.func, ast.Attribute) and arg.func.attr == 'fake_pearl_state':
+                    has_fake_pearl = True
+                    break
+
+        if attr_name == 'access_rule':
+            # Export as EntranceAccessRule
+            result = {
+                'rule': 'EntranceAccessRule',
+                'args': {
+                    'entrance_name': entrance_name,
+                    'fake_pearl': has_fake_pearl
+                }
+            }
+            logging.debug(f"_try_handle_entrance_access_rule: Exported as EntranceAccessRule: {result}")
+            return result
+        elif attr_name == 'can_reach':
+            # For can_reach, convert to state_method can_reach with Entrance type
+            # This is already handled elsewhere, but we can provide a consistent output
+            result = {
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': entrance_name},
+                    {'type': 'constant', 'value': 'Entrance'}
+                ]
+            }
+            if has_fake_pearl:
+                result['fake_pearl'] = True
+            logging.debug(f"_try_handle_entrance_access_rule: Converted can_reach to state_method: {result}")
+            return result
+
+        return None
+
     def _try_handle_dict_lambda_lookup(self, node) -> Optional[Dict[str, Any]]:
         """
         Detect and handle the pattern: dict.get(key, default)(state)
