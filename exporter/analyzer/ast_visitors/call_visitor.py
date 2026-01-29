@@ -1177,6 +1177,17 @@ class CallVisitorMixin:
                 logging.debug(f"Created map result: {result}")
                 return result
 
+            # *** Special handling for closure variable names that should NOT be exported as helpers ***
+            # These are closure variables used by ALttP's rule combinators, NOT helper functions.
+            # If we reach this point, recursive analysis of the captured function failed,
+            # so we must NOT export them as helper references.
+            # - 'old_rule': Used by add_rule/add_alternate_rule to capture the previous access rule
+            # - 'path_to_access_rule': Used by bunny rule generation to capture path traversal rules
+            closure_var_blacklist = {'old_rule', 'path_to_access_rule'}
+            if func_name in closure_var_blacklist:
+                logging.warning(f"Closure variable '{func_name}' could not be analyzed - using True_ fallback")
+                return {'rule': 'True_'}
+
             # Create helper result with filtered args and kwargs (no state/player in JSON)
             result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)
             logging.debug(f"Created helper result: {result}")
