@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-01-29T01:22:12.158269",
-    "last_updated": "2026-01-29T18:04:43.482568",
+    "last_updated": "2026-01-29T18:52:29.412748",
     "script_version": "1.0.0"
   },
   "results": {
@@ -77,7 +77,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 18.45,
+        "processing_time_seconds": 16.52,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -92,7 +92,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 13.77,
+        "processing_time_seconds": 12.12,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -100,7 +100,7 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2026-01-29T18:04:09.355622",
+      "timestamp": "2026-01-29T18:51:59.039244",
       "world_info": {
         "exporter_path": "exporter/games/official/alttp.py",
         "exporter_size": 124356,
