@@ -40,17 +40,19 @@ class ClosureFunctionAnalyzer:
 
     # Maximum depth for bunny rule path expansion
     # Beyond this depth, use conservative approximation to prevent exponential growth
-    # Lower values prevent exponential growth but may produce less accurate rules
-    # Testing showed depths 1, 2, and 10 all produce 74% pass rate - the remaining
-    # failures are due to bunny rule export issues, not insufficient depth.
-    # Using depth=1 as optimal balance (no timeouts, same pass rate)
-    # Set to 0 for unlimited depth (may cause exponential growth with entrance shuffle)
-    MAX_BUNNY_PATH_DEPTH = 1
+    # Set to 0 for unlimited depth (recommended with early termination optimization)
+    # Testing with 20 runs each showed:
+    #   depth=1, pruning ON:  75% pass rate
+    #   depth=0, pruning ON:  80% pass rate
+    #   depth=1, pruning OFF: 65% pass rate
+    #   depth=0, pruning OFF: 85% pass rate (best)
+    MAX_BUNNY_PATH_DEPTH = 0
 
     # Enable dominance pruning in bunny rule analysis.
     # When True, removes options that require a strict superset of another option's items.
-    # Set to False to disable if pruning causes incorrect results.
-    ENABLE_DOMINANCE_PRUNING = True
+    # Testing showed pruning can incorrectly remove valid paths with unlimited depth.
+    # Set to True to enable if rule sizes become too large.
+    ENABLE_DOMINANCE_PRUNING = False
 
     # Patterns recognized by closure variable names
     KNOWN_PATTERNS = {
