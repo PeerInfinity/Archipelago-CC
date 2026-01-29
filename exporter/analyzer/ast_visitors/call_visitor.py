@@ -532,6 +532,25 @@ class CallVisitorMixin:
                  actual_func = self.closure_vars[func_name]
                  closure_func_name = getattr(actual_func, '__name__', func_name)
 
+                 # Check if game handler wants to replace this closure with a constant value
+                 # This is used for closure variables from combined lambdas (e.g., add_rule)
+                 # that would otherwise become undefined helper references.
+                 # We check both the closure variable name (func_name) and the function's
+                 # __name__ attribute (closure_func_name) since lambda functions may have
+                 # __name__='<lambda>' but the closure variable is named 'rule'.
+                 if self.game_handler and hasattr(self.game_handler, 'CLOSURE_CONSTANT_REPLACEMENTS'):
+                     replacements = self.game_handler.CLOSURE_CONSTANT_REPLACEMENTS
+                     # Check closure variable name first (e.g., 'rule' from the closure)
+                     if func_name in replacements:
+                         const_value = replacements[func_name]
+                         logging.debug(f"Replacing closure variable {func_name} with constant {const_value}")
+                         return {'type': 'constant', 'value': const_value}
+                     # Also check function's __name__ attribute
+                     if closure_func_name in replacements:
+                         const_value = replacements[closure_func_name]
+                         logging.debug(f"Replacing closure {closure_func_name} with constant {const_value}")
+                         return {'type': 'constant', 'value': const_value}
+
                  # Check if game handler wants to explicitly preserve this as a helper
                  # (without recursive analysis - the JS implementation handles it)
                  if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
@@ -670,7 +689,24 @@ class CallVisitorMixin:
                          return factory_result
                  # --- END Factory function execution logic ---
 
-                 # If recursion wasn't attempted or failed, fall through to default helper representation
+                 # If recursion wasn't attempted or failed, check for internal closure names
+                 # from add_rule combined lambdas. These closures ('rule', 'old_rule') don't
+                 # exist as actual helpers and would cause NameError if preserved as helper
+                 # references. Try ClosureFunctionAnalyzer first, then fall back to True.
+                 if func_name in ('rule', 'old_rule') and callable(actual_func):
+                     # Try ClosureFunctionAnalyzer - it can analyze runtime-composed lambdas
+                     # via closure pattern recognition and bytecode analysis
+                     logging.debug(f"Closure '{func_name}' trying ClosureFunctionAnalyzer")
+                     closure_analyzer = ClosureFunctionAnalyzer(self)
+                     fallback_result = closure_analyzer.analyze_function(actual_func)
+                     if fallback_result and fallback_result.get('type') != 'error':
+                         logging.debug(f"Closure '{func_name}' analyzed via ClosureFunctionAnalyzer: {fallback_result}")
+                         return fallback_result
+                     # ClosureFunctionAnalyzer failed - fall back to True (permissive)
+                     logging.debug(f"Closure '{func_name}' ClosureFunctionAnalyzer failed, replacing with True (add_rule fallback)")
+                     return {'type': 'constant', 'value': True}
+
+                 # Otherwise fall through to default helper representation
 
             # *** Special handling for all(GeneratorExp) ***
             if func_name == 'all' and len(filtered_args) == 1 and filtered_args[0].get('type') == 'generator_expression':
@@ -1192,6 +1228,13 @@ class CallVisitorMixin:
                 }
                 logging.debug(f"Created map result: {result}")
                 return result
+
+            # Check for internal closure names from add_rule combined lambdas
+            # These closures ('rule', 'old_rule') should never be preserved as helpers
+            # as they don't exist as actual helpers and would cause NameError
+            if func_name in ('rule', 'old_rule'):
+                logging.debug(f"Closure '{func_name}' not in closure_vars, replacing with True (add_rule fallback)")
+                return {'type': 'constant', 'value': True}
 
             # Create helper result with filtered args and kwargs (no state/player in JSON)
             result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)

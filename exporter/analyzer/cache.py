@@ -120,8 +120,18 @@ def _compute_closure_fingerprint_impl(func: Callable, seen_ids: set) -> Optional
                 # Primitive types - use directly
                 fingerprint_parts.append((var_name, value))
             elif isinstance(value, (tuple, frozenset)):
-                # Already hashable collections
-                fingerprint_parts.append((var_name, value))
+                # Tuples/frozensets might contain unhashable elements (e.g., NamedTuples with list fields)
+                # Try to hash first, fall back to fingerprinting or id if unhashable
+                try:
+                    hash(value)
+                    fingerprint_parts.append((var_name, value))
+                except TypeError:
+                    # Unhashable tuple (e.g., contains lists) - use id as fallback
+                    # Check if it has a name attribute (common for NamedTuples with a 'name' field)
+                    if hasattr(value, 'name'):
+                        fingerprint_parts.append((var_name, ('named', type(value).__name__, value.name)))
+                    else:
+                        fingerprint_parts.append((var_name, ('unhashable_tuple', id(value))))
             elif isinstance(value, list):
                 # For lists, create tuple of fingerprints
                 # For callables, use source location + recursive closure fingerprint
@@ -204,8 +214,19 @@ def _compute_defaults_fingerprint(func: Callable) -> Optional[Tuple]:
                 # Primitive types - use directly
                 fingerprint_parts.append(value)
             elif isinstance(value, (tuple, frozenset)):
-                # Already hashable collections
-                fingerprint_parts.append(value)
+                # Tuples/frozensets might contain unhashable elements (e.g., NamedTuples with list fields)
+                # Try to hash first, fall back to fingerprinting if unhashable
+                try:
+                    hash(value)
+                    fingerprint_parts.append(value)
+                except TypeError:
+                    # Unhashable tuple (e.g., contains lists)
+                    # Check if it has a name attribute (common for NamedTuples with a 'name' field)
+                    if hasattr(value, 'name'):
+                        fingerprint_parts.append(('named', type(value).__name__, value.name))
+                    else:
+                        # Unhashable tuple without name - can't fingerprint reliably
+                        return None
             elif hasattr(value, 'name'):
                 # Objects with name attribute (Location, Region, etc.)
                 fingerprint_parts.append(('named', type(value).__name__, value.name))
