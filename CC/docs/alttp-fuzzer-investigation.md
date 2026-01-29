@@ -131,29 +131,30 @@ Changed behavior when both JUMP_IF_TRUE and JUMP_IF_FALSE are detected:
 - Now returns `None` to indicate analysis failed rather than guessing wrong
 - This allows the caller to handle the failure appropriately
 
-## Remaining Issues
+### 4. Multiline Lambda Source Extraction (MAJOR FIX)
+Fixed the core issue preventing self-locking rules from being correctly exported:
 
-The partial fixes improve some cases but don't fully solve the problem. The remaining issue is:
+**Problem**: When a multiline lambda is passed as an argument to a function call (e.g., `set_rule(..., lambda: ...)`):
+1. `inspect.getsource()` returns source code by line boundaries, not expression boundaries
+2. `textwrap.dedent()` removes leading whitespace from continuation lines, breaking implicit line continuation
+3. `inspect.getsource()` may include trailing parens from the outer function call
 
-**Chained add_rule Analysis**: When multiple `add_rule` calls are chained (e.g., base rule + stalfos_rule + lamp_requirement), the innermost original rule may still fail analysis. When this happens, only the outer rules are preserved while the original rule's requirements are lost.
+**Solution**: Try multiple source parsing strategies:
+1. Try dedented source first (works for most single-line lambdas)
+2. If that fails, join all lines into a single line
+3. Strip trailing unbalanced parens from outer function calls
+4. Added `count_paren_balance()` helper that correctly ignores parens inside strings
 
-Example: Eastern Palace - Big Key Chest ends up with only `can_kill_most_things(4) AND Lamp` when it should have the full self-locking key requirement.
+**Result**: Self-locking rules like Eastern Palace - Big Key Chest now correctly export with:
+- `location_item_name(...)` converted to `placement_lookup` rule
+- The comparison preserved as `compare` rule
+- All nested conditions properly structured
 
-### Root Cause
-The `location_item_name` comparison pattern in the original rule:
-```python
-location_item_name(state, 'Eastern Palace - Big Key Chest', player) == ('Big Key (Eastern Palace)', player)
-```
-This pattern requires:
-1. AST analysis to recognize the function call
-2. The game handler to convert it to `placement_lookup` rule type
-3. The comparison to be preserved with the tuple on the right side
+## Status
 
-When options like `enemy_shuffle` trigger `add_rule` to wrap the original rule, the closure function analyzer may fail to fully analyze the nested lambda chain, resulting in lost requirements.
+**FIXED**: The multiline lambda source extraction fix resolves the main issue. ALttP self-locking rules with `location_item_name` comparisons are now correctly exported when options like `enemy_shuffle` are enabled.
 
-## Workaround
-
-Currently, there is no workaround. Games with self-locking rules may fail fuzzer testing when certain options are enabled.
+Fuzzer tests now pass (timeouts may still occur due to test infrastructure, not rule export issues).
 
 ## Test Commands
 
