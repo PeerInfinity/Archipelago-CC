@@ -186,14 +186,6 @@ class FFMQGameExportHandler(GenericGameExportHandler):
                         else:
                             return {'rule': 'HasAll', 'args': {'items': list(access_items)}}
 
-            # Check for has_all pattern in bytecode: state.has_all([items], player)
-            # This handles nested functions like hard_boss_logic that don't match
-            # the lambda patterns above (e.g., defined as named functions with 'self' closure)
-            # Run this BEFORE constant return check since it's more specific
-            result = self._analyze_has_all_bytecode(rule_func)
-            if result is not None:
-                return result
-
             # Check for simple constant return lambdas (lambda state: True or lambda state: False)
             # These have no closure and no defaults, and just return a constant
             # Use bytecode analysis to determine the return value
@@ -254,69 +246,6 @@ class FFMQGameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.debug(f"FFMQ _analyze_constant_return_lambda failed: {e}")
             return None
-
-    def _analyze_has_all_bytecode(self, rule_func: Callable) -> Optional[Dict[str, Any]]:
-        """Analyze a function for has_all patterns using bytecode analysis.
-
-        This handles cases like the hard_boss_logic function:
-            def hard_boss_logic(state):
-                return state.has_all(["River Coin", "Sand Coin"], self.player)
-
-        The items list is built at runtime from LOAD_CONST instructions followed by BUILD_LIST.
-        """
-        try:
-            import dis
-            code = rule_func.__code__
-
-            # First check if has_all is called
-            if 'has_all' not in code.co_names:
-                return None
-
-            # Look for lists of strings in co_consts (pre-compiled tuple literal)
-            for const in code.co_consts:
-                if isinstance(const, (list, tuple)) and const:
-                    if all(isinstance(item, str) for item in const):
-                        return {'rule': 'HasAll', 'args': {'items': list(const)}}
-
-            # If no list constant, check for BUILD_LIST pattern
-            # The bytecode pattern is: LOAD_CONST (item1), LOAD_CONST (item2), ..., BUILD_LIST n
-            instructions = list(dis.get_instructions(code))
-            items = []
-
-            for i, instr in enumerate(instructions):
-                if instr.opname == 'BUILD_LIST' and instr.arg and instr.arg > 0:
-                    # Look back for LOAD_CONST instructions before BUILD_LIST
-                    num_items = instr.arg
-                    start_idx = i - num_items
-
-                    if start_idx >= 0:
-                        potential_items = []
-                        all_strings = True
-
-                        for j in range(start_idx, i):
-                            prev_instr = instructions[j]
-                            if prev_instr.opname == 'LOAD_CONST':
-                                const_val = code.co_consts[prev_instr.arg]
-                                if isinstance(const_val, str):
-                                    potential_items.append(const_val)
-                                else:
-                                    all_strings = False
-                                    break
-                            else:
-                                all_strings = False
-                                break
-
-                        if all_strings and len(potential_items) == num_items:
-                            items = potential_items
-                            break
-
-            if items:
-                return {'rule': 'HasAll', 'args': {'items': items}}
-
-        except Exception as e:
-            logger.debug(f"FFMQ _analyze_has_all_bytecode failed: {e}")
-
-        return None
 
     def _is_always_true(self, rule: Dict[str, Any]) -> bool:
         """Check if a rule always evaluates to True."""

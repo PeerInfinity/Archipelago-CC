@@ -15,7 +15,7 @@ from typing import Optional, Callable, Dict, Any, Tuple
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
-from .cache import parameterless_func_cache, closure_aware_cache, get_closure_aware_cache_key
+from .cache import parameterless_func_cache
 from exporter.constants import MAX_ANALYZE_RULE_CALLS
 from exporter.profiling import profiler
 
@@ -140,20 +140,11 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
     # Check parameterless function cache for functions that only take state/player/world
     # This avoids re-analyzing the same helper function multiple times
     cache_key = None
-    closure_cache_key = None
     if rule_func is not None and not preserve_parameter_names:
         cache_key = _is_cacheable_function(rule_func)
         if cache_key and cache_key in parameterless_func_cache:
             logging.debug(f"analyze_rule: Cache hit for parameterless function at {cache_key}")
             return parameterless_func_cache[cache_key]
-
-        # Check closure-aware cache for functions with closures
-        # This allows caching lambdas at the same source location with equivalent closures
-        if cache_key is None:  # Has closures, wasn't cacheable by parameterless cache
-            closure_cache_key = get_closure_aware_cache_key(rule_func)
-            if closure_cache_key and closure_cache_key in closure_aware_cache:
-                logging.debug(f"analyze_rule: Closure-aware cache hit for {closure_cache_key[0]}:{closure_cache_key[1]}")
-                return closure_aware_cache[closure_cache_key]
 
     logging.debug("\n--- Starting Rule Analysis ---")
 
@@ -212,20 +203,13 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
             local_closure_vars = closure_vars.copy()
 
             # Attempt to add function's actual closure variables TO THE COPY
-            # IMPORTANT: Don't overwrite vars that were explicitly passed in closure_vars,
-            # especially 'world' which the exporter sets to the correct game World object
-            # (the function's closure might have a different 'world', e.g., MultiWorld)
             try:
                 if hasattr(rule_func, '__closure__') and rule_func.__closure__:
                     closure_cells = rule_func.__closure__
                     free_vars = rule_func.__code__.co_freevars
                     for var_name, cell in zip(free_vars, closure_cells):
                         try:
-                            # Don't overwrite vars that were explicitly passed in
-                            if var_name not in closure_vars:
-                                local_closure_vars[var_name] = cell.cell_contents
-                            else:
-                                logging.debug(f"Preserving passed closure_vars['{var_name}'] instead of function's closure value")
+                            local_closure_vars[var_name] = cell.cell_contents
                         except ValueError:
                             # Cell is empty, skip
                             pass
@@ -381,11 +365,6 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
             if cache_key is not None and final_result.get('type') != 'error':
                 parameterless_func_cache[cache_key] = final_result
                 logging.debug(f"analyze_rule: Cached result for parameterless function at {cache_key}")
-
-            # Cache in closure-aware cache for functions with closures
-            if closure_cache_key is not None and final_result.get('type') != 'error':
-                closure_aware_cache[closure_cache_key] = final_result
-                logging.debug(f"analyze_rule: Cached result in closure-aware cache for {closure_cache_key[0]}:{closure_cache_key[1]}")
 
         # Always log the final result (or error structure) being returned
         try:
