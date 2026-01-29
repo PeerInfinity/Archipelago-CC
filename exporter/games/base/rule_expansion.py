@@ -50,6 +50,17 @@ class RuleExpansionMixin:
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
+            # Helper not expanded - recursively expand args, but preserve the helper structure
+            # This preserves helpers like can_buy_unlimited that are in HELPERS_TO_PRESERVE
+            expanded_args = [
+                self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
+                for arg in helper_args
+            ]
+            result = {'type': 'helper', 'name': helper_name, 'args': expanded_args}
+            if 'kwargs' in rule:
+                result['kwargs'] = rule['kwargs']
+            return result
+
         # Handle helper type in RB format: {'rule': 'helper_name', '_original_ast_type': 'helper', 'args': [...]}
         if rule.get('_original_ast_type') == 'helper':
             helper_name = rule.get('rule', '')

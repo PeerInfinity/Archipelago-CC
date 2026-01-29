@@ -212,13 +212,20 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
             local_closure_vars = closure_vars.copy()
 
             # Attempt to add function's actual closure variables TO THE COPY
+            # IMPORTANT: Don't overwrite vars that were explicitly passed in closure_vars,
+            # especially 'world' which the exporter sets to the correct game World object
+            # (the function's closure might have a different 'world', e.g., MultiWorld)
             try:
                 if hasattr(rule_func, '__closure__') and rule_func.__closure__:
                     closure_cells = rule_func.__closure__
                     free_vars = rule_func.__code__.co_freevars
                     for var_name, cell in zip(free_vars, closure_cells):
                         try:
-                            local_closure_vars[var_name] = cell.cell_contents
+                            # Don't overwrite vars that were explicitly passed in
+                            if var_name not in closure_vars:
+                                local_closure_vars[var_name] = cell.cell_contents
+                            else:
+                                logging.debug(f"Preserving passed closure_vars['{var_name}'] instead of function's closure value")
                         except ValueError:
                             # Cell is empty, skip
                             pass
