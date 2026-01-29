@@ -41,13 +41,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'get_rule_to_add',
     }
 
-    # Closure function names that should NOT be recursively analyzed during
-    # rule analysis. These are captured in add_rule combined lambdas and
-    # can cause massive rule expansion when analyzed.
-    SKIP_ANALYSIS_CLOSURES: Set[str] = {
-        'rule',      # The new rule in add_rule combined lambdas
-        'old_rule',  # The existing rule in add_rule combined lambdas
-    }
+    # NOTE: 'rule' and 'old_rule' closures from add_rule combined lambdas should
+    # be analyzed recursively - they contain actual callable access rule functions.
+    # Do NOT add them to CLOSURE_CONSTANT_REPLACEMENTS as that would lose rule logic.
 
     # State method replacements for ALttP-specific state extensions
     # These are handled specially in the call_visitor but we can add
@@ -65,9 +61,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         analysis and creates a simple helper reference instead.
 
         This is critical for preventing rule explosion in ALttP when:
-        - Combined rules (from add_rule) reference 'rule' and 'old_rule' closures
         - Bunny rules use path_to_access_rule with nested generator expressions
         - Options rules use options_to_access_rule with nested any() patterns
+
+        Note: 'rule' and 'old_rule' closures from add_rule combined lambdas are
+        handled by CLOSURE_CONSTANT_REPLACEMENTS (replaced with True) rather than
+        preserved as helpers, to avoid undefined reference errors.
 
         Args:
             helper_name: Name of the helper function
@@ -77,9 +76,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """
         if helper_name in self.HELPERS_TO_PRESERVE:
             logger.debug(f"Preserving ALttP helper '{helper_name}' (in HELPERS_TO_PRESERVE)")
-            return True
-        if helper_name in self.SKIP_ANALYSIS_CLOSURES:
-            logger.debug(f"Preserving ALttP closure '{helper_name}' (in SKIP_ANALYSIS_CLOSURES)")
             return True
         return super().should_preserve_as_helper(helper_name) if hasattr(super(), 'should_preserve_as_helper') else False
 
