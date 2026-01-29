@@ -5315,13 +5315,40 @@ class RuleCodeGenerator:
 
             # Case 5: element_rule is a helper with name "rule" - items ARE the rules to evaluate
             # This pattern: any(rule(state) for rule in [rule1_ast, rule2_ast, ...])
-            # Where each rule in the list is itself an AST expression
+            # Where each rule in the list is itself an AST expression (or Rule Builder format)
             if (element_rule.get('type') == 'helper' and element_rule.get('name') == 'rule' and
-                    all(isinstance(item, dict) and 'type' in item for item in items)):
-                # Each item is an AST rule - recursively process them
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is an AST/Rule Builder rule - recursively process them
                 checks = []
                 for item in items:
-                    # Items already have 'type' key, pass directly to _convert_rule
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 6: element_rule is a constant true and items are rule dicts
+            # This pattern: any(rule for rule in [rule1, rule2, ...])
+            # Where iterator items ARE the rules to evaluate (bunny revival pattern)
+            # The element_rule being constant True means "evaluate the rule value"
+            if (element_rule.get('type') == 'constant' and element_rule.get('value') is True and
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is a rule - recursively process them
+                checks = []
+                for item in items:
                     check = self._convert_rule(item)
                     if check and check not in ('True', 'True_()'):
                         checks.append(check)
@@ -5345,7 +5372,8 @@ class RuleCodeGenerator:
             if len(items) == 1:
                 item = items[0]
                 # Check if item is an AST expression (dict with 'type' key)
-                if isinstance(item, dict) and 'type' in item:
+                # or Rule Builder format (dict with 'rule' key)
+                if isinstance(item, dict) and ('type' in item or 'rule' in item):
                     return self._convert_rule(item)
                 item_escaped = self._escape_string(str(item), "'")
                 self.required_imports.add('Has')
@@ -5355,7 +5383,8 @@ class RuleCodeGenerator:
                 has_checks = []
                 for item in items:
                     # Check if item is an AST expression (dict with 'type' key)
-                    if isinstance(item, dict) and 'type' in item:
+                    # or Rule Builder format (dict with 'rule' key)
+                    if isinstance(item, dict) and ('type' in item or 'rule' in item):
                         check = self._convert_rule(item)
                         has_checks.append(check)
                     else:
