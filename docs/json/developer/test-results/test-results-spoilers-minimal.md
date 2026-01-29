@@ -10,11 +10,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-29 03:58:04
+**Generated:** 2026-01-29 18:04:43
 
 **Source Data Created:** 2026-01-29T01:22:12.158269
 
-**Source Data Last Updated:** 2026-01-29T01:22:12.158276
+**Source Data Last Updated:** 2026-01-29T18:04:42.027136
 
 ## Summary
 
@@ -35,7 +35,7 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.7KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 121.4KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 16.2KB | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -58,7 +58,7 @@
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ❌ Failed | 0 | 4.1 | 18.2 | 🟡 22.5% | 13.4KB | ✅ |
+| Final Fantasy Mystic Quest | ❌ Failed | 0 | 4.1 | 18.2 | 🟡 22.5% | 10.3KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |

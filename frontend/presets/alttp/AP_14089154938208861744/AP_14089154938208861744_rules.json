@@ -3301,6 +3301,11 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "has_fire_source",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "AST_function_call",
                   "args": {
                     "function": {
@@ -3313,11 +3318,6 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_fire_source",
-                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
@@ -3579,30 +3579,51 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "helper",
-                  "name": "can_shoot_arrows"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Big Key (Eastern Palace)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Eastern Palace)"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp"
+                    "item_name": "Small Key (Eastern Palace)",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "location"
+                            },
+                            "attr": "parent_region"
+                          },
+                          "attr": "dungeon"
+                        },
+                        "attr": "boss"
+                      },
+                      "attr": "can_defeat"
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_shoot_arrows",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Big Key (Eastern Palace)",
+                      "Lamp"
+                    ]
                   }
                 }
               ]
@@ -3625,30 +3646,51 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "helper",
-                  "name": "can_shoot_arrows"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Big Key (Eastern Palace)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Eastern Palace)"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp"
+                    "item_name": "Small Key (Eastern Palace)",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "location"
+                            },
+                            "attr": "parent_region"
+                          },
+                          "attr": "dungeon"
+                        },
+                        "attr": "boss"
+                      },
+                      "attr": "can_defeat"
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_shoot_arrows",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Big Key (Eastern Palace)",
+                      "Lamp"
+                    ]
                   }
                 }
               ]
@@ -6064,6 +6106,18 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Bomb Shop"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "East Dark World"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -6081,18 +6135,6 @@
                       "_converted_from_ast": true
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Big Bomb Shop"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "East Dark World"
-                  }
                 },
                 {
                   "rule": "HasAll",
@@ -7114,75 +7156,9 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "type": "item_check",
-                          "item": "Moon Pearl"
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "type": "item_check",
-                              "item": "Moon Pearl"
-                            },
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Moon Pearl"
-                                },
-                                {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "type": "item_check",
-                                      "item": "Moon Pearl"
-                                    },
-                                    {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "type": "item_check",
-                                          "item": "Moon Pearl"
-                                        },
-                                        {
-                                          "rule": "And",
-                                          "children": [
-                                            {
-                                              "type": "item_check",
-                                              "item": "Moon Pearl"
-                                            },
-                                            {
-                                              "type": "helper",
-                                              "name": "can_lift_heavy_rocks"
-                                            }
-                                          ]
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "rule": "can_lift_heavy_rocks",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8457,6 +8433,20 @@
                           "rule": "Or",
                           "children": [
                             {
+                              "rule": "has_hearts",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": 4
+                                  },
+                                  "_converted_from_ast": true
+                                }
+                              ]
+                            },
+                            {
                               "rule": "can_extend_magic",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
@@ -8470,20 +8460,6 @@
                                 },
                                 {
                                   "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "has_hearts",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 4
-                                  },
-                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -8572,22 +8548,13 @@
             "name": "Hookshot Cave - Top Right",
             "id": 60241,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Moon Pearl"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Hookshot"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -8604,22 +8571,13 @@
             "name": "Hookshot Cave - Top Left",
             "id": 60244,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Moon Pearl"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Hookshot"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -8639,25 +8597,13 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pegasus Boots"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Pegasus Boots"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -8682,22 +8628,13 @@
             "name": "Hookshot Cave - Bottom Left",
             "id": 60247,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Moon Pearl"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Hookshot"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -8939,8 +8876,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Flippers",
                   "Magic Mirror",
+                  "Flippers",
                   "Open Floodgate"
                 ]
               }
@@ -9168,36 +9105,29 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "placement_lookup",
-                        "location": {
-                          "type": "constant",
-                          "value": "Swamp Palace - Big Chest"
-                        }
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Big Key (Swamp Palace)"
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "AST_placement_lookup",
+                          "args": {
+                            "location": "Swamp Palace - Big Chest",
+                            "_original_ast_type": "placement_lookup"
                           },
-                          {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        ]
-                      }
+                          "_converted_from_ast": true
+                        },
+                        "op": "==",
+                        "right": [
+                          "Big Key (Swamp Palace)",
+                          1
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
-                      "rule": "HasAny",
+                      "rule": "Has",
                       "args": {
-                        "items": [
-                          "Big Key (Swamp Palace)",
-                          "Moon Pearl"
-                        ]
+                        "item_name": "Big Key (Swamp Palace)"
                       }
                     }
                   ]
@@ -9433,35 +9363,38 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "count_check",
-                  "item": "Small Key (Swamp Palace)",
-                  "count": {
-                    "type": "constant",
-                    "value": 6
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 6
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
                       "type": "attribute",
                       "object": {
                         "type": "attribute",
                         "object": {
                           "type": "attribute",
                           "object": {
-                            "type": "name",
-                            "name": "location"
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "location"
+                            },
+                            "attr": "parent_region"
                           },
-                          "attr": "parent_region"
+                          "attr": "dungeon"
                         },
-                        "attr": "dungeon"
+                        "attr": "boss"
                       },
-                      "attr": "boss"
+                      "attr": "can_defeat"
                     },
-                    "attr": "can_defeat"
-                  }
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -9489,35 +9422,38 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "count_check",
-                  "item": "Small Key (Swamp Palace)",
-                  "count": {
-                    "type": "constant",
-                    "value": 6
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Swamp Palace)",
+                    "count": 6
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
                       "type": "attribute",
                       "object": {
                         "type": "attribute",
                         "object": {
                           "type": "attribute",
                           "object": {
-                            "type": "name",
-                            "name": "location"
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "location"
+                            },
+                            "attr": "parent_region"
                           },
-                          "attr": "parent_region"
+                          "attr": "dungeon"
                         },
-                        "attr": "dungeon"
+                        "attr": "boss"
                       },
-                      "attr": "boss"
+                      "attr": "can_defeat"
                     },
-                    "attr": "can_defeat"
-                  }
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10200,50 +10136,43 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
-                      "type": "compare",
-                      "left": {
-                        "type": "placement_lookup",
-                        "location": {
-                          "type": "constant",
-                          "value": "Skull Woods - Big Chest"
-                        }
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Big Key (Skull Woods)"
-                          },
-                          {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        ]
-                      }
-                    },
-                    {
                       "rule": "And",
                       "children": [
+                        {
+                          "rule": "can_use_bombs",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
                         {
                           "rule": "Has",
                           "args": {
                             "item_name": "Big Key (Skull Woods)"
                           }
-                        },
-                        {
-                          "type": "helper",
-                          "name": "can_use_bombs"
                         }
                       ]
+                    },
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "AST_placement_lookup",
+                          "args": {
+                            "location": "Skull Woods - Big Chest",
+                            "_original_ast_type": "placement_lookup"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "==",
+                        "right": [
+                          "Big Key (Skull Woods)",
+                          1
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -10457,35 +10386,38 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "count_check",
-                  "item": "Small Key (Skull Woods)",
-                  "count": {
-                    "type": "constant",
-                    "value": 5
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 5
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
                       "type": "attribute",
                       "object": {
                         "type": "attribute",
                         "object": {
                           "type": "attribute",
                           "object": {
-                            "type": "name",
-                            "name": "location"
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "location"
+                            },
+                            "attr": "parent_region"
                           },
-                          "attr": "parent_region"
+                          "attr": "dungeon"
                         },
-                        "attr": "dungeon"
+                        "attr": "boss"
                       },
-                      "attr": "boss"
+                      "attr": "can_defeat"
                     },
-                    "attr": "can_defeat"
-                  }
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10513,35 +10445,38 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "count_check",
-                  "item": "Small Key (Skull Woods)",
-                  "count": {
-                    "type": "constant",
-                    "value": 5
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Skull Woods)",
+                    "count": 5
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
                       "type": "attribute",
                       "object": {
                         "type": "attribute",
                         "object": {
                           "type": "attribute",
                           "object": {
-                            "type": "name",
-                            "name": "location"
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "location"
+                            },
+                            "attr": "parent_region"
                           },
-                          "attr": "parent_region"
+                          "attr": "dungeon"
                         },
-                        "attr": "dungeon"
+                        "attr": "boss"
                       },
-                      "attr": "boss"
+                      "attr": "can_defeat"
                     },
-                    "attr": "can_defeat"
-                  }
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10729,52 +10664,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "Has",
                   "args": {
-                    "test": {
-                      "rule": "AST_placement_search",
-                      "args": {
-                        "item": "Big Key (Ice Palace)",
-                        "player": 1,
-                        "locations": [
-                          [
-                            "Ice Palace - Spike Room",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Hammer Block Key Drop",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Big Key Chest",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Map Chest",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "placement_search"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 4
-                      }
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Ice Palace)",
-                        "count": 6
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Ice Palace)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11237,74 +11131,11 @@
             "name": "Misery Mire (West)",
             "connected_region": "Misery Mire (West)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Misery Mire - Big Key Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "AST_placement_lookup",
-                          "args": {
-                            "location": "Misery Mire - Compass Chest",
-                            "_original_ast_type": "placement_lookup"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "op": "in",
-                        "right": [
-                          [
-                            "Big Key (Misery Mire)",
-                            1
-                          ]
-                        ],
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 5
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 6
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Misery Mire)",
+                "count": 5
+              }
             }
           },
           {
@@ -11593,90 +11424,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
+                  "rule": "Has",
                   "args": {
-                    "test": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Big Key Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Compass Chest",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "AST_placement_lookup",
-                              "args": {
-                                "location": "Misery Mire - Conveyor Crystal Key Drop",
-                                "_original_ast_type": "placement_lookup"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "op": "==",
-                            "right": [
-                              "Big Key (Misery Mire)",
-                              1
-                            ],
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Misery Mire)",
-                        "count": 4
-                      }
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Small Key (Misery Mire)",
-                        "count": 5
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11988,22 +11740,13 @@
             "name": "Turtle Rock - Compass Chest",
             "id": 59938,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Moon Pearl"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Cane of Somaria"
+                ]
+              }
             },
             "item": {
               "name": "Small Key (Turtle Rock)",
@@ -12020,36 +11763,14 @@
             "name": "Turtle Rock - Roller Room - Left",
             "id": 59932,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cane of Somaria"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Rod"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Cane of Somaria",
+                  "Fire Rod"
+                ]
+              }
             },
             "item": {
               "name": "Big Key (Turtle Rock)",
@@ -12066,36 +11787,14 @@
             "name": "Turtle Rock - Roller Room - Right",
             "id": 59935,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cane of Somaria"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Rod"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Cane of Somaria",
+                  "Fire Rod"
+                ]
+              }
             },
             "item": {
               "name": "Arrows (10)",
@@ -12133,48 +11832,11 @@
             "name": "Turtle Rock (Pokey Room) (South)",
             "connected_region": "Turtle Rock (First Section)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "AST_placement_search",
-                  "args": {
-                    "item": "Big Key (Turtle Rock)",
-                    "player": 1,
-                    "locations": [
-                      [
-                        "Turtle Rock - Compass Chest",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Left",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Right",
-                        1
-                      ]
-                    ],
-                    "_original_ast_type": "placement_search"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 4
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 6
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 6
+              }
             }
           }
         ],
@@ -12186,16 +11848,16 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "type": "helper",
-                  "name": "can_kill_most_things",
+                  "rule": "can_kill_most_things",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 5
+                      "rule": "Constant",
+                      "args": {
+                        "value": 5
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -12243,52 +11905,11 @@
             "name": "Turtle Rock (Chain Chomp Room) (South)",
             "connected_region": "Turtle Rock (Pokey Room)",
             "access_rule": {
-              "rule": "Conditional",
+              "rule": "Has",
               "args": {
-                "test": {
-                  "rule": "AST_placement_search",
-                  "args": {
-                    "item": "Big Key (Turtle Rock)",
-                    "player": 1,
-                    "locations": [
-                      [
-                        "Turtle Rock - Compass Chest",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Pokey 1 Key Drop",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Left",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Right",
-                        1
-                      ]
-                    ],
-                    "_original_ast_type": "placement_search"
-                  },
-                  "_converted_from_ast": true
-                },
-                "if_true": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 3
-                  }
-                },
-                "if_false": {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 5
-                  }
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                "item_name": "Small Key (Turtle Rock)",
+                "count": 5
+              }
             }
           }
         ],
@@ -12300,40 +11921,35 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "children": [
                     {
-                      "type": "helper",
-                      "name": "can_shoot_arrows"
+                      "rule": "can_shoot_arrows",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_use_bombs"
+                      "rule": "can_use_bombs",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "type": "helper",
-                      "name": "has_beam_sword"
+                      "rule": "has_beam_sword",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Blue Boomerang",
-                            "Cane of Somaria",
-                            "Fire Rod",
-                            "Hookshot",
-                            "Ice Rod",
-                            "Red Boomerang"
-                          ]
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Blue Boomerang",
+                          "Cane of Somaria",
+                          "Fire Rod",
+                          "Hookshot",
+                          "Ice Rod",
+                          "Red Boomerang"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -12420,18 +12036,23 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "helper",
-                  "name": "can_use_bombs"
-                },
-                {
-                  "type": "helper",
-                  "name": "can_kill_most_things",
+                  "rule": "can_kill_most_things",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 10
+                      "rule": "Constant",
+                      "args": {
+                        "value": 10
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -12451,43 +12072,15 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "type": "item_check",
-                          "item": "Moon Pearl"
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "type": "item_check",
-                              "item": "Moon Pearl"
-                            },
-                            {
-                              "type": "count_check",
-                              "item": "Small Key (Turtle Rock)",
-                              "count": {
-                                "type": "helper",
-                                "name": "tr_big_key_chest_keys_needed"
-                              }
-                            }
-                          ]
-                        }
-                      ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": {
+                      "rule": "tr_big_key_chest_keys_needed",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
-                  ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12515,43 +12108,16 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
+                  "rule": "can_kill_most_things",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "type": "item_check",
-                          "item": "Moon Pearl"
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "type": "item_check",
-                              "item": "Moon Pearl"
-                            },
-                            {
-                              "type": "helper",
-                              "name": "can_kill_most_things",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 5
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
+                      "rule": "Constant",
+                      "args": {
+                        "value": 5
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -12833,9 +12399,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Moon Pearl",
                       "Big Key (Turtle Rock)",
-                      "Cane of Somaria",
-                      "Moon Pearl"
+                      "Cane of Somaria"
                     ]
                   }
                 }
@@ -12871,40 +12437,14 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Byrna"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cape"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mirror Shield"
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cane of Byrna",
+                      "Cape",
+                      "Mirror Shield"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12932,40 +12472,14 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Byrna"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cape"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mirror Shield"
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cane of Byrna",
+                      "Cape",
+                      "Mirror Shield"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12993,40 +12507,14 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Byrna"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cape"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mirror Shield"
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cane of Byrna",
+                      "Cape",
+                      "Mirror Shield"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13054,40 +12542,14 @@
               "rule": "And",
               "children": [
                 {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "type": "item_check",
-                      "item": "Moon Pearl"
-                    },
-                    {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Byrna"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cape"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mirror Shield"
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cane of Byrna",
+                      "Cape",
+                      "Mirror Shield"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13395,9 +12857,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Lamp",
                       "Big Key (Palace of Darkness)",
-                      "Hammer",
-                      "Lamp"
+                      "Hammer"
                     ]
                   }
                 }
@@ -15562,22 +15024,13 @@
             "name": "Ganons Tower - Big Chest",
             "id": 60118,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "type": "item_check",
-                  "item": "Moon Pearl"
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Big Key (Ganons Tower)",
-                      "Moon Pearl"
-                    ]
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Big Key (Ganons Tower)"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -15594,10 +15047,71 @@
             "name": "Ganons Tower - Big Key Room - Left",
             "id": 60148,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Moon Pearl"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "state"
+                                    },
+                                    "attr": "multiworld"
+                                  },
+                                  "attr": "get_location"
+                                },
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Ganons Tower - Big Key Room - Left"
+                                  }
+                                ]
+                              },
+                              "attr": "parent_region"
+                            },
+                            "attr": "dungeon"
+                          },
+                          "attr": "bosses"
+                        },
+                        "index": {
+                          "type": "constant",
+                          "value": "bottom"
+                        }
+                      },
+                      "attr": "can_defeat"
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Compass (Ganons Tower)",
@@ -15614,10 +15128,71 @@
             "name": "Ganons Tower - Big Key Room - Right",
             "id": 60151,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Moon Pearl"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "state"
+                                    },
+                                    "attr": "multiworld"
+                                  },
+                                  "attr": "get_location"
+                                },
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Ganons Tower - Big Key Room - Right"
+                                  }
+                                ]
+                              },
+                              "attr": "parent_region"
+                            },
+                            "attr": "dungeon"
+                          },
+                          "attr": "bosses"
+                        },
+                        "index": {
+                          "type": "constant",
+                          "value": "bottom"
+                        }
+                      },
+                      "attr": "can_defeat"
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Rupees (20)",
@@ -15634,10 +15209,71 @@
             "name": "Ganons Tower - Big Key Chest",
             "id": 60145,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Moon Pearl"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "AST_function_call",
+                  "args": {
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "state"
+                                    },
+                                    "attr": "multiworld"
+                                  },
+                                  "attr": "get_location"
+                                },
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Ganons Tower - Big Key Chest"
+                                  }
+                                ]
+                              },
+                              "attr": "parent_region"
+                            },
+                            "attr": "dungeon"
+                          },
+                          "attr": "bosses"
+                        },
+                        "index": {
+                          "type": "constant",
+                          "value": "bottom"
+                        }
+                      },
+                      "attr": "can_defeat"
+                    },
+                    "_original_ast_type": "function_call"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_use_bombs",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Moon Pearl"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Arrows (10)",
@@ -16088,21 +15724,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
+                  "rule": "GanonDefeatRule",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_crystals",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
                     {
-                      "type": "helper",
-                      "name": "has_crystals",
-                      "args": [
-                        {
-                          "type": "option_value",
-                          "option": "crystals_needed_for_ganon"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "GanonDefeatRule"
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "crystals_needed_for_ganon"
+                      }
                     }
                   ]
                 },
@@ -20583,6 +20218,8 @@
           "display_name": "Underworld Palette"
         }
       },
+      "logical_heart_containers": 10,
+      "logical_heart_pieces": 24,
       "has_progressive_bows": true,
       "dungeons": {
         "Hyrule Castle": "Hyrule Castle",
@@ -21011,8 +20648,6 @@
           "sram_offset": 30
         }
       ],
-      "logical_heart_containers": 10,
-      "logical_heart_pieces": 24,
       "er_seed": "vanilla",
       "difficulty_requirements": {
         "baseitems": [
@@ -21495,7 +21130,172 @@
   },
   "exporter": {},
   "game_info": {
-    "1": {}
+    "1": {
+      "glitches_required": "no_glitches",
+      "bunny_rules": {
+        "bunny_impassable_caves": [
+          "Bumper Cave",
+          "Desert Palace Main (Inner)",
+          "Fairy Ascension Cave (Drop)",
+          "Hookshot Cave",
+          "Pyramid",
+          "Sewers",
+          "Skull Woods First Section (Left)",
+          "Skull Woods First Section (Right)",
+          "Skull Woods First Section (Top)",
+          "Skull Woods Second Section (Drop)",
+          "Spiral Cave (Top)",
+          "Turtle Rock (Big Chest)",
+          "Turtle Rock (Entrance)",
+          "Turtle Rock (Eye Bridge)",
+          "Turtle Rock (Second Section)",
+          "Two Brothers House"
+        ],
+        "bunny_accessible_locations": [
+          "Blacksmith",
+          "Bombos Tablet",
+          "Bottle Merchant",
+          "Bumper Cave Ledge",
+          "Checkerboard Cave",
+          "Dark Blacksmith Ruins",
+          "Desert Ledge",
+          "Ether Tablet",
+          "Hype Cave - Generous Guy",
+          "Link's Uncle",
+          "Lost Woods Hideout",
+          "Lumberjack Tree",
+          "Master Sword Pedestal",
+          "Missing Smith",
+          "Peg Cave",
+          "Potion Shop",
+          "Purple Chest",
+          "Pyramid",
+          "Sahasrahla",
+          "Sick Kid",
+          "Spectacle Rock",
+          "Spectacle Rock Cave",
+          "Sunken Treasure"
+        ],
+        "mandatory_superbunny_locations": [
+          "Kakariko Well - Bottom",
+          "Kakariko Well - Left",
+          "Kakariko Well - Middle",
+          "Kakariko Well - Right",
+          "Superbunny Cave - Bottom",
+          "Superbunny Cave - Top"
+        ],
+        "mirror_superbunny_locations": [
+          "Blind's Hideout - Far Left",
+          "Blind's Hideout - Far Right",
+          "Blind's Hideout - Left",
+          "Blind's Hideout - Right",
+          "Bonk Rock Cave",
+          "Brewery",
+          "C-Shaped House",
+          "Cave 45",
+          "Chest Game",
+          "Floodgate",
+          "Floodgate Chest",
+          "Ice Rod Cave",
+          "Kakariko Tavern",
+          "King's Tomb",
+          "Library",
+          "Mire Shed - Left",
+          "Mire Shed - Right",
+          "Pyramid Fairy - Left",
+          "Pyramid Fairy - Right",
+          "Sahasrahla's Hut - Left",
+          "Sahasrahla's Hut - Middle",
+          "Sahasrahla's Hut - Right",
+          "Secret Passage",
+          "Spiral Cave",
+          "Waterfall of Wishing - Left",
+          "Waterfall of Wishing - Right"
+        ]
+      },
+      "shops": [
+        {
+          "region": "Cave Shop (Dark Death Mountain)",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Red Shield Shop",
+          "unlimited_items": [
+            "Red Shield",
+            "Bee",
+            "Arrows (10)"
+          ]
+        },
+        {
+          "region": "Dark Lake Hylia Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Dark World Lumberjack Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Village of Outcasts Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Dark World Potion Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Light World Death Mountain Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Kakariko Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Cave Shop (Lake Hylia)",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ]
+        },
+        {
+          "region": "Potion Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Green Potion",
+            "Blue Potion"
+          ]
+        }
+      ]
+    }
   },
   "helpers": {
     "1": {
@@ -21520,8 +21320,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "has_fire_source",
-                      "args": []
+                      "name": "has_fire_source"
                     },
                     {
                       "type": "item_check",
@@ -21529,8 +21328,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "can_shoot_arrows",
-                      "args": []
+                      "name": "can_shoot_arrows"
                     }
                   ]
                 }
@@ -21542,8 +21340,7 @@
             "name": "can_hurt",
             "value": {
               "type": "helper",
-              "name": "has_beam_sword",
-              "args": []
+              "name": "has_beam_sword"
             }
           },
           {
@@ -21558,8 +21355,7 @@
                 },
                 {
                   "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "name": "has_fire_source"
                 }
               ]
             }
@@ -21608,8 +21404,7 @@
                             },
                             {
                               "type": "helper",
-                              "name": "can_shoot_arrows",
-                              "args": []
+                              "name": "can_shoot_arrows"
                             }
                           ]
                         },
@@ -21649,8 +21444,7 @@
                     },
                     {
                       "type": "helper",
-                      "name": "can_shoot_arrows",
-                      "args": []
+                      "name": "can_shoot_arrows"
                     }
                   ]
                 }
@@ -21660,46 +21454,11 @@
         ]
       },
       "basement_key_rule": {
-        "type": "conditional",
-        "test": {
-          "type": "compare",
-          "left": {
-            "type": "placement_lookup",
-            "location": {
-              "type": "constant",
-              "value": "Sewers - Key Rat Key Drop"
-            }
-          },
-          "op": "==",
-          "right": {
-            "type": "tuple",
-            "elements": [
-              {
-                "type": "constant",
-                "value": "Small Key (Hyrule Castle)"
-              },
-              {
-                "type": "constant",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "if_true": {
-          "type": "count_check",
-          "item": "Small Key (Hyrule Castle)",
-          "count": {
-            "type": "constant",
-            "value": 2
-          }
-        },
-        "if_false": {
-          "type": "count_check",
-          "item": "Small Key (Hyrule Castle)",
-          "count": {
-            "type": "constant",
-            "value": 3
-          }
+        "type": "count_check",
+        "item": "Small Key (Hyrule Castle)",
+        "count": {
+          "type": "constant",
+          "value": 2
         }
       },
       "bottle_count": {
@@ -21724,18 +21483,15 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_melee_weapon",
-            "args": []
+            "name": "has_melee_weapon"
           },
           {
             "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
+            "name": "can_use_bombs"
           },
           {
             "type": "helper",
-            "name": "can_shoot_arrows",
-            "args": []
+            "name": "can_shoot_arrows"
           },
           {
             "type": "state_method",
@@ -21766,8 +21522,7 @@
           },
           {
             "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
+            "name": "can_use_bombs"
           }
         ]
       },
@@ -22013,8 +21768,7 @@
                           "op": "*",
                           "right": {
                             "type": "helper",
-                            "name": "bottle_count",
-                            "args": []
+                            "name": "bottle_count"
                           }
                         }
                       ]
@@ -22074,8 +21828,7 @@
                             "op": "*",
                             "right": {
                               "type": "helper",
-                              "name": "bottle_count",
-                              "args": []
+                              "name": "bottle_count"
                             }
                           }
                         ]
@@ -22097,8 +21850,7 @@
                         "op": "*",
                         "right": {
                           "type": "helper",
-                          "name": "bottle_count",
-                          "args": []
+                          "name": "bottle_count"
                         }
                       }
                     }
@@ -22168,8 +21920,7 @@
                       "conditions": [
                         {
                           "type": "helper",
-                          "name": "has_sword",
-                          "args": []
+                          "name": "has_sword"
                         },
                         {
                           "type": "item_check",
@@ -22422,8 +22173,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_melee_weapon",
-                "args": []
+                "name": "has_melee_weapon"
               },
               {
                 "type": "item_check",
@@ -22435,13 +22185,11 @@
               },
               {
                 "type": "helper",
-                "name": "can_extend_magic",
-                "args": []
+                "name": "can_extend_magic"
               },
               {
                 "type": "helper",
-                "name": "can_shoot_arrows",
-                "args": []
+                "name": "can_shoot_arrows"
               },
               {
                 "type": "item_check",
@@ -22472,8 +22220,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_melee_weapon",
-                "args": []
+                "name": "has_melee_weapon"
               },
               {
                 "type": "item_check",
@@ -22503,8 +22250,7 @@
                       },
                       {
                         "type": "helper",
-                        "name": "can_extend_magic",
-                        "args": []
+                        "name": "can_extend_magic"
                       }
                     ]
                   }
@@ -22512,8 +22258,7 @@
               },
               {
                 "type": "helper",
-                "name": "can_shoot_arrows",
-                "args": []
+                "name": "can_shoot_arrows"
               },
               {
                 "type": "item_check",
@@ -22610,8 +22355,7 @@
                   },
                   {
                     "type": "helper",
-                    "name": "has_sword",
-                    "args": []
+                    "name": "has_sword"
                   }
                 ]
               }
@@ -22631,8 +22375,7 @@
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_beam_sword",
-                "args": []
+                "name": "has_beam_sword"
               },
               {
                 "type": "and",
@@ -23002,8 +22745,7 @@
           "type": "compare",
           "left": {
             "type": "helper",
-            "name": "heart_count",
-            "args": []
+            "name": "heart_count"
           },
           "op": ">=",
           "right": {
@@ -23017,8 +22759,7 @@
         "conditions": [
           {
             "type": "helper",
-            "name": "has_sword",
-            "args": []
+            "name": "has_sword"
           },
           {
             "type": "item_check",

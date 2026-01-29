@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-28 10:46:56
+**Generated:** 2026-01-29 18:04:43
 
 ## Summary
 
@@ -35,8 +35,8 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ❌ Failed | ❌ Failed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| A Short Hike | ❌ Failed | ❌ Failed | 1 | 1 | ✅ | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 121.4KB | ✅ |
+| A Short Hike | ❌ Failed | ❌ Failed | 1 | 1 | 16.2KB | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
@@ -58,7 +58,7 @@
 | Donkey Kong Country 3 | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
 | Factorio | ❌ Failed | — | 2 | 2 | 5.1KB | ✅ |
 | Faxanadu | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ❌ Failed | — | 3 | 3 | 13.4KB | ✅ |
+| Final Fantasy Mystic Quest | ❌ Failed | — | 3 | 3 | 10.3KB | ✅ |
 | Heretic | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |

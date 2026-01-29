@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-01-29 03:58:04
+**Generated:** 2026-01-29 18:04:43
 
 ## Summary
 
@@ -31,7 +31,7 @@
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 18.0KB | ✅ |
-| A Link to the Past | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 12.7KB | ✅ |
+| A Link to the Past | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 121.4KB | ✅ |
 | A Short Hike | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 16.2KB | ✅ |
 | APQuest | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Adventure | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
@@ -54,7 +54,7 @@
 | Donkey Kong Country 3 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Factorio | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 5.1KB | ✅ |
 | Faxanadu | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 13.4KB | ✅ |
+| Final Fantasy Mystic Quest | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 10.3KB | ✅ |
 | Heretic | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Hylics 2 | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Inscryption | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 8.0KB | ✅ |
