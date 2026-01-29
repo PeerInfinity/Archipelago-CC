@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-28 10:46:56
+**Generated:** 2026-01-29 03:58:04
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -45,15 +45,15 @@ Additional information:
 
 Of the 43 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 30/43 (69.8%)
+- **Passing with Generic Exporter:** 28/43 (65.1%)
 - **Passing with Generic Logic:** 43/43 (100.0%)
-- **Passing with Both Generic:** 30/43 (69.8%)
+- **Passing with Both Generic:** 28/43 (65.1%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 268.2KB
+- **Total Exporter Code:** 297.2KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 268.2KB
+- **Combined Total:** 297.2KB
 
 ## Test Results
 
@@ -61,9 +61,9 @@ Of the 43 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 246.3KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 665.7KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.7KB | ✅ | 665.7KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 656.1KB |
-| A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
+| A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.9KB |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 27.4KB |
@@ -148,23 +148,25 @@ Of the 43 templates passing all 4 tests:
 | 3 | Super Mario 64 WorldGen | 21.4KB |
 | 4 | A Hat in Time WorldGen | 18.0KB |
 | 5 | Terraria WorldGen | 16.8KB |
-| 6 | The Messenger WorldGen | 14.7KB |
-| 7 | Final Fantasy Mystic Quest WorldGen | 13.4KB |
-| 8 | Yoshi's Island WorldGen | 9.2KB |
-| 9 | Inscryption WorldGen | 8.0KB |
-| 10 | Links Awakening DX WorldGen | 7.4KB |
-| 11 | The Wind Waker WorldGen | 7.0KB |
-| 12 | Factorio WorldGen | 5.1KB |
-| 13 | Celeste 64 WorldGen | 4.1KB |
-| 14 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
-| 15 | VVVVVV WorldGen | 3.8KB |
-| 16 | Landstalker - The Treasures of King Nole WorldGen | 3.6KB |
-| 17 | Paint WorldGen | 2.7KB |
-| 18 | Timespinner WorldGen | 2.2KB |
-| 19 | Subnautica WorldGen | 2.2KB |
-| 20 | Aquaria WorldGen | 1.8KB |
-| 21 | DLCQuest WorldGen | 1.2KB |
-| 22 | Old School Runescape WorldGen | 1.0KB |
+| 6 | A Short Hike WorldGen | 16.2KB |
+| 7 | The Messenger WorldGen | 14.7KB |
+| 8 | Final Fantasy Mystic Quest WorldGen | 13.4KB |
+| 9 | A Link to the Past WorldGen | 12.7KB |
+| 10 | Yoshi's Island WorldGen | 9.2KB |
+| 11 | Inscryption WorldGen | 8.0KB |
+| 12 | Links Awakening DX WorldGen | 7.4KB |
+| 13 | The Wind Waker WorldGen | 7.0KB |
+| 14 | Factorio WorldGen | 5.1KB |
+| 15 | Celeste 64 WorldGen | 4.1KB |
+| 16 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
+| 17 | VVVVVV WorldGen | 3.8KB |
+| 18 | Landstalker - The Treasures of King Nole WorldGen | 3.6KB |
+| 19 | Paint WorldGen | 2.7KB |
+| 20 | Timespinner WorldGen | 2.2KB |
+| 21 | Subnautica WorldGen | 2.2KB |
+| 22 | Aquaria WorldGen | 1.8KB |
+| 23 | DLCQuest WorldGen | 1.2KB |
+| 24 | Old School Runescape WorldGen | 1.0KB |
 
 ## Excluded Templates
 
