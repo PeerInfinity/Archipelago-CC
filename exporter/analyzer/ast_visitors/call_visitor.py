@@ -746,8 +746,23 @@ class CallVisitorMixin:
                                 first_func = constant_value[0]
                                 func_qualname = getattr(first_func, '__qualname__', '')
                                 if 'set_bunny_rules' in func_qualname:
-                                    logging.debug(f"any(GeneratorExp constant): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
-                                    return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
+                                    # Check for glitch modes where bunny rules allow alternative access
+                                    # In glitch modes, superbunny/revival tricks often provide access without Moon Pearl
+                                    glitches_required = None
+                                    if self.game_handler and hasattr(self.game_handler, 'world') and self.game_handler.world:
+                                        world = self.game_handler.world
+                                        if hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
+                                            glitches_required = str(world.options.glitches_required.current_key)
+
+                                    if glitches_required in ('minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'):
+                                        # In glitch modes, bunny rules provide many alternative access paths
+                                        # Use True as a permissive fallback since we can't analyze the specific paths
+                                        logging.debug(f"any(GeneratorExp constant): Detected unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', using True fallback")
+                                        return {'type': 'constant', 'value': True}
+                                    else:
+                                        # In non-glitch modes, Moon Pearl is the safe fallback
+                                        logging.debug(f"any(GeneratorExp constant): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
+                                        return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
 
                 if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
@@ -816,15 +831,26 @@ class CallVisitorMixin:
                             else:
                                 # Analysis failed for callable list - check if these are ALttP bunny rules
                                 # Bunny rules from set_bunny_rules can't be properly analyzed due to their
-                                # dynamic construction. The safe fallback is to require Moon Pearl, which
-                                # is always sufficient (the bunny rules provide alternative paths that all
-                                # ultimately allow access if you have Moon Pearl).
+                                # dynamic construction.
                                 if resolved_value and len(resolved_value) > 0:
                                     first_func = resolved_value[0]
                                     func_qualname = getattr(first_func, '__qualname__', '')
                                     if 'set_bunny_rules' in func_qualname:
-                                        logging.debug(f"any(GeneratorExp): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
-                                        return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
+                                        # Check for glitch modes where bunny rules allow alternative access
+                                        glitches_required = None
+                                        if self.game_handler and hasattr(self.game_handler, 'world') and self.game_handler.world:
+                                            world = self.game_handler.world
+                                            if hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
+                                                glitches_required = str(world.options.glitches_required.current_key)
+
+                                        if glitches_required in ('minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'):
+                                            # In glitch modes, bunny rules provide many alternative access paths
+                                            logging.debug(f"any(GeneratorExp): Detected unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', using True fallback")
+                                            return {'type': 'constant', 'value': True}
+                                        else:
+                                            # In non-glitch modes, Moon Pearl is the safe fallback
+                                            logging.debug(f"any(GeneratorExp): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
+                                            return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
 
                         # NEW: Handle nested comprehensions - list of lists of callables
                         # This pattern appears in The Witness: any(all(condition(state) for condition in sub_req) for sub_req in fully_converted_rules)
