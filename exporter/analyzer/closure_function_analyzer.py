@@ -141,10 +141,63 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule dict, or None if analysis failed
         """
+        func_qualname = getattr(func, '__qualname__', 'unknown')
         try:
-            source = inspect.getsource(func)
-            # Remove leading indentation
-            source = textwrap.dedent(source)
+            raw_source = inspect.getsource(func)
+
+            # Try parsing source in multiple ways
+            # dedent can break multiline lambdas with continuation lines
+            dedented_source = textwrap.dedent(raw_source)
+
+            # For multiline lambdas, try joining into single line
+            # This handles cases where dedent breaks implicit line continuation
+            single_line = ' '.join(line.strip() for line in raw_source.split('\n') if line.strip())
+
+            # Fix: inspect.getsource() may include trailing parens from outer function calls
+            # (e.g., when a lambda is passed as argument to set_rule(..., lambda: ...))
+            # Strip trailing parens until the source is balanced
+            def count_paren_balance(s):
+                """Count paren balance, ignoring parens inside strings."""
+                in_string = None
+                count = 0
+                for i, c in enumerate(s):
+                    if in_string:
+                        if c == in_string and (i == 0 or s[i-1] != '\\'):
+                            in_string = None
+                    else:
+                        if c in '"\'' and (i == 0 or s[i-1] != '\\'):
+                            in_string = c
+                        elif c == '(':
+                            count += 1
+                        elif c == ')':
+                            count -= 1
+                return count
+
+            # Strip trailing parens if unbalanced (from outer function call)
+            while single_line.endswith(')') and count_paren_balance(single_line) < 0:
+                single_line = single_line[:-1]
+
+            source = None
+            # Try 1: dedented source (works for most single-line lambdas)
+            try:
+                ast.parse(dedented_source)
+                source = dedented_source
+            except SyntaxError:
+                pass
+
+            # Try 2: single line (for multiline lambdas with broken continuation)
+            if source is None:
+                try:
+                    ast.parse(single_line)
+                    source = single_line
+                    logger.debug(f"ClosureFunctionAnalyzer: Using single-line source for {func_qualname}")
+                except SyntaxError:
+                    pass
+
+            # Fallback: use dedented even if it fails (will be caught later)
+            if source is None:
+                source = dedented_source
+            logger.debug(f"ClosureFunctionAnalyzer: Got source for {func_qualname} ({len(source)} chars)")
 
             # Parse the source code
             tree = ast.parse(source)
@@ -185,8 +238,11 @@ class ClosureFunctionAnalyzer:
                         target_type=self.parent_analyzer.target_type
                     )
                     result = sub_analyzer.visit(node.body)
+                    logger.debug(f"ClosureFunctionAnalyzer: RuleAnalyzer result for {func_qualname}: type={result.get('type') if result else None}")
                     if result and result.get('type') != 'error':
                         return result
+                    elif result and result.get('type') == 'error':
+                        logger.debug(f"ClosureFunctionAnalyzer: RuleAnalyzer returned error for {func_qualname}: {result.get('error')}")
 
         except (OSError, TypeError) as e:
             # Source not available for dynamically created functions
