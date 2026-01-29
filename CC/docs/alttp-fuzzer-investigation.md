@@ -109,6 +109,48 @@ Possible approaches:
 2. Ensure `location_item_name` comparisons are preserved as `Compare(AST_placement_lookup, ==, tuple)`
 3. Add tests for self-locking rule export with various option combinations
 
+## Partial Fixes Applied
+
+The following fixes have been implemented in `exporter/analyzer/closure_function_analyzer.py`:
+
+### 1. Location Name Filtering (is_item_name)
+Added a heuristic to filter location names from being treated as item names in bytecode analysis:
+- Location names like "Eastern Palace - Big Key Chest" contain " - " but no parentheses
+- Item names like "Small Key (Eastern Palace)" contain parentheses
+- This prevents location names from appearing incorrectly in Has rules
+
+### 2. Error Result Handling (_analyze_add_rule_pattern)
+Fixed the error detection when analyzing combined add_rule lambdas:
+- Previously only checked for `None` results before trying bytecode fallback
+- Now also checks for `{'type': 'error'}` dict results
+- Ensures failed analysis properly triggers bytecode fallback
+
+### 3. Ambiguous AND/OR Pattern Detection (_analyze_via_bytecode)
+Changed behavior when both JUMP_IF_TRUE and JUMP_IF_FALSE are detected:
+- Previously defaulted to OR which produced incorrect rule structures
+- Now returns `None` to indicate analysis failed rather than guessing wrong
+- This allows the caller to handle the failure appropriately
+
+## Remaining Issues
+
+The partial fixes improve some cases but don't fully solve the problem. The remaining issue is:
+
+**Chained add_rule Analysis**: When multiple `add_rule` calls are chained (e.g., base rule + stalfos_rule + lamp_requirement), the innermost original rule may still fail analysis. When this happens, only the outer rules are preserved while the original rule's requirements are lost.
+
+Example: Eastern Palace - Big Key Chest ends up with only `can_kill_most_things(4) AND Lamp` when it should have the full self-locking key requirement.
+
+### Root Cause
+The `location_item_name` comparison pattern in the original rule:
+```python
+location_item_name(state, 'Eastern Palace - Big Key Chest', player) == ('Big Key (Eastern Palace)', player)
+```
+This pattern requires:
+1. AST analysis to recognize the function call
+2. The game handler to convert it to `placement_lookup` rule type
+3. The comparison to be preserved with the tuple on the right side
+
+When options like `enemy_shuffle` trigger `add_rule` to wrap the original rule, the closure function analyzer may fail to fully analyze the nested lambda chain, resulting in lost requirements.
+
 ## Workaround
 
 Currently, there is no workaround. Games with self-locking rules may fail fuzzer testing when certain options are enabled.
