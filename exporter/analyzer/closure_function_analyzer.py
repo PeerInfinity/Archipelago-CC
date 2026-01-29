@@ -13,6 +13,7 @@ import ast
 import inspect
 import logging
 import textwrap
+import warnings
 from typing import Any, Dict, List, Optional, Set, Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -320,9 +321,10 @@ class ClosureFunctionAnalyzer:
         """
         # Feature flag: Limit bunny rule path expansion depth
         if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
-            logger.warning(
+            warnings.warn(
                 f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, using Moon Pearl fallback"
+                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, using Moon Pearl fallback",
+                stacklevel=2
             )
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
 
@@ -333,9 +335,10 @@ class ClosureFunctionAnalyzer:
         # Feature flag: Limit number of options analyzed
         options_to_analyze = options
         if self.ENABLE_BUNNY_OPTIONS_LIMIT and len(options) > self.MAX_BUNNY_OPTIONS:
-            logger.warning(
+            warnings.warn(
                 f"LOSSY FALLBACK: {len(options)} bunny options exceeds MAX_BUNNY_OPTIONS "
-                f"({self.MAX_BUNNY_OPTIONS}), truncating options list"
+                f"({self.MAX_BUNNY_OPTIONS}), truncating options list",
+                stacklevel=2
             )
             options_to_analyze = options[:self.MAX_BUNNY_OPTIONS]
 
@@ -365,7 +368,11 @@ class ClosureFunctionAnalyzer:
         if len(analyzed_options) == 0:
             if failed_count > 0:
                 # We had options but couldn't analyze any - use Moon Pearl fallback
-                logger.debug(f"ClosureFunctionAnalyzer: All {failed_count} options failed, using Moon Pearl")
+                warnings.warn(
+                    f"LOSSY FALLBACK: All {failed_count} bunny rule options failed analysis, "
+                    f"using Moon Pearl requirement as fallback",
+                    stacklevel=2
+                )
                 return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
             return {'rule': 'False_'}
 
@@ -397,9 +404,10 @@ class ClosureFunctionAnalyzer:
         """
         # Feature flag: Limit bunny rule path expansion depth
         if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
-            logger.warning(
+            warnings.warn(
                 f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, using Moon Pearl fallback"
+                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, using Moon Pearl fallback",
+                stacklevel=2
             )
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
 

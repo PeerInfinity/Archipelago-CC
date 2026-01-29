@@ -6,6 +6,7 @@ that uses the Rule Builder pattern.
 """
 
 import copy
+import warnings
 from typing import Any, Dict, List, Set, Tuple, Optional
 
 
@@ -6213,6 +6214,11 @@ class RuleCodeGenerator:
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
+        warnings.warn(
+            f"LOSSY FALLBACK: Unknown helper '{helper_name}' in _convert_rule_builder_helper, "
+            f"using True_() (always accessible) as fallback",
+            stacklevel=2
+        )
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -7418,6 +7424,11 @@ class HelperCodeGenerator:
                     # Unknown helper - return True as placeholder
                     # This makes locations more accessible, which is appropriate for worldgen
                     # since unknown helpers are typically progression checks
+                    warnings.warn(
+                        f"LOSSY FALLBACK: Unknown helper '{helper_name}' in lambda expression, "
+                        f"using True (always accessible) as fallback",
+                        stacklevel=2
+                    )
                     return 'True'
 
             # Handle AST_placement_search (check if item is at any of listed locations)
@@ -8654,6 +8665,11 @@ class HelperCodeGenerator:
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
+        warnings.warn(
+            f"LOSSY FALLBACK: Unknown helper '{name}' in _expr_helper, "
+            f"using True (always accessible) as fallback",
+            stacklevel=2
+        )
         return 'True'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:

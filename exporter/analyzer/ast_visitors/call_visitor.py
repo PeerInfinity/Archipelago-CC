@@ -11,6 +11,7 @@ This is the largest visitor method and handles various call patterns including:
 
 import ast
 import logging
+import warnings
 from typing import Any, Dict, Optional
 
 from ..utils import is_simple_value, make_json_serializable
@@ -757,11 +758,19 @@ class CallVisitorMixin:
                                     if glitches_required in ('minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'):
                                         # In glitch modes, bunny rules provide many alternative access paths
                                         # Use True as a permissive fallback since we can't analyze the specific paths
-                                        logging.debug(f"any(GeneratorExp constant): Detected unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', using True fallback")
+                                        warnings.warn(
+                                            f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', "
+                                            f"using True (always accessible) as fallback",
+                                            stacklevel=2
+                                        )
                                         return {'type': 'constant', 'value': True}
                                     else:
                                         # In non-glitch modes, Moon Pearl is the safe fallback
-                                        logging.debug(f"any(GeneratorExp constant): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
+                                        warnings.warn(
+                                            f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules, "
+                                            f"using Moon Pearl requirement as fallback",
+                                            stacklevel=2
+                                        )
                                         return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
 
                 if iterator_type == 'name':
@@ -845,11 +854,19 @@ class CallVisitorMixin:
 
                                         if glitches_required in ('minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'):
                                             # In glitch modes, bunny rules provide many alternative access paths
-                                            logging.debug(f"any(GeneratorExp): Detected unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', using True fallback")
+                                            warnings.warn(
+                                                f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', "
+                                                f"using True (always accessible) as fallback",
+                                                stacklevel=2
+                                            )
                                             return {'type': 'constant', 'value': True}
                                         else:
                                             # In non-glitch modes, Moon Pearl is the safe fallback
-                                            logging.debug(f"any(GeneratorExp): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
+                                            warnings.warn(
+                                                f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules, "
+                                                f"using Moon Pearl requirement as fallback",
+                                                stacklevel=2
+                                            )
                                             return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
 
                         # NEW: Handle nested comprehensions - list of lists of callables
