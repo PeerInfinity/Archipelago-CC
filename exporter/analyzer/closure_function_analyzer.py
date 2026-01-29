@@ -43,10 +43,18 @@ class ClosureFunctionAnalyzer:
     # Set to 0 for unlimited depth
     # Testing with 20 runs each (after add_rule closure analysis fix) showed:
     #   depth=1, pruning ON:  76.5% pass rate
-    #   depth=0, pruning ON:  94.4% pass rate (best)
+    #   depth=0, pruning ON:  94.4% pass rate (best) - but causes rule explosion with dungeons_crossed
     #   depth=1, pruning OFF: 88.2% pass rate
     #   depth=0, pruning OFF: 58.8% pass rate
-    MAX_BUNNY_PATH_DEPTH = 0
+    #   depth=3: Balance between accuracy and preventing explosion
+    MAX_BUNNY_PATH_DEPTH = 3
+
+    # Maximum number of options to analyze in bunny rule patterns.
+    # With entrance_shuffle: dungeons_crossed, there can be hundreds of possible paths.
+    # Analyzing all of them causes rule explosion (580KB+ rules).
+    # After analyzing MAX_BUNNY_OPTIONS paths, we use the Moon Pearl fallback
+    # for remaining options to prevent explosion while preserving some accuracy.
+    MAX_BUNNY_OPTIONS = 10
 
     # Enable dominance pruning in bunny rule analysis.
     # When True, removes options that require a strict superset of another option's items.
@@ -342,6 +350,8 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule dict as an 'or' of all options
         """
+        logger.debug(f"ClosureFunctionAnalyzer: _analyze_options_pattern called with {len(options)} options at depth {depth}")
+
         if not options:
             # Empty options list - any([]) is False
             return {'rule': 'False_'}
@@ -353,6 +363,14 @@ class ClosureFunctionAnalyzer:
             logger.debug(f"ClosureFunctionAnalyzer: Options depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using Moon Pearl fallback")
             # Return Moon Pearl check - the base case for all bunny rules
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+
+        # Limit the number of options to prevent rule explosion
+        # With entrance_shuffle: dungeons_crossed, there can be hundreds of paths
+        if self.MAX_BUNNY_OPTIONS > 0 and len(options) > self.MAX_BUNNY_OPTIONS:
+            logger.warning(f"ClosureFunctionAnalyzer: {len(options)} options exceeds MAX_BUNNY_OPTIONS ({self.MAX_BUNNY_OPTIONS}), limiting analysis")
+            # First option is always Moon Pearl check, include it
+            # Then include up to MAX_BUNNY_OPTIONS-1 more options (prioritizing simpler ones)
+            options = options[:self.MAX_BUNNY_OPTIONS]
 
         # Sort options by estimated complexity (shorter paths first)
         # This increases chances of finding a simple path early

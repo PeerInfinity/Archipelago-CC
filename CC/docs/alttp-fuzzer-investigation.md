@@ -234,11 +234,30 @@ The primary remaining issue is **rule size explosion**:
 2. Rules exceeding 50KB are simplified to `constant True` during export
 3. The simplified rules don't match the original game logic, causing sphere mismatches
 
-### Recommended Fixes
+### Implemented Fixes (January 2026)
 
-1. **Short-term**: Increase rule size limits or optimize rule deduplication
-2. **Medium-term**: Implement rule compression/factoring to prevent explosion
-3. **Long-term**: Consider a different rule representation that doesn't require full expansion
+1. **Early rule simplification**: Rules over 100KB are simplified to Moon Pearl check in `alttp.py:expand_rule()`
+   - Prevents further explosion during expansion
+   - Conservative but prevents timeouts and memory issues
+
+2. **Bunny path depth limit**: `MAX_BUNNY_PATH_DEPTH = 3` in `closure_function_analyzer.py`
+   - Limits recursive path analysis in bunny rules
+   - Falls back to Moon Pearl check when depth exceeded
+
+3. **Options limit**: `MAX_BUNNY_OPTIONS = 10` in `closure_function_analyzer.py`
+   - Limits number of path options analyzed per bunny rule
+   - Prevents explosion from hundreds of entrance combinations
+
+### Remaining Issues
+
+1. **Event chain rules**: Blacksmith, Flute, Purple Chest still have issues with multi-step event dependencies
+2. **Self-locking rules**: Some dungeon key rules may not export correctly with all option combinations
+
+### Recommended Future Fixes
+
+1. **Medium-term**: Implement rule compression/factoring to prevent explosion
+2. **Long-term**: Consider a different rule representation that doesn't require full expansion
+3. **Event chains**: Fix Flute/Blacksmith event dependencies in the exporter
 
 ### Next Steps for Investigation
 

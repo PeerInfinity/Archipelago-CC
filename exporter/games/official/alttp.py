@@ -75,7 +75,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             True if the helper should be preserved without analysis
         """
         if helper_name in self.HELPERS_TO_PRESERVE:
-            logger.debug(f"Preserving ALttP helper '{helper_name}' (in HELPERS_TO_PRESERVE)")
+            logger.debug(f"ALttP: Preserving helper '{helper_name}' (in HELPERS_TO_PRESERVE)")
             return True
         return super().should_preserve_as_helper(helper_name) if hasattr(super(), 'should_preserve_as_helper') else False
 
@@ -115,7 +115,25 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             input_size = len(json.dumps(rule, default=str))
             input_size_kb = input_size / 1024
             if input_size_kb > 50:
-                logger.warning(f"ALttP expand_rule input already large: {input_size_kb:.1f} KB")
+                # Log more details about the exploding rule
+                rule_type = rule.get('type', 'unknown')
+                rule_name = rule.get('name', rule.get('method', ''))
+                # Count helper references
+                rule_str = json.dumps(rule, default=str)
+                helper_count = rule_str.count('"type": "helper"')
+                item_check_count = rule_str.count('"type": "item_check"')
+                or_count = rule_str.count('"type": "or"')
+                and_count = rule_str.count('"type": "and"')
+
+                # For very large rules (>100KB), simplify immediately to Moon Pearl check
+                # This prevents further explosion during expansion
+                if input_size_kb > 100:
+                    logger.warning(f"ALttP rule too large ({input_size_kb:.1f} KB), simplifying to Moon Pearl check")
+                    return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+
+                logger.warning(f"ALttP expand_rule input already large: {input_size_kb:.1f} KB "
+                             f"[type={rule_type}, name={rule_name}, helpers={helper_count}, "
+                             f"item_checks={item_check_count}, ors={or_count}, ands={and_count}]")
         except:
             pass
 
