@@ -43,29 +43,34 @@ class ClosureFunctionAnalyzer:
     # Feature: Limit bunny rule path expansion depth
     # When enabled, bunny rules deeper than MAX_BUNNY_PATH_DEPTH use Moon Pearl fallback.
     # This prevents rule explosion with complex entrance shuffle but may reduce accuracy.
+    # LOSSY: Keep disabled by default - could miss valid access paths.
     ENABLE_BUNNY_PATH_DEPTH_LIMIT = False
     MAX_BUNNY_PATH_DEPTH = 3  # Only used when ENABLE_BUNNY_PATH_DEPTH_LIMIT is True
 
     # Feature: Limit number of bunny rule options analyzed
     # When enabled, only the first MAX_BUNNY_OPTIONS options are analyzed in options_to_access_rule.
     # This reduces rule size but may miss some valid access paths.
+    # LOSSY: Keep disabled by default - could miss valid access paths.
     ENABLE_BUNNY_OPTIONS_LIMIT = False
     MAX_BUNNY_OPTIONS = 10  # Only used when ENABLE_BUNNY_OPTIONS_LIMIT is True
 
     # Feature: Fingerprint-based deduplication
     # When enabled, uses canonical string fingerprints to detect duplicate conditions.
     # This can catch duplicates that simple equality check misses.
-    ENABLE_FINGERPRINT_DEDUP = False
+    # LOSSLESS: Safe to enable - only removes true duplicates.
+    ENABLE_FINGERPRINT_DEDUP = True
 
     # Feature: Nested structure flattening
     # When enabled, flattens nested OR(OR(a,b),c) -> OR(a,b,c) and AND(AND(a,b),c) -> AND(a,b,c).
     # This produces more compact rules.
-    ENABLE_NESTED_FLATTENING = False
+    # LOSSLESS: Safe to enable - semantically equivalent transformation.
+    ENABLE_NESTED_FLATTENING = True
 
     # Feature: Cross-type dominance pruning
     # When enabled, in OR conditions, simpler options (item-only) dominate complex ones (item+can_reach).
     # If Has(X) is present, AND(CanReachEntrance(Y), Has(X)) can be pruned.
-    ENABLE_CROSS_TYPE_DOMINANCE = False
+    # LOSSLESS: Safe to enable - removes strictly redundant options in OR.
+    ENABLE_CROSS_TYPE_DOMINANCE = True
 
     # Patterns recognized by closure variable names
     KNOWN_PATTERNS = {

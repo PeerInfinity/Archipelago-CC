@@ -23,7 +23,8 @@ class RuleExpansionMixin:
     # Feature: Lossless rule simplification during expansion
     # When enabled, applies constant folding, duplicate removal, and flattening
     # to AND/OR rules after they are expanded.
-    ENABLE_LOSSLESS_SIMPLIFICATION = False
+    # LOSSLESS: Safe to enable - semantically equivalent transformation.
+    ENABLE_LOSSLESS_SIMPLIFICATION = True
 
     # These attributes are expected to be defined on the main handler class
     # They are declared here for type checking purposes
