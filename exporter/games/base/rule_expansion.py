@@ -764,8 +764,15 @@ class RuleExpansionMixin:
                         continue
 
             # Skip duplicates using fingerprint
+            # Use default=str to handle non-serializable objects like functions
+            # that may end up in rule dicts when analysis fails to fully resolve them
             import json
-            fingerprint = json.dumps(cond, sort_keys=True)
+            try:
+                fingerprint = json.dumps(cond, sort_keys=True, default=str)
+            except (TypeError, ValueError) as e:
+                # If serialization still fails, use repr as fallback
+                logger.debug(f"_simplify_and_or: Could not serialize condition for fingerprint: {e}")
+                fingerprint = repr(cond)
             if fingerprint in seen_fingerprints:
                 continue
             seen_fingerprints.add(fingerprint)
