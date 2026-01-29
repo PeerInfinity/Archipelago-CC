@@ -1185,7 +1185,11 @@ class CallVisitorMixin:
             # - 'path_to_access_rule': Used by bunny rule generation to capture path traversal rules
             closure_var_blacklist = {'old_rule', 'path_to_access_rule'}
             if func_name in closure_var_blacklist:
-                logging.warning(f"Closure variable '{func_name}' could not be analyzed - using True_ fallback")
+                print(
+                    f"LOSSY FALLBACK: Closure variable '{func_name}' could not be analyzed, "
+                    f"using True_ (always accessible) as fallback",
+                    file=sys.stderr
+                )
                 return {'rule': 'True_'}
 
             # Create helper result with filtered args and kwargs (no state/player in JSON)
