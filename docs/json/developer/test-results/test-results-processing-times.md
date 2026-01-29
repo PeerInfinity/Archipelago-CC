@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-29 18:04:43
+**Generated:** 2026-01-29 18:52:29
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -14,16 +14,16 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 354.4s | 615.3s | 900.5s | 26597.3s |
-| Average | 4.9s | 8.4s | 12.3s | 364.3s |
-| Max | 18.4s | 34.7s | 147.8s | 364.6s |
+| Total | 352.5s | 613.7s | 900.5s | 26597.3s |
+| Average | 4.8s | 8.4s | 12.3s | 364.3s |
+| Max | 16.5s | 34.7s | 147.8s | 364.6s |
 | Min | 3.3s | 5.4s | 5.5s | 364.0s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Slowest | A Link to the Past (18.4s) | Kirby's Dream Land 3 (34.7s) | Dark Souls III (147.8s) | Choo-Choo Charles (364.6s) |
+| Slowest | A Link to the Past (16.5s) | Kirby's Dream Land 3 (34.7s) | Dark Souls III (147.8s) | Choo-Choo Charles (364.6s) |
 | Fastest | Paint (3.3s) | Paint (5.4s) | Metamath (5.5s) | A Hat in Time (364.0s) |
 
 ## Individual Game Processing Times
@@ -31,7 +31,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Game | Gen Time | Minimal Test | Full Test | Multiclient |
 |------|----------|--------------|-----------|-------------|
 | A Hat in Time | 5.6s | 7.6s | 8.7s | 364.0s |
-| A Link to the Past | 18.4s | 13.8s | 11.8s | 364.1s |
+| A Link to the Past | 16.5s | 12.1s | 11.8s | 364.1s |
 | A Short Hike | 4.2s | 9.4s | 9.5s | 364.5s |
 | APQuest | 3.7s | 9.2s | 7.1s | 364.4s |
 | Adventure | 3.9s | 8.5s | 6.2s | 364.6s |
