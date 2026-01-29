@@ -156,6 +156,23 @@ class ClosureFunctionAnalyzer:
                     # Create sub-analyzer with function's closure vars
                     closure_vars = self._extract_closure_vars(func)
 
+                    # Merge parent analyzer's closure_vars to preserve injected values
+                    # like 'world' which is needed for _lttp_has_key detection
+                    parent_closure_vars = self.parent_analyzer.closure_vars or {}
+                    for key, value in parent_closure_vars.items():
+                        if key not in closure_vars:
+                            # Add parent vars that aren't in function's closure
+                            closure_vars[key] = value
+                        elif key == 'world':
+                            # Special handling for 'world': prefer the parent's world if it
+                            # has game options (meaning it's a game World, not a MultiWorld).
+                            # In ALttP, lambdas capture 'world' = MultiWorld, but the exporter
+                            # injects 'world' = ALttPWorld which is needed for _lttp_has_key
+                            # universal key detection.
+                            parent_world = value
+                            if hasattr(parent_world, 'options'):
+                                closure_vars['world'] = parent_world
+
                     # Import here to avoid circular imports
                     from .rule_analyzer import RuleAnalyzer
 
