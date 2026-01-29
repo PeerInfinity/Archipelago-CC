@@ -1355,7 +1355,22 @@ class CallVisitorMixin:
                         item_value = item_arg
                     # Count is now in position 1 after player is filtered
                     count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-                    result = {'type': 'count_check', 'item': item_value, 'count': count}
+
+                    # Check for ALttP small_key_shuffle option
+                    # When set to 'universal', _lttp_has_key checks can_buy_unlimited instead
+                    small_key_shuffle = None
+                    if self.game_handler and hasattr(self.game_handler, 'world') and self.game_handler.world:
+                        world = self.game_handler.world
+                        if hasattr(world, 'options') and hasattr(world.options, 'small_key_shuffle'):
+                            small_key_shuffle = str(world.options.small_key_shuffle.current_key)
+
+                    if small_key_shuffle == 'universal':
+                        # When universal keys are enabled, use can_buy_unlimited helper
+                        result = {'type': 'helper', 'name': 'can_buy_unlimited',
+                                  'args': [{'type': 'constant', 'value': 'Small Key (Universal)'}]}
+                        logging.debug(f"_lttp_has_key with universal keys -> can_buy_unlimited helper")
+                    else:
+                        result = {'type': 'count_check', 'item': item_value, 'count': count}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object
