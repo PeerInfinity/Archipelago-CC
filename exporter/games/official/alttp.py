@@ -107,6 +107,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         ALttP bunny rules can create deeply nested any_of/all_of structures
         that exceed the size limit. We flatten these structures and apply
         special simplification for the common patterns.
+
+        The base class now applies lossless simplification (deduplication,
+        constant folding, flattening) during expansion. This handler adds:
+        1. Additional flattening for any_of/all_of patterns
+        2. Lossy simplification as a last resort for very large rules
         """
         import json
 
@@ -114,36 +119,41 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         try:
             input_size = len(json.dumps(rule, default=str))
             input_size_kb = input_size / 1024
+
+            # For very large rules (>200KB), simplify immediately to Moon Pearl check
+            # This prevents further explosion during expansion
+            # Threshold raised from 100KB since lossless simplification helps
+            if input_size_kb > 200:
+                logger.warning(f"ALttP rule too large pre-expansion ({input_size_kb:.1f} KB), "
+                             f"simplifying to Moon Pearl check")
+                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+
             if input_size_kb > 50:
-                # Log more details about the exploding rule
+                # Log more details about the large rule
                 rule_type = rule.get('type', 'unknown')
                 rule_name = rule.get('name', rule.get('method', ''))
-                # Count helper references
                 rule_str = json.dumps(rule, default=str)
                 helper_count = rule_str.count('"type": "helper"')
                 item_check_count = rule_str.count('"type": "item_check"')
                 or_count = rule_str.count('"type": "or"')
                 and_count = rule_str.count('"type": "and"')
 
-                # For very large rules (>100KB), simplify immediately to Moon Pearl check
-                # This prevents further explosion during expansion
-                if input_size_kb > 100:
-                    logger.warning(f"ALttP rule too large ({input_size_kb:.1f} KB), simplifying to Moon Pearl check")
-                    return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
-
-                logger.warning(f"ALttP expand_rule input already large: {input_size_kb:.1f} KB "
-                             f"[type={rule_type}, name={rule_name}, helpers={helper_count}, "
-                             f"item_checks={item_check_count}, ors={or_count}, ands={and_count}]")
+                logger.debug(f"ALttP expand_rule input large: {input_size_kb:.1f} KB "
+                           f"[type={rule_type}, name={rule_name}, helpers={helper_count}, "
+                           f"item_checks={item_check_count}, ors={or_count}, ands={and_count}]")
         except:
             pass
 
-        # First, do standard expansion
+        # Do standard expansion (which now includes lossless simplification)
         result = super().expand_rule(rule, _depth)
 
-        # Then flatten and simplify to reduce size
+        # Then apply ALttP-specific flattening for any_of/all_of patterns
         if result and isinstance(result, dict):
             result = self._flatten_nested_any_of(result)
-            result = self._simplify_for_size(result)
+            # Apply lossless simplification again after flattening
+            result = self.simplify_rule_tree(result)
+            # Only use lossy simplification as last resort (raised threshold to 100KB)
+            result = self._simplify_for_size(result, size_limit_kb=100)
 
         return result
 

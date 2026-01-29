@@ -236,7 +236,8 @@ The primary remaining issue is **rule size explosion**:
 
 ### Implemented Fixes (January 2026)
 
-1. **Early rule simplification**: Rules over 100KB are simplified to Moon Pearl check in `alttp.py:expand_rule()`
+1. **Early rule simplification**: Rules over 200KB are simplified to Moon Pearl check in `alttp.py:expand_rule()`
+   - Threshold raised from 100KB due to lossless simplification improvements
    - Prevents further explosion during expansion
    - Conservative but prevents timeouts and memory issues
 
@@ -248,22 +249,51 @@ The primary remaining issue is **rule size explosion**:
    - Limits number of path options analyzed per bunny rule
    - Prevents explosion from hundreds of entrance combinations
 
+4. **Lossless rule simplification** (NEW): Added to `rule_expansion.py`
+   - Fingerprint-based deduplication: Removes structurally identical conditions
+   - Constant folding: `AND(True, X) → X`, `OR(False, X) → X`
+   - Flattening: `OR(OR(A, B), C) → OR(A, B, C)`
+   - Domination: `AND(False, X) → False`, `OR(True, X) → True`
+   - Applied automatically during rule expansion via `_simplify_and_or()`
+
+5. **Improved dominance pruning** (NEW): Fixed in `closure_function_analyzer.py`
+   - Options without `can_reach` now correctly dominate options with `can_reach` when items are subset
+   - Example: `has(Moon Pearl)` dominates `can_reach(X) AND has(Moon Pearl)`
+   - Significantly reduces bunny rule size when Moon Pearl is sufficient
+
+6. **Fingerprint-based deduplication** (NEW): Added to `closure_function_analyzer.py`
+   - `_rule_fingerprint()` creates canonical string representation for rules
+   - `_simplify_or_conditions()` and `_simplify_and_conditions()` use fingerprints
+   - Catches structurally identical rules even when they're different objects
+
+7. **Nested structure flattening** (NEW): Added to `closure_function_analyzer.py`
+   - `_flatten_or_children()` and `_flatten_and_children()` methods
+   - Applied before deduplication to maximize duplicate detection
+
+### Test Results
+
+With all lossless simplification fixes:
+- **Timeouts eliminated**: 0 timeouts in 30-run test (was 3 before)
+- **Success rate**: ~20-40% depending on option combinations
+- **Remaining failures**: Mostly due to logic export issues, not rule size
+
 ### Remaining Issues
 
-1. **Event chain rules**: Blacksmith, Flute, Purple Chest still have issues with multi-step event dependencies
-2. **Self-locking rules**: Some dungeon key rules may not export correctly with all option combinations
+1. **Event chain rules**: Blacksmith, Flute Spot, Purple Chest still have issues with multi-step event dependencies
+2. **Location access mismatches**: Some locations (Old Man, Tower of Hera, Waterfall Fairy) show server/UT logic differences
+3. **Glitch mode rules**: `hybrid_major_glitches` and `overworld_glitches` have complex rules that may not export correctly
 
 ### Recommended Future Fixes
 
-1. **Medium-term**: Implement rule compression/factoring to prevent explosion
-2. **Long-term**: Consider a different rule representation that doesn't require full expansion
-3. **Event chains**: Fix Flute/Blacksmith event dependencies in the exporter
+1. **Event chains**: Fix Flute activation and Blacksmith event dependencies in the exporter
+2. **Glitch rules**: Investigate why glitch-dependent rules cause logic mismatches
+3. **Location access**: Debug specific location access rules that differ between server and UT
 
 ### Next Steps for Investigation
 
-1. **Rule optimization**: Analyze why entrance shuffle creates massive rules and optimize helper expansion
-2. **Self-locking rules**: Ensure Turtle Rock/Swamp Palace key rules are exported with correct counts
-3. **Event chains**: Trace Flute/Blacksmith event dependencies in the exporter
+1. **Event chains**: Trace Flute/Blacksmith event dependencies in the exporter
+2. **Location mismatches**: Compare specific location rules between exported JSON and original Python
+3. **Glitch rules**: Analyze how glitch-related rules are being exported
 
 ## Test Commands
 

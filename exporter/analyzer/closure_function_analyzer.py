@@ -418,8 +418,11 @@ class ClosureFunctionAnalyzer:
         if len(analyzed_options) == 1:
             return analyzed_options[0]
 
+        # Flatten nested ORs first
+        flattened_options = self._flatten_or_children(analyzed_options)
+
         # Simplify: remove duplicates and True constants
-        simplified = self._simplify_or_conditions(analyzed_options)
+        simplified = self._simplify_or_conditions(flattened_options)
 
         # Apply dominance pruning: remove options that require a superset of items
         if self.ENABLE_DOMINANCE_PRUNING:
@@ -583,17 +586,27 @@ class ClosureFunctionAnalyzer:
                 if opt is other_opt:
                     continue
 
-                # Only compare options of the same "type":
-                # - Both have can_reach, or neither has can_reach
-                # This prevents pruning Moon Pearl in favor of entrance-based options
-                if has_reach != other_has_reach:
-                    continue
-
-                # Check if other strictly dominates this (other requires fewer items)
-                if other_reqs < reqs:  # Strict subset
-                    is_dominated = True
-                    logger.debug(f"ClosureFunctionAnalyzer: Pruning dominated option (requires {reqs}, dominated by {other_reqs})")
-                    break
+                # An option dominates another if it requires fewer or equal items AND
+                # - either both have can_reach, or
+                # - the dominator has NO can_reach (strictly easier)
+                #
+                # Key insight: option without can_reach is STRICTLY easier than one with
+                # can_reach when items are same/subset. Moon Pearl alone should dominate
+                # "can_reach(X) AND Moon Pearl" because Moon Pearl is always reachable
+                # if you have the item, while can_reach(X) may not be.
+                if other_reqs <= reqs:  # Subset or equal
+                    if not other_has_reach and has_reach:
+                        # Other has no can_reach, this has can_reach -> dominated
+                        is_dominated = True
+                        logger.debug(f"ClosureFunctionAnalyzer: Pruning option with can_reach "
+                                   f"(requires {reqs}, dominated by {other_reqs} without can_reach)")
+                        break
+                    elif other_has_reach == has_reach and other_reqs < reqs:
+                        # Same reach type, but other has strictly fewer items
+                        is_dominated = True
+                        logger.debug(f"ClosureFunctionAnalyzer: Pruning dominated option "
+                                   f"(requires {reqs}, dominated by {other_reqs})")
+                        break
             if not is_dominated:
                 non_dominated.append(opt)
 
@@ -690,8 +703,11 @@ class ClosureFunctionAnalyzer:
 
         all_conditions = [can_reach] + path_conditions
 
+        # Flatten nested ANDs
+        flattened = self._flatten_and_children(all_conditions)
+
         # Simplify if possible
-        simplified = self._simplify_and_conditions(all_conditions)
+        simplified = self._simplify_and_conditions(flattened)
         if len(simplified) == 1:
             return simplified[0]
         return {'rule': 'And', 'children': simplified}
@@ -1042,11 +1058,137 @@ class ClosureFunctionAnalyzer:
 
         return result
 
+    def _flatten_or_children(self, conditions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Flatten nested OR structures into a single list.
+
+        If any child is itself an OR, extract its children directly.
+        OR(OR(A, B), C) -> OR(A, B, C)
+
+        Args:
+            conditions: List of rule dicts
+
+        Returns:
+            Flattened list of conditions
+        """
+        result = []
+        for cond in conditions:
+            if isinstance(cond, dict):
+                rule_type = cond.get('rule') or cond.get('type')
+                if rule_type in ('Or', 'or'):
+                    children = cond.get('children', cond.get('conditions', []))
+                    # Recursively flatten
+                    result.extend(self._flatten_or_children(children))
+                else:
+                    result.append(cond)
+            else:
+                result.append(cond)
+        return result
+
+    def _flatten_and_children(self, conditions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Flatten nested AND structures into a single list.
+
+        If any child is itself an AND, extract its children directly.
+        AND(AND(A, B), C) -> AND(A, B, C)
+
+        Args:
+            conditions: List of rule dicts
+
+        Returns:
+            Flattened list of conditions
+        """
+        result = []
+        for cond in conditions:
+            if isinstance(cond, dict):
+                rule_type = cond.get('rule') or cond.get('type')
+                if rule_type in ('And', 'and'):
+                    children = cond.get('children', cond.get('conditions', []))
+                    # Recursively flatten
+                    result.extend(self._flatten_and_children(children))
+                else:
+                    result.append(cond)
+            else:
+                result.append(cond)
+        return result
+
+    def _rule_fingerprint(self, rule: Any) -> str:
+        """Create a canonical string fingerprint of a rule for deduplication.
+
+        This produces a consistent string representation that can be used
+        to detect structurally identical rules even if they are different objects.
+
+        Args:
+            rule: A rule dictionary or primitive value
+
+        Returns:
+            A canonical string representation for comparison
+        """
+        if rule is None:
+            return "null"
+        if isinstance(rule, bool):
+            return f"bool:{rule}"
+        if isinstance(rule, (int, float)):
+            return f"num:{rule}"
+        if isinstance(rule, str):
+            return f"str:{rule}"
+        if isinstance(rule, (list, tuple)):
+            parts = [self._rule_fingerprint(item) for item in rule]
+            return f"list:[{','.join(parts)}]"
+        if not isinstance(rule, dict):
+            return f"other:{type(rule).__name__}"
+
+        rule_type = rule.get('rule') or rule.get('type', '')
+
+        # Handle AND/OR - sort children for consistent ordering
+        if rule_type in ('And', 'and'):
+            children = rule.get('children', rule.get('conditions', []))
+            child_fps = sorted(self._rule_fingerprint(c) for c in children)
+            return f"and:[{','.join(child_fps)}]"
+
+        if rule_type in ('Or', 'or'):
+            children = rule.get('children', rule.get('conditions', []))
+            child_fps = sorted(self._rule_fingerprint(c) for c in children)
+            return f"or:[{','.join(child_fps)}]"
+
+        # Handle common rule types
+        if rule_type == 'Has':
+            args = rule.get('args', {})
+            item = args.get('item_name', '')
+            count = args.get('count', 1)
+            return f"has:{item}:{count}"
+
+        if rule_type == 'item_check':
+            item = rule.get('item', '')
+            count = rule.get('count', 1)
+            return f"item:{item}:{count}"
+
+        if rule_type in ('CanReachEntrance', 'can_reach'):
+            args = rule.get('args', {})
+            name = args.get('entrance_name', args.get('name', ''))
+            return f"reach:{name}"
+
+        if rule_type == 'CanReachRegion':
+            args = rule.get('args', {})
+            name = args.get('region_name', '')
+            return f"region:{name}"
+
+        if rule_type in ('True_', 'constant') and rule.get('value') is True:
+            return "true"
+
+        if rule_type in ('False_', 'constant') and rule.get('value') is False:
+            return "false"
+
+        # Fallback: use JSON serialization
+        import json
+        try:
+            return json.dumps(rule, sort_keys=True, default=str)
+        except (TypeError, ValueError):
+            return f"unknown:{id(rule)}"
+
     def _simplify_or_conditions(self, conditions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Simplify a list of OR conditions.
 
         Removes:
-        - Duplicate conditions
+        - Duplicate conditions (using fingerprint-based structural equality)
         - If any condition is True, the whole OR is True
         - False conditions (they don't affect OR)
 
@@ -1056,7 +1198,8 @@ class ClosureFunctionAnalyzer:
         Returns:
             Simplified list of conditions
         """
-        seen = []
+        seen_fps = set()
+        result = []
 
         for cond in conditions:
             # True makes the whole OR true (both formats)
@@ -1071,17 +1214,19 @@ class ClosureFunctionAnalyzer:
             if cond.get('rule') == 'False_':
                 continue
 
-            # Skip duplicates (simple equality check)
-            if cond not in seen:
-                seen.append(cond)
+            # Skip duplicates using fingerprint
+            fp = self._rule_fingerprint(cond)
+            if fp not in seen_fps:
+                seen_fps.add(fp)
+                result.append(cond)
 
-        return seen
+        return result
 
     def _simplify_and_conditions(self, conditions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Simplify a list of AND conditions.
 
         Removes:
-        - Duplicate conditions
+        - Duplicate conditions (using fingerprint-based structural equality)
         - If any condition is False, the whole AND is False
         - True conditions (they don't affect AND)
 
@@ -1091,7 +1236,8 @@ class ClosureFunctionAnalyzer:
         Returns:
             Simplified list of conditions
         """
-        seen = []
+        seen_fps = set()
+        result = []
 
         for cond in conditions:
             # False makes the whole AND false (both formats)
@@ -1106,11 +1252,13 @@ class ClosureFunctionAnalyzer:
             if cond.get('rule') == 'True_':
                 continue
 
-            # Skip duplicates (simple equality check)
-            if cond not in seen:
-                seen.append(cond)
+            # Skip duplicates using fingerprint
+            fp = self._rule_fingerprint(cond)
+            if fp not in seen_fps:
+                seen_fps.add(fp)
+                result.append(cond)
 
-        return seen if seen else [{'rule': 'True_'}]
+        return result if result else [{'rule': 'True_'}]
 
 
 class BunnyRulePatternMatcher:
