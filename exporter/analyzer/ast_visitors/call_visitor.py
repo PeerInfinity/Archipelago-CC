@@ -567,6 +567,71 @@ class CallVisitorMixin:
                     # The iterator has already been fully analyzed, just return it
                     return iterator_info['iterator']
 
+                # Handle iterator that's already a constant (e.g., list resolved from closure)
+                if iterator_type == 'constant':
+                    constant_value = iterator_info['iterator'].get('value')
+                    logging.debug(f"all(GeneratorExp): Iterator is constant with {len(constant_value) if isinstance(constant_value, list) else 'non-list'} items")
+
+                    if isinstance(constant_value, list) and len(constant_value) > 0:
+                        # Check if items are callables (bunny rules)
+                        if all(callable(item) for item in constant_value):
+                            from ..analysis import analyze_rule
+                            analyzed_items = []
+                            for item_func in constant_value:
+                                try:
+                                    item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs, game_handler=self.game_handler,
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
+                                    if item_result and item_result.get('type') != 'error':
+                                        analyzed_items.append(item_result)
+                                    else:
+                                        logging.debug(f"Could not analyze item in constant list, checking for fallback")
+                                        analyzed_items = None
+                                        break
+                                except Exception as e:
+                                    logging.debug(f"Error analyzing item in constant list: {e}")
+                                    analyzed_items = None
+                                    break
+
+                            if analyzed_items:
+                                # Successfully analyzed all items - return an 'and' of all items
+                                logging.debug(f"all(GeneratorExp constant): Successfully analyzed {len(analyzed_items)} items, returning 'and' rule")
+                                if len(analyzed_items) == 1:
+                                    return analyzed_items[0]
+                                else:
+                                    return {'type': 'and', 'conditions': analyzed_items}
+                        else:
+                            # Handle non-callable constant values (strings, numbers, etc.) - expand the comprehension
+                            logging.debug(f"all(GeneratorExp): Iterator contains non-callable constant values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"all(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in constant_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"all(GeneratorExp constant): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"all(GeneratorExp constant): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - all() of empty is True
+                                        return {'type': 'constant', 'value': True}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'and', 'conditions': expanded_conditions}
+
                 if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
                     logging.debug(f"all(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
@@ -774,6 +839,35 @@ class CallVisitorMixin:
                                             file=sys.stderr
                                         )
                                         return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
+                        else:
+                            # Handle non-callable constant values (strings, numbers, etc.) - expand the comprehension
+                            logging.debug(f"any(GeneratorExp): Iterator contains non-callable constant values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"any(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in constant_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"any(GeneratorExp constant): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"any(GeneratorExp constant): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - any() of empty is False
+                                        return {'type': 'constant', 'value': False}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'or', 'conditions': expanded_conditions}
 
                 if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
