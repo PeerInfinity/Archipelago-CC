@@ -72,6 +72,26 @@ class ClosureFunctionAnalyzer:
     # LOSSLESS: Safe to enable - removes strictly redundant options in OR.
     ENABLE_CROSS_TYPE_DOMINANCE = True
 
+    # Feature: Propagate rule_target_name and target_type to sub-analyzers
+    # When enabled, sub-analyzers receive the parent's rule_target_name and target_type,
+    # allowing location name replacement (e.g., 'ep_boss' -> 'location') to work in nested rules.
+    # This is needed for ALttP Eastern Palace - Boss and similar patterns.
+    # CORRECTNESS: Enable to ensure proper rule analysis for nested lambdas.
+    ENABLE_RULE_TARGET_PROPAGATION = True
+
+    # Feature: Merge parent analyzer's closure_vars into sub-analyzer
+    # When enabled, parent closure_vars are merged into child closure_vars, preserving
+    # injected values like 'world' which is needed for _lttp_has_key universal key detection.
+    # Special handling: 'world' from parent is preferred if it has game options.
+    # CORRECTNESS: Enable to ensure proper world object is available in nested rules.
+    ENABLE_CLOSURE_VARS_MERGING = True
+
+    # Feature: Detect add_rule combine mode (AND vs OR)
+    # When enabled, examines bytecode to detect whether add_rule() used combine="and" or combine="or".
+    # This is needed for ALttP Skull Woods - Big Chest and other locations with OR-combined rules.
+    # CORRECTNESS: Enable to properly handle OR-combined rules from add_rule().
+    ENABLE_ADD_RULE_COMBINE_DETECTION = True
+
     # Patterns recognized by closure variable names
     KNOWN_PATTERNS = {
         'options_to_access_rule': {'options'},
@@ -161,16 +181,41 @@ class ClosureFunctionAnalyzer:
                     # Create sub-analyzer with function's closure vars
                     closure_vars = self._extract_closure_vars(func)
 
+                    # Feature flag: Merge parent analyzer's closure_vars to preserve injected values
+                    if self.ENABLE_CLOSURE_VARS_MERGING:
+                        parent_closure_vars = self.parent_analyzer.closure_vars or {}
+                        for key, value in parent_closure_vars.items():
+                            if key not in closure_vars:
+                                # Add parent vars that aren't in function's closure
+                                closure_vars[key] = value
+                            elif key == 'world':
+                                # Special handling for 'world': prefer the parent's world if it
+                                # has game options (meaning it's a game World, not a MultiWorld).
+                                # In ALttP, lambdas capture 'world' = MultiWorld, but the exporter
+                                # injects 'world' = ALttPWorld which is needed for _lttp_has_key
+                                # universal key detection.
+                                parent_world = value
+                                if hasattr(parent_world, 'options'):
+                                    closure_vars['world'] = parent_world
+
                     # Import here to avoid circular imports
                     from .rule_analyzer import RuleAnalyzer
 
-                    sub_analyzer = RuleAnalyzer(
-                        closure_vars=closure_vars,
-                        rule_func=func,
-                        player_context=self.parent_analyzer.player_context,
-                        game_handler=self.parent_analyzer.game_handler,
-                        seen_funcs=self.parent_analyzer.seen_funcs
-                    )
+                    # Build sub-analyzer kwargs
+                    sub_analyzer_kwargs = {
+                        'closure_vars': closure_vars,
+                        'rule_func': func,
+                        'player_context': self.parent_analyzer.player_context,
+                        'game_handler': self.parent_analyzer.game_handler,
+                        'seen_funcs': self.parent_analyzer.seen_funcs,
+                    }
+
+                    # Feature flag: Propagate rule_target_name and target_type to sub-analyzers
+                    if self.ENABLE_RULE_TARGET_PROPAGATION:
+                        sub_analyzer_kwargs['rule_target_name'] = self.parent_analyzer.rule_target_name
+                        sub_analyzer_kwargs['target_type'] = self.parent_analyzer.target_type
+
+                    sub_analyzer = RuleAnalyzer(**sub_analyzer_kwargs)
                     result = sub_analyzer.visit(node.body)
                     if result and result.get('type') != 'error':
                         return result
@@ -223,6 +268,21 @@ class ClosureFunctionAnalyzer:
                 closure_vars['entrance'],
                 depth
             )
+
+        # Pattern: add_rule combined lambda
+        # lambda state: rule(state) and old_rule(state)  -- combine="and"
+        # lambda state: rule(state) or old_rule(state)   -- combine="or"
+        # Created by worlds/generic/Rules.py add_rule() function
+        if 'rule' in closure_vars and 'old_rule' in closure_vars:
+            rule_func = closure_vars['rule']
+            old_rule_func = closure_vars['old_rule']
+            if callable(rule_func) and callable(old_rule_func):
+                # Feature flag: Detect AND vs OR by examining bytecode
+                if self.ENABLE_ADD_RULE_COMBINE_DETECTION:
+                    combine_mode = self._detect_add_rule_combine_mode(func)
+                else:
+                    combine_mode = 'and'  # Default to AND if detection disabled
+                return self._analyze_add_rule_pattern(rule_func, old_rule_func, depth, combine_mode)
 
         # Pattern: Simple item check with 'player' captured
         # lambda state: state.has('Moon Pearl', player)
@@ -381,6 +441,98 @@ class ClosureFunctionAnalyzer:
         if len(simplified) == 1:
             return simplified[0]
         return {'rule': 'And', 'children': simplified}
+
+    def _detect_add_rule_combine_mode(self, func: Callable) -> str:
+        """Detect whether an add_rule lambda uses AND or OR combination.
+
+        Examines bytecode to find POP_JUMP_IF_FALSE (AND) or POP_JUMP_IF_TRUE (OR).
+
+        Args:
+            func: The combined lambda function
+
+        Returns:
+            'and' or 'or' based on bytecode analysis, defaults to 'and'
+        """
+        try:
+            import dis
+            code = func.__code__
+            for instr in dis.get_instructions(code):
+                if instr.opname == 'POP_JUMP_IF_FALSE':
+                    return 'and'
+                elif instr.opname == 'POP_JUMP_IF_TRUE':
+                    return 'or'
+        except Exception as e:
+            logger.debug(f"ClosureFunctionAnalyzer: Could not detect combine mode: {e}")
+        return 'and'  # Default to AND
+
+    def _analyze_add_rule_pattern(self, rule_func: Callable, old_rule_func: Callable,
+                                   depth: int, combine_mode: str = 'and') -> Optional[Dict[str, Any]]:
+        """Analyze add_rule combined lambda pattern.
+
+        This pattern is created by worlds/generic/Rules.py add_rule() function:
+        lambda state: rule(state) and old_rule(state)  -- combine="and"
+        lambda state: rule(state) or old_rule(state)   -- combine="or"
+
+        Args:
+            rule_func: The new rule being added
+            old_rule_func: The existing rule
+            depth: Current recursion depth
+            combine_mode: 'and' or 'or' to determine how rules are combined
+
+        Returns:
+            Analyzed rule combining both rules with AND or OR
+        """
+        logger.debug(f"ClosureFunctionAnalyzer: Analyzing add_rule pattern at depth {depth} (combine={combine_mode})")
+
+        # Analyze both rules
+        rule_result = self.analyze_function(rule_func, depth + 1)
+        old_rule_result = self.analyze_function(old_rule_func, depth + 1)
+
+        # If new rule analysis failed, try bytecode
+        if rule_result is None:
+            rule_result = self._analyze_via_bytecode(rule_func)
+        # If old rule analysis failed, try bytecode
+        if old_rule_result is None:
+            old_rule_result = self._analyze_via_bytecode(old_rule_func)
+
+        # Handle cases where one or both failed
+        if rule_result is None and old_rule_result is None:
+            logger.debug(f"ClosureFunctionAnalyzer: Both add_rule components failed analysis")
+            return None
+        elif rule_result is None:
+            # Only old_rule succeeded - return it (rule is implicitly True for AND, False for OR)
+            logger.debug(f"ClosureFunctionAnalyzer: Only old_rule succeeded in add_rule ({combine_mode})")
+            if combine_mode == 'or':
+                # rule OR old_rule where rule=False means just old_rule
+                return old_rule_result
+            return old_rule_result
+        elif old_rule_result is None:
+            # Only rule succeeded - return it (old_rule is implicitly True for AND, False for OR)
+            logger.debug(f"ClosureFunctionAnalyzer: Only rule succeeded in add_rule ({combine_mode})")
+            if combine_mode == 'or':
+                # rule OR old_rule where old_rule=False means just rule
+                return rule_result
+            return rule_result
+
+        # Both succeeded - combine with AND or OR
+        conditions = [rule_result, old_rule_result]
+
+        if combine_mode == 'or':
+            simplified = self._simplify_or_conditions(conditions)
+            if len(simplified) == 0:
+                return {'rule': 'False_'}
+            elif len(simplified) == 1:
+                return simplified[0]
+            logger.debug(f"ClosureFunctionAnalyzer: add_rule OR pattern combined: {simplified}")
+            return {'rule': 'Or', 'children': simplified}
+        else:
+            simplified = self._simplify_and_conditions(conditions)
+            if len(simplified) == 0:
+                return {'rule': 'True_'}
+            elif len(simplified) == 1:
+                return simplified[0]
+            logger.debug(f"ClosureFunctionAnalyzer: add_rule AND pattern combined: {simplified}")
+            return {'rule': 'And', 'children': simplified}
 
     def _analyze_via_bytecode(self, func: Callable) -> Optional[Dict[str, Any]]:
         """Analyze a function by examining its bytecode constants and names.
