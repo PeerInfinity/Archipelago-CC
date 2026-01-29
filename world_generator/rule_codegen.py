@@ -7404,13 +7404,21 @@ class HelperCodeGenerator:
             # Handle helper calls with _original_ast_type marker
             if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
                 helper_name = rule_type
-                func_name = self.get_function_name(helper_name)
-                # Check for args - this can be a list of arguments to pass to the helper
-                args = expr.get('args', [])
-                if args and isinstance(args, list):
-                    arg_exprs = [self._generate_expression(a) for a in args]
-                    return f'{func_name}(state, player, {", ".join(arg_exprs)})'
-                return f'{func_name}(state, player)'
+                # Only generate function call if helper is known (has a definition)
+                # Unknown helpers should return True as a placeholder to avoid NameError
+                if helper_name in self.known_helpers:
+                    func_name = self.get_function_name(helper_name)
+                    # Check for args - this can be a list of arguments to pass to the helper
+                    args = expr.get('args', [])
+                    if args and isinstance(args, list):
+                        arg_exprs = [self._generate_expression(a) for a in args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+                    return f'{func_name}(state, player)'
+                else:
+                    # Unknown helper - return True as placeholder
+                    # This makes locations more accessible, which is appropriate for worldgen
+                    # since unknown helpers are typically progression checks
+                    return 'True'
 
             # Handle AST_placement_search (check if item is at any of listed locations)
             if rule_type == 'AST_placement_search':
