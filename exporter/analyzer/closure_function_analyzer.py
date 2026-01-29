@@ -360,14 +360,16 @@ class ClosureFunctionAnalyzer:
         # This prevents exponential growth in complex entrance shuffle scenarios
         # (skip check if MAX_BUNNY_PATH_DEPTH is 0, meaning unlimited)
         if self.MAX_BUNNY_PATH_DEPTH > 0 and depth > self.MAX_BUNNY_PATH_DEPTH:
-            logger.debug(f"ClosureFunctionAnalyzer: Options depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using Moon Pearl fallback")
+            logger.warning(f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH ({self.MAX_BUNNY_PATH_DEPTH}), "
+                          f"simplifying to Moon Pearl check (rule may be more permissive than original)")
             # Return Moon Pearl check - the base case for all bunny rules
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
 
         # Limit the number of options to prevent rule explosion
         # With entrance_shuffle: dungeons_crossed, there can be hundreds of paths
         if self.MAX_BUNNY_OPTIONS > 0 and len(options) > self.MAX_BUNNY_OPTIONS:
-            logger.warning(f"ClosureFunctionAnalyzer: {len(options)} options exceeds MAX_BUNNY_OPTIONS ({self.MAX_BUNNY_OPTIONS}), limiting analysis")
+            logger.warning(f"LOSSY FALLBACK: {len(options)} bunny rule options exceeds MAX_BUNNY_OPTIONS ({self.MAX_BUNNY_OPTIONS}), "
+                          f"truncating to first {self.MAX_BUNNY_OPTIONS} options (rule may be more restrictive than original)")
             # First option is always Moon Pearl check, include it
             # Then include up to MAX_BUNNY_OPTIONS-1 more options (prioritizing simpler ones)
             options = options[:self.MAX_BUNNY_OPTIONS]
@@ -411,7 +413,8 @@ class ClosureFunctionAnalyzer:
         if len(analyzed_options) == 0:
             if failed_count > 0:
                 # We had options but couldn't analyze any - use Moon Pearl fallback
-                logger.debug(f"ClosureFunctionAnalyzer: All {failed_count} options failed, using Moon Pearl")
+                logger.warning(f"LOSSY FALLBACK: All {failed_count} bunny rule options failed analysis, "
+                              f"simplifying to Moon Pearl check (rule may be more permissive than original)")
                 return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
             return {'rule': 'False_'}
 
@@ -663,7 +666,8 @@ class ClosureFunctionAnalyzer:
         # This prevents exponential growth in complex entrance shuffle scenarios
         # (skip check if MAX_BUNNY_PATH_DEPTH is 0, meaning unlimited)
         if self.MAX_BUNNY_PATH_DEPTH > 0 and depth > self.MAX_BUNNY_PATH_DEPTH:
-            logger.debug(f"ClosureFunctionAnalyzer: Depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using conservative approximation")
+            logger.warning(f"LOSSY FALLBACK: Path analysis depth {depth} exceeds MAX_BUNNY_PATH_DEPTH ({self.MAX_BUNNY_PATH_DEPTH}), "
+                          f"returning only can_reach check for '{entrance_name}' (rule may be more permissive than original)")
             # Return just the can_reach check - conservative but prevents explosion
             return can_reach
 

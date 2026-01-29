@@ -124,8 +124,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # This prevents further explosion during expansion
             # Threshold raised from 100KB since lossless simplification helps
             if input_size_kb > 200:
-                logger.warning(f"ALttP rule too large pre-expansion ({input_size_kb:.1f} KB), "
-                             f"simplifying to Moon Pearl check")
+                logger.warning(f"LOSSY FALLBACK: ALttP rule too large pre-expansion ({input_size_kb:.1f} KB > 200 KB), "
+                             f"simplifying to Moon Pearl check (rule may be more permissive than original)")
                 return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
 
             if input_size_kb > 50:
@@ -259,8 +259,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             rule_size_kb = rule_size / 1024
 
             if rule_size_kb > size_limit_kb:
-                logger.warning(f"ALttP rule too large ({rule_size_kb:.1f} KB > {size_limit_kb} KB), "
-                             f"simplifying to constant True")
+                logger.warning(f"LOSSY FALLBACK: ALttP rule too large post-expansion ({rule_size_kb:.1f} KB > {size_limit_kb} KB), "
+                             f"simplifying to constant True (location will always be considered accessible)")
                 # Return permissive rule - location will be considered accessible
                 # This is safer than failing completely
                 return {'type': 'constant', 'value': True}
