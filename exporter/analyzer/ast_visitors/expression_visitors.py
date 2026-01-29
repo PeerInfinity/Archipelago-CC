@@ -143,11 +143,6 @@ class ExpressionVisitorMixin:
                             list_value = list(resolved_attr)
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
-                        elif hasattr(resolved_attr, 'value') and isinstance(resolved_attr.value, (int, float, str, bool)):
-                            # Handle enum values by extracting their .value attribute
-                            # This enables constant folding for comparisons like location.shop_price_type == ShopPriceType.Hearts
-                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to enum constant: {resolved_attr.value}")
-                            return {'type': 'constant', 'value': resolved_attr.value}
                         elif callable(resolved_attr) and hasattr(obj_value, '_fields'):
                             # Handle callable attributes on NamedTuples (e.g., LocationData.access_rule)
                             # When used in boolean context (if loc.access_rule:), this should be True
@@ -241,63 +236,8 @@ class ExpressionVisitorMixin:
                     pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
-                    list_value = list(value) if isinstance(value, tuple) else value
-                    # Check if the list contains callables (like entrance access rules)
-                    # If so, analyze each callable to get proper rule structures
-                    if list_value and all(callable(item) for item in list_value):
-                        logging.debug(f"visit_Name: '{name}' is a list of {len(list_value)} callables, analyzing each")
-                        # Import analyze_rule to avoid circular dependency
-                        from ..analysis import analyze_rule
-                        from ..cache import callable_list_cache, closure_aware_cache, get_closure_aware_cache_key
-                        analyzed_items = []
-                        for idx, item_func in enumerate(list_value):
-                            try:
-                                # Check closure-aware cache first (for semantically equivalent lambdas)
-                                # This is critical for ALttP bunny rules where get_rule_to_add() creates
-                                # new lambda instances that are semantically equivalent
-                                closure_key = get_closure_aware_cache_key(item_func)
-                                func_id = id(item_func)
-
-                                if closure_key and closure_key in closure_aware_cache:
-                                    logging.debug(f"visit_Name: Closure-aware cache hit for callable {idx} in list '{name}'")
-                                    item_result = closure_aware_cache[closure_key]
-                                elif func_id in callable_list_cache:
-                                    logging.debug(f"visit_Name: ID cache hit for callable {idx} in list '{name}'")
-                                    item_result = callable_list_cache[func_id]
-                                else:
-                                    item_result = analyze_rule(
-                                        rule_func=item_func,
-                                        closure_vars=self.closure_vars.copy(),
-                                        seen_funcs=self.seen_funcs,
-                                        game_handler=self.game_handler,
-                                        player_context=self.player_context,
-                                        rule_target_name=getattr(self, 'rule_target_name', None),
-                                        target_type=getattr(self, 'target_type', None)
-                                    )
-                                    # Cache successful results in both caches
-                                    if item_result and item_result.get('type') != 'error':
-                                        callable_list_cache[func_id] = item_result
-                                        if closure_key:
-                                            closure_aware_cache[closure_key] = item_result
-
-                                if item_result and item_result.get('type') != 'error':
-                                    analyzed_items.append(item_result)
-                                else:
-                                    logging.debug(f"visit_Name: Could not analyze callable item {idx} in list '{name}'")
-                                    analyzed_items = None
-                                    break
-                            except Exception as e:
-                                logging.debug(f"visit_Name: Error analyzing callable item {idx} in list '{name}': {e}")
-                                analyzed_items = None
-                                break
-
-                        if analyzed_items is not None:
-                            logging.debug(f"visit_Name: Successfully analyzed {len(analyzed_items)} callables from '{name}'")
-                            return {'type': 'constant', 'value': analyzed_items}
-                        else:
-                            logging.debug(f"visit_Name: Failed to analyze callable list '{name}', falling back to string representation")
-
                     # Convert to list for JSON serialization
+                    list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
                 # Handle set/frozenset values - resolve to constant for 'in' / 'not in' comparisons
@@ -879,20 +819,17 @@ class ExpressionVisitorMixin:
         Handle named expressions (walrus operator := ).
 
         The walrus operator `x := expr` evaluates `expr`, assigns it to `x`,
-        and returns the value of `expr`. We track the assignment so that later
-        references to `x` can be resolved to the original expression.
+        and returns the value of `expr`. For rule analysis purposes, we only
+        care about the value, not the assignment.
 
         Example patterns:
             - lambda state: (total := self.cyb_mod_count(state)) >= 6
             - lambda state: func(x, y, result := helper(state))
-            - lambda state: (_r := region_lookup) is None else _r.is_light_world
 
-        We evaluate and return the value expression, and track the assignment
-        for later resolution.
+        We simply evaluate and return the value expression.
         """
         logging.debug(f"\nvisit_NamedExpr called:")
-        target_name = node.target.id if hasattr(node.target, 'id') else None
-        logging.debug(f"Target: {target_name}")
+        logging.debug(f"Target: {node.target.id if hasattr(node.target, 'id') else node.target}")
         logging.debug(f"Value: {ast.dump(node.value)}")
 
         # Visit the value expression - this is what the walrus operator returns
@@ -902,15 +839,6 @@ class ExpressionVisitorMixin:
             logging.warning(f"Failed to analyze walrus operator value: {ast.dump(node.value)}")
             # Return None to signal that analysis failed
             return None
-
-        # Track the walrus operator assignment for later resolution
-        # This allows references to the target variable (e.g., _r) to be resolved
-        # to the original expression
-        if target_name:
-            if not hasattr(self, 'walrus_assignments'):
-                self.walrus_assignments = {}
-            self.walrus_assignments[target_name] = value_result
-            logging.debug(f"Tracked walrus assignment: {target_name} = {value_result}")
 
         logging.debug(f"NamedExpr value result: {value_result}")
         return value_result

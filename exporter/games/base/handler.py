@@ -249,15 +249,6 @@ class BaseGameExportHandler(
     # Example: {'always_true_helper': True, 'disabled_feature': False}
     CONSTANT_HELPER_EXPANSIONS: Dict[str, Any] = {}
 
-    # Mapping of closure variable names to their constant replacement values.
-    # Used for closure variables from combined lambdas (e.g., add_rule) that
-    # should be replaced with constant values instead of being preserved as
-    # undefined helper references.
-    # Example: {'rule': True, 'old_rule': True}
-    # When the analyzer encounters a closure with a name in this dict, it returns
-    # a constant rule instead of a helper call.
-    CLOSURE_CONSTANT_REPLACEMENTS: Dict[str, Any] = {}
-
     # Mapping of helper function names to rule type configurations.
     # Used for helpers that take a single argument and convert it to a rule type.
     # Format: {'helper_name': {'type': 'rule_type', 'field': 'field_name', 'arg_index': 0}}

@@ -43,116 +43,6 @@ class CallVisitorMixin:
         - _substitute_variable_in_rule(): Substitutes variables in rules
     """
 
-    def _try_resolve_arg_to_value(self, arg_result: Dict[str, Any]) -> tuple:
-        """
-        Try to resolve an analyzed argument dict to a concrete Python value.
-
-        This is used for factory function execution, where we need to convert
-        analyzed argument structures back to actual values to call the function.
-
-        Args:
-            arg_result: The analyzed argument dict from visiting an AST node
-
-        Returns:
-            A tuple (success: bool, value: Any). If success is False, value is None.
-        """
-        if not isinstance(arg_result, dict):
-            # If it's already a concrete value (shouldn't happen normally)
-            return (True, arg_result)
-
-        arg_type = arg_result.get('type')
-
-        # Handle constant values - already resolved
-        if arg_type == 'constant':
-            return (True, arg_result.get('value'))
-
-        # Handle name references - look up in closure vars
-        if arg_type == 'name':
-            name = arg_result.get('name')
-            if name in self.closure_vars:
-                return (True, self.closure_vars[name])
-            # Try expression resolver as fallback
-            resolved = self.expression_resolver.resolve_variable(name)
-            if resolved is not None:
-                return (True, resolved)
-            return (False, None)
-
-        # Handle attribute access - use expression resolver
-        if arg_type == 'attribute':
-            resolved = self.expression_resolver.resolve_expression(arg_result)
-            if resolved is not None:
-                return (True, resolved)
-            return (False, None)
-
-        # Handle subscript - use expression resolver
-        if arg_type == 'subscript':
-            resolved = self.expression_resolver.resolve_expression(arg_result)
-            if resolved is not None:
-                return (True, resolved)
-            return (False, None)
-
-        # For other types (item_check, state_method, etc.), we can't resolve to a value
-        logging.debug(f"Cannot resolve arg type '{arg_type}' to concrete value")
-        return (False, None)
-
-    def _try_execute_factory_function(self, actual_func, args_with_nodes, func_name: str) -> Optional[Dict[str, Any]]:
-        """
-        Try to execute a factory function (one that returns a callable) and analyze the result.
-
-        Factory functions like path_to_access_rule(path, entrance) return lambdas.
-        If we can resolve all arguments to concrete values, we can execute the function
-        and analyze the returned lambda directly.
-
-        Args:
-            actual_func: The factory function to execute
-            args_with_nodes: List of (ast_node, analyzed_result) tuples for arguments
-            func_name: Name of the function (for logging)
-
-        Returns:
-            Analyzed rule dict if successful, None otherwise
-        """
-        # Try to resolve all arguments to concrete values
-        resolved_args = []
-        for ast_node, arg_result in args_with_nodes:
-            success, value = self._try_resolve_arg_to_value(arg_result)
-            if not success:
-                logging.debug(f"Factory function {func_name}: Could not resolve arg to value")
-                return None
-            resolved_args.append(value)
-
-        # Execute the factory function with resolved arguments
-        try:
-            logging.debug(f"Executing factory function {func_name} with {len(resolved_args)} resolved args")
-            result = actual_func(*resolved_args)
-        except Exception as e:
-            logging.debug(f"Factory function {func_name} execution failed: {e}")
-            return None
-
-        # Check if the result is callable (a lambda/function)
-        if not callable(result):
-            logging.debug(f"Factory function {func_name} returned non-callable: {type(result)}")
-            return None
-
-        # Analyze the returned callable
-        logging.debug(f"Factory function {func_name} returned callable, analyzing it")
-        from ..analysis import analyze_rule
-        analyzed_result = analyze_rule(
-            rule_func=result,
-            closure_vars=self.closure_vars.copy(),
-            seen_funcs=self.seen_funcs,
-            game_handler=self.game_handler,
-            player_context=self.player_context,
-            rule_target_name=getattr(self, 'rule_target_name', None),
-            target_type=getattr(self, 'target_type', None)
-        )
-
-        if analyzed_result and analyzed_result.get('type') != 'error':
-            logging.debug(f"Factory function {func_name}: Successfully analyzed returned callable")
-            return analyzed_result
-
-        logging.debug(f"Factory function {func_name}: analyze_rule returned error")
-        return None
-
     def visit_Call(self, node):
         """
         Visit a function call node.
@@ -177,13 +67,6 @@ class CallVisitorMixin:
         namedtuple_callable = self._try_inline_namedtuple_callable(node)
         if namedtuple_callable is not None:
             return namedtuple_callable
-
-        # *** Special handling for Entrance.access_rule() calls ***
-        # Pattern: dungeon_entrance.access_rule(fake_pearl_state(state, player))
-        # where dungeon_entrance is an Entrance object in closure_vars
-        entrance_access_rule = self._try_handle_entrance_access_rule(node)
-        if entrance_access_rule is not None:
-            return entrance_access_rule
 
         # *** Special handling for dict.get(key, default)(state) where dict contains lambdas ***
         # Pattern: rule_map.get(entrance.connected_region.name, lambda: False)(state)
@@ -532,25 +415,6 @@ class CallVisitorMixin:
                  actual_func = self.closure_vars[func_name]
                  closure_func_name = getattr(actual_func, '__name__', func_name)
 
-                 # Check if game handler wants to replace this closure with a constant value
-                 # This is used for closure variables from combined lambdas (e.g., add_rule)
-                 # that would otherwise become undefined helper references.
-                 # We check both the closure variable name (func_name) and the function's
-                 # __name__ attribute (closure_func_name) since lambda functions may have
-                 # __name__='<lambda>' but the closure variable is named 'rule'.
-                 if self.game_handler and hasattr(self.game_handler, 'CLOSURE_CONSTANT_REPLACEMENTS'):
-                     replacements = self.game_handler.CLOSURE_CONSTANT_REPLACEMENTS
-                     # Check closure variable name first (e.g., 'rule' from the closure)
-                     if func_name in replacements:
-                         const_value = replacements[func_name]
-                         logging.debug(f"Replacing closure variable {func_name} with constant {const_value}")
-                         return {'type': 'constant', 'value': const_value}
-                     # Also check function's __name__ attribute
-                     if closure_func_name in replacements:
-                         const_value = replacements[closure_func_name]
-                         logging.debug(f"Replacing closure {closure_func_name} with constant {const_value}")
-                         return {'type': 'constant', 'value': const_value}
-
                  # Check if game handler wants to explicitly preserve this as a helper
                  # (without recursive analysis - the JS implementation handles it)
                  if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
@@ -675,38 +539,7 @@ class CallVisitorMixin:
                  except Exception as e:
                       logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
-
-                 # --- Factory function execution logic ---
-                 # If the function doesn't take 'state' as an argument but returns a callable,
-                 # it might be a "factory function" like path_to_access_rule(path, entrance).
-                 # Try to execute it with resolved arguments and analyze the returned callable.
-                 if callable(actual_func):
-                     factory_result = self._try_execute_factory_function(
-                         actual_func, args_with_nodes, closure_func_name or func_name
-                     )
-                     if factory_result is not None:
-                         logging.debug(f"Factory function execution successful for {func_name}")
-                         return factory_result
-                 # --- END Factory function execution logic ---
-
-                 # If recursion wasn't attempted or failed, check for internal closure names
-                 # from add_rule combined lambdas. These closures ('rule', 'old_rule') don't
-                 # exist as actual helpers and would cause NameError if preserved as helper
-                 # references. Try ClosureFunctionAnalyzer first, then fall back to True.
-                 if func_name in ('rule', 'old_rule') and callable(actual_func):
-                     # Try ClosureFunctionAnalyzer - it can analyze runtime-composed lambdas
-                     # via closure pattern recognition and bytecode analysis
-                     logging.debug(f"Closure '{func_name}' trying ClosureFunctionAnalyzer")
-                     closure_analyzer = ClosureFunctionAnalyzer(self)
-                     fallback_result = closure_analyzer.analyze_function(actual_func)
-                     if fallback_result and fallback_result.get('type') != 'error':
-                         logging.debug(f"Closure '{func_name}' analyzed via ClosureFunctionAnalyzer: {fallback_result}")
-                         return fallback_result
-                     # ClosureFunctionAnalyzer failed - fall back to True (permissive)
-                     logging.debug(f"Closure '{func_name}' ClosureFunctionAnalyzer failed, replacing with True (add_rule fallback)")
-                     return {'type': 'constant', 'value': True}
-
-                 # Otherwise fall through to default helper representation
+                 # If recursion wasn't attempted or failed, fall through to default helper representation
 
             # *** Special handling for all(GeneratorExp) ***
             if func_name == 'all' and len(filtered_args) == 1 and filtered_args[0].get('type') == 'generator_expression':
@@ -1229,13 +1062,6 @@ class CallVisitorMixin:
                 logging.debug(f"Created map result: {result}")
                 return result
 
-            # Check for internal closure names from add_rule combined lambdas
-            # These closures ('rule', 'old_rule') should never be preserved as helpers
-            # as they don't exist as actual helpers and would cause NameError
-            if func_name in ('rule', 'old_rule'):
-                logging.debug(f"Closure '{func_name}' not in closure_vars, replacing with True (add_rule fallback)")
-                return {'type': 'constant', 'value': True}
-
             # Create helper result with filtered args and kwargs (no state/player in JSON)
             result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)
             logging.debug(f"Created helper result: {result}")
@@ -1512,38 +1338,17 @@ class CallVisitorMixin:
                             items.append(item)
                     result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in items]}
                 elif method == '_lttp_has_key' and len(filtered_args) >= 1:
-                    # Check if universal key shuffle is enabled - if so, use can_buy_unlimited instead
-                    # ALttP's _lttp_has_key returns can_buy_unlimited('Small Key (Universal)') when
-                    # small_key_shuffle == universal (option value 5)
-                    world = self.closure_vars.get('world')
-                    use_universal_key = False
-                    if world and hasattr(world, 'options') and hasattr(world.options, 'small_key_shuffle'):
-                        small_key_opt = world.options.small_key_shuffle
-                        # option_universal = 5 in worlds/alttp/Options.py
-                        if hasattr(small_key_opt, 'value') and small_key_opt.value == 5:
-                            use_universal_key = True
-                            logging.debug("_lttp_has_key: universal key shuffle detected, using can_buy_unlimited")
-
-                    if use_universal_key:
-                        # With universal key shuffle, any small key check becomes can_buy_unlimited
-                        result = {
-                            'type': 'helper',
-                            'name': 'can_buy_unlimited',
-                            'args': [{'type': 'constant', 'value': 'Small Key (Universal)'}]
-                        }
+                    # Unwrap item name if it's a constant
+                    item_arg = filtered_args[0]
+                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
+                        item_value = item_arg.get('value')
+                    elif isinstance(item_arg, str):
+                        item_value = item_arg
                     else:
-                        # Normal count-based check
-                        # Unwrap item name if it's a constant
-                        item_arg = filtered_args[0]
-                        if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
-                            item_value = item_arg.get('value')
-                        elif isinstance(item_arg, str):
-                            item_value = item_arg
-                        else:
-                            item_value = item_arg
-                        # Count is now in position 1 after player is filtered
-                        count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-                        result = {'type': 'count_check', 'item': item_value, 'count': count}
+                        item_value = item_arg
+                    # Count is now in position 1 after player is filtered
+                    count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
+                    result = {'type': 'count_check', 'item': item_value, 'count': count}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object
