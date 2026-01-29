@@ -664,29 +664,42 @@ class ClosureFunctionAnalyzer:
         """
         logger.debug(f"ClosureFunctionAnalyzer: Analyzing add_rule pattern at depth {depth} (combine={combine_mode})")
 
+        # Helper to check if analysis failed (None or error-type result)
+        def is_failed_result(result):
+            if result is None:
+                return True
+            if isinstance(result, dict) and result.get('type') == 'error':
+                return True
+            return False
+
         # Analyze both rules
         rule_result = self.analyze_function(rule_func, depth + 1)
         old_rule_result = self.analyze_function(old_rule_func, depth + 1)
 
         # If new rule analysis failed, try bytecode
-        if rule_result is None:
+        if is_failed_result(rule_result):
+            logger.debug(f"ClosureFunctionAnalyzer: rule analysis failed, trying bytecode")
             rule_result = self._analyze_via_bytecode(rule_func)
         # If old rule analysis failed, try bytecode
-        if old_rule_result is None:
+        if is_failed_result(old_rule_result):
+            logger.debug(f"ClosureFunctionAnalyzer: old_rule analysis failed, trying bytecode")
             old_rule_result = self._analyze_via_bytecode(old_rule_func)
 
-        # Handle cases where one or both failed
-        if rule_result is None and old_rule_result is None:
+        # Handle cases where one or both failed (use is_failed_result for consistency)
+        rule_failed = is_failed_result(rule_result)
+        old_rule_failed = is_failed_result(old_rule_result)
+
+        if rule_failed and old_rule_failed:
             logger.debug(f"ClosureFunctionAnalyzer: Both add_rule components failed analysis")
             return None
-        elif rule_result is None:
+        elif rule_failed:
             # Only old_rule succeeded - return it (rule is implicitly True for AND, False for OR)
             logger.debug(f"ClosureFunctionAnalyzer: Only old_rule succeeded in add_rule ({combine_mode})")
             if combine_mode == 'or':
                 # rule OR old_rule where rule=False means just old_rule
                 return old_rule_result
             return old_rule_result
-        elif old_rule_result is None:
+        elif old_rule_failed:
             # Only rule succeeded - return it (old_rule is implicitly True for AND, False for OR)
             logger.debug(f"ClosureFunctionAnalyzer: Only rule succeeded in add_rule ({combine_mode})")
             if combine_mode == 'or':
@@ -763,6 +776,11 @@ class ClosureFunctionAnalyzer:
             # Skip type/target strings
             if s in ('Entrance', 'Region', 'Location', 'state', 'player'):
                 return False
+            # Skip likely location names: strings with " - " separator but no parentheses
+            # Location patterns: "Eastern Palace - Big Key Chest", "Tower of Hera - Boss"
+            # Item patterns: "Small Key (Eastern Palace)", "Big Key (Turtle Rock)"
+            if ' - ' in s and '(' not in s:
+                return False
             return True
 
         # Check for combined patterns: (item AND has_sword) OR item
@@ -821,9 +839,11 @@ class ClosureFunctionAnalyzer:
                     logger.debug(f"ClosureFunctionAnalyzer: Bytecode found AND pattern with items: {item_names}")
                     return {'rule': 'And', 'children': item_checks}
                 else:
-                    # Both AND and OR detected but no has_sword - default to OR
-                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found mixed pattern, defaulting to OR: {item_names}")
-                    return {'rule': 'Or', 'children': item_checks}
+                    # Both AND and OR detected - the rule has nested structure we can't reliably
+                    # determine from bytecode alone. Return None to indicate analysis failed.
+                    # This is better than producing an incorrect rule structure.
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found mixed AND/OR pattern, cannot reliably analyze: {item_names}")
+                    return None
 
         # Check for state.can_reach() pattern
         if 'can_reach' in names:
