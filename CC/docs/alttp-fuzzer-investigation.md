@@ -152,9 +152,99 @@ Fixed the core issue preventing self-locking rules from being correctly exported
 
 ## Status
 
-**FIXED**: The multiline lambda source extraction fix resolves the main issue. ALttP self-locking rules with `location_item_name` comparisons are now correctly exported when options like `enemy_shuffle` are enabled.
+**PARTIALLY FIXED**: The multiline lambda source extraction fix resolved the self-locking rule export issue. However, fuzzer tests still fail ~60% of the time due to additional issues documented below.
 
-Fuzzer tests now pass (timeouts may still occur due to test infrastructure, not rule export issues).
+## Remaining Issues (January 2026 Analysis)
+
+Fuzzer testing with 20 runs shows: 8 successes, 12 failures (60% failure rate).
+
+### Common Failure Patterns
+
+Analysis of failure logs reveals these recurring issues:
+
+#### 1. Flute/Flute Spot Logic Export
+**Symptom**: "Flute Spot was expected to be in logic but wasn't"
+- The UT state shows `Activated Flute:1` but Flute Spot location remains inaccessible
+- Occurs with `entrance_shuffle: full` and `mode: inverted`
+- The flute activation event chain may not be correctly exported
+
+#### 2. Blacksmith/Purple Chest Event Chain
+**Symptom**: "Purple Chest, Blacksmith were expected to be in logic but weren't"
+- The UT state shows `Return Smith:1, Pick Up Purple Chest:1, Get Frog:1`
+- Events are processed but the actual locations aren't accessible
+- Related to complex event dependencies (Frog → Smith → Purple Chest)
+
+#### 3. Zora's Ledge Access Rules
+**Symptom**: "Zora's Ledge was in server logic but not expected in UT"
+- Server considers it accessible, UT doesn't
+- Often occurs with `glitches_required: hybrid_major_glitches`
+- Glitch-dependent access rules may not be correctly exported
+
+#### 4. Rule Expansion Depth/Size Limits
+**Symptom**: Log messages like:
+- `Rule expansion exceeded maximum depth (100)`
+- `ALttP rule too large (53.0 KB > 50 KB), simplifying to constant True`
+- Rules with complex helper references exceed processing limits
+- When simplified to True, locations become artificially accessible
+
+### Affected Option Combinations
+
+Failures correlate with these option patterns:
+
+| Option | Problematic Values | Issue |
+|--------|-------------------|-------|
+| `glitches_required` | `overworld_glitches`, `hybrid_major_glitches` | Glitch rules not exported |
+| `mode` | `inverted` | Inverted mode-specific rules |
+| `entrance_shuffle` | `full`, `restricted` | Complex entrance logic |
+| `retro_caves` | `true` | Affects item/location accessibility |
+
+### Root Causes
+
+1. **Event chain export**: Multi-step event dependencies (Frog → Smith → Purple Chest, Flute activation) aren't correctly captured in the exported rules
+
+2. **Glitch rule complexity**: Advanced glitch modes have complex conditional rules that either:
+   - Exceed the analysis depth limit (10)
+   - Produce rules too large to export (>50KB)
+   - Get simplified incorrectly
+
+3. **Rule size limits**: The exporter has protective limits:
+   - Max analysis depth: 10 (ClosureFunctionAnalyzer)
+   - Max rule expansion depth: 100
+   - Max rule size: 50KB
+   - When exceeded, rules are simplified to constant True (over-permissive)
+
+### Additional Testing Results
+
+**Test: Disable glitch modes and inverted mode**
+```bash
+python fuzz.py -r 20 -j 4 -g alttp --hook worlds.tracker.fuzzer_hook:Hook \
+  --disallow-options "glitches_required=overworld_glitches,hybrid_major_glitches,major_glitches,minor_glitches;mode=inverted"
+```
+Result: 65% success (13/20), improvement from 40% baseline
+
+Even without glitch modes, failures occur due to:
+1. **Swamp Palace - Big Chest**: Self-locking rules with key counts
+2. **Turtle Rock - Big Key Chest**: Rule simplified to True after exceeding size limit
+3. **Rule explosion**: Options like `entrance_shuffle: dungeons_crossed` + shop randomization create 500KB+ rules
+
+### Root Cause Summary
+
+The primary remaining issue is **rule size explosion**:
+1. Complex option combinations (entrance shuffle + shop randomization + retro modes) create exponentially large rules
+2. Rules exceeding 50KB are simplified to `constant True` during export
+3. The simplified rules don't match the original game logic, causing sphere mismatches
+
+### Recommended Fixes
+
+1. **Short-term**: Increase rule size limits or optimize rule deduplication
+2. **Medium-term**: Implement rule compression/factoring to prevent explosion
+3. **Long-term**: Consider a different rule representation that doesn't require full expansion
+
+### Next Steps for Investigation
+
+1. **Rule optimization**: Analyze why entrance shuffle creates massive rules and optimize helper expansion
+2. **Self-locking rules**: Ensure Turtle Rock/Swamp Palace key rules are exported with correct counts
+3. **Event chains**: Trace Flute/Blacksmith event dependencies in the exporter
 
 ## Test Commands
 
