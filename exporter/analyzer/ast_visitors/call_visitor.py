@@ -692,9 +692,18 @@ class CallVisitorMixin:
                  # If recursion wasn't attempted or failed, check for internal closure names
                  # from add_rule combined lambdas. These closures ('rule', 'old_rule') don't
                  # exist as actual helpers and would cause NameError if preserved as helper
-                 # references. Replace them with True (permissive) as a fallback.
-                 if func_name in ('rule', 'old_rule'):
-                     logging.debug(f"Closure '{func_name}' analysis failed, replacing with True (add_rule fallback)")
+                 # references. Try ClosureFunctionAnalyzer first, then fall back to True.
+                 if func_name in ('rule', 'old_rule') and callable(actual_func):
+                     # Try ClosureFunctionAnalyzer - it can analyze runtime-composed lambdas
+                     # via closure pattern recognition and bytecode analysis
+                     logging.debug(f"Closure '{func_name}' trying ClosureFunctionAnalyzer")
+                     closure_analyzer = ClosureFunctionAnalyzer(self)
+                     fallback_result = closure_analyzer.analyze_function(actual_func)
+                     if fallback_result and fallback_result.get('type') != 'error':
+                         logging.debug(f"Closure '{func_name}' analyzed via ClosureFunctionAnalyzer: {fallback_result}")
+                         return fallback_result
+                     # ClosureFunctionAnalyzer failed - fall back to True (permissive)
+                     logging.debug(f"Closure '{func_name}' ClosureFunctionAnalyzer failed, replacing with True (add_rule fallback)")
                      return {'type': 'constant', 'value': True}
 
                  # Otherwise fall through to default helper representation
@@ -1219,6 +1228,13 @@ class CallVisitorMixin:
                 }
                 logging.debug(f"Created map result: {result}")
                 return result
+
+            # Check for internal closure names from add_rule combined lambdas
+            # These closures ('rule', 'old_rule') should never be preserved as helpers
+            # as they don't exist as actual helpers and would cause NameError
+            if func_name in ('rule', 'old_rule'):
+                logging.debug(f"Closure '{func_name}' not in closure_vars, replacing with True (add_rule fallback)")
+                return {'type': 'constant', 'value': True}
 
             # Create helper result with filtered args and kwargs (no state/player in JSON)
             result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)

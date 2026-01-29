@@ -219,6 +219,15 @@ class ClosureFunctionAnalyzer:
                 depth
             )
 
+        # Pattern: add_rule combined lambda
+        # lambda state: rule(state) and old_rule(state)
+        # Created by worlds/generic/Rules.py add_rule() function
+        if 'rule' in closure_vars and 'old_rule' in closure_vars:
+            rule_func = closure_vars['rule']
+            old_rule_func = closure_vars['old_rule']
+            if callable(rule_func) and callable(old_rule_func):
+                return self._analyze_add_rule_pattern(rule_func, old_rule_func, depth)
+
         # Pattern: Simple item check with 'player' captured
         # lambda state: state.has('Moon Pearl', player)
         if 'player' in closure_vars and len(closure_vars) <= 2:
@@ -590,6 +599,59 @@ class ClosureFunctionAnalyzer:
         simplified = self._simplify_and_conditions(all_conditions)
         if len(simplified) == 1:
             return simplified[0]
+        return {'rule': 'And', 'children': simplified}
+
+    def _analyze_add_rule_pattern(self, rule_func: Callable, old_rule_func: Callable,
+                                   depth: int) -> Optional[Dict[str, Any]]:
+        """Analyze add_rule combined lambda pattern.
+
+        This pattern is created by worlds/generic/Rules.py add_rule() function:
+        lambda state: rule(state) and old_rule(state)
+
+        Args:
+            rule_func: The new rule being added
+            old_rule_func: The existing rule
+            depth: Current recursion depth
+
+        Returns:
+            Analyzed rule combining both rules with AND
+        """
+        logger.debug(f"ClosureFunctionAnalyzer: Analyzing add_rule pattern at depth {depth}")
+
+        # Analyze both rules
+        rule_result = self.analyze_function(rule_func, depth + 1)
+        old_rule_result = self.analyze_function(old_rule_func, depth + 1)
+
+        # If new rule analysis failed, try bytecode
+        if rule_result is None:
+            rule_result = self._analyze_via_bytecode(rule_func)
+        # If old rule analysis failed, try bytecode
+        if old_rule_result is None:
+            old_rule_result = self._analyze_via_bytecode(old_rule_func)
+
+        # Handle cases where one or both failed
+        if rule_result is None and old_rule_result is None:
+            logger.debug(f"ClosureFunctionAnalyzer: Both add_rule components failed analysis")
+            return None
+        elif rule_result is None:
+            # Only old_rule succeeded - return it (rule is implicitly True)
+            logger.debug(f"ClosureFunctionAnalyzer: Only old_rule succeeded in add_rule")
+            return old_rule_result
+        elif old_rule_result is None:
+            # Only rule succeeded - return it (old_rule is implicitly True)
+            logger.debug(f"ClosureFunctionAnalyzer: Only rule succeeded in add_rule")
+            return rule_result
+
+        # Both succeeded - combine with AND
+        conditions = [rule_result, old_rule_result]
+        simplified = self._simplify_and_conditions(conditions)
+
+        if len(simplified) == 0:
+            return {'rule': 'True_'}
+        elif len(simplified) == 1:
+            return simplified[0]
+
+        logger.debug(f"ClosureFunctionAnalyzer: add_rule pattern combined: {simplified}")
         return {'rule': 'And', 'children': simplified}
 
     def _analyze_via_bytecode(self, func: Callable) -> Optional[Dict[str, Any]]:
