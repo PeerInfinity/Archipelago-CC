@@ -16,6 +16,15 @@ logger = logging.getLogger(__name__)
 class RuleExpansionMixin:
     """Mixin providing rule expansion methods."""
 
+    # ==================== Feature Flags ====================
+    # These flags control experimental features that may cause regressions.
+    # All flags default to False (disabled) for safety.
+
+    # Feature: Lossless rule simplification during expansion
+    # When enabled, applies constant folding, duplicate removal, and flattening
+    # to AND/OR rules after they are expanded.
+    ENABLE_LOSSLESS_SIMPLIFICATION = False
+
     # These attributes are expected to be defined on the main handler class
     # They are declared here for type checking purposes
     world: Any
@@ -152,6 +161,9 @@ class RuleExpansionMixin:
         # Handle compound rules
         if rule_type in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+            # Feature flag: Apply lossless simplification to AND/OR rules
+            if self.ENABLE_LOSSLESS_SIMPLIFICATION:
+                rule = self._simplify_and_or(rule)
 
         elif rule_type == 'not':
             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
@@ -690,6 +702,135 @@ class RuleExpansionMixin:
                 return [item for item in value if isinstance(item, str)]
 
         return None
+
+    # ==================== Lossless Simplification Methods ====================
+
+    def _simplify_and_or(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform lossless simplification on AND/OR rules.
+
+        This simplification:
+        - Flattens nested AND(AND(...)) and OR(OR(...))
+        - Removes constants (True from AND doesn't affect result, False from OR doesn't affect result)
+        - Removes duplicate conditions
+        - Returns early if a dominating constant is found (False in AND, True in OR)
+
+        Args:
+            rule: A rule dict
+
+        Returns:
+            Simplified rule dict (may be the same dict if no simplification possible)
+        """
+        rule_type = rule.get('type')
+
+        if rule_type not in ('and', 'or'):
+            return rule
+
+        conditions = rule.get('conditions', [])
+        if not conditions:
+            # Empty AND is True, empty OR is False
+            return {'type': 'constant', 'value': rule_type == 'and'}
+
+        # Flatten nested structures of the same type
+        flattened = []
+        for cond in conditions:
+            if isinstance(cond, dict) and cond.get('type') == rule_type:
+                # Same type - flatten children
+                flattened.extend(cond.get('conditions', []))
+            else:
+                flattened.append(cond)
+
+        # Process conditions: remove identity elements and detect absorbing elements
+        simplified = []
+        seen_fingerprints = set()
+
+        for cond in flattened:
+            # Check for constants
+            if isinstance(cond, dict) and cond.get('type') == 'constant':
+                val = cond.get('value')
+                if rule_type == 'and':
+                    if val is False:
+                        # False in AND makes the whole thing False
+                        return {'type': 'constant', 'value': False}
+                    elif val is True:
+                        # True in AND is identity, skip it
+                        continue
+                else:  # or
+                    if val is True:
+                        # True in OR makes the whole thing True
+                        return {'type': 'constant', 'value': True}
+                    elif val is False:
+                        # False in OR is identity, skip it
+                        continue
+
+            # Skip duplicates using fingerprint
+            import json
+            fingerprint = json.dumps(cond, sort_keys=True)
+            if fingerprint in seen_fingerprints:
+                continue
+            seen_fingerprints.add(fingerprint)
+
+            simplified.append(cond)
+
+        # Handle result
+        if not simplified:
+            # All conditions were identity elements
+            return {'type': 'constant', 'value': rule_type == 'and'}
+        elif len(simplified) == 1:
+            return simplified[0]
+        else:
+            return {'type': rule_type, 'conditions': simplified}
+
+    def simplify_rule_tree(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively simplify a rule tree.
+
+        This applies _simplify_and_or to all AND/OR nodes in the tree,
+        from the leaves upward (post-order traversal).
+
+        Args:
+            rule: A rule dict
+
+        Returns:
+            Simplified rule dict
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        # First, recursively simplify children
+        if rule_type in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            simplified_conditions = [self.simplify_rule_tree(c) for c in conditions]
+            rule = {'type': rule_type, 'conditions': simplified_conditions}
+            # Then simplify this node
+            return self._simplify_and_or(rule)
+
+        elif rule_type == 'not':
+            simplified_condition = self.simplify_rule_tree(rule.get('condition'))
+            # Handle double negation: not(not(X)) -> X
+            if isinstance(simplified_condition, dict) and simplified_condition.get('type') == 'not':
+                return simplified_condition.get('condition')
+            # Handle not(constant)
+            if isinstance(simplified_condition, dict) and simplified_condition.get('type') == 'constant':
+                return {'type': 'constant', 'value': not simplified_condition.get('value')}
+            return {'type': 'not', 'condition': simplified_condition}
+
+        elif rule_type == 'conditional':
+            simplified_test = self.simplify_rule_tree(rule.get('test'))
+            simplified_if_true = self.simplify_rule_tree(rule.get('if_true'))
+            simplified_if_false = self.simplify_rule_tree(rule.get('if_false'))
+            # Handle constant test
+            if isinstance(simplified_test, dict) and simplified_test.get('type') == 'constant':
+                return simplified_if_true if simplified_test.get('value') else simplified_if_false
+            return {
+                'type': 'conditional',
+                'test': simplified_test,
+                'if_true': simplified_if_true,
+                'if_false': simplified_if_false
+            }
+
+        # Return other rules unchanged (but could be extended for more patterns)
+        return rule
 
     # These methods are expected to be provided by the main handler class
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:

@@ -36,6 +36,37 @@ class ClosureFunctionAnalyzer:
     # Maximum recursion depth to prevent infinite loops
     MAX_DEPTH = 10
 
+    # ==================== Feature Flags ====================
+    # These flags control experimental features that may cause regressions.
+    # All flags default to False (disabled) for safety.
+
+    # Feature: Limit bunny rule path expansion depth
+    # When enabled, bunny rules deeper than MAX_BUNNY_PATH_DEPTH use Moon Pearl fallback.
+    # This prevents rule explosion with complex entrance shuffle but may reduce accuracy.
+    ENABLE_BUNNY_PATH_DEPTH_LIMIT = False
+    MAX_BUNNY_PATH_DEPTH = 3  # Only used when ENABLE_BUNNY_PATH_DEPTH_LIMIT is True
+
+    # Feature: Limit number of bunny rule options analyzed
+    # When enabled, only the first MAX_BUNNY_OPTIONS options are analyzed in options_to_access_rule.
+    # This reduces rule size but may miss some valid access paths.
+    ENABLE_BUNNY_OPTIONS_LIMIT = False
+    MAX_BUNNY_OPTIONS = 10  # Only used when ENABLE_BUNNY_OPTIONS_LIMIT is True
+
+    # Feature: Fingerprint-based deduplication
+    # When enabled, uses canonical string fingerprints to detect duplicate conditions.
+    # This can catch duplicates that simple equality check misses.
+    ENABLE_FINGERPRINT_DEDUP = False
+
+    # Feature: Nested structure flattening
+    # When enabled, flattens nested OR(OR(a,b),c) -> OR(a,b,c) and AND(AND(a,b),c) -> AND(a,b,c).
+    # This produces more compact rules.
+    ENABLE_NESTED_FLATTENING = False
+
+    # Feature: Cross-type dominance pruning
+    # When enabled, in OR conditions, simpler options (item-only) dominate complex ones (item+can_reach).
+    # If Has(X) is present, AND(CanReachEntrance(Y), Has(X)) can be pruned.
+    ENABLE_CROSS_TYPE_DOMINANCE = False
+
     # Patterns recognized by closure variable names
     KNOWN_PATTERNS = {
         'options_to_access_rule': {'options'},
@@ -222,14 +253,31 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule dict as an 'or' of all options
         """
+        # Feature flag: Limit bunny rule path expansion depth
+        if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
+            logger.warning(
+                f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
+                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, using Moon Pearl fallback"
+            )
+            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+
         if not options:
             # Empty options list - any([]) is False
             return {'rule': 'False_'}
 
+        # Feature flag: Limit number of options analyzed
+        options_to_analyze = options
+        if self.ENABLE_BUNNY_OPTIONS_LIMIT and len(options) > self.MAX_BUNNY_OPTIONS:
+            logger.warning(
+                f"LOSSY FALLBACK: {len(options)} bunny options exceeds MAX_BUNNY_OPTIONS "
+                f"({self.MAX_BUNNY_OPTIONS}), truncating options list"
+            )
+            options_to_analyze = options[:self.MAX_BUNNY_OPTIONS]
+
         analyzed_options = []
         failed_count = 0
 
-        for i, option_func in enumerate(options):
+        for i, option_func in enumerate(options_to_analyze):
             if not callable(option_func):
                 logger.warning(f"ClosureFunctionAnalyzer: Option {i} is not callable: {type(option_func)}")
                 failed_count += 1
@@ -282,6 +330,14 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule combining can_reach and path requirements
         """
+        # Feature flag: Limit bunny rule path expansion depth
+        if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
+            logger.warning(
+                f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
+                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, using Moon Pearl fallback"
+            )
+            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+
         # Build the can_reach part
         entrance_name = getattr(entrance, 'name', str(entrance))
         can_reach = {
@@ -534,6 +590,134 @@ class ClosureFunctionAnalyzer:
 
         return result
 
+    def _flatten_or_children(self, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Flatten nested OR structures: OR(OR(a,b), c) -> OR(a, b, c).
+
+        Args:
+            children: List of child rules
+
+        Returns:
+            Flattened list where nested OR children are lifted up
+        """
+        flattened = []
+        for child in children:
+            if child.get('rule') == 'Or' and 'children' in child:
+                # Recursively flatten nested ORs
+                flattened.extend(self._flatten_or_children(child['children']))
+            else:
+                flattened.append(child)
+        return flattened
+
+    def _flatten_and_children(self, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Flatten nested AND structures: AND(AND(a,b), c) -> AND(a, b, c).
+
+        Args:
+            children: List of child rules
+
+        Returns:
+            Flattened list where nested AND children are lifted up
+        """
+        flattened = []
+        for child in children:
+            if child.get('rule') == 'And' and 'children' in child:
+                # Recursively flatten nested ANDs
+                flattened.extend(self._flatten_and_children(child['children']))
+            else:
+                flattened.append(child)
+        return flattened
+
+    def _extract_items_from_rule(self, rule: Dict[str, Any]) -> Optional[Set[str]]:
+        """Extract item names from a rule for dominance comparison.
+
+        Args:
+            rule: A rule dict
+
+        Returns:
+            Set of item names, or None if rule has can_reach requirements
+        """
+        if rule.get('rule') == 'Has':
+            return {rule.get('args', {}).get('item_name', '')}
+        elif rule.get('rule') == 'HasAny':
+            return set(rule.get('args', {}).get('items', []))
+        elif rule.get('rule') in ('CanReachEntrance', 'CanReachRegion'):
+            return None  # Has can_reach, not a pure item rule
+        elif rule.get('rule') == 'And' and 'children' in rule:
+            items = set()
+            for child in rule['children']:
+                child_items = self._extract_items_from_rule(child)
+                if child_items is None:
+                    return None  # Has can_reach requirement
+                items.update(child_items)
+            return items
+        elif rule.get('rule') in ('True_', 'False_'):
+            return set()  # Constants have no item requirements
+        return None  # Unknown rule type, treat conservatively
+
+    def _prune_dominated_options(self, options: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Remove options that are dominated by simpler options.
+
+        An option A dominates option B if A's item requirements are a subset of B's
+        AND A has no can_reach requirements while B does.
+
+        Example: Has(Moon Pearl) dominates AND(CanReachEntrance(X), Has(Moon Pearl))
+
+        Args:
+            options: List of rule dicts
+
+        Returns:
+            List with dominated options removed
+        """
+        # Separate options by whether they have can_reach requirements
+        simple_options = []  # No can_reach requirements
+        complex_options = []  # Has can_reach requirements
+
+        for opt in options:
+            items = self._extract_items_from_rule(opt)
+            if items is not None:
+                simple_options.append((opt, items))
+            else:
+                complex_options.append(opt)
+
+        # Check if any complex option is dominated by a simple option
+        kept_complex = []
+        for complex_opt in complex_options:
+            dominated = False
+            # For complex options, we need to extract just the item requirements
+            # The complex option needs can_reach + items, but if a simple option
+            # needs the same or fewer items, it dominates
+            for simple_opt, simple_items in simple_options:
+                # A simple option (items only) dominates a complex option
+                # if the simple option's items are a subset of what the complex
+                # option requires (since simple doesn't need can_reach)
+                # Actually, the simpler check: if simple_items is empty or
+                # the complex option requires at least all of simple_items,
+                # then simple dominates
+                if not simple_items:  # True_ dominates everything
+                    dominated = True
+                    break
+            if not dominated:
+                kept_complex.append(complex_opt)
+
+        # Reconstruct the options list
+        result = [opt for opt, _ in simple_options] + kept_complex
+        return result
+
+    def _rule_fingerprint(self, rule: Dict[str, Any]) -> str:
+        """Generate a canonical string fingerprint for a rule.
+
+        This creates a deterministic string representation that can be used
+        for deduplication, catching cases where rules are structurally identical
+        but have different dict ordering.
+
+        Args:
+            rule: A rule dictionary
+
+        Returns:
+            Canonical string representation
+        """
+        import json
+        return json.dumps(rule, sort_keys=True)
+
     def _simplify_or_conditions(self, conditions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Simplify a list of OR conditions.
 
@@ -548,7 +732,12 @@ class ClosureFunctionAnalyzer:
         Returns:
             Simplified list of conditions
         """
+        # Feature flag: Flatten nested OR structures first
+        if self.ENABLE_NESTED_FLATTENING:
+            conditions = self._flatten_or_children(conditions)
+
         seen = []
+        seen_fingerprints: Set[str] = set()  # For fingerprint-based dedup
 
         for cond in conditions:
             # True makes the whole OR true (both formats)
@@ -563,9 +752,21 @@ class ClosureFunctionAnalyzer:
             if cond.get('rule') == 'False_':
                 continue
 
-            # Skip duplicates (simple equality check)
-            if cond not in seen:
-                seen.append(cond)
+            # Skip duplicates
+            if self.ENABLE_FINGERPRINT_DEDUP:
+                # Use fingerprint-based deduplication
+                fingerprint = self._rule_fingerprint(cond)
+                if fingerprint not in seen_fingerprints:
+                    seen_fingerprints.add(fingerprint)
+                    seen.append(cond)
+            else:
+                # Simple equality check
+                if cond not in seen:
+                    seen.append(cond)
+
+        # Feature flag: Cross-type dominance pruning
+        if self.ENABLE_CROSS_TYPE_DOMINANCE and len(seen) > 1:
+            seen = self._prune_dominated_options(seen)
 
         return seen
 
@@ -583,7 +784,12 @@ class ClosureFunctionAnalyzer:
         Returns:
             Simplified list of conditions
         """
+        # Feature flag: Flatten nested AND structures first
+        if self.ENABLE_NESTED_FLATTENING:
+            conditions = self._flatten_and_children(conditions)
+
         seen = []
+        seen_fingerprints: Set[str] = set()  # For fingerprint-based dedup
 
         for cond in conditions:
             # False makes the whole AND false (both formats)
@@ -598,9 +804,17 @@ class ClosureFunctionAnalyzer:
             if cond.get('rule') == 'True_':
                 continue
 
-            # Skip duplicates (simple equality check)
-            if cond not in seen:
-                seen.append(cond)
+            # Skip duplicates
+            if self.ENABLE_FINGERPRINT_DEDUP:
+                # Use fingerprint-based deduplication
+                fingerprint = self._rule_fingerprint(cond)
+                if fingerprint not in seen_fingerprints:
+                    seen_fingerprints.add(fingerprint)
+                    seen.append(cond)
+            else:
+                # Simple equality check
+                if cond not in seen:
+                    seen.append(cond)
 
         return seen if seen else [{'rule': 'True_'}]
 
