@@ -698,6 +698,57 @@ class CallVisitorMixin:
                     else:
                         return iterator_rule
 
+                # Handle iterator that's already a constant (e.g., list of functions from closure)
+                if iterator_type == 'constant':
+                    constant_value = iterator_info['iterator'].get('value')
+                    logging.debug(f"any(GeneratorExp): Iterator is constant with {len(constant_value) if isinstance(constant_value, list) else 'non-list'} items")
+
+                    if isinstance(constant_value, list) and len(constant_value) > 0:
+                        # Check if items are callables (bunny rules)
+                        if all(callable(item) for item in constant_value):
+                            from ..analysis import analyze_rule
+                            analyzed_items = []
+                            for item_func in constant_value:
+                                try:
+                                    item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs, game_handler=self.game_handler,
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
+                                    if item_result and item_result.get('type') != 'error':
+                                        analyzed_items.append(item_result)
+                                    else:
+                                        # Try ClosureFunctionAnalyzer as fallback for bunny rules
+                                        logging.debug(f"any(GeneratorExp constant): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"any(GeneratorExp constant): ClosureFunctionAnalyzer succeeded")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item in constant list, checking for bunny rule fallback")
+                                            analyzed_items = None
+                                            break
+                                except Exception as e:
+                                    logging.debug(f"Error analyzing item in constant list: {e}")
+                                    analyzed_items = None
+                                    break
+
+                            if analyzed_items:
+                                # Successfully analyzed all items - return an 'or' of all items
+                                logging.debug(f"any(GeneratorExp constant): Successfully analyzed {len(analyzed_items)} items, returning 'or' rule")
+                                if len(analyzed_items) == 1:
+                                    return analyzed_items[0]
+                                else:
+                                    return {'type': 'or', 'conditions': analyzed_items}
+                            else:
+                                # Analysis failed - check if these are ALttP bunny rules
+                                first_func = constant_value[0]
+                                func_qualname = getattr(first_func, '__qualname__', '')
+                                if 'set_bunny_rules' in func_qualname:
+                                    logging.debug(f"any(GeneratorExp constant): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
+                                    return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
+
                 if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
                     logging.debug(f"any(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
@@ -762,6 +813,18 @@ class CallVisitorMixin:
                                     return analyzed_items[0]
                                 else:
                                     return {'type': 'or', 'conditions': analyzed_items}
+                            else:
+                                # Analysis failed for callable list - check if these are ALttP bunny rules
+                                # Bunny rules from set_bunny_rules can't be properly analyzed due to their
+                                # dynamic construction. The safe fallback is to require Moon Pearl, which
+                                # is always sufficient (the bunny rules provide alternative paths that all
+                                # ultimately allow access if you have Moon Pearl).
+                                if resolved_value and len(resolved_value) > 0:
+                                    first_func = resolved_value[0]
+                                    func_qualname = getattr(first_func, '__qualname__', '')
+                                    if 'set_bunny_rules' in func_qualname:
+                                        logging.debug(f"any(GeneratorExp): Detected unanalyzable ALttP bunny rules, using Moon Pearl fallback")
+                                        return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
 
                         # NEW: Handle nested comprehensions - list of lists of callables
                         # This pattern appears in The Witness: any(all(condition(state) for condition in sub_req) for sub_req in fully_converted_rules)
