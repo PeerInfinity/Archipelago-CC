@@ -44,7 +44,13 @@ class ClosureFunctionAnalyzer:
     # Testing showed depths 1, 2, and 10 all produce 74% pass rate - the remaining
     # failures are due to bunny rule export issues, not insufficient depth.
     # Using depth=1 as optimal balance (no timeouts, same pass rate)
+    # Set to 0 for unlimited depth (may cause exponential growth with entrance shuffle)
     MAX_BUNNY_PATH_DEPTH = 1
+
+    # Enable dominance pruning in bunny rule analysis.
+    # When True, removes options that require a strict superset of another option's items.
+    # Set to False to disable if pruning causes incorrect results.
+    ENABLE_DOMINANCE_PRUNING = True
 
     # Patterns recognized by closure variable names
     KNOWN_PATTERNS = {
@@ -254,7 +260,8 @@ class ClosureFunctionAnalyzer:
 
         # If we're too deep in bunny rule recursion, use conservative approximation
         # This prevents exponential growth in complex entrance shuffle scenarios
-        if depth > self.MAX_BUNNY_PATH_DEPTH:
+        # (skip check if MAX_BUNNY_PATH_DEPTH is 0, meaning unlimited)
+        if self.MAX_BUNNY_PATH_DEPTH > 0 and depth > self.MAX_BUNNY_PATH_DEPTH:
             logger.debug(f"ClosureFunctionAnalyzer: Options depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using Moon Pearl fallback")
             # Return Moon Pearl check - the base case for all bunny rules
             return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
@@ -309,7 +316,8 @@ class ClosureFunctionAnalyzer:
         simplified = self._simplify_or_conditions(analyzed_options)
 
         # Apply dominance pruning: remove options that require a superset of items
-        simplified = self._prune_dominated_options(simplified)
+        if self.ENABLE_DOMINANCE_PRUNING:
+            simplified = self._prune_dominated_options(simplified)
 
         if len(simplified) == 0:
             return {'rule': 'False_'}
@@ -534,7 +542,8 @@ class ClosureFunctionAnalyzer:
 
         # If we're too deep in bunny rule recursion, use conservative approximation
         # This prevents exponential growth in complex entrance shuffle scenarios
-        if depth > self.MAX_BUNNY_PATH_DEPTH:
+        # (skip check if MAX_BUNNY_PATH_DEPTH is 0, meaning unlimited)
+        if self.MAX_BUNNY_PATH_DEPTH > 0 and depth > self.MAX_BUNNY_PATH_DEPTH:
             logger.debug(f"ClosureFunctionAnalyzer: Depth {depth} exceeds MAX_BUNNY_PATH_DEPTH, using conservative approximation")
             # Return just the can_reach check - conservative but prevents explosion
             return can_reach
@@ -545,7 +554,8 @@ class ClosureFunctionAnalyzer:
             if callable(rule_func):
                 # Check if this is another bunny rule (nested options/path pattern)
                 # If so, and we're at depth limit, skip it to prevent exponential growth
-                if depth >= self.MAX_BUNNY_PATH_DEPTH - 1:
+                # (skip check if MAX_BUNNY_PATH_DEPTH is 0, meaning unlimited)
+                if self.MAX_BUNNY_PATH_DEPTH > 0 and depth >= self.MAX_BUNNY_PATH_DEPTH - 1:
                     closure_vars = self._extract_closure_vars(rule_func)
                     if closure_vars and ('options' in closure_vars or 'path' in closure_vars):
                         logger.debug(f"ClosureFunctionAnalyzer: Skipping nested bunny rule at depth {depth}")
