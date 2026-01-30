@@ -305,6 +305,132 @@ def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fi
         return {}
 
 
+def load_ut_fuzz_single_game_results(project_root, ut_version='modified', seed_mode='fixed'):
+    """Load the single-game UT fuzz test results JSON file.
+
+    These are results from the test-ut-fuzz-single-game.yml workflow, which tests
+    one game with many iterations to find specific failing seeds.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original', 'modified', or 'hybrid'
+        seed_mode: 'fixed' or 'random'
+
+    Returns:
+        Dict with 'metadata' and 'results' keys, or empty dict if not found
+    """
+    # Single-game results use the pattern: test-results-single-game-{ut_version}-{seed_mode}-seed.json
+    filename = f'test-results-single-game-{ut_version}-{seed_mode}-seed.json'
+    results_file = Path(project_root) / 'scripts' / 'output' / 'ut-fuzz' / filename
+
+    if not results_file.exists():
+        return {}
+
+    try:
+        with open(results_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading single-game UT fuzz test results: {e}", file=sys.stderr)
+        return {}
+
+
+def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='fixed'):
+    """Get the lowest-numbered failing seed from single-game UT fuzz results.
+
+    Returns a dict with failure details if a failure is found, None otherwise.
+    The dict includes:
+        - game_name: Display name of the game
+        - template: Template filename
+        - world_directory: World directory name
+        - base_seed: The --seed value used for the fuzz test
+        - failing_seed: The specific run number that failed (lowest if multiple)
+        - reproduction_seed: base_seed + failing_seed (for --seed arg to fuzz.py)
+        - error_type: The error type (e.g., 'None' for logic mismatch)
+        - ut_fuzz: Dict with total, success, failure stats
+        - yaml_path: Path to the failing YAML config (if exists)
+        - log_path: Path to the failure log (if exists)
+    """
+    data = load_ut_fuzz_single_game_results(project_root, ut_version, seed_mode)
+
+    if not data or 'results' not in data:
+        return None
+
+    metadata = data.get('metadata', {})
+    base_seed = metadata.get('seed')
+
+    # If base_seed is None or "random", we can't reproduce deterministically
+    if base_seed is None or base_seed == "random":
+        base_seed = None
+
+    # Extract fuzzer options from metadata
+    default_options = metadata.get('default_options')
+    disallow_options = metadata.get('disallow_options')
+
+    results = data.get('results', {})
+
+    # Find the first game with failures (there should only be one in single-game results)
+    for template_name, result in results.items():
+        ut_fuzz = result.get('ut_fuzz', {})
+
+        if ut_fuzz.get('passed', True):
+            continue
+
+        errors = ut_fuzz.get('errors', {})
+        if not errors:
+            continue
+
+        # Find the lowest failing seed number across all error types
+        lowest_seed = None
+        lowest_error_type = None
+        for error_type, seed_list in errors.items():
+            if seed_list:
+                min_seed = min(seed_list)
+                if lowest_seed is None or min_seed < lowest_seed:
+                    lowest_seed = min_seed
+                    lowest_error_type = error_type
+
+        if lowest_seed is None:
+            continue
+
+        world_info = result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+        world_dir = world_info.get('world_directory', '')
+
+        # Calculate reproduction seed
+        reproduction_seed = None
+        if base_seed is not None:
+            reproduction_seed = base_seed + lowest_seed
+
+        # Check for saved failure artifacts
+        fuzz_output_dir = Path(project_root) / 'fuzz_output' / 'error' / world_dir / str(lowest_seed)
+        yaml_path = fuzz_output_dir / f'{lowest_seed}-0.yaml'
+        log_path = fuzz_output_dir / f'{lowest_seed}.log'
+
+        return {
+            'game_name': game_name,
+            'template': template_name,
+            'world_directory': world_dir,
+            'base_seed': base_seed,
+            'failing_seed': lowest_seed,
+            'reproduction_seed': reproduction_seed,
+            'error_type': lowest_error_type,
+            'ut_fuzz': {
+                'total': ut_fuzz.get('total', 0),
+                'success': ut_fuzz.get('success', 0),
+                'failure': ut_fuzz.get('failure', 0),
+                'timeout': ut_fuzz.get('timeout', 0),
+                'ignored': ut_fuzz.get('ignored', 0),
+                'errors': errors,
+            },
+            'yaml_path': str(yaml_path) if yaml_path.exists() else None,
+            'log_path': str(log_path) if log_path.exists() else None,
+            'default_options': default_options,
+            'disallow_options': disallow_options,
+        }
+
+    return None
+
+
 def load_worldgen_exclude_list(project_root, include_all_excludes=False):
     """Load the worldgen_test_exclude_list from template-exclude-list.json.
 
