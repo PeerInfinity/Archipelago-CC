@@ -1193,7 +1193,7 @@ def generate_ut_fuzz_single_failure_prompt(failure_info):
 
     This is used for detailed investigation of a specific failing seed from the
     single-game UT fuzz workflow. Unlike the multi-game prompt, this provides
-    exact reproduction commands and references saved failure artifacts.
+    exact reproduction commands for a specific failing seed.
 
     Args:
         failure_info: Dict from get_ut_fuzz_single_failure() containing:
@@ -1201,7 +1201,7 @@ def generate_ut_fuzz_single_failure_prompt(failure_info):
             - base_seed, failing_seed, reproduction_seed
             - error_type
             - ut_fuzz stats
-            - yaml_path, log_path (paths to saved artifacts)
+            - default_options, disallow_options (fuzzer options used)
     """
     setup_doc = "CC/cloud-setup.md"
     fuzz_doc = "CC/docs/fuzzer-testing.md"
@@ -1214,8 +1214,6 @@ def generate_ut_fuzz_single_failure_prompt(failure_info):
     reproduction_seed = failure_info['reproduction_seed']
     error_type = failure_info['error_type']
     ut_fuzz = failure_info['ut_fuzz']
-    yaml_path = failure_info.get('yaml_path')
-    log_path = failure_info.get('log_path')
     default_options = failure_info.get('default_options')
     disallow_options = failure_info.get('disallow_options')
 
@@ -1259,7 +1257,7 @@ source .venv/bin/activate
         repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
         repro_explanation = f"""
 **Note**: The original test used a random seed, so exact reproduction is not possible.
-However, the saved YAML configuration can be used to recreate similar conditions.
+Running the fuzzer again may produce different failures.
 """
         if default_options or disallow_options:
             repro_explanation += f"""
@@ -1276,34 +1274,6 @@ To run a new test:
 source .venv/bin/activate
 {repro_cmd}
 ```"""
-
-    # Build artifact references
-    artifacts_section = ""
-    if yaml_path or log_path:
-        artifacts_section = """
-## Saved Failure Artifacts
-
-The workflow saved the following files from the failing run:
-"""
-        if yaml_path:
-            artifacts_section += f"""
-### Failing YAML Configuration
-```bash
-cat {yaml_path}
-```
-This file contains the exact options that caused the failure.
-"""
-        if log_path:
-            artifacts_section += f"""
-### Failure Log
-```bash
-cat {log_path}
-```
-This log shows:
-- Which locations were expected in logic but weren't accessible
-- The server's logic spheres at the point of failure
-- Inventory state at the time of failure
-"""
 
     # Error type analysis
     if error_type == 'None' or error_type is None:
@@ -1373,7 +1343,6 @@ Then, please read {fuzz_doc} for background on UT fuzzer testing.
 
 ## Exact Reproduction
 {repro_explanation}
-{artifacts_section}
 {error_analysis}
 ## Investigation Steps
 
@@ -1386,21 +1355,20 @@ source .venv/bin/activate
 
 ### 2. Examine the failure details
 
-After running the reproduction command, check the newly generated error files:
+After running the reproduction command, check the generated error files:
 ```bash
 cat fuzz_output/error/{world_dir}/0/0.log
 cat fuzz_output/error/{world_dir}/0/0.yaml
 ```
 
-### 3. Compare with the saved artifacts
+The log shows:
+- Which locations were expected in logic but weren't accessible
+- The server's logic spheres at the point of failure
+- Inventory state at the time of failure
 
-If the saved artifacts exist, compare:
-```bash
-# Compare YAML configs (if different seeds produce different failures)
-diff {yaml_path if yaml_path else f'fuzz_output/error/{world_dir}/0/0.yaml'} fuzz_output/error/{world_dir}/0/0.yaml
-```
+The YAML file contains the exact options that caused the failure.
 
-### 4. Identify the root cause
+### 3. Identify the root cause
 
 Based on the error analysis above, focus on:
 - The specific location(s) that fail the logic check

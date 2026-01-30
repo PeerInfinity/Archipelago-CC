@@ -347,8 +347,8 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='f
         - reproduction_seed: base_seed + failing_seed (for --seed arg to fuzz.py)
         - error_type: The error type (e.g., 'None' for logic mismatch)
         - ut_fuzz: Dict with total, success, failure stats
-        - yaml_path: Path to the failing YAML config (if exists)
-        - log_path: Path to the failure log (if exists)
+        - default_options: Options left at defaults during fuzzing (if any)
+        - disallow_options: Options disallowed during fuzzing (if any)
     """
     data = load_ut_fuzz_single_game_results(project_root, ut_version, seed_mode)
 
@@ -401,11 +401,6 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='f
         if base_seed is not None:
             reproduction_seed = base_seed + lowest_seed
 
-        # Check for saved failure artifacts
-        fuzz_output_dir = Path(project_root) / 'fuzz_output' / 'error' / world_dir / str(lowest_seed)
-        yaml_path = fuzz_output_dir / f'{lowest_seed}-0.yaml'
-        log_path = fuzz_output_dir / f'{lowest_seed}.log'
-
         return {
             'game_name': game_name,
             'template': template_name,
@@ -422,8 +417,6 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='f
                 'ignored': ut_fuzz.get('ignored', 0),
                 'errors': errors,
             },
-            'yaml_path': str(yaml_path) if yaml_path.exists() else None,
-            'log_path': str(log_path) if log_path.exists() else None,
             'default_options': default_options,
             'disallow_options': disallow_options,
         }

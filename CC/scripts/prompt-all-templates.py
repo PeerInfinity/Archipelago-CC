@@ -416,12 +416,9 @@ def main():
             print(f"Single Failure Analysis: {game_name}")
             print(f"{'='*60}")
             print(f"Failing seed: {failing_seed}")
+            print(f"Reproduction seed: {failure['reproduction_seed']}")
             print(f"UT Fuzz: {ut_fuzz['success']}/{ut_fuzz['total']} passed ({success_rate:.1f}%)")
             print(f"Error type: {failure['error_type'] or 'None (logic mismatch)'}")
-            if failure.get('yaml_path'):
-                print(f"YAML config: {failure['yaml_path']}")
-            if failure.get('log_path'):
-                print(f"Failure log: {failure['log_path']}")
             print('='*60)
 
         prompt = generate_ut_fuzz_single_failure_prompt(failure)
