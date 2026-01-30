@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
+import net from 'net';
 import { spawn, exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -61,19 +62,47 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
     console.log(`Starting server with: ${fullPath}`);
 
-    const serverProc = spawn('python3', [
+    // Use venv Python if available (required for cloud environments)
+    const venvPython = './venv/bin/python3';
+    const venvPythonAlt = './.venv/bin/python3';
+    const pythonPath = fs.existsSync(venvPythonAlt) ? venvPythonAlt :
+                       fs.existsSync(venvPython) ? venvPython : 'python3';
+
+    console.log(`Using Python: ${pythonPath}`);
+
+    const serverProc = spawn(pythonPath, [
       'MultiServer.py',
       '--host', 'localhost',
       '--port', serverPort.toString(),
       fullPath
     ], {
-      stdio: ['ignore', 'pipe', 'pipe']
+      stdio: ['ignore', 'pipe', 'pipe'],
+      detached: true  // Prevent server from being killed when test ends
+    });
+
+    // Track server process events
+    serverProc.on('error', (err) => {
+      console.log(`Server process error: ${err.message}`);
+    });
+    serverProc.on('exit', (code, signal) => {
+      console.log(`Server process exited with code ${code}, signal ${signal}`);
     });
 
     // Redirect server output to a log file
     const logStream = fs.createWriteStream('server_log.txt', { flags: 'w' });
     serverProc.stdout.pipe(logStream);
     serverProc.stderr.pipe(logStream);
+
+    // Also log stdout to console for debugging
+    serverProc.stdout.on('data', (data) => {
+      const line = data.toString().trim();
+      if (line.includes('listening') || line.includes('error') || line.includes('Error')) {
+        console.log(`SERVER: ${line}`);
+      }
+    });
+    serverProc.stderr.on('data', (data) => {
+      console.log(`SERVER STDERR: ${data.toString().trim()}`);
+    });
 
     // Wait for server to start
     // Note: Loading 70+ apworlds can take significant time on CI runners,
@@ -82,15 +111,23 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     const maxWaitTime = 120000; // 120 seconds
     let serverReady = false;
 
+    let lastError = null;
+    let attemptCount = 0;
     while (Date.now() - startTime < maxWaitTime) {
       // Check if server process has exited
       if (serverProc.exitCode !== null) {
-        throw new Error('Server failed to start - process exited');
+        throw new Error(`Server failed to start - process exited with code ${serverProc.exitCode}`);
+      }
+
+      attemptCount++;
+      // Log progress every 10 attempts
+      if (attemptCount % 10 === 1) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        console.log(`Connection attempt ${attemptCount} (${elapsed}s elapsed, last error: ${lastError || 'none'})`);
       }
 
       // Try to connect to see if server is ready
       try {
-        const net = require('net');
         await new Promise((resolve, reject) => {
           const socket = new net.Socket();
           socket.setTimeout(500);
@@ -109,8 +146,10 @@ test.describe('Multiplayer Client Interaction Tests', () => {
           socket.connect(serverPort, 'localhost');
         });
         serverReady = true;
+        console.log(`Server ready after ${attemptCount} attempts`);
         break;
       } catch (e) {
+        lastError = e.message;
         // Server not ready yet, wait and retry
         await new Promise(resolve => setTimeout(resolve, 500));
       }
