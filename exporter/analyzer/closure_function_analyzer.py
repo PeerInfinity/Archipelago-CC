@@ -44,19 +44,19 @@ class ClosureFunctionAnalyzer:
     # These flags control experimental features that may cause regressions.
     # All flags default to False (disabled) for safety.
 
-    # Feature: Limit bunny rule path expansion depth
-    # When enabled, bunny rules deeper than MAX_BUNNY_PATH_DEPTH use Moon Pearl fallback.
+    # Feature: Limit closure analysis depth
+    # When enabled, closures deeper than MAX_CLOSURE_DEPTH use game handler fallback.
     # This prevents rule explosion with complex entrance shuffle but may reduce accuracy.
     # LOSSY: Keep disabled by default - could miss valid access paths.
-    ENABLE_BUNNY_PATH_DEPTH_LIMIT = False
-    MAX_BUNNY_PATH_DEPTH = 3  # Only used when ENABLE_BUNNY_PATH_DEPTH_LIMIT is True
+    ENABLE_CLOSURE_DEPTH_LIMIT = False
+    MAX_CLOSURE_DEPTH = 3  # Only used when ENABLE_CLOSURE_DEPTH_LIMIT is True
 
-    # Feature: Limit number of bunny rule options analyzed
-    # When enabled, only the first MAX_BUNNY_OPTIONS options are analyzed in options_to_access_rule.
+    # Feature: Limit number of closure options analyzed
+    # When enabled, only the first MAX_CLOSURE_OPTIONS options are analyzed in options_to_access_rule.
     # This reduces rule size but may miss some valid access paths.
     # LOSSY: Keep disabled by default - could miss valid access paths.
-    ENABLE_BUNNY_OPTIONS_LIMIT = False
-    MAX_BUNNY_OPTIONS = 10  # Only used when ENABLE_BUNNY_OPTIONS_LIMIT is True
+    ENABLE_CLOSURE_OPTIONS_LIMIT = False
+    MAX_CLOSURE_OPTIONS = 10  # Only used when ENABLE_CLOSURE_OPTIONS_LIMIT is True
 
     # Feature: Fingerprint-based deduplication
     # When enabled, uses canonical string fingerprints to detect duplicate conditions.
@@ -327,23 +327,23 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule dict as an 'or' of all options
         """
-        # Feature flag: Limit bunny rule path expansion depth
-        if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
+        # Feature flag: Limit closure analysis depth
+        if self.ENABLE_CLOSURE_DEPTH_LIMIT and depth > self.MAX_CLOSURE_DEPTH:
             # Try to get game-specific fallback from handler
             fallback = None
             if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
                 fallback = self.game_handler.get_unanalyzable_rule_fallback()
             if fallback:
                 print(
-                    f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                    f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, using game handler fallback",
+                    f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_CLOSURE_DEPTH "
+                    f"({self.MAX_CLOSURE_DEPTH}) in _analyze_options_pattern, using game handler fallback",
                     file=sys.stderr
                 )
                 return fallback
             # No handler fallback available
             print(
-                f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, no fallback available",
+                f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_CLOSURE_DEPTH "
+                f"({self.MAX_CLOSURE_DEPTH}) in _analyze_options_pattern, no fallback available",
                 file=sys.stderr
             )
             return None
@@ -354,13 +354,13 @@ class ClosureFunctionAnalyzer:
 
         # Feature flag: Limit number of options analyzed
         options_to_analyze = options
-        if self.ENABLE_BUNNY_OPTIONS_LIMIT and len(options) > self.MAX_BUNNY_OPTIONS:
+        if self.ENABLE_CLOSURE_OPTIONS_LIMIT and len(options) > self.MAX_CLOSURE_OPTIONS:
             print(
-                f"LOSSY FALLBACK: {len(options)} bunny options exceeds MAX_BUNNY_OPTIONS "
-                f"({self.MAX_BUNNY_OPTIONS}), truncating options list",
+                f"LOSSY FALLBACK: {len(options)} closure options exceeds MAX_CLOSURE_OPTIONS "
+                f"({self.MAX_CLOSURE_OPTIONS}), truncating options list",
                 file=sys.stderr
             )
-            options_to_analyze = options[:self.MAX_BUNNY_OPTIONS]
+            options_to_analyze = options[:self.MAX_CLOSURE_OPTIONS]
 
         analyzed_options = []
         failed_count = 0
@@ -433,23 +433,23 @@ class ClosureFunctionAnalyzer:
         Returns:
             Analyzed rule combining can_reach and path requirements
         """
-        # Feature flag: Limit bunny rule path expansion depth
-        if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
+        # Feature flag: Limit closure analysis depth
+        if self.ENABLE_CLOSURE_DEPTH_LIMIT and depth > self.MAX_CLOSURE_DEPTH:
             # Try to get game-specific fallback from handler
             fallback = None
             if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
                 fallback = self.game_handler.get_unanalyzable_rule_fallback()
             if fallback:
                 print(
-                    f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                    f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, using game handler fallback",
+                    f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_CLOSURE_DEPTH "
+                    f"({self.MAX_CLOSURE_DEPTH}) in _analyze_path_pattern, using game handler fallback",
                     file=sys.stderr
                 )
                 return fallback
             # No handler fallback available
             print(
-                f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, no fallback available",
+                f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_CLOSURE_DEPTH "
+                f"({self.MAX_CLOSURE_DEPTH}) in _analyze_path_pattern, no fallback available",
                 file=sys.stderr
             )
             return None
@@ -630,14 +630,18 @@ class ClosureFunctionAnalyzer:
         if self.game_handler and hasattr(self.game_handler, 'get_known_items_for_bytecode'):
             known_items = self.game_handler.get_known_items_for_bytecode()
 
-        # Get sword tiers from game handler for has_sword expansion
-        sword_tiers: List[str] = []
-        if self.game_handler and hasattr(self.game_handler, 'get_sword_tiers'):
-            sword_tiers = self.game_handler.get_sword_tiers()
+        # Check for helper expansions from game handler
+        # This allows games to define how helpers like 'has_sword' expand in bytecode
+        def get_helper_expansion(helper_name: str) -> List[str]:
+            if self.game_handler and hasattr(self.game_handler, 'get_bytecode_helper_expansion'):
+                return self.game_handler.get_bytecode_helper_expansion(helper_name)
+            return []
 
-        # Check for combined patterns: (item AND has_sword) OR item
+        # Check for combined patterns: (item AND helper) OR item
         # This pattern is used in some games' glitch mode rules
-        if 'has' in names and 'has_sword' in names and is_or_pattern and is_and_pattern and sword_tiers:
+        # Example: (Moon Pearl AND has_sword) OR Magic Mirror
+        helper_expansion = get_helper_expansion('has_sword')
+        if 'has' in names and 'has_sword' in names and is_or_pattern and is_and_pattern and helper_expansion:
             item_names = []
             for const in consts:
                 if isinstance(const, str) and const and not const.startswith('<'):
@@ -648,10 +652,10 @@ class ClosureFunctionAnalyzer:
             if len(item_names) >= 2:
                 # Pattern: (first_item AND has_sword) OR second_item
                 # The bytecode order is: item1 check -> AND jump -> has_sword -> OR jump -> item2
-                # Convert has_sword to actual item checks using game handler's sword tiers
+                # Convert has_sword to actual item checks using game handler's helper expansion
                 has_sword_rule = {
                     'rule': 'HasAny',
-                    'args': {'items': sword_tiers}
+                    'args': {'items': helper_expansion}
                 }
                 first_item = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
                 second_item = {'rule': 'Has', 'args': {'item_name': item_names[1]}}
@@ -710,14 +714,16 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found can_reach via closure entrance '{entrance_name}'")
                 return {'rule': 'CanReachEntrance', 'args': {'entrance_name': entrance_name}}
 
-        # Check for has_sword helper
-        # Convert to actual item checks using game handler's sword tiers
-        if 'has_sword' in names and sword_tiers:
-            logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has_sword(), converting to item checks")
-            return {
-                'rule': 'HasAny',
-                'args': {'items': sword_tiers}
-            }
+        # Check for helper functions that have bytecode expansions
+        # Convert to HasAny item checks using game handler's expansion mapping
+        for name in names:
+            expansion = get_helper_expansion(name)
+            if expansion:
+                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found {name}(), converting to item checks")
+                return {
+                    'rule': 'HasAny',
+                    'args': {'items': expansion}
+                }
 
         return None
 

@@ -58,10 +58,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
     }
 
-    # Sword tier items for has_sword() expansion
-    SWORD_TIERS: List[str] = [
-        'Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'
-    ]
+    # Bytecode helper expansions for ALttP
+    # When these helpers are seen in bytecode, expand to HasAny(items=...)
+    BYTECODE_HELPER_EXPANSIONS: Dict[str, List[str]] = {
+        'has_sword': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'],
+    }
 
     # Fallback item for unanalyzable bunny rules (non-glitch modes)
     UNANALYZABLE_RULE_FALLBACK_ITEM: Optional[str] = 'Moon Pearl'

@@ -307,11 +307,11 @@ class BaseGameExportHandler(
     # Example: {'Moon Pearl', 'Magic Mirror', 'Hookshot', ...}
     KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS: Set[str] = set()
 
-    # List of sword tier items for expanding has_sword() helper calls.
-    # When the analyzer encounters a has_sword pattern in bytecode, it expands
-    # to HasAny(items=SWORD_TIERS). Leave empty if the game doesn't have this pattern.
-    # Example: ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']
-    SWORD_TIERS: List[str] = []
+    # Mapping of helper names to item lists for bytecode-based expansion.
+    # When the analyzer sees a helper name (e.g., 'has_sword') in bytecode, it expands
+    # to HasAny(items=BYTECODE_HELPER_EXPANSIONS[helper_name]).
+    # Example: {'has_sword': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']}
+    BYTECODE_HELPER_EXPANSIONS: Dict[str, List[str]] = {}
 
     # Item name to use as fallback when rule analysis fails completely.
     # If set, unanalyzable rules fall back to Has(item_name=FALLBACK_ITEM).
@@ -994,17 +994,20 @@ class BaseGameExportHandler(
         """
         return self.KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS
 
-    def get_sword_tiers(self) -> List[str]:
-        """Get the list of sword tier items for has_sword expansion.
+    def get_bytecode_helper_expansion(self, helper_name: str) -> List[str]:
+        """Get the item list expansion for a helper seen in bytecode.
 
-        When the analyzer encounters a has_sword() pattern, it expands
-        to HasAny(items=sword_tiers). Games with sword progression should
-        override this or set SWORD_TIERS.
+        When the analyzer encounters a helper name (e.g., 'has_sword') in
+        bytecode, it can expand to HasAny(items=expansion). Games can
+        configure this via BYTECODE_HELPER_EXPANSIONS.
+
+        Args:
+            helper_name: The helper function name seen in bytecode
 
         Returns:
-            List of sword tier item names, or empty list if not applicable
+            List of item names to expand to, or empty list if not configured
         """
-        return self.SWORD_TIERS
+        return self.BYTECODE_HELPER_EXPANSIONS.get(helper_name, [])
 
     def handle_game_specific_state_method(
         self,
