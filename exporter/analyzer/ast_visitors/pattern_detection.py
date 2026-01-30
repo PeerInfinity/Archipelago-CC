@@ -395,10 +395,6 @@ class PatternDetectionMixin:
         This is used when a helper function takes a region as a parameter
         and accesses its attributes within the function body.
 
-        Also handles walrus operator patterns like:
-            (_r := region_lookup) is None else _r.is_light_world
-        In this case, _r is resolved to the original region parameter.
-
         Args:
             node: The AST Attribute node
             region_param_names: Set of parameter names that are known to be regions
@@ -493,73 +489,6 @@ class PatternDetectionMixin:
 
         return None
 
-    def _try_inline_namedtuple_callable(self, node) -> Optional[Dict[str, Any]]:
-        """
-        Detect and inline callable attributes on NamedTuple closure variables.
-
-        Pattern: loc.access_rule(state, player) where:
-        - loc is a NamedTuple in closure_vars (e.g., LocationData)
-        - access_rule is an attribute that holds a callable (function)
-
-        This handles apworlds like rac2 that store rule functions in LocationData NamedTuples.
-        Instead of creating a non-functional reference, we inline the actual rule function.
-
-        Returns:
-            The analyzed rule dict if the pattern matches, None otherwise.
-        """
-        if not isinstance(node, ast.Call):
-            return None
-
-        # Check if func is an attribute access
-        func = node.func
-        if not isinstance(func, ast.Attribute):
-            return None
-
-        attr_name = func.attr
-
-        # Check if the object is a simple name (variable reference)
-        if not isinstance(func.value, ast.Name):
-            return None
-
-        var_name = func.value.id
-
-        # Check if the variable is in closure_vars
-        if not hasattr(self, 'closure_vars') or var_name not in self.closure_vars:
-            return None
-
-        closure_obj = self.closure_vars[var_name]
-
-        # Check if it's a NamedTuple (has _fields) with the requested attribute
-        if not hasattr(closure_obj, '_fields') or not hasattr(closure_obj, attr_name):
-            return None
-
-        attr_value = getattr(closure_obj, attr_name, None)
-
-        # Check if the attribute is a callable
-        if attr_value is None or not callable(attr_value):
-            return None
-
-        logging.debug(f"_try_inline_namedtuple_callable: Detected {var_name}.{attr_name} as callable on NamedTuple")
-
-        # Inline the callable by analyzing it recursively
-        from ..analysis import analyze_rule
-        analyzed = analyze_rule(
-            rule_func=attr_value,
-            closure_vars=self.closure_vars.copy(),
-            seen_funcs=self.seen_funcs,
-            game_handler=self.game_handler,
-            player_context=self.player_context,
-            rule_target_name=getattr(self, 'rule_target_name', None),
-            target_type=getattr(self, 'target_type', None)
-        )
-
-        if analyzed and analyzed.get('type') != 'error':
-            logging.debug(f"_try_inline_namedtuple_callable: Successfully inlined {var_name}.{attr_name}: {analyzed.get('type')}")
-            return analyzed
-        else:
-            logging.warning(f"_try_inline_namedtuple_callable: Failed to analyze {var_name}.{attr_name}")
-            return None
-
     def _try_handle_entrance_access_rule(self, node) -> Optional[Dict[str, Any]]:
         """
         Detect and handle the pattern: entrance_var.access_rule(...)
@@ -652,6 +581,73 @@ class PatternDetectionMixin:
             return result
 
         return None
+
+    def _try_inline_namedtuple_callable(self, node) -> Optional[Dict[str, Any]]:
+        """
+        Detect and inline callable attributes on NamedTuple closure variables.
+
+        Pattern: loc.access_rule(state, player) where:
+        - loc is a NamedTuple in closure_vars (e.g., LocationData)
+        - access_rule is an attribute that holds a callable (function)
+
+        This handles apworlds like rac2 that store rule functions in LocationData NamedTuples.
+        Instead of creating a non-functional reference, we inline the actual rule function.
+
+        Returns:
+            The analyzed rule dict if the pattern matches, None otherwise.
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check if func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute):
+            return None
+
+        attr_name = func.attr
+
+        # Check if the object is a simple name (variable reference)
+        if not isinstance(func.value, ast.Name):
+            return None
+
+        var_name = func.value.id
+
+        # Check if the variable is in closure_vars
+        if not hasattr(self, 'closure_vars') or var_name not in self.closure_vars:
+            return None
+
+        closure_obj = self.closure_vars[var_name]
+
+        # Check if it's a NamedTuple (has _fields) with the requested attribute
+        if not hasattr(closure_obj, '_fields') or not hasattr(closure_obj, attr_name):
+            return None
+
+        attr_value = getattr(closure_obj, attr_name, None)
+
+        # Check if the attribute is a callable
+        if attr_value is None or not callable(attr_value):
+            return None
+
+        logging.debug(f"_try_inline_namedtuple_callable: Detected {var_name}.{attr_name} as callable on NamedTuple")
+
+        # Inline the callable by analyzing it recursively
+        from ..analysis import analyze_rule
+        analyzed = analyze_rule(
+            rule_func=attr_value,
+            closure_vars=self.closure_vars.copy(),
+            seen_funcs=self.seen_funcs,
+            game_handler=self.game_handler,
+            player_context=self.player_context,
+            rule_target_name=getattr(self, 'rule_target_name', None),
+            target_type=getattr(self, 'target_type', None)
+        )
+
+        if analyzed and analyzed.get('type') != 'error':
+            logging.debug(f"_try_inline_namedtuple_callable: Successfully inlined {var_name}.{attr_name}: {analyzed.get('type')}")
+            return analyzed
+        else:
+            logging.warning(f"_try_inline_namedtuple_callable: Failed to analyze {var_name}.{attr_name}")
+            return None
 
     def _try_handle_dict_lambda_lookup(self, node) -> Optional[Dict[str, Any]]:
         """

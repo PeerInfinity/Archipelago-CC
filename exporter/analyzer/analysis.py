@@ -15,7 +15,7 @@ from typing import Optional, Callable, Dict, Any, Tuple
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
-from .cache import parameterless_func_cache, closure_aware_cache, get_closure_aware_cache_key
+from .cache import parameterless_func_cache, closure_func_identity_cache
 from exporter.constants import MAX_ANALYZE_RULE_CALLS
 from exporter.profiling import profiler
 
@@ -140,20 +140,21 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
     # Check parameterless function cache for functions that only take state/player/world
     # This avoids re-analyzing the same helper function multiple times
     cache_key = None
-    closure_cache_key = None
+    identity_cache_key = None
     if rule_func is not None and not preserve_parameter_names:
         cache_key = _is_cacheable_function(rule_func)
         if cache_key and cache_key in parameterless_func_cache:
             logging.debug(f"analyze_rule: Cache hit for parameterless function at {cache_key}")
             return parameterless_func_cache[cache_key]
 
-        # Check closure-aware cache for functions with closures
-        # This allows caching lambdas at the same source location with equivalent closures
-        if cache_key is None:  # Has closures, wasn't cacheable by parameterless cache
-            closure_cache_key = get_closure_aware_cache_key(rule_func)
-            if closure_cache_key and closure_cache_key in closure_aware_cache:
-                logging.debug(f"analyze_rule: Closure-aware cache hit for {closure_cache_key[0]}:{closure_cache_key[1]}")
-                return closure_aware_cache[closure_cache_key]
+        # For functions with closures (cache_key is None), check identity cache
+        # This caches by function object identity, important for entrance shuffle
+        # which creates deeply nested add_rule chains with the same function objects
+        if cache_key is None:
+            identity_cache_key = id(rule_func)
+            if identity_cache_key in closure_func_identity_cache:
+                logging.debug(f"analyze_rule: Cache hit for closure function id={identity_cache_key}")
+                return closure_func_identity_cache[identity_cache_key]
 
     logging.debug("\n--- Starting Rule Analysis ---")
 
@@ -375,10 +376,11 @@ def _analyze_rule_impl(rule_func: Optional[Callable[[Any], bool]] = None,
                 parameterless_func_cache[cache_key] = final_result
                 logging.debug(f"analyze_rule: Cached result for parameterless function at {cache_key}")
 
-            # Cache in closure-aware cache for functions with closures
-            if closure_cache_key is not None and final_result.get('type') != 'error':
-                closure_aware_cache[closure_cache_key] = final_result
-                logging.debug(f"analyze_rule: Cached result in closure-aware cache for {closure_cache_key[0]}:{closure_cache_key[1]}")
+            # Cache successful results for closure functions by identity
+            # This is important for entrance shuffle which creates deeply nested add_rule chains
+            if identity_cache_key is not None and final_result.get('type') != 'error':
+                closure_func_identity_cache[identity_cache_key] = final_result
+                logging.debug(f"analyze_rule: Cached result for closure function id={identity_cache_key}")
 
         # Always log the final result (or error structure) being returned
         try:

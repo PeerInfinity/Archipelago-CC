@@ -3301,11 +3301,6 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_fire_source",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "AST_function_call",
                   "args": {
                     "function": {
@@ -3318,6 +3313,11 @@
                     },
                     "_original_ast_type": "function_call"
                   },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_fire_source",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
@@ -6106,18 +6106,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Big Bomb Shop"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "East Dark World"
-                  }
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -6135,6 +6123,18 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Bomb Shop"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "East Dark World"
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -8433,20 +8433,6 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "has_hearts",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 4
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
                               "rule": "can_extend_magic",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
@@ -8460,6 +8446,20 @@
                                 },
                                 {
                                   "rule": "True_"
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "has_hearts",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": 4
+                                  },
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -8551,8 +8551,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Hookshot"
+                  "Hookshot",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -8574,8 +8574,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Hookshot"
+                  "Hookshot",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -8631,8 +8631,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Hookshot"
+                  "Hookshot",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -8876,8 +8876,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Magic Mirror",
                   "Flippers",
+                  "Magic Mirror",
                   "Open Floodgate"
                 ]
               }
@@ -11743,8 +11743,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Cane of Somaria"
+                  "Cane of Somaria",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -11766,9 +11766,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
                   "Cane of Somaria",
-                  "Fire Rod"
+                  "Fire Rod",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -11790,9 +11790,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
                   "Cane of Somaria",
-                  "Fire Rod"
+                  "Fire Rod",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -12399,9 +12399,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
                       "Big Key (Turtle Rock)",
-                      "Cane of Somaria"
+                      "Cane of Somaria",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -12857,9 +12857,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Lamp",
                       "Big Key (Palace of Darkness)",
-                      "Hammer"
+                      "Hammer",
+                      "Lamp"
                     ]
                   }
                 }
@@ -15027,8 +15027,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Big Key (Ganons Tower)"
+                  "Big Key (Ganons Tower)",
+                  "Moon Pearl"
                 ]
               }
             },

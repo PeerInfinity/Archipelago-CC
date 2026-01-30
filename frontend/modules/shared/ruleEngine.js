@@ -986,8 +986,9 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         if (context && typeof context.resolveName === 'function') {
           const boundValue = context.resolveName(rule.name);
           if (boundValue !== undefined) {
-            // If the bound value is a rule object (has a 'type' property), evaluate it recursively
-            if (boundValue && typeof boundValue === 'object' && boundValue.type) {
+            // If the bound value is a rule object (has 'type' or 'rule' property), evaluate it recursively
+            // 'type' = AST format, 'rule' = Rule Builder format
+            if (boundValue && typeof boundValue === 'object' && (boundValue.type || boundValue.rule)) {
               log('debug', `[evaluateRule] Helper '${rule.name}' resolved to bound rule object, evaluating recursively`);
               result = evaluateRule(boundValue, context, depth + 1, localScope);
               break;

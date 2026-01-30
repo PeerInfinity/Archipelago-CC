@@ -5,9 +5,10 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      - 'tests/**/*.py'
       - 'tests/fixtures/**'
-      - 'tests/test_rule_fixtures.py'
-      - 'exporter/analyzer/**/*.py'
+      - 'exporter/**/*.py'
+      - 'rule_builder/**/*.py'
       - 'vitest.config.js'
       - 'package.json'
       - 'package-lock.json'
@@ -16,9 +17,10 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      - 'tests/**/*.py'
       - 'tests/fixtures/**'
-      - 'tests/test_rule_fixtures.py'
-      - 'exporter/analyzer/**/*.py'
+      - 'exporter/**/*.py'
+      - 'rule_builder/**/*.py'
       - 'vitest.config.js'
       - 'package.json'
       - 'package-lock.json'
@@ -46,28 +48,8 @@ jobs:
       - name: Run Vitest tests
         run: npm run test:unit
 
-  python-fixture-tests:
-    name: Python Fixture Tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          check-latest: true
-
-      - name: Install pytest
-        run: pip install pytest
-
-      - name: Run fixture tests
-        run: python -m pytest tests/test_rule_fixtures.py -v
-
-  python-analyzer-tests:
-    name: Python Analyzer Tests
+  python-tests:
+    name: Python Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -110,7 +92,7 @@ jobs:
           source .venv/bin/activate
           pip install pytest
 
-      - name: Run analyzer tests
+      - name: Run all Python tests
         run: |
           source .venv/bin/activate
-          python -m pytest exporter/analyzer/test_ast_visitors.py -v
+          python -m pytest tests/ exporter/analyzer/test_ast_visitors.py -v

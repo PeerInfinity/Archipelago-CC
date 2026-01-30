@@ -1186,3 +1186,210 @@ Document your findings so we can either:
 - `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
 - `scripts/data/apworld-combined-data.json` - APWorld metadata
 """
+
+
+def generate_ut_fuzz_single_failure_prompt(failure_info):
+    """Generate a prompt for debugging a single UT fuzz failure with exact reproduction steps.
+
+    This is used for detailed investigation of a specific failing seed from the
+    single-game UT fuzz workflow. Unlike the multi-game prompt, this provides
+    exact reproduction commands for a specific failing seed.
+
+    Args:
+        failure_info: Dict from get_ut_fuzz_single_failure() containing:
+            - game_name, template, world_directory
+            - base_seed, failing_seed, reproduction_seed
+            - error_type
+            - ut_fuzz stats
+            - default_options, disallow_options (fuzzer options used)
+    """
+    setup_doc = "CC/cloud-setup.md"
+    fuzz_doc = "CC/docs/fuzzer-testing.md"
+
+    game_name = failure_info['game_name']
+    template = failure_info['template']
+    world_dir = failure_info['world_directory']
+    base_seed = failure_info['base_seed']
+    failing_seed = failure_info['failing_seed']
+    reproduction_seed = failure_info['reproduction_seed']
+    error_type = failure_info['error_type']
+    ut_fuzz = failure_info['ut_fuzz']
+    default_options = failure_info.get('default_options')
+    disallow_options = failure_info.get('disallow_options')
+
+    # Format stats
+    total = ut_fuzz.get('total', 0)
+    success = ut_fuzz.get('success', 0)
+    failure = ut_fuzz.get('failure', 0)
+    ignored = ut_fuzz.get('ignored', 0)
+    success_rate = (success / max(total, 1)) * 100
+
+    # Build fuzzer options string for reproduction command
+    fuzzer_opts = ""
+    if default_options:
+        fuzzer_opts += f" --default-options {default_options}"
+    if disallow_options:
+        fuzzer_opts += f' --disallow-options "{disallow_options}"'
+
+    # Build reproduction command
+    if reproduction_seed is not None:
+        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --seed {reproduction_seed}{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
+        repro_explanation = f"""
+The original test used `--seed {base_seed}` with {total} runs.
+Each run `i` is seeded with `base_seed + i`, so run {failing_seed} used `random.seed({base_seed} + {failing_seed}) = random.seed({reproduction_seed})`.
+"""
+        if default_options or disallow_options:
+            repro_explanation += f"""
+**Fuzzer options used:**
+"""
+            if default_options:
+                repro_explanation += f"- Default options: `{default_options}`\n"
+            if disallow_options:
+                repro_explanation += f"- Disallow options: `{disallow_options}`\n"
+
+        repro_explanation += f"""
+To reproduce this exact failure:
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```"""
+    else:
+        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
+        repro_explanation = f"""
+**Note**: The original test used a random seed, so exact reproduction is not possible.
+Running the fuzzer again may produce different failures.
+"""
+        if default_options or disallow_options:
+            repro_explanation += f"""
+**Fuzzer options used:**
+"""
+            if default_options:
+                repro_explanation += f"- Default options: `{default_options}`\n"
+            if disallow_options:
+                repro_explanation += f"- Disallow options: `{disallow_options}`\n"
+
+        repro_explanation += f"""
+To run a new test:
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```"""
+
+    # Error type analysis
+    if error_type == 'None' or error_type is None:
+        error_analysis = """
+## Error Analysis: Logic Mismatch
+
+The error type `None` indicates a **logic mismatch** - the Universal Tracker and the
+server disagree about which locations should be accessible.
+
+The failure log will show a message like:
+```
+Locations [LOCATION_NAME] were expected to be in logic but weren't
+```
+
+**Common causes:**
+1. **Entrance shuffle**: Shuffled entrances change region connectivity in ways the tracker doesn't handle
+2. **Option-dependent rules**: Rules behave differently based on game options (mode, glitches, etc.)
+3. **Dynamic state**: Rules involving item counts or progressive items evaluated incorrectly
+4. **Helper function logic**: Helper functions with edge cases not covered
+
+**Investigation approach:**
+1. Read the failure log to identify which location(s) failed
+2. Check the YAML to see which options were randomized
+3. Look for the failing location in the Rules.py or exported rules
+4. Compare rule evaluation between UT and server
+"""
+    else:
+        error_analysis = f"""
+## Error Analysis: {error_type}
+
+The test encountered a Python exception: `{error_type}`
+
+This typically indicates:
+1. Missing helper functions for certain option configurations
+2. Type errors in rule evaluation
+3. Key errors when looking up option-dependent data
+
+**Investigation approach:**
+1. Run the reproduction command to see the full traceback
+2. Identify which function or rule caused the error
+3. Check if the error is in the tracker, exporter, or world code
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {fuzz_doc} for background on UT fuzzer testing.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template}`
+- **World directory**: `worlds/{world_dir}/`
+
+## Test Results Summary
+
+- **Total runs**: {total}
+- **Success**: {success} ({success_rate:.1f}%)
+- **Failures**: {failure}
+- **Ignored**: {ignored}
+
+## The Failing Seed
+
+- **Failing run number**: {failing_seed}
+- **Base seed**: {base_seed if base_seed is not None else 'random'}
+- **Reproduction seed**: {reproduction_seed if reproduction_seed is not None else 'N/A (random base seed)'}
+- **Error type**: {error_type or 'None (logic mismatch)'}
+
+## Exact Reproduction
+{repro_explanation}
+{error_analysis}
+## Investigation Steps
+
+### 1. Reproduce the failure
+
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```
+
+### 2. Examine the failure details
+
+After running the reproduction command, check the generated error files:
+```bash
+cat fuzz_output/error/{world_dir}/0/0.log
+cat fuzz_output/error/{world_dir}/0/0.yaml
+```
+
+The log shows:
+- Which locations were expected in logic but weren't accessible
+- The server's logic spheres at the point of failure
+- Inventory state at the time of failure
+
+The YAML file contains the exact options that caused the failure.
+
+### 3. Identify the root cause
+
+Based on the error analysis above, focus on:
+- The specific location(s) that fail the logic check
+- The option settings that trigger the failure
+- The rule or entrance that evaluates differently
+
+## Goal
+
+Fix the logic mismatch so that this specific seed passes. After fixing:
+
+1. Re-run the reproduction command to verify the fix
+2. Run a broader test to ensure no regressions:
+   ```bash
+   python scripts/test/test-all-ut-fuzz.py --include-list "{template}" --runs 100 --seed {base_seed if base_seed else 1}
+   ```
+
+## Reference Files
+
+- `worlds/{world_dir}/Rules.py` - Location access rules
+- `worlds/{world_dir}/Regions.py` - Region and entrance definitions
+- `exporter/games/{world_dir}.py` - Game-specific exporter (if exists)
+- `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
+- `rule_builder/` - Rule Builder implementation
+"""
