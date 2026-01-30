@@ -1631,8 +1631,6 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                             unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
                                             if unwrapped:
                                                 rule_to_analyze = unwrapped
-                                        elif game_name == "Super Metroid":
-                                            logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
 
                                     # Try special handling first for complex exit rules
                                     if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
@@ -2890,7 +2888,7 @@ def _clear_multiworld_references(multiworld) -> None:
         # Clear world references and world-specific objects (like dungeons)
         if hasattr(multiworld, 'worlds'):
             for player, world in list(multiworld.worlds.items()):
-                # Clear dungeon references (ALttP has dungeons dict that hold multiworld refs)
+                # Clear dungeon references (some games have dungeons dict that hold multiworld refs)
                 if hasattr(world, 'dungeons') and isinstance(world.dungeons, dict):
                     dungeon_count = 0
                     for dungeon in list(world.dungeons.values()):
