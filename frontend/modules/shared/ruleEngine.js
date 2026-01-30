@@ -5041,11 +5041,13 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // Composite rules: And
     case 'And': {
-      if (children.length === 0) return true;
+      // Support both rule.children (legacy) and args.rules (Rule Builder format)
+      const andChildren = args.rules || children;
+      if (andChildren.length === 0) return true;
       let hasUndefined = false;
       let hasSMBool = false;
       let totalDifficulty = 0;
-      for (const childRule of children) {
+      for (const childRule of andChildren) {
         let result = evaluateRule(childRule, context, depth + 1, localScope);
         // Handle SMBool objects from SM helpers - extract bool property and accumulate difficulty
         let boolValue = result;
@@ -5069,11 +5071,13 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // Composite rules: Or
     case 'Or': {
-      if (children.length === 0) return false;
+      // Support both rule.children (legacy) and args.rules (Rule Builder format)
+      const orChildren = args.rules || children;
+      if (orChildren.length === 0) return false;
       let hasUndefined = false;
       let hasSMBool = false;
       let minDifficulty = Infinity;
-      for (const childRule of children) {
+      for (const childRule of orChildren) {
         let result = evaluateRule(childRule, context, depth + 1, localScope);
         // Handle SMBool objects from SM helpers - extract bool property and track min difficulty
         let boolValue = result;
