@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-01-30T07:56:02.438761",
-    "last_updated": "2026-01-30T07:56:02.438769",
+    "last_updated": "2026-01-30T18:35:14.532305",
     "script_version": "1.0.0"
   },
   "results": {
@@ -13,30 +13,30 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.19,
+        "processing_time_seconds": 11.59,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiclient_test": {
-        "client1_event_locations": 0,
-        "client1_event_locations_checked": 0,
-        "client1_locations_checked": 0,
-        "client1_manually_checkable": 0,
-        "client1_manually_checkable_checked": 0,
-        "client1_passed": false,
-        "client1_total_locations": 0,
+        "client1_event_locations": 9,
+        "client1_event_locations_checked": 9,
+        "client1_locations_checked": 232,
+        "client1_manually_checkable": 223,
+        "client1_manually_checkable_checked": 223,
+        "client1_passed": true,
+        "client1_total_locations": 232,
         "client2_locations_received": 0,
         "client2_passed": false,
         "client2_total_locations": 0,
-        "error_count": 6,
-        "locations_checked": 0,
-        "processing_time_seconds": 364.34,
-        "return_code": 1,
-        "single_client_mode": false,
-        "success": false,
-        "total_locations": 0,
-        "warning_count": 0
+        "error_count": 0,
+        "locations_checked": 232,
+        "processing_time_seconds": 30.48,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 223,
+        "warning_count": 537
       },
       "rules_file": {
         "path": "frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -46,7 +46,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2026-01-30T07:06:18.444527",
+      "timestamp": "2026-01-30T18:34:32.439911",
       "world_info": {
         "exporter_path": "exporter/games/official/ahit.py",
         "exporter_size": 18402,

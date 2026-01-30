@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
+import net from 'net';
 import { spawn, exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -46,6 +47,19 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     }
   }
 
+  // Helper function to get the Python executable path
+  // Uses PYTHON_PATH env var, or .venv/bin/python3 if exists, or falls back to python3
+  function getPythonPath() {
+    if (process.env.PYTHON_PATH) {
+      return process.env.PYTHON_PATH;
+    }
+    const venvPython = '.venv/bin/python3';
+    if (fs.existsSync(venvPython)) {
+      return venvPython;
+    }
+    return 'python3';
+  }
+
   // Helper function to start Archipelago server
   async function startServer(game, seed) {
     // Construct the path to the .archipelago file
@@ -59,9 +73,10 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       throw new Error(`Archipelago file not found: ${fullPath}`);
     }
 
-    console.log(`Starting server with: ${fullPath}`);
+    const pythonPath = getPythonPath();
+    console.log(`Starting server with: ${fullPath} using Python: ${pythonPath}`);
 
-    const serverProc = spawn('python3', [
+    const serverProc = spawn(pythonPath, [
       'MultiServer.py',
       '--host', 'localhost',
       '--port', serverPort.toString(),
@@ -82,7 +97,9 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     const maxWaitTime = 120000; // 120 seconds
     let serverReady = false;
 
+    let attemptCount = 0;
     while (Date.now() - startTime < maxWaitTime) {
+      attemptCount++;
       // Check if server process has exited
       if (serverProc.exitCode !== null) {
         throw new Error('Server failed to start - process exited');
@@ -90,7 +107,6 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
       // Try to connect to see if server is ready
       try {
-        const net = require('net');
         await new Promise((resolve, reject) => {
           const socket = new net.Socket();
           socket.setTimeout(500);
@@ -111,12 +127,17 @@ test.describe('Multiplayer Client Interaction Tests', () => {
         serverReady = true;
         break;
       } catch (e) {
+        // Log every 10 attempts (5 seconds)
+        if (attemptCount % 10 === 0) {
+          console.log(`Server connection attempt ${attemptCount}: ${e.message}`);
+        }
         // Server not ready yet, wait and retry
         await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
 
     if (!serverReady) {
+      console.log(`Server connection failed after ${attemptCount} attempts over ${Date.now() - startTime}ms`);
       throw new Error('Server failed to start - timeout waiting for port');
     }
 
