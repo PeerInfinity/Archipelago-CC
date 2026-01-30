@@ -102,7 +102,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       attemptCount++;
       // Check if server process has exited
       if (serverProc.exitCode !== null) {
-        throw new Error('Server failed to start - process exited');
+        throw new Error(`Server failed to start - process exited with code ${serverProc.exitCode}`);
       }
 
       // Try to connect to see if server is ready
@@ -111,6 +111,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
           const socket = new net.Socket();
           socket.setTimeout(500);
           socket.on('connect', () => {
+            console.log(`Connection successful on attempt ${attemptCount}`);
             socket.destroy();
             resolve();
           });
