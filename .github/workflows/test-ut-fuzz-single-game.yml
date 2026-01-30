@@ -13,7 +13,7 @@ on:
         description: 'Number of fuzz runs'
         required: true
         type: number
-        default: 50
+        default: 100
 
       jobs:
         description: 'Number of parallel fuzzer jobs. Leave empty to use CPU count.'
@@ -156,9 +156,20 @@ jobs:
             UT_FLAGS="--ut-version modified --no-prefer-native-ut"
           fi
 
+          # Determine seed type for output filename
+          if [ -n "${{ inputs.seed }}" ]; then
+            SEED_TYPE="fixed"
+          else
+            SEED_TYPE="random"
+          fi
+
+          # Use a distinct output file for single-game tests to avoid conflicts with main workflow
+          OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-${SEED_TYPE}-seed.json"
+
           # Build command with optional arguments
           CMD="python scripts/test/test-all-ut-fuzz.py"
           CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --output-file \"${OUTPUT_FILE}\""
           CMD="$CMD --runs ${{ inputs.runs }}"
           CMD="$CMD ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }}"
           CMD="$CMD --timeout ${{ inputs.timeout }}"
@@ -192,8 +203,8 @@ jobs:
           # Create new branch from current HEAD
           git checkout -b "${{ steps.branch-name.outputs.branch_name }}"
 
-          # Add test results
-          git add -f scripts/output/ut-fuzz/test-results-*.json || true
+          # Add test results (single-game results only)
+          git add -f scripts/output/ut-fuzz/test-results-single-game-*.json || true
 
           # Add fuzz output if it exists (for debugging failures)
           if [ -d "fuzz_output" ]; then
@@ -225,7 +236,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}
-          path: scripts/output/ut-fuzz/test-results-*.json
+          path: scripts/output/ut-fuzz/test-results-single-game-*.json
           retention-days: 30
 
       - name: Upload fuzz output artifact
