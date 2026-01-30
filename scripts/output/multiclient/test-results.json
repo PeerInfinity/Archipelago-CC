@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-01-30T07:56:02.438761",
-    "last_updated": "2026-01-30T07:56:02.438769",
+    "last_updated": "2026-01-30T18:32:23.931600",
     "script_version": "1.0.0"
   },
   "results": {
@@ -117,30 +117,30 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.95,
+        "processing_time_seconds": 7.15,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiclient_test": {
         "client1_event_locations": 0,
         "client1_event_locations_checked": 0,
-        "client1_locations_checked": 0,
-        "client1_manually_checkable": 0,
-        "client1_manually_checkable_checked": 0,
-        "client1_passed": false,
-        "client1_total_locations": 0,
+        "client1_locations_checked": 131,
+        "client1_manually_checkable": 131,
+        "client1_manually_checkable_checked": 131,
+        "client1_passed": true,
+        "client1_total_locations": 131,
         "client2_locations_received": 0,
         "client2_passed": false,
         "client2_total_locations": 0,
-        "error_count": 6,
-        "locations_checked": 0,
-        "processing_time_seconds": 364.36,
-        "return_code": 1,
-        "single_client_mode": false,
-        "success": false,
-        "total_locations": 0,
-        "warning_count": 0
+        "error_count": 0,
+        "locations_checked": 131,
+        "processing_time_seconds": 22.97,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 131,
+        "warning_count": 351
       },
       "rules_file": {
         "path": "frontend/presets/shorthike/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -150,7 +150,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Short Hike.yaml",
-      "timestamp": "2026-01-30T07:05:56.603579",
+      "timestamp": "2026-01-30T18:31:53.790839",
       "world_info": {
         "exporter_path": "exporter/games/unofficial/shorthike.py",
         "exporter_size": 16628,
