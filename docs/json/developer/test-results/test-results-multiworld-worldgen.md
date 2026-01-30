@@ -6,9 +6,7 @@
 
 [📖 Learn about this test](../tests/test-multiworld.md)
 
-[View Original Template Results](./test-results-multiworld.md)
-
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 05:19:43
 
 ## Summary
 
