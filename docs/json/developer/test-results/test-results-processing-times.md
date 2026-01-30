@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-29 03:58:04
+**Generated:** 2026-01-29 04:12:01
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -110,8 +110,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Yoshi's Island | 20.3s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+3 more) |
+| 2 | Wargroove | 18.9s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 3 | TUNIC | 18.6s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+2 more) |
+| 4 | TOEM rule builder | 18.2s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 5 | Super Metroid | 18.2s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+1 more) |
+| 6 | Shivers | 18.0s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 7 | Metamath | 17.2s | 5 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml |
+| 8 | Stardew Valley | 15.6s | 6 | APQuest.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 9 | Sonic Adventure 2 Battle | 15.6s | 6 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+1 more) |
+| 10 | Muse Dash | 13.1s | 5 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 65.2s | 6 | APQuest.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 2 | Secret of Evermore | 63.1s | 5 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml, Meritous.yaml, Secret of Evermore.yaml |
+| 3 | Super Metroid | 47.6s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+1 more) |
+| 4 | Kirby's Dream Land 3 | 43.9s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml |
+| 5 | Lingo | 43.8s | 4 | A Short Hike.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml |
+| 6 | Final Fantasy Mystic Quest | 43.3s | 3 | Adventure.yaml, Choo-Choo Charles.yaml, Final Fantasy Mystic Quest.yaml |
+| 7 | Raft | 42.8s | 5 | Baking Adventure.yaml, Coding Adventure.yaml, Hylics 2.yaml, Math Adventure.yaml, Raft.yaml |
+| 8 | Kingdom Hearts 2 | 37.9s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml |
+| 9 | Dark Souls III | 31.0s | 3 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml |
+| 10 | Subnautica | 25.8s | 5 | Adventure.yaml, Choo-Choo Charles.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml, Subnautica.yaml |
