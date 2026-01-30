@@ -4,7 +4,7 @@ Exports required_technologies dict and simplifies technology.name attribute acce
 in all_of rules. Progressive item mapping is auto-detected from progressive_technology_table.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from ..base import GenericGameExportHandler
 
 
@@ -36,6 +36,9 @@ class FactorioGameExportHandler(GenericGameExportHandler):
 
         Simplifies 'technology.name' to just 'technology' when iterating over
         required_technologies, since exported JSON has tech names as strings.
+
+        Also handles the already-expanded case where all() has been collapsed
+        to a single ItemCheck with Attribute access on a Constant.
         """
         if not rule:
             return rule
@@ -59,8 +62,100 @@ class FactorioGameExportHandler(GenericGameExportHandler):
                 if simplified:
                     rule_data['element_rule'] = simplified
 
-        # Let base class handle all standard processing
+        # Handle already-expanded ItemCheck rules with Attribute access on Constant
+        # This happens when all() with a single-item iterator gets collapsed
+        simplified = self._simplify_expanded_item_check(rule)
+        if simplified:
+            rule = simplified
+
+        # Let base class handle all standard processing (which recursively processes children)
         return super().expand_rule(rule, _depth)
+
+    def _simplify_expanded_item_check(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Simplify already-expanded ItemCheck rules with Attribute access on Constant.
+
+        When all(state.has(tech.name, player) for tech in [Technology('foo')]) is expanded
+        with a single item, it becomes:
+
+        Rule Builder format:
+        {
+            "rule": "ItemCheck",
+            "args": {
+                "item": {
+                    "rule": "Attribute",
+                    "args": {
+                        "object": {"rule": "Constant", "args": {"value": "foo"}},
+                        "attr": "name"
+                    }
+                },
+                "count": 1
+            }
+        }
+
+        AST format:
+        {
+            "type": "item_check",
+            "item": {
+                "type": "attribute",
+                "object": {"type": "constant", "value": Technology(foo)},
+                "attr": "name"
+            }
+        }
+
+        This should be simplified to just check for the item "foo".
+        The value can be either a string or a Technology object with a .name attribute.
+        """
+        if not rule:
+            return None
+
+        def extract_name(value):
+            """Extract the name from a value - handles strings and objects with .name attribute."""
+            if isinstance(value, str):
+                return value
+            if hasattr(value, 'name'):
+                return value.name
+            return None
+
+        # Check Rule Builder format
+        if rule.get('rule') == 'ItemCheck':
+            args = rule.get('args', {})
+            item = args.get('item', {})
+
+            if item.get('rule') == 'Attribute':
+                attr_args = item.get('args', {})
+                if attr_args.get('attr') == 'name':
+                    obj = attr_args.get('object', {})
+                    if obj.get('rule') == 'Constant':
+                        const_args = obj.get('args', {})
+                        value = const_args.get('value')
+                        name = extract_name(value)
+                        if name:
+                            # Simplify to direct item check
+                            return {
+                                'rule': 'ItemCheck',
+                                'args': {
+                                    'item': name,
+                                    'count': args.get('count', 1)
+                                }
+                            }
+
+        # Check AST format
+        if rule.get('type') == 'item_check':
+            item = rule.get('item', {})
+
+            if item.get('type') == 'attribute' and item.get('attr') == 'name':
+                obj = item.get('object', {})
+                if obj.get('type') == 'constant':
+                    value = obj.get('value')
+                    name = extract_name(value)
+                    if name:
+                        # Simplify to direct item check
+                        return {
+                            'type': 'item_check',
+                            'item': name
+                        }
+
+        return None
 
     def _is_required_tech_iterator(self, iterator: Dict[str, Any]) -> bool:
         """Check if iterator is accessing required_technologies[something].
