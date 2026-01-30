@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-01-28 19:16:56
+**Generated:** 2026-01-30 03:18:05
 
 **Source Data Created:** 2026-01-22T20:59:24.837945
 
@@ -47,23 +47,23 @@
 
 Of the 61 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 39/61 (63.9%)
+- **Passing with Generic Exporter:** 38/61 (62.3%)
 - **Passing with Generic Logic:** 61/61 (100.0%)
-- **Passing with Both Generic:** 39/61 (63.9%)
+- **Passing with Both Generic:** 38/61 (62.3%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 692.3KB
+- **Total Exporter Code:** 710.7KB
 - **Total Game Logic Code:** 652.0KB
-- **Combined Total:** 1344.3KB
+- **Combined Total:** 1362.7KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | 119.3KB | ✅ | 648.6KB |
-| A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 410.7KB |
+| A Link to the Past | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | 121.4KB | ✅ | 648.6KB |
+| A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |

@@ -121,6 +121,14 @@ class BinaryOpProcessor:
             The list length, or None if it can't be resolved
         """
         try:
+            # Handle constant lists directly
+            if list_ref and list_ref.get('type') == 'constant':
+                constant_value = list_ref.get('value')
+                if isinstance(constant_value, list):
+                    length = len(constant_value)
+                    logging.debug(f"Resolved length of constant list to {length}")
+                    return length
+
             # Handle direct name references to known collections
             if list_ref and list_ref.get('type') == 'name':
                 name = list_ref.get('name')

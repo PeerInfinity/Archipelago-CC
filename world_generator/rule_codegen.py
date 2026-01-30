@@ -6,7 +6,11 @@ that uses the Rule Builder pattern.
 """
 
 import copy
+import logging
+import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
+
+logger = logging.getLogger(__name__)
 
 
 class RuleCodeGenerator:
@@ -24,6 +28,7 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        self.entrance_regions: Dict[str, str] = {}  # entrance_name -> parent_region_name
         # Context for current location/entrance being processed
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
@@ -54,6 +59,18 @@ class RuleCodeGenerator:
         self.helper_params = helper_params or {}  # helper_name -> list of param names
         self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
         self.placements = placements or {}  # location_name -> item_name
+
+    def set_entrance_regions(self, entrance_regions: Dict[str, str]) -> None:
+        """Set the entrance-to-parent-region mapping.
+
+        This is used to resolve Attribute rules like `entrance.parent_region`
+        when the entrance name is known. For example, 'kikiskip.parent_region'
+        would resolve to the parent region of the 'Kiki Skip' entrance.
+
+        Args:
+            entrance_regions: Dict mapping entrance name (lowercase) to parent region name
+        """
+        self.entrance_regions = entrance_regions
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
@@ -5315,13 +5332,40 @@ class RuleCodeGenerator:
 
             # Case 5: element_rule is a helper with name "rule" - items ARE the rules to evaluate
             # This pattern: any(rule(state) for rule in [rule1_ast, rule2_ast, ...])
-            # Where each rule in the list is itself an AST expression
+            # Where each rule in the list is itself an AST expression (or Rule Builder format)
             if (element_rule.get('type') == 'helper' and element_rule.get('name') == 'rule' and
-                    all(isinstance(item, dict) and 'type' in item for item in items)):
-                # Each item is an AST rule - recursively process them
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is an AST/Rule Builder rule - recursively process them
                 checks = []
                 for item in items:
-                    # Items already have 'type' key, pass directly to _convert_rule
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 6: element_rule is a constant true and items are rule dicts
+            # This pattern: any(rule for rule in [rule1, rule2, ...])
+            # Where iterator items ARE the rules to evaluate (bunny revival pattern)
+            # The element_rule being constant True means "evaluate the rule value"
+            if (element_rule.get('type') == 'constant' and element_rule.get('value') is True and
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is a rule - recursively process them
+                checks = []
+                for item in items:
                     check = self._convert_rule(item)
                     if check and check not in ('True', 'True_()'):
                         checks.append(check)
@@ -5345,7 +5389,8 @@ class RuleCodeGenerator:
             if len(items) == 1:
                 item = items[0]
                 # Check if item is an AST expression (dict with 'type' key)
-                if isinstance(item, dict) and 'type' in item:
+                # or Rule Builder format (dict with 'rule' key)
+                if isinstance(item, dict) and ('type' in item or 'rule' in item):
                     return self._convert_rule(item)
                 item_escaped = self._escape_string(str(item), "'")
                 self.required_imports.add('Has')
@@ -5355,7 +5400,8 @@ class RuleCodeGenerator:
                 has_checks = []
                 for item in items:
                     # Check if item is an AST expression (dict with 'type' key)
-                    if isinstance(item, dict) and 'type' in item:
+                    # or Rule Builder format (dict with 'rule' key)
+                    if isinstance(item, dict) and ('type' in item or 'rule' in item):
                         check = self._convert_rule(item)
                         has_checks.append(check)
                     else:
@@ -6147,6 +6193,25 @@ class RuleCodeGenerator:
                             arg_strs.append(compare_result)
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'Attribute':
+                        # Handle Attribute rules like entrance.parent_region
+                        # This is used by ALttP glitch rules (e.g., can_bomb_clip(kikiskip.parent_region))
+                        obj_info = arg.get('args', {}).get('object', {})
+                        attr_name = arg.get('args', {}).get('attr', '')
+                        if obj_info.get('rule') == 'Name' and attr_name == 'parent_region':
+                            # This is entrance_name.parent_region - resolve to actual region
+                            entrance_var = obj_info.get('args', {}).get('name', '')
+                            # Normalize the entrance name (lowercase, no spaces)
+                            entrance_key = entrance_var.lower().replace(' ', '')
+                            if entrance_key in self.entrance_regions:
+                                region_name = self.entrance_regions[entrance_key]
+                                arg_strs.append(repr(region_name))
+                            else:
+                                # Unknown entrance - fall back to None
+                                arg_strs.append('None')
+                        else:
+                            # Other Attribute patterns - fall back to None
+                            arg_strs.append('None')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
@@ -6184,6 +6249,11 @@ class RuleCodeGenerator:
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
+        print(
+            f"LOSSY FALLBACK: Unknown helper '{helper_name}' in _convert_rule_builder_helper, "
+            f"using True_() (always accessible) as fallback",
+            file=sys.stderr
+        )
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -7375,13 +7445,26 @@ class HelperCodeGenerator:
             # Handle helper calls with _original_ast_type marker
             if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
                 helper_name = rule_type
-                func_name = self.get_function_name(helper_name)
-                # Check for args - this can be a list of arguments to pass to the helper
-                args = expr.get('args', [])
-                if args and isinstance(args, list):
-                    arg_exprs = [self._generate_expression(a) for a in args]
-                    return f'{func_name}(state, player, {", ".join(arg_exprs)})'
-                return f'{func_name}(state, player)'
+                # Only generate function call if helper is known (has a definition)
+                # Unknown helpers should return True as a placeholder to avoid NameError
+                if helper_name in self.known_helpers:
+                    func_name = self.get_function_name(helper_name)
+                    # Check for args - this can be a list of arguments to pass to the helper
+                    args = expr.get('args', [])
+                    if args and isinstance(args, list):
+                        arg_exprs = [self._generate_expression(a) for a in args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+                    return f'{func_name}(state, player)'
+                else:
+                    # Unknown helper - return True as placeholder
+                    # This makes locations more accessible, which is appropriate for worldgen
+                    # since unknown helpers are typically progression checks
+                    print(
+                        f"LOSSY FALLBACK: Unknown helper '{helper_name}' in lambda expression, "
+                        f"using True (always accessible) as fallback",
+                        file=sys.stderr
+                    )
+                    return 'True'
 
             # Handle AST_placement_search (check if item is at any of listed locations)
             if rule_type == 'AST_placement_search':
@@ -8617,6 +8700,11 @@ class HelperCodeGenerator:
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
+        print(
+            f"LOSSY FALLBACK: Unknown helper '{name}' in _expr_helper, "
+            f"using True (always accessible) as fallback",
+            file=sys.stderr
+        )
         return 'True'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:

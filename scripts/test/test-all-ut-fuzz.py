@@ -654,6 +654,8 @@ def main():
             "runs_per_game": args.runs,
             "jobs": args.jobs,
             "timeout": args.timeout,
+            "default_options": args.default_options,
+            "disallow_options": args.disallow_options,
             "total_templates": len(template_files)
         },
         "results": {}

@@ -981,6 +981,9 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             # Don't add error to export_data - exporter settings can fall back to defaults
 
         # Get helper definitions using handler
+        # Reset counter before helper analysis to prevent false "infinite loop" detection
+        # from accumulated counts during location/entrance rule analysis
+        reset_analyze_rule_counter()
         with profiler.section("get_helper_definitions"):
             try:
                 helper_definitions = game_handler.get_helper_definitions(world)
