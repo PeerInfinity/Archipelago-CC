@@ -5809,7 +5809,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking options`);
 
       // Check for _original_ast_type to determine if this should be delegated to AST evaluator
-      const originalAstType = args?._original_ast_type;
+      // Note: _original_ast_type may be at top level (rule._original_ast_type) or inside args (args._original_ast_type)
+      const originalAstType = rule._original_ast_type || args?._original_ast_type;
       if (originalAstType && originalAstType !== 'helper') {
         // This was converted from an AST rule that we should try to evaluate as AST
         log('debug', `[evaluateRuleBuilderRule] Delegating to AST evaluator for type '${originalAstType}'`);
@@ -5832,11 +5833,12 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       // Handle as helper (converted from AST helper or unknown Rule Builder type)
       // New format: {rule: "helper_name", args: [...], _original_ast_type: "helper"}
       // Old format: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
+      // Raft format: {rule: "helper_name", _original_ast_type: "helper"} (no args)
       let helperArgs;
       if (Array.isArray(args)) {
         // New flattened format - args is directly an array
         helperArgs = args;
-      } else if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+      } else if ((rule._original_ast_type === 'helper' || args._original_ast_type === 'helper') && Array.isArray(args.args)) {
         // Old nested format - args.args contains the helper arguments
         helperArgs = args.args;
       } else {

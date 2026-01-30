@@ -5,7 +5,7 @@ analyzed by the standard AST analyzer. This handler uses locations.json to resol
 which rules apply to each location, then constructs the appropriate rule structures.
 """
 
-from typing import Optional
+from typing import Optional, Set
 from ..base import GenericGameExportHandler
 import json
 import logging
@@ -39,6 +39,35 @@ class RaftGameExportHandler(GenericGameExportHandler):
     # Use resolved_items for progressive item tracking (e.g., "Smelter" not "progressive-metals")
     USE_RESOLVED_ITEMS = True
     ADD_SPHERE_ITEMS_UPFRONT = True
+
+    # Export all helper functions used in the manually constructed rules
+    # These helpers are defined in worlds/raft/Rules.py as methods on RaftLogic class
+    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
+        # Region access helpers
+        'raft_can_access_radio_tower',
+        'raft_can_access_vasagatan',
+        'raft_can_access_balboa_island',
+        'raft_can_access_caravan_island',
+        'raft_can_access_tangaroa',
+        'raft_can_access_varuna_point',
+        'raft_can_access_temperance',
+        'raft_can_access_utopia',
+        'raft_can_complete_temperance',
+        # Item/crafting helpers
+        'raft_big_islands_available',
+        'raft_can_smelt_items',
+        'raft_can_craft_bolt',
+        'raft_can_craft_hinge',
+        'raft_can_craft_circuitBoard',
+        'raft_can_craft_plasticBottle',
+        'raft_can_craft_birdNest',
+        'raft_can_craft_shears',
+        'raft_can_craft_machete',
+        'raft_can_craft_ziplineTool',
+        'raft_can_capture_animals',
+        'raft_can_get_dirt',
+        'raft_can_find_titanium',
+    }
 
     # Maps material/item names to their access rules (from itemChecks in Rules.py)
     ITEM_CHECK_RULES = {
@@ -90,7 +119,7 @@ class RaftGameExportHandler(GenericGameExportHandler):
         # Load locations.json to get location→region mapping and required items
         self.location_to_region = {}
         self.location_to_items = {}
-        raft_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'worlds', 'raft')
+        raft_dir = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'worlds', 'raft')
         locations_file = os.path.join(raft_dir, 'locations.json')
         try:
             with open(locations_file, 'r') as f:
