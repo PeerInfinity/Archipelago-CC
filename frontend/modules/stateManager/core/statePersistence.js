@@ -669,13 +669,18 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
 
       // Check if there's a helper function that computes this value
       // SC2 uses this for power_rating which is computed from inventory state
+      // NOTE: Only call helpers that take exactly 2 arguments (snapshot, staticData).
+      // Helpers requiring additional arguments (like 'has', 'count') should NOT be
+      // called here - they need to go through the normal executeHelper path.
       const gameName = sm.rules?.game_name;
       if (gameName) {
         const gameLogic = getGameLogic(gameName);
         const computedHelpers = gameLogic?.helperFunctions;
         if (computedHelpers) {
           // Try exact match first (e.g., 'power_rating' -> power_rating helper)
-          if (typeof computedHelpers[name] === 'function') {
+          const helperFn = computedHelpers[name];
+          // Only call if it takes 0-2 arguments (snapshot, staticData) - not helpers requiring more args
+          if (typeof helperFn === 'function' && helperFn.length <= 2) {
             // Create a lightweight snapshot for the helper
             const snapshot = {
               inventory: sm.inventory,
@@ -685,13 +690,15 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
               checkedLocations: Array.from(sm.checkedLocations || [])
             };
             const staticData = getStaticGameData(sm);
-            return computedHelpers[name](snapshot, staticData);
+            return helperFn(snapshot, staticData);
           }
           // Try with game-specific prefixes if defined (e.g., 'power_rating' -> 'terran_power_rating' for SC2)
           const prefixes = gameLogic.helperPrefixes || [];
           for (const prefix of prefixes) {
             const prefixedName = prefix + name;
-            if (typeof computedHelpers[prefixedName] === 'function') {
+            const prefixedHelperFn = computedHelpers[prefixedName];
+            // Only call if it takes 0-2 arguments (snapshot, staticData)
+            if (typeof prefixedHelperFn === 'function' && prefixedHelperFn.length <= 2) {
               const snapshot = {
                 inventory: sm.inventory,
                 flags: sm.gameStateModule?.flags || [],
@@ -700,7 +707,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
                 checkedLocations: Array.from(sm.checkedLocations || [])
               };
               const staticData = getStaticGameData(sm);
-              return computedHelpers[prefixedName](snapshot, staticData);
+              return prefixedHelperFn(snapshot, staticData);
             }
           }
         }
