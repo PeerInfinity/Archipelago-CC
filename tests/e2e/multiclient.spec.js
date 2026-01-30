@@ -82,13 +82,33 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       '--port', serverPort.toString(),
       fullPath
     ], {
-      stdio: ['ignore', 'pipe', 'pipe']
+      stdio: ['ignore', 'pipe', 'pipe'],
+      detached: true  // Prevent server from being killed when test ends
+    });
+
+    // Track server process events
+    serverProc.on('error', (err) => {
+      console.log(`Server process error: ${err.message}`);
+    });
+    serverProc.on('exit', (code, signal) => {
+      console.log(`Server process exited with code ${code}, signal ${signal}`);
     });
 
     // Redirect server output to a log file
     const logStream = fs.createWriteStream('server_log.txt', { flags: 'w' });
     serverProc.stdout.pipe(logStream);
     serverProc.stderr.pipe(logStream);
+
+    // Also log stdout to console for debugging
+    serverProc.stdout.on('data', (data) => {
+      const line = data.toString().trim();
+      if (line.includes('listening') || line.includes('error') || line.includes('Error')) {
+        console.log(`SERVER: ${line}`);
+      }
+    });
+    serverProc.stderr.on('data', (data) => {
+      console.log(`SERVER STDERR: ${data.toString().trim()}`);
+    });
 
     // Wait for server to start
     // Note: Loading 70+ apworlds can take significant time on CI runners,
@@ -126,6 +146,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
           socket.connect(serverPort, 'localhost');
         });
         serverReady = true;
+        console.log(`Server ready after ${attemptCount} attempts`);
         break;
       } catch (e) {
         // Log every 10 attempts (5 seconds)
