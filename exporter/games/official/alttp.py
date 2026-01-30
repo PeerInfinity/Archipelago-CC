@@ -11,11 +11,10 @@ This exporter handles ALttP-specific helpers that are used in rules:
 These helpers have option-dependent logic that must be exported as definitions
 so the worldgen world can evaluate them correctly at runtime.
 
-This exporter also handles:
-- Superbunny accessible locations: In glitch modes (minor_glitches, overworld_glitches,
-  hybrid_major_glitches, no_logic), certain locations can be accessed in superbunny state
-  without Moon Pearl. These are exported with True_ rules since the complex bunny rule
-  analysis can miss some valid access paths.
+Note: The complex bunny rule for Superbunny Cave locations uses the default AST
+analysis. Previous True_ overrides caused logic mismatches in certain entrance
+shuffle configurations. The AST analysis may produce incomplete entrance path
+rules for multi-hop paths, but this is preferable to the permissive True_ rule.
 """
 
 from typing import Dict, Any, Set, Optional
@@ -23,26 +22,6 @@ from ..base import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-# Superbunny accessible locations that can be accessed WITHOUT Magic Mirror
-# In set_bunny_rules, locations entered via 'Superbunny Cave (Bottom)' don't need Mirror.
-# Other superbunny accessible locations still require Magic Mirror.
-# This matches the logic in worlds.alttp.Rules.set_bunny_rules lines 1740-1743.
-SUPERBUNNY_NO_MIRROR_LOCATIONS = frozenset([
-    # Locations in Superbunny Cave (Top) region, accessed via Superbunny Cave (Bottom)
-    'Superbunny Cave - Top',
-    'Superbunny Cave - Bottom',
-])
-
-# Glitch modes that allow superbunny access (from ALttP options)
-# These values correspond to the glitches_required option
-GLITCH_MODES_WITH_SUPERBUNNY = frozenset([
-    'minor_glitches',      # 1
-    'overworld_glitches',  # 2
-    'hybrid_major_glitches',  # 3
-    'no_logic',            # 4
-])
 
 
 class ALttPGameExportHandler(GenericGameExportHandler):
@@ -102,77 +81,7 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
     def __init__(self, world=None):
         super().__init__(world)
-        self._glitch_mode = None  # Cache for glitch mode
         logger.info("ALttP exporter initialized")
-
-    def _get_glitch_mode(self, world) -> Optional[str]:
-        """Get the glitches_required option value for this world."""
-        if self._glitch_mode is not None:
-            return self._glitch_mode
-
-        if world is None:
-            return None
-
-        try:
-            # Try to get glitches_required option
-            if hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
-                glitch_option = world.options.glitches_required
-                # Option might be an int or have a current_key property
-                if hasattr(glitch_option, 'current_key'):
-                    self._glitch_mode = glitch_option.current_key
-                elif hasattr(glitch_option, 'value'):
-                    # Map numeric value to string
-                    value = glitch_option.value
-                    mode_map = {
-                        0: 'no_glitches',
-                        1: 'minor_glitches',
-                        2: 'overworld_glitches',
-                        3: 'hybrid_major_glitches',
-                        4: 'no_logic',
-                    }
-                    self._glitch_mode = mode_map.get(value, 'no_glitches')
-                else:
-                    self._glitch_mode = str(glitch_option)
-                logger.debug(f"ALttP glitch mode: {self._glitch_mode}")
-        except Exception as e:
-            logger.debug(f"Could not determine glitch mode: {e}")
-            self._glitch_mode = None
-
-        return self._glitch_mode
-
-    def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
-        """Override location access rule for superbunny accessible locations that don't need Mirror.
-
-        In glitch modes (minor_glitches, overworld_glitches, hybrid_major_glitches, no_logic),
-        certain locations can be accessed in superbunny state without Moon Pearl.
-
-        However, most superbunny accessible locations still require Magic Mirror to superbunny into.
-        Only locations in Superbunny Cave (entered via the bottom) can be accessed without Mirror.
-
-        The complex bunny rule analysis in set_bunny_rules can miss some valid access paths
-        when there are multiple entrances to a region, so we export True_ for locations that
-        truly don't need any additional requirements beyond reaching the region.
-
-        Returns:
-            Dict with True_ rule if location is superbunny accessible without Mirror,
-            None to use default analysis.
-        """
-        location_name = getattr(location, 'name', None)
-        if not location_name:
-            return None
-
-        # Check if in a glitch mode that allows superbunny access
-        glitch_mode = self._get_glitch_mode(world)
-        if glitch_mode not in GLITCH_MODES_WITH_SUPERBUNNY:
-            return None
-
-        # Only locations that can be accessed without Mirror get True_ rules
-        # Other superbunny accessible locations still need the complex bunny rule
-        if location_name in SUPERBUNNY_NO_MIRROR_LOCATIONS:
-            logger.debug(f"Superbunny location (no mirror) '{location_name}' in {glitch_mode} mode - using True_ rule")
-            return {'rule': 'True_'}
-
-        return None
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Export progressive item mappings for ALttP.
