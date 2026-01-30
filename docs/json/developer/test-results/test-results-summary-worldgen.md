@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 08:09:55
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -51,9 +51,9 @@ Of the 43 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 297.2KB
+- **Total Exporter Code:** 290.1KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 297.2KB
+- **Combined Total:** 290.1KB
 
 ## Test Results
 
@@ -61,7 +61,7 @@ Of the 43 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 246.3KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.7KB | ✅ | 665.7KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.6KB | ✅ | 665.7KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 656.1KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -151,11 +151,11 @@ Of the 43 templates passing all 4 tests:
 | 6 | A Short Hike WorldGen | 16.2KB |
 | 7 | The Messenger WorldGen | 14.7KB |
 | 8 | Final Fantasy Mystic Quest WorldGen | 13.4KB |
-| 9 | A Link to the Past WorldGen | 12.7KB |
-| 10 | Yoshi's Island WorldGen | 9.2KB |
-| 11 | Inscryption WorldGen | 8.0KB |
-| 12 | Links Awakening DX WorldGen | 7.4KB |
-| 13 | The Wind Waker WorldGen | 7.0KB |
+| 9 | Yoshi's Island WorldGen | 9.2KB |
+| 10 | Inscryption WorldGen | 8.0KB |
+| 11 | Links Awakening DX WorldGen | 7.4KB |
+| 12 | The Wind Waker WorldGen | 7.0KB |
+| 13 | A Link to the Past WorldGen | 5.6KB |
 | 14 | Factorio WorldGen | 5.1KB |
 | 15 | Celeste 64 WorldGen | 4.1KB |
 | 16 | Castlevania - Circle of the Moon WorldGen | 4.0KB |

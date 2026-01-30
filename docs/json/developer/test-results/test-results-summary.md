@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 08:09:55
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -24,10 +24,10 @@ Additional information:
 
 ### Individual Test Results
 
-- **Minimal Test:** 65/73 passed (89.0%)
-- **Full Test:** 65/73 passed (89.0%)
+- **Minimal Test:** 64/73 passed (87.7%)
+- **Full Test:** 64/73 passed (87.7%)
 - **Multiclient Test:** 0/73 passed (0.0%)
-- **Multiworld Test:** 62/73 passed (84.9%)
+- **Multiworld Test:** 60/73 passed (82.2%)
 
 ### Intermittent Failures
 
@@ -39,10 +39,10 @@ Additional information:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 0/73 (0.0%)
-- **Templates passing 3 tests:** 61/73 (83.6%)
+- **Templates passing 3 tests:** 60/73 (82.2%)
 - **Templates passing 2 tests:** 4/73 (5.5%)
-- **Templates passing 1 test:** 1/73 (1.4%)
-- **Templates passing 0 tests:** 7/73 (9.6%)
+- **Templates passing 1 test:** 0/73 (0.0%)
+- **Templates passing 0 tests:** 9/73 (12.3%)
 
 ### Generic Exporter/Logic Statistics
 
@@ -54,16 +54,16 @@ Of the 0 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 502.5KB
+- **Total Exporter Code:** 495.4KB
 - **Total Game Logic Code:** 267.8KB
-- **Combined Total:** 770.4KB
+- **Combined Total:** 763.3KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 12.7KB | ✅ | 648.6KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 5.6KB | ✅ | 648.6KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -84,7 +84,7 @@ Of the 0 templates passing all 4 tests:
 | DOOM II | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 5.1KB | ✅ | 497.8KB |
+| Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy Mystic Quest | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 13.4KB | ✅ | 549.0KB |
 | Heretic | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 367.5KB |
@@ -114,7 +114,7 @@ Of the 0 templates passing all 4 tests:
 | Secret of Evermore | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 28.7KB | 87.4KB | 1136.1KB |
 | Stardew Valley | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 207.8KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 21.4KB | ✅ | 92.9KB |
@@ -169,12 +169,12 @@ Of the 0 templates passing all 4 tests:
 | 12 | The Messenger | 14.7KB |
 | 13 | The Witness | 14.1KB |
 | 14 | Final Fantasy Mystic Quest | 13.4KB |
-| 15 | A Link to the Past | 12.7KB |
-| 16 | Kirby's Dream Land 3 | 10.1KB |
-| 17 | Yoshi's Island | 9.2KB |
-| 18 | Inscryption | 8.0KB |
-| 19 | Links Awakening DX | 7.4KB |
-| 20 | The Wind Waker | 7.0KB |
+| 15 | Kirby's Dream Land 3 | 10.1KB |
+| 16 | Yoshi's Island | 9.2KB |
+| 17 | Inscryption | 8.0KB |
+| 18 | Links Awakening DX | 7.4KB |
+| 19 | The Wind Waker | 7.0KB |
+| 20 | A Link to the Past | 5.6KB |
 | 21 | Raft | 5.4KB |
 | 22 | Secret of Evermore | 5.3KB |
 | 23 | Factorio | 5.1KB |

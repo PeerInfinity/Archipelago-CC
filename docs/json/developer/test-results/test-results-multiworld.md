@@ -10,32 +10,32 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 08:09:55
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 57 (78.1%)
-- **Failed:** 16 (21.9%)
+- **Passed:** 55 (75.3%)
+- **Failed:** 18 (24.7%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 67
-- **Second Pass Passed:** 62
+- **Second Pass Tested:** 65
+- **Second Pass Passed:** 60
 - **Second Pass Failed:** 5
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 36/57 (63.2% of passed)
-- **Passing with Generic Logic:** 61/57 (107.0% of passed)
-- **Passing with Both Generic:** 36/57 (63.2% of passed)
+- **Passing with Generic Exporter:** 36/55 (65.5% of passed)
+- **Passing with Generic Logic:** 60/55 (109.1% of passed)
+- **Passing with Both Generic:** 36/55 (65.5% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 12.7KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 5.6KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | 16.2KB | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -56,7 +56,7 @@
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.1KB | ✅ |
+| Factorio | ❌ Failed | — | 3 | 3 | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ❌ Failed | — | 3 | 3 | 13.4KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -66,7 +66,7 @@
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 3.6KB | ✅ |
-| Lingo | ❌ Failed | — | 4 | 4 | 38.0KB | 10.7KB |
+| Lingo | ❌ Failed | — | 3 | 3 | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -76,7 +76,7 @@
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Noita | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
+| Noita | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 4 | 4 | 28.5KB | ✅ |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
@@ -86,7 +86,7 @@
 | Secret of Evermore | ❌ Failed | — | 5 | 5 | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 5 | 5 | 28.7KB | 87.4KB |
+| Starcraft 2 | ❌ Failed | — | 4 | 4 | 28.7KB | 87.4KB |
 | Stardew Valley | ❌ Failed | — | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 5 | 5 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 21.4KB | ✅ |
@@ -96,7 +96,7 @@
 | TOEM original | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
-| Terraria | ✅ Passed | ✅ Passed | 6 | 6 | 16.8KB | ✅ |
+| Terraria | ✅ Passed | ✅ Passed | 4 | 4 | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 6 | 6 | 14.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
@@ -106,7 +106,7 @@
 | VVVVVV | ✅ Passed | ✅ Passed | 6 | 6 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 9.2KB | ✅ |
-| shapez | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| shapez | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 
 ## Templates in Multiworld
 
@@ -258,7 +258,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Celeste (Open World).yaml |
 | 3 | Donkey Kong Country 3.yaml |
 
-### Factorio ✅ (Split 3)
+### Factorio ❌ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -346,8 +346,7 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Lingo.yaml |
+| 3 | Lingo.yaml |
 
 ### Links Awakening DX ✅ (Split 4)
 
@@ -437,8 +436,7 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
+| 3 | Noita.yaml |
 
 ### Old School Runescape ✅ (Split 4)
 
@@ -531,15 +529,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
 
-### Starcraft 2 ✅ (Split 3)
+### Starcraft 2 ❌ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
+| 3 | Noita.yaml |
+| 4 | Starcraft 2.yaml |
 
 ### Stardew Valley ❌ (Split 4)
 
@@ -645,10 +642,8 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
 
 ### The Legend of Zelda ✅ (Split 4)
 
@@ -761,16 +756,23 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
+| 5 | shapez.yaml |
 
 
 ## Bisection Results
 
 When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Factorio (Factorio.yaml)
+
+**Failing pairs found:** 2
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| Celeste 64.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Final Fantasy Mystic Quest (Final Fantasy Mystic Quest.yaml)
 
@@ -783,13 +785,12 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### Lingo (Lingo.yaml)
 
-**Failing pairs found:** 3
+**Failing pairs found:** 2
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
 | A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
 | Celeste 64.yaml | ❌ | ✅ | ✅ | ❌ |
-| Factorio.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Raft (Raft.yaml)
 
@@ -812,6 +813,16 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 | DOOM II.yaml | ❌ | ✅ | ✅ | ❌ |
 | Kingdom Hearts.yaml | ❌ | ✅ | ✅ | ❌ |
 | Meritous.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Starcraft 2 (Starcraft 2.yaml)
+
+**Failing pairs found:** 1
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ✅ | ✅ | ✅ | ✅ |
+| Celeste 64.yaml | ✅ | ✅ | ✅ | ✅ |
+| Noita.yaml | ❌ | ✅ | ✅ | ❌ |
 
 ### Stardew Valley (Stardew Valley.yaml)
 
@@ -846,7 +857,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 |-----------|-------------------|---------------------|---------------------|--------------------|
 | A Hat in Time | 1 | 8 | 1 | ✅ Passed |
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
-| A Short Hike | 1 | 7 | 1 | ✅ Passed |
+| A Short Hike | 1 | 5 | 1 | ✅ Passed |
 | APQuest | 1 | 6 | 1 | ✅ Passed |
 | Adventure | 1 | 6 | 1 | ✅ Passed |
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
@@ -856,7 +867,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Castlevania - Circle of the Moon | 1 | 6 | 1 | ✅ Passed |
 | Castlevania 64 | 2 | 8 | 2 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
-| Celeste 64 | 2 | 7 | 2 | ✅ Passed |
+| Celeste 64 | 2 | 5 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 6 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 6 | 2 | ✅ Passed |
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
@@ -866,7 +877,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | DOOM II | 2 | 6 | 2 | ✅ Passed |
 | Dark Souls III | 3 | 8 | 3 | ✅ Passed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
-| Factorio | 3 | 7 | 3 | ✅ Passed |
 | Faxanadu | 3 | 6 | 3 | ✅ Passed |
 | Heretic | 3 | 7 | 3 | ✅ Passed |
 | Hylics 2 | 3 | 6 | 3 | ✅ Passed |
@@ -884,7 +894,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Meritous | 4 | 6 | 4 | ✅ Passed |
 | Metamath | 5 | 8 | 5 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
-| Noita | 4 | 7 | 4 | ✅ Passed |
+| Noita | 3 | 5 | 3 | ✅ Passed |
 | Old School Runescape | 5 | 6 | 5 | ✅ Passed |
 | Overcooked! 2 | 4 | 6 | 4 | ✅ Passed |
 | Paint | 5 | 7 | 5 | ✅ Passed |
@@ -892,7 +902,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Saving Princess | 5 | 6 | 5 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
-| Starcraft 2 | 5 | 7 | 5 | ✅ Passed |
 | Subnautica | 5 | 6 | 5 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 5 | 6 | 5 | ✅ Passed |
@@ -900,7 +909,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | TOEM original | 5 | 6 | 5 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
 | TUNIC | 7 | 8 | 7 | ✅ Passed |
-| Terraria | 6 | 7 | 6 | ✅ Passed |
+| Terraria | 4 | 5 | 4 | ✅ Passed |
 | The Legend of Zelda | 6 | 6 | 6 | ✅ Passed |
 | The Messenger | 6 | 6 | 6 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
@@ -910,7 +919,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | VVVVVV | 6 | 6 | 6 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
-| shapez | 7 | 7 | 7 | ✅ Passed |
+| shapez | 5 | 5 | 5 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
 
@@ -948,11 +957,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
+| 5 | shapez.yaml |
 
 #### APQuest ✅ (Split 4)
 
@@ -1065,11 +1072,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
+| 5 | shapez.yaml |
 
 #### ChecksFinder ✅ (Split 4)
 
@@ -1174,18 +1179,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Sonic Adventure 2 Battle.yaml |
 | 7 | TUNIC.yaml |
 | 8 | Yoshi's Island.yaml |
-
-#### Factorio ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
 
 #### Faxanadu ✅ (Split 4)
 
@@ -1388,11 +1381,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
+| 5 | shapez.yaml |
 
 #### Old School Runescape ✅ (Split 4)
 
@@ -1474,18 +1465,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Sonic Adventure 2 Battle.yaml |
 | 7 | TUNIC.yaml |
 | 8 | Yoshi's Island.yaml |
-
-#### Starcraft 2 ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
 
 #### Subnautica ✅ (Split 5)
 
@@ -1573,11 +1552,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
+| 5 | shapez.yaml |
 
 #### The Legend of Zelda ✅ (Split 4)
 
@@ -1686,11 +1663,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Noita.yaml |
-| 5 | Starcraft 2.yaml |
-| 6 | Terraria.yaml |
-| 7 | shapez.yaml |
+| 3 | Noita.yaml |
+| 4 | Terraria.yaml |
+| 5 | shapez.yaml |
 
 ### Second Pass Bisection Results
 

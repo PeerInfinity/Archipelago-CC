@@ -10,32 +10,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 08:09:55
 
-**Source Data Created:** 2026-01-29T01:28:21.555529
+**Source Data Created:** 2026-01-30T05:26:03.219818
 
-**Source Data Last Updated:** 2026-01-29T01:28:21.555535
+**Source Data Last Updated:** 2026-01-30T05:26:03.219824
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 65 (89.0%)
-- **Failed:** 8 (11.0%)
+- **Passed:** 64 (87.7%)
+- **Failed:** 9 (12.3%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 38/65 (58.5% of passed)
-- **Passing with Generic Logic:** 65/65 (100.0% of passed)
-- **Passing with Both Generic:** 38/65 (58.5% of passed)
+- **Passing with Generic Exporter:** 38/64 (59.4% of passed)
+- **Passing with Generic Logic:** 64/64 (100.0% of passed)
+- **Passing with Both Generic:** 38/64 (59.4% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.7KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 5.6KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 16.2KB | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -56,7 +56,7 @@
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.1KB | ✅ |
+| Factorio | ❌ Failed | 0 | 1.2 | 12.1 | 🟡 9.9% | 5.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ❌ Failed | 0 | 4.1 | 19.6 | 🟡 20.9% | 13.4KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |

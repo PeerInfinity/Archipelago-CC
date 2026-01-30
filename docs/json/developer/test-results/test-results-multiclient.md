@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 08:09:55
 
 ## Summary
 
@@ -31,7 +31,7 @@
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 18.0KB | ✅ |
-| A Link to the Past | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 12.7KB | ✅ |
+| A Link to the Past | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 5.6KB | ✅ |
 | A Short Hike | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 16.2KB | ✅ |
 | APQuest | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Adventure | ❌ Failed | 0 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
