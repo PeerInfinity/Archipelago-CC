@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2026-01-30T07:56:02.438761",
-    "last_updated": "2026-01-30T07:56:02.438769",
+    "last_updated": "2026-01-30T18:36:57.315123",
     "script_version": "1.0.0"
   },
   "results": {
@@ -65,30 +65,30 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.62,
+        "processing_time_seconds": 13.7,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "multiclient_test": {
-        "client1_event_locations": 0,
-        "client1_event_locations_checked": 0,
-        "client1_locations_checked": 0,
-        "client1_manually_checkable": 0,
-        "client1_manually_checkable_checked": 0,
-        "client1_passed": false,
-        "client1_total_locations": 0,
+        "client1_event_locations": 7,
+        "client1_event_locations_checked": 7,
+        "client1_locations_checked": 268,
+        "client1_manually_checkable": 249,
+        "client1_manually_checkable_checked": 249,
+        "client1_passed": true,
+        "client1_total_locations": 268,
         "client2_locations_received": 0,
         "client2_passed": false,
         "client2_total_locations": 0,
-        "error_count": 6,
-        "locations_checked": 0,
-        "processing_time_seconds": 364.34,
-        "return_code": 1,
-        "single_client_mode": false,
-        "success": false,
-        "total_locations": 0,
-        "warning_count": 0
+        "error_count": 2,
+        "locations_checked": 268,
+        "processing_time_seconds": 30.55,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 249,
+        "warning_count": 18
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -98,7 +98,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2026-01-30T07:06:06.724963",
+      "timestamp": "2026-01-30T18:36:13.049559",
       "world_info": {
         "exporter_path": "exporter/games/official/alttp.py",
         "exporter_size": 5760,
