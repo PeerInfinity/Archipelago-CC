@@ -25,6 +25,14 @@ unparsed_lambda_cache: Dict[Tuple[str, int], Optional[str]] = {}
 # This avoids re-analyzing the same helper function multiple times
 parameterless_func_cache: Dict[Tuple[str, int], Dict[str, Any]] = {}
 
+# Cache for closure function analysis results by function identity
+# Key: id(func) for the exact function object
+# This caches results for functions with closures, where the same object
+# will always have the same closure values (unlike parameterless_func_cache
+# which caches by source location). This is especially important for
+# entrance shuffle which creates deeply nested add_rule chains.
+closure_func_identity_cache: Dict[int, Dict[str, Any]] = {}
+
 
 def clear_caches():
     """
@@ -37,3 +45,4 @@ def clear_caches():
     clean_source_cache.clear()
     unparsed_lambda_cache.clear()
     parameterless_func_cache.clear()
+    closure_func_identity_cache.clear()
