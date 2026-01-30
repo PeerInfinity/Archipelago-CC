@@ -512,10 +512,14 @@ export function createStateSnapshotInterface(
 
           // Check if there's a helper function that computes this value
           // Some games use computed values (e.g., SC2's power_rating) from inventory state
+          // IMPORTANT: Only call helpers directly if they take no extra args (beyond snapshot, staticData)
+          // Helpers that require additional arguments (like graffiti_spots with movestyle, limit, etc.)
+          // must be called via executeHelper with their args properly evaluated
           const computedHelpers = getHelperFunctions(gameName);
           if (computedHelpers) {
             // Try exact match first (e.g., 'power_rating' -> power_rating helper)
-            if (typeof computedHelpers[name] === 'function') {
+            // Only call directly if the function takes at most 2 params (snapshot, staticData)
+            if (typeof computedHelpers[name] === 'function' && computedHelpers[name].length <= 2) {
               const result = computedHelpers[name](snapshot, staticData);
               return result;
             }
@@ -523,7 +527,7 @@ export function createStateSnapshotInterface(
             const prefixes = gameLogic.helperPrefixes || [];
             for (const prefix of prefixes) {
               const prefixedName = prefix + name;
-              if (typeof computedHelpers[prefixedName] === 'function') {
+              if (typeof computedHelpers[prefixedName] === 'function' && computedHelpers[prefixedName].length <= 2) {
                 const result = computedHelpers[prefixedName](snapshot, staticData);
                 return result;
               }
