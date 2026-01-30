@@ -146,14 +146,9 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # Get the glitch mode value - handle both string and enum
             glitch_mode = str(glitches.current_key) if hasattr(glitches, 'current_key') else str(glitches)
 
-            # Only apply True_ for OWG+ modes where boots clips make superbunny access easy
-            # minor_glitches doesn't have boots clips, so needs the full bunny rule
-            owg_plus_modes = {'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
-            if glitch_mode not in owg_plus_modes:
-                return None  # In no_glitches/minor_glitches, use normal AST analysis
-
-            logger.debug(f"Using True_ override for Superbunny Cave location '{location_name}' in {glitch_mode} mode")
-            return {"rule": "True_"}
+            # With the bug fix in Rules.py (adding (state) to call path_to_access_rule results),
+            # normal AST analysis now works correctly for bunny rules. No override needed.
+            return None  # Let normal AST analysis handle it
 
         except Exception as e:
             logger.debug(f"Error checking superbunny location: {e}")
