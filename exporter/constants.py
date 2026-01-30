@@ -11,7 +11,10 @@ to prevent infinite loops and runaway resource usage.
 
 # Maximum number of times analyze_rule can be called in a single export.
 # This catches infinite loops where rules keep spawning new analyze_rule calls.
-MAX_ANALYZE_RULE_CALLS = 10000
+# Set to 15000 to accommodate complex configurations like ALttP's entrance_shuffle=full
+# which creates many more region/entrance rules that need analysis.
+# With closure function identity caching, this limit is rarely hit.
+MAX_ANALYZE_RULE_CALLS = 15000
 
 # Maximum number of AST node visits within a single RuleAnalyzer instance.
 # This catches infinite loops within a single rule's AST traversal.
