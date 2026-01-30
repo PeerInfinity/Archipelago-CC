@@ -12,20 +12,16 @@ These helpers have option-dependent logic that must be exported as definitions
 so the worldgen world can evaluate them correctly at runtime.
 
 Superbunny Cave Locations:
-In OWG/minor_glitches modes (non-inverted), "Superbunny Cave - Top" and
-"Superbunny Cave - Bottom" can be accessed in "superbunny" state when entering
-through certain entrances. The bunny rules in Rules.py generate complex
-entrance-path-dependent rules at runtime that the AST analysis can't fully
-capture, especially with entrance shuffle.
+In overworld_glitches/hybrid_major_glitches/no_logic modes, "Superbunny Cave - Top"
+and "Superbunny Cave - Bottom" can be accessed with boots clips and superbunny state.
+The bunny rules in Rules.py generate complex entrance-path-dependent rules at runtime
+that the AST analysis can't fully capture, especially with entrance shuffle.
 
-For these two specific locations in glitch modes (non-inverted), we use True_
-(no additional location rule beyond region access). This is correct because:
-1. The cave is literally named "Superbunny Cave" - items can be grabbed in superbunny state
-2. When entering from Superbunny Cave (Bottom) or similar paths, no Magic Mirror is needed
-3. The region entrance rules ensure the player can physically reach the cave
+For these locations in OWG+ modes, we use True_ (no additional location rule beyond
+region access). This is correct because boots clips make reaching the region sufficient.
 
-In INVERTED mode, the bunny rules are reversed (player is bunny in Light World
-instead of Dark World), so we fall back to normal AST analysis.
+Note: minor_glitches does NOT get this override because boots clips aren't available -
+you need Lamp or Flute for proper access. The AST analysis handles minor_glitches.
 
 Other superbunny accessible locations (like Pyramid Fairy) still require Magic Mirror
 for superbunny access, so they use the default AST analysis which correctly handles
@@ -107,27 +103,26 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         logger.info("ALttP exporter initialized")
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
-        """Override location rule for Superbunny Cave locations in non-inverted glitch modes.
+        """Override location rule for Superbunny Cave locations in OWG+ glitch modes.
 
-        In OWG/minor_glitches modes (non-inverted), Superbunny Cave locations can be
-        accessed in superbunny state without Magic Mirror when entering through certain
-        entrances (like Superbunny Cave Bottom). The complex bunny rule traversal
-        in Rules.py doesn't export cleanly via AST analysis, especially with
-        entrance shuffle.
+        In overworld_glitches/hybrid_major_glitches/no_logic modes, Superbunny Cave
+        locations can be accessed with boots clips and superbunny mechanics. The complex
+        bunny rule traversal in Rules.py generates entrance-path-dependent rules at
+        runtime that the AST analysis can't fully capture, especially with entrance shuffle.
 
-        For Superbunny Cave locations specifically in glitch modes (non-inverted),
-        we return True_ (no additional rule), relying on region entrance rules to
-        ensure accessibility. This is correct because the cave is named "Superbunny
-        Cave" precisely because items can be grabbed in superbunny state.
+        For Superbunny Cave locations in OWG+ modes, we return True_ (no additional
+        location rule beyond region access). This is correct because:
+        1. The cave is named "Superbunny Cave" - items can be grabbed in superbunny state
+        2. The region entrance rules ensure the player can physically reach the cave
+        3. With boots clips available, reaching the region is sufficient for access
 
-        In INVERTED mode, the bunny rules are reversed (player is bunny in Light World
-        instead of Dark World), so Superbunny Cave has different access requirements.
-        We fall back to normal AST analysis which correctly handles the inverted
-        bunny rules.
+        Note: minor_glitches mode does NOT get this override because boots clips aren't
+        available there - you need Lamp or Flute for proper access. The AST analysis
+        correctly captures the Moon Pearl requirements for minor_glitches.
 
-        Note: Other superbunny accessible locations (like Pyramid Fairy) still need
-        Magic Mirror for superbunny access, so they use the default AST analysis
-        which correctly requires Moon Pearl or Magic Mirror.
+        Other superbunny accessible locations (like Pyramid Fairy) still need Magic Mirror
+        for superbunny access, so they use the default AST analysis which correctly
+        requires Moon Pearl or Magic Mirror.
         """
         try:
             location_name = location.name if hasattr(location, 'name') else str(location)
@@ -137,14 +132,6 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             if location_name not in self.SUPERBUNNY_CAVE_LOCATIONS:
                 return None  # Fall back to normal analysis
 
-            # Check if this is inverted mode - bunny rules are different there
-            # In inverted mode, the player is a bunny in Light World instead of Dark World
-            mode = getattr(world.options, 'mode', None)
-            if mode is not None:
-                mode_value = str(mode.current_key) if hasattr(mode, 'current_key') else str(mode)
-                if mode_value == 'inverted':
-                    return None  # Fall back to normal analysis for inverted mode
-
             # Check if glitches_required is set to a mode that allows superbunny access
             glitches = getattr(world.options, 'glitches_required', None)
             if glitches is None:
@@ -153,10 +140,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
             # Get the glitch mode value - handle both string and enum
             glitch_mode = str(glitches.current_key) if hasattr(glitches, 'current_key') else str(glitches)
 
-            # Superbunny access is only relevant in glitch modes
-            glitch_modes = {'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
-            if glitch_mode not in glitch_modes:
-                return None  # In no_glitches mode, normal Moon Pearl rule applies
+            # Only apply True_ for OWG+ modes where boots clips make superbunny access easy
+            # minor_glitches doesn't have boots clips, so needs the full bunny rule
+            owg_plus_modes = {'overworld_glitches', 'hybrid_major_glitches', 'no_logic'}
+            if glitch_mode not in owg_plus_modes:
+                return None  # In no_glitches/minor_glitches, use normal AST analysis
 
             logger.debug(f"Using True_ override for Superbunny Cave location '{location_name}' in {glitch_mode} mode")
             return {"rule": "True_"}
