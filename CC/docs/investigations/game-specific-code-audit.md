@@ -2,16 +2,67 @@
 
 This document catalogs all instances of game-specific code found in shared exporter and analyzer files. Game-specific code should only appear in dedicated game handlers (`exporter/games/official/*.py` or `exporter/games/unofficial/*.py`), not in the shared infrastructure.
 
+## Remediation Status
+
+**REMEDIATION COMPLETED** - The following changes were made to address the critical issues:
+
+### Changes Made
+
+1. **Added game handler hooks to `BaseGameExportHandler`:**
+   - `KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS` - Set of known items for bytecode analysis
+   - `SWORD_TIERS` - List of sword tier items for has_sword expansion
+   - `UNANALYZABLE_RULE_FALLBACK_ITEM` - Fallback item for unanalyzable rules
+   - `GLITCH_MODE_OPTION_NAME` and `GLITCH_MODE_OPTION_VALUES` - Glitch mode detection
+   - `is_unanalyzable_rule_pattern()` - Check if a rule is unanalyzable
+   - `get_unanalyzable_rule_fallback()` - Get fallback rule for unanalyzable patterns
+   - `get_known_items_for_bytecode()` - Get known items for bytecode analysis
+   - `get_sword_tiers()` - Get sword tier items
+   - `handle_game_specific_state_method()` - Handle game-specific state methods
+
+2. **Updated `ALttPGameExportHandler`:**
+   - Configured all ALttP-specific values (known items, sword tiers, fallback item, glitch modes)
+   - Implemented `is_unanalyzable_rule_pattern()` to detect bunny rules
+   - Implemented `handle_game_specific_state_method()` for `_lttp_has_key` handling
+
+3. **Updated `closure_function_analyzer.py`:**
+   - Replaced hardcoded `alttp_items` set with `game_handler.get_known_items_for_bytecode()`
+   - Replaced hardcoded sword tiers with `game_handler.get_sword_tiers()`
+   - Replaced Moon Pearl fallbacks with `game_handler.get_unanalyzable_rule_fallback()`
+   - Renamed `BunnyRulePatternMatcher` to `UnanalyzableRulePatternMatcher` (with backward compat alias)
+   - Updated docstrings to be generic
+
+4. **Updated `call_visitor.py`:**
+   - Replaced bunny rule detection with `game_handler.is_unanalyzable_rule_pattern()`
+   - Replaced bunny rule fallback with `game_handler.get_unanalyzable_rule_fallback()`
+   - Replaced `_lttp_has_key` handling with `game_handler.handle_game_specific_state_method()`
+
+5. **Updated `exporter.py`:**
+   - Removed `if game_name == "Super Metroid"` conditional
+   - Updated ALttP-specific comment about dungeon cleanup to be generic
+
+6. **Renamed pattern methods in `handler.py`:**
+   - `_try_alttp_pattern()` -> `_try_progression_mapping_pattern()`
+   - `_try_factorio_pattern()` -> `_try_progressive_table_pattern()`
+   - `_try_raft_pattern()` -> `_try_progressive_list_pattern()`
+
+### Remaining (Low Priority)
+
+- Game-specific comments throughout the code (documentation only, does not affect behavior)
+
+---
+
+## Original Audit (Historical Reference)
+
 ## Summary
 
 The audit found **extensive game-specific code** scattered throughout shared files, with A Link to the Past (ALttP) being the most common offender. The code falls into these categories:
 
-1. **Hardcoded item names** - ALttP items like "Moon Pearl", sword tiers
-2. **Game-specific fallback logic** - Bunny rule handling, glitch mode detection
-3. **Named pattern methods** - `_try_alttp_pattern()`, `_try_factorio_pattern()`
-4. **Game name conditionals** - `if game_name == "Super Metroid"`
-5. **Game-specific comments** - References to specific games in code comments
-6. **Game-specific constants** - Limits tuned for specific games
+1. **Hardcoded item names** - ALttP items like "Moon Pearl", sword tiers ✅ FIXED
+2. **Game-specific fallback logic** - Bunny rule handling, glitch mode detection ✅ FIXED
+3. **Named pattern methods** - `_try_alttp_pattern()`, `_try_factorio_pattern()` ✅ FIXED
+4. **Game name conditionals** - `if game_name == "Super Metroid"` ✅ FIXED
+5. **Game-specific comments** - References to specific games in code comments (LOW PRIORITY)
+6. **Game-specific constants** - Limits tuned for specific games (LOW PRIORITY)
 
 ---
 

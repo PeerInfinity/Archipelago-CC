@@ -5,8 +5,11 @@ stored in closure variables during rule analysis. These functions cannot be
 directly serialized to JSON but can be analyzed if we can access their source
 or recognize their structure patterns.
 
-Primary use case: ALttP bunny rules which use `options_to_access_rule` and
+Common use cases include games that use `options_to_access_rule` and
 `path_to_access_rule` lambdas that contain lists of function objects.
+
+Game-specific configuration (known items, sword tiers, fallback rules) is
+obtained from the game handler via hook methods, keeping this module generic.
 """
 
 import ast
@@ -110,6 +113,11 @@ class ClosureFunctionAnalyzer:
         self.parent_analyzer = parent_analyzer
         self.max_depth = max_depth if max_depth is not None else self.MAX_DEPTH
         self._seen_functions: Set[int] = set()  # Cycle detection by function id
+
+    @property
+    def game_handler(self):
+        """Get the game handler from the parent analyzer."""
+        return getattr(self.parent_analyzer, 'game_handler', None)
 
     def analyze_function(self, func: Callable, depth: int = 0) -> Optional[Dict[str, Any]]:
         """Attempt to analyze a function object.
@@ -321,12 +329,24 @@ class ClosureFunctionAnalyzer:
         """
         # Feature flag: Limit bunny rule path expansion depth
         if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
+            # Try to get game-specific fallback from handler
+            fallback = None
+            if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                fallback = self.game_handler.get_unanalyzable_rule_fallback()
+            if fallback:
+                print(
+                    f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
+                    f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, using game handler fallback",
+                    file=sys.stderr
+                )
+                return fallback
+            # No handler fallback available
             print(
-                f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, using Moon Pearl fallback",
+                f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
+                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_options_pattern, no fallback available",
                 file=sys.stderr
             )
-            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+            return None
 
         if not options:
             # Empty options list - any([]) is False
@@ -367,13 +387,24 @@ class ClosureFunctionAnalyzer:
         # Only fail completely if we couldn't analyze ANY option
         if len(analyzed_options) == 0:
             if failed_count > 0:
-                # We had options but couldn't analyze any - use Moon Pearl fallback
+                # We had options but couldn't analyze any - try game handler fallback
+                fallback = None
+                if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                    fallback = self.game_handler.get_unanalyzable_rule_fallback()
+                if fallback:
+                    print(
+                        f"LOSSY FALLBACK: All {failed_count} rule options failed analysis, "
+                        f"using game handler fallback",
+                        file=sys.stderr
+                    )
+                    return fallback
+                # No handler fallback - return None to indicate failure
                 print(
-                    f"LOSSY FALLBACK: All {failed_count} bunny rule options failed analysis, "
-                    f"using Moon Pearl requirement as fallback",
+                    f"LOSSY FALLBACK: All {failed_count} rule options failed analysis, "
+                    f"no game handler fallback available",
                     file=sys.stderr
                 )
-                return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+                return None
             return {'rule': 'False_'}
 
         if len(analyzed_options) == 1:
@@ -404,12 +435,24 @@ class ClosureFunctionAnalyzer:
         """
         # Feature flag: Limit bunny rule path expansion depth
         if self.ENABLE_BUNNY_PATH_DEPTH_LIMIT and depth > self.MAX_BUNNY_PATH_DEPTH:
+            # Try to get game-specific fallback from handler
+            fallback = None
+            if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                fallback = self.game_handler.get_unanalyzable_rule_fallback()
+            if fallback:
+                print(
+                    f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
+                    f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, using game handler fallback",
+                    file=sys.stderr
+                )
+                return fallback
+            # No handler fallback available
             print(
-                f"LOSSY FALLBACK: Bunny rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
-                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, using Moon Pearl fallback",
+                f"LOSSY FALLBACK: Rule depth {depth} exceeds MAX_BUNNY_PATH_DEPTH "
+                f"({self.MAX_BUNNY_PATH_DEPTH}) in _analyze_path_pattern, no fallback available",
                 file=sys.stderr
             )
-            return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl', 'count': 1}}
+            return None
 
         # Build the can_reach part
         entrance_name = getattr(entrance, 'name', str(entrance))
@@ -581,31 +624,34 @@ class ClosureFunctionAnalyzer:
         except Exception:
             pass  # Fall back to heuristics if bytecode analysis fails
 
-        # Known ALttP items that appear in bunny/access rules
-        alttp_items = {
-            'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
-            'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
-            'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
-            'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
-        }
+        # Get known items from game handler (if available)
+        # This allows game-specific items to be recognized in bytecode analysis
+        known_items: Set[str] = set()
+        if self.game_handler and hasattr(self.game_handler, 'get_known_items_for_bytecode'):
+            known_items = self.game_handler.get_known_items_for_bytecode()
+
+        # Get sword tiers from game handler for has_sword expansion
+        sword_tiers: List[str] = []
+        if self.game_handler and hasattr(self.game_handler, 'get_sword_tiers'):
+            sword_tiers = self.game_handler.get_sword_tiers()
 
         # Check for combined patterns: (item AND has_sword) OR item
-        # This is the Tower of Hera pattern used in glitch modes
-        if 'has' in names and 'has_sword' in names and is_or_pattern and is_and_pattern:
+        # This pattern is used in some games' glitch mode rules
+        if 'has' in names and 'has_sword' in names and is_or_pattern and is_and_pattern and sword_tiers:
             item_names = []
             for const in consts:
                 if isinstance(const, str) and const and not const.startswith('<'):
                     if const not in ('Entrance', 'Region', 'Location'):
-                        if const in alttp_items:
+                        if const in known_items:
                             item_names.append(const)
 
             if len(item_names) >= 2:
                 # Pattern: (first_item AND has_sword) OR second_item
                 # The bytecode order is: item1 check -> AND jump -> has_sword -> OR jump -> item2
-                # Convert has_sword to actual item checks
+                # Convert has_sword to actual item checks using game handler's sword tiers
                 has_sword_rule = {
                     'rule': 'HasAny',
-                    'args': {'items': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']}
+                    'args': {'items': sword_tiers}
                 }
                 first_item = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
                 second_item = {'rule': 'Has', 'args': {'item_name': item_names[1]}}
@@ -617,13 +663,13 @@ class ClosureFunctionAnalyzer:
                 return result
 
         # Check for state.has() pattern - collect ALL item names first
-        if 'has' in names:
+        if 'has' in names and known_items:
             item_names = []
             for const in consts:
                 if isinstance(const, str) and const and not const.startswith('<'):
                     # Skip type strings
                     if const not in ('Entrance', 'Region', 'Location'):
-                        if const in alttp_items:
+                        if const in known_items:
                             item_names.append(const)
 
             if len(item_names) == 1:
@@ -664,14 +710,13 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found can_reach via closure entrance '{entrance_name}'")
                 return {'rule': 'CanReachEntrance', 'args': {'entrance_name': entrance_name}}
 
-        # Check for has_sword helper (used in superbunny rules)
-        # Convert to actual item checks since frontend doesn't have has_sword handler
-        if 'has_sword' in names:
+        # Check for has_sword helper
+        # Convert to actual item checks using game handler's sword tiers
+        if 'has_sword' in names and sword_tiers:
             logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has_sword(), converting to item checks")
-            # has_sword checks for any of the four sword tiers
             return {
                 'rule': 'HasAny',
-                'args': {'items': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']}
+                'args': {'items': sword_tiers}
             }
 
         return None
@@ -984,43 +1029,52 @@ class ClosureFunctionAnalyzer:
         return seen if seen else [{'rule': 'True_'}]
 
 
-class BunnyRulePatternMatcher:
-    """Recognizes and identifies bunny rule lambda patterns.
+class UnanalyzableRulePatternMatcher:
+    """Utility class for detecting unanalyzable rule patterns.
 
     This class provides static methods for detecting whether a function
-    is a bunny rule lambda from ALttP's set_bunny_rules() function.
+    matches a known unanalyzable pattern that should use fallback handling.
+
+    DEPRECATED: Prefer using game_handler.is_unanalyzable_rule_pattern() instead.
+    This class is kept for backward compatibility.
     """
 
     @staticmethod
-    def is_bunny_rule(func: Callable) -> bool:
-        """Check if a function is a bunny rule lambda.
+    def is_unanalyzable_pattern(func: Callable, game_handler=None) -> bool:
+        """Check if a function matches an unanalyzable rule pattern.
+
+        Checks the game handler first (if available), then falls back to
+        legacy detection for known patterns.
 
         Args:
             func: The function to check
+            game_handler: Optional game handler for game-specific detection
 
         Returns:
-            True if this appears to be a bunny rule lambda
+            True if this appears to be an unanalyzable rule pattern
         """
         if not callable(func):
             return False
 
+        # Prefer game handler detection
+        if game_handler and hasattr(game_handler, 'is_unanalyzable_rule_pattern'):
+            return game_handler.is_unanalyzable_rule_pattern(func)
+
+        # Legacy fallback: check for set_bunny_rules pattern
         qualname = getattr(func, '__qualname__', '')
         return 'set_bunny_rules' in qualname
 
     @staticmethod
     def get_pattern_type(func: Callable) -> Optional[str]:
-        """Identify which bunny rule pattern a function matches.
+        """Identify which rule pattern a function matches.
 
         Args:
             func: The function to analyze
 
         Returns:
-            Pattern name string, or None if not a bunny rule
+            Pattern name string, or None if not recognized
         """
-        if not BunnyRulePatternMatcher.is_bunny_rule(func):
-            return None
-
-        closure_var_names = BunnyRulePatternMatcher._get_closure_var_names(func)
+        closure_var_names = UnanalyzableRulePatternMatcher._get_closure_var_names(func)
 
         # Match by closure variable signature
         if set(closure_var_names) == {'options'}:
@@ -1047,3 +1101,7 @@ class BunnyRulePatternMatcher:
         if hasattr(func, '__code__'):
             return list(func.__code__.co_freevars)
         return []
+
+
+# Backward compatibility alias
+BunnyRulePatternMatcher = UnanalyzableRulePatternMatcher

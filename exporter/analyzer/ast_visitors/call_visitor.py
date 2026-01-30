@@ -877,35 +877,32 @@ class CallVisitorMixin:
                                 else:
                                     return {'type': 'or', 'conditions': analyzed_items}
                             else:
-                                # Analysis failed - check if these are ALttP bunny rules
+                                # Analysis failed - check if game handler can identify this as an unanalyzable pattern
                                 first_func = constant_value[0]
-                                func_qualname = getattr(first_func, '__qualname__', '')
-                                if 'set_bunny_rules' in func_qualname:
-                                    # Check for glitch modes where bunny rules allow alternative access
-                                    # In glitch modes, superbunny/revival tricks often provide access without Moon Pearl
-                                    glitches_required = None
-                                    if self.game_handler and hasattr(self.game_handler, 'world') and self.game_handler.world:
-                                        world = self.game_handler.world
-                                        if hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
-                                            glitches_required = str(world.options.glitches_required.current_key)
+                                is_unanalyzable = False
+                                if self.game_handler and hasattr(self.game_handler, 'is_unanalyzable_rule_pattern'):
+                                    is_unanalyzable = self.game_handler.is_unanalyzable_rule_pattern(first_func)
+                                else:
+                                    # Legacy fallback: check for set_bunny_rules pattern
+                                    func_qualname = getattr(first_func, '__qualname__', '')
+                                    is_unanalyzable = 'set_bunny_rules' in func_qualname
 
-                                    if glitches_required in ('minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'):
-                                        # In glitch modes, bunny rules provide many alternative access paths
-                                        # Use True as a permissive fallback since we can't analyze the specific paths
+                                if is_unanalyzable:
+                                    # Get game-specific fallback from handler
+                                    fallback = None
+                                    if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                                        fallback = self.game_handler.get_unanalyzable_rule_fallback(first_func)
+                                    if fallback:
                                         print(
-                                            f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', "
-                                            f"using True (always accessible) as fallback",
+                                            f"LOSSY FALLBACK: Unanalyzable rule pattern, using game handler fallback",
                                             file=sys.stderr
                                         )
-                                        return {'type': 'constant', 'value': True}
-                                    else:
-                                        # In non-glitch modes, Moon Pearl is the safe fallback
-                                        print(
-                                            f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules, "
-                                            f"using Moon Pearl requirement as fallback",
-                                            file=sys.stderr
-                                        )
-                                        return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
+                                        return fallback
+                                    # No fallback available
+                                    print(
+                                        f"LOSSY FALLBACK: Unanalyzable rule pattern, no game handler fallback available",
+                                        file=sys.stderr
+                                    )
                         else:
                             # Handle non-callable constant values (strings, numbers, etc.) - expand the comprehension
                             logging.debug(f"any(GeneratorExp): Iterator contains non-callable constant values, expanding comprehension")
@@ -1001,36 +998,34 @@ class CallVisitorMixin:
                                 else:
                                     return {'type': 'or', 'conditions': analyzed_items}
                             else:
-                                # Analysis failed for callable list - check if these are ALttP bunny rules
-                                # Bunny rules from set_bunny_rules can't be properly analyzed due to their
-                                # dynamic construction.
+                                # Analysis failed for callable list - check if game handler can identify this
+                                # as an unanalyzable pattern
                                 if resolved_value and len(resolved_value) > 0:
                                     first_func = resolved_value[0]
-                                    func_qualname = getattr(first_func, '__qualname__', '')
-                                    if 'set_bunny_rules' in func_qualname:
-                                        # Check for glitch modes where bunny rules allow alternative access
-                                        glitches_required = None
-                                        if self.game_handler and hasattr(self.game_handler, 'world') and self.game_handler.world:
-                                            world = self.game_handler.world
-                                            if hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
-                                                glitches_required = str(world.options.glitches_required.current_key)
+                                    is_unanalyzable = False
+                                    if self.game_handler and hasattr(self.game_handler, 'is_unanalyzable_rule_pattern'):
+                                        is_unanalyzable = self.game_handler.is_unanalyzable_rule_pattern(first_func)
+                                    else:
+                                        # Legacy fallback: check for set_bunny_rules pattern
+                                        func_qualname = getattr(first_func, '__qualname__', '')
+                                        is_unanalyzable = 'set_bunny_rules' in func_qualname
 
-                                        if glitches_required in ('minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'):
-                                            # In glitch modes, bunny rules provide many alternative access paths
+                                    if is_unanalyzable:
+                                        # Get game-specific fallback from handler
+                                        fallback = None
+                                        if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                                            fallback = self.game_handler.get_unanalyzable_rule_fallback(first_func)
+                                        if fallback:
                                             print(
-                                                f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules in glitch mode '{glitches_required}', "
-                                                f"using True (always accessible) as fallback",
+                                                f"LOSSY FALLBACK: Unanalyzable rule pattern, using game handler fallback",
                                                 file=sys.stderr
                                             )
-                                            return {'type': 'constant', 'value': True}
-                                        else:
-                                            # In non-glitch modes, Moon Pearl is the safe fallback
-                                            print(
-                                                f"LOSSY FALLBACK: Unanalyzable ALttP bunny rules, "
-                                                f"using Moon Pearl requirement as fallback",
-                                                file=sys.stderr
-                                            )
-                                            return {'type': 'item_check', 'item': 'Moon Pearl', 'count': 1}
+                                            return fallback
+                                        # No fallback available
+                                        print(
+                                            f"LOSSY FALLBACK: Unanalyzable rule pattern, no game handler fallback available",
+                                            file=sys.stderr
+                                        )
 
                         # NEW: Handle nested comprehensions - list of lists of callables
                         # This pattern appears in The Witness: any(all(condition(state) for condition in sub_req) for sub_req in fully_converted_rules)
@@ -1628,33 +1623,23 @@ class CallVisitorMixin:
                         else:
                             items.append(item)
                     result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in items]}
-                elif method == '_lttp_has_key' and len(filtered_args) >= 1:
-                    # Unwrap item name if it's a constant
-                    item_arg = filtered_args[0]
-                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
-                        item_value = item_arg.get('value')
-                    elif isinstance(item_arg, str):
-                        item_value = item_arg
+                elif method.startswith('_') and len(filtered_args) >= 1:
+                    # Check if game handler has special handling for game-specific state methods
+                    # (e.g., _lttp_has_key for ALttP)
+                    if self.game_handler and hasattr(self.game_handler, 'handle_game_specific_state_method'):
+                        world = getattr(self.game_handler, 'world', None)
+                        handler_result = self.game_handler.handle_game_specific_state_method(
+                            method, filtered_args, world
+                        )
+                        if handler_result:
+                            logging.debug(f"Game handler handled state method '{method}'")
+                            result = handler_result
+                        else:
+                            # Game handler didn't handle this method - use generic state_method
+                            result = {'type': 'state_method', 'method': method, 'args': filtered_args}
                     else:
-                        item_value = item_arg
-                    # Count is now in position 1 after player is filtered
-                    count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-
-                    # Check for ALttP small_key_shuffle option
-                    # When set to 'universal', _lttp_has_key checks can_buy_unlimited instead
-                    small_key_shuffle = None
-                    if self.game_handler and hasattr(self.game_handler, 'world') and self.game_handler.world:
-                        world = self.game_handler.world
-                        if hasattr(world, 'options') and hasattr(world.options, 'small_key_shuffle'):
-                            small_key_shuffle = str(world.options.small_key_shuffle.current_key)
-
-                    if small_key_shuffle == 'universal':
-                        # When universal keys are enabled, use can_buy_unlimited helper
-                        result = {'type': 'helper', 'name': 'can_buy_unlimited',
-                                  'args': [{'type': 'constant', 'value': 'Small Key (Universal)'}]}
-                        logging.debug(f"_lttp_has_key with universal keys -> can_buy_unlimited helper")
-                    else:
-                        result = {'type': 'count_check', 'item': item_value, 'count': count}
+                        # No game handler or no handler method - use generic state_method
+                        result = {'type': 'state_method', 'method': method, 'args': filtered_args}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object

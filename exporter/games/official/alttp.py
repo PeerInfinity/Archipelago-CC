@@ -15,9 +15,17 @@ Note: The complex bunny rule for Superbunny Cave locations uses the default AST
 analysis. Previous True_ overrides caused logic mismatches in certain entrance
 shuffle configurations. The AST analysis may produce incomplete entrance path
 rules for multi-hop paths, but this is preferable to the permissive True_ rule.
+
+ALttP-specific analyzer configuration:
+- Bunny rules (from set_bunny_rules) are detected as unanalyzable patterns
+- In glitch modes, unanalyzable rules return True (permissive)
+- In non-glitch modes, unanalyzable rules fall back to Moon Pearl requirement
+- Bytecode analysis recognizes ALttP-specific items
+- has_sword() pattern expands to check all four sword tiers
+- _lttp_has_key method handles universal key mode
 """
 
-from typing import Dict, Any, Set, Optional
+from typing import Dict, Any, Set, Optional, List, Callable
 from ..base import GenericGameExportHandler
 import logging
 
@@ -36,6 +44,33 @@ class ALttPGameExportHandler(GenericGameExportHandler):
     # Enable automatic helper export - already True in GenericGameExportHandler
     # but explicitly set for clarity
     AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # ==========================================================================
+    # ALttP-specific analyzer configuration
+    # ==========================================================================
+
+    # Known ALttP items for bytecode-based rule analysis
+    # When the analyzer falls back to bytecode analysis, it recognizes these items
+    KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS: Set[str] = {
+        'Moon Pearl', 'Magic Mirror', 'Pegasus Boots', 'Flippers',
+        'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
+        'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
+        'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
+    }
+
+    # Sword tier items for has_sword() expansion
+    SWORD_TIERS: List[str] = [
+        'Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'
+    ]
+
+    # Fallback item for unanalyzable bunny rules (non-glitch modes)
+    UNANALYZABLE_RULE_FALLBACK_ITEM: Optional[str] = 'Moon Pearl'
+
+    # Glitch mode configuration
+    GLITCH_MODE_OPTION_NAME: Optional[str] = 'glitches_required'
+    GLITCH_MODE_OPTION_VALUES: List[str] = [
+        'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'
+    ]
 
     # Whitelist critical helpers that must be exported as definitions
     # These are option-dependent and fall back to True if not exported
@@ -150,3 +185,77 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 ]
             }
         }
+
+    # ==========================================================================
+    # ALttP-specific analyzer hooks
+    # ==========================================================================
+
+    def is_unanalyzable_rule_pattern(self, func: Callable) -> bool:
+        """Check if a function is an ALttP bunny rule pattern.
+
+        ALttP's set_bunny_rules() creates complex lambda functions that
+        cannot be fully analyzed by the standard analyzer. These are
+        identified by their __qualname__ containing 'set_bunny_rules'.
+
+        Args:
+            func: The function object to check
+
+        Returns:
+            True if this is a bunny rule that needs fallback handling
+        """
+        if not callable(func):
+            return False
+
+        qualname = getattr(func, '__qualname__', '')
+        return 'set_bunny_rules' in qualname
+
+    def handle_game_specific_state_method(
+        self,
+        method_name: str,
+        args: List[Any],
+        world: Any
+    ) -> Optional[Dict[str, Any]]:
+        """Handle ALttP-specific state methods.
+
+        Handles:
+        - _lttp_has_key: Converts to can_buy_unlimited for universal key mode
+
+        Args:
+            method_name: The name of the state method
+            args: The processed arguments to the method
+            world: The world object for option access
+
+        Returns:
+            Rule dict if this method should be handled specially, None otherwise
+        """
+        if method_name == '_lttp_has_key' and len(args) >= 1:
+            # Extract item name from first argument
+            item_arg = args[0]
+            if isinstance(item_arg, dict) and item_arg.get('type') == 'constant':
+                item_value = item_arg.get('value')
+            elif isinstance(item_arg, str):
+                item_value = item_arg
+            else:
+                item_value = item_arg
+
+            # Get count from second argument (defaults to 1)
+            count = args[1] if len(args) >= 2 else {'type': 'constant', 'value': 1}
+
+            # Check for universal key mode
+            small_key_shuffle = None
+            if world and hasattr(world, 'options') and hasattr(world.options, 'small_key_shuffle'):
+                small_key_shuffle = str(world.options.small_key_shuffle.current_key)
+
+            if small_key_shuffle == 'universal':
+                # When universal keys are enabled, use can_buy_unlimited helper
+                logger.debug("_lttp_has_key with universal keys -> can_buy_unlimited helper")
+                return {
+                    'type': 'helper',
+                    'name': 'can_buy_unlimited',
+                    'args': [{'type': 'constant', 'value': 'Small Key (Universal)'}]
+                }
+            else:
+                # Standard key check
+                return {'type': 'count_check', 'item': item_value, 'count': count}
+
+        return None  # Let default handling proceed
