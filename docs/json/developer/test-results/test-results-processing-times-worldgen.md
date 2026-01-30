@@ -1,6 +1,6 @@
 # Processing Times Chart (WorldGen)
 
-**Generated:** 2026-01-30 07:56:03
+**Generated:** 2026-01-30 08:09:55
 
 [← Back to Test Results Summary](./test-results-summary-worldgen.md)
 
