@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
+import net from 'net';
 import { spawn, exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -61,7 +62,12 @@ test.describe('Multiplayer Client Interaction Tests', () => {
 
     console.log(`Starting server with: ${fullPath}`);
 
-    const serverProc = spawn('python3', [
+    // Use virtual environment Python if available, otherwise fall back to system python3
+    const venvPython = '.venv/bin/python3';
+    const pythonPath = fs.existsSync(venvPython) ? venvPython : 'python3';
+    console.log(`Using Python: ${pythonPath}`);
+
+    const serverProc = spawn(pythonPath, [
       'MultiServer.py',
       '--host', 'localhost',
       '--port', serverPort.toString(),
@@ -82,19 +88,21 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     const maxWaitTime = 120000; // 120 seconds
     let serverReady = false;
 
+    let attemptCount = 0;
     while (Date.now() - startTime < maxWaitTime) {
+      attemptCount++;
       // Check if server process has exited
       if (serverProc.exitCode !== null) {
-        throw new Error('Server failed to start - process exited');
+        throw new Error(`Server failed to start - process exited with code ${serverProc.exitCode}`);
       }
 
       // Try to connect to see if server is ready
       try {
-        const net = require('net');
         await new Promise((resolve, reject) => {
           const socket = new net.Socket();
           socket.setTimeout(500);
           socket.on('connect', () => {
+            console.log(`Connection successful on attempt ${attemptCount}`);
             socket.destroy();
             resolve();
           });
@@ -112,6 +120,9 @@ test.describe('Multiplayer Client Interaction Tests', () => {
         break;
       } catch (e) {
         // Server not ready yet, wait and retry
+        if (attemptCount % 20 === 0) {
+          console.log(`Still waiting for server... attempt ${attemptCount}, error: ${e.message}`);
+        }
         await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
