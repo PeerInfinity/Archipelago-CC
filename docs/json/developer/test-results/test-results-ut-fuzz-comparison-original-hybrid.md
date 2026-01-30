@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-01-28 20:39:22
+**Generated:** 2026-01-30 03:18:05
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -20,7 +20,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Original Only:** 4 (4.7%)
 - **Passing Hybrid Only:** 27 (31.8%)
 - **Passing Neither:** 20 (23.5%)
-- **Passing Hybrid with no custom code:** 39 (45.9%)
+- **Passing Hybrid with no custom code:** 38 (44.7%)
 - **Passing Hybrid Only with no custom code:** 13 (15.3%)
 
 ## Full Comparison
@@ -28,8 +28,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 119.3KB | ✅ | 648.6KB |
-| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 410.7KB |
+| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 121.4KB | ✅ | 648.6KB |
+| A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ 100.0% | ✅ 100.0% | 1.8KB | ✅ | 275.4KB |
@@ -119,7 +119,7 @@ These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Short Hike | ✅ | ✅ | 410.7KB |
+| A Short Hike | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | 11.0KB |
 | Aquaria | 1.8KB | ✅ | 275.4KB |
 | Baking Adventure | ✅ | ✅ | 18.2KB |
@@ -206,7 +206,7 @@ These games fail in both Universal Tracker versions.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | 119.3KB | ✅ | 648.6KB |
+| A Link to the Past | 121.4KB | ✅ | 648.6KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
 | Final Fantasy Mystic Quest | 10.3KB | ✅ | 549.0KB |
 | Hollow Knight | ✅ | ✅ | N/A |

@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-28 20:39:22
+**Generated:** 2026-01-30 03:18:05
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -16,11 +16,11 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 60 (70.6%)
-- **Passing Modified Only:** 2 (2.4%)
-- **Passing Hybrid Only:** 1 (1.2%)
-- **Passing Neither:** 22 (25.9%)
-- **Passing Hybrid with no custom code:** 39 (45.9%)
+- **Passing Both:** 59 (69.4%)
+- **Passing Modified Only:** 3 (3.5%)
+- **Passing Hybrid Only:** 2 (2.4%)
+- **Passing Neither:** 21 (24.7%)
+- **Passing Hybrid with no custom code:** 38 (44.7%)
 - **Passing Hybrid Only with no custom code:** 0 (0.0%)
 
 ## Full Comparison
@@ -28,8 +28,8 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ 100.0% | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ 40.0% | ⚠️ 70.0% | 119.3KB | ✅ | 648.6KB |
-| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 410.7KB |
+| A Link to the Past | ✅ 80.0% | ⚠️ 70.0% | 121.4KB | ✅ | 648.6KB |
+| A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ 100.0% | ✅ 100.0% | 1.8KB | ✅ | 275.4KB |
@@ -50,16 +50,16 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ 100.0% | ✅ 100.0% | 5.1KB | ✅ | 497.8KB |
+| Factorio | ❌ 40.0% | ✅ 100.0% | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ⚠️ 60.0% | ❌ 0.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ⚠️ 50.0% | ❌ 0.0% | 10.3KB | ✅ | 549.0KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
 | Inscryption | ✅ 100.0% | ✅ 100.0% | 8.0KB | ✅ | 84.2KB |
 | Jak and Daxter: The Precursor Legacy | ❌ 0.0% | ❌ 0.0% | 21.6KB | 4.6KB | 298.6KB |
-| Kingdom Hearts | ❌ 0.0% | ❌ 10.0% | ✅ | ✅ | 757.5KB |
+| Kingdom Hearts | ❌ 10.0% | ❌ 10.0% | ✅ | ✅ | 757.5KB |
 | Kingdom Hearts 2 | ❌ 0.0% | ❌ 0.0% | 19.5KB | ✅ | 1675.2KB |
 | Kirby's Dream Land 3 | ✅ 100.0% | ✅ 100.0% | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ 100.0% | ✅ 100.0% | 3.6KB | ✅ | 210.5KB |
@@ -97,7 +97,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Super Metroid | ❌ 0.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.4KB |
 | TOEM original | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
-| TUNIC | ⚠️ 90.0% | ✅ 100.0% | 3.1KB | ✅ | 705.5KB |
+| TUNIC | ⚠️ 80.0% | ✅ 100.0% | 3.1KB | ✅ | 705.5KB |
 | Terraria | ✅ 90.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.6KB |
 | The Messenger | ✅ 100.0% | ✅ 100.0% | 14.7KB | ✅ | 211.8KB |
@@ -113,13 +113,13 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 60.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (60)
+## Games Passing Both (59)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Short Hike | ✅ | ✅ | 410.7KB |
+| A Short Hike | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Aquaria | 1.8KB | ✅ | 275.4KB |
@@ -137,7 +137,6 @@ These games have 100% success rate in both Universal Tracker versions.
 | DOOM II | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
-| Factorio | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | ✅ | N/A |
 | Heretic | ✅ | ✅ | 367.5KB |
@@ -180,30 +179,31 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Modified Only (2)
+## Games Passing Modified Only (3)
 
 These games pass in the Modified UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
+| A Link to the Past | 121.4KB | ✅ | 648.6KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 
-## Games Passing Hybrid Only (1)
+## Games Passing Hybrid Only (2)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| Factorio | 5.1KB | ✅ | 497.8KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 
-## Games Passing Neither (22)
+## Games Passing Neither (21)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Link to the Past | 119.3KB | ✅ | 648.6KB |
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
