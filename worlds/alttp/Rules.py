@@ -1732,15 +1732,15 @@ def set_bunny_rules(world: MultiWorld, player: int, inverted: bool):
                     # For glitch rulesets, establish superbunny and revival rules.
                     if world.worlds[player].options.glitches_required in ['minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'] and entrance.name not in OverworldGlitchRules.get_invalid_bunny_revival_dungeons():
                         if region.name in OverworldGlitchRules.get_sword_required_superbunny_mirror_regions():
-                            possible_options.append(lambda state: path_to_access_rule(new_path, entrance) and state.has('Magic Mirror', player) and has_sword(state, player))
+                            possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state) and state.has('Magic Mirror', player) and has_sword(state, player))
                         elif (region.name in OverworldGlitchRules.get_boots_required_superbunny_mirror_regions()
                               or location is not None and location.name in OverworldGlitchRules.get_boots_required_superbunny_mirror_locations()):
-                            possible_options.append(lambda state: path_to_access_rule(new_path, entrance) and state.has('Magic Mirror', player) and state.has('Pegasus Boots', player))
+                            possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state) and state.has('Magic Mirror', player) and state.has('Pegasus Boots', player))
                         elif location is not None and location.name in OverworldGlitchRules.get_superbunny_accessible_locations():
                             if new_region.name == 'Superbunny Cave (Bottom)' or region.name == 'Kakariko Well (top)':
-                                possible_options.append(lambda state: path_to_access_rule(new_path, entrance))
+                                possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state))
                             else:
-                                possible_options.append(lambda state: path_to_access_rule(new_path, entrance) and state.has('Magic Mirror', player))
+                                possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state) and state.has('Magic Mirror', player))
                         if new_region.type != LTTPRegionType.Cave:
                             continue
                     else:

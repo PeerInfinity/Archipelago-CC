@@ -7555,6 +7555,27 @@ class HelperCodeGenerator:
                             # Just generate the helper call directly
                             return self._generate_expression(function)
 
+                    # Special case: if the function is a Rule Builder type that already
+                    # produces a complete boolean expression (like CanReachEntrance,
+                    # CanReachRegion, Has, And, Or, etc.), generate it directly without adding ().
+                    # This happens when the analyzer wraps path_to_access_rule results.
+                    func_rule = function.get('rule', '')
+                    func_type = function.get('type', '')
+                    # Rule Builder types that produce complete boolean expressions
+                    rule_builder_bool_types = (
+                        'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                        'Has', 'HasAll', 'HasAny', 'HasGroup',
+                        'And', 'Or', 'Not',
+                        'True_', 'False_',
+                        'Compare', 'Conditional',
+                    )
+                    # Also handle analyzer types (lowercase)
+                    analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
+                                          'can_reach', 'region_check', 'location_check')
+                    if func_rule in rule_builder_bool_types or func_type in analyzer_bool_types:
+                        # These types already produce complete boolean expressions
+                        return self._generate_expression(function)
+
                     # Check if this is a math or logging module function call
                     # and set the appropriate flags for imports
                     if function.get('type') == 'attribute':
