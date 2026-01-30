@@ -549,6 +549,73 @@ class CallVisitorMixin:
                  except Exception as e:
                       logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
+
+                 # --- Function factory handling (e.g., path_to_access_rule) ---
+                 # Handle function factories that return lambdas when called.
+                 # These are functions like path_to_access_rule(path, entrance) that return
+                 # a new lambda capturing the arguments. We need to:
+                 # 1. Resolve the arguments to their actual values
+                 # 2. Call the function to get the resulting lambda
+                 # 3. Analyze that resulting lambda with ClosureFunctionAnalyzer
+                 FUNCTION_FACTORY_NAMES = {'path_to_access_rule', 'options_to_access_rule'}
+                 if closure_func_name in FUNCTION_FACTORY_NAMES and callable(actual_func):
+                     logging.debug(f"Detected function factory call: {closure_func_name}")
+                     try:
+                         # Resolve the arguments to actual values from closure
+                         resolved_arg_values = []
+                         all_args_resolved = True
+                         for arg_node in node.args:
+                             if isinstance(arg_node, ast.Name):
+                                 arg_name = arg_node.id
+                                 if arg_name in self.closure_vars:
+                                     resolved_arg_values.append(self.closure_vars[arg_name])
+                                 else:
+                                     # Try expression resolver
+                                     resolved_value = self.expression_resolver.resolve_variable(arg_name)
+                                     if resolved_value is not None:
+                                         resolved_arg_values.append(resolved_value)
+                                     else:
+                                         logging.debug(f"Could not resolve argument {arg_name} for function factory {closure_func_name}")
+                                         all_args_resolved = False
+                                         break
+                             else:
+                                 logging.debug(f"Argument to function factory is not a simple name: {type(arg_node)}")
+                                 all_args_resolved = False
+                                 break
+
+                         if all_args_resolved and len(resolved_arg_values) == len(node.args):
+                             # Call the function factory to get the resulting lambda
+                             logging.debug(f"Calling function factory {closure_func_name} with {len(resolved_arg_values)} args")
+                             result_lambda = actual_func(*resolved_arg_values)
+
+                             if callable(result_lambda):
+                                 # Analyze the resulting lambda using ClosureFunctionAnalyzer
+                                 from ..closure_function_analyzer import ClosureFunctionAnalyzer
+                                 from ..rule_analyzer import RuleAnalyzer
+
+                                 # Create a minimal parent analyzer for the ClosureFunctionAnalyzer
+                                 parent_analyzer = RuleAnalyzer(
+                                     closure_vars=self.closure_vars,
+                                     rule_func=result_lambda,
+                                     player_context=self.player_context,
+                                     game_handler=self.game_handler,
+                                     seen_funcs=self.seen_funcs
+                                 )
+
+                                 closure_analyzer = ClosureFunctionAnalyzer(parent_analyzer)
+                                 analyzed_result = closure_analyzer.analyze_function(result_lambda)
+
+                                 if analyzed_result is not None:
+                                     logging.debug(f"Successfully analyzed function factory result for {closure_func_name}")
+                                     return analyzed_result
+                                 else:
+                                     logging.debug(f"ClosureFunctionAnalyzer could not analyze result of {closure_func_name}")
+                             else:
+                                 logging.debug(f"Function factory {closure_func_name} did not return a callable")
+                     except Exception as e:
+                         logging.error(f"Error analyzing function factory {closure_func_name}: {e}")
+                 # --- END Function factory handling ---
+
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
             # *** Special handling for all(GeneratorExp) ***
