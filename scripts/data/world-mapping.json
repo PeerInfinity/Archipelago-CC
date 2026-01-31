@@ -28,7 +28,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/official/alttp.py",
-    "exporter_size": 10471,
+    "exporter_size": 12810,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1297,7 +1297,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/official/messenger.py",
-    "exporter_size": 15003,
+    "exporter_size": 15206,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

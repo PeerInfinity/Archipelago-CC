@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-30 18:33:23
+**Generated:** 2026-01-30 20:00:08
 
 **Source Data Created:** 2026-01-30T23:54:12.969736
 
@@ -39,7 +39,7 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 10.2KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 12.5KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | 16.2KB | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -102,7 +102,7 @@
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 6 | 6 | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| The Messenger | ❌ Failed | ❌ Failed | 7 | 7 | 14.7KB | ✅ |
+| The Messenger | ❌ Failed | ❌ Failed | 7 | 7 | 14.8KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |

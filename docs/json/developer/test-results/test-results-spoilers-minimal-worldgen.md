@@ -8,7 +8,7 @@
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2026-01-30 18:33:23
+**Generated:** 2026-01-30 20:00:08
 
 **Source Data Created:** 2026-01-27T22:55:56.684110
 

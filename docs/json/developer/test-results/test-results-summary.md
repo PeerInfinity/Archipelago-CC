@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-30 18:33:23
+**Generated:** 2026-01-30 20:00:08
 
 **Source Data Created:** 2026-01-30T23:11:27.520653
 
@@ -59,16 +59,16 @@ Of the 60 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 504.6KB
+- **Total Exporter Code:** 507.1KB
 - **Total Game Logic Code:** 271.1KB
-- **Combined Total:** 775.7KB
+- **Combined Total:** 778.2KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.2KB | ✅ | 665.3KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.5KB | ✅ | 665.3KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
@@ -131,7 +131,7 @@ Of the 60 templates passing all 4 tests:
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ | 705.5KB |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 555.6KB |
-| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 14.7KB | ✅ | 211.8KB |
+| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 14.8KB | ✅ | 211.8KB |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 253.9KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.1KB | ✅ | 401.1KB |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 260.8KB |
@@ -171,10 +171,10 @@ Of the 60 templates passing all 4 tests:
 | 9 | A Hat in Time | 18.0KB |
 | 10 | Terraria | 16.8KB |
 | 11 | A Short Hike | 16.2KB |
-| 12 | The Messenger | 14.7KB |
+| 12 | The Messenger | 14.8KB |
 | 13 | The Witness | 14.1KB |
 | 14 | Final Fantasy Mystic Quest | 13.4KB |
-| 15 | A Link to the Past | 10.2KB |
+| 15 | A Link to the Past | 12.5KB |
 | 16 | Kirby's Dream Land 3 | 10.1KB |
 | 17 | Yoshi's Island | 9.2KB |
 | 18 | Factorio | 8.6KB |

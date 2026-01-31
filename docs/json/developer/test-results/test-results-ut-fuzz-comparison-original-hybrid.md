@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-01-30 18:29:02
+**Generated:** 2026-01-30 20:00:08
 
 **Source Data Last Updated:** 2026-01-22T20:59:24
 
@@ -30,7 +30,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 10.2KB | ✅ | 665.3KB |
+| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 12.5KB | ✅ | 665.3KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -102,7 +102,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | TUNIC | ✅ 100.0% | ✅ 100.0% | 3.1KB | ✅ | 705.5KB |
 | Terraria | ⚠️ 98.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.6KB |
-| The Messenger | ❌ 2.0% | ✅ 100.0% | 14.7KB | ✅ | 211.8KB |
+| The Messenger | ❌ 2.0% | ✅ 100.0% | 14.8KB | ✅ | 211.8KB |
 | The Wind Waker | ❌ 3.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ✅ 100.0% | ❌ 30.0% | 14.1KB | ✅ | 401.1KB |
 | Timespinner | ❌ 5.0% | ❌ 0.0% | 2.2KB | ✅ | 260.8KB |
@@ -195,7 +195,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Super Mario Land 2 | 92.5KB | ✅ | 976.7KB |
 | Super Mario World | ✅ | ✅ | 178.2KB |
 | Terraria | 16.8KB | ✅ | 283.0KB |
-| The Messenger | 14.7KB | ✅ | 211.8KB |
+| The Messenger | 14.8KB | ✅ | 211.8KB |
 | The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | VVVVVV | 3.8KB | ✅ | 22.8KB |
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
@@ -208,7 +208,7 @@ These games fail in both Universal Tracker versions.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | 10.2KB | ✅ | 665.3KB |
+| A Link to the Past | 12.5KB | ✅ | 665.3KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
 | Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.0KB |
 | Hollow Knight | ✅ | ✅ | N/A |

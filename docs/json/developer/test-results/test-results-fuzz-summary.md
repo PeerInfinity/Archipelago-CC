@@ -1,10 +1,10 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-01-30 18:26:08
+**Generated:** 2026-01-30 20:00:08
 
-**Source Data Created:** 2026-01-30T03:18:04.897649
+**Source Data Created:** 2026-01-31T01:30:17.508462
 
-**Source Data Last Updated:** 2026-01-30T03:18:04.897657
+**Source Data Last Updated:** 2026-01-31T01:30:17.508468
 
 [<- Back to Main Test Results Summary](./test-results-summary.md)
 
@@ -24,16 +24,16 @@ This summary combines results from fuzz tests that validate game configurations 
 ### Individual Test Results
 
 - **UT Fuzz Original:** 38/85 passed (44.7%)
-- **UT Fuzz Modified:** 62/85 passed (72.9%)
+- **UT Fuzz Modified:** 59/85 passed (69.4%)
 - **UT Fuzz Hybrid:** 61/85 passed (71.8%)
 - **Spoiler Fuzz:** 48/73 passed (65.8%)
 
 ### Combined Results
 
-- **Games passing all 4 fuzz tests:** 30/85 (35.3%)
+- **Games passing all 4 fuzz tests:** 29/85 (34.1%)
 - **Games passing 3 fuzz tests:** 19/85 (22.4%)
 - **Games passing 2 fuzz tests:** 12/85 (14.1%)
-- **Games passing 1 fuzz test:** 8/85 (9.4%)
+- **Games passing 1 fuzz test:** 9/85 (10.6%)
 - **Games passing 0 fuzz tests:** 16/85 (18.8%)
 
 ## Test Results
@@ -63,10 +63,10 @@ This summary combines results from fuzz tests that validate game configurations 
 | DOOM II | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | 🔶 52% | ✅ | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0% | ❌ 40% | ✅ | 🔶 70% | 497.8KB |
+| Factorio | ❌ 0% | 🔶 80% | ✅ | 🔶 70% | 497.8KB |
 | Faxanadu | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | ✅ | ✅ | — | N/A |
-| Final Fantasy Mystic Quest | ❌ 1% | 🔶 50% | ❌ 0% | ❌ 0% | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ 1% | 🔶 70% | ❌ 0% | ❌ 0% | 549.0KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 11% | ❌ 0% | ❌ 0% | — | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | 102.2KB |
@@ -91,9 +91,9 @@ This summary combines results from fuzz tests that validate game configurations 
 | Old School Runescape | ✅ | ✅ | ✅ | ✅ | 308.9KB |
 | Overcooked! 2 | ❌ 12% | ✅ | ✅ | 🔶 50% | 489.2KB |
 | Paint | ✅ | ✅ | ✅ | ✅ | 123.7KB |
-| Pokemon Emerald | 🔶 59% | ❌ 0% | ❌ 0% | — | 1390.9KB |
+| Pokemon Emerald | 🔶 59% | ❌ 20% | ❌ 0% | — | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0% | ❌ 0% | ❌ 0% | — | 1029.2KB |
-| Raft | ✅ | ✅ | ✅ | ❌ 0% | 485.4KB |
+| Raft | ✅ | ❌ 0% | ✅ | ❌ 0% | 485.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 1% | ❌ 0% | ❌ 0% | — | 1044.7KB |
 | Saving Princess | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
@@ -114,12 +114,12 @@ This summary combines results from fuzz tests that validate game configurations 
 | Terraria | ⚠️ 98% | ✅ | ✅ | 🔶 70% | 283.0KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 555.6KB |
 | The Messenger | ❌ 2% | ✅ | ✅ | ⚠️ 90% | 211.8KB |
-| The Wind Waker | ❌ 3% | ✅ | ✅ | 🔶 50% | 253.9KB |
+| The Wind Waker | ❌ 3% | ❌ 0% | ✅ | 🔶 50% | 253.9KB |
 | The Witness | ✅ | ❌ 30% | ❌ 30% | ❌ 20% | 401.1KB |
 | Timespinner | ❌ 5% | ✅ | ❌ 0% | ✅ | 260.8KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | 58.0KB |
 | VVVVVV | 🔶 67% | ✅ | ✅ | ✅ | 22.8KB |
-| Wargroove | ✅ | ✅ | ✅ | ✅ | 44.7KB |
+| Wargroove | ✅ | ❌ 0% | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ 5% | ❌ 0% | ❌ 0% | — | 249.5KB |
 | Yoshi's Island | ❌ 22% | ✅ | ✅ | ✅ | 296.7KB |
 | Yu-Gi-Oh! 2006 | ❌ 33% | ❌ 0% | ❌ 0% | — | 628.0KB |
