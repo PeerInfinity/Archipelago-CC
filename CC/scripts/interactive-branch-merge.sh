@@ -457,11 +457,12 @@ fetch_and_merge() {
 }
 
 # Function to select mode
-# Returns: fetch or merge
+# Returns: fetch, merge, or abort
 select_mode() {
     echo -e "${BLUE}=== Select Mode ===${NC}" >&2
     echo "1. Fetch and merge unfetched branches (default)" >&2
     echo "2. Merge existing local branches" >&2
+    echo "3. Abort current merge" >&2
     echo >&2
 
     read -p "Select mode [1]: " mode_choice >&2
@@ -477,6 +478,9 @@ select_mode() {
         2)
             echo "merge"
             ;;
+        3)
+            echo "abort"
+            ;;
         *)
             # Default to option 1
             echo "fetch"
@@ -491,9 +495,26 @@ main() {
     echo -e "${BLUE}========================================${NC}"
     echo
 
-    # Select mode
-    local mode_type=$(select_mode)
-    echo
+    while true; do
+        # Select mode
+        local mode_type=$(select_mode)
+        echo
+
+        # Handle abort mode
+        if [ "$mode_type" = "abort" ]; then
+            echo -e "${YELLOW}Aborting current merge...${NC}"
+            if git merge --abort 2>/dev/null; then
+                echo -e "${GREEN}Merge aborted successfully.${NC}"
+            else
+                echo -e "${BLUE}No merge in progress to abort.${NC}"
+            fi
+            echo
+            continue
+        fi
+
+        # Break out of mode selection loop to proceed with fetch or merge
+        break
+    done
 
     if [ "$mode_type" = "fetch" ]; then
         # Fetch and merge unfetched branches
