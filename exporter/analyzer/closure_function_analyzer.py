@@ -820,6 +820,12 @@ class ClosureFunctionAnalyzer:
             logger.debug(f"ClosureFunctionAnalyzer: Multiple items found, using bytecode analysis")
             return self._analyze_via_bytecode(func)
 
+        # If this pattern includes option access (world.worlds[player].options.X),
+        # delegate to bytecode analysis which handles has() OR option patterns
+        if 'options' in names and 'worlds' in names:
+            logger.debug(f"ClosureFunctionAnalyzer: Pattern includes option access, using bytecode analysis")
+            return self._analyze_via_bytecode(func)
+
         if len(item_candidates) == 1:
             item_name = item_candidates[0]
             logger.debug(f"ClosureFunctionAnalyzer: Detected has() check for '{item_name}'")
