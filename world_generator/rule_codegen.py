@@ -1358,98 +1358,6 @@ class RuleCodeGenerator:
         # Don't use inline comments as they break multi-line expressions
         return 'True_()'
 
-    def _get_can_reach_entrance_from_rule(self, rule: Dict[str, Any]) -> Optional[str]:
-        """Extract CanReachEntrance name from a rule if it's a standalone CanReachEntrance.
-
-        Returns the entrance name if the rule is:
-        - CanReachEntrance(X)
-        - AST_function_call wrapping CanReachEntrance(X)
-
-        Returns None otherwise.
-        """
-        if not isinstance(rule, dict):
-            return None
-
-        rb_rule = rule.get('rule', '')
-
-        # Direct CanReachEntrance
-        if rb_rule == 'CanReachEntrance':
-            return rule.get('args', {}).get('entrance_name')
-
-        # AST_function_call wrapping CanReachEntrance
-        if rb_rule == 'AST_function_call':
-            args = rule.get('args', {})
-            function = args.get('function', {})
-            if isinstance(function, dict) and function.get('rule') == 'CanReachEntrance':
-                return function.get('args', {}).get('entrance_name')
-
-        return None
-
-    def _get_can_reach_entrance_from_and(self, rule: Dict[str, Any]) -> Optional[str]:
-        """Extract CanReachEntrance name from an And rule if it contains one.
-
-        Returns the entrance name if the And rule has CanReachEntrance as a child.
-        Returns None otherwise.
-        """
-        if not isinstance(rule, dict):
-            return None
-
-        rb_rule = rule.get('rule', '')
-        if rb_rule != 'And':
-            return None
-
-        children = rule.get('children', [])
-        for child in children:
-            entrance_name = self._get_can_reach_entrance_from_rule(child)
-            if entrance_name:
-                return entrance_name
-
-        return None
-
-    def _fix_bunny_rule_or(self, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Fix bunny rule pattern in Or children.
-
-        If Or has both:
-        - Standalone CanReachEntrance(X) or AST_function_call(CanReachEntrance(X))
-        - And(CanReachEntrance(X), Y) with the same entrance X
-
-        Remove the standalone CanReachEntrance because it causes false positives
-        (makes the And conditions like Magic Mirror or Moon Pearl redundant).
-
-        This pattern occurs when the exporter produces redundant options for bunny rules
-        due to entrance shuffle conflating multiple logical entrances to the same physical one.
-        """
-        # Find all standalone CanReachEntrance rules and their entrance names
-        standalone_entrances = {}  # entrance_name -> index in children
-        for i, child in enumerate(children):
-            entrance_name = self._get_can_reach_entrance_from_rule(child)
-            if entrance_name:
-                standalone_entrances[entrance_name] = i
-
-        if not standalone_entrances:
-            return children  # No standalone CanReachEntrance, nothing to fix
-
-        # Find And rules that contain CanReachEntrance
-        and_entrances = set()
-        for child in children:
-            entrance_name = self._get_can_reach_entrance_from_and(child)
-            if entrance_name:
-                and_entrances.add(entrance_name)
-
-        # Find overlapping entrances
-        redundant_indices = set()
-        for entrance_name, idx in standalone_entrances.items():
-            if entrance_name in and_entrances:
-                # This standalone CanReachEntrance is redundant because there's an And
-                # with additional conditions for the same entrance
-                redundant_indices.add(idx)
-
-        if not redundant_indices:
-            return children  # No redundancy found
-
-        # Return filtered children
-        return [child for i, child in enumerate(children) if i not in redundant_indices]
-
     def _convert_rule_builder_format(self, rule: Dict[str, Any], rb_rule: str, rule_type: str) -> str:
         """Convert Rule Builder format rules (with 'rule' key) to Python expressions."""
         args = rule.get('args', {})
@@ -1493,12 +1401,6 @@ class RuleCodeGenerator:
                     if isinstance(const_val, (int, float)) and not isinstance(const_val, bool):
                         return self._make_bool_constant(const_val != 0)
                 return self._convert_rule(single_child)
-
-            # Note: We previously had simplification for And(CanReachEntrance, ...) -> CanReachEntrance
-            # but this was incorrect for bunny rules where the additional conditions (like Moon Pearl
-            # or Magic Mirror) are actually required for location access. The CanReachEntrance check
-            # alone doesn't capture the bunny state restrictions.
-
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAll instead of And(Has(...), Has(...), ...)
             # This matches the Rule Builder's _simplify_and behavior
@@ -1564,13 +1466,6 @@ class RuleCodeGenerator:
                     if isinstance(const_val, (int, float)) and not isinstance(const_val, bool):
                         return self._make_bool_constant(const_val != 0)
                 return self._convert_rule(single_child)
-
-            # Fix for bunny rules: If Or has both standalone CanReachEntrance(X) AND
-            # And(CanReachEntrance(X), Y), remove the standalone because it causes
-            # false positives (makes the And conditions redundant). This pattern occurs
-            # when the exporter produces redundant options for bunny rules.
-            children = self._fix_bunny_rule_or(children)
-
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAny instead of Or(Has(...), Has(...), ...)
             # This matches the Rule Builder's _simplify_or behavior
@@ -1618,18 +1513,6 @@ class RuleCodeGenerator:
             elif len(simple_has_items) == 1:
                 self.required_imports.add('Has')
                 child_exprs.append(f'Has({repr(simple_has_items[0])})')
-
-            # Deduplicate conditions - if the same rule appears multiple times,
-            # keep only one instance. This can happen with bunny rules where
-            # And(CanReachEntrance, X) simplifies to just CanReachEntrance,
-            # which may already exist as another option.
-            seen = set()
-            unique_exprs = []
-            for expr in child_exprs:
-                if expr not in seen:
-                    seen.add(expr)
-                    unique_exprs.append(expr)
-            child_exprs = unique_exprs
 
             if len(child_exprs) == 1:
                 return child_exprs[0]
@@ -2533,21 +2416,6 @@ class RuleCodeGenerator:
 
         # Convert each condition and join with |
         converted = [self._convert_rule(c) for c in conditions]
-
-        # Deduplicate conditions - if the same rule appears multiple times,
-        # keep only one instance. This can happen with bunny rules where
-        # And(CanReachEntrance, X) simplifies to just CanReachEntrance,
-        # which may already exist as another option.
-        seen = set()
-        unique_converted = []
-        for c in converted:
-            if c not in seen:
-                seen.add(c)
-                unique_converted.append(c)
-        converted = unique_converted
-
-        if len(converted) == 1:
-            return converted[0]
 
         # Wrap each in parens for safety, then join
         return ' | '.join(f'({c})' for c in converted)
@@ -6503,8 +6371,16 @@ class RuleCodeGenerator:
                 # conditions are redundant and can cause issues if the exporter
                 # only partially captured the entrance's access rule.
                 # Simplify to just CanReachEntrance.
-                # Note: We previously simplified And(CanReachEntrance, ...) -> CanReachEntrance
-                # but this was incorrect for bunny rules where additional conditions are required.
+                if func_rule == 'And':
+                    children = function.get('children', [])
+                    can_reach_entrance = None
+                    for child in children:
+                        if isinstance(child, dict) and child.get('rule') == 'CanReachEntrance':
+                            can_reach_entrance = child
+                            break
+                    if can_reach_entrance:
+                        # Found CanReachEntrance - use it directly, dropping redundant conditions
+                        return self._convert_rule(can_reach_entrance)
                 # Recursively convert the nested Rule Builder rule
                 return self._convert_rule(function)
 
