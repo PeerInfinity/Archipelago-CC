@@ -842,20 +842,18 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"_try_evaluate_option: Option '{option_name}' not found")
                 return None
 
-            # Try to call to_bool() if available
-            if hasattr(option_obj, 'to_bool'):
-                if multiworld is not None:
-                    result = option_obj.to_bool(multiworld, player)
-                else:
-                    # Fallback: use value truthiness
-                    result = bool(getattr(option_obj, 'value', False))
-                logger.debug(f"_try_evaluate_option: {option_name}.to_bool() = {result}")
-                return result
-            else:
-                # Use value truthiness
-                result = bool(getattr(option_obj, 'value', False))
-                logger.debug(f"_try_evaluate_option: {option_name}.value = {result}")
-                return result
+            # Use direct value truthiness, NOT to_bool()
+            # The bytecode pattern detection recognizes direct option access like:
+            #   world.worlds[player].options.open_pyramid
+            # NOT:
+            #   world.worlds[player].options.open_pyramid.to_bool(world, player)
+            # So we must evaluate the option the same way the original code does.
+            # For Choice options, bool(option) uses bool(option.value).
+            # to_bool() may have different semantics (e.g., OpenPyramid.to_bool()
+            # checks goal and entrance_shuffle, not just the value).
+            result = bool(getattr(option_obj, 'value', False))
+            logger.debug(f"_try_evaluate_option: bool({option_name}.value) = {result}")
+            return result
 
         except Exception as e:
             logger.debug(f"_try_evaluate_option: Failed to evaluate '{option_name}': {e}")
