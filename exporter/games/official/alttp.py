@@ -320,3 +320,128 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return None  # Let default handling proceed
 
+    # ==========================================================================
+    # Superbunny location handling
+    # ==========================================================================
+
+    def _is_superbunny_mirror_rule(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a superbunny path check with Magic Mirror.
+
+        Pattern: Or(And(...path_check..., Has('Magic Mirror')), Has('Moon Pearl'))
+        The path_check typically contains CanReachEntrance and additional Has checks.
+
+        The exporter uses two formats:
+        1. Rule Builder format: {'rule': 'Or', 'children': [...]}
+        2. Internal format: {'type': 'or', 'conditions': [...]}
+
+        This method handles both formats.
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        # Handle both formats
+        rule_type = rule.get('rule') or rule.get('type', '')
+        if rule_type.lower() != 'or':
+            return False
+
+        children = rule.get('children', []) or rule.get('conditions', [])
+        if len(children) != 2:
+            return False
+
+        # Check for Moon Pearl in one child
+        has_moon_pearl = False
+        and_with_mirror = None
+
+        for child in children:
+            if isinstance(child, dict):
+                # Check for Moon Pearl (both formats)
+                child_type = child.get('rule') or child.get('type', '')
+                if child_type.lower() in ('has', 'item_check'):
+                    item = child.get('args', {}).get('item_name', '') or child.get('item', '')
+                    if item == 'Moon Pearl':
+                        has_moon_pearl = True
+
+                # Check for And with Magic Mirror (both formats)
+                if child_type.lower() == 'and':
+                    and_children = child.get('children', []) or child.get('conditions', [])
+                    for ac in and_children:
+                        if isinstance(ac, dict):
+                            ac_type = ac.get('rule') or ac.get('type', '')
+                            if ac_type.lower() in ('has', 'item_check'):
+                                ac_item = ac.get('args', {}).get('item_name', '') or ac.get('item', '')
+                                if ac_item == 'Magic Mirror':
+                                    and_with_mirror = child
+                                    break
+                            # Also check for function_call with CanReachEntrance pattern
+                            if ac_type.lower() in ('function_call', 'ast_function_call'):
+                                # This is a complex path check
+                                # Check if the And also contains Magic Mirror
+                                for other_ac in and_children:
+                                    if isinstance(other_ac, dict):
+                                        other_type = other_ac.get('rule') or other_ac.get('type', '')
+                                        if other_type.lower() in ('has', 'item_check'):
+                                            other_item = other_ac.get('args', {}).get('item_name', '') or other_ac.get('item', '')
+                                            if other_item == 'Magic Mirror':
+                                                and_with_mirror = child
+                                                break
+
+        return has_moon_pearl and and_with_mirror is not None
+
+    def _simplify_superbunny_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Simplify a superbunny rule to just: Moon Pearl OR Magic Mirror.
+
+        This removes overly-restrictive path checks from the bunny rule analysis
+        that only capture one specific path when there are multiple valid paths.
+
+        Returns the rule in the internal format (type/conditions) since that's
+        what the exporter uses during processing.
+        """
+        return {
+            'type': 'or',
+            'conditions': [
+                {'type': 'item_check', 'item': 'Magic Mirror'},
+                {'type': 'item_check', 'item': 'Moon Pearl'}
+            ]
+        }
+
+    # Locations that should have their superbunny rules simplified.
+    # These are locations where the bunny rule analysis captures only ONE specific
+    # path that's too restrictive, but there are actually multiple valid paths.
+    # Only add locations here after verifying they fail due to over-restrictive rules.
+    SUPERBUNNY_LOCATIONS_TO_SIMPLIFY: Set[str] = {
+        # Secret Passage fails in inverted mode because the bunny rule analysis
+        # only captures the path through Inverted Pyramid Hole (requiring Beat Agahnim 2),
+        # but there are other valid paths through Hammer Peg Area or Post Aga Teleporter.
+        'Secret Passage',
+    }
+
+    def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """Post-process location data to fix superbunny rules.
+
+        In inverted mode with minor_glitches (or other glitch modes), superbunny
+        locations have complex bunny rules that check for specific paths back to
+        link-state regions. The rule analysis may only capture one specific path,
+        making the exported rule too restrictive.
+
+        For specific superbunny locations where we've verified this is an issue,
+        the rule is simplified to: Moon Pearl OR Magic Mirror.
+
+        This method only applies to locations in SUPERBUNNY_LOCATIONS_TO_SIMPLIFY
+        to avoid making rules too permissive for locations where the path check
+        is actually necessary.
+        """
+        # Only simplify for specific locations we've verified need it
+        if location_name not in self.SUPERBUNNY_LOCATIONS_TO_SIMPLIFY:
+            return location_data
+
+        access_rule = location_data.get('access_rule')
+        if access_rule is None:
+            return location_data
+
+        # Check if this is an over-restrictive superbunny rule
+        if self._is_superbunny_mirror_rule(access_rule):
+            logger.info(f"Simplifying superbunny rule for location: {location_name}")
+            location_data['access_rule'] = self._simplify_superbunny_rule(access_rule)
+
+        return location_data
+
