@@ -445,6 +445,12 @@ class ClosureFunctionAnalyzer:
 
         Returns:
             Analyzed rule combining can_reach and path requirements
+
+        Note:
+            In ALttP's bunny rule BFS, path is built as: new_path = path + [entrance.access_rule]
+            This means the LAST element of path is always the entrance's own access rule.
+            Since CanReachEntrance already checks the entrance's access_rule via Entrance.can_reach(),
+            we skip the last element to avoid double-counting the entrance rule.
         """
         # Feature flag: Limit closure analysis depth
         if self.ENABLE_CLOSURE_DEPTH_LIMIT and depth > self.MAX_CLOSURE_DEPTH:
@@ -474,9 +480,15 @@ class ClosureFunctionAnalyzer:
             'args': {'entrance_name': entrance_name}
         }
 
-        # Analyze each rule in path
+        # Skip the last element of path - it's the entrance's access_rule which is already
+        # checked by CanReachEntrance via Entrance.can_reach(). Including it would double-count
+        # the entrance rule, causing incorrect logic (e.g., requiring Beat Agahnim 2 when
+        # the entrance rule is "open_pyramid OR Beat Agahnim 2").
+        path_to_analyze = path[:-1] if path else []
+
+        # Analyze each rule in path (excluding the last element)
         path_conditions = []
-        for i, rule_func in enumerate(path):
+        for i, rule_func in enumerate(path_to_analyze):
             if callable(rule_func):
                 result = self.analyze_function(rule_func, depth + 1)
                 if result is not None:
