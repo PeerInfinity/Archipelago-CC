@@ -399,13 +399,16 @@ def main():
         failures = get_ut_fuzz_all_single_failures(
             project_root,
             ut_version=args.ut_version,
-            seed_mode=args.ut_seed_mode
+            seed=args.ut_seed
         )
 
         if not failures:
             if not quiet_mode:
                 print("No failures found in single-game UT fuzz results")
-                print(f"Looking for: scripts/output/ut-fuzz/test-results-single-game-{args.ut_version}-{args.ut_seed_mode}-seed.json")
+                if args.ut_seed:
+                    print(f"Looking for: scripts/output/ut-fuzz/test-results-single-game-{args.ut_version}-seed-{args.ut_seed}.json")
+                else:
+                    print(f"Looking for: scripts/output/ut-fuzz/test-results-single-game-{args.ut_version}-seed-*.json (auto-detect)")
             return 0
 
         # Get stats from the first failure (all failures share the same stats)

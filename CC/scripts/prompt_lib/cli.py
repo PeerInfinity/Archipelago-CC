@@ -72,7 +72,9 @@ def create_argument_parser():
     parser.add_argument('--ut-version', type=str, choices=['original', 'modified', 'hybrid'], default='modified',
                        help='Which UT version results to use for --ut-fuzz-* modes (default: modified)')
     parser.add_argument('--ut-seed-mode', type=str, choices=['fixed', 'random'], default='fixed',
-                       help='Which seed mode results to use for --ut-fuzz-apworld-failures and --ut-fuzz-single-failure (default: fixed)')
+                       help='Which seed mode results to use for --ut-fuzz-apworld-failures (default: fixed)')
+    parser.add_argument('--ut-seed', type=int, default=None,
+                       help='Specific seed number to load single-game UT fuzz results for (default: auto-detect most recent)')
     parser.add_argument('--all-promptfiles', action='store_true',
                        help='Run all prompt-generating modes and output to separate files in CC/scripts/prompts/')
     parser.add_argument('--exclude-pattern', type=str,
