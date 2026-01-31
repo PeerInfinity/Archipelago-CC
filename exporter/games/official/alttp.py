@@ -19,13 +19,65 @@ ALttP-specific analyzer configuration:
 - Bytecode analysis recognizes ALttP-specific items
 - has_sword() pattern expands to check all four sword tiers
 - _lttp_has_key method handles universal key mode
+
+Post-processing:
+- Removes overly-permissive standalone CanReachEntrance options from superbunny location rules
+- These should always be combined with Magic Mirror or Moon Pearl
 """
 
 from typing import Dict, Any, Set, Optional, List, Callable
 from ..base import GenericGameExportHandler
 import logging
+import re
 
 logger = logging.getLogger(__name__)
+
+
+# Superbunny-accessible locations from OverworldGlitchRules.get_superbunny_accessible_locations()
+# These locations can be accessed in bunny state with specific requirements
+SUPERBUNNY_ACCESSIBLE_LOCATIONS = {
+    'Waterfall of Wishing - Left',
+    'Waterfall of Wishing - Right',
+    "King's Tomb",
+    'Floodgate',
+    'Floodgate Chest',
+    'Cave 45',
+    'Bonk Rock Cave',
+    'Brewery',
+    'C-Shaped House',
+    'Chest Game',
+    'Mire Shed - Left',
+    'Mire Shed - Right',
+    'Secret Passage',
+    'Ice Rod Cave',
+    'Pyramid Fairy - Left',
+    'Pyramid Fairy - Right',
+    'Superbunny Cave - Top',
+    'Superbunny Cave - Bottom',
+    "Blind's Hideout - Left",
+    "Blind's Hideout - Right",
+    "Blind's Hideout - Far Left",
+    "Blind's Hideout - Far Right",
+    'Kakariko Well - Left',
+    'Kakariko Well - Middle',
+    'Kakariko Well - Right',
+    'Kakariko Well - Bottom',
+    'Kakariko Tavern',
+    'Library',
+    'Spiral Cave',
+    # Boots-required superbunny mirror locations
+    'Paradox Cave Lower - Far Left',
+    'Paradox Cave Lower - Left',
+    'Paradox Cave Lower - Middle',
+    'Paradox Cave Lower - Right',
+    'Paradox Cave Lower - Far Right',
+    'Paradox Cave Upper - Left',
+    'Paradox Cave Upper - Right',
+    'Hookshot Cave - Top Right',
+    'Hookshot Cave - Top Left',
+    'Hookshot Cave - Bottom Left',
+    'Hookshot Cave - Bottom Right',
+}
 
 
 def _export_shops(world, multiworld, player) -> List[Dict[str, Any]]:
@@ -321,4 +373,264 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return {'type': 'count_check', 'item': item_value, 'count': count}
 
         return None  # Let default handling proceed
+
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process ALttP export data to fix bunny rule issues.
+
+        In glitch modes, the bunny rules analyzer sometimes produces overly-permissive
+        rules for superbunny-accessible locations. Specifically, it may create Or rules
+        with standalone CanReachEntrance options that should have Magic Mirror requirements.
+
+        This method:
+        1. Identifies location rules for superbunny-accessible locations
+        2. Removes standalone CanReachEntrance options from Or rules
+        3. For Superbunny Cave locations, removes ALL CanReachEntrance options
+
+        This ensures the worldgen rules match the more restrictive server logic.
+        """
+        # Check if we're in a glitch mode that uses bunny rules
+        if not self._is_glitch_mode():
+            return super().post_process_data(data)
+
+        fixed_count = 0
+        # Process each player's regions
+        for player_id_str, player_regions in data.get('regions', {}).items():
+            for region_name, region_data in player_regions.items():
+                # Process location rules
+                for loc_data in region_data.get('locations', []):
+                    loc_name = loc_data.get('name', '')
+                    if loc_name in SUPERBUNNY_ACCESSIBLE_LOCATIONS:
+                        access_rule = loc_data.get('access_rule')
+                        if access_rule:
+                            # Superbunny Cave locations have special path-based logic that doesn't export correctly.
+                            # The bunny rule analyzer produces CanReachEntrance-based rules that are too permissive.
+                            # Remove ALL CanReachEntrance options for Superbunny Cave, requiring Moon Pearl only.
+                            # This trades some false negatives for avoiding false positives from the broken export.
+                            is_superbunny_cave = loc_name in ('Superbunny Cave - Top', 'Superbunny Cave - Bottom')
+                            fixed_rule = self._fix_superbunny_rule(access_rule, remove_all_canreach=is_superbunny_cave)
+                            if fixed_rule != access_rule:
+                                logger.debug(f"Fixed superbunny rule for {loc_name}")
+                                loc_data['access_rule'] = fixed_rule
+                                fixed_count += 1
+
+        if fixed_count > 0:
+            logger.debug(f"ALttP post_process_data: fixed {fixed_count} superbunny rules")
+        return super().post_process_data(data)
+
+    def _is_glitch_mode(self) -> bool:
+        """Check if the current world uses glitch logic that requires bunny rule fixes."""
+        if self.world and hasattr(self.world, 'options'):
+            option = getattr(self.world.options, 'glitches_required', None)
+            if option is not None:
+                current_value = str(getattr(option, 'current_key', ''))
+                return current_value in self.PERMISSIVE_LOGIC_OPTION_VALUES
+        return False
+
+    def _fix_superbunny_rule(self, rule: Dict[str, Any], remove_all_canreach: bool = False) -> Dict[str, Any]:
+        """Fix a superbunny location rule by removing overly-permissive options.
+
+        For most superbunny locations:
+        - Removes only STANDALONE CanReachEntrance options
+        - Keeps And(CanReachEntrance, Mirror) as valid bunny mirror access
+
+        For Superbunny Cave locations (when remove_all_canreach=True):
+        - Removes ALL CanReachEntrance-based options (standalone and And with Mirror)
+        - These locations have special path-based logic that doesn't export correctly
+
+        Handles both rule formats:
+        - JSON schema format: {'rule': 'Or', 'children': [...]}
+        - Export format: {'type': 'or', 'conditions': [...]}
+
+        Args:
+            rule: The access rule to fix
+            remove_all_canreach: If True, remove all CanReachEntrance options (for Superbunny Cave)
+
+        Returns:
+            The fixed rule with overly-permissive options removed
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Check for both rule formats
+        rule_type = rule.get('rule') or rule.get('type')
+
+        # Only process Or rules
+        if rule_type not in ('Or', 'or'):
+            return rule
+
+        # Get children (different key names in different formats)
+        children = rule.get('children') or rule.get('conditions', [])
+        if not children:
+            return rule
+
+        fixed_children = []
+        removed_count = 0
+        for child in children:
+            should_remove = False
+
+            if remove_all_canreach:
+                # For Superbunny Cave: remove ALL CanReachEntrance-based options
+                if self._involves_can_reach_entrance(child):
+                    should_remove = True
+            else:
+                # For other locations: only remove STANDALONE CanReachEntrance
+                if self._is_standalone_can_reach_entrance(child):
+                    should_remove = True
+
+            if should_remove:
+                removed_count += 1
+            else:
+                fixed_children.append(child)
+
+        # If we removed any children, rebuild the Or
+        if removed_count > 0:
+            if len(fixed_children) == 0:
+                # All options removed - fall back to Moon Pearl requirement
+                if 'conditions' in rule:
+                    return {'type': 'item_check', 'item': 'Moon Pearl'}
+                else:
+                    return {'rule': 'Has', 'args': {'item_name': 'Moon Pearl'}}
+            elif len(fixed_children) == 1:
+                # Only one option left - unwrap the Or
+                return fixed_children[0]
+            else:
+                # Preserve the original format
+                if 'conditions' in rule:
+                    return {'type': 'or', 'conditions': fixed_children}
+                else:
+                    return {'rule': 'Or', 'children': fixed_children}
+
+        return rule
+
+    def _involves_can_reach_entrance(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule involves CanReachEntrance in any way (standalone or in And)."""
+        if not isinstance(rule, dict):
+            return False
+
+        rule_type = rule.get('rule') or rule.get('type')
+
+        # Direct CanReachEntrance or function_call with CanReachEntrance
+        if self._is_standalone_can_reach_entrance(rule):
+            return True
+
+        # And rule containing CanReachEntrance
+        if rule_type in ('And', 'and'):
+            and_children = rule.get('children') or rule.get('conditions', [])
+            for child in and_children:
+                if self._is_standalone_can_reach_entrance(child):
+                    return True
+
+        return False
+
+    def _get_entrance_name_from_any(self, rule: Dict[str, Any]) -> Optional[str]:
+        """Extract entrance name from any rule that involves CanReachEntrance."""
+        if not isinstance(rule, dict):
+            return None
+
+        # Try direct extraction
+        name = self._get_entrance_name(rule)
+        if name:
+            return name
+
+        # Check And children
+        rule_type = rule.get('rule') or rule.get('type')
+        if rule_type in ('And', 'and'):
+            and_children = rule.get('children') or rule.get('conditions', [])
+            for child in and_children:
+                name = self._get_entrance_name(child)
+                if name:
+                    return name
+
+        return None
+
+    def _is_standalone_can_reach_entrance(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a standalone CanReachEntrance without other requirements."""
+        if not isinstance(rule, dict):
+            return False
+
+        rule_type = rule.get('rule') or rule.get('type')
+
+        # Direct CanReachEntrance (JSON schema format)
+        if rule_type == 'CanReachEntrance':
+            return True
+
+        # function_call wrapping CanReachEntrance (export format)
+        if rule_type == 'function_call':
+            function = rule.get('function', {})
+            if isinstance(function, dict) and function.get('rule') == 'CanReachEntrance':
+                return True
+
+        # AST_function_call wrapping CanReachEntrance
+        if rule_type == 'AST_function_call':
+            function = rule.get('args', {}).get('function', {})
+            if isinstance(function, dict) and function.get('rule') == 'CanReachEntrance':
+                return True
+
+        return False
+
+    def _get_entrance_name(self, rule: Dict[str, Any]) -> Optional[str]:
+        """Extract entrance name from a CanReachEntrance rule."""
+        if not isinstance(rule, dict):
+            return None
+
+        rule_type = rule.get('rule') or rule.get('type')
+
+        if rule_type == 'CanReachEntrance':
+            return rule.get('args', {}).get('entrance_name')
+
+        # function_call format (export format)
+        if rule_type == 'function_call':
+            function = rule.get('function', {})
+            if isinstance(function, dict) and function.get('rule') == 'CanReachEntrance':
+                return function.get('args', {}).get('entrance_name')
+
+        if rule_type == 'AST_function_call':
+            function = rule.get('args', {}).get('function', {})
+            if isinstance(function, dict) and function.get('rule') == 'CanReachEntrance':
+                return function.get('args', {}).get('entrance_name')
+
+        return None
+
+    def _has_mirror_protected_version(self, children: List[Dict[str, Any]], entrance_name: str) -> bool:
+        """Check if there's a Mirror-protected version of the entrance check.
+
+        Looks for: And(CanReachEntrance(entrance_name), Has('Magic Mirror'))
+        Handles both rule formats.
+        """
+        for child in children:
+            if not isinstance(child, dict):
+                continue
+
+            child_type = child.get('rule') or child.get('type')
+            if child_type not in ('And', 'and'):
+                continue
+
+            and_children = child.get('children') or child.get('conditions', [])
+            has_entrance = False
+            has_mirror = False
+
+            for and_child in and_children:
+                if not isinstance(and_child, dict):
+                    continue
+
+                # Check for CanReachEntrance with matching name
+                if self._get_entrance_name(and_child) == entrance_name:
+                    has_entrance = True
+
+                # Check for Has('Magic Mirror') - JSON schema format
+                if and_child.get('rule') == 'Has':
+                    item_name = and_child.get('args', {}).get('item_name')
+                    if item_name == 'Magic Mirror':
+                        has_mirror = True
+
+                # Check for item_check with Magic Mirror - export format
+                if and_child.get('type') == 'item_check':
+                    item_name = and_child.get('item')
+                    if item_name == 'Magic Mirror':
+                        has_mirror = True
+
+            if has_entrance and has_mirror:
+                return True
+
+        return False
 
