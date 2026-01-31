@@ -320,3 +320,60 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return None  # Let default handling proceed
 
+    def post_process_location_data(
+        self,
+        location_data: Dict[str, Any],
+        location_name: str
+    ) -> Dict[str, Any]:
+        """Post-process location data for ALttP superbunny accessibility.
+
+        In overworld glitches mode (and other glitch modes), certain locations
+        in Kakariko Well (top) region can be accessed as a superbunny without
+        Moon Pearl. The complex bunny rule analysis can't fully capture this,
+        so we override the access rule to True_ for these locations.
+
+        The original game logic (Rules.py lines 1739-1741) shows that for
+        'Kakariko Well (top)' region with superbunny-accessible locations,
+        the access path doesn't require Moon Pearl or Magic Mirror.
+
+        Args:
+            location_data: The location data dict being built
+            location_name: The name of the location
+
+        Returns:
+            The modified location data dict
+        """
+        # Superbunny-accessible locations in Kakariko Well (top) region
+        # These locations can be accessed without Moon Pearl in glitch modes
+        kakariko_well_superbunny_locations = {
+            'Kakariko Well - Left',
+            'Kakariko Well - Middle',
+            'Kakariko Well - Right',
+            'Kakariko Well - Bottom',
+        }
+
+        # Check if this location needs the superbunny override
+        if location_name not in kakariko_well_superbunny_locations:
+            return location_data
+
+        # Check if we're in a glitch mode that allows superbunny access
+        if not self.world:
+            return location_data
+
+        glitches_required = None
+        if hasattr(self.world, 'options') and hasattr(self.world.options, 'glitches_required'):
+            glitches_required = str(self.world.options.glitches_required.current_key)
+
+        # Only apply superbunny override in glitch modes
+        glitch_modes = ['minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic']
+        if glitches_required not in glitch_modes:
+            return location_data
+
+        # Override the access rule to True_ - these locations only need region access
+        # The bunny rule analysis produces incomplete rules that require Moon Pearl,
+        # but the actual game logic allows superbunny access without Moon Pearl
+        logger.info(f"ALttP: Setting True_ rule for superbunny location '{location_name}' in glitch mode")
+        location_data['access_rule'] = {'rule': 'True_'}
+
+        return location_data
+
