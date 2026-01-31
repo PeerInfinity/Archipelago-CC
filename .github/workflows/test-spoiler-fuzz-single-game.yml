@@ -507,9 +507,9 @@ jobs:
           total_stats = {
               "total": 0,
               "success": 0,
-              "failure": 0,
-              "timeout": 0,
-              "generation_error": 0
+              "generation_failure": 0,
+              "test_failure": 0,
+              "timeout": 0
           }
 
           for f in sorted(files):
@@ -532,9 +532,9 @@ jobs:
                               "passed": True,
                               "total": 0,
                               "success": 0,
-                              "failure": 0,
+                              "generation_failure": 0,
+                              "test_failure": 0,
                               "timeout": 0,
-                              "generation_error": 0,
                               "errors": []
                           },
                           "world_info": result.get("world_info", {}),
@@ -547,12 +547,12 @@ jobs:
                   # Aggregate counts
                   combined_sf["total"] += spoiler_fuzz.get("total", 0)
                   combined_sf["success"] += spoiler_fuzz.get("success", 0)
-                  combined_sf["failure"] += spoiler_fuzz.get("failure", 0)
+                  combined_sf["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
+                  combined_sf["test_failure"] += spoiler_fuzz.get("test_failure", 0)
                   combined_sf["timeout"] += spoiler_fuzz.get("timeout", 0)
-                  combined_sf["generation_error"] += spoiler_fuzz.get("generation_error", 0)
 
                   # Update passed status
-                  if spoiler_fuzz.get("failure", 0) > 0 or spoiler_fuzz.get("timeout", 0) > 0:
+                  if spoiler_fuzz.get("test_failure", 0) > 0 or spoiler_fuzz.get("timeout", 0) > 0 or spoiler_fuzz.get("generation_failure", 0) > 0:
                       combined_sf["passed"] = False
 
                   # Merge errors (errors is a list of strings)
@@ -563,9 +563,9 @@ jobs:
                   # Update total stats
                   total_stats["total"] += spoiler_fuzz.get("total", 0)
                   total_stats["success"] += spoiler_fuzz.get("success", 0)
-                  total_stats["failure"] += spoiler_fuzz.get("failure", 0)
+                  total_stats["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
+                  total_stats["test_failure"] += spoiler_fuzz.get("test_failure", 0)
                   total_stats["timeout"] += spoiler_fuzz.get("timeout", 0)
-                  total_stats["generation_error"] += spoiler_fuzz.get("generation_error", 0)
 
           combined["metadata"]["total_runs"] = total_stats["total"]
           combined["metadata"]["total_templates"] = len(combined["results"])
@@ -576,7 +576,7 @@ jobs:
               json.dump(combined, fp, indent=2)
 
           print(f"Combined results written to {output_file}")
-          print(f"Total: {total_stats['total']}, Success: {total_stats['success']}, Failure: {total_stats['failure']}, Timeout: {total_stats['timeout']}, Generation Error: {total_stats['generation_error']}")
+          print(f"Total: {total_stats['total']}, Success: {total_stats['success']}, Test Failure: {total_stats['test_failure']}, Timeout: {total_stats['timeout']}, Generation Failure: {total_stats['generation_failure']}")
           PYTHON_SCRIPT
 
       - name: Combine fuzz output directories
