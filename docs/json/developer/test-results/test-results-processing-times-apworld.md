@@ -1,6 +1,10 @@
 # Processing Times Chart (APWorld)
 
-**Generated:** 2026-01-30 23:54:13
+**Generated:** 2026-01-31 04:30:19
+
+**Source Data Created:** 2026-01-24T05:56:04.771277
+
+**Source Data Last Updated:** 2026-01-24T05:56:04.771282
 
 [← Back to Test Results Summary](./test-results-summary-apworld.md)
 

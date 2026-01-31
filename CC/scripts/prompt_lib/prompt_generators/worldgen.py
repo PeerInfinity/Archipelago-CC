@@ -1232,33 +1232,32 @@ def generate_ut_fuzz_single_failure_prompt(failure_info):
         fuzzer_opts += f' --disallow-options "{disallow_options}"'
 
     # Build reproduction command
+    # Detect if seeds are already actual seeds (failing_seed == reproduction_seed) or iteration indices
+    seeds_are_actual = reproduction_seed is not None and failing_seed == reproduction_seed
+
     if reproduction_seed is not None:
         repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --seed {reproduction_seed}{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
-        repro_explanation = f"""
-The original test used `--seed {base_seed}` with {total} runs.
-Each run `i` is seeded with `base_seed + i`, so run {failing_seed} used `random.seed({base_seed} + {failing_seed}) = random.seed({reproduction_seed})`.
-"""
-        if default_options or disallow_options:
-            repro_explanation += f"""
-**Fuzzer options used:**
-"""
-            if default_options:
-                repro_explanation += f"- Default options: `{default_options}`\n"
-            if disallow_options:
-                repro_explanation += f"- Disallow options: `{disallow_options}`\n"
+        if seeds_are_actual:
+            # New behavior: --number-by-seed was used, failing_seed IS the actual seed
+            repro_explanation = f"""
+The failure occurred at seed {failing_seed}. The test used `--number-by-seed` so the failing seed is the actual seed value.
 
-        repro_explanation += f"""
 To reproduce this exact failure:
 ```bash
 source .venv/bin/activate
 {repro_cmd}
 ```"""
-    else:
-        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
-        repro_explanation = f"""
-**Note**: The original test used a random seed, so exact reproduction is not possible.
-Running the fuzzer again may produce different failures.
-"""
+        else:
+            # Old behavior: failing_seed is an iteration index
+            repro_explanation = f"""
+The original test used `--seed {base_seed}` with {total} runs.
+Each run `i` is seeded with `base_seed + i`, so run {failing_seed} used `random.seed({base_seed} + {failing_seed}) = random.seed({reproduction_seed})`.
+
+To reproduce this exact failure:
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```"""
         if default_options or disallow_options:
             repro_explanation += f"""
 **Fuzzer options used:**
@@ -1267,13 +1266,25 @@ Running the fuzzer again may produce different failures.
                 repro_explanation += f"- Default options: `{default_options}`\n"
             if disallow_options:
                 repro_explanation += f"- Disallow options: `{disallow_options}`\n"
+    else:
+        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
+        repro_explanation = f"""
+**Note**: The original test used a random seed, so exact reproduction is not possible.
+Running the fuzzer again may produce different failures.
 
-        repro_explanation += f"""
 To run a new test:
 ```bash
 source .venv/bin/activate
 {repro_cmd}
 ```"""
+        if default_options or disallow_options:
+            repro_explanation += f"""
+**Fuzzer options used:**
+"""
+            if default_options:
+                repro_explanation += f"- Default options: `{default_options}`\n"
+            if disallow_options:
+                repro_explanation += f"- Disallow options: `{disallow_options}`\n"
 
     # Error type analysis
     if error_type == 'None' or error_type is None:
@@ -1355,10 +1366,14 @@ source .venv/bin/activate
 
 ### 2. Examine the failure details
 
-After running the reproduction command, check the generated error files:
+After running the reproduction command, examine the generated error files:
+
 ```bash
-cat fuzz_output/error/{world_dir}/0/0.log
-cat fuzz_output/error/{world_dir}/0/0.yaml
+# View the failure log
+cat fuzz_output/error/{world_dir}/{reproduction_seed}/{reproduction_seed}.log
+
+# View the YAML configuration that caused the failure
+cat fuzz_output/error/{world_dir}/{reproduction_seed}/{reproduction_seed}-0.yaml
 ```
 
 The log shows:

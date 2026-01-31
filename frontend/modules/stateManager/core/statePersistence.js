@@ -687,13 +687,25 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           if (typeof computedHelpers[name] === 'function'
               && computedHelpers[name].length <= 2
               && !helpersWithOptionalArgs.has(name)) {
-            // Create a lightweight snapshot for the helper
+            // Create a snapshot for the helper that includes regionReachability
+            // Some helpers (like lingo_can_use_level_2_location) need to check which regions are reachable
+            const regionReachability = {};
+            if (sm.regions) {
+              for (const regionName of sm.regions.keys()) {
+                if (sm.knownReachableRegions.has(regionName)) {
+                  regionReachability[regionName] = 'reachable';
+                } else {
+                  regionReachability[regionName] = 'unreachable';
+                }
+              }
+            }
             const snapshot = {
               inventory: sm.inventory,
               flags: sm.gameStateModule?.flags || [],
               events: sm.gameStateModule?.events || [],
               player: { id: sm.playerId, slot: sm.playerId },
-              checkedLocations: Array.from(sm.checkedLocations || [])
+              checkedLocations: Array.from(sm.checkedLocations || []),
+              regionReachability: regionReachability
             };
             const staticData = getStaticGameData(sm);
             return computedHelpers[name](snapshot, staticData);
@@ -705,12 +717,24 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
             if (typeof computedHelpers[prefixedName] === 'function'
                 && computedHelpers[prefixedName].length <= 2
                 && !helpersWithOptionalArgs.has(prefixedName)) {
+              // Create a snapshot for the helper that includes regionReachability
+              const regionReachability = {};
+              if (sm.regions) {
+                for (const regionName of sm.regions.keys()) {
+                  if (sm.knownReachableRegions.has(regionName)) {
+                    regionReachability[regionName] = 'reachable';
+                  } else {
+                    regionReachability[regionName] = 'unreachable';
+                  }
+                }
+              }
               const snapshot = {
                 inventory: sm.inventory,
                 flags: sm.gameStateModule?.flags || [],
                 events: sm.gameStateModule?.events || [],
                 player: { id: sm.playerId, slot: sm.playerId },
-                checkedLocations: Array.from(sm.checkedLocations || [])
+                checkedLocations: Array.from(sm.checkedLocations || []),
+                regionReachability: regionReachability
               };
               const staticData = getStaticGameData(sm);
               return computedHelpers[prefixedName](snapshot, staticData);

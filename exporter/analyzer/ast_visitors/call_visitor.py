@@ -303,6 +303,69 @@ class CallVisitorMixin:
                 if resolved_func is not None and callable(resolved_func):
                     logging.debug(f"Identified call to function from lambda default parameter: {func_name} -> {resolved_func}")
 
+                    # --- Module-level function factory handling ---
+                    # Handle function factories (like path_to_access_rule) that return lambdas when called.
+                    # This is needed for patterns like: lambda state: path_to_access_rule(args)(state)
+                    # where path_to_access_rule is a module-level function, not a closure variable.
+                    FUNCTION_FACTORY_NAMES = {'path_to_access_rule', 'options_to_access_rule'}
+                    if func_name in FUNCTION_FACTORY_NAMES:
+                        logging.debug(f"Detected module-level function factory call: {func_name}")
+                        try:
+                            # Resolve the arguments to actual values
+                            resolved_arg_values = []
+                            all_args_resolved = True
+                            for arg_node in node.args:
+                                if isinstance(arg_node, ast.Name):
+                                    arg_name = arg_node.id
+                                    if arg_name in self.closure_vars:
+                                        resolved_arg_values.append(self.closure_vars[arg_name])
+                                    else:
+                                        # Try expression resolver
+                                        resolved_value = self.expression_resolver.resolve_variable(arg_name)
+                                        if resolved_value is not None:
+                                            resolved_arg_values.append(resolved_value)
+                                        else:
+                                            logging.debug(f"Could not resolve argument {arg_name} for module-level function factory {func_name}")
+                                            all_args_resolved = False
+                                            break
+                                else:
+                                    logging.debug(f"Argument to module-level function factory is not a simple name: {type(arg_node)}")
+                                    all_args_resolved = False
+                                    break
+
+                            if all_args_resolved and len(resolved_arg_values) == len(node.args):
+                                # Call the function factory to get the resulting lambda
+                                logging.debug(f"Calling module-level function factory {func_name} with {len(resolved_arg_values)} args")
+                                result_lambda = resolved_func(*resolved_arg_values)
+
+                                if callable(result_lambda):
+                                    # Analyze the resulting lambda using ClosureFunctionAnalyzer
+                                    from ..closure_function_analyzer import ClosureFunctionAnalyzer
+                                    from ..rule_analyzer import RuleAnalyzer
+
+                                    # Create a minimal parent analyzer for the ClosureFunctionAnalyzer
+                                    parent_analyzer = RuleAnalyzer(
+                                        closure_vars=self.closure_vars,
+                                        rule_func=result_lambda,
+                                        player_context=self.player_context,
+                                        game_handler=self.game_handler,
+                                        seen_funcs=self.seen_funcs
+                                    )
+
+                                    closure_analyzer = ClosureFunctionAnalyzer(parent_analyzer)
+                                    analyzed_result = closure_analyzer.analyze_function(result_lambda)
+
+                                    if analyzed_result is not None:
+                                        logging.debug(f"Successfully analyzed module-level function factory result for {func_name}")
+                                        return analyzed_result
+                                    else:
+                                        logging.debug(f"ClosureFunctionAnalyzer could not analyze result of module-level {func_name}")
+                                else:
+                                    logging.debug(f"Module-level function factory {func_name} did not return a callable")
+                        except Exception as e:
+                            logging.error(f"Error analyzing module-level function factory {func_name}: {e}")
+                    # --- END Module-level function factory handling ---
+
                     # Check if game handler wants to preserve this as a helper
                     should_preserve = False
                     actual_func_name = None
@@ -1634,7 +1697,12 @@ class CallVisitorMixin:
                         if handler_result:
                             logging.debug(f"Game handler handled state method '{method}'")
                             result = handler_result
-                    # If not handled by game handler, don't set result - let default handling proceed
+                        else:
+                            # Handler didn't handle it, create default state_method
+                            result = {'type': 'state_method', 'method': method, 'args': filtered_args}
+                    else:
+                        # No handler available, create default state_method
+                        result = {'type': 'state_method', 'method': method, 'args': filtered_args}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object

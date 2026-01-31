@@ -80,7 +80,7 @@ class OperatorVisitorMixin:
                 return None # Or a generic representation
 
         except Exception as e:
-            logging.error("Error in visit_UnaryOp", e)
+            logging.error(f"Error in visit_UnaryOp: {e}")
             return None
 
     def visit_Compare(self, node: ast.Compare):
@@ -172,7 +172,7 @@ class OperatorVisitorMixin:
             }
 
         except Exception as e:
-            logging.error("Error in visit_Compare", e)
+            logging.error(f"Error in visit_Compare: {e}")
             return None
 
     def _try_fold_comparison(self, left_result, op_symbol, right_result):
@@ -345,5 +345,5 @@ class OperatorVisitorMixin:
                 'right': right_result
             }
         except Exception as e:
-            logging.error("Error in visit_BinOp", e)
+            logging.error(f"Error in visit_BinOp: {e}")
             return None

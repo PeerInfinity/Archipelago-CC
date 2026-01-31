@@ -166,6 +166,12 @@ class BaseGameExportHandler(
     # of overriding the method
     HELPERS_TO_PRESERVE: Set[str] = set()
 
+    # Set of option names recognized during bytecode analysis
+    # Used by ClosureFunctionAnalyzer to detect option access patterns like:
+    #   world.worlds[player].options.open_pyramid
+    # Games should override this with their specific option names
+    KNOWN_OPTION_NAMES: Set[str] = set()
+
     # Whether exits should be assumed bidirectional for frontend logic
     # Set to True for games where going through an entrance implies being able to return
     # Set to False to explicitly disable bidirectional assumption
@@ -1008,6 +1014,20 @@ class BaseGameExportHandler(
             List of item names to expand to, or empty list if not configured
         """
         return self.BYTECODE_HELPER_EXPANSIONS.get(helper_name, [])
+
+    def get_known_option_names(self) -> Set[str]:
+        """Get the set of known option names for bytecode-based analysis.
+
+        The analyzer uses this when falling back to bytecode analysis to
+        identify option access patterns like:
+            world.worlds[player].options.open_pyramid
+
+        Games can override this or set KNOWN_OPTION_NAMES.
+
+        Returns:
+            Set of known option names
+        """
+        return self.KNOWN_OPTION_NAMES
 
     def handle_game_specific_state_method(
         self,

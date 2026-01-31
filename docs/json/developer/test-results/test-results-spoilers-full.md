@@ -10,32 +10,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-30 23:54:13
+**Generated:** 2026-01-31 04:30:19
 
-**Source Data Created:** 2026-01-30T23:18:34.219775
+**Source Data Created:** 2026-01-31T04:15:03.561351
 
-**Source Data Last Updated:** 2026-01-30T23:18:34.219781
+**Source Data Last Updated:** 2026-01-31T04:15:03.561360
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 70 (95.9%)
-- **Failed:** 3 (4.1%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 37/70 (52.9% of passed)
-- **Passing with Generic Logic:** 66/70 (94.3% of passed)
-- **Passing with Both Generic:** 37/70 (52.9% of passed)
+- **Passing with Generic Exporter:** 38/73 (52.1% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 38/73 (52.1% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 10.2KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.5KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 16.2KB | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -66,7 +66,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 3.6KB | ✅ |
-| Lingo | ❌ Failed | 0 | 1.6 | 6.12 | 🟡 26.1% | 38.0KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | ✅ | ✅ |
@@ -83,10 +83,10 @@
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.3KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | 0 | 7.1 | 15.14 | 🟡 46.9% | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 21.4KB | ✅ |
@@ -98,13 +98,13 @@
 | TUNIC | ✅ Passed | 0 | 5.12 | 5.12 | 🟢 Complete | 3.1KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 14.7KB | ✅ |
+| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 14.8KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 7.0KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 3.8KB | ✅ |
-| Wargroove | ❌ Failed | 301 | 0 | 9.1 | 🔴 0.0% | ✅ | ✅ |
+| Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 9.2KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 

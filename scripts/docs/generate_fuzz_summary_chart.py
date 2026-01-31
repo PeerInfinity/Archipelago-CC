@@ -165,7 +165,8 @@ def generate_fuzz_summary_markdown(
     spoiler_fuzz: Dict[str, Dict[str, Any]],
     world_mapping: Dict[str, Dict[str, Any]],
     project_root: str,
-    world_source: str = "bundled"
+    world_source: str = "bundled",
+    metadata: Optional[Dict[str, Any]] = None
 ) -> str:
     """Generate the fuzz summary markdown content."""
 
@@ -182,6 +183,13 @@ def generate_fuzz_summary_markdown(
     md_content = f"# Fuzz Test Results Summary{title_suffix}\n\n"
 
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+    # Add source data metadata if available
+    if metadata and ('created' in metadata or 'last_updated' in metadata):
+        if 'created' in metadata:
+            md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
+        if 'last_updated' in metadata:
+            md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
 
     # Navigation links
     md_content += "[<- Back to Main Test Results Summary](./test-results-summary.md)\n\n"
@@ -383,10 +391,11 @@ def main():
             print(f"No fuzz test results found for {world_source}")
             continue
 
-        # Generate markdown
+        # Generate markdown (use ut_modified metadata as primary source)
+        metadata = ut_modified_data.get('metadata', {})
         md_content = generate_fuzz_summary_markdown(
             ut_original, ut_modified, ut_hybrid, spoiler_fuzz,
-            world_mapping, project_root, world_source
+            world_mapping, project_root, world_source, metadata
         )
 
         # Determine output path

@@ -519,7 +519,8 @@ def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
                 else:
                     extra = "".join(traceback.format_exception(raised))
 
-                dump_generation_output(outcome, apworld_name, i, yaml_path, out_buf, extra)
+                run_id = get_run_id(i, args)
+                dump_generation_output(outcome, apworld_name, run_id, yaml_path, out_buf, extra)
 
                 return outcome, raised
     except Exception as e:
@@ -557,12 +558,24 @@ class GenOutcome:
     OptionError = 3
 
 
+def get_run_id(i, args):
+    """Get the run identifier for output files and error reporting.
+
+    When --number-by-seed is set, returns the actual seed (base_seed + iteration).
+    Otherwise returns the iteration index (default behavior).
+    """
+    if getattr(args, 'number_by_seed', False) and args.seed is not None:
+        return args.seed + i
+    return i
+
+
 IS_TTY = sys.stdout.isatty()
 SUCCESS = 0
 FAILURE = 0
 TIMEOUTS = 0
 OPTION_ERRORS = 0
 SUBMITTED = 0
+STOP_REQUESTED = False
 REPORT = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [])))
 
 
@@ -573,23 +586,29 @@ def gen_callback(yamls_dir, apworld_name, i, args, outcome):
         else:
             exc = None
 
-        global SUCCESS, FAILURE, SUBMITTED, OPTION_ERRORS, TIMEOUTS
+        global SUCCESS, FAILURE, SUBMITTED, OPTION_ERRORS, TIMEOUTS, STOP_REQUESTED
         SUBMITTED -= 1
+
+        run_id = get_run_id(i, args)
 
         if outcome == GenOutcome.Success:
             SUCCESS += 1
             if IS_TTY:
                 print(".", end="")
         elif outcome == GenOutcome.Failure:
-            REPORT[apworld_name][type(exc)][str(exc)].append(i)
+            REPORT[apworld_name][type(exc)][str(exc)].append(run_id)
             FAILURE += 1
             if IS_TTY:
                 print("F", end="")
+            if getattr(args, 'stop_on_first_failure', False):
+                STOP_REQUESTED = True
         elif outcome == GenOutcome.Timeout:
-            REPORT[apworld_name][TimeoutError][""].append(i)
+            REPORT[apworld_name][TimeoutError][""].append(run_id)
             TIMEOUTS += 1
             if IS_TTY:
                 print("T", end="")
+            if getattr(args, 'stop_on_first_failure', False):
+                STOP_REQUESTED = True
         elif outcome == GenOutcome.OptionError:
             OPTION_ERRORS += 1
             if IS_TTY:
@@ -622,7 +641,8 @@ def error(yamls_dir, apworld_name, i, args, raised):
             msg.write(raised.out_buf)
         msg.write("\n".join(traceback.format_exception(raised)))
 
-        dump_generation_output(GenOutcome.Failure, apworld_name, i, yamls_dir, msg)
+        run_id = get_run_id(i, args)
+        dump_generation_output(GenOutcome.Failure, apworld_name, run_id, yamls_dir, msg)
         return gen_callback(yamls_dir, apworld_name, i, args, GenOutcome.Failure)
     except Exception as e:
         print("Error while handling fuzzing result:")
@@ -816,7 +836,8 @@ if __name__ == "__main__":
                     outcome = GenOutcome.Timeout
                     for hook in MAIN_HOOKS:
                         outcome, _ = hook.reclassify_outcome(outcome, TimeoutError())
-                    dump_generation_output(outcome, apworld_name, i, yamls_dir, out_buf, extra)
+                    run_id = get_run_id(i, args)
+                    dump_generation_output(outcome, apworld_name, run_id, yamls_dir, out_buf, extra)
                     gen_callback(yamls_dir, apworld_name, i, args, outcome)
                 except KeyboardInterrupt:
                     break
@@ -824,7 +845,8 @@ if __name__ == "__main__":
                     break
                 except Exception as exc:
                     extra = "[...] Exception while timing out:\n {}".format("\n".join(traceback.format_exception(exc)))
-                    dump_generation_output(GenOutcome.Timeout, apworld_name, i, yamls_dir, out_buf, extra)
+                    run_id = get_run_id(i, args)
+                    dump_generation_output(GenOutcome.Timeout, apworld_name, run_id, yamls_dir, out_buf, extra)
                     gen_callback(yamls_dir, apworld_name, i, args, outcome)
                     continue
 
@@ -832,7 +854,7 @@ if __name__ == "__main__":
         timeout_handler.daemon = True
         timeout_handler.start()
 
-        while i < args.runs:
+        while i < args.runs and not STOP_REQUESTED:
             # Seed random for this iteration if seed is provided
             # This ensures YAML generation in main process is deterministic
             if args.seed is not None:
@@ -860,13 +882,14 @@ if __name__ == "__main__":
 
             SUBMITTED += 1
 
+            run_id = get_run_id(i, args)
             yamls_dir = tempfile.mkdtemp(prefix="apfuzz", dir=tmp)
             for nb, yaml_content in enumerate(random_yamls):
-                yaml_path = os.path.join(yamls_dir, f"{i}-{nb}.yaml")
+                yaml_path = os.path.join(yamls_dir, f"{run_id}-{nb}.yaml")
                 open(yaml_path, "wb").write(yaml_content.encode("utf-8"))
 
             for nb, yaml_content in enumerate(static_yamls):
-                yaml_path = os.path.join(yamls_dir, f"static-{i}-{nb}.yaml")
+                yaml_path = os.path.join(yamls_dir, f"static-{run_id}-{nb}.yaml")
                 open(yaml_path, "wb").write(yaml_content.encode("utf-8"))
 
             last_job = p.apply_async(
@@ -883,9 +906,14 @@ if __name__ == "__main__":
 
             i += 1
 
-        while SUBMITTED > 0:
+        while SUBMITTED > 0 and not STOP_REQUESTED:
             last_job.ready()
             time.sleep(0.05)
+
+        if STOP_REQUESTED:
+            print("\nStopping after first failure...")
+            # Give a moment for any pending callbacks to complete
+            time.sleep(0.5)
 
     parser = ArgumentParser(prog="apfuzz")
     parser.add_argument("-g", "--game", default=None)
@@ -909,8 +937,17 @@ if __name__ == "__main__":
                         help="Enable fractional sphere logic for UT comparison. "
                              "This iterates within each integer sphere to handle cascading item dependencies, "
                              "where collecting items from one location enables access to other locations in the same sphere.")
+    parser.add_argument("--number-by-seed", default=False, action="store_true",
+                        help="Number output files and errors by actual seed (base_seed + iteration) instead of iteration index. "
+                             "Requires --seed to be set. Makes it easier to reproduce specific failures.")
+    parser.add_argument("--stop-on-first-failure", default=False, action="store_true",
+                        help="Stop fuzzing after the first failure or timeout. Useful for debugging.")
 
     args = parser.parse_args()
+
+    # Validate --number-by-seed requires --seed
+    if args.number_by_seed and args.seed is None:
+        parser.error("--number-by-seed requires --seed to be set")
 
     # This is just to make sure that the host.yaml file exists by the time we fork
     # so that a first run on a new installation doesn't throw out failures until

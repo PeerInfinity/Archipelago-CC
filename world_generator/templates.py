@@ -2031,16 +2031,45 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             shop_wrapper_section = '''
 
 class _RegionWrapper:
-    """Wrapper for region to provide can_reach interface for worldgen shops."""
+    """Wrapper for region to provide can_reach interface for worldgen shops.
+
+    This wrapper stores a region name and lazily resolves it to the actual
+    Region object. Once resolved, the Region object is cached to ensure
+    consistent behavior with the original ALttP world's shop.region.
+    """
     def __init__(self, region_name: str, world):
         self.name = region_name
         self._world = world
+        self._region = None  # Cache for the actual Region object
+        self.player = world.player if hasattr(world, 'player') else 1  # For compatibility
 
-    def can_reach(self, state) -> bool:
-        """Check if the region is reachable."""
+    def _get_region(self):
+        """Get the actual Region object, caching it for future use.
+
+        Only caches successful lookups to handle the case where this is called
+        before regions are created (during __init__).
+        """
+        if self._region is not None:
+            return self._region
         try:
             region = self._world.multiworld.get_region(self.name, self._world.player)
-            return state.can_reach_region(self.name, self._world.player)
+            self._region = region  # Cache only on success
+            return region
+        except KeyError:
+            return None
+
+    def can_reach(self, state) -> bool:
+        """Check if the region is reachable.
+
+        Delegates to the actual Region.can_reach() method to ensure proper
+        handling of state.stale checks and BFS updates. This is important
+        because Region.can_reach() will trigger a BFS update if the state
+        is stale, ensuring consistent behavior with the original world.
+        """
+        try:
+            # Look up the region from the STATE's multiworld and delegate to it
+            region = state.multiworld.get_region(self.name, self._world.player)
+            return region.can_reach(state)
         except KeyError:
             return False
 

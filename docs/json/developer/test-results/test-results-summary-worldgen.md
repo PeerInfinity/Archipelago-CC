@@ -1,6 +1,10 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-30 23:54:13
+**Generated:** 2026-01-31 04:30:19
+
+**Source Data Created:** 2026-01-27T22:55:56.684110
+
+**Source Data Last Updated:** 2026-01-27T22:55:56.684115
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -12,6 +16,7 @@ This summary combines results from 4 types of tests:
 
 Additional test results:
 - **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-worldgen.md)
+- **Freshness Report:** Shows when each test result document was last updated - [View Details](./test-results-freshness.md)
 
 Additional information:
 - **Template Types:** Understanding original, WorldGen, and APWorld templates - [Learn More](../tests/template-types.md)
@@ -51,9 +56,9 @@ Of the 43 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 298.2KB
+- **Total Exporter Code:** 300.7KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 298.2KB
+- **Combined Total:** 300.7KB
 
 ## Test Results
 
@@ -61,7 +66,7 @@ Of the 43 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 246.3KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.2KB | ✅ | 665.7KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.5KB | ✅ | 665.7KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 656.1KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -115,7 +120,7 @@ Of the 43 templates passing all 4 tests:
 | TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 111.0KB |
 | Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.8KB | ✅ | 255.7KB |
 | The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 440.1KB |
-| The Messenger WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.7KB | ✅ | 217.9KB |
+| The Messenger WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.8KB | ✅ | 217.9KB |
 | The Wind Waker WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 269.9KB |
 | Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 257.1KB |
 | Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 60.2KB |
@@ -149,9 +154,9 @@ Of the 43 templates passing all 4 tests:
 | 4 | A Hat in Time WorldGen | 18.0KB |
 | 5 | Terraria WorldGen | 16.8KB |
 | 6 | A Short Hike WorldGen | 16.2KB |
-| 7 | The Messenger WorldGen | 14.7KB |
+| 7 | The Messenger WorldGen | 14.8KB |
 | 8 | Final Fantasy Mystic Quest WorldGen | 13.4KB |
-| 9 | A Link to the Past WorldGen | 10.2KB |
+| 9 | A Link to the Past WorldGen | 12.5KB |
 | 10 | Yoshi's Island WorldGen | 9.2KB |
 | 11 | Factorio WorldGen | 8.6KB |
 | 12 | Inscryption WorldGen | 8.0KB |
