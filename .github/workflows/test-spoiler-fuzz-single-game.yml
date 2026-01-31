@@ -535,7 +535,7 @@ jobs:
                               "failure": 0,
                               "timeout": 0,
                               "generation_error": 0,
-                              "errors": {}
+                              "errors": []
                           },
                           "world_info": result.get("world_info", {}),
                           "timestamp": datetime.now().isoformat()
@@ -555,11 +555,10 @@ jobs:
                   if spoiler_fuzz.get("failure", 0) > 0 or spoiler_fuzz.get("timeout", 0) > 0:
                       combined_sf["passed"] = False
 
-                  # Merge errors
-                  for error_type, seeds in spoiler_fuzz.get("errors", {}).items():
-                      if error_type not in combined_sf["errors"]:
-                          combined_sf["errors"][error_type] = []
-                      combined_sf["errors"][error_type].extend(seeds)
+                  # Merge errors (errors is a list of strings)
+                  errors = spoiler_fuzz.get("errors", [])
+                  if isinstance(errors, list):
+                      combined_sf["errors"].extend(errors)
 
                   # Update total stats
                   total_stats["total"] += spoiler_fuzz.get("total", 0)
