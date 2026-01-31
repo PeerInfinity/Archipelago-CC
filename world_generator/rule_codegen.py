@@ -29,6 +29,7 @@ class RuleCodeGenerator:
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
         self.entrance_regions: Dict[str, str] = {}  # entrance_name -> parent_region_name
+        self.entrance_connections: Dict[str, str] = {}  # entrance_name -> connected_region_name
         # Context for current location/entrance being processed
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
@@ -71,6 +72,21 @@ class RuleCodeGenerator:
             entrance_regions: Dict mapping entrance name (lowercase) to parent region name
         """
         self.entrance_regions = entrance_regions
+
+    def set_entrance_connections(self, entrance_connections: Dict[str, str]) -> None:
+        """Set the entrance-to-connected-region mapping.
+
+        This is used to resolve dict_lambda_lookup patterns like:
+            rule_map.get(world.get_entrance('X').connected_region.name, default)
+
+        When entrance shuffle is vanilla, we know the exact connections at export
+        time, so we can resolve the key and return just the matching case instead
+        of OR'ing all cases together.
+
+        Args:
+            entrance_connections: Dict mapping entrance name to connected region name
+        """
+        self.entrance_connections = entrance_connections or {}
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
@@ -1277,6 +1293,18 @@ class RuleCodeGenerator:
                             # Generate a HelperCall for the helper function
                             return f'HelperCall({func_name})'
                     # Unknown capability - fall through to True_()
+
+                # Check if this is an AST_dict_lambda_lookup rule (dict.get(key, default) pattern)
+                if rb_rule == 'AST_dict_lambda_lookup':
+                    args = rule.get('args', {})
+                    lookup_rule = {
+                        'type': 'dict_lambda_lookup',
+                        'dict_name': args.get('dict_name', ''),
+                        'key': args.get('key', {}),
+                        'cases': args.get('cases', {}),
+                        'default': args.get('default', {'rule': 'False_'})
+                    }
+                    return self._convert_dict_lambda_lookup(lookup_rule)
 
         # Dispatch based on rule type
         converters = {
@@ -6446,15 +6474,9 @@ class RuleCodeGenerator:
         This handles patterns like: rule_map.get(key, default)(state)
         where rule_map contains lambda values that have been analyzed.
 
-        The generated code creates an Or() of all possible cases, since at export time
-        we don't know which entrance shuffle resulted in which region connections.
-        Each case is: (key matches) AND (rule for that key)
-
-        This is a permissive approach - if ANY of the dict's rules could be satisfied,
-        the overall rule passes. This is correct because:
-        1. At runtime, only ONE key will match (the actual region name)
-        2. By OR-ing all cases, we ensure the correct rule is evaluated
-        3. The server uses the same permissive approach when multiple paths exist
+        When we can resolve the key expression (e.g., for vanilla entrance shuffle),
+        we return just the matching case's rule. Otherwise, we fall back to OR'ing
+        all cases together (permissive approach).
 
         Args:
             rule: Dict with 'cases' (analyzed rules for each key), 'key', 'default'
@@ -6469,6 +6491,15 @@ class RuleCodeGenerator:
         if not cases:
             # No cases - just use the default
             return self._convert_rule(default)
+
+        # Try to resolve the key expression if it's a world.get_entrance(X).connected_region.name pattern
+        resolved_key = self._try_resolve_entrance_connected_region(key_expr)
+        if resolved_key is not None:
+            # We resolved the key - return just the matching case or default
+            if resolved_key in cases:
+                return self._convert_rule(cases[resolved_key])
+            else:
+                return self._convert_rule(default)
 
         # If there's only one case, we can simplify
         if len(cases) == 1:
@@ -6506,6 +6537,63 @@ class RuleCodeGenerator:
 
         # Multiple rules - Or them together
         return f'Or({", ".join(case_rules)})'
+
+    def _try_resolve_entrance_connected_region(self, key_expr: Dict[str, Any]) -> Optional[str]:
+        """Try to resolve a key expression that accesses entrance.connected_region.name.
+
+        Handles patterns like:
+            world.get_entrance('Tower of Hera').connected_region.name
+
+        If we have the entrance connections data (set via set_entrance_connections),
+        we can resolve this to the actual connected region name.
+
+        Args:
+            key_expr: The key expression from dict_lambda_lookup
+
+        Returns:
+            The resolved region name, or None if we can't resolve it
+        """
+        if not self.entrance_connections:
+            return None
+
+        if not isinstance(key_expr, dict):
+            return None
+
+        # Pattern: {type: 'attribute', attr: 'name', object: {type: 'attribute', attr: 'connected_region', object: ...}}
+        if key_expr.get('type') != 'attribute' or key_expr.get('attr') != 'name':
+            return None
+
+        inner = key_expr.get('object', {})
+        if inner.get('type') != 'attribute' or inner.get('attr') != 'connected_region':
+            return None
+
+        # Now look for world.get_entrance('X') pattern
+        func_call = inner.get('object', {})
+        if func_call.get('type') != 'function_call':
+            return None
+
+        func = func_call.get('function', {})
+        if func.get('type') != 'attribute' or func.get('attr') != 'get_entrance':
+            return None
+
+        # Get the entrance name from the first argument
+        args = func_call.get('args', [])
+        if not args:
+            return None
+
+        first_arg = args[0]
+        entrance_name = None
+        if isinstance(first_arg, dict):
+            if first_arg.get('type') == 'constant':
+                entrance_name = first_arg.get('value')
+        elif isinstance(first_arg, str):
+            entrance_name = first_arg
+
+        if not entrance_name:
+            return None
+
+        # Look up the connected region
+        return self.entrance_connections.get(entrance_name)
 
     def _try_evaluate_conditional_test(self, test: Dict[str, Any]) -> Optional[bool]:
         """Try to evaluate a conditional test to a constant boolean.
