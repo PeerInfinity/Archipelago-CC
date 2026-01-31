@@ -1189,6 +1189,7 @@ class RuleCodeGenerator:
                     'List': 'list',  # Rule Builder format list for comparisons
                     'AST_group_count': 'AST_group_count',  # Group count for comparisons (state.count_group)
                     'group_count': 'group_count',  # Group count for comparisons
+                    'BunnyPaths': 'bunny_paths',  # Pre-computed bunny access paths
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -1710,6 +1711,13 @@ class RuleCodeGenerator:
             option_name = args.get('option', '')
             self.required_imports.add('OptionValue')
             return f"OptionValue('{option_name}')"
+
+        if rb_rule == 'BunnyPaths':
+            # Convert Rule Builder format BunnyPaths rule
+            # This rule is generated during ALttP export for superbunny locations
+            options = args.get('options', [])
+            self.required_imports.add('BunnyPaths')
+            return self._generate_bunny_paths_code(options)
 
         if rb_rule == 'WorldAttribute':
             # Convert Rule Builder format WorldAttribute
@@ -2572,6 +2580,49 @@ class RuleCodeGenerator:
         entrance_escaped = self._escape_string(entrance)
 
         return f'CanReachEntrance("{entrance_escaped}")'
+
+    def _generate_bunny_paths_code(self, options: List[Dict[str, Any]]) -> str:
+        """Generate code for BunnyPaths rule.
+
+        This creates a BunnyPaths rule with the pre-computed path options
+        extracted from ALttP bunny rule closures during export.
+
+        Args:
+            options: List of path options, each with type, entrance info, and requirements
+
+        Returns:
+            Python code string for BunnyPaths rule instantiation
+        """
+        if not options:
+            return 'BunnyPaths(options=[])'
+
+        # Build option list as Python code
+        option_strs = []
+        for opt in options:
+            opt_parts = []
+
+            # Type (required)
+            opt_type = opt.get('type', 'direct')
+            opt_parts.append(f"'type': {repr(opt_type)}")
+
+            # Required items
+            requires = opt.get('requires', [])
+            opt_parts.append(f"'requires': {repr(requires)}")
+
+            # Path-specific fields
+            if opt_type == 'path':
+                if 'via_entrance' in opt:
+                    opt_parts.append(f"'via_entrance': {repr(opt['via_entrance'])}")
+                if 'via_region' in opt:
+                    opt_parts.append(f"'via_region': {repr(opt['via_region'])}")
+                if 'connected_region' in opt:
+                    opt_parts.append(f"'connected_region': {repr(opt['connected_region'])}")
+                if opt.get('is_superbunny'):
+                    opt_parts.append("'is_superbunny': True")
+
+            option_strs.append('{' + ', '.join(opt_parts) + '}')
+
+        return f"BunnyPaths(options=[{', '.join(option_strs)}])"
 
     def _convert_state_method(self, rule: Dict[str, Any]) -> str:
         """Convert state_method calls to appropriate Rule Builder classes."""

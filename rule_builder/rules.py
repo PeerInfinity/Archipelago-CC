@@ -2386,6 +2386,185 @@ class EntranceAccessRuleCall(Rule[TWorld], game="Archipelago"):
             return result
 
 
+@dataclasses.dataclass()
+class BunnyPaths(Rule[TWorld], game="Archipelago"):
+    """A rule that checks multiple pre-computed bunny access paths.
+
+    This rule is generated during ALttP export for superbunny-accessible locations
+    in glitch modes. It contains a list of path options, each with:
+    - type: 'path' (via entrance) or 'direct' (item-only)
+    - via_entrance: entrance name (for path type)
+    - via_region: source region of entrance (for path type)
+    - connected_region: destination region (for path type)
+    - requires: list of required items
+    - is_superbunny: whether this is a superbunny mirror path
+
+    The rule succeeds if ANY path option is satisfied.
+    """
+
+    options: list[dict[str, Any]] = dataclasses.field(default_factory=list)
+    """List of path options, each with type, entrance info, and requirements"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Pre-resolve entrance lookups
+        resolved_options = []
+        for opt in self.options:
+            resolved_opt = dict(opt)
+            if opt.get('type') == 'path' and opt.get('via_entrance'):
+                try:
+                    entrance = world.get_entrance(opt['via_entrance'])
+                    resolved_opt['_entrance_exists'] = True
+                    resolved_opt['_parent_region'] = (
+                        entrance.parent_region.name if entrance.parent_region else None
+                    )
+                except KeyError:
+                    resolved_opt['_entrance_exists'] = False
+            resolved_options.append(resolved_opt)
+
+        return self.Resolved(
+            tuple(tuple(sorted(opt.items())) for opt in resolved_options),  # Hashable
+            resolved_options,  # Original for access
+            player=world.player,
+            caching_enabled=world.rule_caching_enabled,
+        )
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any], world_cls: type) -> "BunnyPaths":
+        """Create a BunnyPaths rule from a dict representation."""
+        options = data.get('options', data.get('args', {}).get('options', []))
+        return cls(options=list(options))
+
+    @override
+    def __str__(self) -> str:
+        paths = [self._describe_option(opt) for opt in self.options]
+        return f"BunnyPaths({' OR '.join(paths)})"
+
+    def _describe_option(self, opt: dict[str, Any]) -> str:
+        if opt.get('type') == 'direct':
+            return f"direct({','.join(opt.get('requires', []))})"
+        else:
+            entrance = opt.get('via_entrance', '?')
+            items = ','.join(opt.get('requires', []))
+            return f"path({entrance}: {items})"
+
+    class Resolved(Rule.Resolved):
+        options_hashable: tuple  # For hashing
+        options: list[dict[str, Any]]
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            """Check if any path option is satisfied."""
+            for opt in self.options:
+                if self._check_option(opt, state):
+                    return True
+            return False
+
+        def _check_option(self, opt: dict[str, Any], state: CollectionState) -> bool:
+            """Check if a single path option is satisfied."""
+            opt_type = opt.get('type', 'direct')
+            requires = opt.get('requires', [])
+
+            # Check required items
+            for item in requires:
+                if not state.has(item, self.player):
+                    return False
+
+            # For path type, also check entrance reachability
+            if opt_type == 'path':
+                entrance_name = opt.get('via_entrance')
+                if not entrance_name:
+                    return False
+
+                # Skip if entrance doesn't exist
+                if not opt.get('_entrance_exists', True):
+                    return False
+
+                # Check if entrance is reachable
+                try:
+                    if not state.can_reach_entrance(entrance_name, self.player):
+                        return False
+                except KeyError:
+                    return False
+
+            return True
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            for opt in self.options:
+                for item in opt.get('requires', []):
+                    if item not in deps:
+                        deps[item] = set()
+                    deps[item].add(id(self))
+            return deps
+
+        @override
+        def entrance_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            for opt in self.options:
+                if opt.get('type') == 'path':
+                    entrance = opt.get('via_entrance')
+                    if entrance:
+                        if entrance not in deps:
+                            deps[entrance] = set()
+                        deps[entrance].add(id(self))
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "BunnyPaths("}]
+            if state is None:
+                # Just list the options
+                for i, opt in enumerate(self.options):
+                    if i > 0:
+                        messages.append({"type": "text", "text": " OR "})
+                    messages.append({"type": "text", "text": self._describe_option(opt)})
+            else:
+                # Show which options are satisfied
+                for i, opt in enumerate(self.options):
+                    if i > 0:
+                        messages.append({"type": "text", "text": " OR "})
+                    satisfied = self._check_option(opt, state)
+                    color = "green" if satisfied else "salmon"
+                    messages.append({
+                        "type": "color",
+                        "color": color,
+                        "text": self._describe_option(opt)
+                    })
+            messages.append({"type": "text", "text": ")"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                paths = [self._describe_option(opt) for opt in self.options]
+                return f"BunnyPaths({' OR '.join(paths)})"
+
+            for opt in self.options:
+                if self._check_option(opt, state):
+                    return f"Satisfied via {self._describe_option(opt)}"
+
+            return "No bunny path available"
+
+        def _describe_option(self, opt: dict[str, Any]) -> str:
+            if opt.get('type') == 'direct':
+                return f"direct({','.join(opt.get('requires', []))})"
+            else:
+                entrance = opt.get('via_entrance', '?')
+                items = ','.join(opt.get('requires', []))
+                return f"path({entrance}: {items})"
+
+        @override
+        def __str__(self) -> str:
+            paths = [self._describe_option(opt) for opt in self.options]
+            return f"BunnyPaths({' OR '.join(paths)})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"options": self.options}
+
+
 # =============================================================================
 # AST Format Support Classes
 # =============================================================================

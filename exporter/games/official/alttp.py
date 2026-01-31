@@ -27,6 +27,7 @@ Post-processing:
 
 from typing import Dict, Any, Set, Optional, List, Callable
 from ..base import GenericGameExportHandler
+from exporter.analyzer.closure_function_analyzer import ClosureFunctionAnalyzer
 import logging
 import re
 
@@ -378,21 +379,30 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         """Post-process ALttP export data to fix bunny rule issues.
 
         In glitch modes, the bunny rules analyzer sometimes produces overly-permissive
-        rules for superbunny-accessible locations. Specifically, it may create Or rules
-        with standalone CanReachEntrance options that should have Magic Mirror requirements.
+        rules for superbunny-accessible locations. This method extracts pre-computed
+        bunny path data from the original rule closures and converts them to BunnyPaths
+        format which can be properly evaluated by the worldgen.
 
-        This method:
-        1. Identifies location rules for superbunny-accessible locations
-        2. Removes standalone CanReachEntrance options from Or rules
-        3. For Superbunny Cave locations, removes ALL CanReachEntrance options
+        The pre-computed paths capture:
+        - Which entrances can be used for bunny access
+        - What items are required for each path (e.g., Magic Mirror, Pegasus Boots)
+        - The source and destination regions for path validation
 
-        This ensures the worldgen rules match the more restrictive server logic.
+        Falls back to the workaround (Moon Pearl only) if path extraction fails.
         """
         # Check if we're in a glitch mode that uses bunny rules
         if not self._is_glitch_mode():
             return super().post_process_data(data)
 
-        fixed_count = 0
+        converted_count = 0
+        fallback_count = 0
+
+        # Locations with complex entrance access rules that need the fallback
+        # These locations have entrances with requirements beyond what BunnyPaths can capture
+        fallback_locations = {
+            'Pyramid Fairy - Left', 'Pyramid Fairy - Right',
+        }
+
         # Process each player's regions
         for player_id_str, player_regions in data.get('regions', {}).items():
             for region_name, region_data in player_regions.items():
@@ -402,20 +412,81 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                     if loc_name in SUPERBUNNY_ACCESSIBLE_LOCATIONS:
                         access_rule = loc_data.get('access_rule')
                         if access_rule:
-                            # Superbunny Cave locations have special path-based logic that doesn't export correctly.
-                            # The bunny rule analyzer produces CanReachEntrance-based rules that are too permissive.
-                            # Remove ALL CanReachEntrance options for Superbunny Cave, requiring Moon Pearl only.
-                            # This trades some false negatives for avoiding false positives from the broken export.
-                            is_superbunny_cave = loc_name in ('Superbunny Cave - Top', 'Superbunny Cave - Bottom')
-                            fixed_rule = self._fix_superbunny_rule(access_rule, remove_all_canreach=is_superbunny_cave)
-                            if fixed_rule != access_rule:
-                                logger.debug(f"Fixed superbunny rule for {loc_name}")
-                                loc_data['access_rule'] = fixed_rule
-                                fixed_count += 1
+                            # Force fallback for locations with complex entrance rules
+                            if loc_name in fallback_locations:
+                                fixed_rule = self._fix_superbunny_rule(access_rule, remove_all_canreach=True)
+                                if fixed_rule != access_rule:
+                                    loc_data['access_rule'] = fixed_rule
+                                    fallback_count += 1
+                                    logger.debug(f"Forced fallback for {loc_name}")
+                                continue
 
-        if fixed_count > 0:
-            logger.debug(f"ALttP post_process_data: fixed {fixed_count} superbunny rules")
+                            # Try to extract pre-computed bunny paths
+                            bunny_paths = self._extract_bunny_paths(loc_name)
+
+                            if bunny_paths:
+                                loc_data['access_rule'] = bunny_paths
+                                converted_count += 1
+                                logger.debug(f"Converted bunny rule to BunnyPaths for {loc_name}: "
+                                           f"{len(bunny_paths.get('options', []))} path options")
+                            else:
+                                # Fallback: use the existing fix method
+                                is_superbunny_cave = loc_name in ('Superbunny Cave - Top', 'Superbunny Cave - Bottom')
+                                fixed_rule = self._fix_superbunny_rule(access_rule, remove_all_canreach=is_superbunny_cave)
+                                if fixed_rule != access_rule:
+                                    loc_data['access_rule'] = fixed_rule
+                                    fallback_count += 1
+                                    logger.debug(f"Fallback fix for {loc_name}")
+
+        if converted_count > 0 or fallback_count > 0:
+            logger.info(f"ALttP post_process_data: converted {converted_count} to BunnyPaths, "
+                       f"{fallback_count} used fallback fix")
         return super().post_process_data(data)
+
+    def _extract_bunny_paths(self, location_name: str) -> Optional[Dict[str, Any]]:
+        """Extract pre-computed bunny paths for a location.
+
+        Uses the ClosureFunctionAnalyzer to extract entrance/path data from
+        the bunny rule closure without deep rule analysis.
+
+        Args:
+            location_name: Name of the location to extract paths for
+
+        Returns:
+            BunnyPaths rule dict if extraction succeeds, None otherwise
+        """
+        if not self.world:
+            return None
+
+        try:
+            location = self.world.get_location(location_name)
+        except (KeyError, AttributeError):
+            logger.debug(f"Could not find location: {location_name}")
+            return None
+
+        if not hasattr(location, 'access_rule') or not callable(location.access_rule):
+            return None
+
+        # Use the closure analyzer to extract bunny path data
+        analyzer = ClosureFunctionAnalyzer(game_handler=self)
+        path_data = analyzer.extract_bunny_path_data(location.access_rule)
+
+        if path_data:
+            logger.debug(f"Extracted bunny paths for {location_name}: {path_data}")
+            return path_data
+
+        return None
+
+    def get_known_items_for_bytecode(self) -> Set[str]:
+        """Return known ALttP items for bytecode analysis.
+
+        Called by ClosureFunctionAnalyzer when extracting items from
+        function bytecode constants.
+
+        Returns:
+            Set of valid ALttP item names
+        """
+        return self.KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS
 
     def _is_glitch_mode(self) -> bool:
         """Check if the current world uses glitch logic that requires bunny rule fixes."""
