@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-29 04:12:01
+**Generated:** 2026-01-30 23:54:13
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -51,9 +51,9 @@ Of the 43 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 297.2KB
+- **Total Exporter Code:** 298.2KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 297.2KB
+- **Combined Total:** 298.2KB
 
 ## Test Results
 
@@ -61,7 +61,7 @@ Of the 43 templates passing all 4 tests:
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 246.3KB |
 | A Hat in Time WorldGen2 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ | 234.8KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.7KB | ✅ | 665.7KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.2KB | ✅ | 665.7KB |
 | A Link to the Past WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 656.1KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 79.2KB |
 | A Short Hike WorldGen2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 79.2KB |
@@ -83,7 +83,7 @@ Of the 43 templates passing all 4 tests:
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 356.1KB |
 | Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1090.0KB |
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 131.1KB |
-| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.1KB | ✅ | 236.3KB |
+| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.6KB | ✅ | 236.3KB |
 | Faxanadu WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 75.0KB |
 | Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.4KB | ✅ | 549.5KB |
 | Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 401.4KB |
@@ -151,12 +151,12 @@ Of the 43 templates passing all 4 tests:
 | 6 | A Short Hike WorldGen | 16.2KB |
 | 7 | The Messenger WorldGen | 14.7KB |
 | 8 | Final Fantasy Mystic Quest WorldGen | 13.4KB |
-| 9 | A Link to the Past WorldGen | 12.7KB |
+| 9 | A Link to the Past WorldGen | 10.2KB |
 | 10 | Yoshi's Island WorldGen | 9.2KB |
-| 11 | Inscryption WorldGen | 8.0KB |
-| 12 | Links Awakening DX WorldGen | 7.4KB |
-| 13 | The Wind Waker WorldGen | 7.0KB |
-| 14 | Factorio WorldGen | 5.1KB |
+| 11 | Factorio WorldGen | 8.6KB |
+| 12 | Inscryption WorldGen | 8.0KB |
+| 13 | Links Awakening DX WorldGen | 7.4KB |
+| 14 | The Wind Waker WorldGen | 7.0KB |
 | 15 | Celeste 64 WorldGen | 4.1KB |
 | 16 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
 | 17 | VVVVVV WorldGen | 3.8KB |

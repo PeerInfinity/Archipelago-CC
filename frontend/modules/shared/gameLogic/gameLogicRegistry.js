@@ -264,6 +264,7 @@ const GAME_REGISTRY = {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: sc2Logic.helperFunctions,
     helperPrefixes: sc2Logic.helperPrefixes,
+    helpersWithOptionalArgs: sc2Logic.helpersWithOptionalArgs,
     wrapState: sc2Logic.wrapState,
     worldClasses: ['SC2World'],
     aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
@@ -382,6 +383,7 @@ export function getGameLogic(gameName) {
     logicModule: config.logicModule,
     // Fallback to generic helpers if none specified - base helpers like has/count are always needed
     helperFunctions: config.helperFunctions || GAME_REGISTRY['Generic'].helperFunctions,
+    helpersWithOptionalArgs: config.helpersWithOptionalArgs,
     stateMethods: config.stateMethods,
     stateModule: config.logicModule, // Expose stateModule for hooks
     constants: config.constants,

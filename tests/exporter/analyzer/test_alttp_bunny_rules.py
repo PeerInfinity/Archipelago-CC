@@ -1,0 +1,448 @@
+"""
+Tests for analyzing ALttP bunny rule patterns.
+
+This module tests the analyzer's ability to handle the complex lambda patterns
+used in ALttP's set_bunny_rules() function, which uses:
+- Function factories (path_to_access_rule)
+- options_to_access_rule with any() pattern
+- Mixed option lists with simple lambdas and factory-generated lambdas
+"""
+
+import pytest
+from typing import Dict, Any, List, Callable
+
+from exporter.analyzer import analyze_rule, clear_caches, reset_analyze_rule_counter
+
+
+# =============================================================================
+# Mock Objects for Testing
+# =============================================================================
+
+class MockEntrance:
+    """Mock entrance object for testing bunny rules."""
+
+    def __init__(self, name: str, player: int = 1):
+        self.name = name
+        self.player = player
+
+
+class MockState:
+    """Mock state for testing rule evaluation."""
+
+    def __init__(self, items: Dict[str, int] = None, reachable: set = None):
+        self.items = items or {}
+        self.reachable = reachable or set()
+
+    def has(self, item: str, player: int = 1, count: int = 1) -> bool:
+        return self.items.get(item, 0) >= count
+
+    def can_reach(self, name: str, resolution_hint: str = None, player: int = 1) -> bool:
+        return name in self.reachable
+
+
+# =============================================================================
+# ALttP Bunny Rule Pattern Recreations
+# =============================================================================
+
+def path_to_access_rule(path: List[Callable], entrance: MockEntrance):
+    """
+    Recreation of ALttP's path_to_access_rule function factory.
+
+    This is the exact pattern used in worlds/alttp/Rules.py line 1669-1671.
+    """
+    return lambda state: state.can_reach(entrance.name, 'Entrance', entrance.player) and all(
+        rule(state) for rule in path)
+
+
+def options_to_access_rule(options: List[Callable]):
+    """
+    Recreation of ALttP's options_to_access_rule function.
+
+    This is the exact pattern used in worlds/alttp/Rules.py line 1673-1674.
+    """
+    return lambda state: any(rule(state) for rule in options)
+
+
+# =============================================================================
+# Test Classes
+# =============================================================================
+
+class TestPathToAccessRule:
+    """Tests for the path_to_access_rule function factory pattern."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_simple_path_to_access_rule(self):
+        """Test analyzing a simple path_to_access_rule lambda."""
+        entrance = MockEntrance("Cave Entrance")
+        path = []  # Empty path
+
+        rule_func = path_to_access_rule(path, entrance)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for simple path_to_access_rule: {result}")
+
+        # The analyzer should be able to handle this pattern
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+    def test_path_to_access_rule_with_item_check(self):
+        """Test path_to_access_rule with an item check in the path."""
+        entrance = MockEntrance("Cave Entrance")
+        player = 1
+        path = [lambda state: state.has('Moon Pearl', player)]
+
+        rule_func = path_to_access_rule(path, entrance)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for path with item check: {result}")
+
+        # Should handle this without error
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+    def test_path_to_access_rule_with_multiple_conditions(self):
+        """Test path_to_access_rule with multiple conditions in path."""
+        entrance = MockEntrance("Dungeon Entrance")
+        player = 1
+        path = [
+            lambda state: state.has('Moon Pearl', player),
+            lambda state: state.has('Sword', player),
+        ]
+
+        rule_func = path_to_access_rule(path, entrance)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for path with multiple conditions: {result}")
+
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+
+class TestOptionsToAccessRule:
+    """Tests for the options_to_access_rule pattern (any() over options)."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_simple_options_to_access_rule(self):
+        """Test analyzing options_to_access_rule with simple lambdas."""
+        player = 1
+        options = [
+            lambda state: state.has('Moon Pearl', player),
+            lambda state: state.has('Magic Mirror', player),
+        ]
+
+        rule_func = options_to_access_rule(options)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for simple options: {result}")
+
+        # Should produce an "or" type with the options
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+    def test_options_with_single_option(self):
+        """Test options_to_access_rule with a single option (Moon Pearl only)."""
+        player = 1
+        options = [lambda state: state.has('Moon Pearl', player)]
+
+        rule_func = options_to_access_rule(options)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for single option: {result}")
+
+        # This is the base case that should work
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+
+class TestMixedOptions:
+    """Tests for mixed options (simple lambdas + factory-generated lambdas)."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_mixed_options_simple_and_factory(self):
+        """
+        Test the exact pattern used in ALttP bunny rules.
+
+        This recreates the pattern from Rules.py lines 1739-1741:
+        possible_options = [lambda state: state.has('Moon Pearl', player)]
+        ...
+        possible_options.append(lambda state: path_to_access_rule(new_path, entrance))
+
+        Note: The original code has a bug - it appends a lambda that RETURNS
+        path_to_access_rule instead of calling it. This test recreates that bug.
+        """
+        player = 1
+        entrance = MockEntrance("Superbunny Cave (Top)")
+        new_path = [lambda state: state.has('Moon Pearl', player)]
+
+        # This is the BUGGY pattern from ALttP (returns lambda, doesn't call it)
+        possible_options = [lambda state: state.has('Moon Pearl', player)]
+        possible_options.append(lambda state: path_to_access_rule(new_path, entrance))
+
+        rule_func = options_to_access_rule(possible_options)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for mixed options (buggy pattern): {result}")
+
+        # Document what happens with the buggy pattern
+        if result.get("type") == "error":
+            print(f"  Error message: {result.get('message', 'No message')}")
+
+    def test_mixed_options_correct_pattern(self):
+        """
+        Test the CORRECT pattern (if the bug were fixed).
+
+        The correct pattern would be:
+        possible_options.append(path_to_access_rule(new_path, entrance))
+
+        This directly appends the lambda returned by the factory, not a lambda
+        that returns the factory result.
+        """
+        player = 1
+        entrance = MockEntrance("Superbunny Cave (Top)")
+        new_path = [lambda state: state.has('Moon Pearl', player)]
+
+        # Correct pattern - directly append the factory result
+        possible_options = [lambda state: state.has('Moon Pearl', player)]
+        possible_options.append(path_to_access_rule(new_path, entrance))
+
+        rule_func = options_to_access_rule(possible_options)
+        result = analyze_rule(rule_func)
+
+        print(f"Result for mixed options (correct pattern): {result}")
+
+        # This should be analyzable
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+
+class TestSuperbunnyCaveExactPattern:
+    """
+    Tests recreating the exact Superbunny Cave bunny rule pattern.
+
+    This attempts to recreate what happens during actual rule export.
+    """
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_superbunny_cave_moon_pearl_only(self):
+        """Test the simplest case - just Moon Pearl requirement."""
+        player = 1
+
+        # When no paths are found, only Moon Pearl is in options
+        possible_options = [lambda state: state.has('Moon Pearl', player)]
+        rule_func = options_to_access_rule(possible_options)
+
+        result = analyze_rule(rule_func)
+
+        print(f"Superbunny Cave (Moon Pearl only): {result}")
+
+        # This should definitely work
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+        # Check if we get the right structure
+        if result.get("type") == "or":
+            conditions = result.get("conditions", [])
+            print(f"  Conditions: {conditions}")
+
+    def test_superbunny_cave_with_one_path(self):
+        """Test with Moon Pearl + one path option."""
+        player = 1
+        entrance = MockEntrance("Superbunny Cave (Top)")
+
+        # Build the path rule correctly
+        moon_pearl_rule = lambda state: state.has('Moon Pearl', player)
+        new_path = [moon_pearl_rule]
+        path_rule = path_to_access_rule(new_path, entrance)
+
+        # Options: Moon Pearl OR (can_reach entrance AND path)
+        possible_options = [
+            lambda state: state.has('Moon Pearl', player),
+            path_rule,
+        ]
+
+        rule_func = options_to_access_rule(possible_options)
+        result = analyze_rule(rule_func)
+
+        print(f"Superbunny Cave (with one path): {result}")
+
+        if result.get("type") == "error":
+            print(f"  Error: {result.get('message', 'Unknown error')}")
+        else:
+            print(f"  Type: {result.get('type')}")
+            if result.get("type") == "or":
+                print(f"  Num conditions: {len(result.get('conditions', []))}")
+
+
+class TestClosureVariableResolution:
+    """Tests for closure variable resolution in bunny rule patterns."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_closure_with_entrance_object(self):
+        """Test that entrance objects in closures are handled."""
+        entrance = MockEntrance("Test Entrance", player=1)
+
+        rule_func = lambda state: state.can_reach(entrance.name, 'Entrance', entrance.player)
+        result = analyze_rule(rule_func)
+
+        print(f"Closure with entrance object: {result}")
+
+        # Should extract the entrance name
+        assert result.get("type") != "error", f"Analysis failed: {result}"
+
+    def test_closure_with_list_of_rules(self):
+        """Test closure containing a list of rule functions."""
+        player = 1
+        path = [
+            lambda state: state.has('Moon Pearl', player),
+            lambda state: state.has('Sword', player),
+        ]
+
+        # Rule that uses all() over the path
+        rule_func = lambda state: all(rule(state) for rule in path)
+        result = analyze_rule(rule_func)
+
+        print(f"Closure with list of rules: {result}")
+
+        # This pattern is used in path_to_access_rule
+        if result.get("type") == "error":
+            print(f"  Error: {result.get('message')}")
+
+
+class TestAnyGeneratorPattern:
+    """Tests specifically for the any(rule(state) for rule in options) pattern."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_any_with_simple_rules(self):
+        """Test any() over simple item check rules."""
+        player = 1
+        options = [
+            lambda state: state.has('Item1', player),
+            lambda state: state.has('Item2', player),
+            lambda state: state.has('Item3', player),
+        ]
+
+        rule_func = lambda state: any(rule(state) for rule in options)
+        result = analyze_rule(rule_func)
+
+        print(f"any() with simple rules: {result}")
+
+        # Should produce an OR of item checks
+        assert result.get("type") in ("or", "state_method"), f"Unexpected type: {result.get('type')}"
+
+    def test_all_with_simple_rules(self):
+        """Test all() over simple item check rules."""
+        player = 1
+        path = [
+            lambda state: state.has('Item1', player),
+            lambda state: state.has('Item2', player),
+        ]
+
+        rule_func = lambda state: all(rule(state) for rule in path)
+        result = analyze_rule(rule_func)
+
+        print(f"all() with simple rules: {result}")
+
+        # Should produce an AND of item checks
+        assert result.get("type") in ("and", "state_method"), f"Unexpected type: {result.get('type')}"
+
+    def test_nested_any_all(self):
+        """Test can_reach AND all(path) pattern used in path_to_access_rule."""
+        entrance = MockEntrance("Test Entrance")
+        player = 1
+        path = [lambda state: state.has('Moon Pearl', player)]
+
+        # This is the exact structure of path_to_access_rule's return value
+        rule_func = lambda state: state.can_reach(entrance.name, 'Entrance', entrance.player) and all(
+            rule(state) for rule in path)
+
+        result = analyze_rule(rule_func)
+
+        print(f"can_reach AND all(path): {result}")
+
+        if result.get("type") == "error":
+            print(f"  Error: {result.get('message')}")
+        elif result.get("type") == "and":
+            print(f"  Conditions: {len(result.get('conditions', []))}")
+            for i, cond in enumerate(result.get("conditions", [])):
+                print(f"    [{i}] type: {cond.get('type')}")
+
+
+class TestAnalyzerDiagnostics:
+    """Diagnostic tests to understand analyzer behavior."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_lambda_returning_lambda(self):
+        """Test what happens when a lambda returns another lambda (the bug pattern)."""
+        player = 1
+        entrance = MockEntrance("Test")
+
+        # This is the bug: lambda returns a lambda instead of calling it
+        inner_factory = lambda: lambda state: state.has('Moon Pearl', player)
+
+        # Outer lambda that returns the inner factory result (a lambda)
+        rule_func = lambda state: inner_factory()
+
+        result = analyze_rule(rule_func)
+
+        print(f"Lambda returning lambda: {result}")
+        print(f"  Type: {result.get('type')}")
+
+    def test_direct_factory_result(self):
+        """Test analyzing the direct result of a function factory."""
+        player = 1
+        entrance = MockEntrance("Test Entrance")
+        path = [lambda state: state.has('Moon Pearl', player)]
+
+        # Get the lambda directly from the factory
+        rule_func = path_to_access_rule(path, entrance)
+
+        result = analyze_rule(rule_func)
+
+        print(f"Direct factory result: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        if result.get("type") == "and":
+            for i, cond in enumerate(result.get("conditions", [])):
+                print(f"  Condition {i}: {cond}")
+
+    def test_verbose_closure_info(self):
+        """Print detailed closure information for debugging."""
+        player = 1
+        entrance = MockEntrance("Test Entrance")
+        path = [lambda state: state.has('Moon Pearl', player)]
+
+        rule_func = path_to_access_rule(path, entrance)
+
+        # Print closure info
+        print(f"\nClosure info for path_to_access_rule result:")
+        print(f"  __code__.co_freevars: {rule_func.__code__.co_freevars}")
+        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+            for i, cell in enumerate(rule_func.__closure__):
+                var_name = rule_func.__code__.co_freevars[i]
+                try:
+                    val = cell.cell_contents
+                    print(f"  {var_name}: {type(val).__name__} = {repr(val)[:100]}")
+                except ValueError:
+                    print(f"  {var_name}: <empty cell>")
+
+        result = analyze_rule(rule_func)
+        print(f"\nAnalysis result: {result}")
+
+
+if __name__ == "__main__":
+    # Run tests with verbose output
+    pytest.main([__file__, "-v", "-s"])

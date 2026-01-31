@@ -28,6 +28,7 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        self.entrance_regions: Dict[str, str] = {}  # entrance_name -> parent_region_name
         # Context for current location/entrance being processed
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
@@ -58,6 +59,18 @@ class RuleCodeGenerator:
         self.helper_params = helper_params or {}  # helper_name -> list of param names
         self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
         self.placements = placements or {}  # location_name -> item_name
+
+    def set_entrance_regions(self, entrance_regions: Dict[str, str]) -> None:
+        """Set the entrance-to-parent-region mapping.
+
+        This is used to resolve Attribute rules like `entrance.parent_region`
+        when the entrance name is known. For example, 'kikiskip.parent_region'
+        would resolve to the parent region of the 'Kiki Skip' entrance.
+
+        Args:
+            entrance_regions: Dict mapping entrance name (lowercase) to parent region name
+        """
+        self.entrance_regions = entrance_regions
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
@@ -6180,6 +6193,25 @@ class RuleCodeGenerator:
                             arg_strs.append(compare_result)
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'Attribute':
+                        # Handle Attribute rules like entrance.parent_region
+                        # This is used by ALttP glitch rules (e.g., can_bomb_clip(kikiskip.parent_region))
+                        obj_info = arg.get('args', {}).get('object', {})
+                        attr_name = arg.get('args', {}).get('attr', '')
+                        if obj_info.get('rule') == 'Name' and attr_name == 'parent_region':
+                            # This is entrance_name.parent_region - resolve to actual region
+                            entrance_var = obj_info.get('args', {}).get('name', '')
+                            # Normalize the entrance name (lowercase, no spaces)
+                            entrance_key = entrance_var.lower().replace(' ', '')
+                            if entrance_key in self.entrance_regions:
+                                region_name = self.entrance_regions[entrance_key]
+                                arg_strs.append(repr(region_name))
+                            else:
+                                # Unknown entrance - fall back to None
+                                arg_strs.append('None')
+                        else:
+                            # Other Attribute patterns - fall back to None
+                            arg_strs.append('None')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
@@ -7522,6 +7554,27 @@ class HelperCodeGenerator:
                             # The helper function already returns bool, not a callable
                             # Just generate the helper call directly
                             return self._generate_expression(function)
+
+                    # Special case: if the function is a Rule Builder type that already
+                    # produces a complete boolean expression (like CanReachEntrance,
+                    # CanReachRegion, Has, And, Or, etc.), generate it directly without adding ().
+                    # This happens when the analyzer wraps path_to_access_rule results.
+                    func_rule = function.get('rule', '')
+                    func_type = function.get('type', '')
+                    # Rule Builder types that produce complete boolean expressions
+                    rule_builder_bool_types = (
+                        'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                        'Has', 'HasAll', 'HasAny', 'HasGroup',
+                        'And', 'Or', 'Not',
+                        'True_', 'False_',
+                        'Compare', 'Conditional',
+                    )
+                    # Also handle analyzer types (lowercase)
+                    analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
+                                          'can_reach', 'region_check', 'location_check')
+                    if func_rule in rule_builder_bool_types or func_type in analyzer_bool_types:
+                        # These types already produce complete boolean expressions
+                        return self._generate_expression(function)
 
                     # Check if this is a math or logging module function call
                     # and set the appropriate flags for imports

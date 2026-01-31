@@ -846,6 +846,15 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values, data.metadata.option_definitions)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
+    # Build entrance-to-parent-region mapping for resolving Attribute rules
+    # like entrance.parent_region (used by ALttP glitch rules)
+    entrance_regions = {}
+    for exit_name, exit_data in data.exits.items():
+        # Normalize entrance name: lowercase, no spaces (matches how exporter creates variable names)
+        normalized_name = exit_name.lower().replace(' ', '')
+        entrance_regions[normalized_name] = exit_data.source_region
+    rule_builder_generator.set_entrance_regions(entrance_regions)
+
     helper_generator = HelperCodeGenerator(
         game_name,
         resolved_values=data.metadata.resolved_values,

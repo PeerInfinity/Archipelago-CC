@@ -669,13 +669,24 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
 
       // Check if there's a helper function that computes this value
       // SC2 uses this for power_rating which is computed from inventory state
+      // IMPORTANT: Only call helpers directly if they take no extra args (beyond snapshot, staticData)
+      // Helpers that require additional arguments (like graffiti_spots with movestyle, limit, etc.)
+      // must be called via executeHelper with their args properly evaluated
+      // Also skip helpers that have optional parameters (function.length doesn't count defaults)
       const gameName = sm.rules?.game_name;
       if (gameName) {
         const gameLogic = getGameLogic(gameName);
         const computedHelpers = gameLogic?.helperFunctions;
+        // Get the set of helpers with optional args that should NOT be called directly
+        const helpersWithOptionalArgs = gameLogic?.helpersWithOptionalArgs || new Set();
         if (computedHelpers) {
           // Try exact match first (e.g., 'power_rating' -> power_rating helper)
-          if (typeof computedHelpers[name] === 'function') {
+          // Only call directly if:
+          // 1. The function takes at most 2 params (snapshot, staticData)
+          // 2. The helper is NOT in the helpersWithOptionalArgs set (has optional params)
+          if (typeof computedHelpers[name] === 'function'
+              && computedHelpers[name].length <= 2
+              && !helpersWithOptionalArgs.has(name)) {
             // Create a lightweight snapshot for the helper
             const snapshot = {
               inventory: sm.inventory,
@@ -691,7 +702,9 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           const prefixes = gameLogic.helperPrefixes || [];
           for (const prefix of prefixes) {
             const prefixedName = prefix + name;
-            if (typeof computedHelpers[prefixedName] === 'function') {
+            if (typeof computedHelpers[prefixedName] === 'function'
+                && computedHelpers[prefixedName].length <= 2
+                && !helpersWithOptionalArgs.has(prefixedName)) {
               const snapshot = {
                 inventory: sm.inventory,
                 flags: sm.gameStateModule?.flags || [],
