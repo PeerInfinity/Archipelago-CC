@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-30 20:00:08
+**Generated:** 2026-01-31 04:08:43
 
-**Source Data Created:** 2026-01-30T23:11:27.520653
+**Source Data Created:** 2026-01-31T04:08:42.835914
 
-**Source Data Last Updated:** 2026-01-30T23:11:27.520660
+**Source Data Last Updated:** 2026-01-31T04:08:42.835919
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 70 (95.9%)
-- **Failed:** 3 (4.1%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 37/70 (52.9% of passed)
-- **Passing with Generic Logic:** 66/70 (94.3% of passed)
-- **Passing with Both Generic:** 37/70 (52.9% of passed)
+- **Passing with Generic Exporter:** 38/73 (52.1% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 38/73 (52.1% of passed)
 
 ## Test Results
 
@@ -66,7 +66,7 @@
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
-| Lingo | ❌ Failed | 0 | 1.3 | 5.1 | 🟡 25.5% | 38.0KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
@@ -86,7 +86,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | 0 | 7.1 | 15.5 | 🟡 45.8% | 28.7KB | 90.1KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 21.4KB | ✅ |
@@ -104,7 +104,7 @@
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 3.8KB | ✅ |
-| Wargroove | ❌ Failed | 301 | 0 | 9.1 | 🔴 0.0% | ✅ | ✅ |
+| Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 9.2KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
