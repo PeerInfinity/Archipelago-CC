@@ -1,6 +1,6 @@
 # Processing Times Chart (WorldGen)
 
-**Generated:** 2026-01-31 04:30:19
+**Generated:** 2026-01-31 22:43:25
 
 **Source Data Created:** 2026-01-27T22:55:56.684110
 
@@ -16,7 +16,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 268.0s | 469.7s | 752.1s | 1285.3s |
+| Total | 268.0s | 469.7s | 752.1s | 1285.4s |
 | Average | 4.2s | 7.3s | 11.8s | 20.1s |
 | Max | 7.9s | 19.7s | 158.9s | 166.1s |
 | Min | 3.2s | 0.0s | 0.0s | 12.3s |

@@ -1,10 +1,10 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-31 04:30:19
+**Generated:** 2026-01-31 22:43:25
 
 **Source Data Created:** 2026-01-31T04:08:42.835914
 
-**Source Data Last Updated:** 2026-01-31T04:08:42.835919
+**Source Data Last Updated:** 2026-01-31T22:43:23.512436
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -18,16 +18,16 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 342.9s | 593.2s | 915.7s | 1566.3s |
-| Average | 4.7s | 8.1s | 12.5s | 21.5s |
-| Max | 11.3s | 36.5s | 148.9s | 160.4s |
+| Total | 348.9s | 594.9s | 915.7s | 1566.3s |
+| Average | 4.8s | 8.1s | 12.5s | 21.5s |
+| Max | 13.3s | 36.5s | 148.9s | 160.4s |
 | Min | 3.4s | 5.4s | 5.5s | 11.9s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Slowest | Metamath (11.3s) | Kirby's Dream Land 3 (36.5s) | Dark Souls III (148.9s) | Dark Souls III (160.4s) |
+| Slowest | A Link to the Past (13.3s) | Kirby's Dream Land 3 (36.5s) | Dark Souls III (148.9s) | Dark Souls III (160.4s) |
 | Fastest | TOEM rule builder (3.4s) | Sonic Adventure 2 Battle (5.4s) | Muse Dash (5.5s) | Saving Princess (11.9s) |
 
 ## Individual Game Processing Times
@@ -35,7 +35,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Game | Gen Time | Minimal Test | Full Test | Multiclient |
 |------|----------|--------------|-----------|-------------|
 | A Hat in Time | 5.1s | 9.2s | 9.6s | 21.1s |
-| A Link to the Past | 7.3s | 12.6s | 11.0s | 27.7s |
+| A Link to the Past | 13.3s | 14.2s | 11.0s | 27.7s |
 | A Short Hike | 4.0s | 7.7s | 6.3s | 16.4s |
 | APQuest | 3.6s | 6.2s | 8.7s | 13.5s |
 | Adventure | 3.8s | 9.7s | 8.8s | 15.8s |

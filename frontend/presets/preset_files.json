@@ -69,6 +69,22 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      },
+      "AP_75906120961547370236": {
+        "seed": 168,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_75906120961547370236.archipelago",
+          "AP_75906120961547370236_Spoiler.txt",
+          "AP_75906120961547370236_rules.json",
+          "AP_75906120961547370236_sphere_log.jsonl"
+        ]
       }
     },
     "test_result": {
