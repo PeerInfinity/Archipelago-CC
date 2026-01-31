@@ -350,10 +350,31 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='f
         - default_options: Options left at defaults during fuzzing (if any)
         - disallow_options: Options disallowed during fuzzing (if any)
     """
+    all_failures = get_ut_fuzz_all_single_failures(project_root, ut_version, seed_mode)
+    return all_failures[0] if all_failures else None
+
+
+def get_ut_fuzz_all_single_failures(project_root, ut_version='modified', seed_mode='fixed'):
+    """Get all failing seeds from single-game UT fuzz results.
+
+    Returns a list of dicts, one for each failing seed. Each dict includes:
+        - game_name: Display name of the game
+        - template: Template filename
+        - world_directory: World directory name
+        - base_seed: The --seed value used for the fuzz test
+        - failing_seed: The specific run number that failed
+        - reproduction_seed: base_seed + failing_seed (for --seed arg to fuzz.py)
+        - error_type: The error type (e.g., 'None' for logic mismatch)
+        - ut_fuzz: Dict with total, success, failure stats
+        - default_options: Options left at defaults during fuzzing (if any)
+        - disallow_options: Options disallowed during fuzzing (if any)
+
+    The list is sorted by failing_seed (lowest first).
+    """
     data = load_ut_fuzz_single_game_results(project_root, ut_version, seed_mode)
 
     if not data or 'results' not in data:
-        return None
+        return []
 
     metadata = data.get('metadata', {})
     base_seed = metadata.get('seed')
@@ -367,6 +388,7 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='f
     disallow_options = metadata.get('disallow_options')
 
     results = data.get('results', {})
+    all_failures = []
 
     # Find the first game with failures (there should only be one in single-game results)
     for template_name, result in results.items():
@@ -379,49 +401,45 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed_mode='f
         if not errors:
             continue
 
-        # Find the lowest failing seed number across all error types
-        lowest_seed = None
-        lowest_error_type = None
-        for error_type, seed_list in errors.items():
-            if seed_list:
-                min_seed = min(seed_list)
-                if lowest_seed is None or min_seed < lowest_seed:
-                    lowest_seed = min_seed
-                    lowest_error_type = error_type
-
-        if lowest_seed is None:
-            continue
-
         world_info = result.get('world_info', {})
         game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
         world_dir = world_info.get('world_directory', '')
 
-        # Calculate reproduction seed
-        reproduction_seed = None
-        if base_seed is not None:
-            reproduction_seed = base_seed + lowest_seed
-
-        return {
-            'game_name': game_name,
-            'template': template_name,
-            'world_directory': world_dir,
-            'base_seed': base_seed,
-            'failing_seed': lowest_seed,
-            'reproduction_seed': reproduction_seed,
-            'error_type': lowest_error_type,
-            'ut_fuzz': {
-                'total': ut_fuzz.get('total', 0),
-                'success': ut_fuzz.get('success', 0),
-                'failure': ut_fuzz.get('failure', 0),
-                'timeout': ut_fuzz.get('timeout', 0),
-                'ignored': ut_fuzz.get('ignored', 0),
-                'errors': errors,
-            },
-            'default_options': default_options,
-            'disallow_options': disallow_options,
+        # Build ut_fuzz stats dict (shared across all failures from this game)
+        ut_fuzz_stats = {
+            'total': ut_fuzz.get('total', 0),
+            'success': ut_fuzz.get('success', 0),
+            'failure': ut_fuzz.get('failure', 0),
+            'timeout': ut_fuzz.get('timeout', 0),
+            'ignored': ut_fuzz.get('ignored', 0),
+            'errors': errors,
         }
 
-    return None
+        # Create a failure entry for each failing seed
+        for error_type, seed_list in errors.items():
+            for failing_seed in seed_list:
+                # Calculate reproduction seed
+                reproduction_seed = None
+                if base_seed is not None:
+                    reproduction_seed = base_seed + failing_seed
+
+                all_failures.append({
+                    'game_name': game_name,
+                    'template': template_name,
+                    'world_directory': world_dir,
+                    'base_seed': base_seed,
+                    'failing_seed': failing_seed,
+                    'reproduction_seed': reproduction_seed,
+                    'error_type': error_type,
+                    'ut_fuzz': ut_fuzz_stats,
+                    'default_options': default_options,
+                    'disallow_options': disallow_options,
+                })
+
+    # Sort by failing_seed (lowest first)
+    all_failures.sort(key=lambda x: x['failing_seed'])
+
+    return all_failures
 
 
 def load_worldgen_exclude_list(project_root, include_all_excludes=False):
