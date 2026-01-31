@@ -150,6 +150,149 @@ rm -rf frontend/presets/*/AP_*
 5. **Comparison**: Compares what locations UT considers accessible vs what the server considers accessible
 6. **Validation**: Reports any mismatches
 
+## Analyzing Failures with the Exporter Test Suite
+
+The `tests/exporter/` directory contains a comprehensive test suite for debugging fuzzer failures. When the fuzzer reports a logic mismatch, these tests help isolate whether the issue is in rule analysis, conversion, or game-specific handling.
+
+### Test Suite Structure
+
+```
+tests/exporter/
+├── analyzer/               # Rule analysis tests
+│   ├── test_analysis.py           # Main analyze_rule() entry point
+│   ├── test_alttp_bunny_rules.py  # ALttP bunny rule patterns
+│   ├── test_secret_passage.py     # Inverted mode rule patterns
+│   ├── test_source_extraction.py  # Lambda source code extraction
+│   ├── test_binary_ops.py         # Boolean operations (AND/OR/NOT)
+│   ├── test_expression_resolver.py # Closure variable resolution
+│   └── visitors/                   # AST visitor tests
+├── converter/              # JSON <-> Python conversion tests
+│   ├── test_json_to_python.py
+│   ├── test_python_to_json.py
+│   └── test_round_trip.py
+└── games/                  # Game-specific handler tests
+    ├── test_base_handler.py
+    └── test_handler_discovery.py
+```
+
+### Running the Tests
+
+```bash
+# Run all exporter tests
+pytest tests/exporter/ -v
+
+# Run specific test file with output
+pytest tests/exporter/analyzer/test_alttp_bunny_rules.py -v -s
+
+# Run a specific test class
+pytest tests/exporter/analyzer/test_alttp_bunny_rules.py::TestNestedCallPattern -v -s
+
+# Run a specific test method
+pytest tests/exporter/analyzer/test_alttp_bunny_rules.py::TestNestedCallPattern::test_nested_call_in_options -v -s
+```
+
+### Debugging a Fuzzer Failure
+
+When the fuzzer reports a logic mismatch, follow these steps:
+
+**1. Identify the problematic location and rule**
+
+Check the fuzzer log in `fuzz_output/error/<game>/<run>/<run>.log` for lines like:
+```
+Locations ['Secret Passage'] were in server logic but not expected in UT
+```
+
+**2. Find the rule in the exported JSON**
+
+Look at the `_rules.json` file in the generated preset directory to see what rule was exported for that location.
+
+**3. Recreate the pattern in a test**
+
+Use `test_alttp_bunny_rules.py` or `test_secret_passage.py` as templates. The key function is `analyze_rule()`:
+
+```python
+from exporter.analyzer import analyze_rule, clear_caches, reset_analyze_rule_counter
+
+def test_my_failing_pattern():
+    clear_caches()
+    reset_analyze_rule_counter()
+
+    # Recreate the lambda pattern from the original world
+    player = 1
+    rule_func = lambda state: state.has('Moon Pearl', player) or state.has('Magic Mirror', player)
+
+    result = analyze_rule(rule_func)
+    print(f"Result: {result}")
+    print(f"Type: {result.get('type')}")
+```
+
+**4. Test with closure variables**
+
+Many failures involve closure variables not being resolved correctly:
+
+```python
+# Pass closure vars explicitly for debugging
+result = analyze_rule(rule_func, closure_vars={'player': player, 'world': world})
+```
+
+**5. Test nested function factory patterns**
+
+ALttP bunny rules use complex nested patterns. See `TestNestedCallPattern` for examples:
+
+```python
+def path_to_access_rule(path, entrance):
+    return lambda state: state.can_reach(entrance.name, 'Entrance', entrance.player) and all(
+        rule(state) for rule in path)
+
+def options_to_access_rule(options):
+    return lambda state: any(rule(state) for rule in options)
+
+# The exact ALttP pattern: lambda calls factory then calls result with (state)
+rule_func = lambda state: path_to_access_rule(new_path, entrance)(state)
+```
+
+### Common Failure Patterns
+
+| Pattern | Test File | Description |
+|---------|-----------|-------------|
+| Bunny rules with `any()`/`all()` | `test_alttp_bunny_rules.py` | Function factories returning lambdas with generator expressions |
+| Nested call `factory(args)(state)` | `test_alttp_bunny_rules.py::TestNestedCallPattern` | Lambda that calls a factory and immediately invokes the result |
+| Inverted mode superbunny | `test_secret_passage.py` | Rules with entrance access requirements in inverted mode |
+| Option `.to_bool()` calls | `test_alttp_bunny_rules.py::TestOpenPyramidToBool` | Option value method calls in rules |
+| Closure variable resolution | `test_analysis.py::TestClosureVariables` | Item names or counts captured in closures |
+
+### Adding Tests for New Failures
+
+When you encounter a new failure pattern:
+
+1. Create a minimal reproduction in the appropriate test file
+2. Use mock objects (see `MockEntrance`, `MockState` in test files)
+3. Print the full `analyze_rule()` result to understand what's happening
+4. Document the root cause in the test docstring
+
+Example test structure:
+
+```python
+class TestMyNewFailurePattern:
+    """Tests for [description of the failure pattern]."""
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_exact_failing_pattern(self):
+        """
+        Recreate the exact pattern that causes the failure.
+
+        Root cause: [explain why the analyzer produces incorrect output]
+        """
+        # ... recreate the pattern ...
+        result = analyze_rule(rule_func)
+
+        print(f"Result: {result}")
+        # Add assertions or document expected behavior
+```
+
 ## Troubleshooting
 
 ### Module caching with code changes
