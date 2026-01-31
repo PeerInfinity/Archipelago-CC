@@ -179,7 +179,8 @@ def run_fuzz_test(
     seed: Optional[int],
     headed: bool = False,
     default_options: Optional[set] = None,
-    disallow_options: Optional[Dict] = None
+    disallow_options: Optional[Dict] = None,
+    verbose: bool = True
 ) -> Dict:
     """
     Run fuzz tests for a single game.
@@ -219,6 +220,9 @@ def run_fuzz_test(
         else:
             run_seed = random.randint(1, 1000000)
 
+        if verbose:
+            print(f"    Run {i + 1}/{runs} (seed {run_seed}): ", end="", flush=True)
+
         # Generate random YAML
         try:
             yaml_content = generate_random_yaml(
@@ -232,6 +236,8 @@ def run_fuzz_test(
             result["errors"].append(run_result["error"])
             result["generation_failure"] += 1
             result["runs"].append(run_result)
+            if verbose:
+                print("YAML generation failed")
             continue
 
         # Write YAML to temp file
@@ -266,7 +272,12 @@ def run_fuzz_test(
                 result["errors"].append(run_result["error"])
                 result["generation_failure"] += 1
                 result["runs"].append(run_result)
+                if verbose:
+                    print("generation failed")
                 continue
+
+            if verbose:
+                print("generated -> ", end="", flush=True)
 
             # Run spoiler test
             test_success, test_result = run_spoiler_test(
@@ -283,11 +294,17 @@ def run_fuzz_test(
 
             if test_success:
                 result["success"] += 1
+                if verbose:
+                    print("PASS")
             else:
                 if test_result.get("error") and "timeout" in test_result["error"].lower():
                     result["timeout"] += 1
+                    if verbose:
+                        print("TIMEOUT")
                 else:
                     result["test_failure"] += 1
+                    if verbose:
+                        print("FAIL")
                 run_result["error"] = test_result.get("error") or "Spoiler test failed"
                 result["errors"].append(run_result["error"])
 
