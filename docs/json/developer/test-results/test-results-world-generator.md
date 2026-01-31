@@ -2,7 +2,9 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-24 15:19:36
+[📖 Learn about this test](../tests/test-world-generator.md)
+
+**Generated:** 2026-01-30 20:00:08
 
 **Source Data Created:** 2026-01-14 04:15:44
 

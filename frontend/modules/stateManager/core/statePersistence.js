@@ -672,21 +672,40 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       // IMPORTANT: Only call helpers directly if they take no extra args (beyond snapshot, staticData)
       // Helpers that require additional arguments (like graffiti_spots with movestyle, limit, etc.)
       // must be called via executeHelper with their args properly evaluated
+      // Also skip helpers that have optional parameters (function.length doesn't count defaults)
       const gameName = sm.rules?.game_name;
       if (gameName) {
         const gameLogic = getGameLogic(gameName);
         const computedHelpers = gameLogic?.helperFunctions;
+        // Get the set of helpers with optional args that should NOT be called directly
+        const helpersWithOptionalArgs = gameLogic?.helpersWithOptionalArgs || new Set();
         if (computedHelpers) {
           // Try exact match first (e.g., 'power_rating' -> power_rating helper)
-          // Only call directly if the function takes at most 2 params (snapshot, staticData)
-          if (typeof computedHelpers[name] === 'function' && computedHelpers[name].length <= 2) {
-            // Create a lightweight snapshot for the helper
+          // Only call directly if:
+          // 1. The function takes at most 2 params (snapshot, staticData)
+          // 2. The helper is NOT in the helpersWithOptionalArgs set (has optional params)
+          if (typeof computedHelpers[name] === 'function'
+              && computedHelpers[name].length <= 2
+              && !helpersWithOptionalArgs.has(name)) {
+            // Create a snapshot for the helper that includes regionReachability
+            // Some helpers (like lingo_can_use_level_2_location) need to check which regions are reachable
+            const regionReachability = {};
+            if (sm.regions) {
+              for (const regionName of sm.regions.keys()) {
+                if (sm.knownReachableRegions.has(regionName)) {
+                  regionReachability[regionName] = 'reachable';
+                } else {
+                  regionReachability[regionName] = 'unreachable';
+                }
+              }
+            }
             const snapshot = {
               inventory: sm.inventory,
               flags: sm.gameStateModule?.flags || [],
               events: sm.gameStateModule?.events || [],
               player: { id: sm.playerId, slot: sm.playerId },
-              checkedLocations: Array.from(sm.checkedLocations || [])
+              checkedLocations: Array.from(sm.checkedLocations || []),
+              regionReachability: regionReachability
             };
             const staticData = getStaticGameData(sm);
             return computedHelpers[name](snapshot, staticData);
@@ -695,13 +714,27 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           const prefixes = gameLogic.helperPrefixes || [];
           for (const prefix of prefixes) {
             const prefixedName = prefix + name;
-            if (typeof computedHelpers[prefixedName] === 'function' && computedHelpers[prefixedName].length <= 2) {
+            if (typeof computedHelpers[prefixedName] === 'function'
+                && computedHelpers[prefixedName].length <= 2
+                && !helpersWithOptionalArgs.has(prefixedName)) {
+              // Create a snapshot for the helper that includes regionReachability
+              const regionReachability = {};
+              if (sm.regions) {
+                for (const regionName of sm.regions.keys()) {
+                  if (sm.knownReachableRegions.has(regionName)) {
+                    regionReachability[regionName] = 'reachable';
+                  } else {
+                    regionReachability[regionName] = 'unreachable';
+                  }
+                }
+              }
               const snapshot = {
                 inventory: sm.inventory,
                 flags: sm.gameStateModule?.flags || [],
                 events: sm.gameStateModule?.events || [],
                 player: { id: sm.playerId, slot: sm.playerId },
-                checkedLocations: Array.from(sm.checkedLocations || [])
+                checkedLocations: Array.from(sm.checkedLocations || []),
+                regionReachability: regionReachability
               };
               const staticData = getStaticGameData(sm);
               return computedHelpers[prefixedName](snapshot, staticData);

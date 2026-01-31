@@ -11,15 +11,11 @@ This exporter handles ALttP-specific helpers that are used in rules:
 These helpers have option-dependent logic that must be exported as definitions
 so the worldgen world can evaluate them correctly at runtime.
 
-Note: The complex bunny rule for Superbunny Cave locations uses the default AST
-analysis. Previous True_ overrides caused logic mismatches in certain entrance
-shuffle configurations. The AST analysis may produce incomplete entrance path
-rules for multi-hop paths, but this is preferable to the permissive True_ rule.
-
 ALttP-specific analyzer configuration:
-- Bunny rules (from set_bunny_rules) are detected as unanalyzable patterns
-- In glitch modes, unanalyzable rules return True (permissive)
-- In non-glitch modes, unanalyzable rules fall back to Moon Pearl requirement
+- Bunny rules (from set_bunny_rules) use nested call patterns that the analyzer
+  handles via module-level function factory detection (see call_visitor.py)
+- path_to_access_rule and options_to_access_rule are recognized as function factories
+- The analyzer correctly produces Or(Moon Pearl, can_reach_entrance) for superbunny locations
 - Bytecode analysis recognizes ALttP-specific items
 - has_sword() pattern expands to check all four sword tiers
 - _lttp_has_key method handles universal key mode
@@ -32,8 +28,57 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def _export_shops(world, multiworld, player) -> List[Dict[str, Any]]:
+    """Export shop data for ALttP worldgen.
+
+    The worldgen world needs shop information to implement can_buy_unlimited
+    and can_buy helpers. Each shop is exported with:
+    - region: The region name where the shop is located
+    - unlimited_items: List of items that have unlimited stock
+    - inventory: Full inventory data for advanced shop logic
+    """
+    shops_data = []
+    for shop in getattr(world, 'shops', []):
+        # Get region name
+        region_name = shop.region.name if shop.region else ''
+
+        # Build list of unlimited items
+        unlimited_items = []
+        for inv in shop.inventory:
+            if inv is None:
+                continue
+            # max=0 means unlimited stock of the base item
+            # max>0 means limited stock, but replacement is unlimited after stock runs out
+            if inv.get('max', 0) == 0:
+                if inv.get('item'):
+                    unlimited_items.append(inv['item'])
+            else:
+                if inv.get('replacement'):
+                    unlimited_items.append(inv['replacement'])
+
+        shops_data.append({
+            'region': region_name,
+            'unlimited_items': unlimited_items,
+            'inventory': shop.inventory,
+            'room_id': shop.room_id,
+            'shopkeeper_config': shop.shopkeeper_config,
+            'custom': shop.custom,
+            'locked': shop.locked,
+            'sram_offset': getattr(shop, 'sram_offset', 0),
+        })
+
+    return shops_data
+
+
 class ALttPGameExportHandler(GenericGameExportHandler):
     """Export handler for A Link to the Past."""
+
+    # The original ALttP world uses explicit_indirect_conditions = False
+    # which enables the auto-retry BFS algorithm for entrance rules that
+    # check region reachability (like can_buy_unlimited checking shop regions).
+    # Without this, the explicit BFS algorithm requires registered indirect
+    # conditions which aren't set up by the worldgen.
+    USE_AUTO_INDIRECT_CONDITIONS = True
 
     # Helper modules containing the rule helpers
     HELPER_MODULES = [
@@ -64,14 +109,23 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'has_sword': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'],
     }
 
-    # Fallback item for unanalyzable bunny rules (non-glitch modes)
+    # Fallback item for unanalyzable bunny rules (non-permissive modes)
     UNANALYZABLE_RULE_FALLBACK_ITEM: Optional[str] = 'Moon Pearl'
 
-    # Glitch mode configuration
-    GLITCH_MODE_OPTION_NAME: Optional[str] = 'glitches_required'
-    GLITCH_MODE_OPTION_VALUES: List[str] = [
+    # Permissive logic mode configuration
+    PERMISSIVE_LOGIC_OPTION_NAME: Optional[str] = 'glitches_required'
+    PERMISSIVE_LOGIC_OPTION_VALUES: List[str] = [
         'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'
     ]
+
+    # Known option names for bytecode analysis
+    # These are recognized when detecting option access patterns in rules
+    KNOWN_OPTION_NAMES: Set[str] = {
+        'open_pyramid', 'swordless', 'retro_bow', 'retro_caves', 'mode',
+        'glitches_required', 'entrance_shuffle', 'bombless_start',
+        'shuffle_capacity_upgrades', 'key_drop_shuffle', 'pot_shuffle',
+        'randomize_cost_types', 'item_functionality', 'goal',
+    }
 
     # Whitelist critical helpers that must be exported as definitions
     # These are option-dependent and fall back to True if not exported
@@ -114,6 +168,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
     # Blacklist helpers that are too complex or use patterns we can't export
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+
+    # Export shop data for can_buy_unlimited and can_buy helpers
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        'shops': _export_shops,
+    }
 
     def __init__(self, world=None):
         super().__init__(world)
@@ -260,3 +319,4 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return {'type': 'count_check', 'item': item_value, 'count': count}
 
         return None  # Let default handling proceed
+

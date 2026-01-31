@@ -10,7 +10,11 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-30 23:54:13
+**Generated:** 2026-01-30 20:00:08
+
+**Source Data Created:** 2026-01-30T23:54:12.969736
+
+**Source Data Last Updated:** 2026-01-30T23:54:12.969744
 
 ## Summary
 
@@ -35,7 +39,7 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 10.2KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 12.5KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | 16.2KB | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -83,10 +87,10 @@
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 7.5KB |
 | Shivers | ❌ Failed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 5 | 5 | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 5 | 5 | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ❌ Failed | ❌ Failed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 21.4KB | ✅ |
@@ -98,7 +102,7 @@
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 6 | 6 | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| The Messenger | ❌ Failed | ❌ Failed | 7 | 7 | 14.7KB | ✅ |
+| The Messenger | ❌ Failed | ❌ Failed | 7 | 7 | 14.8KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |

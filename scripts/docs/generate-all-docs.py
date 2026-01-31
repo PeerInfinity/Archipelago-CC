@@ -67,6 +67,13 @@ GENERATORS: List[Tuple[str, str, str, List[str], bool]] = [
         ["worldgen"],
         False
     ),
+    (
+        "freshness",
+        "generate-freshness-report.py",
+        "Document freshness report showing when each test result doc was generated",
+        ["summary", "meta"],
+        False
+    ),
 ]
 
 

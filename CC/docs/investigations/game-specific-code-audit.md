@@ -12,7 +12,7 @@ This document catalogs all instances of game-specific code found in shared expor
    - `KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS` - Set of known items for bytecode analysis
    - `SWORD_TIERS` - List of sword tier items for has_sword expansion
    - `UNANALYZABLE_RULE_FALLBACK_ITEM` - Fallback item for unanalyzable rules
-   - `GLITCH_MODE_OPTION_NAME` and `GLITCH_MODE_OPTION_VALUES` - Glitch mode detection
+   - `PERMISSIVE_LOGIC_OPTION_NAME` and `PERMISSIVE_LOGIC_OPTION_VALUES` - Permissive logic mode detection
    - `is_unanalyzable_rule_pattern()` - Check if a rule is unanalyzable
    - `get_unanalyzable_rule_fallback()` - Get fallback rule for unanalyzable patterns
    - `get_known_items_for_bytecode()` - Get known items for bytecode analysis

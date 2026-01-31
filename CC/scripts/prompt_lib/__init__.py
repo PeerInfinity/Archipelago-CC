@@ -45,6 +45,7 @@ from .worldgen_analysis import (
     get_ut_fuzz_apworld_failures,
     load_ut_fuzz_single_game_results,
     get_ut_fuzz_single_failure,
+    get_ut_fuzz_all_single_failures,
 )
 
 from .prompt_generators import (
@@ -118,6 +119,7 @@ __all__ = [
     'get_ut_fuzz_apworld_failures',
     'load_ut_fuzz_single_game_results',
     'get_ut_fuzz_single_failure',
+    'get_ut_fuzz_all_single_failures',
     # prompt_generators.standard
     'generate_helper_export_prompt',
     'generate_exporter_simplify_prompt',

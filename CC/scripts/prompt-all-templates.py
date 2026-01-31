@@ -48,6 +48,7 @@ from prompt_lib import (
     get_ut_fuzz_worldgen_pass_failures,
     get_ut_fuzz_apworld_failures,
     get_ut_fuzz_single_failure,
+    get_ut_fuzz_all_single_failures,
     # prompt_generators.standard
     generate_helper_export_prompt,
     generate_exporter_simplify_prompt,
@@ -390,44 +391,65 @@ def main():
 
         return 0
 
-    # Handle UT fuzz single failure mode - detailed prompt for one specific failing seed
+    # Handle UT fuzz single failure mode - detailed prompt for each failing seed
     if args.ut_fuzz_single_failure:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
+        collected_prompts = [] if args.promptfile else None
 
-        failure = get_ut_fuzz_single_failure(
+        failures = get_ut_fuzz_all_single_failures(
             project_root,
             ut_version=args.ut_version,
-            seed_mode=args.ut_seed_mode
+            seed=args.ut_seed
         )
 
-        if failure is None:
+        if not failures:
             if not quiet_mode:
                 print("No failures found in single-game UT fuzz results")
-                print(f"Looking for: scripts/output/ut-fuzz/test-results-single-game-{args.ut_version}-{args.ut_seed_mode}-seed.json")
+                if args.ut_seed:
+                    print(f"Looking for: scripts/output/ut-fuzz/test-results-single-game-{args.ut_version}-seed-{args.ut_seed}.json")
+                else:
+                    print(f"Looking for: scripts/output/ut-fuzz/test-results-single-game-{args.ut_version}-seed-*.json (auto-detect)")
             return 0
 
-        game_name = failure['game_name']
-        failing_seed = failure['failing_seed']
-        ut_fuzz = failure['ut_fuzz']
+        # Get stats from the first failure (all failures share the same stats)
+        first_failure = failures[0]
+        game_name = first_failure['game_name']
+        ut_fuzz = first_failure['ut_fuzz']
         success_rate = (ut_fuzz['success'] / max(ut_fuzz['total'], 1)) * 100
 
         if not quiet_mode:
             print(f"\n{'='*60}")
             print(f"Single Failure Analysis: {game_name}")
             print(f"{'='*60}")
-            print(f"Failing seed: {failing_seed}")
-            print(f"Reproduction seed: {failure['reproduction_seed']}")
+            print(f"Found {len(failures)} failing seed(s)")
             print(f"UT Fuzz: {ut_fuzz['success']}/{ut_fuzz['total']} passed ({success_rate:.1f}%)")
-            print(f"Error type: {failure['error_type'] or 'None (logic mismatch)'}")
             print('='*60)
 
-        prompt = generate_ut_fuzz_single_failure_prompt(failure)
+        for i, failure in enumerate(failures):
+            failing_seed = failure['failing_seed']
+            error_type = failure['error_type']
 
-        if args.promptfile:
+            if not quiet_mode:
+                print(f"\n[{i+1}/{len(failures)}] Seed {failing_seed} - {error_type or 'logic mismatch'}")
+
+            prompt = generate_ut_fuzz_single_failure_prompt(failure)
+
+            if args.promptfile:
+                collected_prompts.append(prompt)
+            else:
+                print(prompt)
+                if args.text or args.prompt:
+                    return 0
+
+            if args.max_files and (i + 1) >= args.max_files:
+                if not quiet_mode:
+                    print(f"\nReached maximum file limit ({args.max_files}), stopping...")
+                break
+
+        # Write collected prompts to file if in --promptfile mode
+        if args.promptfile and collected_prompts:
             output_file = Path(project_root) / 'CC' / 'scripts' / 'prompts.txt'
-            write_collected_prompts([prompt], output_file)
-        else:
-            print(prompt)
+            write_collected_prompts(collected_prompts, output_file)
 
         return 0
 

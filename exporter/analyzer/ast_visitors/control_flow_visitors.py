@@ -35,7 +35,7 @@ class ControlFlowVisitorMixin:
             logging.warning(f"visit_Module: Empty module body, returning None")
             return None # Return None if no body
         except Exception as e:
-            logging.error("Error in visit_Module", e)
+            logging.error(f"Error in visit_Module: {e}")
             return None
 
     def visit_FunctionDef(self, node):
@@ -211,7 +211,7 @@ class ControlFlowVisitorMixin:
                     'body': body_result
                 }
         except Exception as e:
-            logging.error("Error in visit_Lambda", e)
+            logging.error(f"Error in visit_Lambda: {e}")
             return None
 
     def visit_Return(self, node):
@@ -226,7 +226,7 @@ class ControlFlowVisitorMixin:
             # Visit the return value and return its result
             return self.visit(node.value)
         except Exception as e:
-            logging.error("Error in visit_Return", e)
+            logging.error(f"Error in visit_Return: {e}")
             return None
 
     def visit_Break(self, node):
@@ -395,7 +395,7 @@ class ControlFlowVisitorMixin:
                 'if_false': orelse_result # This will be None if no else block
             }
         except Exception as e:
-            logging.error("Error in visit_If", e)
+            logging.error(f"Error in visit_If: {e}")
             return None
 
     def visit_IfExp(self, node: ast.IfExp):
@@ -430,7 +430,7 @@ class ControlFlowVisitorMixin:
                 'if_false': orelse_result
             }
         except Exception as e:
-            logging.error("Error in visit_IfExp", e)
+            logging.error(f"Error in visit_IfExp: {e}")
             return None
 
     def visit_For(self, node: ast.For):

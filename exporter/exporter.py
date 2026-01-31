@@ -891,8 +891,9 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         # Also extract dungeons to separate structure
         with profiler.section("process_regions"):
             regions_data, dungeons_data = process_regions(multiworld, player, game_handler, location_id_mappings.get(player, {}))
+
         export_data['regions'][player_str] = regions_data
-        
+
         # Only add dungeons if there's data
         if dungeons_data:
             if 'dungeons' not in export_data:
@@ -1176,6 +1177,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         game_name = multiworld.game[player]
         world = multiworld.worlds[player]
         game_handler = get_game_export_handler(game_name, world)
+
         if game_handler and hasattr(game_handler, 'post_process_data'):
             try:
                 export_data = game_handler.post_process_data(export_data)

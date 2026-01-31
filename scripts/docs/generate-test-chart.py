@@ -487,7 +487,8 @@ def main():
         processing_times_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-processing-times.md')
         processing_times_md = generate_processing_times_markdown(
             processing_times_data,
-            version_links=pt_version_links if pt_version_links else None
+            version_links=pt_version_links if pt_version_links else None,
+            metadata=minimal_meta
         )
         with open(processing_times_output, 'w') as f:
             f.write(processing_times_md)
@@ -505,7 +506,8 @@ def main():
         processing_times_wg_md = generate_processing_times_markdown(
             processing_times_wg_data,
             variant_type="worldgen",
-            version_links={"original": "./test-results-processing-times.md"}
+            version_links={"original": "./test-results-processing-times.md"},
+            metadata=minimal_wg_meta
         )
         with open(processing_times_wg_output, 'w') as f:
             f.write(processing_times_wg_md)
@@ -523,7 +525,8 @@ def main():
         processing_times_ap_md = generate_processing_times_markdown(
             processing_times_ap_data,
             variant_type="apworld",
-            version_links={"original": "./test-results-processing-times.md"}
+            version_links={"original": "./test-results-processing-times.md"},
+            metadata=minimal_ap_meta
         )
         with open(processing_times_ap_output, 'w') as f:
             f.write(processing_times_ap_md)

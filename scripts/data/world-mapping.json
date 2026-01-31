@@ -28,7 +28,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/official/alttp.py",
-    "exporter_size": 124356,
+    "exporter_size": 12810,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -97,6 +97,15 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "apquest_worldgen"
+  },
+  "APWorld Manager": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "apworld_manager"
   },
   "Adventure": {
     "exporter_path": null,
@@ -442,7 +451,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/official/factorio.py",
-    "exporter_size": 5229,
+    "exporter_size": 8812,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -487,7 +496,7 @@
   },
   "Final Fantasy Mystic Quest": {
     "exporter_path": "exporter/games/official/ffmq.py",
-    "exporter_size": 10596,
+    "exporter_size": 13757,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -937,7 +946,7 @@
   },
   "Raft": {
     "exporter_path": "exporter/games/official/raft.py",
-    "exporter_size": 5574,
+    "exporter_size": 6659,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1011,7 +1020,7 @@
     "exporter_path": "exporter/games/official/soe.py",
     "exporter_size": 5441,
     "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
-    "game_logic_size": 7085,
+    "game_logic_size": 7728,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "soe"
@@ -1065,7 +1074,7 @@
     "exporter_path": "exporter/games/official/sc2.py",
     "exporter_size": 29354,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
-    "game_logic_size": 89543,
+    "game_logic_size": 92266,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "sc2"
@@ -1288,7 +1297,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/official/messenger.py",
-    "exporter_size": 15003,
+    "exporter_size": 15206,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
