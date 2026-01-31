@@ -6,7 +6,9 @@
 
 [📖 Learn about this test](../tests/test-multiclient.md)
 
-**Generated:** 2026-01-31 04:15:04
+[View Original Template Results](./test-results-multiclient.md)
+
+**Generated:** 2026-01-31 04:22:02
 
 **Source Data Created:** 2026-01-24T07:47:35.849691
 
