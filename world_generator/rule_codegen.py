@@ -958,8 +958,9 @@ class RuleCodeGenerator:
         if not rule_type:
             rb_rule = rule.get('rule', '')
             if rb_rule in ('True_', 'False_', 'Has', 'HasAll', 'HasAny', 'HasGroup',
-                          'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation',
-                          'CanReachEntrance', 'Compare', 'Conditional'):
+                          'HasFromList', 'HasFromListUnique', 'And', 'Or', 'Not',
+                          'CanReachRegion', 'CanReachLocation', 'CanReachEntrance',
+                          'Compare', 'Conditional', 'HelperCall', 'helper'):
                 # Check children recursively
                 for child in rule.get('children', []):
                     if not self._is_rule_builder_convertible(child, depth + 1):
@@ -6355,11 +6356,11 @@ class RuleCodeGenerator:
             # Rule Builder types that produce complete boolean expressions
             rule_builder_types = (
                 'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
-                'Has', 'HasAll', 'HasAny', 'HasGroup',
+                'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
                 'And', 'Or', 'Not',
                 'True_', 'False_',
                 'Compare', 'Conditional',
-                'HelperCall',
+                'HelperCall', 'helper',
             )
             if func_rule in rule_builder_types:
                 # Recursively convert the nested Rule Builder rule
@@ -7674,10 +7675,11 @@ class HelperCodeGenerator:
                     # Rule Builder types that produce complete boolean expressions
                     rule_builder_bool_types = (
                         'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
-                        'Has', 'HasAll', 'HasAny', 'HasGroup',
+                        'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
                         'And', 'Or', 'Not',
                         'True_', 'False_',
                         'Compare', 'Conditional',
+                        'HelperCall', 'helper',
                     )
                     # Also handle analyzer types (lowercase)
                     analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
