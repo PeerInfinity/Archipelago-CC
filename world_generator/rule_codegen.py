@@ -6335,13 +6335,35 @@ class RuleCodeGenerator:
         return 'None'
 
     def _convert_ast_function_call(self, rule: Dict[str, Any]) -> str:
-        """Convert AST_function_call to resolved constant.
+        """Convert AST_function_call to resolved constant or nested rule.
 
         This handles function calls like options.open_pyramid.to_bool()
         by extracting the option name and resolving it from settings.
+
+        It also handles cases where the function is itself a Rule Builder rule
+        (like And, Or, Has) - these are produced by bunny rule analysis in
+        ALttP where path_to_access_rule returns nested rule expressions.
         """
         args = rule.get('args', {})
         function = args.get('function', {})
+
+        # Check if function is a Rule Builder rule (has 'rule' key with known rule types)
+        # This happens when bunny rules are analyzed and the inner rule is a valid
+        # Rule Builder expression (e.g., And(CanReachEntrance(...), Has(...)))
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            # Rule Builder types that produce complete boolean expressions
+            rule_builder_types = (
+                'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                'Has', 'HasAll', 'HasAny', 'HasGroup',
+                'And', 'Or', 'Not',
+                'True_', 'False_',
+                'Compare', 'Conditional',
+                'HelperCall',
+            )
+            if func_rule in rule_builder_types:
+                # Recursively convert the nested Rule Builder rule
+                return self._convert_rule(function)
 
         # Try to extract the option name from the function expression
         # Structure: world.worlds[1].options.<option_name>.to_bool()
