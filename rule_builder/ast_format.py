@@ -686,4 +686,4 @@ def _parse_bunny_paths(data: Mapping[str, Any]) -> "Rule[Any]":
     from rule_builder.rules import BunnyPaths
 
     options = data.get('options', [])
-    return BunnyPaths(options=list(options))
+    return BunnyPaths(path_options=list(options))
