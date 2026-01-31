@@ -523,6 +523,236 @@ class TestAnalyzerDiagnostics:
         print(f"\nAnalysis result: {result}")
 
 
+class TestOpenPyramidToBool:
+    """
+    Tests for analyzing the open_pyramid.to_bool() pattern.
+
+    This pattern is used in ALttP's Pyramid Hole entrance rule:
+        lambda state: state.has('Beat Agahnim 2', player) or world.worlds[player].options.open_pyramid.to_bool(world, player)
+
+    The key challenge is that to_bool() is a method call on an option object,
+    and the analyzer needs to:
+    1. Recognize world.worlds[player].options.open_pyramid as an option_value
+    2. Handle the .to_bool() method call on that option
+    3. Evaluate to_bool() at analysis time since it only depends on settings
+    """
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_option_to_bool_simple(self):
+        """
+        Test the simplest version of to_bool pattern:
+        world.worlds[player].options.open_pyramid.to_bool(world, player)
+        """
+        import logging
+        logging.getLogger('exporter.analyzer').setLevel(logging.DEBUG)
+
+        # Create mock option with to_bool method
+        class MockOption:
+            def __init__(self, value):
+                self.value = value
+
+            def to_bool(self, world, player):
+                return self.value > 0
+
+        class MockOptions:
+            def __init__(self):
+                self.open_pyramid = MockOption(1)  # "open" = True
+
+        class MockPlayerWorld:
+            def __init__(self):
+                self.options = MockOptions()
+
+        class MockMultiworld:
+            def __init__(self):
+                self.worlds = {1: MockPlayerWorld()}
+
+        world = MockMultiworld()
+        player = 1
+
+        # The exact pattern from the Pyramid Hole rule
+        rule_func = lambda state: world.worlds[player].options.open_pyramid.to_bool(world, player)
+
+        result = analyze_rule(rule_func, closure_vars={'world': world, 'player': player})
+
+        print(f"\nOption to_bool simple pattern:")
+        print(f"  Result: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        # The ideal outcome: to_bool should be evaluated to True at analysis time
+        # If the analyzer properly handles this, result should be {'type': 'constant', 'value': True}
+        if result.get('type') == 'constant':
+            print(f"  SUCCESS: to_bool evaluated to constant {result.get('value')}")
+        else:
+            print(f"  ISSUE: to_bool was not evaluated at analysis time")
+            print(f"  Full result: {result}")
+
+    def test_pyramid_hole_full_rule(self):
+        """
+        Test the full Pyramid Hole rule pattern:
+        state.has('Beat Agahnim 2', player) or world.worlds[player].options.open_pyramid.to_bool(world, player)
+        """
+        import logging
+        logging.getLogger('exporter.analyzer').setLevel(logging.DEBUG)
+
+        # Create mock option with to_bool method (open_pyramid = 1 = open)
+        class MockOption:
+            def __init__(self, value):
+                self.value = value
+
+            def to_bool(self, world, player):
+                return self.value > 0
+
+        class MockOptions:
+            def __init__(self):
+                self.open_pyramid = MockOption(1)
+
+        class MockPlayerWorld:
+            def __init__(self):
+                self.options = MockOptions()
+
+        class MockMultiworld:
+            def __init__(self):
+                self.worlds = {1: MockPlayerWorld()}
+
+        world = MockMultiworld()
+        player = 1
+
+        # The full Pyramid Hole rule
+        rule_func = lambda state: state.has('Beat Agahnim 2', player) or world.worlds[player].options.open_pyramid.to_bool(world, player)
+
+        result = analyze_rule(rule_func, closure_vars={'world': world, 'player': player})
+
+        print(f"\nPyramid Hole full rule:")
+        print(f"  Result: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        # Since open_pyramid.to_bool() returns True, the whole expression should simplify to True
+        # OR if partial evaluation: {'type': 'or', 'conditions': [<Beat Agahnim 2>, True]}
+        # OR worst case: {'type': 'or', 'conditions': [<Beat Agahnim 2>, <unresolved to_bool>]}
+        if result.get('type') == 'constant' and result.get('value') == True:
+            print(f"  SUCCESS: Rule fully simplified to True")
+        elif result.get('type') == 'or':
+            conditions = result.get('conditions', [])
+            print(f"  OR with {len(conditions)} conditions:")
+            for i, cond in enumerate(conditions):
+                print(f"    [{i}]: {cond}")
+                if cond.get('type') == 'constant' and cond.get('value') == True:
+                    print(f"        -> This is the to_bool result (True)")
+        else:
+            print(f"  Full result: {result}")
+
+    def test_option_to_bool_closed(self):
+        """
+        Test to_bool when open_pyramid is closed (value = 0).
+        The rule should NOT simplify away Beat Agahnim 2.
+        """
+        # Create mock option with to_bool method (open_pyramid = 0 = closed)
+        class MockOption:
+            def __init__(self, value):
+                self.value = value
+
+            def to_bool(self, world, player):
+                return self.value > 0
+
+        class MockOptions:
+            def __init__(self):
+                self.open_pyramid = MockOption(0)  # closed
+
+        class MockPlayerWorld:
+            def __init__(self):
+                self.options = MockOptions()
+
+        class MockMultiworld:
+            def __init__(self):
+                self.worlds = {1: MockPlayerWorld()}
+
+        world = MockMultiworld()
+        player = 1
+
+        rule_func = lambda state: state.has('Beat Agahnim 2', player) or world.worlds[player].options.open_pyramid.to_bool(world, player)
+
+        result = analyze_rule(rule_func, closure_vars={'world': world, 'player': player})
+
+        print(f"\nPyramid Hole rule (closed):")
+        print(f"  Result: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        # With open_pyramid closed, the rule should be:
+        # OR(Beat Agahnim 2, False) -> which should simplify to just Beat Agahnim 2
+        if result.get('type') == 'item_check' and result.get('item') == 'Beat Agahnim 2':
+            print(f"  SUCCESS: Rule correctly simplified to just 'Beat Agahnim 2'")
+        elif result.get('type') == 'or':
+            conditions = result.get('conditions', [])
+            print(f"  OR with {len(conditions)} conditions - could be optimized")
+
+    def test_option_to_bool_auto_closure_extraction(self):
+        """
+        Test to_bool pattern with automatic closure variable extraction.
+
+        This simulates what happens during actual export - the closure_vars
+        are extracted from the lambda's __closure__, not passed explicitly.
+        """
+        import logging
+        logging.getLogger('exporter.analyzer').setLevel(logging.DEBUG)
+
+        # Create mock option with to_bool method
+        class MockOption:
+            def __init__(self, value):
+                self.value = value
+
+            def to_bool(self, world, player):
+                return self.value > 0
+
+        class MockOptions:
+            def __init__(self):
+                self.open_pyramid = MockOption(1)  # open
+
+        class MockPlayerWorld:
+            def __init__(self):
+                self.options = MockOptions()
+
+        class MockMultiworld:
+            def __init__(self):
+                self.worlds = {1: MockPlayerWorld()}
+
+        world = MockMultiworld()
+        player = 1
+
+        # Create the lambda - this captures world and player in its closure
+        rule_func = lambda state: state.has('Beat Agahnim 2', player) or world.worlds[player].options.open_pyramid.to_bool(world, player)
+
+        # Check what's in the closure
+        print(f"\nAuto closure extraction test:")
+        print(f"  co_freevars: {rule_func.__code__.co_freevars}")
+        if rule_func.__closure__:
+            for i, (name, cell) in enumerate(zip(rule_func.__code__.co_freevars, rule_func.__closure__)):
+                try:
+                    val = cell.cell_contents
+                    print(f"  {name}: {type(val).__name__}")
+                except ValueError:
+                    print(f"  {name}: <empty>")
+
+        # Analyze WITHOUT explicitly passing closure_vars - let it auto-extract
+        result = analyze_rule(rule_func)
+
+        print(f"\nResult (auto closure extraction):")
+        print(f"  Result: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        if result.get('type') == 'constant' and result.get('value') == True:
+            print(f"  SUCCESS: Rule fully simplified to True")
+        elif result.get('type') == 'or':
+            conditions = result.get('conditions', [])
+            print(f"  OR with {len(conditions)} conditions:")
+            for i, cond in enumerate(conditions):
+                print(f"    [{i}]: {cond}")
+        else:
+            print(f"  Full result: {result}")
+
+
 if __name__ == "__main__":
     # Run tests with verbose output
     pytest.main([__file__, "-v", "-s"])
