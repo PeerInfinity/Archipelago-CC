@@ -260,3 +260,68 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return {'type': 'count_check', 'item': item_value, 'count': count}
 
         return None  # Let default handling proceed
+
+    # ==========================================================================
+    # Superbunny-accessible location overrides for OWG mode
+    # ==========================================================================
+
+    # Locations in Kakariko Well (top) region that are superbunny-accessible.
+    # In OWG mode, these locations don't require Moon Pearl because they can be
+    # accessed via superbunny state (a glitch that allows picking up items in bunny form).
+    #
+    # The bunny rule logic in ALttP Rules.py (lines 1739-1741) handles this:
+    #   if location.name in OverworldGlitchRules.get_superbunny_accessible_locations():
+    #       if region.name == 'Kakariko Well (top)':
+    #           possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state))
+    #
+    # However, the analyzer produces an incomplete rule because:
+    # 1. The bunny rule uses options_to_access_rule() which combines multiple path options
+    # 2. Each path option is a nested lambda: lambda state: path_to_access_rule(new_path, entrance)(state)
+    # 3. The AST analyzer can analyze the outer lambda but doesn't fully trace through
+    #    the nested function factory call with the captured closure variables
+    # 4. The result includes Moon Pearl (base option) and one path (via entrance rules),
+    #    but misses the simpler superbunny path that requires no additional items
+    #
+    # This post-processing override correctly represents the original game logic:
+    # in OWG mode, superbunny-accessible locations in Kakariko Well (top) need only
+    # the ability to reach the region - no Moon Pearl or other items required.
+    KAKARIKO_WELL_SUPERBUNNY_LOCATIONS: Set[str] = {
+        'Kakariko Well - Left',
+        'Kakariko Well - Middle',
+        'Kakariko Well - Right',
+        'Kakariko Well - Bottom',
+    }
+
+    def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """Post-process location data to fix superbunny-accessible locations in OWG mode."""
+        # Check if we're in a glitch mode that supports superbunny access
+        if not self._is_glitch_mode_enabled():
+            return location_data
+
+        # Check if this is a Kakariko Well superbunny-accessible location
+        if location_name not in self.KAKARIKO_WELL_SUPERBUNNY_LOCATIONS:
+            return location_data
+
+        # Override the access rule to True_ (no additional item requirements)
+        # The region access rule will still apply, but no Moon Pearl is needed
+        logger.info(f"Overriding access rule for superbunny location '{location_name}' to True_ (OWG mode)")
+        location_data['access_rule'] = {'rule': 'True_'}
+
+        return location_data
+
+    def _is_glitch_mode_enabled(self) -> bool:
+        """Check if the current world is in a glitch mode that supports superbunny access."""
+        if not self.world:
+            return False
+
+        if not hasattr(self.world, 'options'):
+            return False
+
+        if not hasattr(self.world.options, 'glitches_required'):
+            return False
+
+        try:
+            current_value = str(self.world.options.glitches_required.current_key)
+            return current_value in self.GLITCH_MODE_OPTION_VALUES
+        except (AttributeError, KeyError):
+            return False
