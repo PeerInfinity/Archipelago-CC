@@ -103,20 +103,25 @@ class ClosureFunctionAnalyzer:
         'moon_pearl_check': {'player'},
     }
 
-    def __init__(self, parent_analyzer: 'RuleAnalyzer', max_depth: int = None):
+    def __init__(self, parent_analyzer: 'RuleAnalyzer' = None, max_depth: int = None,
+                 game_handler=None):
         """Initialize the ClosureFunctionAnalyzer.
 
         Args:
-            parent_analyzer: The RuleAnalyzer instance for recursive analysis
+            parent_analyzer: The RuleAnalyzer instance for recursive analysis (optional)
             max_depth: Maximum recursion depth (defaults to MAX_DEPTH)
+            game_handler: Direct game handler reference (used when no parent_analyzer)
         """
         self.parent_analyzer = parent_analyzer
+        self._direct_game_handler = game_handler
         self.max_depth = max_depth if max_depth is not None else self.MAX_DEPTH
         self._seen_functions: Set[int] = set()  # Cycle detection by function id
 
     @property
     def game_handler(self):
-        """Get the game handler from the parent analyzer."""
+        """Get the game handler from the parent analyzer or direct reference."""
+        if self._direct_game_handler is not None:
+            return self._direct_game_handler
         return getattr(self.parent_analyzer, 'game_handler', None)
 
     def analyze_function(self, func: Callable, depth: int = 0) -> Optional[Dict[str, Any]]:
@@ -955,6 +960,236 @@ class ClosureFunctionAnalyzer:
                 pass
 
         return result
+
+    # ==================== Bunny Path Extraction ====================
+    # These methods extract pre-computed bunny path data from closures
+    # without full rule analysis, for use with the BunnyPaths rule type.
+
+    def extract_bunny_path_data(self, func: Callable) -> Optional[Dict[str, Any]]:
+        """Extract bunny path data from a bunny rule closure.
+
+        This extracts entrance/path data from options_to_access_rule patterns
+        without performing deep rule analysis. The result is a simplified
+        representation suitable for the BunnyPaths rule type.
+
+        Args:
+            func: The access rule function to extract from
+
+        Returns:
+            Dict with 'rule': 'BunnyPaths' and 'options' list, or None if
+            not a recognizable bunny rule pattern.
+        """
+        if not callable(func):
+            return None
+
+        # First, check if this is an add_rule combined function
+        # These have a 'rule' closure var pointing to the actual bunny rule
+        closure_vars = self._extract_closure_vars(func)
+
+        # Handle add_rule wrapper: lambda state: old(state) and rule(state)
+        if 'rule' in closure_vars and callable(closure_vars['rule']):
+            inner_func = closure_vars['rule']
+            inner_closure = self._extract_closure_vars(inner_func)
+
+            # Check if inner function is options_to_access_rule pattern
+            if 'options' in inner_closure:
+                return self._extract_options_paths(inner_closure['options'])
+
+        # Direct options_to_access_rule pattern
+        if 'options' in closure_vars:
+            return self._extract_options_paths(closure_vars['options'])
+
+        return None
+
+    def _extract_options_paths(self, options: List) -> Optional[Dict[str, Any]]:
+        """Extract path data from a list of bunny rule options.
+
+        Args:
+            options: List of option functions from options_to_access_rule
+
+        Returns:
+            Dict with 'rule': 'BunnyPaths' and extracted path options
+        """
+        if not options:
+            return None
+
+        extracted_paths = []
+
+        for option_func in options:
+            if not callable(option_func):
+                continue
+
+            path_data = self._extract_single_path_data(option_func)
+            if path_data:
+                extracted_paths.append(path_data)
+
+        if not extracted_paths:
+            return None
+
+        # Always include Moon Pearl as a direct option (the safe fallback)
+        has_moon_pearl = any(
+            opt.get('type') == 'direct' and 'Moon Pearl' in opt.get('requires', [])
+            for opt in extracted_paths
+        )
+        if not has_moon_pearl:
+            extracted_paths.append({
+                'type': 'direct',
+                'requires': ['Moon Pearl']
+            })
+
+        return {
+            'rule': 'BunnyPaths',
+            'options': extracted_paths
+        }
+
+    def _extract_single_path_data(self, func: Callable) -> Optional[Dict[str, Any]]:
+        """Extract data from a single path_to_access_rule closure.
+
+        Args:
+            func: A single option function from the options list
+
+        Returns:
+            Dict with path data (type, via_entrance, requires, etc.)
+        """
+        closure_vars = self._extract_closure_vars(func)
+
+        # Pattern: path_to_access_rule - has 'entrance' and 'path' or 'new_path'
+        entrance = closure_vars.get('entrance')
+        path_rules = closure_vars.get('path') or closure_vars.get('new_path', [])
+
+        if entrance is None:
+            # Not a path_to_access_rule pattern
+            # Could be a simple Moon Pearl check or other pattern
+            return self._extract_non_path_option(func, closure_vars)
+
+        # Extract entrance info
+        entrance_name = getattr(entrance, 'name', None)
+        if not entrance_name:
+            return None
+
+        parent_region = None
+        if hasattr(entrance, 'parent_region') and entrance.parent_region:
+            parent_region = entrance.parent_region.name
+
+        connected_region = None
+        if hasattr(entrance, 'connected_region') and entrance.connected_region:
+            connected_region = entrance.connected_region.name
+
+        # Extract required items from path rules
+        required_items = self._extract_path_item_requirements(path_rules)
+
+        # IMPORTANT: Also extract items from the OUTER lambda's bytecode
+        # The outer lambda may have additional requirements like:
+        #   lambda state: path_to_access_rule(...)(state) and state.has('Magic Mirror', player)
+        # These items are in the outer lambda's bytecode, not in path_rules
+        outer_items = self._extract_items_from_bytecode(func)
+        required_items = list(set(required_items) | outer_items)
+
+        # Determine if this is a superbunny mirror path
+        is_mirror_path = 'Magic Mirror' in required_items
+
+        return {
+            'type': 'path',
+            'via_entrance': entrance_name,
+            'via_region': parent_region,
+            'connected_region': connected_region,
+            'requires': required_items,
+            'is_superbunny': is_mirror_path
+        }
+
+    def _extract_non_path_option(self, func: Callable, closure_vars: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Extract data from a non-path option (e.g., Moon Pearl check).
+
+        Args:
+            func: The option function
+            closure_vars: Already extracted closure variables
+
+        Returns:
+            Dict with 'type': 'direct' and required items, or None
+        """
+        # Try bytecode analysis for simple item checks
+        items = self._extract_items_from_bytecode(func)
+
+        if items:
+            return {
+                'type': 'direct',
+                'requires': list(items)
+            }
+
+        return None
+
+    def _extract_path_item_requirements(self, path_rules: List) -> List[str]:
+        """Extract item requirements from path rule functions.
+
+        Args:
+            path_rules: List of rule functions from the path
+
+        Returns:
+            List of required item names
+        """
+        items = set()
+
+        # Get known items from game handler
+        known_items: Set[str] = set()
+        if self.game_handler and hasattr(self.game_handler, 'get_known_items_for_bytecode'):
+            known_items = self.game_handler.get_known_items_for_bytecode()
+
+        for rule_func in path_rules:
+            if not callable(rule_func):
+                continue
+
+            # Extract items from bytecode constants
+            extracted = self._extract_items_from_bytecode(rule_func, known_items)
+            items.update(extracted)
+
+            # Check for nested bunny rules (options_to_access_rule)
+            # If found, this path goes through another bunny region
+            nested_closure = self._extract_closure_vars(rule_func)
+            if 'options' in nested_closure:
+                # Nested bunny rule - path requires Moon Pearl to safely navigate
+                items.add('Moon Pearl')
+
+        return list(items)
+
+    def _extract_items_from_bytecode(self, func: Callable, known_items: Set[str] = None) -> Set[str]:
+        """Extract item names from function bytecode.
+
+        Args:
+            func: The function to analyze
+            known_items: Optional set of valid item names to filter by
+
+        Returns:
+            Set of item names found in bytecode constants
+        """
+        items = set()
+
+        if known_items is None:
+            known_items = set()
+            if self.game_handler and hasattr(self.game_handler, 'get_known_items_for_bytecode'):
+                known_items = self.game_handler.get_known_items_for_bytecode()
+
+        if not hasattr(func, '__code__'):
+            return items
+
+        # Check bytecode constants
+        for const in func.__code__.co_consts:
+            if isinstance(const, str) and const:
+                # Skip type strings and internal names
+                if const in ('Entrance', 'Region', 'Location', 'state', 'player'):
+                    continue
+                if const.startswith('<') or const.startswith('_'):
+                    continue
+
+                # If we have known items, filter by them
+                if known_items:
+                    if const in known_items:
+                        items.add(const)
+                else:
+                    # Heuristic: likely an item if it's a capitalized string
+                    if const[0].isupper() and ' ' in const or const[0].isupper():
+                        items.add(const)
+
+        return items
 
     def _flatten_or_children(self, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Flatten nested OR structures: OR(OR(a,b), c) -> OR(a, b, c).
