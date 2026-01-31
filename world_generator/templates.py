@@ -259,15 +259,36 @@ def _rule_needs_lambda(rule: dict) -> bool:
         return True
 
     # AST format dynamic references also need lambda
-    # AST_function_call is included because it may reference 'location' or 'entrance'
-    # variables that are substituted at generation time via set_context(), and
-    # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
     # WorldAttribute and OptionValue need lambda because they generate
     # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
     # to be defined (only available in lambda context).
     # AST_capability needs lambda because it calls helper functions with runtime arguments
     # from options/world attributes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+        return True
+
+    # AST_function_call may need lambda, but not if the function is a Rule Builder rule
+    # (e.g., And, Or, Has, CanReachEntrance) - those can be converted directly.
+    # This happens when bunny rules are analyzed and path_to_access_rule returns
+    # nested Rule Builder expressions wrapped in AST_function_call.
+    if rule_name == 'AST_function_call':
+        args = rule.get('args', {})
+        function = args.get('function', {})
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            rule_builder_types = (
+                'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                'Has', 'HasAll', 'HasAny', 'HasGroup',
+                'And', 'Or', 'Not',
+                'True_', 'False_',
+                'Compare', 'Conditional',
+                'HelperCall',
+            )
+            if func_rule in rule_builder_types:
+                # Function is a Rule Builder rule - check if IT needs lambda
+                # (it might have nested dynamic references)
+                return _rule_needs_lambda(function)
+        # Unknown function call structure - needs lambda
         return True
 
     # HasFromList/HasFromListUnique with dynamic count (dict instead of int) need lambda

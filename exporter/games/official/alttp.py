@@ -320,3 +320,53 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return None  # Let default handling proceed
 
+    # Kakariko Well locations that can be accessed via superbunny state in glitch modes
+    # In the original code, these locations in Kakariko Well (top) region are special-cased
+    # to not require Magic Mirror (unlike other superbunny locations). The bunny rule
+    # analyzer may produce complex Or(glitch_path, Moon Pearl) rules, but these should
+    # just be accessible from the region in glitch modes.
+    KAKARIKO_WELL_SUPERBUNNY_LOCATIONS = {
+        'Kakariko Well - Left',
+        'Kakariko Well - Middle',
+        'Kakariko Well - Right',
+        'Kakariko Well - Bottom',
+    }
+
+    def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """Post-process location data to simplify rules for Kakariko Well locations in glitch modes.
+
+        In ALttP, the Kakariko Well (top) region has special handling in the bunny rules.
+        Unlike most superbunny-accessible locations, Kakariko Well locations don't need
+        Magic Mirror - they just need to reach the region. The bunny rule analyzer may
+        produce complex rules with Moon Pearl and entrance conditions, but in glitch modes
+        these locations should be accessible just by reaching the region.
+
+        This simplifies the access rule to True (no additional requirements) for
+        Kakariko Well superbunny locations when in permissive glitch modes.
+        """
+        # Check if this is a Kakariko Well superbunny location
+        if location_name not in self.KAKARIKO_WELL_SUPERBUNNY_LOCATIONS:
+            return location_data
+
+        # Check if we're in a permissive glitch mode
+        if not self.world or not hasattr(self.world, 'options'):
+            return location_data
+
+        glitches_option = getattr(self.world.options, 'glitches_required', None)
+        if glitches_option is None:
+            return location_data
+
+        current_glitch_mode = str(getattr(glitches_option, 'current_key', ''))
+        if current_glitch_mode not in self.PERMISSIVE_LOGIC_OPTION_VALUES:
+            return location_data
+
+        # In permissive glitch mode, Kakariko Well locations just need region access
+        # Simplify the access rule to True
+        access_rule = location_data.get('access_rule')
+        if access_rule and access_rule != {'rule': 'True_'}:
+            logger.debug(f"Simplifying access rule for Kakariko Well location '{location_name}' "
+                        f"in {current_glitch_mode} mode")
+            location_data['access_rule'] = {'rule': 'True_'}
+
+        return location_data
+
