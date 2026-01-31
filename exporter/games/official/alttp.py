@@ -101,6 +101,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
         'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
         'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
+        # Event items used in entrance rules
+        'Beat Agahnim 1', 'Beat Agahnim 2',
     }
 
     # Bytecode helper expansions for ALttP
@@ -319,4 +321,181 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return {'type': 'count_check', 'item': item_value, 'count': count}
 
         return None  # Let default handling proceed
+
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process the exported data to fix superbunny location rules.
+
+        When open_pyramid is 'open', the Pyramid Hole entrance doesn't require
+        Beat Agahnim 2. This affects superbunny accessible locations in Kakariko Well
+        that would otherwise incorrectly require Beat Agahnim 2.
+
+        Args:
+            data: The complete export data dictionary
+
+        Returns:
+            The modified export data dictionary
+        """
+        # First call base class post-processing
+        data = super().post_process_data(data)
+
+        # Check if open_pyramid is enabled
+        open_pyramid_enabled = False
+        if self.world and hasattr(self.world, 'options'):
+            option = getattr(self.world.options, 'open_pyramid', None)
+            if option is not None:
+                try:
+                    # Get the multiworld for to_bool() evaluation
+                    multiworld = getattr(self.world, 'multiworld', None)
+                    player = getattr(self.world, 'player', 1)
+                    if multiworld and hasattr(option, 'to_bool'):
+                        open_pyramid_enabled = option.to_bool(multiworld, player)
+                    else:
+                        # Fallback: check if value indicates 'open'
+                        open_pyramid_enabled = getattr(option, 'value', 0) == 1
+                except Exception as e:
+                    logger.debug(f"Could not evaluate open_pyramid: {e}")
+
+        if not open_pyramid_enabled:
+            return data
+
+        logger.info("ALttP: open_pyramid enabled, simplifying superbunny rules")
+
+        # Superbunny accessible locations in Kakariko Well (top) that need rule simplification
+        superbunny_well_locations = {
+            'Kakariko Well - Left',
+            'Kakariko Well - Middle',
+            'Kakariko Well - Right',
+            'Kakariko Well - Bottom',
+        }
+
+        # Walk through all regions and fix location rules
+        for player_id, regions in data.get('regions', {}).items():
+            for region_name, region in regions.items():
+                if region_name != 'Kakariko Well (top)':
+                    continue
+
+                for location in region.get('locations', []):
+                    loc_name = location.get('name')
+                    if loc_name not in superbunny_well_locations:
+                        continue
+
+                    rule = location.get('access_rule', {})
+                    simplified = self._simplify_beat_agahnim_2_rule(rule)
+                    if simplified != rule:
+                        location['access_rule'] = simplified
+                        logger.debug(f"Simplified rule for {loc_name}")
+
+        return data
+
+    def _simplify_beat_agahnim_2_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Simplify rules containing Beat Agahnim 2 when open_pyramid is True.
+
+        Since open_pyramid is True, any OR with Beat Agahnim 2 can be simplified
+        because the alternative path (through the open pyramid) is always available.
+
+        The key insight is:
+        - Pyramid Hole entrance rule is: Beat Agahnim 2 OR open_pyramid
+        - When open_pyramid is True, this becomes: Beat Agahnim 2 OR True = True
+        - So CanReachEntrance(Pyramid Hole) AND Has(Beat Agahnim 2) becomes just CanReachEntrance
+
+        Note: The rule structure at post_process_data time uses two formats:
+        - Rule Builder format: {'rule': 'And', 'children': [...]}
+        - Exporter format: {'type': 'and', 'conditions': [...]}
+
+        Args:
+            rule: The rule to simplify
+
+        Returns:
+            The simplified rule
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Handle Rule Builder format: {'rule': 'X', 'args': {...}} or {'rule': 'X', 'children': [...]}
+        rule_type = rule.get('rule', '')
+
+        # If this is Has(Beat Agahnim 2) in Rule Builder format
+        if rule_type == 'Has' and rule.get('args', {}).get('item_name') == 'Beat Agahnim 2':
+            return {'rule': 'True_'}
+
+        # Handle Rule Builder And
+        if rule_type == 'And':
+            children = rule.get('children', [])
+            simplified_children = [self._simplify_beat_agahnim_2_rule(c) for c in children]
+            filtered = [c for c in simplified_children if not (isinstance(c, dict) and c.get('rule') == 'True_')]
+            if not filtered:
+                return {'rule': 'True_'}
+            elif len(filtered) == 1:
+                return filtered[0]
+            else:
+                return {'rule': 'And', 'children': filtered}
+
+        # Handle Rule Builder Or
+        if rule_type == 'Or':
+            children = rule.get('children', [])
+            simplified_children = [self._simplify_beat_agahnim_2_rule(c) for c in children]
+            if any(isinstance(c, dict) and c.get('rule') == 'True_' for c in simplified_children):
+                return {'rule': 'True_'}
+            filtered = [c for c in simplified_children if not (isinstance(c, dict) and c.get('rule') == 'False_')]
+            if not filtered:
+                return {'rule': 'False_'}
+            elif len(filtered) == 1:
+                return filtered[0]
+            else:
+                return {'rule': 'Or', 'children': filtered}
+
+        # Handle AST_function_call
+        if rule_type == 'AST_function_call':
+            args = rule.get('args', {})
+            if 'function' in args:
+                simplified_func = self._simplify_beat_agahnim_2_rule(args['function'])
+                new_args = dict(args)
+                new_args['function'] = simplified_func
+                return {'rule': 'AST_function_call', 'args': new_args}
+
+        # Handle Exporter format: {'type': 'x', 'conditions': [...]}
+        type_key = rule.get('type', '')
+
+        # If this is an item_check for Beat Agahnim 2 in exporter format
+        if type_key == 'item_check' and rule.get('item') == 'Beat Agahnim 2':
+            return {'type': 'constant', 'value': True}
+
+        # Handle exporter format 'and'
+        if type_key == 'and':
+            conditions = rule.get('conditions', [])
+            simplified_conditions = [self._simplify_beat_agahnim_2_rule(c) for c in conditions]
+            # Remove True constants from And
+            filtered = [c for c in simplified_conditions if not (isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') is True)]
+            if not filtered:
+                return {'type': 'constant', 'value': True}
+            elif len(filtered) == 1:
+                return filtered[0]
+            else:
+                return {'type': 'and', 'conditions': filtered}
+
+        # Handle exporter format 'or'
+        if type_key == 'or':
+            conditions = rule.get('conditions', [])
+            simplified_conditions = [self._simplify_beat_agahnim_2_rule(c) for c in conditions]
+            # If any child is True, the whole Or is True
+            if any(isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') is True for c in simplified_conditions):
+                return {'type': 'constant', 'value': True}
+            # Remove False constants from Or
+            filtered = [c for c in simplified_conditions if not (isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') is False)]
+            if not filtered:
+                return {'type': 'constant', 'value': False}
+            elif len(filtered) == 1:
+                return filtered[0]
+            else:
+                return {'type': 'or', 'conditions': filtered}
+
+        # Handle function_call in exporter format
+        if type_key == 'function_call':
+            if 'function' in rule:
+                simplified_func = self._simplify_beat_agahnim_2_rule(rule['function'])
+                new_rule = dict(rule)
+                new_rule['function'] = simplified_func
+                return new_rule
+
+        return rule
 

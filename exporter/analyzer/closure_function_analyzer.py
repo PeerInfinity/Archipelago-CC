@@ -713,10 +713,22 @@ class ClosureFunctionAnalyzer:
 
             # If we have an OR pattern with has() and option access, combine them
             if is_or_pattern and option_name and len(item_names) >= 1:
-                option_rule = {'rule': 'OptionValue', 'args': {'option': option_name}}
-                item_rule = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
-                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern: has('{item_names[0]}') or option '{option_name}'")
-                return {'rule': 'Or', 'children': [option_rule, item_rule]}
+                # Try to evaluate the option at export time
+                option_value = self._try_evaluate_option(option_name, closure_vars)
+                if option_value is True:
+                    # Option evaluates to True, so the OR is always True
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode OR pattern with option '{option_name}' = True -> True_")
+                    return {'rule': 'True_'}
+                elif option_value is False:
+                    # Option evaluates to False, so only the item check matters
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode OR pattern with option '{option_name}' = False -> Has('{item_names[0]}')")
+                    return {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+                else:
+                    # Could not evaluate option, return full OR rule
+                    option_rule = {'rule': 'OptionValue', 'args': {'option': option_name}}
+                    item_rule = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern: has('{item_names[0]}') or option '{option_name}'")
+                    return {'rule': 'Or', 'children': [option_rule, item_rule]}
 
             if len(item_names) == 1:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has('{item_names[0]}')")
@@ -773,6 +785,81 @@ class ClosureFunctionAnalyzer:
                 }
 
         return None
+
+    def _try_evaluate_option(self, option_name: str, closure_vars: Dict[str, Any]) -> Optional[bool]:
+        """Try to evaluate an option value at export time.
+
+        This is used to simplify rules like `has(X) or option.to_bool()` when we can
+        determine the option's value from the world context.
+
+        Args:
+            option_name: Name of the option to evaluate (e.g., 'open_pyramid')
+            closure_vars: Closure variables that might contain world context
+
+        Returns:
+            True if option evaluates to True
+            False if option evaluates to False
+            None if we cannot determine the value
+        """
+        # Try to get world from closure vars or game handler
+        world = closure_vars.get('world')
+
+        # If world is not in closure, try to get it from game handler
+        if world is None and self.game_handler:
+            world = getattr(self.game_handler, 'world', None)
+
+        if world is None:
+            logger.debug(f"_try_evaluate_option: No world context available for '{option_name}'")
+            return None
+
+        try:
+            # Get player from closure or default to 1
+            player = closure_vars.get('player', 1)
+
+            # Determine if we have the player's world or the multiworld
+            if hasattr(world, 'options'):
+                # We have the player's world directly
+                player_world = world
+                multiworld = getattr(world, 'multiworld', None)
+            elif hasattr(world, 'worlds'):
+                # We have the multiworld - get player's world
+                multiworld = world
+                player_world = multiworld.worlds.get(player)
+                if player_world is None:
+                    logger.debug(f"_try_evaluate_option: Could not get player world for player {player}")
+                    return None
+            else:
+                logger.debug(f"_try_evaluate_option: World object has no 'options' or 'worlds' attribute")
+                return None
+
+            # Get the option object
+            if not hasattr(player_world, 'options'):
+                logger.debug(f"_try_evaluate_option: Player world has no 'options' attribute")
+                return None
+
+            option_obj = getattr(player_world.options, option_name, None)
+            if option_obj is None:
+                logger.debug(f"_try_evaluate_option: Option '{option_name}' not found")
+                return None
+
+            # Try to call to_bool() if available
+            if hasattr(option_obj, 'to_bool'):
+                if multiworld is not None:
+                    result = option_obj.to_bool(multiworld, player)
+                else:
+                    # Fallback: use value truthiness
+                    result = bool(getattr(option_obj, 'value', False))
+                logger.debug(f"_try_evaluate_option: {option_name}.to_bool() = {result}")
+                return result
+            else:
+                # Use value truthiness
+                result = bool(getattr(option_obj, 'value', False))
+                logger.debug(f"_try_evaluate_option: {option_name}.value = {result}")
+                return result
+
+        except Exception as e:
+            logger.debug(f"_try_evaluate_option: Failed to evaluate '{option_name}': {e}")
+            return None
 
     def _analyze_simple_check_pattern(self, func: Callable,
                                       closure_vars: Dict[str, Any]) -> Optional[Dict[str, Any]]:
