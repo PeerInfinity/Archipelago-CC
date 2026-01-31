@@ -1620,19 +1620,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     CANONICAL_SEED: ClassVar[int] = {canonical_seed}
 
     def generate_early(self) -> None:
-        """Push starting items and load canonical options.
-
-        Options are always loaded from _worldgen_options.json to ensure consistency
-        between the original world's rules and the worldgen world's helper functions.
-        This is critical for UT fuzzer testing where option-dependent helpers
-        (like has_paintings) need to evaluate identically to the original world.
-        """
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        # Always load canonical options to match the original world's behavior
-        # This is essential for helpers that check options (like has_paintings)
-        self._load_canonical_options()
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
+            if self.options.use_canonical_options.value:
+                self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
