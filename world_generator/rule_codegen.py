@@ -1715,7 +1715,8 @@ class RuleCodeGenerator:
         if rb_rule == 'BunnyPaths':
             # Convert Rule Builder format BunnyPaths rule
             # This rule is generated during ALttP export for superbunny locations
-            options = args.get('options', [])
+            # Options are stored at the top level of the rule dict, not inside args
+            options = rule.get('options', args.get('options', []))
             self.required_imports.add('BunnyPaths')
             return self._generate_bunny_paths_code(options)
 
@@ -2594,7 +2595,7 @@ class RuleCodeGenerator:
             Python code string for BunnyPaths rule instantiation
         """
         if not options:
-            return 'BunnyPaths(options=[])'
+            return 'BunnyPaths(path_options=[])'
 
         # Build option list as Python code
         option_strs = []
@@ -2622,7 +2623,7 @@ class RuleCodeGenerator:
 
             option_strs.append('{' + ', '.join(opt_parts) + '}')
 
-        return f"BunnyPaths(options=[{', '.join(option_strs)}])"
+        return f"BunnyPaths(path_options=[{', '.join(option_strs)}])"
 
     def _convert_state_method(self, rule: Dict[str, Any]) -> str:
         """Convert state_method calls to appropriate Rule Builder classes."""

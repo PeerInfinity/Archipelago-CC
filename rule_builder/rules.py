@@ -2400,16 +2400,19 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
     - is_superbunny: whether this is a superbunny mirror path
 
     The rule succeeds if ANY path option is satisfied.
+
+    Note: Uses 'path_options' to avoid collision with base class 'options' field
+    which is used for OptionFilters.
     """
 
-    options: list[dict[str, Any]] = dataclasses.field(default_factory=list)
+    path_options: list[dict[str, Any]] = dataclasses.field(default_factory=list)
     """List of path options, each with type, entrance info, and requirements"""
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         # Pre-resolve entrance lookups
         resolved_options = []
-        for opt in self.options:
+        for opt in self.path_options:
             resolved_opt = dict(opt)
             if opt.get('type') == 'path' and opt.get('via_entrance'):
                 try:
@@ -2433,11 +2436,11 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
     def from_dict(cls, data: Mapping[str, Any], world_cls: type) -> "BunnyPaths":
         """Create a BunnyPaths rule from a dict representation."""
         options = data.get('options', data.get('args', {}).get('options', []))
-        return cls(options=list(options))
+        return cls(path_options=list(options))
 
     @override
     def __str__(self) -> str:
-        paths = [self._describe_option(opt) for opt in self.options]
+        paths = [self._describe_option(opt) for opt in self.path_options]
         return f"BunnyPaths({' OR '.join(paths)})"
 
     def _describe_option(self, opt: dict[str, Any]) -> str:
@@ -2449,13 +2452,13 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
             return f"path({entrance}: {items})"
 
     class Resolved(Rule.Resolved):
-        options_hashable: tuple  # For hashing
-        options: list[dict[str, Any]]
+        path_options_hashable: tuple  # For hashing
+        path_options: list[dict[str, Any]]
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
             """Check if any path option is satisfied."""
-            for opt in self.options:
+            for opt in self.path_options:
                 if self._check_option(opt, state):
                     return True
             return False
@@ -2492,7 +2495,7 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
             deps: dict[str, set[int]] = {}
-            for opt in self.options:
+            for opt in self.path_options:
                 for item in opt.get('requires', []):
                     if item not in deps:
                         deps[item] = set()
@@ -2502,7 +2505,7 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
         @override
         def entrance_dependencies(self) -> dict[str, set[int]]:
             deps: dict[str, set[int]] = {}
-            for opt in self.options:
+            for opt in self.path_options:
                 if opt.get('type') == 'path':
                     entrance = opt.get('via_entrance')
                     if entrance:
@@ -2516,13 +2519,13 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
             messages: list[JSONMessagePart] = [{"type": "text", "text": "BunnyPaths("}]
             if state is None:
                 # Just list the options
-                for i, opt in enumerate(self.options):
+                for i, opt in enumerate(self.path_options):
                     if i > 0:
                         messages.append({"type": "text", "text": " OR "})
                     messages.append({"type": "text", "text": self._describe_option(opt)})
             else:
                 # Show which options are satisfied
-                for i, opt in enumerate(self.options):
+                for i, opt in enumerate(self.path_options):
                     if i > 0:
                         messages.append({"type": "text", "text": " OR "})
                     satisfied = self._check_option(opt, state)
@@ -2538,10 +2541,10 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
         @override
         def explain_str(self, state: CollectionState | None = None) -> str:
             if state is None:
-                paths = [self._describe_option(opt) for opt in self.options]
+                paths = [self._describe_option(opt) for opt in self.path_options]
                 return f"BunnyPaths({' OR '.join(paths)})"
 
-            for opt in self.options:
+            for opt in self.path_options:
                 if self._check_option(opt, state):
                     return f"Satisfied via {self._describe_option(opt)}"
 
@@ -2557,12 +2560,12 @@ class BunnyPaths(Rule[TWorld], game="Archipelago"):
 
         @override
         def __str__(self) -> str:
-            paths = [self._describe_option(opt) for opt in self.options]
+            paths = [self._describe_option(opt) for opt in self.path_options]
             return f"BunnyPaths({' OR '.join(paths)})"
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"options": self.options}
+            return {"path_options": self.path_options}
 
 
 # =============================================================================
