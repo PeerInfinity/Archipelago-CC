@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-01-30 03:18:05
+**Generated:** 2026-01-31 01:30:17
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -28,7 +28,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | ❌ 0.0% | ⚠️ 70.0% | 121.4KB | ✅ | 665.3KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -87,7 +87,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Secret of Evermore | ✅ 100.0% | ❌ 0.0% | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ 8.0% | ✅ 100.0% | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.4KB | 1126.6KB |
 | Stardew Valley | ❌ 4.0% | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ❌ 10.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -206,7 +206,7 @@ These games fail in both Universal Tracker versions.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | 121.4KB | ✅ | 665.3KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
 | Final Fantasy Mystic Quest | 10.3KB | ✅ | 549.0KB |
 | Hollow Knight | ✅ | ✅ | N/A |
@@ -218,7 +218,7 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.3KB | 51.3KB | 1044.7KB |
-| Starcraft 2 | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | 28.7KB | 87.4KB | 1126.6KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |

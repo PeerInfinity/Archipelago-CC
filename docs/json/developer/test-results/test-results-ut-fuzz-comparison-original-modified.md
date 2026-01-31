@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified
 
-**Generated:** 2026-01-30 03:18:05
+**Generated:** 2026-01-31 01:30:17
 
 This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
 
@@ -16,11 +16,11 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 33 (38.8%)
-- **Passing Original Only:** 5 (5.9%)
-- **Passing Modified Only:** 29 (34.1%)
-- **Passing Neither:** 18 (21.2%)
-- **Passing Modified with no custom code:** 38 (44.7%)
+- **Passing Both:** 31 (36.5%)
+- **Passing Original Only:** 7 (8.2%)
+- **Passing Modified Only:** 28 (32.9%)
+- **Passing Neither:** 19 (22.4%)
+- **Passing Modified with no custom code:** 37 (43.5%)
 - **Passing Modified Only with no custom code:** 13 (15.3%)
 
 ## Full Comparison
@@ -28,7 +28,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ✅ 100.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0.0% | ✅ 80.0% | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | ❌ 0.0% | ✅ 80.0% | 121.4KB | ✅ | 665.3KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -50,10 +50,10 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ⚠️ 52.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0.0% | ❌ 40.0% | 5.1KB | ✅ | 497.8KB |
+| Factorio | ❌ 0.0% | ⚠️ 80.0% | 5.1KB | ✅ | 497.8KB |
 | Faxanadu | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ 1.0% | ⚠️ 50.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ 1.0% | ⚠️ 70.0% | 10.3KB | ✅ | 549.0KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 11.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
@@ -78,16 +78,16 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Old School Runescape | ✅ 91.0% | ✅ 100.0% | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | ❌ 12.0% | ✅ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ 98.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
-| Pokemon Emerald | ⚠️ 59.0% | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
+| Pokemon Emerald | ⚠️ 59.0% | ❌ 20.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
-| Raft | ✅ 100.0% | ✅ 100.0% | 5.4KB | ✅ | 485.4KB |
+| Raft | ✅ 100.0% | ❌ 0.0% | 5.4KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
 | Saving Princess | ❌ 28.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ 100.0% | ❌ 0.0% | 5.3KB | 6.9KB | 418.7KB |
 | Shivers | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ 8.0% | ✅ 100.0% | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.4KB | 1126.6KB |
 | Stardew Valley | ❌ 4.0% | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ❌ 10.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -101,19 +101,19 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Terraria | ⚠️ 98.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.6KB |
 | The Messenger | ❌ 2.0% | ✅ 100.0% | 14.7KB | ✅ | 211.8KB |
-| The Wind Waker | ❌ 3.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
+| The Wind Waker | ❌ 3.0% | ❌ 0.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ✅ 100.0% | ❌ 30.0% | 14.1KB | ✅ | 401.1KB |
 | Timespinner | ❌ 5.0% | ✅ 100.0% | 2.2KB | ✅ | 260.8KB |
 | Undertale | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 58.0KB |
 | VVVVVV | ⚠️ 67.0% | ✅ 100.0% | 3.8KB | ✅ | 22.8KB |
-| Wargroove | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 44.7KB |
+| Wargroove | ✅ 100.0% | ❌ 0.0% | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ 5.0% | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
 | Yoshi's Island | ❌ 22.0% | ✅ 100.0% | 9.2KB | ✅ | 296.7KB |
 | Yu-Gi-Oh! 2006 | ❌ 33.0% | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ 42.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (33)
+## Games Passing Both (31)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -144,16 +144,14 @@ These games have 100% success rate in both Universal Tracker versions.
 | Meritous | ✅ | ✅ | 57.2KB |
 | Old School Runescape | 1.0KB | ✅ | 308.9KB |
 | Paint | 2.7KB | ✅ | 123.7KB |
-| Raft | 5.4KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ | ✅ | 146.1KB |
 | Sudoku | ✅ | ✅ | N/A |
 | TOEM original | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | ✅ | 102.8KB |
 | The Legend of Zelda | ✅ | ✅ | 555.6KB |
 | Undertale | ✅ | ✅ | 58.0KB |
-| Wargroove | ✅ | ✅ | 44.7KB |
 
-## Games Passing Original Only (5)
+## Games Passing Original Only (7)
 
 These games pass in the Original UT but fail in the Modified UT.
 
@@ -161,18 +159,20 @@ These games pass in the Original UT but fail in the Modified UT.
 |-----------|:--------:|:---------:|:----------:|
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |
+| Raft | 5.4KB | ✅ | 485.4KB |
 | Secret of Evermore | 5.3KB | 6.9KB | 418.7KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 | The Witness | 14.1KB | ✅ | 401.1KB |
+| Wargroove | ✅ | ✅ | 44.7KB |
 
-## Games Passing Modified Only (29)
+## Games Passing Modified Only (28)
 
 These games pass in the Modified UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | 121.4KB | ✅ | 665.3KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | DLCQuest | 1.2KB | ✅ | 51.0KB |
@@ -195,13 +195,12 @@ These games pass in the Modified UT but fail in the Original UT.
 | Super Mario World | ✅ | ✅ | 178.2KB |
 | Terraria | 16.8KB | ✅ | 283.0KB |
 | The Messenger | 14.7KB | ✅ | 211.8KB |
-| The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 | VVVVVV | 3.8KB | ✅ | 22.8KB |
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Neither (18)
+## Games Passing Neither (19)
 
 These games fail in both Universal Tracker versions.
 
@@ -219,9 +218,10 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.3KB | 51.3KB | 1044.7KB |
-| Starcraft 2 | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | 28.7KB | 87.4KB | 1126.6KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
+| The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | Yacht Dice | 0.9KB | 285.0KB | 249.5KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ✅ | ✅ | N/A |
