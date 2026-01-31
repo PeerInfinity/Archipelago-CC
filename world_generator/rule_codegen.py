@@ -6367,20 +6367,46 @@ class RuleCodeGenerator:
                 # The bunny rules code creates rules like:
                 #   can_reach(entrance) AND entrance.access_rule(state)
                 # But CanReachEntrance already checks the entrance's access_rule
-                # at runtime (see BaseClasses.Entrance.can_reach), so the additional
-                # conditions are redundant and can cause issues if the exporter
-                # only partially captured the entrance's access rule.
-                # Simplify to just CanReachEntrance.
+                # at runtime (see BaseClasses.Entrance.can_reach), so conditions
+                # that are part of the entrance's access rule are redundant.
+                #
+                # HOWEVER, bunny rules also add additional conditions like Mirror
+                # that are NOT part of the entrance's access rule and MUST be preserved.
+                # Example: path_to_access_rule(new_path, entrance)(state) and state.has('Magic Mirror', player)
+                #
+                # We preserve item checks (Has, HasAll, HasAny, etc.) because they
+                # are definitely not entrance access rules. We only drop conditions
+                # that look like they came from entrance.access_rule (like Or/And with
+                # option checks, or CanReachRegion that would be redundant).
                 if func_rule == 'And':
                     children = function.get('children', [])
                     can_reach_entrance = None
+                    non_entrance_conditions = []
                     for child in children:
-                        if isinstance(child, dict) and child.get('rule') == 'CanReachEntrance':
-                            can_reach_entrance = child
-                            break
+                        if isinstance(child, dict):
+                            child_rule = child.get('rule', '')
+                            # Check if this is the CanReachEntrance condition
+                            if child_rule == 'CanReachEntrance':
+                                can_reach_entrance = child
+                            # Preserve item checks - these are definitely additional requirements
+                            elif child_rule in ('Has', 'HasAll', 'HasAny', 'HasGroup',
+                                               'HasFromList', 'HasFromListUnique'):
+                                non_entrance_conditions.append(child)
+                            # Preserve helper calls - these might be important game-specific checks
+                            elif child_rule in ('HelperCall', 'helper'):
+                                non_entrance_conditions.append(child)
+                            # Other conditions (Or, And, OptionValue, etc.) might be from
+                            # entrance access rules, so we skip them as potentially redundant
                     if can_reach_entrance:
-                        # Found CanReachEntrance - use it directly, dropping redundant conditions
-                        return self._convert_rule(can_reach_entrance)
+                        if non_entrance_conditions:
+                            # Preserve CanReachEntrance AND the non-entrance conditions
+                            preserved = [can_reach_entrance] + non_entrance_conditions
+                            if len(preserved) == 1:
+                                return self._convert_rule(preserved[0])
+                            return self._convert_rule({'rule': 'And', 'children': preserved})
+                        else:
+                            # No additional conditions to preserve, just use CanReachEntrance
+                            return self._convert_rule(can_reach_entrance)
                 # Recursively convert the nested Rule Builder rule
                 return self._convert_rule(function)
 
