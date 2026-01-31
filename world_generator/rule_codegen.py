@@ -6307,13 +6307,36 @@ class RuleCodeGenerator:
         return 'None'
 
     def _convert_ast_function_call(self, rule: Dict[str, Any]) -> str:
-        """Convert AST_function_call to resolved constant.
+        """Convert AST_function_call to resolved constant or recursive rule conversion.
 
-        This handles function calls like options.open_pyramid.to_bool()
-        by extracting the option name and resolving it from settings.
+        This handles:
+        1. Function calls like options.open_pyramid.to_bool() - resolved from settings
+        2. Nested Rule Builder types (And, Or, Has, etc.) - recursively converted
+
+        The second case occurs when the exporter wraps a path_to_access_rule result
+        in AST_function_call. The function contains a valid Rule Builder structure
+        that should be recursively converted.
         """
         args = rule.get('args', {})
         function = args.get('function', {})
+
+        # Check if the function is actually a Rule Builder type that should be
+        # recursively converted. This happens when the analyzer wraps complex
+        # rule structures (like bunny rules from path_to_access_rule).
+        if isinstance(function, dict):
+            func_rule = function.get('rule', '')
+            # Rule Builder types that produce complete boolean expressions
+            rule_builder_types = (
+                'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
+                'And', 'Or', 'Not',
+                'True_', 'False_',
+                'Compare', 'Conditional',
+                'HelperCall', 'helper',
+            )
+            if func_rule in rule_builder_types:
+                # This is a nested Rule Builder structure - recursively convert it
+                return self.convert_rule_to_rb(function)
 
         # Try to extract the option name from the function expression
         # Structure: world.worlds[1].options.<option_name>.to_bool()

@@ -320,3 +320,119 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
         return None  # Let default handling proceed
 
+    def post_process_location_data(
+        self,
+        location_data: Dict[str, Any],
+        location_name: str,
+        region_name: str = None,
+        world: Any = None
+    ) -> Dict[str, Any]:
+        """Post-process location data after export.
+
+        Fixes superbunny accessible locations in Kakariko Well (top) region.
+        In OWG/glitch modes, these locations can be accessed without Moon Pearl
+        when entering as a bunny (superbunny state). The exporter captures
+        complex path rules that may not match the actual entrance shuffle,
+        so we simplify them to True_ for the superbunny path.
+
+        Args:
+            location_data: The exported location data dict
+            location_name: The name of the location
+            region_name: The name of the region containing this location
+            world: The world object
+
+        Returns:
+            Modified location data dict
+        """
+        # Check if this is a Kakariko Well superbunny location in OWG mode
+        kakariko_well_superbunny_locs = {
+            'Kakariko Well - Left',
+            'Kakariko Well - Middle',
+            'Kakariko Well - Right',
+            'Kakariko Well - Bottom',
+        }
+
+        if (region_name == 'Kakariko Well (top)' and
+                location_name in kakariko_well_superbunny_locs):
+            # Check if glitches are enabled
+            glitches_required = None
+            if world and hasattr(world, 'options') and hasattr(world.options, 'glitches_required'):
+                glitches_required = str(world.options.glitches_required.current_key)
+
+            glitch_modes = {'minor_glitches', 'overworld_glitches',
+                          'hybrid_major_glitches', 'no_logic'}
+
+            if glitches_required in glitch_modes:
+                # For superbunny locations in Kakariko Well (top), the rule should be
+                # simplified to True_ because in OWG mode, if you can reach the region,
+                # you can access the location via superbunny glitch (no Moon Pearl needed)
+                access_rule = location_data.get('access_rule', {})
+                if access_rule and self._is_complex_bunny_rule(access_rule):
+                    logger.debug(f"Simplifying superbunny rule for {location_name}")
+                    location_data['access_rule'] = {'rule': 'True_'}
+
+        return location_data
+
+    def _is_complex_bunny_rule(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is a complex bunny rule that should be simplified.
+
+        Identifies Or rules with function_call children that contain
+        problematic path requirements like Beat Agahnim 2.
+
+        Handles both formats:
+        - Analyzer format: {'type': 'or', 'conditions': [...]}
+        - Rule Builder format: {'rule': 'Or', 'children': [...]}
+        """
+        # Check for analyzer format
+        rule_type = rule.get('type', '') or rule.get('rule', '')
+        if rule_type.lower() != 'or':
+            return False
+
+        # Get children from either format
+        children = rule.get('conditions', []) or rule.get('children', [])
+        for child in children:
+            child_type = child.get('type', '') or child.get('rule', '')
+            # Check for function_call or AST_function_call
+            if child_type in ('function_call', 'AST_function_call'):
+                # Get function from either format
+                function = child.get('function', {}) or child.get('args', {}).get('function', {})
+                if self._contains_beat_agahnim(function):
+                    return True
+
+        return False
+
+    def _contains_beat_agahnim(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule contains a Beat Agahnim requirement."""
+        if not isinstance(rule, dict):
+            return False
+
+        rule_type = rule.get('rule', '')
+
+        # Check Has rule for Beat Agahnim items
+        if rule_type == 'Has':
+            args = rule.get('args', {})
+            item = args.get('item_name', '')
+            if 'Beat Agahnim' in item:
+                return True
+
+        # Recursively check children
+        for key in ['children', 'child']:
+            if key in rule:
+                value = rule[key]
+                if isinstance(value, list):
+                    for child in value:
+                        if self._contains_beat_agahnim(child):
+                            return True
+                elif isinstance(value, dict):
+                    if self._contains_beat_agahnim(value):
+                        return True
+
+        # Check function argument (for AST_function_call)
+        if 'args' in rule:
+            args = rule['args']
+            if isinstance(args, dict) and 'function' in args:
+                if self._contains_beat_agahnim(args['function']):
+                    return True
+
+        return False
+

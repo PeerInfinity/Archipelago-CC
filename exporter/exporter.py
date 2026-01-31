@@ -1819,7 +1819,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                 # Allow game handler to post-process location data before adding to region
                                 if game_handler and hasattr(game_handler, 'post_process_location_data'):
-                                    location_data = game_handler.post_process_location_data(location_data, location_name)
+                                    location_data = game_handler.post_process_location_data(
+                                        location_data, location_name, region.name, world)
 
                                 region_data['locations'].append(location_data)
                             except Exception as e:
