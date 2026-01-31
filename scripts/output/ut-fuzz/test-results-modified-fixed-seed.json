@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-01-31T04:41:29.882166",
-    "last_updated": "2026-01-31T04:41:29.882172",
+    "created": "2026-01-31T05:17:40.862210",
+    "last_updated": "2026-01-31T05:17:40.862216",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -28,7 +28,7 @@
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-01-31T04:38:28.874504",
+      "timestamp": "2026-01-31T05:14:25.488161",
       "explain_stats": {
         "game": "A Hat in Time WorldGen_11408892729106005028",
         "total_locations": 273,
@@ -65,7 +65,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-01-31T04:38:35.816342",
+      "timestamp": "2026-01-31T05:14:31.745001",
       "explain_stats": {
         "game": "Castlevania - Circle of the Moon WorldGen_55977854110148887761",
         "total_locations": 124,
@@ -96,18 +96,18 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-01-31T04:38:43.772492",
+      "timestamp": "2026-01-31T05:14:39.292051",
       "explain_stats": {
-        "game": "DOOM II WorldGen_79645483297583998146",
-        "total_locations": 479,
+        "game": "DOOM II WorldGen_11408892729106005028",
+        "total_locations": 453,
         "locations_with_explain": 0,
-        "locations_default_rule": 479,
+        "locations_default_rule": 453,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 183,
-        "entrances_with_explain": 124,
-        "entrances_default_rule": 59,
+        "total_entrances": 179,
+        "entrances_with_explain": 121,
+        "entrances_default_rule": 58,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -127,9 +127,9 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-01-31T04:38:50.192071",
+      "timestamp": "2026-01-31T05:14:44.985115",
       "explain_stats": {
-        "game": "Inscryption WorldGen_79645483297583998146",
+        "game": "Inscryption WorldGen_55977854110148887761",
         "total_locations": 100,
         "locations_with_explain": 65,
         "locations_default_rule": 35,
@@ -137,8 +137,8 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 4,
-        "entrances_with_explain": 3,
-        "entrances_default_rule": 1,
+        "entrances_with_explain": 0,
+        "entrances_default_rule": 4,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -158,7 +158,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-01-31T04:38:55.535519",
+      "timestamp": "2026-01-31T05:14:49.844313",
       "explain_stats": {
         "game": "Math Adventure WorldGen_79645483297583998146",
         "total_locations": 10,
@@ -189,7 +189,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-01-31T04:39:02.207468",
+      "timestamp": "2026-01-31T05:14:55.872418",
       "explain_stats": {
         "game": "Paint WorldGen_55977854110148887761",
         "total_locations": 167,
@@ -218,11 +218,11 @@
           "File 0-0.yaml is invalid. Please fix your yaml.": [
             0
           ],
-          "File 2-0.yaml is invalid. Please fix your yaml.": [
-            2
-          ],
           "File 3-0.yaml is invalid. Please fix your yaml.": [
             3
+          ],
+          "File 2-0.yaml is invalid. Please fix your yaml.": [
+            2
           ],
           "File 1-0.yaml is invalid. Please fix your yaml.": [
             1
@@ -236,11 +236,11 @@
           "File 8-0.yaml is invalid. Please fix your yaml.": [
             8
           ],
-          "File 7-0.yaml is invalid. Please fix your yaml.": [
-            7
-          ],
           "File 6-0.yaml is invalid. Please fix your yaml.": [
             6
+          ],
+          "File 7-0.yaml is invalid. Please fix your yaml.": [
+            7
           ],
           "File 9-0.yaml is invalid. Please fix your yaml.": [
             9
@@ -251,7 +251,7 @@
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-01-31T04:39:11.821984"
+      "timestamp": "2026-01-31T05:15:04.776449"
     },
     "TUNIC.yaml": {
       "ut_fuzz": {
@@ -272,7 +272,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-01-31T04:40:24.072259",
+      "timestamp": "2026-01-31T05:16:16.703309",
       "explain_stats": {
         "game": "TUNIC WorldGen_79645483297583998146",
         "total_locations": 6804,
@@ -309,9 +309,9 @@
             1,
             3,
             2,
-            4,
             6,
             5,
+            4,
             7,
             8,
             9
@@ -322,7 +322,7 @@
         "game_name": "Yacht Dice",
         "world_directory": "yachtdice"
       },
-      "timestamp": "2026-01-31T04:40:33.467983",
+      "timestamp": "2026-01-31T05:16:25.494501",
       "explain_stats": {
         "game": "Yacht Dice WorldGen_11408892729106005028",
         "total_locations": 58,
@@ -353,9 +353,9 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-01-31T04:38:21.544483",
+      "timestamp": "2026-01-31T05:14:16.967204",
       "explain_stats": {
-        "game": "Bumper Stickers WorldGen_79645483297583998146",
+        "game": "Bumper Stickers WorldGen_55977854110148887761",
         "total_locations": 100,
         "locations_with_explain": 38,
         "locations_default_rule": 62,
@@ -384,7 +384,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-01-31T04:38:28.693066",
+      "timestamp": "2026-01-31T05:14:24.001960",
       "explain_stats": {
         "game": "DOOM 1993 WorldGen_79645483297583998146",
         "total_locations": 474,
@@ -415,7 +415,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-01-31T04:38:35.604251",
+      "timestamp": "2026-01-31T05:14:30.746446",
       "explain_stats": {
         "game": "Hylics 2 WorldGen_11408892729106005028",
         "total_locations": 166,
@@ -446,7 +446,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-01-31T04:38:45.041487",
+      "timestamp": "2026-01-31T05:14:40.205768",
       "explain_stats": {
         "game": "Mario & Luigi Superstar Saga WorldGen_11408892729106005028",
         "total_locations": 598,
@@ -498,7 +498,7 @@
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-01-31T04:38:50.445568",
+      "timestamp": "2026-01-31T05:14:45.514608",
       "explain_stats": {
         "game": "Overcooked! 2 WorldGen_86998726363870010506",
         "total_locations": 43,
@@ -529,7 +529,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-01-31T04:39:14.365571",
+      "timestamp": "2026-01-31T05:15:09.412201",
       "explain_stats": {
         "game": "Sonic Adventure 2 Battle WorldGen_55977854110148887761",
         "total_locations": 1046,
@@ -560,18 +560,18 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-01-31T04:39:20.059478",
+      "timestamp": "2026-01-31T05:15:15.060204",
       "explain_stats": {
-        "game": "TOEM rule builder WorldGen_79645483297583998146",
-        "total_locations": 191,
+        "game": "TOEM rule builder WorldGen_11408892729106005028",
+        "total_locations": 214,
         "locations_with_explain": 4,
-        "locations_default_rule": 187,
+        "locations_default_rule": 210,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 5,
+        "total_entrances": 6,
         "entrances_with_explain": 5,
-        "entrances_default_rule": 0,
+        "entrances_default_rule": 1,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -591,9 +591,9 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-01-31T04:39:26.352641",
+      "timestamp": "2026-01-31T05:15:21.268608",
       "explain_stats": {
-        "game": "Wargroove WorldGen_11408892729106005028",
+        "game": "Wargroove WorldGen_79645483297583998146",
         "total_locations": 38,
         "locations_with_explain": 28,
         "locations_default_rule": 10,
@@ -622,54 +622,18 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-01-31T04:38:26.092862",
+      "timestamp": "2026-01-31T05:14:30.612343",
       "explain_stats": {
-        "game": "A Link to the Past WorldGen_55977854110148887761",
-        "total_locations": 226,
-        "locations_with_explain": 96,
-        "locations_default_rule": 85,
-        "locations_without_explain": 45,
-        "explain_coverage_percent": 68.09,
+        "game": "A Link to the Past WorldGen_11408892729106005028",
+        "total_locations": 270,
+        "locations_with_explain": 122,
+        "locations_default_rule": 107,
+        "locations_without_explain": 41,
+        "explain_coverage_percent": 74.85,
         "locations_without_explain_list": [
-          {
-            "name": "Blind's Hideout - Left",
-            "region": "Blinds Hideout"
-          },
-          {
-            "name": "Blind's Hideout - Right",
-            "region": "Blinds Hideout"
-          },
-          {
-            "name": "Blind's Hideout - Far Left",
-            "region": "Blinds Hideout"
-          },
-          {
-            "name": "Blind's Hideout - Far Right",
-            "region": "Blinds Hideout"
-          },
-          {
-            "name": "Secret Passage",
-            "region": "Hyrule Castle Secret Entrance"
-          },
           {
             "name": "Floodgate Chest",
             "region": "Dam"
-          },
-          {
-            "name": "Kakariko Tavern",
-            "region": "Tavern"
-          },
-          {
-            "name": "Sahasrahla's Hut - Left",
-            "region": "Sahasrahlas Hut"
-          },
-          {
-            "name": "Sahasrahla's Hut - Middle",
-            "region": "Sahasrahlas Hut"
-          },
-          {
-            "name": "Sahasrahla's Hut - Right",
-            "region": "Sahasrahlas Hut"
           },
           {
             "name": "Kakariko Well - Left",
@@ -688,14 +652,6 @@
             "region": "Kakariko Well (top)"
           },
           {
-            "name": "Cave 45",
-            "region": "Cave 45"
-          },
-          {
-            "name": "Library",
-            "region": "Library"
-          },
-          {
             "name": "Desert Palace - Boss",
             "region": "Desert Palace North"
           },
@@ -708,16 +664,32 @@
             "region": "Eastern Palace"
           },
           {
-            "name": "Hyrule Castle - Zelda's Chest",
-            "region": "Hyrule Castle"
-          },
-          {
             "name": "Spiral Cave",
             "region": "Spiral Cave (Top)"
           },
           {
             "name": "Tower of Hera - Boss",
             "region": "Tower of Hera (Top)"
+          },
+          {
+            "name": "Pyramid Fairy - Left",
+            "region": "Pyramid Fairy"
+          },
+          {
+            "name": "Pyramid Fairy - Right",
+            "region": "Pyramid Fairy"
+          },
+          {
+            "name": "Brewery",
+            "region": "Brewery"
+          },
+          {
+            "name": "Superbunny Cave - Top",
+            "region": "Superbunny Cave (Top)"
+          },
+          {
+            "name": "Superbunny Cave - Bottom",
+            "region": "Superbunny Cave (Top)"
           },
           {
             "name": "Mimic Cave",
@@ -752,8 +724,16 @@
             "region": "Ice Palace (Kholdstare)"
           },
           {
+            "name": "Misery Mire - Conveyor Crystal Key Drop",
+            "region": "Misery Mire (Main)"
+          },
+          {
             "name": "Misery Mire - Boss",
             "region": "Misery Mire (Vitreous)"
+          },
+          {
+            "name": "Turtle Rock - Big Key Chest",
+            "region": "Turtle Rock (Second Section)"
           },
           {
             "name": "Turtle Rock - Boss",
@@ -777,6 +757,10 @@
           },
           {
             "name": "Ganons Tower - Compass Room - Bottom Right",
+            "region": "Ganons Tower (Compass Room)"
+          },
+          {
+            "name": "Ganons Tower - Conveyor Star Pits Pot Key",
             "region": "Ganons Tower (Compass Room)"
           },
           {
@@ -812,21 +796,21 @@
             "region": "Ganons Tower (Bottom)"
           }
         ],
-        "total_entrances": 466,
-        "entrances_with_explain": 219,
-        "entrances_default_rule": 229,
-        "entrances_without_explain": 18,
-        "entrance_explain_coverage_percent": 92.41,
+        "total_entrances": 430,
+        "entrances_with_explain": 200,
+        "entrances_default_rule": 214,
+        "entrances_without_explain": 16,
+        "entrance_explain_coverage_percent": 92.59,
         "entrances_without_explain_list": [
           {
-            "name": "Inverted Ganons Tower",
-            "from_region": "Hyrule Castle Ledge",
-            "to_region": "Misery Mire (Entrance)"
+            "name": "Two Brothers House Exit (East)",
+            "from_region": "Two Brothers House",
+            "to_region": "Dark Desert"
           },
           {
-            "name": "Inverted Pyramid Hole",
-            "from_region": "Hyrule Castle Ledge",
-            "to_region": "Pyramid"
+            "name": "Two Brothers House Exit (West)",
+            "from_region": "Two Brothers House",
+            "to_region": "Light World"
           },
           {
             "name": "Sewers Door",
@@ -839,14 +823,14 @@
             "to_region": "Tower of Hera (Basement)"
           },
           {
-            "name": "Swamp Palace (Center)",
-            "from_region": "Swamp Palace (Starting Area)",
-            "to_region": "Swamp Palace (Center)"
+            "name": "Pyramid Fairy",
+            "from_region": "East Dark World",
+            "to_region": "Hyrule Castle"
           },
           {
-            "name": "Ice Palace (Main)",
-            "from_region": "Ice Palace (Second Section)",
-            "to_region": "Ice Palace (Main)"
+            "name": "Ganons Tower",
+            "from_region": "Dark Death Mountain (Top)",
+            "to_region": "Light World Bomb Hut"
           },
           {
             "name": "Ice Palace (East)",
@@ -857,16 +841,6 @@
             "name": "Misery Mire (West)",
             "from_region": "Misery Mire (Main)",
             "to_region": "Misery Mire (West)"
-          },
-          {
-            "name": "Turtle Rock (Pokey Room) (South)",
-            "from_region": "Turtle Rock (Pokey Room)",
-            "to_region": "Turtle Rock (First Section)"
-          },
-          {
-            "name": "Turtle Rock (Chain Chomp Room) (South)",
-            "from_region": "Turtle Rock (Chain Chomp Room)",
-            "to_region": "Turtle Rock (Pokey Room)"
           },
           {
             "name": "Palace of Darkness Big Key Chest Staircase",
@@ -925,7 +899,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-01-31T04:38:33.991808",
+      "timestamp": "2026-01-31T05:14:38.547032",
       "explain_stats": {
         "game": "Castlevania 64 WorldGen_11408892729106005028",
         "total_locations": 294,
@@ -977,7 +951,7 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-01-31T04:38:46.111633",
+      "timestamp": "2026-01-31T05:14:50.513866",
       "explain_stats": {
         "game": "Dark Souls III WorldGen_79645483297583998146",
         "total_locations": 1469,
@@ -1008,8 +982,8 @@
             2,
             1,
             3,
-            5,
             6,
+            5,
             4,
             7,
             8,
@@ -1021,7 +995,7 @@
         "game_name": "Jak and Daxter: The Precursor Legacy",
         "world_directory": "jakanddaxter"
       },
-      "timestamp": "2026-01-31T04:38:55.347313",
+      "timestamp": "2026-01-31T05:14:59.641306",
       "explain_stats": {
         "game": "Jak and Daxter: The Precursor Legacy WorldGen_55977854110148887761",
         "total_locations": 439,
@@ -1052,7 +1026,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-01-31T04:39:02.128466",
+      "timestamp": "2026-01-31T05:15:06.425412",
       "explain_stats": {
         "game": "Mega Man 2 WorldGen_55977854110148887761",
         "total_locations": 44,
@@ -1095,7 +1069,7 @@
         "game_name": "Pokemon Emerald",
         "world_directory": "pokemon_emerald"
       },
-      "timestamp": "2026-01-31T04:39:19.466798",
+      "timestamp": "2026-01-31T05:15:23.542822",
       "explain_stats": {
         "game": "Pokemon Emerald WorldGen_81209627519868761947",
         "total_locations": 817,
@@ -1249,14 +1223,14 @@
         "errors": {
           "None": [
             1,
-            2,
             3,
+            2,
             0,
             4,
             6,
             5,
-            8,
             7,
+            8,
             9
           ]
         }
@@ -1265,12 +1239,12 @@
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-01-31T04:39:48.314137",
+      "timestamp": "2026-01-31T05:15:53.839253",
       "explain_stats": {
         "game": "Stardew Valley WorldGen_22708164196567875238",
-        "total_locations": 1070,
-        "locations_with_explain": 929,
-        "locations_default_rule": 141,
+        "total_locations": 1068,
+        "locations_with_explain": 928,
+        "locations_default_rule": 140,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -1296,7 +1270,7 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-01-31T04:39:56.092452",
+      "timestamp": "2026-01-31T05:16:01.393550",
       "explain_stats": {
         "game": "Terraria WorldGen_79645483297583998146",
         "total_locations": 128,
@@ -1327,7 +1301,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-01-31T04:40:09.771446",
+      "timestamp": "2026-01-31T05:16:14.992668",
       "explain_stats": {
         "game": "Yoshi's Island WorldGen_79645483297583998146",
         "total_locations": 221,
@@ -1358,260 +1332,15 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-01-31T04:38:14.450362",
+      "timestamp": "2026-01-31T05:14:19.333966",
       "explain_stats": {
         "game": "A Short Hike WorldGen_55977854110148887761",
         "total_locations": 131,
-        "locations_with_explain": 21,
+        "locations_with_explain": 82,
         "locations_default_rule": 49,
-        "locations_without_explain": 61,
-        "explain_coverage_percent": 25.61,
-        "locations_without_explain_list": [
-          {
-            "name": "West River Seashell",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "West Riverbank Seashell",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Stone Tower Riverbank Seashell",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Meteor Lake Seashell",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Good Creek Path Seashell",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Tough Bird Salesman Golden Feather 1",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Tough Bird Salesman Golden Feather 2",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Tough Bird Salesman Golden Feather 3",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Tough Bird Salesman Golden Feather 4",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Tough Bird Salesman (400 Coins)",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Hawk Peak Bucket Rock",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Bill the Walrus Fisherman",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Catch All Fish Reward",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Permit Guy Bribe",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Catch Fish with Permit",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Return Camping Permit",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Blackwood Trail Lookout Toy Shovel",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Blackwood Trail Rock Toy Shovel",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Below Lighthouse Walkway Stick",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Cliff Overlooking West River Waterfall Stick",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Trail to Tough Bird Salesman Stick",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Outlook Point Dog Gift",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Taylor the Turtle Headband Gift",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Sue the Rabbit Shoes Reward",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Blackwood Forest Golden Feather",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Artist Golden Feather",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Visitor Camp Rock Golden Feather",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Outlook Cliff Golden Feather",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Meteor Lake Cliff Golden Feather",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Secret Island Peak",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Lighthouse Golden Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Outlook Golden Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Stone Tower Golden Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "North Cliff Golden Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Blackwood Cliff Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Shirley's Point Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "King Buried Treasure Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Good Creek Path Buried Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Good Creek Path West Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Good Creek Path East Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Stone Tower West Cliff Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Bucket Path Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Bucket Cliff Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "In Her Shadow Buried Treasure Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Meteor Lake Buried Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Meteor Lake Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "West River Waterfall Head Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Old Building Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Old Building West Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Old Building East Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Hawk Peak West Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Hawk Peak East Buried Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Hawk Peak Northeast Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Northern East Coast Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "North Coast Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Secret Island Treehouse Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Orange Islands North Buried Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Orange Islands Ruins Buried Chest",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Lighthouse Race Reward",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Old Building Race Reward",
-            "region": "Hawk Peak"
-          },
-          {
-            "name": "Hawk Peak Race Reward",
-            "region": "Hawk Peak"
-          }
-        ],
+        "locations_without_explain": 0,
+        "explain_coverage_percent": 100.0,
+        "locations_without_explain_list": [],
         "total_entrances": 1,
         "entrances_with_explain": 0,
         "entrances_default_rule": 1,
@@ -1647,7 +1376,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-01-31T04:38:34.548739",
+      "timestamp": "2026-01-31T05:14:39.001924",
       "explain_stats": {
         "game": "Celeste (Open World) WorldGen_79645483297583998146",
         "total_locations": 1035,
@@ -1678,11 +1407,11 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-01-31T04:38:41.099487",
+      "timestamp": "2026-01-31T05:14:45.385202",
       "explain_stats": {
-        "game": "Donkey Kong Country 3 WorldGen_79645483297583998146",
-        "total_locations": 220,
-        "locations_with_explain": 1,
+        "game": "Donkey Kong Country 3 WorldGen_11408892729106005028",
+        "total_locations": 219,
+        "locations_with_explain": 0,
         "locations_default_rule": 219,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -1755,7 +1484,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-01-31T04:38:52.870710",
+      "timestamp": "2026-01-31T05:14:57.119877",
       "explain_stats": {
         "game": "Kingdom Hearts 2 WorldGen_79645483297583998146",
         "total_locations": 643,
@@ -1907,9 +1636,9 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-01-31T04:38:59.506508",
+      "timestamp": "2026-01-31T05:15:03.881035",
       "explain_stats": {
-        "game": "MegaMan Battle Network 3 WorldGen_11408892729106005028",
+        "game": "MegaMan Battle Network 3 WorldGen_79645483297583998146",
         "total_locations": 263,
         "locations_with_explain": 80,
         "locations_default_rule": 183,
@@ -1929,21 +1658,19 @@
         "passed": false,
         "total": 10,
         "success": 0,
-        "failure": 8,
-        "timeout": 1,
+        "failure": 9,
+        "timeout": 0,
         "ignored": 1,
         "errors": {
           "None": [
-            0,
             3,
+            0,
             2,
             4,
-            5,
             6,
+            5,
             7,
-            8
-          ],
-          "<class 'TimeoutError'>": [
+            8,
             9
           ]
         }
@@ -1952,7 +1679,7 @@
         "game_name": "Pokemon Red and Blue",
         "world_directory": "pokemon_rb"
       },
-      "timestamp": "2026-01-31T04:40:34.121650",
+      "timestamp": "2026-01-31T05:15:46.271052",
       "explain_stats": {
         "game": "Pokemon Red and Blue WorldGen_86998726363870010506",
         "total_locations": 280,
@@ -2522,11 +2249,11 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-01-31T04:40:41.934031",
+      "timestamp": "2026-01-31T05:15:54.002865",
       "explain_stats": {
-        "game": "Subnautica WorldGen_11408892729106005028",
-        "total_locations": 161,
-        "locations_with_explain": 161,
+        "game": "Subnautica WorldGen_55977854110148887761",
+        "total_locations": 136,
+        "locations_with_explain": 136,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -2553,7 +2280,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-01-31T04:40:50.775766",
+      "timestamp": "2026-01-31T05:16:02.931749",
       "explain_stats": {
         "game": "The Legend of Zelda WorldGen_11408892729106005028",
         "total_locations": 155,
@@ -2597,17 +2324,17 @@
         "game_name": "Yu-Gi-Oh! 2006",
         "world_directory": "yugioh06"
       },
-      "timestamp": "2026-01-31T04:41:02.309807",
+      "timestamp": "2026-01-31T05:16:14.645076",
       "explain_stats": {
-        "game": "Yu-Gi-Oh! 2006 WorldGen_79645483297583998146",
-        "total_locations": 151,
+        "game": "Yu-Gi-Oh! 2006 WorldGen_22708164196567875238",
+        "total_locations": 157,
         "locations_with_explain": 63,
-        "locations_default_rule": 88,
+        "locations_default_rule": 94,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 151,
-        "entrances_with_explain": 147,
+        "total_entrances": 157,
+        "entrances_with_explain": 153,
         "entrances_default_rule": 4,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
@@ -2628,7 +2355,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-01-31T04:38:22.380034",
+      "timestamp": "2026-01-31T05:14:15.131185",
       "explain_stats": {
         "game": "APQuest WorldGen_11408892729106005028",
         "total_locations": 6,
@@ -2659,7 +2386,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-01-31T04:38:28.046934",
+      "timestamp": "2026-01-31T05:14:20.401028",
       "explain_stats": {
         "game": "Celeste 64 WorldGen_11408892729106005028",
         "total_locations": 54,
@@ -2678,24 +2405,19 @@
     },
     "Factorio.yaml": {
       "ut_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 8,
-        "failure": 2,
+        "success": 10,
+        "failure": 0,
         "timeout": 0,
         "ignored": 0,
-        "errors": {
-          "None": [
-            2,
-            4
-          ]
-        }
+        "errors": {}
       },
       "world_info": {
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-01-31T04:38:38.276280",
+      "timestamp": "2026-01-31T05:14:30.233153",
       "explain_stats": {
         "game": "Factorio WorldGen_11408892729106005028",
         "total_locations": 309,
@@ -2738,7 +2460,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-01-31T04:39:03.611173",
+      "timestamp": "2026-01-31T05:14:55.805631",
       "explain_stats": {
         "game": "Kingdom Hearts WorldGen_79645483297583998146",
         "total_locations": 523,
@@ -2769,9 +2491,9 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-01-31T04:39:09.054191",
+      "timestamp": "2026-01-31T05:15:01.024531",
       "explain_stats": {
-        "game": "Meritous WorldGen_11408892729106005028",
+        "game": "Meritous WorldGen_79645483297583998146",
         "total_locations": 104,
         "locations_with_explain": 0,
         "locations_default_rule": 104,
@@ -2797,12 +2519,12 @@
         "errors": {
           "None": [
             0,
-            3,
             1,
+            3,
             2,
             4,
-            6,
             5,
+            6,
             7,
             8,
             9
@@ -2813,7 +2535,7 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-01-31T04:39:15.384837",
+      "timestamp": "2026-01-31T05:15:07.319496",
       "explain_stats": {
         "game": "Raft WorldGen_11408892729106005028",
         "total_locations": 154,
@@ -2844,7 +2566,7 @@
         "game_name": "Sudoku",
         "world_directory": "apsudoku"
       },
-      "timestamp": "2026-01-31T04:39:20.172167",
+      "timestamp": "2026-01-31T05:15:11.883655",
       "explain_stats": {
         "game": "Sudoku",
         "total_locations": 0,
@@ -2875,7 +2597,7 @@
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-01-31T04:39:27.999777",
+      "timestamp": "2026-01-31T05:15:19.403474",
       "explain_stats": {
         "game": "The Messenger WorldGen_11408892729106005028",
         "total_locations": 136,
@@ -2933,8 +2655,8 @@
             5,
             7,
             2,
-            9,
-            8
+            8,
+            9
           ],
           "<class 'AssertionError'>": [
             3
@@ -2945,18 +2667,18 @@
         "game_name": "Zillion",
         "world_directory": "zillion"
       },
-      "timestamp": "2026-01-31T04:40:58.306797",
+      "timestamp": "2026-01-31T05:16:47.287484",
       "explain_stats": {
-        "game": "Zillion WorldGen_11408892729106005028",
+        "game": "Zillion WorldGen_69295380914715731703",
         "total_locations": 147,
         "locations_with_explain": 147,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 240,
+        "total_entrances": 210,
         "entrances_with_explain": 0,
-        "entrances_default_rule": 240,
+        "entrances_default_rule": 210,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -2976,7 +2698,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-01-31T04:38:12.419210",
+      "timestamp": "2026-01-31T05:14:20.389125",
       "explain_stats": {
         "game": "Adventure WorldGen_79645483297583998146",
         "total_locations": 21,
@@ -3007,9 +2729,9 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-01-31T04:38:16.993448",
+      "timestamp": "2026-01-31T05:14:24.964310",
       "explain_stats": {
-        "game": "ChecksFinder WorldGen_55977854110148887761",
+        "game": "ChecksFinder WorldGen_79645483297583998146",
         "total_locations": 25,
         "locations_with_explain": 20,
         "locations_default_rule": 5,
@@ -3038,12 +2760,12 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-01-31T04:38:22.571115",
+      "timestamp": "2026-01-31T05:14:30.517362",
       "explain_stats": {
-        "game": "Faxanadu WorldGen_11408892729106005028",
+        "game": "Faxanadu WorldGen_79645483297583998146",
         "total_locations": 110,
-        "locations_with_explain": 25,
-        "locations_default_rule": 85,
+        "locations_with_explain": 24,
+        "locations_default_rule": 86,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -3069,7 +2791,7 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-01-31T04:38:34.675655",
+      "timestamp": "2026-01-31T05:14:42.418267",
       "explain_stats": {
         "game": "Kirby's Dream Land 3 WorldGen_55977854110148887761",
         "total_locations": 832,
@@ -3121,18 +2843,18 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-01-31T04:39:19.657922",
+      "timestamp": "2026-01-31T05:15:21.983265",
       "explain_stats": {
-        "game": "Metamath WorldGen_79645483297583998146",
-        "total_locations": 3,
-        "locations_with_explain": 1,
-        "locations_default_rule": 2,
+        "game": "Metamath WorldGen_22708164196567875238",
+        "total_locations": 6,
+        "locations_with_explain": 3,
+        "locations_default_rule": 3,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 6,
-        "entrances_with_explain": 3,
-        "entrances_default_rule": 3,
+        "total_entrances": 12,
+        "entrances_with_explain": 6,
+        "entrances_default_rule": 6,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3152,7 +2874,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-01-31T04:39:27.944428",
+      "timestamp": "2026-01-31T05:15:30.124852",
       "explain_stats": {
         "game": "Risk of Rain 2 WorldGen_11408892729106005028",
         "total_locations": 672,
@@ -3183,7 +2905,7 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-01-31T04:39:34.849009",
+      "timestamp": "2026-01-31T05:15:36.947995",
       "explain_stats": {
         "game": "Super Mario 64 WorldGen_79645483297583998146",
         "total_locations": 164,
@@ -3214,7 +2936,7 @@
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-01-31T04:39:46.946268",
+      "timestamp": "2026-01-31T05:15:48.875493",
       "explain_stats": {
         "game": "The Wind Waker WorldGen_81209627519868761947",
         "total_locations": 228,
@@ -3310,7 +3032,7 @@
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-01-31T04:39:54.992525",
+      "timestamp": "2026-01-31T05:15:56.640865",
       "explain_stats": {
         "game": "shapez WorldGen_81209627519868761947",
         "total_locations": 1032,
@@ -3341,7 +3063,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-01-31T04:38:26.193151",
+      "timestamp": "2026-01-31T05:14:22.987574",
       "explain_stats": {
         "game": "Aquaria WorldGen_11408892729106005028",
         "total_locations": 218,
@@ -3372,7 +3094,7 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-01-31T04:38:32.292459",
+      "timestamp": "2026-01-31T05:14:29.114762",
       "explain_stats": {
         "game": "Choo-Choo Charles WorldGen_55977854110148887761",
         "total_locations": 691,
@@ -3399,7 +3121,7 @@
         "ignored": 2,
         "errors": {
           "<class 'TimeoutError'>": [
-            0
+            1
           ]
         }
       },
@@ -3407,7 +3129,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-01-31T04:39:36.003767",
+      "timestamp": "2026-01-31T05:15:33.063415",
       "explain_stats": {
         "game": "Final Fantasy Mystic Quest WorldGen_86998726363870010506",
         "total_locations": 251,
@@ -3438,18 +3160,18 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-01-31T04:39:42.796166",
+      "timestamp": "2026-01-31T05:15:40.006806",
       "explain_stats": {
-        "game": "Landstalker - The Treasures of King Nole WorldGen_55977854110148887761",
-        "total_locations": 291,
+        "game": "Landstalker - The Treasures of King Nole WorldGen_11408892729106005028",
+        "total_locations": 249,
         "locations_with_explain": 1,
-        "locations_default_rule": 290,
+        "locations_default_rule": 248,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
-        "total_entrances": 121,
-        "entrances_with_explain": 52,
-        "entrances_default_rule": 69,
+        "total_entrances": 131,
+        "entrances_with_explain": 63,
+        "entrances_default_rule": 68,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -3469,11 +3191,11 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-01-31T04:39:51.590068",
+      "timestamp": "2026-01-31T05:15:48.524583",
       "explain_stats": {
-        "game": "Muse Dash WorldGen_79645483297583998146",
-        "total_locations": 776,
-        "locations_with_explain": 776,
+        "game": "Muse Dash WorldGen_55977854110148887761",
+        "total_locations": 828,
+        "locations_with_explain": 828,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
@@ -3496,13 +3218,13 @@
         "ignored": 0,
         "errors": {
           "None": [
-            3,
             0,
             1,
+            3,
             2,
+            4,
             5,
             6,
-            4,
             7,
             8,
             9
@@ -3513,7 +3235,7 @@
         "game_name": "SMZ3",
         "world_directory": "smz3"
       },
-      "timestamp": "2026-01-31T04:40:04.377180",
+      "timestamp": "2026-01-31T05:16:01.123414",
       "explain_stats": {
         "game": "SMZ3 WorldGen_11408892729106005028",
         "total_locations": 316,
@@ -3523,10 +3245,10 @@
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 80,
-        "entrances_with_explain": 31,
-        "entrances_default_rule": 48,
+        "entrances_with_explain": 32,
+        "entrances_default_rule": 47,
         "entrances_without_explain": 1,
-        "entrance_explain_coverage_percent": 96.88,
+        "entrance_explain_coverage_percent": 96.97,
         "entrances_without_explain_list": [
           {
             "name": "Menu->Ganon's Tower",
@@ -3550,7 +3272,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-01-31T04:40:16.380036",
+      "timestamp": "2026-01-31T05:16:12.970727",
       "explain_stats": {
         "game": "Super Mario Land 2 WorldGen_11408892729106005028",
         "total_locations": 2652,
@@ -3578,8 +3300,8 @@
         "errors": {
           "None": [
             0,
-            3,
             1,
+            3,
             2,
             5,
             7,
@@ -3591,7 +3313,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-01-31T04:40:26.469734",
+      "timestamp": "2026-01-31T05:16:23.463471",
       "explain_stats": {
         "game": "The Witness WorldGen_11408892729106005028",
         "total_locations": 269,
@@ -3622,9 +3344,9 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-01-31T04:38:15.081755",
+      "timestamp": "2026-01-31T05:14:24.469581",
       "explain_stats": {
-        "game": "Baking Adventure WorldGen_11408892729106005028",
+        "game": "Baking Adventure WorldGen_79645483297583998146",
         "total_locations": 15,
         "locations_with_explain": 8,
         "locations_default_rule": 7,
@@ -3653,7 +3375,7 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-01-31T04:38:20.907247",
+      "timestamp": "2026-01-31T05:14:30.481593",
       "explain_stats": {
         "game": "Civilization VI WorldGen_55977854110148887761",
         "total_locations": 270,
@@ -3684,7 +3406,7 @@
         "game_name": "Final Fantasy",
         "world_directory": "ff1"
       },
-      "timestamp": "2026-01-31T04:38:25.472088",
+      "timestamp": "2026-01-31T05:14:35.241314",
       "explain_stats": {
         "game": "Final Fantasy WorldGen_55977854110148887761",
         "total_locations": 0,
@@ -3721,7 +3443,7 @@
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-01-31T04:38:33.556833",
+      "timestamp": "2026-01-31T05:14:43.237657",
       "explain_stats": {
         "game": "Lingo WorldGen_86998726363870010506",
         "total_locations": 800,
@@ -3752,7 +3474,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-01-31T04:38:39.068671",
+      "timestamp": "2026-01-31T05:14:48.920547",
       "explain_stats": {
         "game": "Noita WorldGen_11408892729106005028",
         "total_locations": 376,
@@ -3783,12 +3505,12 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-01-31T04:38:44.550137",
+      "timestamp": "2026-01-31T05:14:54.593804",
       "explain_stats": {
-        "game": "Saving Princess WorldGen_11408892729106005028",
-        "total_locations": 36,
-        "locations_with_explain": 16,
-        "locations_default_rule": 20,
+        "game": "Saving Princess WorldGen_55977854110148887761",
+        "total_locations": 24,
+        "locations_with_explain": 9,
+        "locations_default_rule": 15,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -3814,7 +3536,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-01-31T04:39:10.495987",
+      "timestamp": "2026-01-31T05:15:21.744177",
       "explain_stats": {
         "game": "Super Mario World WorldGen_55977854110148887761",
         "total_locations": 743,
@@ -3856,1879 +3578,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-01-31T04:39:24.325948",
-      "explain_stats": {
-        "game": "Timespinner WorldGen_11408892729106005028",
-        "total_locations": 720,
-        "locations_with_explain": 184,
-        "locations_default_rule": 101,
-        "locations_without_explain": 435,
-        "explain_coverage_percent": 29.73,
-        "locations_without_explain_list": [
-          {
-            "name": "Lake Desolation (Upper): Secret room",
-            "region": "Upper lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Upper): Upper Left Room Lantern 1",
-            "region": "Upper lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Upper): Upper Left Room Lantern 2",
-            "region": "Upper lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Upper): Oxygen Recovery Lantern",
-            "region": "Upper lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Upper): Upper Right Room Lantern 1",
-            "region": "Upper lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Upper): Double jump Cave Lantern",
-            "region": "Upper lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Lower): Not so secret room",
-            "region": "Lower lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Lower): Middle Room Lantern 1",
-            "region": "Lower lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Lower): Middle Room Lantern 2",
-            "region": "Lower lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Lower): Timespinner Wheel Lantern 1",
-            "region": "Lower lake desolation"
-          },
-          {
-            "name": "Lake Desolation (Lower): Timespinner Wheel Lantern 2",
-            "region": "Lower lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 1",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 2",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 3",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 4",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 5",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 6",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Lake Desolation: Metropolis Bridge Lantern 7",
-            "region": "Eastern lake desolation"
-          },
-          {
-            "name": "Library: Storage room chest 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Storage room chest 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Storage room chest 3",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Sewer Entrance Lantern",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Left Sewer Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Left Sewer Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Right Sewer Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Right Sewer Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Right Sewer Lantern 3",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Right Sewer Lantern 4",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Right Sewer Lantern 5",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Right Sewer Lantern 6",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Sewer Exit Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Sewer Exit Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Basement Lantern",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Exit Lantern",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Librarian Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Librarian Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Left Staircase Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Left Staircase Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Left Staircase Lantern 3",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Left Staircase Lantern 4",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 3",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 4",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 5",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 6",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Lantern 7",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Waterway Lantern 1",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Waterway Lantern 2",
-            "region": "Library"
-          },
-          {
-            "name": "Library: Backer Room Lantern 1",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Room Lantern 2",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Room Lantern 3",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Room Lantern 4",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Room Lantern 5",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Stairs Lantern 1",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Stairs Lantern 2",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Stairs Lantern 3",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Backer Stairs Lantern 4",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Mr. Hat Lantern 1",
-            "region": "Library top"
-          },
-          {
-            "name": "Library: Mr. Hat Lantern 2",
-            "region": "Library top"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Bottom floor",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Air vents secret",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Library: Moving Sidewalk Lantern 1",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Library: Moving Sidewalk Lantern 2",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Entrance Lantern",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Elevator Lantern 2",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Base Lantern 1",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Base Lantern 2",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Floor 2 Lantern 1",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Floor 2 Lantern 2",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Middle Lantern",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Ladder Lantern 1",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers (Left): Left Stairs Ladder Lantern 2",
-            "region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth Towers: Bridge Entrance Lantern 1",
-            "region": "Varndagroth tower right (upper)"
-          },
-          {
-            "name": "Varndagroth Towers: Bridge Entrance Lantern 2",
-            "region": "Varndagroth tower right (upper)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Bridge Exit Lantern 1",
-            "region": "Varndagroth tower right (upper)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Bridge Exit Lantern 2",
-            "region": "Varndagroth tower right (upper)"
-          },
-          {
-            "name": "Varndagroth Towers: Memory - Siren Elevator (Childhood)",
-            "region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Stairs Lantern 1",
-            "region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Stairs Lantern 2",
-            "region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Base Lantern 1",
-            "region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Base Lantern 2",
-            "region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Varndagroth",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Elevator Lantern 1",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Elevator Lantern 2",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Elevator Lantern 3",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Elevator Lantern 4",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Elevator Lantern 5",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Varndagroth Towers (Right): Right Elevator Lantern 6",
-            "region": "Varndagroth tower right (elevator)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): Middle Hall Lantern 1",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): Middle Hall Lantern 2",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): Middle Hall Lantern 3",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): Middle Hall Lantern 4",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): First Hall Lantern 1",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): First Hall Lantern 2",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): First Hall Lantern ",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): Condemned Shaft Lantern 1",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Sealed Caves (Sirens): Condemned Shaft Lantern 2",
-            "region": "Sealed Caves (Sirens)"
-          },
-          {
-            "name": "Military Fortress: Entrance Lantern 1",
-            "region": "Military Fortress"
-          },
-          {
-            "name": "Military Fortress: Entrance Lantern 2",
-            "region": "Military Fortress"
-          },
-          {
-            "name": "Military Fortress: Bombing Room Lower Lantern 1",
-            "region": "Military Fortress"
-          },
-          {
-            "name": "Military Fortress: Bombing Room Lower Lantern 2",
-            "region": "Military Fortress"
-          },
-          {
-            "name": "Military Fortress: Bombing Room Upper Lantern 1",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Bombing Room Upper Lantern 2",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Left Bridge Lantern 1",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Left Bridge Lantern 2",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Left Bridge Lantern 3",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Middle Room Lantern 1",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Middle Room Lantern 2",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Right Bridge Lantern 1",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Right Bridge Lantern 2",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Military Fortress: Right Bridge Lantern 3",
-            "region": "Military Fortress (hangar)"
-          },
-          {
-            "name": "Lab: Intro Hallway Lantern 1",
-            "region": "Lab Entrance"
-          },
-          {
-            "name": "Lab: Intro Hallway Lantern 2",
-            "region": "Lab Entrance"
-          },
-          {
-            "name": "Lab: Memory - Genza's Secret Stash 1 (An Old Friend)",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Memory - Genza's Secret Stash 2 (Twilight Dinner)",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Coffee Lantern 1",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Coffee Lantern 2",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Coffee Lantern 3",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Lower Trash Entrance Lantern 1",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Lower Trash Entrance Lantern 2",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 1",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 2",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 3",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 4",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 5",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 6",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 7",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Main Shaft Lantern 8",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Trash Stairs Lantern 1",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Trash Stairs Lantern 2",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Exp. 13 Terminal Lantern 1",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Exp. 13 Terminal Lantern 2",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Left Terminal Lantern 1",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Left Terminal Lantern 2",
-            "region": "Main Lab"
-          },
-          {
-            "name": "Lab: Spider Hell Entrance Lantern 1",
-            "region": "Lab Research"
-          },
-          {
-            "name": "Lab: Spider Hell Entrance Lantern 2",
-            "region": "Lab Research"
-          },
-          {
-            "name": "Lab: Lab secret",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: File Cabinet Lantern 1",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: File Cabinet Lantern 2",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: File Cabinet Staircase Lantern 1",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: File Cabinet Staircase Lantern 2",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: File Cabinet Staircase Lantern 3",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: File Cabinet Staircase Lantern 4",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: Genza Door Lantern 1",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: Genza Door Lantern 2",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: Download and Chest Lantern 1",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Lab: Download and Chest Lantern 2",
-            "region": "The lab (upper)"
-          },
-          {
-            "name": "Emperor's Tower: Courtyard Lantern 1",
-            "region": "Emperors tower (courtyard)"
-          },
-          {
-            "name": "Emperor's Tower: Courtyard Lantern 2",
-            "region": "Emperors tower (courtyard)"
-          },
-          {
-            "name": "Emperor's Tower: Courtyard Bottom Lantern 1",
-            "region": "Emperors tower (courtyard)"
-          },
-          {
-            "name": "Emperor's Tower: Courtyard Bottom Lantern 2",
-            "region": "Emperors tower (courtyard)"
-          },
-          {
-            "name": "Emperor's Tower: Courtyard Staircase Lantern",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Hallway Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Hallway Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Hallway Lantern 3",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Hallway Lantern 4",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Left Room Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Left Room Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Left Tower Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Left Tower Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Galactic Sage Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Galactic Sage Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Save Room Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Save Room Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Climb Past Stairs Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Climb Past Stairs Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Climb Past Stairs Lantern 3",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Climb Past Stairs Lantern 4",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Middle Bridge Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Middle Bridge Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Middle Bridge Lantern 3",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Middle Bridge Lantern 4",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Middle Bridge Lantern 5",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Upper Left Tower Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Upper Left Tower Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Right Tower Lantern 1",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Emperor's Tower: Lower Right Tower Lantern 2",
-            "region": "Emperors tower"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Skeleton Lantern 1",
-            "region": "Skeleton Shaft"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Skeleton Lantern 2",
-            "region": "Skeleton Shaft"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Skeleton Lantern 3",
-            "region": "Skeleton Shaft"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Secret room",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): First Hall Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): First Hall Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): First Hall Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): First Hall Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): First Hall Lantern 5",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): First Hall Lantern 6",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Second Hall Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Second Hall Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Second Hall Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Second Hall Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Forked Shaft Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Forked Shaft Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Forked Shaft Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Forked Shaft Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Forked Shaft Lantern 5",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Lower Fork Start Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Lower Fork Start Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Lower Fork Vertical Room Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Lower Fork Vertical Room Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Lower Fork Vertical Room Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Lower Fork Vertical Room Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Waterfall Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Waterfall Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Waterfall Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Waterfall Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Waterfall Lantern 5",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Post-Fork Room Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Post-Fork Room Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Rejoined Hallway Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Rejoined Hallway Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Rejoined Hallway Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Rejoined Hallway Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Rejoined Hallway Lantern 5",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Rejoined Hallway Lantern 6",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Penultimate Hall Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Penultimate Hall Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Penultimate Hall Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Penultimate Hall Lantern 4",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Penultimate Hall Lantern 5",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Penultimate Hall Lantern 6",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Last Chance Room Lantern 1",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Last Chance Room Lantern 2",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Sealed Caves (Xarion): Last Chance Room Lantern 3",
-            "region": "Sealed Caves (Xarion)"
-          },
-          {
-            "name": "Forest: Green platform secret",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Rats Lantern",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Ramparts Bridge Lantern 1",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Ramparts Bridge Lantern 2",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Ramparts Bridge Lantern 3",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Batcave Lantern",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Lantern Before Broken Bridge",
-            "region": "Forest"
-          },
-          {
-            "name": "Forest: Lantern Past Signpost",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Forest: Lantern After Broken Bridge",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Forest: Left Caves Lantern",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Lake Serene (Upper): Past Cantoran Lantern",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Lake Serene (Upper): Fork Dry Lantern",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Lake Serene (Lower): Above The Eels Lantern 1",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Lake Serene (Lower): Above The Eels Lantern 2",
-            "region": "Left Side forest Caves"
-          },
-          {
-            "name": "Lake Serene (Upper): Cave secret",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Intro Room Lantern",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Middle Cave Lantern",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Uncrashed Site Lantern 1",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Uncrashed Site Lantern 2",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Uncrashed Site Lantern 3",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Uncrashed Site Lantern 4",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Upper): Past First Vine Lantern",
-            "region": "Upper Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Underwater secret",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Water Spikes Lantern 1",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Water Spikes Lantern 2",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Water Spikes Lantern 3",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Underwater Lantern 1",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Underwater Lantern 2",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Lake Serene (Lower): Underwater Lantern 3",
-            "region": "Lower Lake Serene"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Not Dead Yet Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Not Dead Yet Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Not Dead Yet Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Not Dead Yet Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): First Hall Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): First Hall Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): First Hall Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): First Hall Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): First Hall Lantern 5",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): First Hall Lantern 6",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Second Hall Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Second Hall Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Second Hall Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Second Hall Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Shroom Jump Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Shroom Jump Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Shroom Jump Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Shroom Jump Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Forked Shaft Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Forked Shaft Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Forked Shaft Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Forked Shaft Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Forked Shaft Lantern 5",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Lower Fork Vertical Room Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Lower Fork Vertical Room Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Lower Fork Vertical Room Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Lower Fork Vertical Room Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Penultimate Hall Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Penultimate Hall Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Penultimate Hall Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Penultimate Hall Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Penultimate Hall Lantern 5",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Penultimate Hall Lantern 6",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Waterfall Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Waterfall Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Waterfall Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Waterfall Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Waterfall Lantern 5",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Rejoined Hallway Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Rejoined Hallway Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Rejoined Hallway Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Rejoined Hallway Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Rejoined Hallway Lantern 5",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Rejoined Hallway Lantern 6",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Lower Fork Start Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Lower Fork Start Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Post-Fork Room Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Post-Fork Room Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Last Chance Lantern 1",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Last Chance Lantern 2",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Last Chance Lantern 3",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Maw): Last Chance Lantern 4",
-            "region": "Caves of Banishment (Flooded)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): First Hall Lantern 1",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): First Hall Lantern 2",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): First Hall Lantern 3",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Second Hall Lantern 1",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Second Hall Lantern 2",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Second Hall Lantern 3",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Second Hall Lantern 4",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Middle Hall Lantern 1",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Middle Hall Lantern 2",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Middle Hall Lantern 3",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Caves of Banishment (Sirens): Middle Hall Lantern 4",
-            "region": "Caves of Banishment (Sirens)"
-          },
-          {
-            "name": "Castle Ramparts: Giantess Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Giantess Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Archer + Knight Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Archer + Knight Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Pedestal Lantern",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Big Boulder Room Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Big Boulder Room Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Left Rooftops Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Left Rooftops Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Left Rooftops Lantern 3",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Middle Hammer Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Middle Hammer Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Middle Hammer Lantern 3",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Exit Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Exit Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Exit Lantern 3",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Exit Lantern 4",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Pedestal Stairs Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Pedestal Stairs Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Pedestal Stairs Lantern 3",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Right Rooftops Lantern 1",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Right Rooftops Lantern 2",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Ramparts: Right Rooftops Lantern 3",
-            "region": "Castle Ramparts"
-          },
-          {
-            "name": "Castle Keep: Foyer Mid Left Lantern",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Foyer Mid Right Lantern",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Foyer High Left Lantern",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Foyer High Right Lantern",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Beginning Lantern 1",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Beginning Lantern 2",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Beginning Lantern 3",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Beginning Lantern 4",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Far-Left Climb Lower Lantern 1",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Far-Left Climb Lower Lantern 2",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Under The Twins Hallway Lantern 1",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Under The Twins Hallway Lantern 2",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Under The Twins Hallway Lantern 3",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Under The Twins Hallway Lantern 4",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Right-Middle Hallway Lantern 1",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Right-Middle Hallway Lantern 2",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Right-Middle Hallway Lantern 3",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Right-Middle Hallway Lantern 4",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Under The Twins Lantern 1",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Keep: Under The Twins Lantern 2",
-            "region": "Castle Keep"
-          },
-          {
-            "name": "Castle Basement: Secret pedestal",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Entrance Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Entrance Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Entrance Lantern 3",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Exit Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Exit Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Exit Climb Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Exit Climb Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: First Bird Hall Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: First Bird Hall Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Single Bird Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Single Bird Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Second Bird Hall Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Second Bird Hall Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Center Shaft Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Center Shaft Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Giantess Lantern 1",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Giantess Lantern 2",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Foyer Low Left Lantern",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Castle Basement: Foyer Low Right Lantern",
-            "region": "Castle Basement"
-          },
-          {
-            "name": "Royal Towers: Lantern Below Time-Stop Demon",
-            "region": "Royal towers (lower)"
-          },
-          {
-            "name": "Royal Towers: Lantern Above Time-Stop Demon",
-            "region": "Royal towers"
-          },
-          {
-            "name": "Royal Towers: Pre-Climb Lantern 1",
-            "region": "Royal towers"
-          },
-          {
-            "name": "Royal Towers: Pre-Climb Lantern 2",
-            "region": "Royal towers"
-          },
-          {
-            "name": "Royal Towers: Bottom Struggle Lantern",
-            "region": "Royal towers"
-          },
-          {
-            "name": "Royal Towers: Before Aelana Lantern 1",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Tower Base Entrance Lantern 1",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Tower Base Entrance Lantern 2",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Tower Base Entrance Lantern 3",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Left Tower Base Lantern 1",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Left Tower Base Lantern 2",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Left Royal Guard Lantern 1",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Left Royal Guard Lantern 2",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Final Climb Lantern 1",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Final Climb Lantern 2",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Right Tower Base Lantern 1",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Right Tower Base Lantern 2",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Royal Towers: Right Tower Base Lantern 3",
-            "region": "Royal towers (upper)"
-          },
-          {
-            "name": "Dark Forest: Pyramid Entrance Lantern 1",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Pyramid Entrance Lantern 2",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Pyramid Entrance Lantern 3",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Pyramid Entrance Lantern 4",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Pyramid Entrance Lantern 5",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Pyramid Entrance Lantern 6",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Training Dummy Lantern 1",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Dark Forest: Training Dummy Lantern 2",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Entrance Lantern 1",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Entrance Lantern 2",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Rubble Lantern 1",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Rubble Lantern 2",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Rubble Lantern 3",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Entrance Climb Lantern 1",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Entrance Climb Lantern 2",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: Why Not It's Right There Lantern",
-            "region": "Ancient Pyramid (entrance)"
-          },
-          {
-            "name": "Ancient Pyramid: First Enemy Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: First Enemy Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Upper-Left Stairway Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Upper-Left Stairway Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Upper-Left Stairway Lantern 3",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Left Hallway Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Left Hallway Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Left Hallway Lantern 3",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Left Hallway Lantern 4",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Outside Inner Warp Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Outside Inner Warp Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Nightmare Stairway Entrance Lantern",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Conviction Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Conviction Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Last Chance Before Shaft Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Last Chance Before Shaft Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Pit Secret Wall Lantern",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Post-Shaft Hallway Lantern 1",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Post-Shaft Hallway Lantern 2",
-            "region": "Ancient Pyramid (left)"
-          },
-          {
-            "name": "Ancient Pyramid: Upper-Right Stairway Lantern 1",
-            "region": "Ancient Pyramid (right)"
-          },
-          {
-            "name": "Ancient Pyramid: Upper-Right Stairway Lantern 2",
-            "region": "Ancient Pyramid (right)"
-          }
-        ],
-        "total_entrances": 122,
-        "entrances_with_explain": 54,
-        "entrances_default_rule": 45,
-        "entrances_without_explain": 23,
-        "entrance_explain_coverage_percent": 70.13,
-        "entrances_without_explain_list": [
-          {
-            "name": "Lake desolation -> Space time continuum",
-            "from_region": "Lake desolation",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Eastern lake desolation -> Space time continuum",
-            "from_region": "Eastern lake desolation",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Library -> Varndagroth tower left",
-            "from_region": "Library",
-            "to_region": "Varndagroth tower left"
-          },
-          {
-            "name": "Library -> Space time continuum",
-            "from_region": "Library",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Varndagroth tower left -> Varndagroth tower right (upper)",
-            "from_region": "Varndagroth tower left",
-            "to_region": "Varndagroth tower right (upper)"
-          },
-          {
-            "name": "Varndagroth tower left -> Varndagroth tower right (lower)",
-            "from_region": "Varndagroth tower left",
-            "to_region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Varndagroth tower right (lower) -> Varndagroth tower left",
-            "from_region": "Varndagroth tower right (lower)",
-            "to_region": "Varndagroth tower left"
-          },
-          {
-            "name": "Varndagroth tower right (lower) -> Military Fortress",
-            "from_region": "Varndagroth tower right (lower)",
-            "to_region": "Military Fortress"
-          },
-          {
-            "name": "Varndagroth tower right (lower) -> Space time continuum",
-            "from_region": "Varndagroth tower right (lower)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Sealed Caves (Sirens) -> Space time continuum",
-            "from_region": "Sealed Caves (Sirens)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Military Fortress -> Varndagroth tower right (lower)",
-            "from_region": "Military Fortress",
-            "to_region": "Varndagroth tower right (lower)"
-          },
-          {
-            "name": "Skeleton Shaft -> Space time continuum",
-            "from_region": "Skeleton Shaft",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Sealed Caves (Xarion) -> Space time continuum",
-            "from_region": "Sealed Caves (Xarion)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Refugee Camp -> Space time continuum",
-            "from_region": "Refugee Camp",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Left Side forest Caves -> Space time continuum",
-            "from_region": "Left Side forest Caves",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Caves of Banishment (upper) -> Space time continuum",
-            "from_region": "Caves of Banishment (upper)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Caves of Banishment (Maw) -> Space time continuum",
-            "from_region": "Caves of Banishment (Maw)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Castle Ramparts -> Space time continuum",
-            "from_region": "Castle Ramparts",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Castle Keep -> Space time continuum",
-            "from_region": "Castle Keep",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Royal towers (lower) -> Space time continuum",
-            "from_region": "Royal towers (lower)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Ancient Pyramid (entrance) -> Space time continuum",
-            "from_region": "Ancient Pyramid (entrance)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Ancient Pyramid (left) -> Space time continuum",
-            "from_region": "Ancient Pyramid (left)",
-            "to_region": "Space time continuum"
-          },
-          {
-            "name": "Ancient Pyramid (right) -> Space time continuum",
-            "from_region": "Ancient Pyramid (right)",
-            "to_region": "Space time continuum"
-          }
-        ]
-      }
+      "timestamp": "2026-01-31T05:15:36.126309"
     },
     "Blasphemous.yaml": {
       "ut_fuzz": {
@@ -5741,9 +3591,9 @@
         "errors": {
           "None": [
             6,
-            7,
             8,
-            3
+            3,
+            7
           ]
         }
       },
@@ -5751,9 +3601,9 @@
         "game_name": "Blasphemous",
         "world_directory": "blasphemous"
       },
-      "timestamp": "2026-01-31T04:38:24.763180",
+      "timestamp": "2026-01-31T05:14:36.946972",
       "explain_stats": {
-        "game": "Blasphemous WorldGen_55977854110148887761",
+        "game": "Blasphemous WorldGen_91109154915326795643",
         "total_locations": 305,
         "locations_with_explain": 104,
         "locations_default_rule": 181,
@@ -7104,7 +4954,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-01-31T04:38:29.378298",
+      "timestamp": "2026-01-31T05:14:41.877623",
       "explain_stats": {
         "game": "Coding Adventure WorldGen_11408892729106005028",
         "total_locations": 61,
@@ -7135,7 +4985,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-01-31T04:38:37.234495",
+      "timestamp": "2026-01-31T05:14:50.171969",
       "explain_stats": {
         "game": "Heretic WorldGen_79645483297583998146",
         "total_locations": 691,
@@ -7166,7 +5016,7 @@
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-01-31T04:39:03.053067",
+      "timestamp": "2026-01-31T05:15:16.361232",
       "explain_stats": {
         "game": "Links Awakening DX WorldGen_55977854110148887761",
         "total_locations": 220,
@@ -7209,7 +5059,7 @@
         "game_name": "Ocarina of Time",
         "world_directory": "oot"
       },
-      "timestamp": "2026-01-31T04:39:29.531483"
+      "timestamp": "2026-01-31T05:15:43.802774"
     },
     "Secret of Evermore.yaml": {
       "ut_fuzz": {
@@ -7222,8 +5072,8 @@
         "errors": {
           "None": [
             0,
-            3,
             2,
+            3,
             1,
             4,
             5,
@@ -7238,7 +5088,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-01-31T04:39:38.150850",
+      "timestamp": "2026-01-31T05:15:52.609170",
       "explain_stats": {
         "game": "Secret of Evermore WorldGen_79645483297583998146",
         "total_locations": 913,
@@ -7271,8 +5121,8 @@
           "None": [
             2,
             4,
-            0,
             3,
+            0,
             9,
             6
           ]
@@ -7282,18 +5132,18 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-01-31T04:40:00.880359",
+      "timestamp": "2026-01-31T05:16:16.249964",
       "explain_stats": {
-        "game": "Super Metroid WorldGen_55977854110148887761",
-        "total_locations": 36,
-        "locations_with_explain": 36,
+        "game": "Super Metroid WorldGen_22708164196567875238",
+        "total_locations": 57,
+        "locations_with_explain": 57,
         "locations_default_rule": 0,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
         "total_entrances": 313,
-        "entrances_with_explain": 190,
-        "entrances_default_rule": 123,
+        "entrances_with_explain": 192,
+        "entrances_default_rule": 121,
         "entrances_without_explain": 0,
         "entrance_explain_coverage_percent": 100.0,
         "entrances_without_explain_list": []
@@ -7313,7 +5163,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-01-31T04:40:07.472856",
+      "timestamp": "2026-01-31T05:16:23.468147",
       "explain_stats": {
         "game": "Undertale WorldGen_22708164196567875238",
         "total_locations": 106,
@@ -7353,9 +5203,9 @@
             3,
             5,
             6,
-            9,
+            8,
             7,
-            8
+            9
           ]
         }
       },
@@ -7363,7 +5213,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-01-31T04:38:18.635134",
+      "timestamp": "2026-01-31T05:14:28.546930",
       "explain_stats": {
         "game": "Bomb Rush Cyberfunk WorldGen_55977854110148887761",
         "total_locations": 247,
@@ -7394,7 +5244,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-01-31T04:38:26.390488",
+      "timestamp": "2026-01-31T05:14:35.918784",
       "explain_stats": {
         "game": "DLCQuest WorldGen_11408892729106005028",
         "total_locations": 40,
@@ -7438,7 +5288,7 @@
         "game_name": "Hollow Knight",
         "world_directory": "hk"
       },
-      "timestamp": "2026-01-31T04:39:42.396497",
+      "timestamp": "2026-01-31T05:15:51.362282",
       "explain_stats": {
         "game": "Hollow Knight WorldGen_11408892729106005028",
         "total_locations": 731,
@@ -7469,7 +5319,7 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-01-31T04:39:49.759484",
+      "timestamp": "2026-01-31T05:15:58.664953",
       "explain_stats": {
         "game": "Lufia II Ancient Cave WorldGen_55977854110148887761",
         "total_locations": 77,
@@ -7500,12 +5350,12 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-01-31T04:40:00.000069",
+      "timestamp": "2026-01-31T05:16:08.756299",
       "explain_stats": {
-        "game": "Old School Runescape WorldGen_11408892729106005028",
-        "total_locations": 76,
-        "locations_with_explain": 68,
-        "locations_default_rule": 8,
+        "game": "Old School Runescape WorldGen_79645483297583998146",
+        "total_locations": 62,
+        "locations_with_explain": 60,
+        "locations_default_rule": 2,
         "locations_without_explain": 0,
         "explain_coverage_percent": 100.0,
         "locations_without_explain_list": [],
@@ -7531,7 +5381,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-01-31T04:41:05.047111",
+      "timestamp": "2026-01-31T05:17:13.430284",
       "explain_stats": {
         "game": "Shivers WorldGen_11408892729106005028",
         "total_locations": 76,
@@ -7583,7 +5433,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-01-31T04:41:10.999881",
+      "timestamp": "2026-01-31T05:17:19.367188",
       "explain_stats": {
         "game": "TOEM original WorldGen_11408892729106005028",
         "total_locations": 214,
@@ -7614,7 +5464,7 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-01-31T04:41:16.909090",
+      "timestamp": "2026-01-31T05:17:25.211432",
       "explain_stats": {
         "game": "VVVVVV WorldGen_55977854110148887761",
         "total_locations": 20,

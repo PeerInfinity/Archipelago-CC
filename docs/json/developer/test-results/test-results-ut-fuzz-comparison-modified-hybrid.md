@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-31 04:41:30
+**Generated:** 2026-01-31 05:17:41
 
 **Source Data Last Updated:** 2026-01-22T20:59:24
 
@@ -18,9 +18,9 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 58 (68.2%)
+- **Passing Both:** 59 (69.4%)
 - **Passing Modified Only:** 3 (3.5%)
-- **Passing Hybrid Only:** 3 (3.5%)
+- **Passing Hybrid Only:** 2 (2.4%)
 - **Passing Neither:** 21 (24.7%)
 - **Passing Hybrid with no custom code:** 38 (44.7%)
 - **Passing Hybrid Only with no custom code:** 0 (0.0%)
@@ -52,7 +52,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ⚠️ 80.0% | ✅ 100.0% | 8.6KB | ✅ | 497.8KB |
+| Factorio | ✅ 100.0% | ✅ 100.0% | 8.6KB | ✅ | 497.8KB |
 | Faxanadu | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ⚠️ 70.0% | ❌ 0.0% | 13.4KB | ✅ | 549.0KB |
@@ -115,7 +115,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 60.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (58)
+## Games Passing Both (59)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -139,6 +139,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | DOOM II | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
+| Factorio | 8.6KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | ✅ | N/A |
 | Heretic | ✅ | ✅ | 367.5KB |
@@ -190,13 +191,12 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | A Link to the Past | 12.5KB | ✅ | 665.3KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 
-## Games Passing Hybrid Only (3)
+## Games Passing Hybrid Only (2)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Factorio | 8.6KB | ✅ | 497.8KB |
 | Raft | 6.5KB | ✅ | 485.4KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 

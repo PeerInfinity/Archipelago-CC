@@ -6,11 +6,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-01-31 04:41:30
+**Generated:** 2026-01-31 05:17:41
 
-**Source Data Created:** 2026-01-31T04:41:29.882166
+**Source Data Created:** 2026-01-31T05:17:40.862210
 
-**Source Data Last Updated:** 2026-01-31T04:41:29.882172
+**Source Data Last Updated:** 2026-01-31T05:17:40.862216
 
 **Universal Tracker Version:** Modified (worldgen-based tracking)
 
@@ -25,39 +25,39 @@
 ## Summary
 
 - **Total Games:** 85
-- **Games with 100% Pass Rate:** 61 (71.8%)
-- **Games with Failures:** 24 (28.2%)
+- **Games with 100% Pass Rate:** 62 (72.9%)
+- **Games with Failures:** 23 (27.1%)
 - **Total Fuzz Runs:** 850
-- **Successful Runs:** 621 (73.1%)
-- **Failed Runs:** 185
-- **Timed Out Runs:** 2
+- **Successful Runs:** 623 (73.3%)
+- **Failed Runs:** 184
+- **Timed Out Runs:** 1
 - **Ignored Runs:** 42
 
 ### Expected vs Unexpected Results
 
-- **Expected Passes:** 58 (not excluded, passed)
+- **Expected Passes:** 59 (not excluded, passed)
 - **Unexpected Passes:** 3 (excluded, but passed)
 - **Expected Failures:** 22 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 1 (not excluded, logic mismatch)
+- **Unexpected Failures (logic):** 0 (not excluded, logic mismatch)
 - **Unexpected Failures (timeout only):** 1 (not excluded, only timeouts)
 
 ### Explain Support Summary
 
-- **Games with Explain Stats:** 83
-- **Games with 100% Explain Coverage:** 72
+- **Games with Explain Stats:** 82
+- **Games with 100% Explain Coverage:** 73
 - **Games with No Explain Support:** 0
-- **Locations with Explain Support:** 14,050
-- **Locations without Explain Support:** 674
-- **Locations with Default Rule:** 20,451
-- **Overall Explain Coverage:** 95.4%
+- **Locations with Explain Support:** 13,985
+- **Locations without Explain Support:** 174
+- **Locations with Default Rule:** 20,323
+- **Overall Explain Coverage:** 98.8%
 
 ### Generic Exporter/Logic Statistics
 
-Of the 61 games with 100% pass rate:
+Of the 62 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 38/61 (62.3%)
-- **Passing with Generic Logic:** 61/61 (100.0%)
-- **Passing with Both Generic:** 38/61 (62.3%)
+- **Passing with Generic Exporter:** 38/62 (61.3%)
+- **Passing with Generic Logic:** 62/62 (100.0%)
+- **Passing with Both Generic:** 38/62 (61.3%)
 
 **Combined Custom Code Size:**
 
@@ -92,7 +92,7 @@ Of the 61 games with 100% pass rate:
 | DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% | 8.6KB | ✅ | 497.8KB |
+| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.6KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ❌ | 10 | 7 | 0 | 1 | 2 | ⚠️ 70.0% | 13.4KB | ✅ | 549.0KB |
@@ -121,7 +121,7 @@ Of the 61 games with 100% pass rate:
 | Overcooked! 2 | ✅ | 10 | 5 | 0 | 0 | 5 | ⚠️ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ | 10 | 2 | 4 | 0 | 4 | ❌ 20.0% | 5.2KB | 8.7KB | 1390.9KB |
-| Pokemon Red and Blue | ❌ | 10 | 0 | 8 | 1 | 1 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
+| Pokemon Red and Blue | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
 | Raft | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 6.5KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
@@ -161,11 +161,9 @@ This section shows which games have rules that support the `explain_json()` meth
 
 | Game Name | Total Locs | With Explain | Without Explain | Default Rule | Coverage |
 |-----------|:----------:|:------------:|:---------------:|:------------:|:--------:|
-| A Short Hike | 131 | 21 | 61 | 49 | 🔶 26% |
-| Timespinner | 720 | 184 | 435 | 101 | 🔶 30% |
 | Pokemon Red and Blue | 280 | 79 | 58 | 143 | ⚠️ 58% |
 | Kingdom Hearts 2 | 643 | 46 | 30 | 567 | ⚠️ 61% |
-| A Link to the Past | 226 | 96 | 45 | 85 | ⚠️ 68% |
+| A Link to the Past | 270 | 122 | 41 | 107 | ⚠️ 75% |
 | Blasphemous | 305 | 104 | 20 | 181 | ⚠️ 84% |
 | The Wind Waker | 228 | 173 | 16 | 39 | ⚠️ 92% |
 | Pokemon Emerald | 817 | 17 | 1 | 799 | ⚠️ 94% |
@@ -173,6 +171,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | The Messenger | 136 | 52 | 2 | 82 | ⚠️ 96% |
 | Mega Man 2 | 44 | 29 | 1 | 14 | ⚠️ 97% |
 | A Hat in Time | 273 | 90 | 0 | 183 | ✅ 100% |
+| A Short Hike | 131 | 82 | 0 | 49 | ✅ 100% |
 | APQuest | 6 | 1 | 0 | 5 | ✅ 100% |
 | Adventure | 21 | 0 | 0 | 21 | ✅ 100% |
 | Aquaria | 218 | 35 | 0 | 183 | ✅ 100% |
@@ -189,11 +188,11 @@ This section shows which games have rules that support the `explain_json()` meth
 | Coding Adventure | 61 | 43 | 0 | 18 | ✅ 100% |
 | DLCQuest | 40 | 31 | 0 | 9 | ✅ 100% |
 | DOOM 1993 | 474 | 0 | 0 | 474 | ✅ 100% |
-| DOOM II | 479 | 0 | 0 | 479 | ✅ 100% |
+| DOOM II | 453 | 0 | 0 | 453 | ✅ 100% |
 | Dark Souls III | 1469 | 228 | 0 | 1241 | ✅ 100% |
-| Donkey Kong Country 3 | 220 | 1 | 0 | 219 | ✅ 100% |
+| Donkey Kong Country 3 | 219 | 0 | 0 | 219 | ✅ 100% |
 | Factorio | 309 | 309 | 0 | 0 | ✅ 100% |
-| Faxanadu | 110 | 25 | 0 | 85 | ✅ 100% |
+| Faxanadu | 110 | 24 | 0 | 86 | ✅ 100% |
 | Final Fantasy | 0 | 0 | 0 | 0 | ✅ 100% |
 | Final Fantasy Mystic Quest | 251 | 63 | 0 | 188 | ✅ 100% |
 | Heretic | 691 | 0 | 0 | 691 | ✅ 100% |
@@ -202,7 +201,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Inscryption | 100 | 65 | 0 | 35 | ✅ 100% |
 | Jak and Daxter: The Precursor Legacy | 439 | 309 | 0 | 130 | ✅ 100% |
 | Kingdom Hearts | 523 | 464 | 0 | 59 | ✅ 100% |
-| Landstalker - The Treasures of King Nole | 291 | 1 | 0 | 290 | ✅ 100% |
+| Landstalker - The Treasures of King Nole | 249 | 1 | 0 | 248 | ✅ 100% |
 | Lingo | 800 | 800 | 0 | 0 | ✅ 100% |
 | Links Awakening DX | 220 | 0 | 0 | 220 | ✅ 100% |
 | Lufia II Ancient Cave | 77 | 72 | 0 | 5 | ✅ 100% |
@@ -210,28 +209,28 @@ This section shows which games have rules that support the `explain_json()` meth
 | Math Adventure | 10 | 5 | 0 | 5 | ✅ 100% |
 | MegaMan Battle Network 3 | 263 | 80 | 0 | 183 | ✅ 100% |
 | Meritous | 104 | 0 | 0 | 104 | ✅ 100% |
-| Metamath | 3 | 1 | 0 | 2 | ✅ 100% |
-| Muse Dash | 776 | 776 | 0 | 0 | ✅ 100% |
+| Metamath | 6 | 3 | 0 | 3 | ✅ 100% |
+| Muse Dash | 828 | 828 | 0 | 0 | ✅ 100% |
 | Noita | 376 | 0 | 0 | 376 | ✅ 100% |
-| Old School Runescape | 76 | 68 | 0 | 8 | ✅ 100% |
+| Old School Runescape | 62 | 60 | 0 | 2 | ✅ 100% |
 | Overcooked! 2 | 43 | 9 | 0 | 34 | ✅ 100% |
 | Paint | 167 | 167 | 0 | 0 | ✅ 100% |
 | Raft | 154 | 141 | 0 | 13 | ✅ 100% |
 | Risk of Rain 2 | 672 | 672 | 0 | 0 | ✅ 100% |
 | SMZ3 | 316 | 316 | 0 | 0 | ✅ 100% |
-| Saving Princess | 36 | 16 | 0 | 20 | ✅ 100% |
+| Saving Princess | 24 | 9 | 0 | 15 | ✅ 100% |
 | Secret of Evermore | 913 | 724 | 0 | 189 | ✅ 100% |
 | Shivers | 76 | 22 | 0 | 54 | ✅ 100% |
 | Sonic Adventure 2 Battle | 1046 | 227 | 0 | 819 | ✅ 100% |
-| Stardew Valley | 1070 | 929 | 0 | 141 | ✅ 100% |
-| Subnautica | 161 | 161 | 0 | 0 | ✅ 100% |
+| Stardew Valley | 1068 | 928 | 0 | 140 | ✅ 100% |
+| Subnautica | 136 | 136 | 0 | 0 | ✅ 100% |
 | Sudoku | 0 | 0 | 0 | 0 | ✅ 100% |
 | Super Mario 64 | 164 | 55 | 0 | 109 | ✅ 100% |
 | Super Mario Land 2 | 2652 | 2491 | 0 | 161 | ✅ 100% |
 | Super Mario World | 743 | 396 | 0 | 347 | ✅ 100% |
-| Super Metroid | 36 | 36 | 0 | 0 | ✅ 100% |
+| Super Metroid | 57 | 57 | 0 | 0 | ✅ 100% |
 | TOEM original | 214 | 4 | 0 | 210 | ✅ 100% |
-| TOEM rule builder | 191 | 4 | 0 | 187 | ✅ 100% |
+| TOEM rule builder | 214 | 4 | 0 | 210 | ✅ 100% |
 | TUNIC | 6804 | 528 | 0 | 6276 | ✅ 100% |
 | Terraria | 128 | 92 | 0 | 36 | ✅ 100% |
 | The Legend of Zelda | 155 | 151 | 0 | 4 | ✅ 100% |
@@ -241,7 +240,7 @@ This section shows which games have rules that support the `explain_json()` meth
 | Wargroove | 38 | 28 | 0 | 10 | ✅ 100% |
 | Yacht Dice | 58 | 58 | 0 | 0 | ✅ 100% |
 | Yoshi's Island | 221 | 121 | 0 | 100 | ✅ 100% |
-| Yu-Gi-Oh! 2006 | 151 | 63 | 0 | 88 | ✅ 100% |
+| Yu-Gi-Oh! 2006 | 157 | 63 | 0 | 94 | ✅ 100% |
 | Zillion | 147 | 147 | 0 | 0 | ✅ 100% |
 | shapez | 1032 | 9 | 0 | 1023 | ✅ 100% |
 
@@ -318,12 +317,6 @@ These templates are excluded from testing:
 - Final Fantasy
 - Kirby's Dream Land 3
 - Sudoku
-
-### Unexpected Failures (Logic Mismatch)
-
-These games have actual logic mismatches between UT and Python:
-
-- Factorio
 
 ### Unexpected Failures (Timeout Only)
 
