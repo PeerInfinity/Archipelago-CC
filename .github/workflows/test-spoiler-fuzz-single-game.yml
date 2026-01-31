@@ -52,11 +52,6 @@ on:
         required: false
         type: string
 
-      stop_on_first_failure:
-        description: 'Stop fuzzing after the first failure'
-        type: boolean
-        default: false
-
       parallel_runners:
         description: 'Number of parallel GitHub runners (1 or 10)'
         required: true
@@ -174,7 +169,6 @@ jobs:
           echo "Spoiler Mode: ${{ inputs.spoiler_mode }}"
           echo "Default Options: ${{ inputs.default_options || '(none)' }}"
           echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
-          echo "Stop on First Failure: ${{ inputs.stop_on_first_failure }}"
           echo "========================================"
 
           # Determine output filename based on seed
@@ -194,8 +188,6 @@ jobs:
           CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
-          CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
-          CMD="$CMD ${{ inputs.seed && '--number-by-seed' || '' }}"
 
           echo "Running: $CMD"
           eval $CMD
@@ -241,7 +233,6 @@ jobs:
           Test Timeout: ${{ inputs.test_timeout }}s
           Default Options: ${{ inputs.default_options || '(none)' }}
           Disallow Options: ${{ inputs.disallow_options || '(none)' }}
-          Stop on First Failure: ${{ inputs.stop_on_first_failure }}
           "
             git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
             echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
@@ -279,9 +270,6 @@ jobs:
           fi
           if [ -n "${{ inputs.disallow_options }}" ]; then
             echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
-          fi
-          if [ "${{ inputs.stop_on_first_failure }}" = "true" ]; then
-            echo "**Stop on First Failure:** enabled" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
@@ -436,8 +424,6 @@ jobs:
           CMD="$CMD --seed ${{ steps.seed-range.outputs.start_seed }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
-          CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
-          CMD="$CMD --number-by-seed"
 
           echo "Running: $CMD"
           eval $CMD
@@ -640,7 +626,6 @@ jobs:
           Test Timeout: ${{ inputs.test_timeout }}s
           Default Options: ${{ inputs.default_options || '(none)' }}
           Disallow Options: ${{ inputs.disallow_options || '(none)' }}
-          Stop on First Failure: ${{ inputs.stop_on_first_failure }}
           "
             git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
             echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
@@ -676,9 +661,6 @@ jobs:
           fi
           if [ -n "${{ inputs.disallow_options }}" ]; then
             echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
-          fi
-          if [ "${{ inputs.stop_on_first_failure }}" = "true" ]; then
-            echo "**Stop on First Failure:** enabled" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
