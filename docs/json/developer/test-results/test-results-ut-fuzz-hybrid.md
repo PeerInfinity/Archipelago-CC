@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-01-30 03:18:05
+**Generated:** 2026-01-30 18:29:02
 
 **Source Data Created:** 2026-01-22T20:59:24.837945
 
@@ -53,16 +53,16 @@ Of the 61 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 710.7KB
-- **Total Game Logic Code:** 652.0KB
-- **Combined Total:** 1362.7KB
+- **Total Exporter Code:** 607.1KB
+- **Total Game Logic Code:** 655.3KB
+- **Combined Total:** 1262.4KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | ❌ | 10 | 7 | 2 | 0 | 1 | ⚠️ 70.0% | 10.2KB | ✅ | 665.3KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
@@ -84,10 +84,10 @@ Of the 61 games with 100% pass rate:
 | DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.1KB | ✅ | 497.8KB |
+| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 8.6KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ | 10 | 0 | 7 | 1 | 2 | ❌ 0.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 0 | 7 | 1 | 2 | ❌ 0.0% | 13.4KB | ✅ | 549.0KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
@@ -114,14 +114,14 @@ Of the 61 games with 100% pass rate:
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
-| Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.4KB | ✅ | 485.4KB |
+| Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 6.5KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.8KB |
-| Secret of Evermore | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.3KB | 6.9KB | 418.7KB |
+| Secret of Evermore | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 28.7KB | 90.1KB | 1126.6KB |
 | Stardew Valley | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |

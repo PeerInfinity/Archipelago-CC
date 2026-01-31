@@ -1,6 +1,10 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-01-30 23:54:13
+**Generated:** 2026-01-30 18:33:23
+
+**Source Data Created:** 2026-01-27T22:55:56.684110
+
+**Source Data Last Updated:** 2026-01-27T22:55:56.684115
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -12,6 +16,7 @@ This summary combines results from 4 types of tests:
 
 Additional test results:
 - **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-worldgen.md)
+- **Freshness Report:** Shows when each test result document was last updated - [View Details](./test-results-freshness.md)
 
 Additional information:
 - **Template Types:** Understanding original, WorldGen, and APWorld templates - [Learn More](../tests/template-types.md)

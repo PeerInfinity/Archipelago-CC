@@ -143,17 +143,19 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
     # Add generated timestamp
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
+    # Add source data metadata if available
+    if metadata and ('created' in metadata or 'last_updated' in metadata):
+        if 'created' in metadata:
+            md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
+        if 'last_updated' in metadata:
+            md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
+
     # Add top-level metadata if available
     if top_level_metadata:
         if 'timestamp' in top_level_metadata and top_level_metadata['timestamp']:
             md_content += f"**Test Timestamp:** {top_level_metadata.get('timestamp')}\n\n"
         if 'seed' in top_level_metadata and top_level_metadata['seed']:
             md_content += f"**Seed:** {top_level_metadata.get('seed')}\n\n"
-    elif metadata and ('created' in metadata or 'last_updated' in metadata):
-        if 'created' in metadata:
-            md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
-        if 'last_updated' in metadata:
-            md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
 
     # Check if any entries have second pass data
     has_second_pass_data = any(entry.get('second_pass') for entry in chart_data)

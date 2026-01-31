@@ -512,7 +512,9 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
                                   project_root: str = None,
                                   world_source: str = "bundled",
                                   version1: str = "original",
-                                  version2: str = "modified") -> str:
+                                  version2: str = "modified",
+                                  metadata1: Dict[str, Any] = None,
+                                  metadata2: Dict[str, Any] = None) -> str:
     """
     Generate a markdown comparison between two UT fuzz test results.
 
@@ -524,6 +526,8 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
         world_source: Source of worlds being tested (bundled or apworlds)
         version1: First version being compared ('original', 'modified', or 'hybrid')
         version2: Second version being compared ('original', 'modified', or 'hybrid')
+        metadata1: Metadata from the first test results
+        metadata2: Metadata from the second test results
     """
     # Build lookup dicts by game name
     data1_by_game = {d['game_name']: d for d in data1}
@@ -623,6 +627,34 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
     title_suffix = " (APWorlds)" if world_source == "apworlds" else ""
     md_content = f"# Universal Tracker Fuzz Test Comparison: {version1_display} vs {version2_display}{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+    # Add source data date (use the older of the two dates)
+    if metadata1 or metadata2:
+        date1 = metadata1.get('last_updated') or metadata1.get('created') if metadata1 else None
+        date2 = metadata2.get('last_updated') or metadata2.get('created') if metadata2 else None
+
+        # Parse dates and find the older one
+        older_date = None
+        if date1 and date2:
+            try:
+                dt1 = datetime.fromisoformat(date1.replace('Z', '+00:00'))
+                dt2 = datetime.fromisoformat(date2.replace('Z', '+00:00'))
+                older_date = min(dt1, dt2)
+            except:
+                older_date = None
+        elif date1:
+            try:
+                older_date = datetime.fromisoformat(date1.replace('Z', '+00:00'))
+            except:
+                older_date = None
+        elif date2:
+            try:
+                older_date = datetime.fromisoformat(date2.replace('Z', '+00:00'))
+            except:
+                older_date = None
+
+        if older_date:
+            md_content += f"**Source Data Last Updated:** {older_date.strftime('%Y-%m-%dT%H:%M:%S')}\n\n"
 
     md_content += f"This report compares fuzz test results between the {version1_description} "
     md_content += f"and the {version2_description}.\n\n"
@@ -842,10 +874,11 @@ def main():
         print(f"Error: No result files found in {results_dir}")
         return 1
 
-    # Track chart data for comparisons
+    # Track chart data and metadata for comparisons
     # Keys: 'bundled-original', 'bundled-modified', 'bundled-hybrid',
     #       'apworlds-original', 'apworlds-modified', 'apworlds-hybrid'
     chart_data_by_type = {}
+    metadata_by_type = {}
 
     # Process each result file
     for results_path in result_files:
@@ -875,9 +908,10 @@ def main():
             world_source = metadata.get('world_source', 'bundled')
             ut_version = metadata.get('ut_version', 'modified')
 
-        # Store chart data for comparison generation
+        # Store chart data and metadata for comparison generation
         key = f"{world_source}-{ut_version}"
         chart_data_by_type[key] = chart_data
+        metadata_by_type[key] = metadata
 
         # Generate markdown with appropriate exclude list based on world source
         excluded_games = excluded_games_apworld if world_source == "apworlds" else excluded_games_bundled
@@ -914,7 +948,9 @@ def main():
                     project_root,
                     world_source,
                     version1='original',
-                    version2=version2
+                    version2=version2,
+                    metadata1=metadata_by_type.get(original_key),
+                    metadata2=metadata_by_type.get(version2_key)
                 )
 
                 # Determine output filename
@@ -938,7 +974,9 @@ def main():
                 project_root,
                 world_source,
                 version1='modified',
-                version2='hybrid'
+                version2='hybrid',
+                metadata1=metadata_by_type.get(modified_key),
+                metadata2=metadata_by_type.get(hybrid_key)
             )
 
             # Determine output filename

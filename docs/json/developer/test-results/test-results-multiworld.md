@@ -10,7 +10,11 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-30 23:54:13
+**Generated:** 2026-01-30 18:33:23
+
+**Source Data Created:** 2026-01-30T23:54:12.969736
+
+**Source Data Last Updated:** 2026-01-30T23:54:12.969744
 
 ## Summary
 
@@ -83,10 +87,10 @@
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 7.5KB |
 | Shivers | ❌ Failed | ❌ Failed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 5 | 5 | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 5 | 5 | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ❌ Failed | ❌ Failed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 21.4KB | ✅ |

@@ -37,6 +37,13 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
+    # Add source data dates from metadata (use minimal_metadata as primary source)
+    if minimal_metadata and ('created' in minimal_metadata or 'last_updated' in minimal_metadata):
+        if 'created' in minimal_metadata:
+            md_content += f"**Source Data Created:** {minimal_metadata.get('created', 'Unknown')}\n\n"
+        if 'last_updated' in minimal_metadata:
+            md_content += f"**Source Data Last Updated:** {minimal_metadata.get('last_updated', 'Unknown')}\n\n"
+
     # Add cross-links to other versions
     if version_links:
         for variant, link in sorted(version_links.items()):
@@ -66,12 +73,15 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         md_content += "\nAdditional test results:\n"
         md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
         md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times.md)\n"
+        md_content += "- **Freshness Report:** Shows when each test result document was last updated - [View Details](./test-results-freshness.md)\n"
     elif variant_type == "worldgen":
         md_content += "\nAdditional test results:\n"
         md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-worldgen.md)\n"
+        md_content += "- **Freshness Report:** Shows when each test result document was last updated - [View Details](./test-results-freshness.md)\n"
     elif variant_type == "apworld":
         md_content += "\nAdditional test results:\n"
         md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times-apworld.md)\n"
+        md_content += "- **Freshness Report:** Shows when each test result document was last updated - [View Details](./test-results-freshness.md)\n"
 
     # Add additional information links
     md_content += "\nAdditional information:\n"

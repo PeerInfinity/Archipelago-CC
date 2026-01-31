@@ -2,7 +2,9 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2026-01-12 05:56:37
+[📖 Learn about fuzz tests](../tests/test-fuzz.md)
+
+**Generated:** 2026-01-30 18:26:08
 
 **Source Data Created:** 2026-01-12T04:05:41.410331
 

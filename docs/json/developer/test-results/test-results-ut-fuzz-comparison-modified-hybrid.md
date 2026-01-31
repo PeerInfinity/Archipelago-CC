@@ -1,6 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-30 03:18:05
+**Generated:** 2026-01-30 18:29:02
+
+**Source Data Last Updated:** 2026-01-22T20:59:24
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
@@ -28,7 +30,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ 100.0% | ❌ 0.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ✅ 80.0% | ⚠️ 70.0% | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | ✅ 80.0% | ⚠️ 70.0% | 10.2KB | ✅ | 665.3KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
@@ -50,10 +52,10 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 40.0% | ✅ 100.0% | 5.1KB | ✅ | 497.8KB |
+| Factorio | ❌ 40.0% | ✅ 100.0% | 8.6KB | ✅ | 497.8KB |
 | Faxanadu | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ⚠️ 50.0% | ❌ 0.0% | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ⚠️ 50.0% | ❌ 0.0% | 13.4KB | ✅ | 549.0KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
@@ -80,14 +82,14 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Paint | ✅ 100.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ 0.0% | ❌ 0.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
-| Raft | ✅ 100.0% | ✅ 100.0% | 5.4KB | ✅ | 485.4KB |
+| Raft | ✅ 100.0% | ✅ 100.0% | 6.5KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 0.0% | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
 | Saving Princess | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
-| Secret of Evermore | ❌ 0.0% | ❌ 0.0% | 5.3KB | 6.9KB | 418.7KB |
+| Secret of Evermore | ❌ 0.0% | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 87.4KB | 1136.1KB |
+| Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 90.1KB | 1126.6KB |
 | Stardew Valley | ❌ 0.0% | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ✅ 100.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
@@ -157,7 +159,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Old School Runescape | 1.0KB | ✅ | 308.9KB |
 | Overcooked! 2 | 28.5KB | ✅ | 489.2KB |
 | Paint | 2.7KB | ✅ | 123.7KB |
-| Raft | 5.4KB | ✅ | 485.4KB |
+| Raft | 6.5KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ | ✅ | 146.1KB |
 | Saving Princess | ✅ | ✅ | 33.8KB |
 | Shivers | ✅ | ✅ | 151.3KB |
@@ -186,7 +188,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | A Hat in Time | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | 121.4KB | ✅ | 648.6KB |
+| A Link to the Past | 10.2KB | ✅ | 665.3KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 
 ## Games Passing Hybrid Only (2)
@@ -195,7 +197,7 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Factorio | 5.1KB | ✅ | 497.8KB |
+| Factorio | 8.6KB | ✅ | 497.8KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
 
 ## Games Passing Neither (21)
@@ -207,7 +209,7 @@ These games fail in both Universal Tracker versions.
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
-| Final Fantasy Mystic Quest | 10.3KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.0KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ✅ | ✅ | 757.5KB |
@@ -217,8 +219,8 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.3KB | 51.3KB | 1044.7KB |
-| Secret of Evermore | 5.3KB | 6.9KB | 418.7KB |
-| Starcraft 2 | 28.7KB | 87.4KB | 1136.1KB |
+| Secret of Evermore | 5.3KB | 7.5KB | 418.7KB |
+| Starcraft 2 | 28.7KB | 90.1KB | 1126.6KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
 | The Witness | 14.1KB | ✅ | 401.1KB |
