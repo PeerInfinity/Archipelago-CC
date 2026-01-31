@@ -101,6 +101,8 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'Hammer', 'Fire Rod', 'Lamp', 'Hookshot', 'Bow', 'Cane of Somaria',
         'Cane of Byrna', 'Cape', 'Bottle', 'Bombos', 'Ether', 'Quake',
         'Book of Mudora', 'Shovel', 'Flute', 'Bug Catching Net',
+        # Event/flag items for bunny rule analysis
+        'Beat Agahnim 1', 'Beat Agahnim 2',
     }
 
     # Bytecode helper expansions for ALttP

@@ -741,9 +741,55 @@ class ExpressionVisitorMixin:
                 logging.debug(f"Unknown boolean operator: {type(node.op).__name__}")
                 return None
 
+            # Simplify boolean expressions with constant values
+            # This is critical for properly handling options like open_pyramid.to_bool()
+            # which evaluate to True/False at analysis time
+            simplified_conditions = []
+            for cond in conditions:
+                if cond.get('type') == 'constant':
+                    const_val = cond.get('value')
+                    if op_type == 'or' and const_val is True:
+                        # OR with True -> True (short-circuit)
+                        logging.debug(f"Boolean simplification: OR with True -> True")
+                        return {'type': 'constant', 'value': True}
+                    elif op_type == 'and' and const_val is False:
+                        # AND with False -> False (short-circuit)
+                        logging.debug(f"Boolean simplification: AND with False -> False")
+                        return {'type': 'constant', 'value': False}
+                    elif op_type == 'or' and const_val is False:
+                        # OR with False -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: OR skipping False condition")
+                        continue
+                    elif op_type == 'and' and const_val is True:
+                        # AND with True -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: AND skipping True condition")
+                        continue
+                    else:
+                        # Non-boolean constant (shouldn't happen in boolean context)
+                        simplified_conditions.append(cond)
+                else:
+                    simplified_conditions.append(cond)
+
+            # Handle cases where all conditions were filtered out
+            if len(simplified_conditions) == 0:
+                # All conditions were identity elements
+                if op_type == 'or':
+                    # All False conditions -> False
+                    logging.debug(f"Boolean simplification: All OR conditions were False -> False")
+                    return {'type': 'constant', 'value': False}
+                else:
+                    # All True conditions -> True
+                    logging.debug(f"Boolean simplification: All AND conditions were True -> True")
+                    return {'type': 'constant', 'value': True}
+
+            # If only one condition remains, return it directly
+            if len(simplified_conditions) == 1:
+                logging.debug(f"Boolean simplification: Single condition remaining -> {simplified_conditions[0]}")
+                return simplified_conditions[0]
+
             result = {
                 'type': op_type,
-                'conditions': conditions
+                'conditions': simplified_conditions
             }
             logging.debug(f"Boolean operation result: {result}")
             return result # Return the result
