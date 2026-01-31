@@ -855,6 +855,15 @@ def generate_rules_py(data: ExtractedData) -> str:
         entrance_regions[normalized_name] = exit_data.source_region
     rule_builder_generator.set_entrance_regions(entrance_regions)
 
+    # Build entrance-to-connected-region mapping for resolving dict_lambda_lookup patterns
+    # like rule_map.get(world.get_entrance('X').connected_region.name, default)
+    # With vanilla entrance shuffle, we can resolve the key to return just the matching case
+    entrance_connections = {}
+    for exit_name, exit_data in data.exits.items():
+        if exit_data.target_region:
+            entrance_connections[exit_name] = exit_data.target_region
+    rule_builder_generator.set_entrance_connections(entrance_connections)
+
     helper_generator = HelperCodeGenerator(
         game_name,
         resolved_values=data.metadata.resolved_values,
