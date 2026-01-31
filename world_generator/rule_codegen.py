@@ -6363,6 +6363,24 @@ class RuleCodeGenerator:
                 'HelperCall', 'helper',
             )
             if func_rule in rule_builder_types:
+                # Special case: And(CanReachEntrance(...), ...) from bunny rules
+                # The bunny rules code creates rules like:
+                #   can_reach(entrance) AND entrance.access_rule(state)
+                # But CanReachEntrance already checks the entrance's access_rule
+                # at runtime (see BaseClasses.Entrance.can_reach), so the additional
+                # conditions are redundant and can cause issues if the exporter
+                # only partially captured the entrance's access rule.
+                # Simplify to just CanReachEntrance.
+                if func_rule == 'And':
+                    children = function.get('children', [])
+                    can_reach_entrance = None
+                    for child in children:
+                        if isinstance(child, dict) and child.get('rule') == 'CanReachEntrance':
+                            can_reach_entrance = child
+                            break
+                    if can_reach_entrance:
+                        # Found CanReachEntrance - use it directly, dropping redundant conditions
+                        return self._convert_rule(can_reach_entrance)
                 # Recursively convert the nested Rule Builder rule
                 return self._convert_rule(function)
 
