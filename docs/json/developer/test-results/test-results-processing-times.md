@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2026-01-31 04:22:02
+**Generated:** 2026-01-31 04:30:19
 
 **Source Data Created:** 2026-01-31T04:08:42.835914
 
@@ -114,8 +114,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Wargroove | 19.1s | 8 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 2 | Yoshi's Island | 18.9s | 8 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+3 more) |
+| 3 | Undertale | 18.6s | 7 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+2 more) |
+| 4 | TOEM rule builder | 18.6s | 7 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 5 | Shivers | 18.2s | 6 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 6 | Metamath | 17.7s | 5 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml |
+| 7 | The Legend of Zelda | 17.6s | 7 | APQuest.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
+| 8 | Super Metroid | 17.5s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+1 more) |
+| 9 | TUNIC | 17.4s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+2 more) |
+| 10 | Stardew Valley | 16.2s | 6 | APQuest.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Stardew Valley | 47.0s | 6 | APQuest.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 2 | Kirby's Dream Land 3 | 42.9s | 4 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml |
+| 3 | Kingdom Hearts 2 | 37.9s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml |
+| 4 | Super Metroid | 31.9s | 6 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+1 more) |
+| 5 | Dark Souls III | 30.8s | 3 | A Hat in Time.yaml, Castlevania 64.yaml, Dark Souls III.yaml |
+| 6 | Subnautica | 27.8s | 6 | Adventure.yaml, Choo-Choo Charles.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 7 | Raft | 24.8s | 5 | Baking Adventure.yaml, Coding Adventure.yaml, Hylics 2.yaml, Math Adventure.yaml, Raft.yaml |
+| 8 | Kingdom Hearts | 22.9s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml |
+| 9 | Secret of Evermore | 22.8s | 5 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml, Meritous.yaml, Secret of Evermore.yaml |
+| 10 | TUNIC | 20.6s | 7 | A Link to the Past.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Landstalker - The Treasures of King Nole.yaml, Muse Dash.yaml (+2 more) |
