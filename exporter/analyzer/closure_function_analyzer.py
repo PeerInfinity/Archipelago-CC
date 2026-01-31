@@ -271,9 +271,16 @@ class ClosureFunctionAnalyzer:
         # Pattern: path_to_access_rule result
         # lambda state: state.can_reach(entrance.name, 'Entrance', entrance.player)
         #               and all(rule(state) for rule in path)
-        if 'path' in closure_vars and 'entrance' in closure_vars:
+        # Note: ALttP's set_bunny_rules uses 'new_path' instead of 'path' in some lambdas
+        path_var = None
+        if 'path' in closure_vars:
+            path_var = closure_vars['path']
+        elif 'new_path' in closure_vars:
+            path_var = closure_vars['new_path']
+
+        if path_var is not None and 'entrance' in closure_vars:
             return self._analyze_path_pattern(
-                closure_vars['path'],
+                path_var,
                 closure_vars['entrance'],
                 depth
             )
@@ -1085,7 +1092,9 @@ class UnanalyzableRulePatternMatcher:
         # Match by closure variable signature
         if set(closure_var_names) == {'options'}:
             return 'options_to_access_rule'
-        if {'path', 'entrance'} <= set(closure_var_names):
+        # Accept both 'path' and 'new_path' - ALttP uses 'new_path' in some bunny rule lambdas
+        if ({'path', 'entrance'} <= set(closure_var_names) or
+            {'new_path', 'entrance'} <= set(closure_var_names)):
             return 'path_to_access_rule'
         if set(closure_var_names) == {'player'}:
             return 'simple_item_check'

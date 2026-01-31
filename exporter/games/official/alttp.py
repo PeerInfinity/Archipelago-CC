@@ -11,15 +11,11 @@ This exporter handles ALttP-specific helpers that are used in rules:
 These helpers have option-dependent logic that must be exported as definitions
 so the worldgen world can evaluate them correctly at runtime.
 
-Note: The complex bunny rule for Superbunny Cave locations uses the default AST
-analysis. Previous True_ overrides caused logic mismatches in certain entrance
-shuffle configurations. The AST analysis may produce incomplete entrance path
-rules for multi-hop paths, but this is preferable to the permissive True_ rule.
-
 ALttP-specific analyzer configuration:
-- Bunny rules (from set_bunny_rules) are detected as unanalyzable patterns
-- In permissive logic modes (glitches), unanalyzable rules return True
-- In non-permissive modes, unanalyzable rules fall back to Moon Pearl requirement
+- Bunny rules (from set_bunny_rules) use nested call patterns that the analyzer
+  handles via module-level function factory detection (see call_visitor.py)
+- path_to_access_rule and options_to_access_rule are recognized as function factories
+- The analyzer correctly produces Or(Moon Pearl, can_reach_entrance) for superbunny locations
 - Bytecode analysis recognizes ALttP-specific items
 - has_sword() pattern expands to check all four sword tiers
 - _lttp_has_key method handles universal key mode
@@ -314,3 +310,4 @@ class ALttPGameExportHandler(GenericGameExportHandler):
                 return {'type': 'count_check', 'item': item_value, 'count': count}
 
         return None  # Let default handling proceed
+
