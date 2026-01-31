@@ -18,8 +18,8 @@ rules for multi-hop paths, but this is preferable to the permissive True_ rule.
 
 ALttP-specific analyzer configuration:
 - Bunny rules (from set_bunny_rules) are detected as unanalyzable patterns
-- In glitch modes, unanalyzable rules return True (permissive)
-- In non-glitch modes, unanalyzable rules fall back to Moon Pearl requirement
+- In permissive logic modes (glitches), unanalyzable rules return True
+- In non-permissive modes, unanalyzable rules fall back to Moon Pearl requirement
 - Bytecode analysis recognizes ALttP-specific items
 - has_sword() pattern expands to check all four sword tiers
 - _lttp_has_key method handles universal key mode
@@ -64,12 +64,12 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'has_sword': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'],
     }
 
-    # Fallback item for unanalyzable bunny rules (non-glitch modes)
+    # Fallback item for unanalyzable bunny rules (non-permissive modes)
     UNANALYZABLE_RULE_FALLBACK_ITEM: Optional[str] = 'Moon Pearl'
 
-    # Glitch mode configuration
-    GLITCH_MODE_OPTION_NAME: Optional[str] = 'glitches_required'
-    GLITCH_MODE_OPTION_VALUES: List[str] = [
+    # Permissive logic mode configuration
+    PERMISSIVE_LOGIC_OPTION_NAME: Optional[str] = 'glitches_required'
+    PERMISSIVE_LOGIC_OPTION_VALUES: List[str] = [
         'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'
     ]
 

@@ -319,17 +319,17 @@ class BaseGameExportHandler(
     # Example: 'Moon Pearl' for ALttP bunny rules
     UNANALYZABLE_RULE_FALLBACK_ITEM: Optional[str] = None
 
-    # Option values that indicate glitch modes are enabled.
-    # When the glitches_required option (or equivalent) has one of these values,
-    # unanalyzable rules may use a more permissive fallback (True instead of item check).
-    # Example: ['minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic']
-    GLITCH_MODE_OPTION_VALUES: List[str] = []
+    # Option values that indicate permissive logic modes are enabled.
+    # When the logic option has one of these values, unanalyzable rules use a
+    # permissive fallback (True) instead of requiring a fallback item.
+    # Example: ['minor_glitches', 'overworld_glitches', 'no_logic', 'hard', 'expert']
+    PERMISSIVE_LOGIC_OPTION_VALUES: List[str] = []
 
-    # Option name for glitch mode detection.
-    # The analyzer checks world.options.<GLITCH_MODE_OPTION_NAME> to determine
-    # if glitch modes are enabled. Leave as None to disable glitch mode detection.
-    # Example: 'glitches_required'
-    GLITCH_MODE_OPTION_NAME: Optional[str] = None
+    # Option name for permissive logic detection.
+    # The analyzer checks world.options.<PERMISSIVE_LOGIC_OPTION_NAME> to determine
+    # if permissive logic is enabled. Leave as None to disable this detection.
+    # Example: 'glitches_required', 'logic_rules', 'difficulty'
+    PERMISSIVE_LOGIC_OPTION_NAME: Optional[str] = None
 
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
@@ -954,7 +954,7 @@ class BaseGameExportHandler(
         to provide game-specific fallback rules.
 
         The base implementation uses class attributes:
-        - If GLITCH_MODE_OPTION_NAME is set and glitch mode is enabled,
+        - If PERMISSIVE_LOGIC_OPTION_NAME is set and permissive logic is enabled,
           returns True (always accessible)
         - Otherwise returns Has(UNANALYZABLE_RULE_FALLBACK_ITEM) if set
         - Otherwise returns None (no fallback)
@@ -965,14 +965,14 @@ class BaseGameExportHandler(
         Returns:
             Fallback rule dict, or None if no fallback available
         """
-        # Check if glitch mode is enabled
-        if self.GLITCH_MODE_OPTION_NAME and self.GLITCH_MODE_OPTION_VALUES:
+        # Check if permissive logic mode is enabled
+        if self.PERMISSIVE_LOGIC_OPTION_NAME and self.PERMISSIVE_LOGIC_OPTION_VALUES:
             if self.world and hasattr(self.world, 'options'):
-                option = getattr(self.world.options, self.GLITCH_MODE_OPTION_NAME, None)
+                option = getattr(self.world.options, self.PERMISSIVE_LOGIC_OPTION_NAME, None)
                 if option is not None:
                     current_value = str(getattr(option, 'current_key', ''))
-                    if current_value in self.GLITCH_MODE_OPTION_VALUES:
-                        # In glitch modes, return True as permissive fallback
+                    if current_value in self.PERMISSIVE_LOGIC_OPTION_VALUES:
+                        # In permissive logic modes, return True as fallback
                         return {'type': 'constant', 'value': True}
 
         # Fall back to item requirement if configured
