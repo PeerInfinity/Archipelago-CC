@@ -118,6 +118,15 @@ class ALttPGameExportHandler(GenericGameExportHandler):
         'minor_glitches', 'overworld_glitches', 'hybrid_major_glitches', 'no_logic'
     ]
 
+    # Known option names for bytecode analysis
+    # These are recognized when detecting option access patterns in rules
+    KNOWN_OPTION_NAMES: Set[str] = {
+        'open_pyramid', 'swordless', 'retro_bow', 'retro_caves', 'mode',
+        'glitches_required', 'entrance_shuffle', 'bombless_start',
+        'shuffle_capacity_upgrades', 'key_drop_shuffle', 'pot_shuffle',
+        'randomize_cost_types', 'item_functionality', 'goal',
+    }
+
     # Whitelist critical helpers that must be exported as definitions
     # These are option-dependent and fall back to True if not exported
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
