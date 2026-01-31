@@ -1919,7 +1919,15 @@ class CallVisitorMixin:
                                     return {'type': 'constant', 'value': bool(option_obj.value)}
                         except Exception as e:
                             logging.warning(f"Failed to evaluate {setting_name}.to_bool(): {e}")
-                            # Fall through to let ast_to_rule_builder handle it
+                            # Return OptionValue so the option check is preserved in export
+                            # This is better than losing the option check entirely
+                            logging.debug(f"Returning OptionValue fallback for {setting_name}")
+                            return {'type': 'option_value', 'option': setting_name}
+
+                    # If we have a setting name but couldn't evaluate, return OptionValue
+                    if setting_name:
+                        logging.debug(f"Could not evaluate to_bool, returning OptionValue for {setting_name}")
+                        return {'type': 'option_value', 'option': setting_name}
 
                 # If we can't resolve to_bool at analysis time, let the converter handle it
                 logging.debug(f"Could not evaluate to_bool at analysis time, falling through")

@@ -7376,12 +7376,21 @@ class HelperCodeGenerator:
             if rule_type == 'False_':
                 return 'False'
 
-            # Handle OptionValue rules (Rule Builder format) - preserve as runtime check
-            # This is critical for boss defeat rules that depend on game options like 'swordless'
+            # Handle OptionValue rules (Rule Builder format) - evaluate as boolean
+            # Options are known at generation time, so we can pre-resolve them
             if rule_type == 'OptionValue':
                 args = expr.get('args', {})
                 option = args.get('option', '')
-                return f'state.multiworld.worlds[player].options.{option}'
+                # Try to resolve from settings (option values are known at generation time)
+                if option in self.settings:
+                    value = self.settings[option]
+                    # Convert to boolean - for Choice options, 0 is typically "disabled"
+                    # This handles simple cases; complex options like open_pyramid with
+                    # auto mode need the exporter to pre-resolve them
+                    return 'True' if bool(value) else 'False'
+                # Fallback: generate runtime code that properly checks the option value
+                # Use bool(option.value) instead of raw option object which is always truthy
+                return f'bool(state.multiworld.worlds[player].options.{option}.value)'
 
             # Handle SettingValue rules (Rule Builder format - legacy)
             if rule_type == 'SettingValue':
