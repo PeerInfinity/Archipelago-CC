@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-01-30 20:00:08
+**Generated:** 2026-01-31 04:41:30
 
 **Source Data Last Updated:** 2026-01-22T20:59:24
 
@@ -18,12 +18,12 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 56 (65.9%)
+- **Passing Both:** 58 (68.2%)
 - **Passing Modified Only:** 3 (3.5%)
-- **Passing Hybrid Only:** 5 (5.9%)
+- **Passing Hybrid Only:** 3 (3.5%)
 - **Passing Neither:** 21 (24.7%)
 - **Passing Hybrid with no custom code:** 38 (44.7%)
-- **Passing Hybrid Only with no custom code:** 1 (1.2%)
+- **Passing Hybrid Only with no custom code:** 0 (0.0%)
 
 ## Full Comparison
 
@@ -103,19 +103,19 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Terraria | ✅ 90.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.6KB |
 | The Messenger | ✅ 100.0% | ✅ 100.0% | 14.8KB | ✅ | 211.8KB |
-| The Wind Waker | ❌ 0.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
+| The Wind Waker | ✅ 50.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ❌ 30.0% | ❌ 30.0% | 14.1KB | ✅ | 401.1KB |
 | Timespinner | ✅ 100.0% | ❌ 0.0% | 2.2KB | ✅ | 260.8KB |
 | Undertale | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ 100.0% | ✅ 100.0% | 3.8KB | ✅ | 22.8KB |
-| Wargroove | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 44.7KB |
+| Wargroove | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ 0.0% | ❌ 0.0% | 0.9KB | 285.0KB | 249.5KB |
 | Yoshi's Island | ✅ 100.0% | ✅ 100.0% | 9.2KB | ✅ | 296.7KB |
 | Yu-Gi-Oh! 2006 | ❌ 0.0% | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 60.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (56)
+## Games Passing Both (58)
 
 These games have 100% success rate in both Universal Tracker versions.
 
@@ -173,8 +173,10 @@ These games have 100% success rate in both Universal Tracker versions.
 | Terraria | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | ✅ | 555.6KB |
 | The Messenger | 14.8KB | ✅ | 211.8KB |
+| The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | Undertale | ✅ | ✅ | 58.0KB |
 | VVVVVV | 3.8KB | ✅ | 22.8KB |
+| Wargroove | ✅ | ✅ | 44.7KB |
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
@@ -188,7 +190,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 | A Link to the Past | 12.5KB | ✅ | 665.3KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 
-## Games Passing Hybrid Only (5)
+## Games Passing Hybrid Only (3)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
@@ -197,8 +199,6 @@ These games pass in the Hybrid UT but fail in the Modified UT.
 | Factorio | 8.6KB | ✅ | 497.8KB |
 | Raft | 6.5KB | ✅ | 485.4KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
-| The Wind Waker | 7.0KB | ✅ | 253.9KB |
-| Wargroove | ✅ | ✅ | 44.7KB |
 
 ## Games Passing Neither (21)
 
