@@ -446,14 +446,17 @@ fetch_and_merge() {
 
     echo -e "${YELLOW}Fetching branch: $branch_name${NC}"
 
-    # Fetch the specific branch
-    git fetch origin "$branch_name:$branch_name"
+    # Fetch the specific branch (use --force to handle diverged branches)
+    if git fetch origin "$branch_name:$branch_name" --force; then
+        echo -e "${GREEN}Successfully fetched $branch_name${NC}"
+        echo
 
-    echo -e "${GREEN}Successfully fetched $branch_name${NC}"
-    echo
-
-    # Perform merge
-    perform_merge "$branch_name" "$merge_type"
+        # Perform merge
+        perform_merge "$branch_name" "$merge_type"
+    else
+        echo -e "${RED}Failed to fetch $branch_name${NC}"
+        return 1
+    fi
 }
 
 # Function to select mode
