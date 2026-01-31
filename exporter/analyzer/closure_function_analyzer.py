@@ -161,6 +161,12 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"ClosureFunctionAnalyzer: Source analysis succeeded")
                 return result
 
+            # Method 3: Try bytecode analysis as last resort
+            result = self._analyze_via_bytecode(func)
+            if result is not None:
+                logger.debug(f"ClosureFunctionAnalyzer: Bytecode analysis succeeded")
+                return result
+
             logger.debug(f"ClosureFunctionAnalyzer: All analysis methods failed for {func_qualname}")
             return None
         finally:
@@ -666,6 +672,32 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found (item AND has_sword) OR item pattern: {item_names}")
                 return result
 
+        # Check for option attribute access pattern: world.worlds[player].options.xxx
+        # This handles rules like: state.has('Beat Agahnim 2', player) or world.worlds[player].options.open_pyramid
+        option_name = None
+        has_option_access = 'options' in names and 'worlds' in names
+        if has_option_access:
+            # Look for option name - it's the last attribute access after 'options'
+            # Common ALttP option names that might appear in rules
+            # The option name is in co_names (attribute access), not co_consts
+            known_option_names = {
+                'open_pyramid', 'swordless', 'retro_bow', 'retro_caves', 'mode',
+                'glitches_required', 'entrance_shuffle', 'bombless_start',
+                'shuffle_capacity_upgrades', 'key_drop_shuffle', 'pot_shuffle',
+                'randomize_cost_types', 'item_functionality', 'goal',
+            }
+            # Check in names (attribute names)
+            for name in names:
+                if name in known_option_names:
+                    option_name = name
+                    break
+            # Also check constants in case it's passed as a string
+            if not option_name:
+                for const in consts:
+                    if isinstance(const, str) and const in known_option_names:
+                        option_name = const
+                        break
+
         # Check for state.has() pattern - collect ALL item names first
         if 'has' in names and known_items:
             item_names = []
@@ -675,6 +707,13 @@ class ClosureFunctionAnalyzer:
                     if const not in ('Entrance', 'Region', 'Location'):
                         if const in known_items:
                             item_names.append(const)
+
+            # If we have an OR pattern with has() and option access, combine them
+            if is_or_pattern and option_name and len(item_names) >= 1:
+                option_rule = {'rule': 'OptionValue', 'args': {'option': option_name}}
+                item_rule = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern: has('{item_names[0]}') or option '{option_name}'")
+                return {'rule': 'Or', 'children': [option_rule, item_rule]}
 
             if len(item_names) == 1:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has('{item_names[0]}')")
@@ -692,6 +731,11 @@ class ClosureFunctionAnalyzer:
                     # Both AND and OR detected but no has_sword - default to OR
                     logger.debug(f"ClosureFunctionAnalyzer: Bytecode found mixed pattern, defaulting to OR: {item_names}")
                     return {'rule': 'Or', 'children': item_checks}
+
+        # Handle standalone option access in OR pattern (e.g., option_value or other_check)
+        if is_or_pattern and option_name and 'has' not in names:
+            logger.debug(f"ClosureFunctionAnalyzer: Bytecode found standalone option access: '{option_name}'")
+            return {'rule': 'OptionValue', 'args': {'option': option_name}}
 
         # Check for state.can_reach() pattern
         if 'can_reach' in names:
