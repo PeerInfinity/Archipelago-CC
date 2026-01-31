@@ -378,6 +378,86 @@ class TestAnyGeneratorPattern:
                 print(f"    [{i}] type: {cond.get('type')}")
 
 
+class TestNestedCallPattern:
+    """
+    Tests for the exact ALttP nested call pattern.
+
+    This is the pattern from ALttP Rules.py line 1739-1741:
+        possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state))
+
+    The key feature is that the factory result is IMMEDIATELY CALLED with (state).
+    This creates a nested Call AST structure where node.func is itself a Call.
+    """
+
+    def setup_method(self):
+        clear_caches()
+        reset_analyze_rule_counter()
+
+    def test_nested_call_empty_path(self):
+        """Test nested call pattern with empty path (simplest case)."""
+        entrance = MockEntrance("Superbunny Cave (Top)")
+        new_path = []  # Empty path
+
+        # EXACT ALttP pattern: lambda that calls factory then calls result with (state)
+        rule_func = lambda state: path_to_access_rule(new_path, entrance)(state)
+
+        print(f"\nClosure vars: {rule_func.__code__.co_freevars}")
+        result = analyze_rule(rule_func)
+
+        print(f"Nested call (empty path): {result}")
+        print(f"  Type: {result.get('type')}")
+
+        # This should ideally produce the same result as calling path_to_access_rule directly
+        # i.e., can_reach AND all(path)
+
+    def test_nested_call_with_item_in_path(self):
+        """Test nested call pattern with Moon Pearl in path."""
+        player = 1
+        entrance = MockEntrance("Superbunny Cave (Top)")
+        new_path = [lambda state: state.has('Moon Pearl', player)]
+
+        # EXACT ALttP pattern
+        rule_func = lambda state: path_to_access_rule(new_path, entrance)(state)
+
+        result = analyze_rule(rule_func)
+
+        print(f"Nested call (with Moon Pearl): {result}")
+        print(f"  Type: {result.get('type')}")
+
+        # Ideally should produce: can_reach(entrance) AND Moon Pearl
+
+    def test_nested_call_in_options(self):
+        """
+        Test the full ALttP bunny rule pattern:
+        options = [Moon Pearl, path_to_access_rule(path, entrance)(state)]
+        rule = any(option(state) for option in options)
+        """
+        player = 1
+        entrance = MockEntrance("Kakariko Well Entry")
+        new_path = []  # Empty path for superbunny-accessible
+
+        # The first option: just Moon Pearl
+        moon_pearl_option = lambda state: state.has('Moon Pearl', player)
+
+        # The second option: the nested call pattern
+        # In superbunny case, this should be "just need to reach entrance"
+        superbunny_option = lambda state: path_to_access_rule(new_path, entrance)(state)
+
+        possible_options = [moon_pearl_option, superbunny_option]
+
+        # The final rule using options_to_access_rule
+        rule_func = options_to_access_rule(possible_options)
+
+        result = analyze_rule(rule_func)
+
+        print(f"Full bunny rule pattern: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        if result.get('type') == 'or':
+            for i, cond in enumerate(result.get('conditions', [])):
+                print(f"  Option {i}: {cond}")
+
+
 class TestAnalyzerDiagnostics:
     """Diagnostic tests to understand analyzer behavior."""
 
