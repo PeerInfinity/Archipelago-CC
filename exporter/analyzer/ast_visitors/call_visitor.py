@@ -1634,7 +1634,12 @@ class CallVisitorMixin:
                         if handler_result:
                             logging.debug(f"Game handler handled state method '{method}'")
                             result = handler_result
-                    # If not handled by game handler, don't set result - let default handling proceed
+                        else:
+                            # Handler didn't handle it, create default state_method
+                            result = {'type': 'state_method', 'method': method, 'args': filtered_args}
+                    else:
+                        # No handler available, create default state_method
+                        result = {'type': 'state_method', 'method': method, 'args': filtered_args}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object

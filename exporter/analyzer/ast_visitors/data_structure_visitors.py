@@ -32,7 +32,7 @@ class DataStructureVisitorMixin:
             # Preserve tuple type for correct Python semantics (tuple != list)
             return {'type': 'tuple', 'elements': elements}
         except Exception as e:
-            logging.error("Error in visit_Tuple", e)
+            logging.error(f"Error in visit_Tuple: {e}")
             return None
 
     def visit_List(self, node: ast.List):
@@ -50,7 +50,7 @@ class DataStructureVisitorMixin:
             # Represent as a list in the output JSON
             return {'type': 'list', 'value': elements}
         except Exception as e:
-            logging.error("Error in visit_List", e)
+            logging.error(f"Error in visit_List: {e}")
             return None
 
     def visit_Set(self, node: ast.Set):
@@ -79,7 +79,7 @@ class DataStructureVisitorMixin:
             # that this originated from a Python set (e.g., for has_any checks)
             return {'type': 'set', 'elements': elements}
         except Exception as e:
-            logging.error("Error in visit_Set", e)
+            logging.error(f"Error in visit_Set: {e}")
             return None
 
     def visit_Dict(self, node: ast.Dict):

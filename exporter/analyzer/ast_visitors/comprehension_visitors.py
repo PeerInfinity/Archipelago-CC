@@ -257,7 +257,7 @@ class ComprehensionVisitorMixin:
                     result['condition'] = {'type': 'and', 'conditions': conditions}
             return result
         except Exception as e:
-            logging.error("Error in visit_comprehension", e)
+            logging.error(f"Error in visit_comprehension: {e}")
             return None
 
     def _convert_generator_exp_to_all_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
