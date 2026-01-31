@@ -32,8 +32,57 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def _export_shops(world, multiworld, player) -> List[Dict[str, Any]]:
+    """Export shop data for ALttP worldgen.
+
+    The worldgen world needs shop information to implement can_buy_unlimited
+    and can_buy helpers. Each shop is exported with:
+    - region: The region name where the shop is located
+    - unlimited_items: List of items that have unlimited stock
+    - inventory: Full inventory data for advanced shop logic
+    """
+    shops_data = []
+    for shop in getattr(world, 'shops', []):
+        # Get region name
+        region_name = shop.region.name if shop.region else ''
+
+        # Build list of unlimited items
+        unlimited_items = []
+        for inv in shop.inventory:
+            if inv is None:
+                continue
+            # max=0 means unlimited stock of the base item
+            # max>0 means limited stock, but replacement is unlimited after stock runs out
+            if inv.get('max', 0) == 0:
+                if inv.get('item'):
+                    unlimited_items.append(inv['item'])
+            else:
+                if inv.get('replacement'):
+                    unlimited_items.append(inv['replacement'])
+
+        shops_data.append({
+            'region': region_name,
+            'unlimited_items': unlimited_items,
+            'inventory': shop.inventory,
+            'room_id': shop.room_id,
+            'shopkeeper_config': shop.shopkeeper_config,
+            'custom': shop.custom,
+            'locked': shop.locked,
+            'sram_offset': getattr(shop, 'sram_offset', 0),
+        })
+
+    return shops_data
+
+
 class ALttPGameExportHandler(GenericGameExportHandler):
     """Export handler for A Link to the Past."""
+
+    # The original ALttP world uses explicit_indirect_conditions = False
+    # which enables the auto-retry BFS algorithm for entrance rules that
+    # check region reachability (like can_buy_unlimited checking shop regions).
+    # Without this, the explicit BFS algorithm requires registered indirect
+    # conditions which aren't set up by the worldgen.
+    USE_AUTO_INDIRECT_CONDITIONS = True
 
     # Helper modules containing the rule helpers
     HELPER_MODULES = [
@@ -114,6 +163,11 @@ class ALttPGameExportHandler(GenericGameExportHandler):
 
     # Blacklist helpers that are too complex or use patterns we can't export
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+
+    # Export shop data for can_buy_unlimited and can_buy helpers
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        'shops': _export_shops,
+    }
 
     def __init__(self, world=None):
         super().__init__(world)
