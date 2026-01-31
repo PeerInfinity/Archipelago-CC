@@ -457,6 +457,87 @@ class TestNestedCallPattern:
             for i, cond in enumerate(result.get('conditions', [])):
                 print(f"  Option {i}: {cond}")
 
+    def test_nested_call_with_entrance_access_rule_in_path(self):
+        """
+        Test the ACTUAL pattern that causes the Kakariko Well failure.
+
+        The original ALttP code at line 1729 does:
+            new_path = path + [entrance.access_rule]
+
+        This means even for superbunny-accessible locations, the entrance's
+        access rule is included in the path. For "Inverted Pyramid Hole" with
+        access_rule = Or(open_pyramid, Beat Agahnim 2), this produces:
+
+            Or(Moon Pearl, And(CanReachEntrance, Beat Agahnim 2))
+
+        But for superbunny locations in Kakariko Well (top), the correct rule
+        should be just:
+
+            Or(Moon Pearl, CanReachEntrance)
+
+        This test demonstrates why the analyzer produces the "wrong" rule -
+        it correctly analyzes what the ALttP code does, but the ALttP code
+        itself has a limitation where it always includes entrance.access_rule
+        in the path, even when it shouldn't for superbunny cases.
+        """
+        player = 1
+        entrance = MockEntrance("Inverted Pyramid Hole")
+
+        # Simulate entrance.access_rule = lambda that checks Beat Agahnim 2
+        # (In reality, this is Or(open_pyramid, Beat Agahnim 2), but simplified for test)
+        entrance_access_rule = lambda state: state.has('Beat Agahnim 2', player)
+
+        # The ACTUAL path as built by ALttP line 1729: new_path = path + [entrance.access_rule]
+        # For the first BFS hop, path = [], so new_path = [entrance.access_rule]
+        new_path_with_entrance_rule = [entrance_access_rule]
+
+        # The first option: just Moon Pearl
+        moon_pearl_option = lambda state: state.has('Moon Pearl', player)
+
+        # The second option: superbunny path WITH entrance access rule in path
+        # This is what ALttP actually builds for Kakariko Well superbunny locations
+        superbunny_option_with_rule = lambda state: path_to_access_rule(
+            new_path_with_entrance_rule, entrance)(state)
+
+        possible_options = [moon_pearl_option, superbunny_option_with_rule]
+        rule_func = options_to_access_rule(possible_options)
+        result = analyze_rule(rule_func)
+
+        print(f"\nKakariko Well ACTUAL pattern (with entrance rule in path):")
+        print(f"  Result: {result}")
+        print(f"  Type: {result.get('type')}")
+
+        if result.get('type') == 'or':
+            for i, cond in enumerate(result.get('conditions', [])):
+                print(f"  Option {i}: {cond}")
+
+        # The analyzer correctly produces:
+        # Or(Moon Pearl, And(CanReachEntrance, Beat Agahnim 2))
+        # This is "correct" analysis of the ALttP code, but the ALttP code
+        # itself is overly restrictive for superbunny locations.
+
+        # Compare with what SHOULD be the rule (empty path)
+        new_path_empty = []  # What superbunny SHOULD use
+        superbunny_option_correct = lambda state: path_to_access_rule(
+            new_path_empty, entrance)(state)
+
+        possible_options_correct = [
+            lambda state: state.has('Moon Pearl', player),
+            superbunny_option_correct
+        ]
+        rule_func_correct = options_to_access_rule(possible_options_correct)
+        result_correct = analyze_rule(rule_func_correct)
+
+        print(f"\nKakariko Well EXPECTED pattern (empty path for superbunny):")
+        print(f"  Result: {result_correct}")
+
+        # Document the difference
+        print(f"\nROOT CAUSE ANALYSIS:")
+        print(f"  The ALttP code at line 1729 does: new_path = path + [entrance.access_rule]")
+        print(f"  This adds entrance.access_rule even for superbunny locations.")
+        print(f"  The analyzer correctly captures this, but the rule is overly restrictive.")
+        print(f"  The fix in alttp.py post_process_location_data overrides to True_")
+
 
 class TestAnalyzerDiagnostics:
     """Diagnostic tests to understand analyzer behavior."""
