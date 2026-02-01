@@ -1,6 +1,10 @@
 {
   "comment": "Per-game fuzzer option configurations. Use 'default_options' to specify options that should remain at their default values during fuzz testing (avoids invalid randomized configurations). Use 'disallow_options' to exclude specific option values. Format matches fuzz.py command-line arguments.",
   "game_options": {
+    "shapez.yaml": {
+      "default_options": "lock_belt_and_extractor",
+      "reason": "When lock_belt_and_extractor=true, include_achievements must also be true (constraint in generate_early). Keeping lock_belt_and_extractor at default (false) avoids this constraint."
+    },
     "Subnautica.yaml": {
       "default_options": "filler_items_distribution",
       "reason": "Empty filler_items_distribution ({}) causes IndexError in generate_early() when accessing weights_pair[1][-1] on empty list"
