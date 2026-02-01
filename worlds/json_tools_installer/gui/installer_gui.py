@@ -26,7 +26,7 @@ from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 
 from ..config import load_config, save_config, InstallerConfig, configure_export_settings, EXPORT_PRESETS
 from ..installer.version_detector import detect_ap_version, get_version_support_status
-from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity
+from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity, check_installer_compatibility
 from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
 from ..installer.patcher import apply_bundled_patches, revert_patches, get_patch_summary
 from ..installer.romless_patcher import apply_romless_patches, revert_romless_patches
@@ -651,6 +651,23 @@ For more information, see the README.md file."""
 
             if not check_connectivity():
                 self.show_message("Error", "Cannot reach GitHub. Check your internet connection.")
+                return
+
+            self.update_status(f"Checking installer compatibility...")
+            self.update_progress(7)
+
+            compat = check_installer_compatibility(source)
+            if not compat.compatible:
+                if compat.error:
+                    self.show_message("Error", compat.error)
+                else:
+                    error_msg = f"Installer version {compat.current_version} is too old.\n"
+                    error_msg += f"Minimum required: {compat.required_version}\n\n"
+                    if compat.message:
+                        error_msg += f"{compat.message}\n\n"
+                    if compat.download_url:
+                        error_msg += f"Download the latest installer from:\n{compat.download_url}"
+                    self.show_message("Installer Update Required", error_msg)
                 return
 
             self.update_status(f"Downloading from {source.repo}...")

@@ -4,14 +4,37 @@ Download manager for JSON Tools.
 Handles downloading archives from GitHub repositories.
 """
 
+import json
 import tempfile
 import urllib.request
 import urllib.error
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Optional, Callable, Tuple
 from dataclasses import dataclass
 
 from ..config import SourceConfig
+
+# Requirements file that specifies minimum installer version
+REQUIREMENTS_FILENAME = "json_tools_installer_requirements.json"
+
+
+@dataclass
+class InstallerRequirements:
+    """Requirements fetched from the repository."""
+    minimum_version: str
+    download_url: str
+    message: str
+
+
+@dataclass
+class CompatibilityResult:
+    """Result of an installer compatibility check."""
+    compatible: bool
+    current_version: str
+    required_version: Optional[str] = None
+    download_url: Optional[str] = None
+    message: Optional[str] = None
+    error: Optional[str] = None
 
 
 @dataclass
@@ -161,3 +184,131 @@ def check_connectivity() -> bool:
             return response.status == 200
     except Exception:
         return False
+
+
+def get_requirements_url(source: SourceConfig) -> str:
+    """
+    Get the URL for the installer requirements file.
+
+    Uses GitHub's raw content API to fetch the file directly.
+
+    Args:
+        source: Source configuration with repo and branch.
+
+    Returns:
+        URL to fetch the requirements JSON file.
+    """
+    return f"https://raw.githubusercontent.com/{source.repo}/{source.branch}/{REQUIREMENTS_FILENAME}"
+
+
+def fetch_installer_requirements(source: SourceConfig) -> Optional[InstallerRequirements]:
+    """
+    Fetch the installer requirements from the repository.
+
+    Args:
+        source: Source configuration with repo and branch.
+
+    Returns:
+        InstallerRequirements if successfully fetched, None otherwise.
+    """
+    url = get_requirements_url(source)
+
+    try:
+        request = urllib.request.Request(
+            url,
+            headers={"User-Agent": "Archipelago-JSON-Tools-Installer/1.0"}
+        )
+
+        with urllib.request.urlopen(request, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            return InstallerRequirements(
+                minimum_version=data.get("minimum_installer_version", "0.0.0"),
+                download_url=data.get("download_url", ""),
+                message=data.get("message", ""),
+            )
+
+    except Exception:
+        return None
+
+
+def parse_version(version_string: str) -> Tuple[int, ...]:
+    """
+    Parse a version string into a tuple of integers for comparison.
+
+    Args:
+        version_string: Version string like "1.0.0" or "1.2.3"
+
+    Returns:
+        Tuple of integers, e.g., (1, 0, 0)
+    """
+    try:
+        # Strip any leading 'v' and split on dots
+        clean = version_string.lstrip('v').strip()
+        parts = clean.split('.')
+        return tuple(int(p) for p in parts)
+    except (ValueError, AttributeError):
+        return (0, 0, 0)
+
+
+def get_installer_version() -> str:
+    """
+    Get the current installer version.
+
+    Returns:
+        Version string of the installed JSON Tools Installer.
+    """
+    try:
+        from .. import __version__
+        return __version__
+    except ImportError:
+        return "0.0.0"
+
+
+def check_installer_compatibility(source: SourceConfig) -> CompatibilityResult:
+    """
+    Check if the current installer is compatible with the repository.
+
+    Fetches the requirements file from the repository and compares
+    the minimum required version against the current installer version.
+
+    Args:
+        source: Source configuration with repo and branch.
+
+    Returns:
+        CompatibilityResult indicating whether installation can proceed.
+    """
+    current_version = get_installer_version()
+
+    # Fetch requirements from repository
+    requirements = fetch_installer_requirements(source)
+
+    if requirements is None:
+        # Requirements file not found or couldn't be fetched - abort
+        return CompatibilityResult(
+            compatible=False,
+            current_version=current_version,
+            error=(
+                f"Could not fetch installer requirements from repository.\n"
+                f"The file '{REQUIREMENTS_FILENAME}' must exist in the repository.\n"
+                f"URL attempted: {get_requirements_url(source)}"
+            ),
+        )
+
+    # Compare versions
+    current = parse_version(current_version)
+    required = parse_version(requirements.minimum_version)
+
+    if current >= required:
+        return CompatibilityResult(
+            compatible=True,
+            current_version=current_version,
+            required_version=requirements.minimum_version,
+        )
+    else:
+        return CompatibilityResult(
+            compatible=False,
+            current_version=current_version,
+            required_version=requirements.minimum_version,
+            download_url=requirements.download_url,
+            message=requirements.message,
+        )
