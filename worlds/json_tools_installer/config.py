@@ -67,6 +67,30 @@ class PatchInfo:
 
 
 @dataclass
+class ExportSettings:
+    """
+    Export settings used when host.yaml doesn't have these options.
+
+    These settings mirror the GeneralOptions settings from the fork's settings.py.
+    When running with monkey patching on vanilla Archipelago, these settings
+    serve as the configuration source since vanilla AP doesn't have these options.
+    """
+    save_rules_json: bool = False
+    rules_json_format: str = "rule_builder"  # "rule_builder", "ast", "both"
+    skip_preset_copy_if_rules_identical: bool = False
+    save_sphere_log: bool = False
+    verbose_sphere_log: bool = False
+    extend_sphere_log_to_all_locations: bool = False
+    log_fractional_sphere_details: bool = True
+    log_integer_sphere_details: bool = False
+    auto_collect_events: bool = False
+    filter_event_items: bool = False
+    update_frontend_presets: bool = False
+    skip_export_for_native_ut: bool = False
+    skip_export_from_list: bool = False
+
+
+@dataclass
 class InstallerConfig:
     """Main configuration for JSON Tools Installer."""
     stable_source: SourceConfig = field(
@@ -77,6 +101,7 @@ class InstallerConfig:
     )
     installation: InstallationInfo = field(default_factory=InstallationInfo)
     patches: PatchInfo = field(default_factory=PatchInfo)
+    export_settings: ExportSettings = field(default_factory=ExportSettings)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert config to dictionary for JSON serialization."""
@@ -100,6 +125,7 @@ class InstallerConfig:
                 "romless_applied": self.patches.romless_applied,
                 "romless_applied_at": self.patches.romless_applied_at,
             },
+            "export_settings": asdict(self.export_settings),
         }
 
     @classmethod
@@ -133,6 +159,23 @@ class InstallerConfig:
             applied_at=patches.get("applied_at"),
             romless_applied=patches.get("romless_applied", False),
             romless_applied_at=patches.get("romless_applied_at"),
+        )
+
+        export_settings = data.get("export_settings", {})
+        config.export_settings = ExportSettings(
+            save_rules_json=export_settings.get("save_rules_json", False),
+            rules_json_format=export_settings.get("rules_json_format", "rule_builder"),
+            skip_preset_copy_if_rules_identical=export_settings.get("skip_preset_copy_if_rules_identical", False),
+            save_sphere_log=export_settings.get("save_sphere_log", False),
+            verbose_sphere_log=export_settings.get("verbose_sphere_log", False),
+            extend_sphere_log_to_all_locations=export_settings.get("extend_sphere_log_to_all_locations", False),
+            log_fractional_sphere_details=export_settings.get("log_fractional_sphere_details", True),
+            log_integer_sphere_details=export_settings.get("log_integer_sphere_details", False),
+            auto_collect_events=export_settings.get("auto_collect_events", False),
+            filter_event_items=export_settings.get("filter_event_items", False),
+            update_frontend_presets=export_settings.get("update_frontend_presets", False),
+            skip_export_for_native_ut=export_settings.get("skip_export_for_native_ut", False),
+            skip_export_from_list=export_settings.get("skip_export_from_list", False),
         )
 
         return config
@@ -218,3 +261,86 @@ def clear_installation(config: InstallerConfig) -> None:
     config.installation = InstallationInfo()
     config.patches = PatchInfo()
     save_config(config)
+
+
+def get_export_setting(setting_name: str, default: Any = None) -> Any:
+    """
+    Get an export setting, checking host.yaml first then falling back to installer config.
+
+    This function provides a unified way to access export settings that works both
+    on the full fork (where settings are in host.yaml) and on vanilla Archipelago
+    with monkey patching (where settings come from the installer's config).
+
+    Args:
+        setting_name: The name of the setting (e.g., 'save_rules_json')
+        default: Default value if setting is not found in either location
+
+    Returns:
+        The setting value from host.yaml if available, otherwise from installer config,
+        or the default if neither has the setting.
+    """
+    # First, try to get from host.yaml's general_options
+    try:
+        from settings import get_settings
+        settings = get_settings()
+        if hasattr(settings, 'general_options'):
+            value = getattr(settings.general_options, setting_name, None)
+            if value is not None:
+                return value
+    except (ImportError, AttributeError):
+        pass
+
+    # Fall back to installer config
+    try:
+        config = load_config()
+        if hasattr(config.export_settings, setting_name):
+            return getattr(config.export_settings, setting_name)
+    except Exception:
+        pass
+
+    return default
+
+
+def get_all_export_settings() -> ExportSettings:
+    """
+    Get all export settings as an ExportSettings object.
+
+    This merges settings from host.yaml (if available) with fallback to installer config.
+    Settings from host.yaml take precedence.
+
+    Returns:
+        An ExportSettings object with values from the appropriate source.
+    """
+    # Start with installer config defaults
+    config = load_config()
+    result = ExportSettings(
+        save_rules_json=config.export_settings.save_rules_json,
+        rules_json_format=config.export_settings.rules_json_format,
+        skip_preset_copy_if_rules_identical=config.export_settings.skip_preset_copy_if_rules_identical,
+        save_sphere_log=config.export_settings.save_sphere_log,
+        verbose_sphere_log=config.export_settings.verbose_sphere_log,
+        extend_sphere_log_to_all_locations=config.export_settings.extend_sphere_log_to_all_locations,
+        log_fractional_sphere_details=config.export_settings.log_fractional_sphere_details,
+        log_integer_sphere_details=config.export_settings.log_integer_sphere_details,
+        auto_collect_events=config.export_settings.auto_collect_events,
+        filter_event_items=config.export_settings.filter_event_items,
+        update_frontend_presets=config.export_settings.update_frontend_presets,
+        skip_export_for_native_ut=config.export_settings.skip_export_for_native_ut,
+        skip_export_from_list=config.export_settings.skip_export_from_list,
+    )
+
+    # Try to override with host.yaml settings if available
+    try:
+        from settings import get_settings
+        settings = get_settings()
+        if hasattr(settings, 'general_options'):
+            general = settings.general_options
+            for field_name in ExportSettings.__dataclass_fields__:
+                if hasattr(general, field_name):
+                    value = getattr(general, field_name, None)
+                    if value is not None:
+                        setattr(result, field_name, value)
+    except (ImportError, AttributeError):
+        pass
+
+    return result
