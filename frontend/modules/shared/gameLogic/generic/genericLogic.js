@@ -183,6 +183,24 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if the player can afford shop items at a location.
+   * This is used by games like ALttP where shop items have rupee prices.
+   * Since we don't track rupees in the frontend, this always returns true
+   * (assuming players can always afford shop items).
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data
+   * @param {Object} location - Location object (or location name)
+   * @returns {boolean} Always true (shop items are always affordable)
+   */
+  shop_price_rules(snapshot, staticData, location) {
+    // We don't track rupees in the frontend, so assume all shop items are affordable.
+    // This matches how most trackers handle shops (ignore rupee requirements).
+    // Note: This fallback is used when the exported Python helper returns null
+    // (e.g., for shop_price_type == 0, which represents rupee prices).
+    return true;
+  },
+
+  /**
    * Get the item placed at a specific location
    * Used for self-locking item logic (allow_self_locking_items)
    * @param {Object} snapshot - Game state snapshot

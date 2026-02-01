@@ -568,12 +568,14 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             if (result && typeof result === 'object' && result.type) {
               result = evaluateRule(result, context, depth + 1, helperLocalScope);
             }
-            // If definition evaluation succeeded (not undefined), use that result
+            // If definition evaluation succeeded (not undefined or null), use that result
             // Otherwise, fall through to try JavaScript helpers as a fallback
-            if (result !== undefined) {
+            // Note: null is used by some helpers (e.g., shop_price_rules) to indicate
+            // a case they can't handle (like rupee prices), signaling to use JS fallback
+            if (result !== undefined && result !== null) {
               break;
             }
-            log('debug', `[evaluateRule] Helper definition for '${rule.name}' returned undefined, trying JavaScript fallback`);
+            // Definition returned undefined or null - fall through to try JavaScript helpers
           }
         } else {
           // No static data available for helper lookup
@@ -1225,9 +1227,11 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           result = evaluateRule(rule.if_true, context, depth + 1, localScope);
         } else {
           // Test is falsy - evaluate if_false branch
-          // Handle null if_false as true (no restriction - Python None means accessible)
+          // Preserve null as null - don't convert to true here
+          // For access rules, null means "accessible" but this conversion should happen
+          // at the caller level. For helper definitions, null means "fallback to JS"
           result = rule.if_false === null
-            ? true
+            ? null
             : evaluateRule(rule.if_false, context, depth + 1, localScope);
         }
         break;
