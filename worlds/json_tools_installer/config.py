@@ -339,6 +339,8 @@ def configure_export_settings(
     Returns:
         True if settings were configured successfully, False otherwise.
     """
+    import subprocess
+
     try:
         import yaml
     except ImportError:
@@ -356,14 +358,47 @@ def configure_export_settings(
 
     if host_yaml_path is None:
         if create_if_missing:
-            host_yaml_path = Path(user_path("host.yaml"))
-            # Create with minimal structure
-            data = {"general_options": {}}
+            # Try to create host.yaml using Launcher.py --update_settings
+            # This creates a properly structured host.yaml with all standard settings
+            try:
+                import sys
+                python_exe = sys.executable
+                # Find Launcher.py - it should be in the Archipelago root
+                launcher_locations = [
+                    Path.cwd() / "Launcher.py",
+                    Path(__file__).parent.parent.parent.parent / "Launcher.py",
+                ]
+                launcher_path = None
+                for loc in launcher_locations:
+                    if loc.exists():
+                        launcher_path = loc
+                        break
+
+                if launcher_path:
+                    result = subprocess.run(
+                        [python_exe, str(launcher_path), "--update_settings"],
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                    )
+                    if result.returncode == 0:
+                        # Re-check for host.yaml after creation
+                        host_yaml_path = get_host_yaml_path()
+            except (subprocess.TimeoutExpired, Exception) as e:
+                print(f"Warning: Failed to run Launcher.py --update_settings: {e}")
+
+            # If Launcher.py didn't create it, fall back to minimal creation
+            if host_yaml_path is None:
+                host_yaml_path = Path(user_path("host.yaml"))
+                data = {"general_options": {}}
         else:
             print("Warning: host.yaml not found, cannot configure export settings")
             return False
     else:
-        # Read existing file
+        data = None  # Will read from file below
+
+    # Read existing file if we haven't already set data
+    if data is None:
         try:
             with open(host_yaml_path, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
