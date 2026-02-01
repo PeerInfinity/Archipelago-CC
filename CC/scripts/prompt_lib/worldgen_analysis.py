@@ -742,7 +742,8 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
         seed_mode: 'fixed' or 'random' for both tests
 
     Returns:
-        List of dicts with game_name, template, ut_fuzz stats, spoiler_fuzz stats.
+        List of dicts with game_name, template, ut_fuzz stats, spoiler_fuzz stats,
+        and base_seed for reproduction.
     """
     # Load both test results
     ut_fuzz_data = load_ut_fuzz_test_results(project_root, ut_version=ut_version, seed_mode=seed_mode)
@@ -753,6 +754,10 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
 
     ut_results = ut_fuzz_data.get('results', {})
     spoiler_results = spoiler_fuzz_data.get('results', {})
+
+    # Get base_seed from spoiler fuzz metadata for reproduction
+    spoiler_metadata = spoiler_fuzz_data.get('metadata', {})
+    base_seed = spoiler_metadata.get('base_seed')  # None if random mode
 
     failures = []
 
@@ -786,11 +791,13 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
         spoiler_failure = spoiler_fuzz.get('test_failure', 0)
         spoiler_gen_failure = spoiler_fuzz.get('generation_failure', 0)
         spoiler_timeout = spoiler_fuzz.get('timeout', 0)
+        failing_seeds = spoiler_fuzz.get('failing_seeds', {})
 
         failures.append({
             'game_name': game_name,
             'template': template_name,
             'world_directory': world_info.get('world_directory'),
+            'base_seed': base_seed,  # For reproduction instructions
             'ut_fuzz': {
                 'total': ut_fuzz.get('total', 0),
                 'success': ut_fuzz.get('success', 0),
@@ -806,6 +813,7 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
                 'timeout': spoiler_timeout,
                 'success_rate': (spoiler_success / max(spoiler_total, 1)) * 100,
                 'errors': spoiler_fuzz.get('errors', []),
+                'failing_seeds': failing_seeds,  # Dict mapping failure type to list of seeds
             },
         })
 

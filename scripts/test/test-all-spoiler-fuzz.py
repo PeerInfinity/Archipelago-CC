@@ -668,10 +668,11 @@ def main():
         "metadata": {
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
-            "script_version": "1.0.0",
+            "script_version": "1.1.0",
             "test_type": "spoiler_fuzz",
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
+            "base_seed": args.seed,  # Store the actual seed value (None if random)
             "runs_per_game": args.runs,
             "generation_timeout": args.generation_timeout,
             "test_timeout": args.test_timeout,
@@ -742,6 +743,28 @@ def main():
                 max_item_dict_value=effective_max_item_dict_value
             )
 
+            # Build failing_seeds dict mapping failure type to list of seeds
+            failing_seeds = {
+                "generation_failure": [],
+                "test_failure": [],
+                "timeout": [],
+            }
+            for run in test_result.get("runs", []):
+                seed = run.get("seed")
+                if seed is None:
+                    continue
+                if run.get("ignored"):
+                    continue  # Don't track ignored runs (invalid option combinations)
+                if not run.get("generation_success"):
+                    failing_seeds["generation_failure"].append(seed)
+                elif not run.get("test_success"):
+                    # Check if it was a timeout
+                    error = run.get("error", "")
+                    if error and "timeout" in error.lower():
+                        failing_seeds["timeout"].append(seed)
+                    else:
+                        failing_seeds["test_failure"].append(seed)
+
             # Store result
             result_entry = {
                 "spoiler_fuzz": {
@@ -752,7 +775,8 @@ def main():
                     "ignored": test_result["ignored"],
                     "test_failure": test_result["test_failure"],
                     "timeout": test_result["timeout"],
-                    "errors": test_result["errors"][:10]  # Limit stored errors
+                    "errors": test_result["errors"][:10],  # Limit stored errors
+                    "failing_seeds": failing_seeds,  # Track which seeds failed
                 },
                 "world_info": {
                     "game_name": game_name,
