@@ -6,9 +6,7 @@ This document describes the GitHub Actions workflows used for testing and CI/CD 
 
 | Workflow | Trigger | Purpose | Results Branch |
 |----------|---------|---------|----------------|
-| [Test Templates](#test-templates) | Push/PR/Manual | Quick or full template testing | `test-results-update` |
-| [Test Spoilers Split](#test-spoilers-split) | Manual | Parallel seed/template tests | `test-results-update` |
-| [Test Individual](#test-individual) | Manual | Single test type for all templates | `test-results-update` |
+| [Test ALTTP Spoiler](#test-alttp-spoiler) | Push/PR/Manual | ALTTP spoiler and regression tests | N/A |
 | [Test All Sequential](#test-all-sequential) | Manual | Comprehensive sequential testing | `test-results-update` |
 | [Test Spoiler Fuzz](#test-spoiler-fuzz) | Manual | Fuzz testing for spoiler generation | `spoiler-fuzz-test` |
 | [Test UT Fuzz](#test-ut-fuzz) | Manual | Universal Tracker fuzz testing | `ut-fuzz-test` |
@@ -29,68 +27,17 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 ## Test Workflows
 
-### Test Templates
+### Test ALTTP Spoiler
 
 **File:** `test-templates.yml`
 
 **Triggers:** Push to main, Pull requests, Manual
 
-**Purpose:** Primary CI workflow for testing template changes.
+**Purpose:** CI workflow for testing ALTTP template changes. Runs on every PR/push that modifies templates or test scripts.
 
-**Inputs:**
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `test_suite` | choice | `quick` | `quick` (ALTTP only) or `full` (all tests) |
-
-**Quick Mode:** Tests ALTTP template with regression tests
-**Full Mode:** Runs 4 parallel test configurations:
-- Minimal spoilers
-- Full spoilers
-- Multiclient
-- Multiworld
-
----
-
-### Test Spoilers Split
-
-**File:** `test-spoilers-split.yml`
-
-**Triggers:** Manual only
-
-**Purpose:** Run parallelized seed or template tests.
-
-**Inputs:**
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `test_type` | choice | `seeds-minimal` | Test configuration to run |
-
-**Test Types:**
-- `seeds-minimal` - Seeds 1-10 with minimal spoilers
-- `seeds-full` - Seeds 1-10 with full spoilers
-- `templates-minimal` - All templates, minimal spoilers
-- `templates-full` - All templates, full spoilers
-- `multiclient` - Multiclient tests
-- `multiworld` - Multiworld tests
-
----
-
-### Test Individual
-
-**File:** `test-individual.yml`
-
-**Triggers:** Manual only
-
-**Purpose:** Run a single test type across all templates.
-
-**Inputs:**
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `test_type` | choice | `minimal-spoiler` | Which test to run |
-
-**Test Types:**
-- `minimal-spoiler` / `full-spoiler` - Spoiler tests
-- `minimal-spoiler-retest` / `full-spoiler-retest` - Retest failures
-- `multiclient` / `multiworld` - Network tests
+**Tests:**
+- ALTTP template generation and spoiler test
+- Regression tests
 
 ---
 
