@@ -17,7 +17,12 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB_BASE, MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .constants import (
+    MAX_RULE_SIZE_KB,
+    MAX_INTERIM_EXPORT_SIZE_MB_BASE, MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME,
+    MAX_FINAL_EXPORT_SIZE_MB_BASE, MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME,
+    SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+)
 from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
 
@@ -1433,6 +1438,12 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         # Get world object (needed for various operations below)
         world = multiworld.worlds[player] if player in multiworld.worlds else None
 
+        # Prioritize the start region (Menu or origin_region_name) to ensure it's exported
+        # before hitting size limits. This is critical because the world generator
+        # needs the start region to be present for the worldgen world to function.
+        start_region_name = getattr(world, 'origin_region_name', 'Menu') if world else 'Menu'
+        player_regions.sort(key=lambda r: (0 if r.name == start_region_name else 1, r.name))
+
         # Use provided location name to ID mapping, or create if not provided
         if location_name_to_id is None:
             location_name_to_id = {}
@@ -1861,9 +1872,9 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         serializable_data = make_serializable(regions_data)
                         current_size = len(json.dumps(serializable_data))
                         current_size_mb = current_size / (1024 * 1024)
-                        # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
+                        # Dynamic interim limit (higher than final due to Python object overhead)
                         num_players = getattr(multiworld, 'players', 1)
-                        max_size_mb = MAX_EXPORT_SIZE_MB_BASE + (MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+                        max_size_mb = MAX_INTERIM_EXPORT_SIZE_MB_BASE + (MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
                         if current_size_mb > max_size_mb:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
                                         f"({max_size_mb} MB) after processing region '{region_name}'. "
@@ -2558,18 +2569,18 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     def write_export_data(data, filepath):
         """
         Apply exclusions and write data to a JSON file.
-        
+
         Args:
             data: The data to write
             filepath: The output file path
-            
+
         Returns:
             Boolean indicating success
         """
         try:
             # Apply field exclusions
             filtered_data = remove_excluded_fields(data, EXCLUDED_FIELDS)
-            
+
             # Apply context-specific exclusions
             if CONTEXT_EXCLUDED_FIELDS:
                 filtered_data = process_field_exclusions(
@@ -2581,7 +2592,20 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Write to file
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(filtered_data, f, indent=2)
-            logger.info(f"Successfully wrote rules to {filepath}")
+
+            # Check final file size against limit
+            file_size_bytes = os.path.getsize(filepath)
+            file_size_mb = file_size_bytes / (1024 * 1024)
+            num_players = getattr(multiworld, 'players', 1)
+            max_final_size_mb = MAX_FINAL_EXPORT_SIZE_MB_BASE + (MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+
+            if file_size_mb > max_final_size_mb:
+                logger.error(f"Final export file size ({file_size_mb:.2f} MB) exceeds limit ({max_final_size_mb} MB): {filepath}")
+                # Don't delete the file - it may still be useful, but warn about it
+                logger.warning(f"Export file exceeds size limit but was written anyway. Consider reducing game complexity.")
+            else:
+                logger.info(f"Successfully wrote rules to {filepath} ({file_size_mb:.2f} MB)")
+
             return True
         except Exception as e:
             logger.error(f"Error writing rules export file {filepath}: {e}")
