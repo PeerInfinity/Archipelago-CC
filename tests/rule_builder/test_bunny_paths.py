@@ -458,5 +458,87 @@ class TestBunnyPathsOperators:
         assert isinstance(combined, Or)
 
 
+class TestBunnyPathsALttPLibrary:
+    """Tests for BunnyPaths with ALttP Library-specific cases.
+
+    The Library location in ALttP has a bunny rule that combines:
+    - Original rule: Pegasus Boots required
+    - Bunny options: Moon Pearl OR superbunny path (via entrance + Magic Mirror)
+
+    The correct structure should be:
+        Or(Moon Pearl, And(superbunny_path, Pegasus Boots))
+    NOT:
+        And(Or(Moon Pearl, superbunny_path), Pegasus Boots)
+
+    These tests verify BunnyPaths evaluation works correctly for this case.
+    """
+
+    def test_library_bunny_paths_exact_rule(self):
+        """Test the exact BunnyPaths rule generated for Library.
+
+        From ALttP fuzzer output, the rule should be:
+        BunnyPaths(path_options=[
+            {'type': 'direct', 'requires': ['Moon Pearl']},
+            {'type': 'path', 'requires': ['Pegasus Boots', 'Magic Mirror'],
+             'via_entrance': 'Bumper Cave (Bottom)', ...}
+        ])
+        """
+        rule = BunnyPaths(path_options=[
+            {'type': 'direct', 'requires': ['Moon Pearl']},
+            {'type': 'path', 'requires': ['Pegasus Boots', 'Magic Mirror'],
+             'via_entrance': 'Bumper Cave (Bottom)', 'via_region': 'Bumper Cave Entrance',
+             'connected_region': 'Library', 'is_superbunny': True}
+        ])
+
+        world = MockWorld(entrances={
+            'Bumper Cave (Bottom)': MockEntrance('Bumper Cave (Bottom)', 'Bumper Cave Entrance')
+        })
+
+        resolved = rule._instantiate(world)
+
+        # Test with Moon Pearl only (should pass via direct option)
+        state = MockState(items={'Moon Pearl': 1})
+        assert resolved._evaluate(state) is True
+
+    def test_library_direct_option_only(self):
+        """Test just the direct option to isolate evaluation."""
+        rule = BunnyPaths(path_options=[
+            {'type': 'direct', 'requires': ['Moon Pearl']}
+        ])
+
+        world = MockWorld()
+        resolved = rule._instantiate(world)
+
+        state = MockState(items={'Moon Pearl': 1})
+        assert resolved._evaluate(state) is True
+
+    def test_library_path_option_with_boots(self):
+        """Test path option requires both entrance and items."""
+        rule = BunnyPaths(path_options=[
+            {'type': 'direct', 'requires': ['Moon Pearl']},
+            {'type': 'path', 'requires': ['Pegasus Boots', 'Magic Mirror'],
+             'via_entrance': 'Bumper Cave (Bottom)'}
+        ])
+
+        world = MockWorld(entrances={
+            'Bumper Cave (Bottom)': MockEntrance('Bumper Cave (Bottom)', 'Bumper Cave Entrance')
+        })
+        resolved = rule._instantiate(world)
+
+        # Has boots and mirror but no entrance access - should fail
+        state = MockState(
+            items={'Pegasus Boots': 1, 'Magic Mirror': 1},
+            reachable_entrances=set()
+        )
+        assert resolved._evaluate(state) is False
+
+        # Has boots, mirror, AND entrance access - should pass
+        state = MockState(
+            items={'Pegasus Boots': 1, 'Magic Mirror': 1},
+            reachable_entrances={'Bumper Cave (Bottom)'}
+        )
+        assert resolved._evaluate(state) is True
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
