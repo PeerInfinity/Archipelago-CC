@@ -176,7 +176,7 @@ yaml.SafeDumper.ignore_aliases = lambda *args: True
 
 # Adapted from archipelago'd generate_yaml_templates
 # https://github.com/ArchipelagoMW/Archipelago/blob/f75a1ae1174fb467e5c5bd5568d7de3c806d5b1c/Options.py#L1504
-def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None):
+def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None, max_item_dict_value=None):
     """Generate a random YAML for the given world.
 
     Args:
@@ -184,6 +184,7 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
         meta: Dictionary of option overrides
         default_options: Set of option names to leave at their defaults instead of randomizing
         disallow_options: Dict mapping option names to sets of values to disallow
+        max_item_dict_value: Max value for OptionCounter items (e.g., start_inventory). Default 1000.
     """
     def dictify_range(option):
         data = {option.default: 50}
@@ -258,7 +259,7 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
             # Get disallowed values for this option (if any)
             disallowed = disallow_options.get(option_name, set())
             game_options[option_name] = sanitize(
-                get_random_value(option_name, option_value, disallowed)
+                get_random_value(option_name, option_value, disallowed, max_item_dict_value)
             )
 
     if "triggers" in game_meta:
@@ -281,16 +282,19 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     return res
 
 
-def get_random_value(name, option, disallowed=None):
+def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
     """Get a random value for the given option.
 
     Args:
         name: The option name
         option: The option class
         disallowed: Set of values to exclude from randomization
+        max_item_dict_value: Max value for OptionCounter items. Default 1000.
     """
     if disallowed is None:
         disallowed = set()
+    if max_item_dict_value is None:
+        max_item_dict_value = 1000
 
     if name == "item_links":
         # Let's not fuck with item links right now, I'm scared
@@ -326,7 +330,7 @@ def get_random_value(name, option, disallowed=None):
             k=random.randint(0, len(option.valid_keys))
         )
         min_val = option.min if option.min is not None else 0
-        max_val = option.max if option.max is not None else 1000
+        max_val = option.max if option.max is not None else max_item_dict_value
         return {key: random.randint(min_val, max_val) for key in selected_keys}
 
     if issubclass(option, OptionDict):

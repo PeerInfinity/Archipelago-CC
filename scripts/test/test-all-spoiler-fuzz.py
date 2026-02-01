@@ -97,14 +97,15 @@ def get_game_fuzzer_options(template_name: str) -> Dict[str, Optional[str]]:
         template_name: The template filename (e.g., 'Subnautica.yaml')
 
     Returns:
-        Dict with 'default_options' and 'disallow_options' keys (values may be None)
+        Dict with 'default_options', 'disallow_options', and 'max_item_dict_value' keys (values may be None)
     """
     game_options = load_game_fuzzer_options()
     config = game_options.get(template_name, {})
 
     return {
         'default_options': config.get('default_options'),
-        'disallow_options': config.get('disallow_options')
+        'disallow_options': config.get('disallow_options'),
+        'max_item_dict_value': config.get('max_item_dict_value')
     }
 
 
@@ -262,6 +263,7 @@ def run_fuzz_test(
     headed: bool = False,
     default_options: Optional[set] = None,
     disallow_options: Optional[Dict] = None,
+    max_item_dict_value: Optional[int] = None,
     verbose: bool = True
 ) -> Dict:
     """
@@ -312,7 +314,8 @@ def run_fuzz_test(
                 world_dir,
                 meta={},
                 default_options=default_options,
-                disallow_options=disallow_options
+                disallow_options=disallow_options,
+                max_item_dict_value=max_item_dict_value
             )
         except Exception as e:
             run_result["error"] = f"YAML generation failed: {e}"
@@ -721,6 +724,9 @@ def main():
                     else:
                         effective_disallow_options[option_name] = values
 
+            # Get max_item_dict_value (caps start_inventory item counts to prevent huge rules.json)
+            effective_max_item_dict_value = game_opts['max_item_dict_value']
+
             # Run the fuzz tests
             test_result = run_fuzz_test(
                 world_dir=world_dir,
@@ -732,7 +738,8 @@ def main():
                 seed=args.seed,
                 headed=args.headed,
                 default_options=effective_default_options,
-                disallow_options=effective_disallow_options
+                disallow_options=effective_disallow_options,
+                max_item_dict_value=effective_max_item_dict_value
             )
 
             # Store result
