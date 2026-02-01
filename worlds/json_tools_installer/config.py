@@ -263,84 +263,150 @@ def clear_installation(config: InstallerConfig) -> None:
     save_config(config)
 
 
+# Export settings presets for host.yaml configuration
+EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
+    "normal": {
+        "skip_required_files": False,
+        "save_rules_json": False,
+        "rules_json_format": "rule_builder",
+        "skip_preset_copy_if_rules_identical": False,
+        "save_sphere_log": False,
+        "verbose_sphere_log": False,
+        "extend_sphere_log_to_all_locations": False,
+        "log_fractional_sphere_details": True,
+        "log_integer_sphere_details": False,
+        "auto_collect_events": False,
+        "filter_event_items": False,
+        "update_frontend_presets": False,
+        "skip_export_for_native_ut": False,
+        "skip_export_from_list": False,
+    },
+    "minimal-spoilers": {
+        "skip_required_files": True,
+        "save_rules_json": True,
+        "rules_json_format": "rule_builder",
+        "skip_preset_copy_if_rules_identical": False,
+        "save_sphere_log": True,
+        "verbose_sphere_log": False,
+        "extend_sphere_log_to_all_locations": False,
+        "log_fractional_sphere_details": True,
+        "log_integer_sphere_details": False,
+        "auto_collect_events": False,
+        "filter_event_items": False,
+        "update_frontend_presets": True,
+        "skip_export_for_native_ut": False,
+        "skip_export_from_list": False,
+    },
+}
+
+
+def get_host_yaml_path() -> Optional[Path]:
+    """
+    Get the path to host.yaml.
+
+    Returns:
+        Path to host.yaml if found, None otherwise.
+    """
+    # Check common locations
+    locations = [
+        Path.cwd() / "host.yaml",
+        Path(user_path("host.yaml")),
+        Path.cwd() / "options.yaml",
+        Path(user_path("options.yaml")),
+    ]
+
+    for loc in locations:
+        if loc.exists():
+            return loc
+
+    return None
+
+
+def configure_export_settings(
+    preset: str = "normal",
+    create_if_missing: bool = True,
+) -> bool:
+    """
+    Configure export settings in host.yaml.
+
+    This adds the export-related settings to host.yaml's general_options section.
+    These settings are needed for JSON export and sphere logging to work.
+
+    Args:
+        preset: Which preset to use ("normal" or "minimal-spoilers").
+        create_if_missing: If True, create host.yaml if it doesn't exist.
+
+    Returns:
+        True if settings were configured successfully, False otherwise.
+    """
+    try:
+        import yaml
+    except ImportError:
+        print("Warning: PyYAML not available, cannot configure host.yaml")
+        return False
+
+    if preset not in EXPORT_PRESETS:
+        print(f"Warning: Unknown preset '{preset}', using 'normal'")
+        preset = "normal"
+
+    settings = EXPORT_PRESETS[preset]
+
+    # Find or create host.yaml
+    host_yaml_path = get_host_yaml_path()
+
+    if host_yaml_path is None:
+        if create_if_missing:
+            host_yaml_path = Path(user_path("host.yaml"))
+            # Create with minimal structure
+            data = {"general_options": {}}
+        else:
+            print("Warning: host.yaml not found, cannot configure export settings")
+            return False
+    else:
+        # Read existing file
+        try:
+            with open(host_yaml_path, "r", encoding="utf-8") as f:
+                data = yaml.safe_load(f) or {}
+        except Exception as e:
+            print(f"Warning: Failed to read host.yaml: {e}")
+            return False
+
+    # Ensure general_options section exists
+    if "general_options" not in data:
+        data["general_options"] = {}
+
+    # Add/update export settings
+    for key, value in settings.items():
+        data["general_options"][key] = value
+
+    # Write back to file
+    try:
+        host_yaml_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(host_yaml_path, "w", encoding="utf-8") as f:
+            yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+        return True
+    except Exception as e:
+        print(f"Warning: Failed to write host.yaml: {e}")
+        return False
+
+
 def get_export_setting(setting_name: str, default: Any = None) -> Any:
     """
-    Get an export setting, checking host.yaml first then falling back to installer config.
-
-    This function provides a unified way to access export settings that works both
-    on the full fork (where settings are in host.yaml) and on vanilla Archipelago
-    with monkey patching (where settings come from the installer's config).
+    Get an export setting from host.yaml.
 
     Args:
         setting_name: The name of the setting (e.g., 'save_rules_json')
-        default: Default value if setting is not found in either location
+        default: Default value if setting is not found
 
     Returns:
-        The setting value from host.yaml if available, otherwise from installer config,
-        or the default if neither has the setting.
+        The setting value from host.yaml, or the default if not found.
     """
-    # First, try to get from host.yaml's general_options
     try:
         from settings import get_settings
         settings = get_settings()
         if hasattr(settings, 'general_options'):
-            value = getattr(settings.general_options, setting_name, None)
-            if value is not None:
-                return value
+            return getattr(settings.general_options, setting_name, default)
     except (ImportError, AttributeError):
-        pass
-
-    # Fall back to installer config
-    try:
-        config = load_config()
-        if hasattr(config.export_settings, setting_name):
-            return getattr(config.export_settings, setting_name)
-    except Exception:
         pass
 
     return default
-
-
-def get_all_export_settings() -> ExportSettings:
-    """
-    Get all export settings as an ExportSettings object.
-
-    This merges settings from host.yaml (if available) with fallback to installer config.
-    Settings from host.yaml take precedence.
-
-    Returns:
-        An ExportSettings object with values from the appropriate source.
-    """
-    # Start with installer config defaults
-    config = load_config()
-    result = ExportSettings(
-        save_rules_json=config.export_settings.save_rules_json,
-        rules_json_format=config.export_settings.rules_json_format,
-        skip_preset_copy_if_rules_identical=config.export_settings.skip_preset_copy_if_rules_identical,
-        save_sphere_log=config.export_settings.save_sphere_log,
-        verbose_sphere_log=config.export_settings.verbose_sphere_log,
-        extend_sphere_log_to_all_locations=config.export_settings.extend_sphere_log_to_all_locations,
-        log_fractional_sphere_details=config.export_settings.log_fractional_sphere_details,
-        log_integer_sphere_details=config.export_settings.log_integer_sphere_details,
-        auto_collect_events=config.export_settings.auto_collect_events,
-        filter_event_items=config.export_settings.filter_event_items,
-        update_frontend_presets=config.export_settings.update_frontend_presets,
-        skip_export_for_native_ut=config.export_settings.skip_export_for_native_ut,
-        skip_export_from_list=config.export_settings.skip_export_from_list,
-    )
-
-    # Try to override with host.yaml settings if available
-    try:
-        from settings import get_settings
-        settings = get_settings()
-        if hasattr(settings, 'general_options'):
-            general = settings.general_options
-            for field_name in ExportSettings.__dataclass_fields__:
-                if hasattr(general, field_name):
-                    value = getattr(general, field_name, None)
-                    if value is not None:
-                        setattr(result, field_name, value)
-    except (ImportError, AttributeError):
-        pass
-
-    return result
