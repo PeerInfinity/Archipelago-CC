@@ -484,8 +484,9 @@ def main():
                 print(f"Spoiler Fuzz: {spoiler_fuzz_info['success']}/{spoiler_fuzz_info['total']} passed ({spoiler_fuzz_info['success_rate']:.1f}%) ❌")
                 print('='*60)
 
+            base_seed = failure.get('base_seed')  # For reproduction instructions
             prompt = generate_spoiler_fuzz_failure_prompt(
-                game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, args.seed
+                game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, args.seed, base_seed
             )
 
             if args.promptfile:

@@ -1188,7 +1188,7 @@ Document your findings so we can either:
 """
 
 
-def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, seed=1):
+def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, seed=1, base_seed=None):
     """Generate a prompt for debugging spoiler fuzz failures on games that pass UT fuzz.
 
     These failures occur when:
@@ -1198,6 +1198,16 @@ def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut
     This indicates that there's likely a rule type that the world generator exports
     but the JavaScript frontend doesn't support. The problem is specifically in the
     frontend ruleEngine, not in the Python exporter or tracker.
+
+    Args:
+        game_name: Display name of the game
+        template_file: Template YAML filename
+        world_dir: World directory name
+        ut_fuzz_info: Dict with UT fuzz test stats
+        spoiler_fuzz_info: Dict with spoiler fuzz test stats including failing_seeds
+        world_mapping: World mapping dict (unused but kept for API consistency)
+        seed: Default seed for single-seed test commands
+        base_seed: The base seed used for the fuzz test (None if random mode)
     """
     setup_doc = "CC/cloud-setup.md"
     fuzz_doc = "CC/docs/fuzzer-testing.md"
@@ -1215,6 +1225,7 @@ def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut
     spoiler_timeout = spoiler_fuzz_info.get('timeout', 0)
     spoiler_success_rate = spoiler_fuzz_info.get('success_rate', 0)
     spoiler_errors = spoiler_fuzz_info.get('errors', [])
+    failing_seeds = spoiler_fuzz_info.get('failing_seeds', {})
 
     # Format error list
     error_list_text = ""
@@ -1224,6 +1235,74 @@ def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut
             unique_errors[err] = unique_errors.get(err, 0) + 1
         for err, count in sorted(unique_errors.items(), key=lambda x: -x[1]):
             error_list_text += f"  - {err}: {count} occurrence(s)\n"
+
+    # Format failing seeds by failure type
+    failing_seeds_text = ""
+    for failure_type in ['test_failure', 'generation_failure', 'timeout']:
+        seeds = failing_seeds.get(failure_type, [])
+        if seeds:
+            seeds_preview = ', '.join(str(s) for s in seeds[:10])
+            if len(seeds) > 10:
+                seeds_preview += f', ... ({len(seeds)} total)'
+            failing_seeds_text += f"  - {failure_type}: seeds [{seeds_preview}]\n"
+
+    # Build reproduction instructions
+    if base_seed is not None:
+        # Find the first failing seed for reproduction example
+        first_failing = None
+        for failure_type in ['test_failure', 'generation_failure', 'timeout']:
+            seeds = failing_seeds.get(failure_type, [])
+            if seeds:
+                first_failing = min(seeds)
+                break
+
+        if first_failing is not None:
+            repro_example = f"""
+## Reproducing a Specific Failure
+
+The test used `--seed {base_seed}` with multiple runs. Each run `i` (0-indexed) uses `seed + i` as its random seed.
+
+**Failing seeds by failure type:**
+{failing_seeds_text}
+To reproduce a specific failing seed (e.g., seed {first_failing}):
+
+```bash
+source .venv/bin/activate
+
+# Reproduce the exact failure
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --seed {first_failing} --runs 1
+```
+
+This will:
+1. Generate a random YAML using `random.seed({first_failing})`
+2. Run seed generation with seed {first_failing}
+3. Run the spoiler test against the generated rules
+"""
+        else:
+            repro_example = """
+## Reproducing Failures
+
+No specific failing seeds were recorded. Run the test again to identify failures:
+
+```bash
+source .venv/bin/activate
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --seed 1
+```
+""".format(template_file=template_file)
+    else:
+        repro_example = f"""
+## Reproducing Failures
+
+**Note**: The original test used random seeds, so exact reproduction is not possible.
+Run the test again with a fixed seed to get reproducible failures:
+
+```bash
+source .venv/bin/activate
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --seed 1
+```
+
+Once you have failing seeds with a fixed base seed, you can reproduce specific failures.
+"""
 
     return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
 
@@ -1267,19 +1346,10 @@ that the world generator produces.
 
 **Error messages:**
 {error_list_text or "  (No specific error messages recorded)"}
-
+{repro_example}
 ## Investigation Steps
 
-### 1. Reproduce a failing configuration
-
-First, run the spoiler fuzz test to find a failing seed:
-
-```bash
-source .venv/bin/activate
-
-# Run spoiler fuzz test for this game
-python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10
-```
+### 1. After reproducing a failing configuration
 
 ### 2. Identify the failing rule type
 
