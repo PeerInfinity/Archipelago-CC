@@ -40,8 +40,13 @@ MAX_RULE_SIZE_KB = 100
 # Checked periodically during region processing.
 # The effective limit is: BASE + (EXTRA_PER_GAME * (num_players - 1))
 # This allows larger exports for multiworld while still catching loops.
-MAX_EXPORT_SIZE_MB_BASE = 10
-MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
+# Note: The interim size check can measure much larger than final output due to
+# Python object string representations being larger than final JSON. For example,
+# a 658 KB final file may measure as 12.9 MB during processing. The limit was
+# increased from 10 MB to 20 MB to accommodate complex games like LADX that have
+# many regions (377+) with detailed rules.
+MAX_EXPORT_SIZE_MB_BASE = 20
+MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME = 2
 
 # =============================================================================
 # Sorting Configuration
