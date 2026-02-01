@@ -157,11 +157,10 @@ def _install_sphere_logging_hook() -> bool:
         @functools.wraps(original_create_playthrough)
         def hooked_create_playthrough(self, create_paths: bool = True):
             """Wrapped create_playthrough that logs sphere information."""
-            # Check if sphere logging is enabled
+            # Check if sphere logging is enabled (with fallback to installer config)
             try:
-                from settings import get_settings
-                settings = get_settings()
-                if getattr(settings.general_options, 'save_sphere_log', False):
+                from ..config import get_export_setting
+                if get_export_setting('save_sphere_log', False):
                     return _create_playthrough_with_logging(
                         self, create_paths, original_create_playthrough
                     )
@@ -192,10 +191,9 @@ def _post_generation_export():
     if it's available.
     """
     try:
-        from settings import get_settings
-        settings = get_settings()
+        from ..config import get_export_setting
 
-        if not getattr(settings.general_options, 'save_rules_json', False):
+        if not get_export_setting('save_rules_json', False):
             return
 
         # Try to import and call the exporter

@@ -55,7 +55,7 @@ A: It uses a search algorithm to find all possible sequences of region connectio
 A: It depends on what you want to do:
 
 - **Just want to use the tracker with your existing Archipelago installation?**
-  Install the **[JSON Tools Installer APWorld](../../../worlds/json_tools_installer/README.md)**. Download [`json_tools_installer.apworld`](../../../apworlds/json_tools_installer.apworld) and place it in your Archipelago `worlds/` directory. After restarting Archipelago, new components appear in the Launcher for installing and managing the JSON Tools. This adds JSON export to your existing installation without needing to clone anything - generate games normally and the `rules.json` files will be created automatically.
+  Install the **[JSON Tools Installer APWorld](../../../worlds/json_tools_installer/README.md)**. Download [`json_tools_installer.apworld`](../../../apworlds/json_tools_installer.apworld) and place it in your Archipelago `worlds/` directory. After restarting Archipelago, new components appear in the Launcher for installing and managing the JSON Tools. The installer automatically configures your `host.yaml` with the necessary export settings - choose the "Minimal spoilers" preset during installation to enable JSON export. This adds JSON export to your existing installation without needing to clone anything - generate games normally and the `rules.json` files will be created automatically.
 
 - **Want to run a local development setup from source?**
   Clone **[PeerInfinity/Archipelago](https://github.com/PeerInfinity/Archipelago)** (JSONExport branch). This is a clean snapshot that's periodically updated. Recommended for most users who need the full source code.
