@@ -550,10 +550,12 @@ class CallVisitorMixin:
                          self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                          return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
-                     # Check if 'state' is passed as an argument (directly or indirectly)
+                     # Check if 'state' or 'item' is passed as an argument (directly or indirectly)
+                     # Access rules use 'state', item rules use 'item' (or 'i')
                      has_state_arg = any(references_state(arg) for arg in node.args)
-                     # Attempt recursion if state arg is present
-                     if has_state_arg:
+                     has_item_arg = any(isinstance(arg, ast.Name) and arg.id in ('item', 'i') for arg in node.args)
+                     # Attempt recursion if state or item arg is present
+                     if has_state_arg or has_item_arg:
                           # Import analyze_rule locally to avoid forward reference issues
                           from ..analysis import analyze_rule
                           # actual_func and closure_func_name already set above
@@ -1404,9 +1406,10 @@ class CallVisitorMixin:
             # - 'path_to_access_rule': Used by bunny rule generation to capture path traversal rules
             closure_var_blacklist = {'old_rule', 'path_to_access_rule'}
             if func_name in closure_var_blacklist:
+                target_name = getattr(self, 'rule_target_name', None) or 'unknown'
                 print(
-                    f"LOSSY FALLBACK: Closure variable '{func_name}' could not be analyzed, "
-                    f"using True_ (always accessible) as fallback",
+                    f"LOSSY FALLBACK: Closure variable '{func_name}' could not be analyzed "
+                    f"for target '{target_name}', using True_ (always accessible) as fallback",
                     file=sys.stderr
                 )
                 return {'rule': 'True_'}
