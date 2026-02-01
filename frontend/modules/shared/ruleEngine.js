@@ -3819,7 +3819,30 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           for (const item of iteratorValue) {
             // Create new localScope with the target variable bound
             const iterationScope = localScope ? { ...localScope } : {};
-            if (targetName) {
+
+            // Handle tuple unpacking (e.g., for key, value in dict.items())
+            const target = comp.target;
+            if (target && target.type === 'tuple' && target.elements && Array.isArray(target.elements)) {
+              // Value should be an array [key, value] for dict items
+              if (Array.isArray(item)) {
+                target.elements.forEach((element, index) => {
+                  if (element.type === 'name' && element.name) {
+                    iterationScope[element.name] = item[index];
+                  }
+                });
+              }
+            }
+            // Handle list type (alternative format for tuple unpacking)
+            else if (target && target.type === 'list' && Array.isArray(target.value) && Array.isArray(item)) {
+              for (let i = 0; i < target.value.length && i < item.length; i++) {
+                const targetElem = target.value[i];
+                if (targetElem && targetElem.type === 'name' && targetElem.name) {
+                  iterationScope[targetElem.name] = item[i];
+                }
+              }
+            }
+            // Handle simple name binding
+            else if (targetName) {
               iterationScope[targetName] = item;
             }
 
