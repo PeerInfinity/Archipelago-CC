@@ -772,63 +772,131 @@ class Marioland2GameExportHandler(BaseGameExportHandler):
         }
 
     def _build_tree_zone_4_coins_helper(self) -> Dict[str, Any]:
-        """Build tree_zone_4_coins helper - simplified."""
+        """
+        Build tree_zone_4_coins helper matching the original logic.
+
+        Original logic calculates reachable_coins_from_start and reachable_coins_from_bell
+        separately, then returns coins <= max(start, bell).
+
+        Bell path logic:
+        - If pipe_down AND (auto_scroll OR NOT pipe_left): +10 (final_room only)
+        - elif pipe_left AND NOT auto_scroll:
+            - If pipe_down: +31, then if pipe_right: +18, then if pipe_up: +25
+            - else: +18 (just entryway + hall)
+        """
+        # Helper functions to create pipe checks
+        def has_pipe_up():
+            return {'type': 'state_method', 'method': 'has_any',
+                    'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]}
+
+        def has_pipe_down():
+            return {'type': 'state_method', 'method': 'has_any',
+                    'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]}
+
+        def has_pipe_left():
+            return {'type': 'state_method', 'method': 'has_any',
+                    'args': [{'type': 'constant', 'value': ['Pipe Traversal - Left', 'Pipe Traversal']}]}
+
+        def has_pipe_right():
+            return {'type': 'state_method', 'method': 'has_any',
+                    'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]}
+
         return {
             'params': ['coins'],
             'body': {
                 'type': 'block',
                 'statements': [
+                    # auto_scroll = is_auto_scroll("Tree Zone 4")
                     {'type': 'assign', 'name': 'auto_scroll', 'value': {
                         'type': 'helper', 'name': 'is_auto_scroll',
                         'args': [{'type': 'constant', 'value': 'Tree Zone 4'}]
                     }},
-                    {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'constant', 'value': 0}},
-                    {'type': 'if_statement', 'test': {
-                        'type': 'state_method', 'method': 'has_any',
-                        'args': [{'type': 'constant', 'value': ['Pipe Traversal - Up', 'Pipe Traversal']}]
-                    }, 'body': [
-                        {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                    # reachable_coins_from_start = 0
+                    {'type': 'assign', 'name': 'reachable_coins_from_start', 'value': {'type': 'constant', 'value': 0}},
+                    # reachable_coins_from_bell = 0
+                    {'type': 'assign', 'name': 'reachable_coins_from_bell', 'value': {'type': 'constant', 'value': 0}},
+
+                    # Start path: if has_pipe_up
+                    {'type': 'if_statement', 'test': has_pipe_up(), 'body': [
+                        # reachable_coins_from_start += 14 (entryway)
+                        {'type': 'aug_assign', 'target': 'reachable_coins_from_start', 'op': '+',
                          'value': {'type': 'constant', 'value': 14}},
-                        {'type': 'if_statement', 'test': {
-                            'type': 'state_method', 'method': 'has_any',
-                            'args': [{'type': 'constant', 'value': ['Pipe Traversal - Right', 'Pipe Traversal']}]
-                        }, 'body': [
-                            {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                        {'type': 'if_statement', 'test': has_pipe_right(), 'body': [
+                            # reachable_coins_from_start += 4 (hall)
+                            {'type': 'aug_assign', 'target': 'reachable_coins_from_start', 'op': '+',
                              'value': {'type': 'constant', 'value': 4}},
-                            {'type': 'if_statement', 'test': {
-                                'type': 'state_method', 'method': 'has_any',
-                                'args': [{'type': 'constant', 'value': ['Pipe Traversal - Down', 'Pipe Traversal']}]
-                            }, 'body': [
+                            {'type': 'if_statement', 'test': has_pipe_down(), 'body': [
                                 {'type': 'if_statement', 'test': {'type': 'name', 'name': 'auto_scroll'},
                                  'body': [
-                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                    # +12 (downstairs_with_auto_scroll)
+                                    {'type': 'aug_assign', 'target': 'reachable_coins_from_start', 'op': '+',
                                      'value': {'type': 'constant', 'value': 12}}
                                 ], 'orelse': [
-                                    {'type': 'aug_assign', 'target': 'reachable_coins', 'op': '+',
+                                    # +56 (final_room + first_trip_downstairs + second_trip_downstairs = 10+31+15)
+                                    {'type': 'aug_assign', 'target': 'reachable_coins_from_start', 'op': '+',
                                      'value': {'type': 'constant', 'value': 56}}
                                 ]}
                             ]}
                         ]}
                     ]},
+
+                    # Bell path: if has Tree Zone 4 Midway Bell
                     {'type': 'if_statement', 'test': {'type': 'item_check', 'item': 'Tree Zone 4 Midway Bell'},
                      'body': [
-                        {'type': 'assign', 'name': 'bell_coins', 'value': {'type': 'constant', 'value': 10}},
+                        # if has_pipe_down AND (auto_scroll OR NOT has_pipe_left)
                         {'type': 'if_statement', 'test': {
-                            'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}
+                            'type': 'and', 'conditions': [
+                                has_pipe_down(),
+                                {'type': 'or', 'conditions': [
+                                    {'type': 'name', 'name': 'auto_scroll'},
+                                    {'type': 'not', 'condition': has_pipe_left()}
+                                ]}
+                            ]
                         }, 'body': [
-                            {'type': 'aug_assign', 'target': 'bell_coins', 'op': '+',
-                             'value': {'type': 'constant', 'value': 46}}
-                        ]},
-                        {'type': 'if_statement', 'test': {
-                            'type': 'compare', 'left': {'type': 'name', 'name': 'bell_coins'},
-                            'op': '>', 'right': {'type': 'name', 'name': 'reachable_coins'}
-                        }, 'body': [
-                            {'type': 'assign', 'name': 'reachable_coins', 'value': {'type': 'name', 'name': 'bell_coins'}}
+                            # reachable_coins_from_bell += 10 (final_room)
+                            {'type': 'aug_assign', 'target': 'reachable_coins_from_bell', 'op': '+',
+                             'value': {'type': 'constant', 'value': 10}}
+                        ], 'orelse': [
+                            # elif has_pipe_left AND NOT auto_scroll
+                            {'type': 'if_statement', 'test': {
+                                'type': 'and', 'conditions': [
+                                    has_pipe_left(),
+                                    {'type': 'not', 'condition': {'type': 'name', 'name': 'auto_scroll'}}
+                                ]
+                            }, 'body': [
+                                {'type': 'if_statement', 'test': has_pipe_down(), 'body': [
+                                    # reachable_coins_from_bell += 31 (first_trip_downstairs)
+                                    {'type': 'aug_assign', 'target': 'reachable_coins_from_bell', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 31}},
+                                    {'type': 'if_statement', 'test': has_pipe_right(), 'body': [
+                                        # reachable_coins_from_bell += 18 (entryway + hall)
+                                        {'type': 'aug_assign', 'target': 'reachable_coins_from_bell', 'op': '+',
+                                         'value': {'type': 'constant', 'value': 18}},
+                                        {'type': 'if_statement', 'test': has_pipe_up(), 'body': [
+                                            # reachable_coins_from_bell += 25 (second_trip_downstairs + final_room)
+                                            {'type': 'aug_assign', 'target': 'reachable_coins_from_bell', 'op': '+',
+                                             'value': {'type': 'constant', 'value': 25}}
+                                        ]}
+                                    ]}
+                                ], 'orelse': [
+                                    # reachable_coins_from_bell += 18 (entryway + hall)
+                                    {'type': 'aug_assign', 'target': 'reachable_coins_from_bell', 'op': '+',
+                                     'value': {'type': 'constant', 'value': 18}}
+                                ]}
+                            ]}
                         ]}
                     ]},
+
+                    # return coins <= max(reachable_coins_from_start, reachable_coins_from_bell)
                     {'type': 'return', 'value': {
                         'type': 'compare', 'left': {'type': 'name', 'name': 'coins'},
-                        'op': '<=', 'right': {'type': 'name', 'name': 'reachable_coins'}
+                        'op': '<=', 'right': {
+                            'type': 'call', 'func': 'max',
+                            'args': [
+                                {'type': 'name', 'name': 'reachable_coins_from_start'},
+                                {'type': 'name', 'name': 'reachable_coins_from_bell'}
+                            ]
+                        }
                     }}
                 ]
             }
