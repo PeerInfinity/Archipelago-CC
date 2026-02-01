@@ -2,15 +2,15 @@
 
 This report shows when each test result document was generated, how fresh the underlying data is, and how to regenerate each document.
 
-**Report Generated:** 2026-02-01 07:41:07
+**Report Generated:** 2026-02-01 07:49:32
 
 ## Summary
 
 - **Total Documents:** 36
 - **With Date Info:** 36
 - 🟢 **Fresh (0-1 days):** 10
-- 🟡 **Recent (2-7 days):** 12
-- 🟠 **Aging (8-30 days):** 14
+- 🟡 **Recent (2-7 days):** 11
+- 🟠 **Aging (8-30 days):** 15
 - 🔴 **Stale (>30 days):** 0
 
 ## Documentation Sync Status
@@ -22,6 +22,7 @@ Status of documentation coverage across the codebase:
 | Rule Types Documentation | 92.1% (116/126) | 🟡 10 gaps | `python scripts/docs/sync-rule-docs.py` |
 | Rule Types Test Coverage | 52.3% (56/107) | 🟠 51 gaps | `python scripts/docs/sync-rule-tests.py` |
 | Script Documentation | 43.4% (33/76) | 🟠 43 gaps | `python scripts/docs/sync-script-docs.py` |
+| Document Reachability | 69.6% (133/191) | 🟠 63 orphans | `python scripts/docs/find_orphaned_docs.py` |
 
 ## Document Freshness
 
@@ -29,7 +30,7 @@ Status of documentation coverage across the codebase:
 |--------|----------|-------------|----------|----------|---------------|
 | 🟠 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | 2026-01-24 05:05 | 8 days | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` |
 | 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-01-31 01:30 | 1 day | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
-| 🟡 | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-01-24 07:47 | 7 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --apworld -p` |
+| 🟠 | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-01-24 07:47 | 8 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --apworld -p` |
 | 🟠 | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-01-08 06:08 | 24 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --worldgen -p` |
 | 🟢 | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-01-31 04:22 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient -p` |
 | 🟡 | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-01-24 09:07 | 7 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --apworld -p` |

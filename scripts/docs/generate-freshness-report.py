@@ -364,6 +364,7 @@ def run_sync_scripts() -> Dict[str, Dict]:
         ('Rule Types Documentation', 'scripts/docs/sync-rule-docs.py'),
         ('Rule Types Test Coverage', 'scripts/docs/sync-rule-tests.py'),
         ('Script Documentation', 'scripts/docs/sync-script-docs.py'),
+        ('Document Reachability', 'scripts/docs/find_orphaned_docs.py'),
     ]
 
     for name, script_path in sync_scripts:
@@ -495,11 +496,18 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
                 summary = data.get('summary', data)
 
                 # Get counts - different scripts use different field names
-                undoc = summary.get('undocumented_count', summary.get('untested_count', 0))
-                total = summary.get('total_implemented', summary.get('total_scripts',
-                        summary.get('implemented_count', 0)))
-                # Some scripts provide the documented/tested count directly
-                documented = summary.get('documented_count', summary.get('tested_count', total - undoc))
+                # orphaned_count is for find_orphaned_docs.py
+                undoc = summary.get('undocumented_count',
+                        summary.get('untested_count',
+                        summary.get('orphaned_count', 0)))
+                total = summary.get('total_implemented',
+                        summary.get('total_scripts',
+                        summary.get('total_documents',
+                        summary.get('implemented_count', 0))))
+                # Some scripts provide the documented/tested/reachable count directly
+                documented = summary.get('documented_count',
+                             summary.get('tested_count',
+                             summary.get('reachable_count', total - undoc)))
 
                 # Calculate coverage
                 if 'coverage_percent' in data:
@@ -511,13 +519,14 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
 
                 coverage = f"{pct}% ({documented}/{total})"
 
-                # Determine status emoji
+                # Determine status emoji - orphaned docs uses "orphans" not "gaps"
+                gap_word = "orphans" if 'orphaned_count' in summary else "gaps"
                 if undoc == 0:
                     status = "✅ Complete"
                 elif undoc <= 10:
-                    status = f"🟡 {undoc} gaps"
+                    status = f"🟡 {undoc} {gap_word}"
                 else:
-                    status = f"🟠 {undoc} gaps"
+                    status = f"🟠 {undoc} {gap_word}"
 
                 cmd = f"`python {script}`"
                 md += f"| {name} | {coverage} | {status} | {cmd} |\n"
