@@ -1225,9 +1225,9 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           result = evaluateRule(rule.if_true, context, depth + 1, localScope);
         } else {
           // Test is falsy - evaluate if_false branch
-          // Handle null if_false as false (location not accessible)
+          // Handle null if_false as true (no restriction - Python None means accessible)
           result = rule.if_false === null
-            ? false
+            ? true
             : evaluateRule(rule.if_false, context, depth + 1, localScope);
         }
         break;
@@ -1907,6 +1907,59 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             }
           }
 
+          return undefined;
+        }
+
+        // Special handling for world.get_region() calls
+        // Returns a region reference object with __regionRef and region attributes like is_light_world
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'get_region' &&
+            rule.function.object?.type === 'name' &&
+            rule.function.object.name === 'world') {
+
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
+          const regionName = args[0];
+
+          if (!regionName) {
+            log('warn', '[evaluateRule] world.get_region() called without region name');
+            return undefined;
+          }
+
+          // Get the region data from static data
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+            const playerIdStr = String(playerId);
+
+            // Regions may be in staticData.regions[playerId] or staticData.regions directly
+            let regionsData = staticData.regions;
+            if (regionsData && regionsData[playerIdStr]) {
+              regionsData = regionsData[playerIdStr];
+            }
+
+            // Look up the region - regions is a Map or object
+            let regionData;
+            if (regionsData instanceof Map) {
+              regionData = regionsData.get(regionName);
+            } else if (regionsData && typeof regionsData === 'object') {
+              regionData = regionsData[regionName];
+            }
+
+            if (regionData) {
+              // Return a region reference with the needed attributes
+              return {
+                __regionRef: true,
+                regionName: regionName,
+                name: regionName,
+                is_light_world: regionData.is_light_world ?? false,
+                is_dark_world: regionData.is_dark_world ?? false,
+                type: regionData.type,
+                dungeon: regionData.dungeon
+              };
+            }
+          }
+
+          log('debug', `[evaluateRule] world.get_region("${regionName}") - region not found`);
           return undefined;
         }
 
@@ -3956,6 +4009,11 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         if (typeof regionExpr === 'string') {
           regionName = regionExpr;
         } else if (regionExpr?.__regionRef) {
+          // If the attribute is already on the region ref object, return it directly
+          if (attrName in regionExpr) {
+            result = regionExpr[attrName];
+            break;
+          }
           regionName = regionExpr.regionName;
         } else {
           log('debug', '[evaluateRule] region_attribute: cannot determine region name (returning undefined)', { regionExpr, rule });
@@ -5126,9 +5184,10 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
           : true;
       } else {
         // Test is falsy - evaluate if_false branch
+        // Missing if_false means no restriction (Python None = accessible)
         return ifFalseRule
           ? evaluateRule(ifFalseRule, context, depth + 1, localScope)
-          : false;
+          : true;
       }
     }
 
