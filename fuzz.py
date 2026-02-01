@@ -39,7 +39,6 @@ from Generate import main as GenMain
 from Fill import FillError
 from Main import main as ERmain
 from settings import get_settings
-from fuzz_game_constraints import apply_game_constraints
 from argparse import Namespace, ArgumentParser
 from concurrent.futures import TimeoutError
 from collections import defaultdict
@@ -264,9 +263,6 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
 
     if "triggers" in game_meta:
         game_options["triggers"] = game_meta["triggers"]
-
-    # Apply game-specific option constraints to fix invalid combinations
-    game_options = apply_game_constraints(world_name, game_options)
 
     yaml_content = {
         "description": f"{game_name} Template, generated with https://github.com/Eijebong/Archipelago-fuzzer/tree/{__version__}",

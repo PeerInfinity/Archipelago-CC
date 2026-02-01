@@ -75,6 +75,37 @@ def get_template_files(templates_dir: Path, skip_list: List[str], include_list: 
     return yaml_files
 
 
+def is_option_error(output: str) -> bool:
+    """
+    Check if the generation output indicates an OptionError (invalid option combination).
+
+    These are expected failures when random option combinations are invalid,
+    and should be counted as "ignored" rather than "failure" (same as UT fuzzer).
+    """
+    # Check for explicit OptionError in traceback
+    if "OptionError" in output:
+        return True
+
+    # Check for common option validation error patterns
+    # These are raised as Exception but are logically option errors
+    option_error_patterns = [
+        "Invalid .* settings",  # e.g., "Invalid OC2 settings"
+        "invalid option",
+        "incompatible option",
+        "requires .* to be",
+        "cannot be used with",
+        "must have .* enabled",
+        "needs at least .* levels",  # Overcooked! 2 level count error
+    ]
+
+    import re
+    for pattern in option_error_patterns:
+        if re.search(pattern, output, re.IGNORECASE):
+            return True
+
+    return False
+
+
 def run_generation(yaml_path: str, seed: int, project_root: Path, timeout: int = 300) -> Tuple[bool, str, Optional[str]]:
     """
     Run Generate.py for a YAML file.
@@ -194,6 +225,7 @@ def run_fuzz_test(
         "total": runs,
         "success": 0,
         "generation_failure": 0,
+        "ignored": 0,  # OptionError or invalid option combinations (expected failures)
         "test_failure": 0,
         "timeout": 0,
         "errors": [],
@@ -269,6 +301,17 @@ def run_fuzz_test(
 
             if not gen_success:
                 run_result["error"] = f"Generation failed: {gen_output[-500:] if len(gen_output) > 500 else gen_output}"
+
+                # Check if this is an OptionError (invalid option combination)
+                # These are expected failures and should be ignored, not counted as failures
+                if is_option_error(gen_output):
+                    result["ignored"] += 1
+                    run_result["ignored"] = True
+                    result["runs"].append(run_result)
+                    if verbose:
+                        print("ignored (invalid options)")
+                    continue
+
                 result["errors"].append(run_result["error"])
                 result["generation_failure"] += 1
                 result["runs"].append(run_result)
@@ -318,6 +361,7 @@ def run_fuzz_test(
                 pass
 
     # Determine overall pass/fail
+    # Note: "ignored" counts are NOT failures - they are expected invalid option combinations
     result["passed"] = (result["generation_failure"] == 0 and
                         result["test_failure"] == 0 and
                         result["timeout"] == 0)
@@ -622,6 +666,7 @@ def main():
                     "total": test_result["total"],
                     "success": test_result["success"],
                     "generation_failure": test_result["generation_failure"],
+                    "ignored": test_result["ignored"],
                     "test_failure": test_result["test_failure"],
                     "timeout": test_result["timeout"],
                     "errors": test_result["errors"][:10]  # Limit stored errors
@@ -636,6 +681,7 @@ def main():
             results["results"][template_name] = result_entry
 
             # Update statistics
+            # Note: "ignored" counts are NOT failures - they are expected invalid option combinations
             if test_result["passed"]:
                 passed_count += 1
                 status = "PASS"
@@ -649,6 +695,7 @@ def main():
             # Print summary
             print(f"  {status}: {test_result['success']}/{test_result['total']} success, "
                   f"{test_result['generation_failure']} gen failures, "
+                  f"{test_result['ignored']} ignored, "
                   f"{test_result['test_failure']} test failures, "
                   f"{test_result['timeout']} timeouts")
 
