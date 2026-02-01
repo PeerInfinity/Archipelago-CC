@@ -1225,9 +1225,9 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           result = evaluateRule(rule.if_true, context, depth + 1, localScope);
         } else {
           // Test is falsy - evaluate if_false branch
-          // Handle null if_false as false (location not accessible)
+          // Handle null if_false as true (no restriction - Python None means accessible)
           result = rule.if_false === null
-            ? false
+            ? true
             : evaluateRule(rule.if_false, context, depth + 1, localScope);
         }
         break;
@@ -1907,6 +1907,59 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             }
           }
 
+          return undefined;
+        }
+
+        // Special handling for world.get_region() calls
+        // Returns a region reference object with __regionRef and region attributes like is_light_world
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'get_region' &&
+            rule.function.object?.type === 'name' &&
+            rule.function.object.name === 'world') {
+
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
+          const regionName = args[0];
+
+          if (!regionName) {
+            log('warn', '[evaluateRule] world.get_region() called without region name');
+            return undefined;
+          }
+
+          // Get the region data from static data
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+            const playerIdStr = String(playerId);
+
+            // Regions may be in staticData.regions[playerId] or staticData.regions directly
+            let regionsData = staticData.regions;
+            if (regionsData && regionsData[playerIdStr]) {
+              regionsData = regionsData[playerIdStr];
+            }
+
+            // Look up the region - regions is a Map or object
+            let regionData;
+            if (regionsData instanceof Map) {
+              regionData = regionsData.get(regionName);
+            } else if (regionsData && typeof regionsData === 'object') {
+              regionData = regionsData[regionName];
+            }
+
+            if (regionData) {
+              // Return a region reference with the needed attributes
+              return {
+                __regionRef: true,
+                regionName: regionName,
+                name: regionName,
+                is_light_world: regionData.is_light_world ?? false,
+                is_dark_world: regionData.is_dark_world ?? false,
+                type: regionData.type,
+                dungeon: regionData.dungeon
+              };
+            }
+          }
+
+          log('debug', `[evaluateRule] world.get_region("${regionName}") - region not found`);
           return undefined;
         }
 
@@ -3956,6 +4009,11 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         if (typeof regionExpr === 'string') {
           regionName = regionExpr;
         } else if (regionExpr?.__regionRef) {
+          // If the attribute is already on the region ref object, return it directly
+          if (attrName in regionExpr) {
+            result = regionExpr[attrName];
+            break;
+          }
           regionName = regionExpr.regionName;
         } else {
           log('debug', '[evaluateRule] region_attribute: cannot determine region name (returning undefined)', { regionExpr, rule });
@@ -5126,9 +5184,10 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
           : true;
       } else {
         // Test is falsy - evaluate if_false branch
+        // Missing if_false means no restriction (Python None = accessible)
         return ifFalseRule
           ? evaluateRule(ifFalseRule, context, depth + 1, localScope)
-          : false;
+          : true;
       }
     }
 
@@ -5789,6 +5848,79 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
         // Add weight for each copy of the item owned
         total += itemCount * weight;
+
+        // Early exit if we've already met the threshold (with small tolerance for floating point)
+        if (total >= threshold - 0.01) {
+          return true;
+        }
+      }
+
+      // If we had undefined counts, we can't be certain
+      if (hasUndefined && total < threshold) {
+        return undefined;
+      }
+
+      return total >= threshold - 0.01;
+    }
+
+    // unique_count: Check if count of unique items owned meets threshold (A Hat in Time)
+    // Rule Builder: {"rule": "unique_count", "args": [threshold, [[item, weight], ...]]}
+    // The logic: sum (weight if count > 0 else 0) for each item, return true if sum >= threshold
+    // Unlike weighted_sum, this counts unique item types, not total items
+    case 'unique_count': {
+      // Handle both array format and object format for args
+      let thresholdArg, itemsArg;
+      if (Array.isArray(rule.args)) {
+        // New format: rule.args is an array [threshold, items]
+        thresholdArg = rule.args[0];
+        itemsArg = rule.args[1];
+      } else {
+        // Fallback for object format
+        thresholdArg = args[0];
+        itemsArg = args[1];
+      }
+
+      // Evaluate threshold (usually a Constant with value like 12.0)
+      const threshold = evaluateRule(thresholdArg, context, depth + 1, localScope);
+      if (threshold === undefined || typeof threshold !== 'number') {
+        log('warn', '[evaluateRuleBuilderRule] unique_count: invalid threshold', { threshold });
+        return undefined;
+      }
+
+      // Evaluate items array (array of [item_name, weight] pairs)
+      const items = evaluateRule(itemsArg, context, depth + 1, localScope);
+      if (!Array.isArray(items)) {
+        log('warn', '[evaluateRuleBuilderRule] unique_count: invalid items array', { items });
+        return undefined;
+      }
+
+      // Calculate count of unique items owned (weight if count > 0, else 0)
+      let total = 0;
+      let hasUndefined = false;
+
+      for (const pair of items) {
+        if (!Array.isArray(pair) || pair.length < 2) continue;
+
+        const [itemName, weight] = pair;
+        if (typeof itemName !== 'string' || typeof weight !== 'number') continue;
+
+        // Get count of this item from context
+        let itemCount;
+        if (typeof context.countItem === 'function') {
+          itemCount = context.countItem(itemName);
+        } else if (typeof context.count === 'function') {
+          itemCount = context.count(itemName);
+        }
+
+        if (itemCount === undefined) {
+          hasUndefined = true;
+          continue;
+        }
+
+        // Add weight only if we have at least one of this item (unique count)
+        if (itemCount > 0) {
+          total += weight;
+        }
 
         // Early exit if we've already met the threshold (with small tolerance for floating point)
         if (total >= threshold - 0.01) {

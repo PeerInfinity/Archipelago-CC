@@ -273,6 +273,34 @@ def categorize_seed_generation_error(error_msg):
     return ('other', {'message': error_msg})
 
 
+def load_spoiler_fuzz_test_results(project_root, seed_mode='fixed'):
+    """Load the spoiler fuzz test results JSON file.
+
+    Spoiler fuzz tests run seed generation with random options, then run the
+    JavaScript frontend spoiler test against the generated rules.json. This
+    tests whether the frontend can correctly evaluate rules for all option
+    combinations.
+
+    Args:
+        project_root: Path to the project root
+        seed_mode: 'fixed' or 'random'
+
+    Returns:
+        Dict with 'metadata' and 'results' keys, or empty dict if not found
+    """
+    filename = f'test-results-{seed_mode}-seed.json'
+    results_file = Path(project_root) / 'scripts' / 'output' / 'spoiler-fuzz' / filename
+    if not results_file.exists():
+        return {}
+
+    try:
+        with open(results_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading spoiler fuzz test results: {e}", file=sys.stderr)
+        return {}
+
+
 def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fixed', world_source='bundled'):
     """Load the UT fuzz test results JSON file.
 
@@ -693,5 +721,95 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
 
     # Sort by success rate (lowest first) so worst failures come first
     failures.sort(key=lambda x: x['ut_fuzz']['success_rate'])
+
+    return failures
+
+
+def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_mode='fixed'):
+    """Get games that pass UT fuzz testing but fail spoiler fuzz testing.
+
+    This identifies games where:
+    - The game passes UT fuzz testing (the Python backend rules match the tracker)
+    - But fails spoiler fuzz testing (the JavaScript frontend can't evaluate rules correctly)
+
+    This indicates that there's likely a rule type that the world generator exports
+    but the JavaScript frontend doesn't support. The Python-based Universal Tracker
+    can evaluate these rules correctly, but the JavaScript ruleEngine cannot.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original' or 'modified' for UT fuzz results
+        seed_mode: 'fixed' or 'random' for both tests
+
+    Returns:
+        List of dicts with game_name, template, ut_fuzz stats, spoiler_fuzz stats.
+    """
+    # Load both test results
+    ut_fuzz_data = load_ut_fuzz_test_results(project_root, ut_version=ut_version, seed_mode=seed_mode)
+    spoiler_fuzz_data = load_spoiler_fuzz_test_results(project_root, seed_mode=seed_mode)
+
+    # Also load exclude list
+    worldgen_exclude_list = load_worldgen_exclude_list(project_root, include_all_excludes=True)
+
+    ut_results = ut_fuzz_data.get('results', {})
+    spoiler_results = spoiler_fuzz_data.get('results', {})
+
+    failures = []
+
+    for template_name, spoiler_result in spoiler_results.items():
+        spoiler_fuzz = spoiler_result.get('spoiler_fuzz', {})
+        world_info = spoiler_result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+
+        # Skip if spoiler fuzz test passed (not what we're looking for)
+        if spoiler_fuzz.get('passed', False):
+            continue
+
+        # Skip games that are in the exclude list
+        if template_name in worldgen_exclude_list:
+            continue
+
+        # Check if this game passes UT fuzz testing
+        ut_result = ut_results.get(template_name)
+        if not ut_result:
+            continue  # No UT fuzz results for this game
+
+        ut_fuzz = ut_result.get('ut_fuzz', {})
+
+        # Skip if UT fuzz test also failed (that's a different category of failure)
+        if not ut_fuzz.get('passed', False):
+            continue
+
+        # This game passes UT fuzz but fails spoiler fuzz - exactly what we want
+        spoiler_total = spoiler_fuzz.get('total', 0)
+        spoiler_success = spoiler_fuzz.get('success', 0)
+        spoiler_failure = spoiler_fuzz.get('test_failure', 0)
+        spoiler_gen_failure = spoiler_fuzz.get('generation_failure', 0)
+        spoiler_timeout = spoiler_fuzz.get('timeout', 0)
+
+        failures.append({
+            'game_name': game_name,
+            'template': template_name,
+            'world_directory': world_info.get('world_directory'),
+            'ut_fuzz': {
+                'total': ut_fuzz.get('total', 0),
+                'success': ut_fuzz.get('success', 0),
+                'failure': ut_fuzz.get('failure', 0),
+                'timeout': ut_fuzz.get('timeout', 0),
+                'success_rate': (ut_fuzz.get('success', 0) / max(ut_fuzz.get('total', 1), 1)) * 100,
+            },
+            'spoiler_fuzz': {
+                'total': spoiler_total,
+                'success': spoiler_success,
+                'test_failure': spoiler_failure,
+                'generation_failure': spoiler_gen_failure,
+                'timeout': spoiler_timeout,
+                'success_rate': (spoiler_success / max(spoiler_total, 1)) * 100,
+                'errors': spoiler_fuzz.get('errors', []),
+            },
+        })
+
+    # Sort by spoiler fuzz success rate (lowest first) so worst failures come first
+    failures.sort(key=lambda x: x['spoiler_fuzz']['success_rate'])
 
     return failures

@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-01 05:06:28
+**Generated:** 2026-02-01 10:31:06
 
 **Source Data Created:** 2026-02-01T05:06:28.039806
 
@@ -55,23 +55,23 @@
 
 Of the 54 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 37/54 (68.5%)
+- **Passing with Generic Exporter:** 38/54 (70.4%)
 - **Passing with Generic Logic:** 54/54 (100.0%)
-- **Passing with Both Generic:** 37/54 (68.5%)
+- **Passing with Both Generic:** 38/54 (70.4%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 609.6KB
+- **Total Exporter Code:** 593.7KB
 - **Total Game Logic Code:** 655.3KB
-- **Combined Total:** 1264.9KB
+- **Combined Total:** 1249.0KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ | 100 | 97 | 2 | 0 | 1 | 97.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | 12.5KB | ✅ | 665.3KB |
-| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 16.2KB | ✅ | 410.7KB |
+| A Link to the Past | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | 12.6KB | ✅ | 665.3KB |
+| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |
@@ -92,7 +92,7 @@ Of the 54 games with 100% pass rate:
 | DOOM II | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.6KB | ✅ | 497.8KB |
+| Factorio | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.8KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ❌ | 100 | 81 | 0 | 5 | 14 | ⚠️ 81.0% | 13.4KB | ✅ | 549.0KB |
@@ -124,7 +124,7 @@ Of the 54 games with 100% pass rate:
 | Pokemon Red and Blue | ❌ | 100 | 0 | 93 | 0 | 7 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
 | Raft | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 6.5KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
-| SMZ3 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
+| SMZ3 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 61.4KB | 51.3KB | 1044.7KB |
 | Saving Princess | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 151.3KB |

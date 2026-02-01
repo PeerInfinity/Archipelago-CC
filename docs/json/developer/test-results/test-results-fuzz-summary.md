@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-01 06:02:39
+**Generated:** 2026-02-01 10:31:06
 
 **Source Data Created:** 2026-02-01T05:06:28.039806
 
@@ -26,13 +26,13 @@ This summary combines results from fuzz tests that validate game configurations 
 - **UT Fuzz Original:** 38/85 passed (44.7%)
 - **UT Fuzz Modified:** 54/85 passed (63.5%)
 - **UT Fuzz Hybrid:** 69/85 passed (81.2%)
-- **Spoiler Fuzz:** 49/73 passed (67.1%)
+- **Spoiler Fuzz:** 48/73 passed (65.8%)
 
 ### Combined Results
 
 - **Games passing all 4 fuzz tests:** 29/85 (34.1%)
-- **Games passing 3 fuzz tests:** 19/85 (22.4%)
-- **Games passing 2 fuzz tests:** 15/85 (17.6%)
+- **Games passing 3 fuzz tests:** 18/85 (21.2%)
+- **Games passing 2 fuzz tests:** 16/85 (18.8%)
 - **Games passing 1 fuzz test:** 7/85 (8.2%)
 - **Games passing 0 fuzz tests:** 15/85 (17.6%)
 
@@ -41,14 +41,14 @@ This summary combines results from fuzz tests that validate game configurations 
 | Game Name | [UT Original](./test-results-ut-fuzz-original.md) | [UT Modified](./test-results-ut-fuzz-modified.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | [Spoiler Fuzz](./test-results-spoiler-fuzz.md) | Rules Size |
 |-----------|:------------:|:------------:|:----------:|:-------------:|:----------:|
 | A Hat in Time | ❌ 17% | ⚠️ 97% | ✅ | ⚠️ 90% | 231.3KB |
-| A Link to the Past | ❌ 0% | ✅ | ✅ | ❌ 0% | 665.3KB |
+| A Link to the Past | ❌ 0% | ✅ | ✅ | ❌ 30% | 665.3KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94% | ✅ | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ | ✅ | ✅ | ✅ | 275.4KB |
 | Baking Adventure | ✅ | ✅ | ✅ | ✅ | 18.2KB |
 | Blasphemous | ✅ | ❌ 0% | ✅ | — | N/A |
-| Bomb Rush Cyberfunk | ✅ | ❌ 0% | ✅ | 🔶 80% | 329.0KB |
+| Bomb Rush Cyberfunk | ✅ | ❌ 0% | ✅ | ❌ 0% | 329.0KB |
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | 94.4KB |
 | Castlevania 64 | ❌ 10% | ✅ | ✅ | ✅ | 138.5KB |
@@ -66,7 +66,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | Factorio | ❌ 0% | ✅ | ✅ | 🔶 70% | 497.8KB |
 | Faxanadu | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | ✅ | ✅ | — | N/A |
-| Final Fantasy Mystic Quest | ❌ 1% | 🔶 81% | 🔶 70% | 🔶 50% | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ 1% | 🔶 81% | 🔶 70% | ❌ 0% | 549.0KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 11% | ❌ 0% | ❌ 0% | — | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | 102.2KB |
@@ -76,7 +76,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | Kingdom Hearts 2 | ❌ 37% | ❌ 0% | ❌ 0% | ❌ 10% | 1675.2KB |
 | Kirby's Dream Land 3 | ❌ 3% | 🔶 87% | ✅ | 🔶 50% | 529.1KB |
 | Landstalker - The Treasures of King Nole | ❌ 20% | ✅ | ✅ | ✅ | 210.5KB |
-| Lingo | ❌ 21% | ❌ 2% | ✅ | ❌ 20% | 946.3KB |
+| Lingo | ❌ 21% | ❌ 2% | ✅ | ❌ 0% | 946.3KB |
 | Links Awakening DX | ❌ 23% | ⚠️ 95% | ✅ | ✅ | 714.5KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | 398.5KB |
@@ -93,15 +93,15 @@ This summary combines results from fuzz tests that validate game configurations 
 | Paint | ✅ | ✅ | ✅ | ✅ | 123.7KB |
 | Pokemon Emerald | 🔶 59% | ❌ 29% | ❌ 20% | — | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0% | ❌ 0% | ❌ 0% | — | 1029.2KB |
-| Raft | ✅ | ❌ 0% | ✅ | ✅ | 485.4KB |
+| Raft | ✅ | ❌ 0% | ✅ | ❌ 0% | 485.4KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 1% | ❌ 0% | ❌ 0% | — | 1044.7KB |
 | Saving Princess | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
-| Secret of Evermore | ✅ | ❌ 0% | ✅ | 🔶 70% | 418.7KB |
+| Secret of Evermore | ✅ | ❌ 0% | ✅ | ❌ 0% | 418.7KB |
 | Shivers | ❌ 0% | ✅ | ✅ | ❌ 40% | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ 8% | ✅ | ✅ | 🔶 70% | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.6KB |
-| Stardew Valley | ❌ 4% | ❌ 0% | ❌ 0% | ❌ 10% | 2430.2KB |
+| Stardew Valley | ❌ 4% | ❌ 0% | ❌ 0% | ❌ 0% | 2430.2KB |
 | Subnautica | ❌ 10% | ⚠️ 94% | ✅ | ✅ | 207.8KB |
 | Sudoku | ✅ | ✅ | ✅ | — | N/A |
 | Super Mario 64 | ❌ 29% | ✅ | ✅ | ✅ | 92.9KB |

@@ -108,6 +108,13 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             if helper_name == 'can_dboost':
                 # Hard mode: just Second Wind (no Meditation/Resilience required)
                 return _item('Second Wind')
+            if helper_name == 'can_leash':
+                # Hard mode: can_leash = has_dart AND can_dboost (hard mode)
+                # = has('Rope Dart') AND has('Second Wind')
+                return {'type': 'and', 'conditions': [
+                    _item('Rope Dart'),
+                    _item('Second Wind')
+                ]}
 
         # Check declarative mappings
         if helper_name in self.HELPER_EXPANSIONS:

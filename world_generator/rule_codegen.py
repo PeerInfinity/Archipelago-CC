@@ -1200,6 +1200,10 @@ class RuleCodeGenerator:
                 if rb_rule == 'weighted_sum' and rule.get('_original_ast_type') == 'helper':
                     return self._convert_weighted_sum(rule)
 
+                # Check if this is a unique_count helper (used by A Hat in Time for Enemy/Boss counting)
+                if rb_rule == 'unique_count' and rule.get('_original_ast_type') == 'helper':
+                    return self._convert_unique_count(rule)
+
                 # Check if this is a helper call from AST exporter format
                 # AST exporter outputs helpers with rule=helper_name and _original_ast_type="helper"
                 # Also check known_helpers for helpers without the _original_ast_type marker
@@ -6092,6 +6096,64 @@ class RuleCodeGenerator:
 
         return f'WeightedSum(threshold={threshold}, items=[{items_str}])'
 
+    def _convert_unique_count(self, rule: Dict[str, Any]) -> str:
+        """Convert unique_count helper to UniqueCount rule.
+
+        unique_count checks if the count of unique items (item present >= 1) from a list
+        meets or exceeds a threshold. Unlike weighted_sum which counts total items,
+        this only counts whether each item type is present (1 if count > 0, else 0).
+
+        Used by A Hat in Time for Enemy/Boss counting where the game tracks unique types
+        collected, not total items.
+
+        Format expected:
+        {
+            "rule": "unique_count",
+            "_original_ast_type": "helper",
+            "args": [
+                {"rule": "Constant", "args": {"value": 12.0}},  # threshold
+                {"rule": "Constant", "args": {"value": [["Enemy1", 1.0], ["Enemy2", 1.0], ...]}}  # items
+            ]
+        }
+        """
+        args = rule.get('args', [])
+
+        # Extract threshold (first arg)
+        threshold = 1.0
+        if len(args) >= 1:
+            arg0 = args[0]
+            if isinstance(arg0, dict):
+                if arg0.get('rule') == 'Constant':
+                    threshold = arg0.get('args', {}).get('value', 1.0)
+                elif arg0.get('type') == 'constant':
+                    threshold = arg0.get('value', 1.0)
+
+        # Extract items with weights (second arg)
+        items = []
+        if len(args) >= 2:
+            arg1 = args[1]
+            if isinstance(arg1, dict):
+                if arg1.get('rule') == 'Constant':
+                    raw_items = arg1.get('args', {}).get('value', [])
+                elif arg1.get('type') == 'constant':
+                    raw_items = arg1.get('value', [])
+                else:
+                    raw_items = []
+
+                # Convert raw items to list of tuples
+                if isinstance(raw_items, list):
+                    for item in raw_items:
+                        if isinstance(item, (list, tuple)) and len(item) >= 2:
+                            items.append((item[0], item[1]))
+
+        # Generate UniqueCount rule
+        self.required_imports.add('UniqueCount')
+
+        # Build the items list as Python code
+        items_str = ', '.join(f'({repr(name)}, {weight})' for name, weight in items)
+
+        return f'UniqueCount(threshold={threshold}, items=[{items_str}])'
+
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
 
@@ -6272,6 +6334,48 @@ class RuleCodeGenerator:
                 parts.append(f'body_rule={body_rule_code}')
 
             return f'HelperCall({", ".join(parts)})'
+
+        # Handle Python built-in functions that can be evaluated at generation time
+        if helper_name == 'int':
+            # Evaluate the int() call - typically used for int(x / y) floor division patterns
+            args = rule.get('args', [])
+            if args and len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, dict):
+                    # Try to evaluate arithmetic expression
+                    if arg.get('rule') == 'Arithmetic':
+                        arith_result = self._evaluate_arithmetic_constant(arg)
+                        if arith_result and arith_result != 'None':
+                            try:
+                                # Apply int() to the arithmetic result
+                                int_result = int(eval(arith_result))
+                                return repr(int_result)
+                            except (ValueError, TypeError, SyntaxError):
+                                pass
+                    # Handle nested int() or other patterns by extracting constant
+                    elif arg.get('rule') == 'Constant':
+                        value = arg.get('args', {}).get('value')
+                        if isinstance(value, (int, float)):
+                            return repr(int(value))
+                elif isinstance(arg, (int, float)):
+                    return repr(int(arg))
+            # If we can't evaluate, return 0 as a conservative default
+            # This is better than True_() which would make rules always pass
+            return repr(0)
+
+        if helper_name == 'len':
+            # len() on collections - try to evaluate if we have a constant list/dict
+            args = rule.get('args', [])
+            if args and len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, (list, tuple)):
+                    return repr(len(arg))
+                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                    value = arg.get('args', {}).get('value')
+                    if isinstance(value, (list, tuple, dict, str)):
+                        return repr(len(value))
+            # Can't evaluate - return 0 as conservative default
+            return repr(0)
 
         # Unknown helper - return True_() as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen

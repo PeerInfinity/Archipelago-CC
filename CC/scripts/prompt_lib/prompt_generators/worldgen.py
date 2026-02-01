@@ -1188,6 +1188,224 @@ Document your findings so we can either:
 """
 
 
+def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, seed=1):
+    """Generate a prompt for debugging spoiler fuzz failures on games that pass UT fuzz.
+
+    These failures occur when:
+    - The game passes UT fuzz testing (the Python backend rules match the tracker)
+    - But fails spoiler fuzz testing (the JavaScript frontend can't evaluate rules correctly)
+
+    This indicates that there's likely a rule type that the world generator exports
+    but the JavaScript frontend doesn't support. The problem is specifically in the
+    frontend ruleEngine, not in the Python exporter or tracker.
+    """
+    setup_doc = "CC/cloud-setup.md"
+    fuzz_doc = "CC/docs/fuzzer-testing.md"
+
+    # Extract UT fuzz stats
+    ut_total = ut_fuzz_info.get('total', 0)
+    ut_success = ut_fuzz_info.get('success', 0)
+    ut_success_rate = ut_fuzz_info.get('success_rate', 0)
+
+    # Extract spoiler fuzz stats
+    spoiler_total = spoiler_fuzz_info.get('total', 0)
+    spoiler_success = spoiler_fuzz_info.get('success', 0)
+    spoiler_failure = spoiler_fuzz_info.get('test_failure', 0)
+    spoiler_gen_failure = spoiler_fuzz_info.get('generation_failure', 0)
+    spoiler_timeout = spoiler_fuzz_info.get('timeout', 0)
+    spoiler_success_rate = spoiler_fuzz_info.get('success_rate', 0)
+    spoiler_errors = spoiler_fuzz_info.get('errors', [])
+
+    # Format error list
+    error_list_text = ""
+    if spoiler_errors:
+        unique_errors = {}
+        for err in spoiler_errors:
+            unique_errors[err] = unique_errors.get(err, 0) + 1
+        for err, count in sorted(unique_errors.items(), key=lambda x: -x[1]):
+            error_list_text += f"  - {err}: {count} occurrence(s)\n"
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {fuzz_doc} for background on fuzzer testing.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+
+## The Problem
+
+This game **passes UT fuzz testing** but **fails spoiler fuzz testing**.
+
+### What This Means
+
+**UT Fuzz Test** (Python-based Universal Tracker):
+- Uses the Python rule_builder module to evaluate rules
+- Tests that the exported rules.json matches the original Python world logic
+- **Result**: {ut_success}/{ut_total} passed ({ut_success_rate:.1f}%) ✅
+
+**Spoiler Fuzz Test** (JavaScript frontend):
+- Uses the JavaScript ruleEngine to evaluate rules
+- Tests that the frontend can correctly process the rules.json
+- **Result**: {spoiler_success}/{spoiler_total} passed ({spoiler_success_rate:.1f}%) ❌
+
+### Why This Matters
+
+Since UT fuzz testing passes, the rules.json is **correctly exported** and **correctly interpreted by Python**.
+The failure is specifically in the **JavaScript frontend ruleEngine** - it doesn't support some rule type
+that the world generator produces.
+
+### Spoiler Fuzz Test Details
+
+- **Total runs**: {spoiler_total}
+- **Success**: {spoiler_success} ({spoiler_success_rate:.1f}%)
+- **Test failures**: {spoiler_failure}
+- **Generation failures**: {spoiler_gen_failure}
+- **Timeouts**: {spoiler_timeout}
+
+**Error messages:**
+{error_list_text or "  (No specific error messages recorded)"}
+
+## Investigation Steps
+
+### 1. Reproduce a failing configuration
+
+First, run the spoiler fuzz test to find a failing seed:
+
+```bash
+source .venv/bin/activate
+
+# Run spoiler fuzz test for this game
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10
+```
+
+### 2. Identify the failing rule type
+
+Once you have a failing seed, examine the generated rules.json:
+
+```bash
+# Find rule types used in the rules.json
+python -c "
+import json
+from collections import Counter
+
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+
+def find_rule_types(obj, types=None):
+    if types is None:
+        types = Counter()
+    if isinstance(obj, dict):
+        if 'type' in obj:
+            types[obj['type']] += 1
+        for v in obj.values():
+            find_rule_types(v, types)
+    elif isinstance(obj, list):
+        for v in obj:
+            find_rule_types(v, types)
+    return types
+
+types = find_rule_types(data)
+print('Rule types used:')
+for rule_type, count in types.most_common():
+    print(f'  {{rule_type}}: {{count}}')
+"
+```
+
+### 3. Check if the rule type is supported in JavaScript
+
+Compare the rule types with what's supported in the frontend:
+
+```bash
+# List rule types handled by the JavaScript ruleEngine
+grep -E "case ['\"]\\w+['\"]:" frontend/modules/shared/ruleEngine.js | head -30
+
+# Search for any unimplemented rule type handlers
+grep -n "TODO\\|FIXME\\|not implemented" frontend/modules/shared/ruleEngine.js
+```
+
+### 4. Find the specific unsupported rule
+
+Look for rules that use types not in the ruleEngine:
+
+```bash
+# Check for rule types in the helpers
+python -c "
+import json
+
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+
+helpers = data.get('helpers', {{}})
+print(f'Helper count: {{len(helpers)}}')
+for name, helper in list(helpers.items())[:10]:
+    print(f'  {{name}}: {{helper.get(\"definition\", {{}}).get(\"type\", \"?\")}}')
+"
+```
+
+## Common Causes
+
+### 1. Unsupported helper definition types
+
+The world generator may export helpers with definition types that the JavaScript
+ruleEngine doesn't handle. Check:
+- `frontend/modules/shared/ruleEngine.js` - `evaluateRule()` function
+- Compare with `rule_builder/evaluator.py` - which supports more rule types
+
+### 2. Complex comparison operators
+
+Some rule types involving comparisons (`>=`, `<=`, etc.) may not be fully
+implemented in JavaScript.
+
+### 3. Missing helper parameter resolution
+
+If helpers use parameters that aren't being resolved correctly in JavaScript.
+
+## Fix Approach
+
+Add support for the missing rule type in the JavaScript ruleEngine:
+- `frontend/modules/shared/ruleEngine.js`
+
+Follow the pattern of existing rule type handlers.
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Run spoiler fuzz test
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10
+
+# Run a single spoiler test with a specific seed
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed <FAILING_SEED>
+npm test -- --mode=test-spoilers --game={world_dir} --seed=<FAILING_SEED>
+
+# Analyze the test failure
+npm run test:analyze
+cat playwright-analysis.txt
+
+# Compare with UT fuzz (should pass)
+python fuzz.py -r 10 -j 4 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+```
+
+## Goal
+
+Fix the JavaScript frontend ruleEngine so that it can correctly evaluate the
+rules produced by the world generator. Since UT fuzz testing passes, the rules
+themselves are correct - only the JavaScript evaluation needs to be fixed.
+
+## Reference Files
+
+- `frontend/modules/shared/ruleEngine.js` - JavaScript rule evaluation
+- `rule_builder/evaluator.py` - Python rule evaluation (reference for correct behavior)
+- `worlds/{world_dir}/Rules.py` - Original rule definitions
+- `exporter/games/official/` or `exporter/games/unofficial/` - Game-specific exporters
+- `frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json` - Exported rules
+"""
+
+
 def generate_ut_fuzz_single_failure_prompt(failure_info):
     """Generate a prompt for debugging a single UT fuzz failure with exact reproduction steps.
 
