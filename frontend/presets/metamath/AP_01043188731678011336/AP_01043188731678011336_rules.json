@@ -1754,7 +1754,7 @@
         "start_inventory": {},
         "start_location_hints": [],
         "starting_statements": 0,
-        "theorem": "2p2e4"
+        "theorem": 1
       },
       "option_definitions": {
         "accessibility": {
@@ -1802,8 +1802,31 @@
         },
         "theorem": {
           "type": "choice",
-          "name_lookup": {},
-          "default": "2p2e4",
+          "name_lookup": {
+            "0": "1p1e2",
+            "1": "2p2e4",
+            "2": "3p3e6",
+            "3": "4p4e8",
+            "4": "5p5e10",
+            "5": "2m1e1",
+            "6": "pm2_21",
+            "7": "pm2_43",
+            "8": "pm5_32",
+            "9": "con3i",
+            "10": "syl",
+            "11": "uneq12i",
+            "12": "ineq12i",
+            "13": "pwfi",
+            "14": "canth",
+            "15": "grplid",
+            "16": "grpinveu",
+            "17": "cos0",
+            "18": "sin0",
+            "19": "euclemma",
+            "20": "wilth",
+            "21": "dfac5"
+          },
+          "default": 1,
           "display_name": "Theorem to Prove"
         }
       },

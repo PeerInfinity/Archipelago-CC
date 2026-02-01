@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -133,122 +133,244 @@ class NoitaWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Coal Pits Chest 1": "Spell Refresher",
-        "Coal Pits Chest 2": "Gold (200)",
-        "Coal Pits Chest 3": "Extra Max HP",
-        "Coal Pits Pedestal 1": "Wand (Tier 3)",
-        "Coal Pits Pedestal 2": "Wand (Tier 1)",
-        "Coal Pits Pedestal 3": "Sädekivi",
-        "Coal Pits Pedestal 4": "Trap",
-        "Coal Pits Pedestal 5": "Gold (200)",
-        "Coal Pits Pedestal 6": "Potion",
-        "Portal to Holy Mountain 2": "Portal to Holy Mountain 2",
-        "Coal Pits Holy Mountain Shop Item 1": "Extra Max HP",
         "Coal Pits Holy Mountain Shop Item 2": "Spell Refresher",
+        "Mines Pedestal 2": "Spell Refresher",
+        "Secret Shop Item 1": "Spell Refresher",
+        "Snowy Depths Holy Mountain Shop Item 4": "Spell Refresher",
+        "Snowy Depths Holy Mountain Shop Item 5": "Spell Refresher",
+        "Coal Pits Chest 2": "Gold (200)",
+        "Coal Pits Pedestal 5": "Gold (200)",
+        "Mines Chest 1": "Gold (200)",
+        "Temple of the Art Pedestal 2": "Gold (200)",
+        "The Vault Pedestal 5": "Gold (200)",
+        "Underground Jungle Pedestal 2": "Gold (200)",
+        "Underground Jungle Pedestal 4": "Gold (200)",
+        "Coal Pits Chest 3": "Extra Max HP",
+        "Coal Pits Holy Mountain Shop Item 1": "Extra Max HP",
         "Coal Pits Holy Mountain Shop Item 3": "Extra Max HP",
-        "Coal Pits Holy Mountain Shop Item 4": "Wand (Tier 5)",
-        "Coal Pits Holy Mountain Shop Item 5": "Wand (Tier 3)",
         "Coal Pits Holy Mountain Spell Refresh": "Extra Max HP",
         "Hiisi Base Chest 1": "Extra Max HP",
-        "Hiisi Base Chest 2": "Potion",
         "Hiisi Base Chest 3": "Extra Max HP",
-        "Hiisi Base Pedestal 1": "Potion",
-        "Hiisi Base Pedestal 2": "Kammi",
-        "Hiisi Base Pedestal 3": "Wand (Tier 3)",
-        "Hiisi Base Pedestal 4": "Trap",
-        "Hiisi Base Pedestal 5": "Extra Max HP",
-        "Hiisi Base Pedestal 6": "Wand (Tier 6)",
-        "Portal to Holy Mountain 4": "Portal to Holy Mountain 4",
-        "Hiisi Base Holy Mountain Shop Item 1": "Wand (Tier 3)",
         "Hiisi Base Holy Mountain Shop Item 2": "Extra Max HP",
-        "Hiisi Base Holy Mountain Shop Item 3": "Trap",
         "Hiisi Base Holy Mountain Shop Item 4": "Extra Max HP",
-        "Hiisi Base Holy Mountain Shop Item 5": "Trap",
-        "Hiisi Base Holy Mountain Spell Refresh": "Potion",
+        "Hiisi Base Pedestal 5": "Extra Max HP",
         "Laboratory Holy Mountain Shop Item 1": "Extra Max HP",
         "Laboratory Holy Mountain Shop Item 2": "Extra Max HP",
         "Laboratory Holy Mountain Shop Item 3": "Extra Max HP",
-        "Laboratory Holy Mountain Shop Item 4": "Trap",
         "Laboratory Holy Mountain Shop Item 5": "Extra Max HP",
-        "Laboratory Holy Mountain Spell Refresh": "Chaos Die",
-        "Mines Chest 1": "Gold (200)",
-        "Mines Chest 2": "Extra Life Perk",
-        "Mines Chest 3": "Wand (Tier 4)",
-        "Mines Pedestal 1": "Trap",
-        "Mines Pedestal 2": "Spell Refresher",
-        "Mines Pedestal 3": "Wand (Tier 2)",
-        "Mines Pedestal 4": "Potion",
-        "Mines Pedestal 5": "Secret Potion",
         "Mines Pedestal 6": "Extra Max HP",
-        "Portal to Holy Mountain 1": "Portal to Holy Mountain 1",
-        "Secret Shop Item 1": "Spell Refresher",
-        "Secret Shop Item 2": "Wand (Tier 4)",
         "Secret Shop Item 3": "Extra Max HP",
-        "Secret Shop Item 4": "Wand (Tier 3)",
-        "Snowy Depths Chest 1": "Powder Pouch",
-        "Snowy Depths Chest 2": "Secret Potion",
-        "Snowy Depths Chest 3": "Trap",
-        "Snowy Depths Pedestal 1": "Potion",
+        "Snowy Depths Holy Mountain Shop Item 3": "Extra Max HP",
+        "Snowy Depths Holy Mountain Spell Refresh": "Extra Max HP",
         "Snowy Depths Pedestal 2": "Extra Max HP",
-        "Snowy Depths Pedestal 3": "Wand (Tier 2)",
+        "Temple of the Art Holy Mountain Shop Item 1": "Extra Max HP",
+        "Vault Holy Mountain Spell Refresh": "Extra Max HP",
+        "Coal Pits Holy Mountain Shop Item 5": "Wand (Tier 3)",
+        "Coal Pits Pedestal 1": "Wand (Tier 3)",
+        "Hiisi Base Holy Mountain Shop Item 1": "Wand (Tier 3)",
+        "Hiisi Base Pedestal 3": "Wand (Tier 3)",
+        "Secret Shop Item 4": "Wand (Tier 3)",
+        "Underground Jungle Chest 1": "Wand (Tier 3)",
+        "Coal Pits Pedestal 2": "Wand (Tier 1)",
+        "Temple of the Art Chest 3": "Wand (Tier 1)",
+        "Coal Pits Pedestal 3": "Sädekivi",
+        "Coal Pits Pedestal 4": "Trap",
+        "Hiisi Base Holy Mountain Shop Item 3": "Trap",
+        "Hiisi Base Holy Mountain Shop Item 5": "Trap",
+        "Hiisi Base Pedestal 4": "Trap",
+        "Laboratory Holy Mountain Shop Item 4": "Trap",
+        "Mines Pedestal 1": "Trap",
+        "Snowy Depths Chest 3": "Trap",
+        "Temple of the Art Holy Mountain Shop Item 2": "Trap",
+        "Temple of the Art Holy Mountain Shop Item 3": "Trap",
+        "Underground Jungle Holy Mountain Spell Refresh": "Trap",
+        "Coal Pits Pedestal 6": "Potion",
+        "Hiisi Base Chest 2": "Potion",
+        "Hiisi Base Holy Mountain Spell Refresh": "Potion",
+        "Hiisi Base Pedestal 1": "Potion",
+        "Mines Pedestal 4": "Potion",
+        "Snowy Depths Pedestal 1": "Potion",
         "Snowy Depths Pedestal 4": "Potion",
         "Snowy Depths Pedestal 5": "Potion",
+        "Temple of the Art Pedestal 1": "Potion",
+        "The Vault Chest 1": "Potion",
+        "The Vault Pedestal 2": "Potion",
+        "The Vault Pedestal 3": "Potion",
+        "The Vault Pedestal 6": "Potion",
+        "Portal to Holy Mountain 2": "Portal to Holy Mountain 2",
+        "Coal Pits Holy Mountain Shop Item 4": "Wand (Tier 5)",
+        "Vault Holy Mountain Shop Item 5": "Wand (Tier 5)",
+        "Hiisi Base Pedestal 2": "Kammi",
+        "Temple of the Art Holy Mountain Shop Item 5": "Kammi",
+        "Hiisi Base Pedestal 6": "Wand (Tier 6)",
+        "Vault Holy Mountain Shop Item 4": "Wand (Tier 6)",
+        "Portal to Holy Mountain 4": "Portal to Holy Mountain 4",
+        "Laboratory Holy Mountain Spell Refresh": "Chaos Die",
         "Snowy Depths Pedestal 6": "Chaos Die",
-        "Portal to Holy Mountain 3": "Portal to Holy Mountain 3",
+        "The Vault Chest 2": "Chaos Die",
+        "Underground Jungle Pedestal 1": "Chaos Die",
+        "Mines Chest 2": "Extra Life Perk",
+        "Underground Jungle Holy Mountain Shop Item 1": "Extra Life Perk",
+        "Mines Chest 3": "Wand (Tier 4)",
+        "Secret Shop Item 2": "Wand (Tier 4)",
         "Snowy Depths Holy Mountain Shop Item 1": "Wand (Tier 4)",
         "Snowy Depths Holy Mountain Shop Item 2": "Wand (Tier 4)",
-        "Snowy Depths Holy Mountain Shop Item 3": "Extra Max HP",
-        "Snowy Depths Holy Mountain Shop Item 4": "Spell Refresher",
-        "Snowy Depths Holy Mountain Shop Item 5": "Spell Refresher",
-        "Snowy Depths Holy Mountain Spell Refresh": "Extra Max HP",
-        "Temple of the Art Chest 1": "Greed Die",
-        "Temple of the Art Chest 2": "Broken Wand",
-        "Temple of the Art Chest 3": "Wand (Tier 1)",
-        "Temple of the Art Pedestal 1": "Potion",
-        "Temple of the Art Pedestal 2": "Gold (200)",
+        "Mines Pedestal 3": "Wand (Tier 2)",
+        "Snowy Depths Pedestal 3": "Wand (Tier 2)",
+        "Temple of the Art Holy Mountain Spell Refresh": "Wand (Tier 2)",
+        "Mines Pedestal 5": "Secret Potion",
+        "Snowy Depths Chest 2": "Secret Potion",
+        "Underground Jungle Pedestal 5": "Secret Potion",
+        "Underground Jungle Pedestal 6": "Secret Potion",
+        "Portal to Holy Mountain 1": "Portal to Holy Mountain 1",
+        "Snowy Depths Chest 1": "Powder Pouch",
         "Temple of the Art Pedestal 3": "Powder Pouch",
         "Temple of the Art Pedestal 4": "Powder Pouch",
         "Temple of the Art Pedestal 5": "Powder Pouch",
+        "The Vault Pedestal 1": "Powder Pouch",
+        "Underground Jungle Chest 3": "Powder Pouch",
+        "Portal to Holy Mountain 3": "Portal to Holy Mountain 3",
+        "Temple of the Art Chest 1": "Greed Die",
+        "Underground Jungle Chest 2": "Greed Die",
+        "Temple of the Art Chest 2": "Broken Wand",
         "Temple of the Art Pedestal 6": "Broken Wand",
         "Portal to Holy Mountain 7": "Portal to Holy Mountain 7",
-        "Temple of the Art Holy Mountain Shop Item 1": "Extra Max HP",
-        "Temple of the Art Holy Mountain Shop Item 2": "Trap",
-        "Temple of the Art Holy Mountain Shop Item 3": "Trap",
         "Temple of the Art Holy Mountain Shop Item 4": "Refreshing Gourd",
-        "Temple of the Art Holy Mountain Shop Item 5": "Kammi",
-        "Temple of the Art Holy Mountain Spell Refresh": "Wand (Tier 2)",
-        "The Vault Chest 1": "Potion",
-        "The Vault Chest 2": "Chaos Die",
         "The Vault Chest 3": "Random Potion",
-        "The Vault Pedestal 1": "Powder Pouch",
-        "The Vault Pedestal 2": "Potion",
-        "The Vault Pedestal 3": "Potion",
         "The Vault Pedestal 4": "Random Potion",
-        "The Vault Pedestal 5": "Gold (200)",
-        "The Vault Pedestal 6": "Potion",
         "Portal to Holy Mountain 6": "Portal to Holy Mountain 6",
         "Victory": "Victory",
-        "Underground Jungle Chest 1": "Wand (Tier 3)",
-        "Underground Jungle Chest 2": "Greed Die",
-        "Underground Jungle Chest 3": "Powder Pouch",
-        "Underground Jungle Pedestal 1": "Chaos Die",
-        "Underground Jungle Pedestal 2": "Gold (200)",
         "Underground Jungle Pedestal 3": "Gold (1000)",
-        "Underground Jungle Pedestal 4": "Gold (200)",
-        "Underground Jungle Pedestal 5": "Secret Potion",
-        "Underground Jungle Pedestal 6": "Secret Potion",
         "Portal to Holy Mountain 5": "Portal to Holy Mountain 5",
-        "Underground Jungle Holy Mountain Shop Item 1": "Extra Life Perk",
         "Underground Jungle Holy Mountain Shop Item 2": "All-Seeing Eye Perk",
         "Underground Jungle Holy Mountain Shop Item 3": "Tinker with Wands Everywhere Perk",
         "Underground Jungle Holy Mountain Shop Item 4": "Electricity Immunity Perk",
         "Underground Jungle Holy Mountain Shop Item 5": "Melee Immunity Perk",
-        "Underground Jungle Holy Mountain Spell Refresh": "Trap",
         "Vault Holy Mountain Shop Item 1": "Explosion Immunity Perk",
         "Vault Holy Mountain Shop Item 2": "Toxic Immunity Perk",
         "Vault Holy Mountain Shop Item 3": "Fire Immunity Perk",
-        "Vault Holy Mountain Shop Item 4": "Wand (Tier 6)",
-        "Vault Holy Mountain Shop Item 5": "Wand (Tier 5)",
-        "Vault Holy Mountain Spell Refresh": "Extra Max HP",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Coal Pits Chest 1": False,
+        "Coal Pits Chest 2": False,
+        "Coal Pits Chest 3": False,
+        "Coal Pits Pedestal 1": False,
+        "Coal Pits Pedestal 2": False,
+        "Coal Pits Pedestal 3": False,
+        "Coal Pits Pedestal 4": False,
+        "Coal Pits Pedestal 5": False,
+        "Coal Pits Pedestal 6": False,
+        "Portal to Holy Mountain 2": True,
+        "Coal Pits Holy Mountain Shop Item 1": False,
+        "Coal Pits Holy Mountain Shop Item 2": False,
+        "Coal Pits Holy Mountain Shop Item 3": False,
+        "Coal Pits Holy Mountain Shop Item 4": False,
+        "Coal Pits Holy Mountain Shop Item 5": False,
+        "Coal Pits Holy Mountain Spell Refresh": False,
+        "Hiisi Base Chest 1": False,
+        "Hiisi Base Chest 2": False,
+        "Hiisi Base Chest 3": False,
+        "Hiisi Base Pedestal 1": False,
+        "Hiisi Base Pedestal 2": False,
+        "Hiisi Base Pedestal 3": False,
+        "Hiisi Base Pedestal 4": False,
+        "Hiisi Base Pedestal 5": False,
+        "Hiisi Base Pedestal 6": False,
+        "Portal to Holy Mountain 4": True,
+        "Hiisi Base Holy Mountain Shop Item 1": False,
+        "Hiisi Base Holy Mountain Shop Item 2": False,
+        "Hiisi Base Holy Mountain Shop Item 3": False,
+        "Hiisi Base Holy Mountain Shop Item 4": False,
+        "Hiisi Base Holy Mountain Shop Item 5": False,
+        "Hiisi Base Holy Mountain Spell Refresh": False,
+        "Laboratory Holy Mountain Shop Item 1": False,
+        "Laboratory Holy Mountain Shop Item 2": False,
+        "Laboratory Holy Mountain Shop Item 3": False,
+        "Laboratory Holy Mountain Shop Item 4": False,
+        "Laboratory Holy Mountain Shop Item 5": False,
+        "Laboratory Holy Mountain Spell Refresh": False,
+        "Mines Chest 1": False,
+        "Mines Chest 2": False,
+        "Mines Chest 3": False,
+        "Mines Pedestal 1": False,
+        "Mines Pedestal 2": False,
+        "Mines Pedestal 3": False,
+        "Mines Pedestal 4": False,
+        "Mines Pedestal 5": False,
+        "Mines Pedestal 6": False,
+        "Portal to Holy Mountain 1": True,
+        "Secret Shop Item 1": False,
+        "Secret Shop Item 2": False,
+        "Secret Shop Item 3": False,
+        "Secret Shop Item 4": False,
+        "Snowy Depths Chest 1": False,
+        "Snowy Depths Chest 2": False,
+        "Snowy Depths Chest 3": False,
+        "Snowy Depths Pedestal 1": False,
+        "Snowy Depths Pedestal 2": False,
+        "Snowy Depths Pedestal 3": False,
+        "Snowy Depths Pedestal 4": False,
+        "Snowy Depths Pedestal 5": False,
+        "Snowy Depths Pedestal 6": False,
+        "Portal to Holy Mountain 3": True,
+        "Snowy Depths Holy Mountain Shop Item 1": False,
+        "Snowy Depths Holy Mountain Shop Item 2": False,
+        "Snowy Depths Holy Mountain Shop Item 3": False,
+        "Snowy Depths Holy Mountain Shop Item 4": False,
+        "Snowy Depths Holy Mountain Shop Item 5": False,
+        "Snowy Depths Holy Mountain Spell Refresh": False,
+        "Temple of the Art Chest 1": False,
+        "Temple of the Art Chest 2": False,
+        "Temple of the Art Chest 3": False,
+        "Temple of the Art Pedestal 1": False,
+        "Temple of the Art Pedestal 2": False,
+        "Temple of the Art Pedestal 3": False,
+        "Temple of the Art Pedestal 4": False,
+        "Temple of the Art Pedestal 5": False,
+        "Temple of the Art Pedestal 6": False,
+        "Portal to Holy Mountain 7": True,
+        "Temple of the Art Holy Mountain Shop Item 1": False,
+        "Temple of the Art Holy Mountain Shop Item 2": False,
+        "Temple of the Art Holy Mountain Shop Item 3": False,
+        "Temple of the Art Holy Mountain Shop Item 4": False,
+        "Temple of the Art Holy Mountain Shop Item 5": False,
+        "Temple of the Art Holy Mountain Spell Refresh": False,
+        "The Vault Chest 1": False,
+        "The Vault Chest 2": False,
+        "The Vault Chest 3": False,
+        "The Vault Pedestal 1": False,
+        "The Vault Pedestal 2": False,
+        "The Vault Pedestal 3": False,
+        "The Vault Pedestal 4": False,
+        "The Vault Pedestal 5": False,
+        "The Vault Pedestal 6": False,
+        "Portal to Holy Mountain 6": True,
+        "Victory": True,
+        "Underground Jungle Chest 1": False,
+        "Underground Jungle Chest 2": False,
+        "Underground Jungle Chest 3": False,
+        "Underground Jungle Pedestal 1": False,
+        "Underground Jungle Pedestal 2": False,
+        "Underground Jungle Pedestal 3": False,
+        "Underground Jungle Pedestal 4": False,
+        "Underground Jungle Pedestal 5": False,
+        "Underground Jungle Pedestal 6": False,
+        "Portal to Holy Mountain 5": True,
+        "Underground Jungle Holy Mountain Shop Item 1": False,
+        "Underground Jungle Holy Mountain Shop Item 2": True,
+        "Underground Jungle Holy Mountain Shop Item 3": True,
+        "Underground Jungle Holy Mountain Shop Item 4": True,
+        "Underground Jungle Holy Mountain Shop Item 5": True,
+        "Underground Jungle Holy Mountain Spell Refresh": False,
+        "Vault Holy Mountain Shop Item 1": True,
+        "Vault Holy Mountain Shop Item 2": True,
+        "Vault Holy Mountain Shop Item 3": True,
+        "Vault Holy Mountain Shop Item 4": False,
+        "Vault Holy Mountain Shop Item 5": False,
+        "Vault Holy Mountain Spell Refresh": False,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -342,14 +464,38 @@ class NoitaWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = NoitaWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = NoitaWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = NoitaWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -394,27 +540,81 @@ class NoitaWorld(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

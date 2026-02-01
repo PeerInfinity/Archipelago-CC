@@ -2289,6 +2289,103 @@ class CanReachEntrance(Rule[TWorld], game="Archipelago"):
             return {"entrance_name": self.entrance_name}
 
 
+@dataclasses.dataclass()
+class EntranceAccessRuleCall(Rule[TWorld], game="Archipelago"):
+    """A rule that evaluates an entrance's access_rule.
+
+    This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+    is called, potentially with a fake pearl state. The entrance is looked up by name
+    and its access_rule is evaluated.
+
+    When fake_pearl is True, Moon Pearl is temporarily added to the state before
+    evaluating the access rule. This simulates the "fake_pearl_state" function from
+    ALttP UnderworldGlitchRules.py.
+    """
+
+    entrance_name: str
+    """The name of the entrance whose access_rule to evaluate"""
+
+    fake_pearl: bool = False
+    """If True, evaluate the rule as if the player has Moon Pearl"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.entrance_name,
+            self.fake_pearl,
+            player=world.player,
+            multiworld=world.multiworld,
+            caching_enabled=world.rule_caching_enabled,
+        )
+
+    @override
+    def __str__(self) -> str:
+        fp = ", fake_pearl=True" if self.fake_pearl else ""
+        return f"{self.__class__.__name__}({self.entrance_name!r}{fp})"
+
+    class Resolved(Rule.Resolved):
+        entrance_name: str
+        fake_pearl: bool
+        multiworld: Any  # MultiWorld
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            try:
+                entrance = self.multiworld.get_entrance(self.entrance_name, self.player)
+            except KeyError:
+                # Entrance not found - conservatively return True
+                return True
+
+            eval_state = state
+            if self.fake_pearl:
+                # Create a fake state with Moon Pearl
+                if not state.has('Moon Pearl', self.player):
+                    eval_state = state.copy()
+                    eval_state.prog_items[self.player]['Moon Pearl'] += 1
+
+            # Evaluate the entrance's access_rule
+            return entrance.access_rule(eval_state)
+
+        @override
+        def entrance_dependencies(self) -> dict[str, set[int]]:
+            return {self.entrance_name: {id(self)}}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            if state is None:
+                verb = "Can access"
+            elif self(state):
+                verb = "Can access"
+            else:
+                verb = "Cannot access"
+            return [
+                {"type": "text", "text": f"{verb} entrance "},
+                {"type": "entrance_name", "text": self.entrance_name, "player": self.player},
+                {"type": "text", "text": f" access rule{fp_text}"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            if state is None:
+                return str(self)
+            prefix = "Can access" if self(state) else "Cannot access"
+            return f"{prefix} entrance {self.entrance_name} access rule{fp_text}"
+
+        @override
+        def __str__(self) -> str:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            return f"Entrance {self.entrance_name} access rule{fp_text}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            result = {"entrance_name": self.entrance_name}
+            if self.fake_pearl:
+                result["fake_pearl"] = True
+            return result
+
+
 # =============================================================================
 # AST Format Support Classes
 # =============================================================================

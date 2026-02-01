@@ -86,17 +86,18 @@ function getVeryHardRequiredUpgradeLevel(snapshot, staticData) {
 /**
  * Get minimum weapon/armor upgrade level across all unit types
  * Returns the minimum upgrade count for infantry, vehicle, and ship weapons/armor
+ * Uses weapon_armor_upgrade_count to account for bundle items
  */
-function terranArmyWeaponArmorUpgradeMinLevel(snapshot) {
+function terranArmyWeaponArmorUpgradeMinLevel(snapshot, staticData) {
     const WEAPON_ARMOR_UPGRADE_MAX_LEVEL = 3;
 
-    // Get upgrade counts for each type
-    const infantryWeapon = count(snapshot, 'Progressive Terran Infantry Weapon');
-    const infantryArmor = count(snapshot, 'Progressive Terran Infantry Armor');
-    const vehicleWeapon = count(snapshot, 'Progressive Terran Vehicle Weapon');
-    const vehicleArmor = count(snapshot, 'Progressive Terran Vehicle Armor');
-    const shipWeapon = count(snapshot, 'Progressive Terran Ship Weapon');
-    const shipArmor = count(snapshot, 'Progressive Terran Ship Armor');
+    // Get upgrade counts for each type, accounting for bundles
+    const infantryWeapon = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Infantry Weapon');
+    const infantryArmor = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Infantry Armor');
+    const vehicleWeapon = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Vehicle Weapon');
+    const vehicleArmor = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Vehicle Armor');
+    const shipWeapon = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Ship Weapon');
+    const shipArmor = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Ship Armor');
 
     // Return minimum across all types (assuming all unit types are in the game)
     return Math.min(
@@ -111,19 +112,50 @@ function terranArmyWeaponArmorUpgradeMinLevel(snapshot) {
  * Check if weapon/armor upgrade level meets very hard mission requirements
  */
 function terranVeryHardMissionWeaponArmorLevel(snapshot, staticData) {
-    const minLevel = terranArmyWeaponArmorUpgradeMinLevel(snapshot);
+    const minLevel = terranArmyWeaponArmorUpgradeMinLevel(snapshot, staticData);
     const requiredLevel = getVeryHardRequiredUpgradeLevel(staticData);
     return minLevel >= requiredLevel;
 }
 
 /**
  * Count weapon/armor upgrades for a specific progressive item
- * Returns the count of a weapon/armor upgrade item.
+ * Returns the count of a weapon/armor upgrade item, including counts from bundle items.
  * Used in comparisons like `weapon_armor_upgrade_count(...) >= 2`
  * Matches Python: self.weapon_armor_upgrade_count(item_name, state)
+ *
+ * Python logic handles:
+ * 1. generic_upgrade_missions option (mission-based upgrades) - not implemented in JS
+ * 2. Direct count of the upgrade item
+ * 3. Counts from upgrade_bundle_inverted_lookup (bundle items that provide this upgrade)
+ * 4. For protoss shields: max of ground/air upgrades - not implemented yet
+ * 5. Quatro bonus for protoss generic upgrades - not implemented yet
  */
 function weapon_armor_upgrade_count(snapshot, staticData, upgradeItem) {
-    return count(snapshot, upgradeItem);
+    let totalCount = count(snapshot, upgradeItem);
+
+    // Get the bundle lookup from game_info
+    // The structure is staticData.game_info[playerId].upgrade_bundle_inverted_lookup
+    const playerId = getPlayerId(snapshot, staticData);
+    let bundleLookup = staticData?.game_info?.[playerId]?.upgrade_bundle_inverted_lookup;
+
+    // Fallback: check if game_info is not keyed by player (some test environments)
+    if (!bundleLookup) {
+        bundleLookup = staticData?.game_info?.upgrade_bundle_inverted_lookup;
+    }
+
+    // Fallback: check if upgrade_bundle_inverted_lookup is directly on staticData
+    if (!bundleLookup) {
+        bundleLookup = staticData?.upgrade_bundle_inverted_lookup;
+    }
+
+    if (bundleLookup && bundleLookup[upgradeItem]) {
+        // Add counts from bundle items that provide this upgrade
+        for (const bundleItem of bundleLookup[upgradeItem]) {
+            totalCount += count(snapshot, bundleItem);
+        }
+    }
+
+    return totalCount;
 }
 
 /**
@@ -205,7 +237,7 @@ export function terran_competent_ground_to_air(snapshot, staticData) {
     // (Marine OR Dominion Trooper) AND bio_heal AND infantry weapon >= 2
     if (has_any(snapshot, ['Marine', 'Dominion Trooper'])
         && terran_bio_heal(snapshot, staticData)
-        && count(snapshot, 'Progressive Terran Infantry Weapon') >= 2) {
+        && weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Infantry Weapon') >= 2) {
         return true;
     }
 
@@ -650,8 +682,9 @@ export function terran_competent_comp(snapshot, staticData, upgradeLevel = 1) {
     const advancedTactics = isAdvancedTactics(staticData, snapshot);
 
     // Infantry with Healing
-    const infantryWeapons = count(snapshot, 'Progressive Terran Infantry Weapon');
-    const infantryArmor = count(snapshot, 'Progressive Terran Infantry Armor');
+    // Use weapon_armor_upgrade_count to account for bundle items
+    const infantryWeapons = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Infantry Weapon');
+    const infantryArmor = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Infantry Armor');
     const hasInfantry = has_any(snapshot, ['Marine', 'Dominion Trooper', 'Marauder']);
     if (infantryWeapons >= upgradeLevel + 1
         && infantryArmor >= upgradeLevel
@@ -662,8 +695,8 @@ export function terran_competent_comp(snapshot, staticData, upgradeLevel = 1) {
     }
 
     // Mass Air-To-Ground
-    const shipWeapons = count(snapshot, 'Progressive Terran Ship Weapon');
-    const shipArmor = count(snapshot, 'Progressive Terran Ship Armor');
+    const shipWeapons = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Ship Weapon');
+    const shipArmor = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Ship Armor');
     if (shipWeapons >= upgradeLevel && shipArmor >= upgradeLevel) {
         const hasAir = has_any(snapshot, ['Banshee', 'Battlecruiser'])
             || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
@@ -676,8 +709,8 @@ export function terran_competent_comp(snapshot, staticData, upgradeLevel = 1) {
     }
 
     // Strong Mech
-    const vehicleWeapons = count(snapshot, 'Progressive Terran Vehicle Weapon');
-    const vehicleArmor = count(snapshot, 'Progressive Terran Vehicle Armor');
+    const vehicleWeapons = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Vehicle Weapon');
+    const vehicleArmor = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Vehicle Armor');
     if (vehicleWeapons >= upgradeLevel && vehicleArmor >= upgradeLevel) {
         const strongVehicle = has_any(snapshot, ['Thor', 'Siege Tank']);
         const lightFrontline = has_any(snapshot, ['Marine', 'Dominion Trooper', 'Hellion', 'Vulture'])
@@ -1391,7 +1424,7 @@ export default {
                 terran_air_anti_air(snapshot, staticData)
                 || (
                     has_any(snapshot, ['Battlecruiser', 'Valkyrie'])
-                    && count(snapshot, 'Progressive Terran Ship Weapon') >= 2
+                    && weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Ship Weapon') >= 2
                 )
             )
         );
@@ -2237,7 +2270,7 @@ export default {
     terran_maw_requirement: function(snapshot, staticData) {
         // Ability to deal with large areas with environment damage
         // Either Battlecruiser with upgrades OR air units that can survive and deal damage
-        const shipWeaponLevel = count(snapshot, 'Progressive Terran Ship Weapon');
+        const shipWeaponLevel = weapon_armor_upgrade_count(snapshot, staticData, 'Progressive Terran Ship Weapon');
 
         return (
             has(snapshot, 'Battlecruiser')

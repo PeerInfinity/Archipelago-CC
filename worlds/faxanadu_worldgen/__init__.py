@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -52,17 +52,14 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Thunder": 1,
     "Tilte": 1,
     "Unlock Wingboots": 1,
+    "Wingboots": 4,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Eolis Deluge": "Wingboots",
-    "Apolune Key Jack": "Wingboots",
     "Sky Spring": "Sky Spring Flow",
     "Joker Spring": "Joker Spring Flow",
     "Tower of Fortress Spring": "Tower of Fortress Spring Flow",
-    "Misty Shop Death": "Wingboots",
-    "Victim Mattock": "Wingboots",
     "Evil One": "Killed Evil One",
 }
 
@@ -122,120 +119,239 @@ class FaxanaduWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "Conflate Guru": "Progressive Sword",
+        "Conflate Magic Shield": "Progressive Sword",
         "Eolis Guru": "Progressive Sword",
+        "Tower of Fortress Guru": "Progressive Sword",
         "Eolis Key Jack": "Elixir",
+        "Fraternal Castle Hidden Ointment": "Elixir",
+        "Joker Spring Ruby Ring": "Elixir",
+        "Path to Daybreak Battle Suit": "Elixir",
         "Eolis Hand Dagger": "Key King",
         "Eolis Red Potion": "Key Jack",
         "Eolis Elixir": "Black Onyx",
-        "Eolis Deluge": "Wingboots",
-        "Path to Apolune Magic Shield": "Unlock Wingboots",
-        "Path to Apolune Death": "Hourglass",
-        "Apolune Small Shield": "Hourglass",
-        "Apolune Hand Dagger": "Red Potion",
-        "Apolune Deluge": "Red Potion",
-        "Apolune Red Potion": "Ointment",
         "Apolune Key Jack": "Wingboots",
-        "Tower of Trunk Hidden Mattock": "Progressive Shield",
-        "Tower of Trunk Hidden Hourglass": "Poison",
-        "Tower of Trunk Boss Mattock": "Mattock",
-        "Path to Forepaw Hidden Red Potion": "Poison",
-        "Path to Forepaw Glove": "Poison",
-        "Forepaw Long Sword": "Ring of Ruby",
+        "Eolis Deluge": "Wingboots",
+        "Misty Shop Death": "Wingboots",
+        "Victim Mattock": "Wingboots",
+        "Path to Apolune Magic Shield": "Unlock Wingboots",
+        "Apolune Small Shield": "Hourglass",
+        "Conflate Wingboots": "Hourglass",
+        "Mascon Key Queen": "Hourglass",
+        "Mascon Red Potion": "Hourglass",
+        "Mascon Thunder": "Hourglass",
+        "Misty Shop Red Potion": "Hourglass",
+        "Path to Apolune Death": "Hourglass",
+        "Path to Conflate Hidden Ointment": "Hourglass",
+        "Tower of Fortress Hidden Wingboots": "Hourglass",
+        "Victim Key King": "Hourglass",
         "Forepaw Studded Mail": "Red Potion",
-        "Forepaw Small Shield": "Key Queen",
-        "Forepaw Red Potion": "Red Potion",
-        "Forepaw Wingboots": "Red Potion",
+        "Path to Daybreak Hidden Wingboots 1": "Red Potion",
+        "Tower of Mist Black Onyx": "Red Potion",
+        "Tower of Mist Hidden Ointment": "Red Potion",
+        "Apolune Deluge": "Red Potion",
+        "Apolune Hand Dagger": "Red Potion",
+        "Branches Hidden Ointment": "Red Potion",
+        "Branches Poison": "Red Potion",
+        "Conflate Giant Blade": "Red Potion",
+        "Conflate Red Potion": "Red Potion",
+        "Daybreak Giant Blade": "Red Potion",
+        "Daybreak Red Potion": "Red Potion",
+        "Evil Fortress Poison 2": "Red Potion",
         "Forepaw Key Jack": "Red Potion",
         "Forepaw Key Queen": "Red Potion",
+        "Forepaw Red Potion": "Red Potion",
+        "Forepaw Wingboots": "Red Potion",
+        "Fraternal Castle Guru": "Red Potion",
+        "Fraternal Castle Poison 1": "Red Potion",
+        "Fraternal Castle Shop Hidden Ointment": "Red Potion",
+        "Mascon Large Shield": "Red Potion",
+        "Mascon Mattock": "Red Potion",
+        "Mist Hidden Poison 1": "Red Potion",
+        "Mist Hidden Poison 2": "Red Potion",
+        "Misty Doctor Office": "Red Potion",
+        "Tower of Fortress Elixir": "Red Potion",
+        "Tower of Mist Elixir": "Red Potion",
+        "Tower of Suffer Pendant": "Red Potion",
         "Trunk Hidden Ointment": "Red Potion",
         "Trunk Hidden Red Potion": "Red Potion",
         "Trunk Red Potion": "Red Potion",
+        "Useless Tower": "Red Potion",
+        "Victim Full Plate": "Red Potion",
+        "Victim Red Potion": "Red Potion",
+        "Victim Tavern": "Red Potion",
+        "Apolune Red Potion": "Ointment",
+        "Dartmoor Giant Blade": "Ointment",
+        "Daybreak Key King": "Ointment",
+        "Evil Fortress Ointment": "Ointment",
+        "Misty House": "Ointment",
+        "Misty Magic Hall": "Ointment",
+        "Path to Daybreak Poison": "Ointment",
+        "Tower of Fortress Ointment": "Ointment",
+        "Branches Hidden Mattock": "Progressive Shield",
+        "Daybreak Tilte": "Progressive Shield",
+        "Misty Shop Elixir": "Progressive Shield",
+        "Tower of Trunk Hidden Mattock": "Progressive Shield",
+        "Dartmoor Castle Hidden Hourglass": "Poison",
+        "Evil Fortress Glove": "Poison",
+        "Evil Fortress Hidden Glove": "Poison",
+        "Evil Fortress Poison 1": "Poison",
+        "Fraternal Castle Dragon Slayer": "Poison",
+        "Fraternal Castle Poison 2": "Poison",
+        "Fraternal Castle Poison 3": "Poison",
+        "Helm Branch Hidden Glove": "Poison",
+        "Mist Hidden Wingboots": "Poison",
+        "Path to Conflate Poison": "Poison",
+        "Path to Daybreak Hidden Wingboots 2": "Poison",
+        "Path to Daybreak Magical Rod": "Poison",
+        "Path to Forepaw Glove": "Poison",
+        "Path to Forepaw Hidden Red Potion": "Poison",
+        "Path to Mascon Hidden Wingboots": "Poison",
+        "Tower of Suffer Hidden Hourglass": "Poison",
+        "Tower of Trunk Hidden Hourglass": "Poison",
+        "Tower of Trunk Boss Mattock": "Mattock",
+        "Forepaw Long Sword": "Ring of Ruby",
+        "Forepaw Small Shield": "Key Queen",
         "Sky Spring": "Sky Spring Flow",
-        "Joker Spring Ruby Ring": "Elixir",
         "Joker Spring": "Joker Spring Flow",
         "Tower of Fortress Poison 1": "Key Joker",
         "Tower of Fortress Poison 2": "Spring Elixir",
-        "Tower of Fortress Hidden Wingboots": "Hourglass",
-        "Tower of Fortress Ointment": "Ointment",
-        "Tower of Fortress Boss Wingboots": "Glove",
-        "Tower of Fortress Elixir": "Red Potion",
-        "Tower of Fortress Guru": "Progressive Sword",
-        "Tower of Fortress Spring": "Tower of Fortress Spring Flow",
-        "Path to Mascon Hidden Wingboots": "Poison",
-        "Tower of Red Potion": "Ring of Dworf",
-        "Mascon Large Shield": "Red Potion",
-        "Mascon Thunder": "Hourglass",
-        "Mascon Mattock": "Red Potion",
-        "Mascon Red Potion": "Hourglass",
-        "Mascon Key Jack": "Key Ace",
-        "Mascon Key Queen": "Hourglass",
-        "Misty Shop Death": "Wingboots",
-        "Misty Shop Hourglass": "Death",
-        "Misty Shop Elixir": "Progressive Shield",
-        "Misty Shop Red Potion": "Hourglass",
-        "Misty Doctor Office": "Red Potion",
-        "Tower of Suffer Hidden Wingboots": "Progressive Armor",
-        "Tower of Suffer Hidden Hourglass": "Poison",
-        "Tower of Suffer Pendant": "Red Potion",
-        "Victim Full Plate": "Red Potion",
-        "Victim Mattock": "Wingboots",
-        "Victim Red Potion": "Red Potion",
-        "Victim Key King": "Hourglass",
-        "Victim Key Queen": "Progressive Armor",
-        "Victim Tavern": "Red Potion",
-        "Mist Hidden Poison 1": "Red Potion",
-        "Mist Hidden Poison 2": "Red Potion",
-        "Mist Hidden Wingboots": "Poison",
-        "Misty Magic Hall": "Ointment",
-        "Misty House": "Ointment",
-        "Useless Tower": "Red Potion",
-        "Tower of Mist Hidden Ointment": "Red Potion",
-        "Tower of Mist Elixir": "Red Potion",
-        "Tower of Mist Black Onyx": "Red Potion",
-        "Path to Conflate Hidden Ointment": "Hourglass",
-        "Path to Conflate Poison": "Poison",
-        "Helm Branch Hidden Glove": "Poison",
         "Helm Branch Battle Helmet": "Glove",
-        "Conflate Giant Blade": "Red Potion",
-        "Conflate Magic Shield": "Progressive Sword",
-        "Conflate Wingboots": "Hourglass",
-        "Conflate Red Potion": "Red Potion",
-        "Conflate Guru": "Progressive Sword",
-        "Branches Hidden Ointment": "Red Potion",
-        "Branches Poison": "Red Potion",
-        "Branches Hidden Mattock": "Progressive Shield",
+        "Tower of Fortress Boss Wingboots": "Glove",
+        "Tower of Fortress Spring": "Tower of Fortress Spring Flow",
+        "Tower of Red Potion": "Ring of Dworf",
+        "Mascon Key Jack": "Key Ace",
+        "Misty Shop Hourglass": "Death",
+        "Evil Fortress Poison 3": "Progressive Armor",
+        "Tower of Suffer Hidden Wingboots": "Progressive Armor",
+        "Victim Key Queen": "Progressive Armor",
         "Branches Hidden Hourglass": "Deluge",
-        "Path to Daybreak Hidden Wingboots 1": "Red Potion",
-        "Path to Daybreak Magical Rod": "Poison",
-        "Path to Daybreak Hidden Wingboots 2": "Poison",
-        "Path to Daybreak Poison": "Ointment",
         "Path to Daybreak Glove": "Tilte",
-        "Path to Daybreak Battle Suit": "Elixir",
-        "Daybreak Tilte": "Progressive Shield",
-        "Daybreak Giant Blade": "Red Potion",
-        "Daybreak Red Potion": "Red Potion",
-        "Daybreak Key King": "Ointment",
         "Daybreak Key Queen": "Demons Ring",
-        "Dartmoor Castle Hidden Hourglass": "Poison",
         "Dartmoor Castle Hidden Red Potion": "Ring of Elf",
-        "Dartmoor Giant Blade": "Ointment",
         "Dartmoor Red Potion": "Fire",
         "Dartmoor Key King": "Magical Rod",
-        "Fraternal Castle Hidden Ointment": "Elixir",
-        "Fraternal Castle Shop Hidden Ointment": "Red Potion",
-        "Fraternal Castle Poison 1": "Red Potion",
-        "Fraternal Castle Poison 2": "Poison",
-        "Fraternal Castle Poison 3": "Poison",
         "Fraternal Castle Hidden Hourglass": "Thunder",
-        "Fraternal Castle Dragon Slayer": "Poison",
-        "Fraternal Castle Guru": "Red Potion",
-        "Evil Fortress Ointment": "Ointment",
-        "Evil Fortress Poison 1": "Poison",
-        "Evil Fortress Glove": "Poison",
-        "Evil Fortress Poison 2": "Red Potion",
-        "Evil Fortress Poison 3": "Progressive Armor",
-        "Evil Fortress Hidden Glove": "Poison",
         "Evil One": "Killed Evil One",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Eolis Guru": True,
+        "Eolis Key Jack": False,
+        "Eolis Hand Dagger": True,
+        "Eolis Red Potion": True,
+        "Eolis Elixir": True,
+        "Eolis Deluge": False,
+        "Path to Apolune Magic Shield": True,
+        "Path to Apolune Death": False,
+        "Apolune Small Shield": False,
+        "Apolune Hand Dagger": False,
+        "Apolune Deluge": False,
+        "Apolune Red Potion": False,
+        "Apolune Key Jack": False,
+        "Tower of Trunk Hidden Mattock": False,
+        "Tower of Trunk Hidden Hourglass": False,
+        "Tower of Trunk Boss Mattock": True,
+        "Path to Forepaw Hidden Red Potion": False,
+        "Path to Forepaw Glove": False,
+        "Forepaw Long Sword": True,
+        "Forepaw Studded Mail": True,
+        "Forepaw Small Shield": True,
+        "Forepaw Red Potion": False,
+        "Forepaw Wingboots": False,
+        "Forepaw Key Jack": False,
+        "Forepaw Key Queen": False,
+        "Trunk Hidden Ointment": False,
+        "Trunk Hidden Red Potion": False,
+        "Trunk Red Potion": False,
+        "Sky Spring": True,
+        "Joker Spring Ruby Ring": False,
+        "Joker Spring": True,
+        "Tower of Fortress Poison 1": True,
+        "Tower of Fortress Poison 2": True,
+        "Tower of Fortress Hidden Wingboots": False,
+        "Tower of Fortress Ointment": False,
+        "Tower of Fortress Boss Wingboots": False,
+        "Tower of Fortress Elixir": False,
+        "Tower of Fortress Guru": True,
+        "Tower of Fortress Spring": True,
+        "Path to Mascon Hidden Wingboots": False,
+        "Tower of Red Potion": True,
+        "Mascon Large Shield": False,
+        "Mascon Thunder": False,
+        "Mascon Mattock": False,
+        "Mascon Red Potion": False,
+        "Mascon Key Jack": True,
+        "Mascon Key Queen": False,
+        "Misty Shop Death": False,
+        "Misty Shop Hourglass": False,
+        "Misty Shop Elixir": False,
+        "Misty Shop Red Potion": False,
+        "Misty Doctor Office": False,
+        "Tower of Suffer Hidden Wingboots": True,
+        "Tower of Suffer Hidden Hourglass": False,
+        "Tower of Suffer Pendant": False,
+        "Victim Full Plate": False,
+        "Victim Mattock": False,
+        "Victim Red Potion": False,
+        "Victim Key King": False,
+        "Victim Key Queen": True,
+        "Victim Tavern": False,
+        "Mist Hidden Poison 1": False,
+        "Mist Hidden Poison 2": False,
+        "Mist Hidden Wingboots": False,
+        "Misty Magic Hall": False,
+        "Misty House": False,
+        "Useless Tower": False,
+        "Tower of Mist Hidden Ointment": True,
+        "Tower of Mist Elixir": False,
+        "Tower of Mist Black Onyx": True,
+        "Path to Conflate Hidden Ointment": False,
+        "Path to Conflate Poison": False,
+        "Helm Branch Hidden Glove": False,
+        "Helm Branch Battle Helmet": False,
+        "Conflate Giant Blade": False,
+        "Conflate Magic Shield": True,
+        "Conflate Wingboots": False,
+        "Conflate Red Potion": False,
+        "Conflate Guru": True,
+        "Branches Hidden Ointment": False,
+        "Branches Poison": False,
+        "Branches Hidden Mattock": False,
+        "Branches Hidden Hourglass": True,
+        "Path to Daybreak Hidden Wingboots 1": True,
+        "Path to Daybreak Magical Rod": False,
+        "Path to Daybreak Hidden Wingboots 2": False,
+        "Path to Daybreak Poison": False,
+        "Path to Daybreak Glove": False,
+        "Path to Daybreak Battle Suit": False,
+        "Daybreak Tilte": False,
+        "Daybreak Giant Blade": False,
+        "Daybreak Red Potion": False,
+        "Daybreak Key King": False,
+        "Daybreak Key Queen": True,
+        "Dartmoor Castle Hidden Hourglass": False,
+        "Dartmoor Castle Hidden Red Potion": False,
+        "Dartmoor Giant Blade": False,
+        "Dartmoor Red Potion": False,
+        "Dartmoor Key King": False,
+        "Fraternal Castle Hidden Ointment": False,
+        "Fraternal Castle Shop Hidden Ointment": False,
+        "Fraternal Castle Poison 1": False,
+        "Fraternal Castle Poison 2": False,
+        "Fraternal Castle Poison 3": False,
+        "Fraternal Castle Hidden Hourglass": False,
+        "Fraternal Castle Dragon Slayer": False,
+        "Fraternal Castle Guru": False,
+        "Evil Fortress Ointment": False,
+        "Evil Fortress Poison 1": False,
+        "Evil Fortress Glove": False,
+        "Evil Fortress Poison 2": False,
+        "Evil Fortress Poison 3": True,
+        "Evil Fortress Hidden Glove": False,
+        "Evil One": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -337,6 +453,7 @@ class FaxanaduWorld(RuleWorldMixin, World):
                 # Create items with per-classification counts
                 classification_map = {
                     'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
                     'useful': ItemClassification.useful,
                     'trap': ItemClassification.trap,
                     'filler': ItemClassification.filler,
@@ -392,20 +509,39 @@ class FaxanaduWorld(RuleWorldMixin, World):
         During tracking (generation_is_fake=True), we always place canonical items
         so that location_item_name() checks work correctly for self-locking rules.
         """
-        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
+
             # Try to find and use an item from the pool (preserves correct classification)
-            # Prefer progression items first since they may be needed for accessibility
             # Note: Must use index-based removal because Item.__eq__ only compares name/player,
             # not classification, so list.remove() would remove the wrong item
             item = None
@@ -425,8 +561,17 @@ class FaxanaduWorld(RuleWorldMixin, World):
                     if progression_idx is not None and filler_idx is not None:
                         break
 
-            # Use progression item first if available, otherwise filler
-            chosen_idx = progression_idx if progression_idx is not None else filler_idx
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
             if chosen_idx is not None:
                 item = self.multiworld.itempool.pop(chosen_idx)
             else:
@@ -438,7 +583,35 @@ class FaxanaduWorld(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = FaxanaduWorldGenItem(name, data.classification, data.id, self.player)
+        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = FaxanaduWorldGenItem(name, classification, data.id, self.player)
+        else:
+            item = FaxanaduWorldGenItem(name, data.classification, data.id, self.player)
         return item
 
 

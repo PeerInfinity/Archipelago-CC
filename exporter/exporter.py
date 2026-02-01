@@ -891,8 +891,9 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         # Also extract dungeons to separate structure
         with profiler.section("process_regions"):
             regions_data, dungeons_data = process_regions(multiworld, player, game_handler, location_id_mappings.get(player, {}))
+
         export_data['regions'][player_str] = regions_data
-        
+
         # Only add dungeons if there's data
         if dungeons_data:
             if 'dungeons' not in export_data:
@@ -981,6 +982,9 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             # Don't add error to export_data - exporter settings can fall back to defaults
 
         # Get helper definitions using handler
+        # Reset counter before helper analysis to prevent false "infinite loop" detection
+        # from accumulated counts during location/entrance rule analysis
+        reset_analyze_rule_counter()
         with profiler.section("get_helper_definitions"):
             try:
                 helper_definitions = game_handler.get_helper_definitions(world)
@@ -1173,6 +1177,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         game_name = multiworld.game[player]
         world = multiworld.worlds[player]
         game_handler = get_game_export_handler(game_name, world)
+
         if game_handler and hasattr(game_handler, 'post_process_data'):
             try:
                 export_data = game_handler.post_process_data(export_data)
@@ -1628,8 +1633,6 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                             unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
                                             if unwrapped:
                                                 rule_to_analyze = unwrapped
-                                        elif game_name == "Super Metroid":
-                                            logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
 
                                     # Try special handling first for complex exit rules
                                     if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
@@ -1816,7 +1819,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                 # Allow game handler to post-process location data before adding to region
                                 if game_handler and hasattr(game_handler, 'post_process_location_data'):
-                                    location_data = game_handler.post_process_location_data(location_data, location_name)
+                                    location_data = game_handler.post_process_location_data(
+                                        location_data, location_name,
+                                        region_name=region.name, world=world
+                                    )
 
                                 region_data['locations'].append(location_data)
                             except Exception as e:
@@ -2887,7 +2893,7 @@ def _clear_multiworld_references(multiworld) -> None:
         # Clear world references and world-specific objects (like dungeons)
         if hasattr(multiworld, 'worlds'):
             for player, world in list(multiworld.worlds.items()):
-                # Clear dungeon references (ALttP has dungeons dict that hold multiworld refs)
+                # Clear dungeon references (some games have dungeons dict that hold multiworld refs)
                 if hasattr(world, 'dungeons') and isinstance(world.dungeons, dict):
                     dungeon_count = 0
                     for dungeon in list(world.dungeons.values()):

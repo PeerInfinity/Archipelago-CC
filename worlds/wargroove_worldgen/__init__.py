@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -114,43 +114,87 @@ class WargrooveWorld(RuleWorldMixin, World):
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Humble Beginnings: Caesar": "Ballista",
         "Humble Beginnings: Chest 1": "Final Bridges",
+        "A Ballista's Revenge: Victory": "Commander Defense Boost",
+        "Ambushed in the Middle: Victory (Blue)": "Commander Defense Boost",
+        "Best Friendssss: Find Sedge": "Commander Defense Boost",
+        "Doggo Mountain: Victory": "Commander Defense Boost",
         "Humble Beginnings: Chest 2": "Commander Defense Boost",
         "Humble Beginnings: Victory": "Commander Defense Boost",
-        "Best Friendssss: Find Sedge": "Commander Defense Boost",
+        "Open Season: Victory": "Commander Defense Boost",
+        "Rebel Village: Victory (Pink)": "Commander Defense Boost",
         "Best Friendssss: Victory": "Dragon",
         "A Knight's Folly: Caesar": "Merfolk",
         "A Knight's Folly: Victory": "Warship",
+        "Ambushed in the Middle: Victory (Green)": "Income Boost",
+        "Archery Lessons: Victory": "Income Boost",
+        "Deep Thicket: Victory": "Income Boost",
         "Denrunaway: Chest": "Income Boost",
+        "Doggo Mountain: Find all the Dogs": "Income Boost",
+        "Foolish Canal: Victory": "Income Boost",
+        "Master of the Lake: Victory": "Income Boost",
         "Denrunaway: Victory": "Witch",
         "Dragon Freeway: Victory": "Barge",
         "Deep Thicket: Find Sedge": "Turtle",
-        "Deep Thicket: Victory": "Income Boost",
         "Corrupted Inlet: Victory": "Eastern Bridges",
         "Mage Mayhem: Caesar": "Balloon",
         "Mage Mayhem: Victory": "Southern Walls",
         "Endless Knight: Victory": "Knight",
-        "Ambushed in the Middle: Victory (Blue)": "Commander Defense Boost",
-        "Ambushed in the Middle: Victory (Green)": "Income Boost",
         "The Churning Sea: Victory": "Spearman",
         "Frigid Archery: Light the Torch": "Mage",
         "Frigid Archery: Victory": "Rifleman",
         "Archery Lessons: Chest": "Harpoon Ship",
-        "Archery Lessons: Victory": "Income Boost",
         "Surrounded: Caesar": "Thief",
         "Surrounded: Victory": "Golem",
         "Darkest Knight: Victory": "Harpy",
         "Robbed: Victory": "Wagon",
         "Open Season: Caesar": "Final Walls",
-        "Open Season: Victory": "Commander Defense Boost",
-        "Doggo Mountain: Find all the Dogs": "Income Boost",
-        "Doggo Mountain: Victory": "Commander Defense Boost",
         "Tenri's Fall: Victory": "Final Sickle",
-        "Foolish Canal: Victory": "Income Boost",
-        "Master of the Lake: Victory": "Income Boost",
-        "A Ballista's Revenge: Victory": "Commander Defense Boost",
-        "Rebel Village: Victory (Pink)": "Commander Defense Boost",
         "Rebel Village: Victory (Red)": "Archer",
         "Wargroove Finale: Victory": "Wargroove Victory",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Humble Beginnings: Caesar": True,
+        "Humble Beginnings: Chest 1": True,
+        "Humble Beginnings: Chest 2": False,
+        "Humble Beginnings: Victory": False,
+        "Best Friendssss: Find Sedge": False,
+        "Best Friendssss: Victory": True,
+        "A Knight's Folly: Caesar": True,
+        "A Knight's Folly: Victory": True,
+        "Denrunaway: Chest": False,
+        "Denrunaway: Victory": False,
+        "Dragon Freeway: Victory": True,
+        "Deep Thicket: Find Sedge": True,
+        "Deep Thicket: Victory": False,
+        "Corrupted Inlet: Victory": True,
+        "Mage Mayhem: Caesar": False,
+        "Mage Mayhem: Victory": True,
+        "Endless Knight: Victory": True,
+        "Ambushed in the Middle: Victory (Blue)": False,
+        "Ambushed in the Middle: Victory (Green)": False,
+        "The Churning Sea: Victory": True,
+        "Frigid Archery: Light the Torch": True,
+        "Frigid Archery: Victory": True,
+        "Archery Lessons: Chest": True,
+        "Archery Lessons: Victory": False,
+        "Surrounded: Caesar": True,
+        "Surrounded: Victory": False,
+        "Darkest Knight: Victory": True,
+        "Robbed: Victory": False,
+        "Open Season: Caesar": True,
+        "Open Season: Victory": False,
+        "Doggo Mountain: Find all the Dogs": False,
+        "Doggo Mountain: Victory": False,
+        "Tenri's Fall: Victory": True,
+        "Foolish Canal: Victory": False,
+        "Master of the Lake: Victory": False,
+        "A Ballista's Revenge: Victory": False,
+        "Rebel Village: Victory (Pink)": False,
+        "Rebel Village: Victory (Red)": True,
+        "Wargroove Finale: Victory": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -158,7 +202,7 @@ class WargrooveWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.world_class_name = 'WargrooveWorld'
         self.world_description = 'Command an army, in this retro style turn based strategy game!'
-        self.slot_data = types.SimpleNamespace(seed='jpYxoraZuFulnbuu', income_boost=25, commander_defense_boost=2, can_choose_commander=False, commander_choice=0, player_sacrifice_limit=0, player_summon_limit=0, ai_sacrifice_limit=0, ai_summon_limit=0, death_link=0, starting_groove_multiplier=20)
+        self.slot_data = types.SimpleNamespace(seed='bHgGslEfAlsYkXhU', income_boost=25, commander_defense_boost=2, can_choose_commander=False, commander_choice=0, player_sacrifice_limit=0, player_summon_limit=0, ai_sacrifice_limit=0, ai_summon_limit=0, death_link=0, starting_groove_multiplier=20)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -244,14 +288,38 @@ class WargrooveWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = WargrooveWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = WargrooveWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = WargrooveWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -296,27 +364,81 @@ class WargrooveWorld(RuleWorldMixin, World):
             lambda state: state.has("Wargroove Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
@@ -328,7 +450,7 @@ class WargrooveWorld(RuleWorldMixin, World):
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
         return {
-            "seed": "jpYxoraZuFulnbuu",
+            "seed": "bHgGslEfAlsYkXhU",
             "income_boost": 25,
             "commander_defense_boost": 2,
             "can_choose_commander": False,

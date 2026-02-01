@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HelperCall, Or
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, False_, Has, HasAll, HasGroup, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -50,11 +50,7 @@ def get_hat_cost(state: "CollectionState", player: int, hat = None) -> bool:
 
 
 def has_paintings(state: "CollectionState", player: int, count = None, allow_skip: bool = True) -> bool:
-    return (True if not (painting_logic(state, player)) else ((True if (get_difficulty(state, player) >= 0) else None) if (not (state.multiworld.worlds[player].options.NoPaintingSkips)) and (allow_skip) else state.has('Progressive Painting Unlock', player, count)))
-
-
-def has_relic_combo(state: "CollectionState", player: int, relic = None) -> bool:
-    return state.has_group(relic, player, len(state.multiworld.worlds[player].item_name_groups[relic]))
+    return (True if not (painting_logic(state, player)) else ((True if (get_difficulty(state, player) >= 0) else state.has('Progressive Painting Unlock', player, count)) if (not (state.multiworld.worlds[player].options.NoPaintingSkips)) and (allow_skip) else state.has('Progressive Painting Unlock', player, count)))
 
 
 def painting_logic(state: "CollectionState", player: int) -> bool:
@@ -134,7 +130,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 1", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HasGroup('Burger', 2)
     )
 
     world.set_rule(
@@ -149,7 +145,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 2", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HasGroup('Burger', 2)
     )
 
     world.set_rule(
@@ -164,7 +160,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 3", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HasGroup('Burger', 2)
     )
 
     world.set_rule(
@@ -179,7 +175,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 4", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HasGroup('Burger', 2)
     )
 
     world.set_rule(
@@ -194,7 +190,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
@@ -209,7 +205,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 5", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HasGroup('Burger', 2)
     )
 
     world.set_rule(
@@ -224,7 +220,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Mafia of Cooks Portal - Entrance 6", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Burger',))
+        HasGroup('Burger', 2)
     )
 
     world.set_rule(
@@ -269,7 +265,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 1", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+        HasGroup('Train', 2)
     )
 
     world.set_rule(
@@ -294,12 +290,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
@@ -309,17 +305,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Dead Bird Studio Portal - Entrance 2", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Train',))
+        HasGroup('Train', 2)
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
@@ -349,7 +345,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 1", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HasGroup('UFO', 4)
     )
 
     world.set_rule(
@@ -364,7 +360,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 2", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HasGroup('UFO', 4)
     )
 
     world.set_rule(
@@ -379,7 +375,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 3", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HasGroup('UFO', 4)
     )
 
     world.set_rule(
@@ -394,17 +390,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 4", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HasGroup('UFO', 4)
     )
 
     world.set_rule(
@@ -419,12 +415,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sleepy Subcon Portal - Entrance 5", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('UFO',))
+        HasGroup('UFO', 4)
     )
 
     world.set_rule(
@@ -439,27 +435,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(0,)))
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasAll("Snatcher's Contract - Mail Delivery Service", "Snatcher's Contract - Queen Vanessa's Manor", "Snatcher's Contract - The Subcon Well", "Snatcher's Contract - Toilet of Doom"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Alpine Skyline - Finale", player),
-        HelperCall(helper_func=can_clear_alpine, helper_name="can_clear_alpine")
+        HelperCall(helper_func=can_clear_alpine, helper_name="can_clear_alpine", body_rule=(Has("Birdhouse Cleared")) & (Has("Lava Cake Cleared")) & (Has("Windmill Cleared")) & (Has("Twilight Bell Cleared")))
     )
 
     world.set_rule(
         multiworld.get_entrance("AFR -> Alpine Skyline Area", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -469,7 +465,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Crayon',)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit", kwargs={"umbrella_only": True}), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HasGroup('Crayon', 4))
     )
 
     world.set_rule(
@@ -479,27 +475,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Lava Cake", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Windmill", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 2", player),
-        HelperCall(helper_func=has_relic_combo, helper_name="has_relic_combo", args=('Crayon',))
+        HasGroup('Crayon', 4)
     )
 
     world.set_rule(
@@ -509,7 +505,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
-        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('TOD Access'))
+        And(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), Has('TOD Access'))
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
@@ -670,47 +666,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Train Rush)", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Window Platform", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cardboard Conductor", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Above Conductor Sign", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Disco Room", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Tightrope", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cameras", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Locked Room", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio Basement)", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -730,17 +726,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Well - On Pipe", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Subcon Well)", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=has_paintings, helper_name="has_paintings", args=(1, False,)))
     )
 
     world.set_rule(
@@ -760,32 +756,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        And(HelperCall(helper_func=can_hit, helper_name="can_hit", args=(True,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('AFR Access'))
+        And(HelperCall(helper_func=can_hit, helper_name="can_hit", args=(True,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), Has('AFR Access'))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Bird Pass Fork", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(1,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Ember Summit", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Outpost Horn", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Windy Passage", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -795,7 +791,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Illness has Spread)", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -850,17 +846,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Above Boats", player),
-        Or(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"), Has('HUMT Access'))
+        Or(HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")), Has('HUMT Access'))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Clock Tower Chest", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Lighthouse", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -880,7 +876,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Noose Treehouse", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -920,12 +916,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Tall Tree Hookshot Swing", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Pipe)", player),
-        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot")
+        HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -935,10 +931,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot"))
+        And(HelperCall(helper_func=can_use_hat, helper_name="can_use_hat", args=(3,)), HelperCall(helper_func=can_use_hookshot, helper_name="can_use_hookshot", body_rule=Has("Hookshot Badge")))
     )

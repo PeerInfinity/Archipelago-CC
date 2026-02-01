@@ -36,7 +36,7 @@
             "item": {
               "name": "Clip Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -202,7 +202,7 @@
             "item": {
               "name": "Clip Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -268,7 +268,7 @@
             "item": {
               "name": "Faster Reload",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -300,7 +300,7 @@
             "item": {
               "name": "Life Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -351,8 +351,13 @@
             "name": "Electrical entrance",
             "connected_region": "Electrical",
             "access_rule": {
-              "rule": "is_gate_unlocked",
-              "_original_ast_type": "helper"
+              "rule": "AST_generic_helper",
+              "args": {
+                "name": "is_gate_unlocked",
+                "description": "Requires is gate unlocked",
+                "_original_ast_type": "generic_helper"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -428,7 +433,7 @@
             "item": {
               "name": "Life Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -443,8 +448,14 @@
             "name": "Swamp: Bramble room",
             "id": 91630179862878,
             "access_rule": {
-              "rule": "can_hover",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "hover",
+                "inferred": true,
+                "description": "Requires ability to hover",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Volt Laser",
@@ -477,7 +488,7 @@
             "item": {
               "name": "Clip Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -521,8 +532,13 @@
             "name": "Electrical (Power On) entrance",
             "connected_region": "Electrical (Power On)",
             "access_rule": {
-              "rule": "is_power_on",
-              "_original_ast_type": "helper"
+              "rule": "AST_generic_helper",
+              "args": {
+                "name": "is_power_on",
+                "description": "Requires is power on",
+                "_original_ast_type": "generic_helper"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -550,7 +566,7 @@
             "item": {
               "name": "Life Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -615,7 +631,7 @@
             "item": {
               "name": "Clip Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -629,7 +645,7 @@
             "item": {
               "name": "Faster Reload",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -658,7 +674,7 @@
             "item": {
               "name": "Life Extension",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -751,7 +767,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification_counts": {
+          "progression": 2,
+          "useful": 4
+        }
       },
       "Clip Extension": {
         "name": "Clip Extension",
@@ -763,7 +783,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification_counts": {
+          "useful": 4,
+          "progression": 2
+        }
       },
       "Faster Reload": {
         "name": "Faster Reload",
@@ -775,7 +799,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification_counts": {
+          "progression": 4,
+          "useful": 2
+        }
       },
       "Special Extension": {
         "name": "Special Extension",
@@ -979,42 +1007,42 @@
   },
   "canonical_placements": {
     "1": {
+      "Cave: Guard (Boss)": "Clip Extension",
+      "Hub: Console login": "Clip Extension",
       "Cave: After Wallboss": "Clip Extension",
+      "Electrical: Behind wall": "Clip Extension",
+      "Swamp: Wall maze": "Clip Extension",
+      "Volcanic: Cliff (Boss)": "Clip Extension",
       "Cave: Balcony": "Full Heal",
+      "Electrical: Generator (Boss)": "Full Heal",
+      "Volcanic: Behind wall": "Full Heal",
       "Cave: Spike pit": "Powered Blaster",
       "Cave: Powered Blaster chest": "Volcanic Key",
+      "Arctic: Under snow": "Faster Reload",
       "Cave: Wallboss (Boss)": "Faster Reload",
-      "Cave: Guard (Boss)": "Clip Extension",
+      "Hub: Hidden near Arctic": "Faster Reload",
+      "Hub: Hidden near Swamp": "Faster Reload",
+      "Arctic: Ice Spreadshot chest": "Faster Reload",
+      "Electrical: Before Malakhov": "Faster Reload",
       "Volcanic: Hot coals": "Flamethrower",
+      "Swamp: Special Extension chest": "Life Extension",
       "Volcanic: Under bridge": "Life Extension",
-      "Volcanic: Behind wall": "Full Heal",
+      "Arctic: Ace (Boss)": "Life Extension",
+      "Electrical: BRAINOS (Boss)": "Life Extension",
+      "Electrical: Volt Laser chest": "Life Extension",
+      "Hub: Ninja scare (Boss?)": "Life Extension",
       "Volcanic: Flamethrower chest": "Cave Key",
-      "Volcanic: Cliff (Boss)": "Clip Extension",
       "Arctic: Before pipes": "System Power",
       "Arctic: After Guard": "Arctic Key",
-      "Arctic: Under snow": "Faster Reload",
-      "Arctic: Ice Spreadshot chest": "Faster Reload",
       "Arctic: Jacket chest": "Ice Trap",
-      "Arctic: Ace (Boss)": "Life Extension",
-      "Hub: Hidden near Arctic": "Faster Reload",
+      "Swamp: Snake (Boss)": "Ice Trap",
       "Hub: Hidden near Cave": "Swamp Key",
-      "Hub: Hidden near Swamp": "Faster Reload",
-      "Hub: Console login": "Clip Extension",
-      "Hub: Ninja scare (Boss?)": "Life Extension",
       "Swamp: Bramble room": "Volt Laser",
       "Swamp: Down the chimney": "Ice Spreadshot",
-      "Swamp: Wall maze": "Clip Extension",
-      "Swamp: Special Extension chest": "Life Extension",
-      "Swamp: Snake (Boss)": "Ice Trap",
+      "Electrical: Malakhov (Boss)": "Ninja Trap",
       "Elevator: Ninja (Boss)": "Ninja Trap",
-      "Electrical: Volt Laser chest": "Life Extension",
-      "Electrical: Generator (Boss)": "Full Heal",
       "Electrical: Tesla orb": "Jacket",
       "Electrical: Near generator": "Special Extension",
-      "Electrical: Behind wall": "Clip Extension",
-      "Electrical: Before Malakhov": "Faster Reload",
-      "Electrical: Malakhov (Boss)": "Ninja Trap",
-      "Electrical: BRAINOS (Boss)": "Life Extension",
       "Mission objective": "PRINCESS"
     }
   },
@@ -1028,6 +1056,7 @@
     "1": {
       "game": "Saving Princess WorldGen",
       "world_class_name": "SavingPrincessWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "ace_weapon_upgrade": 1,

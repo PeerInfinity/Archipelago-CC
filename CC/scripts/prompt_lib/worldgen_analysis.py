@@ -305,6 +305,192 @@ def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fi
         return {}
 
 
+def load_ut_fuzz_single_game_results(project_root, ut_version='modified', seed=None):
+    """Load the single-game UT fuzz test results JSON file.
+
+    These are results from the test-ut-fuzz-single-game.yml workflow, which tests
+    one game with many iterations to find specific failing seeds.
+
+    Args:
+        project_root: Path to the project root
+        ut_version: 'original', 'modified', or 'hybrid'
+        seed: Specific seed number to load results for, or None to auto-detect
+
+    Returns:
+        Dict with 'metadata' and 'results' keys, or empty dict if not found
+    """
+    import glob as glob_module
+
+    results_dir = Path(project_root) / 'scripts' / 'output' / 'ut-fuzz'
+
+    if seed is not None:
+        # Load results for specific seed
+        # New format: test-results-single-game-{ut_version}-seed-{seed}.json
+        filename = f'test-results-single-game-{ut_version}-seed-{seed}.json'
+        results_file = results_dir / filename
+    else:
+        # Auto-detect: look for any matching result file
+        # New format: test-results-single-game-{ut_version}-seed-*.json
+        # Also check for random seed: test-results-single-game-{ut_version}-random-seed.json
+        pattern = str(results_dir / f'test-results-single-game-{ut_version}-seed-*.json')
+        matches = glob_module.glob(pattern)
+
+        # Also check for random seed file
+        random_file = results_dir / f'test-results-single-game-{ut_version}-random-seed.json'
+        if random_file.exists():
+            matches.append(str(random_file))
+
+        # Fall back to old format for backwards compatibility
+        old_fixed = results_dir / f'test-results-single-game-{ut_version}-fixed-seed.json'
+        old_random = results_dir / f'test-results-single-game-{ut_version}-random-seed.json'
+        if old_fixed.exists():
+            matches.append(str(old_fixed))
+        if old_random.exists() and str(random_file) not in matches:
+            matches.append(str(old_random))
+
+        if not matches:
+            return {}
+
+        # Use the most recently modified file
+        results_file = Path(max(matches, key=lambda f: Path(f).stat().st_mtime))
+
+    if not results_file.exists():
+        return {}
+
+    try:
+        with open(results_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading single-game UT fuzz test results: {e}", file=sys.stderr)
+        return {}
+
+
+def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed=None):
+    """Get the lowest-numbered failing seed from single-game UT fuzz results.
+
+    Returns a dict with failure details if a failure is found, None otherwise.
+    The dict includes:
+        - game_name: Display name of the game
+        - template: Template filename
+        - world_directory: World directory name
+        - base_seed: The --seed value used for the fuzz test
+        - failing_seed: The actual seed that failed (lowest if multiple)
+        - reproduction_seed: The seed to use for reproduction (same as failing_seed with --number-by-seed)
+        - error_type: The error type (e.g., 'None' for logic mismatch)
+        - ut_fuzz: Dict with total, success, failure stats
+        - default_options: Options left at defaults during fuzzing (if any)
+        - disallow_options: Options disallowed during fuzzing (if any)
+    """
+    all_failures = get_ut_fuzz_all_single_failures(project_root, ut_version, seed)
+    return all_failures[0] if all_failures else None
+
+
+def get_ut_fuzz_all_single_failures(project_root, ut_version='modified', seed=None):
+    """Get all failing seeds from single-game UT fuzz results.
+
+    Returns a list of dicts, one for each failing seed. Each dict includes:
+        - game_name: Display name of the game
+        - template: Template filename
+        - world_directory: World directory name
+        - base_seed: The --seed value used for the fuzz test
+        - failing_seed: The actual seed that failed
+        - reproduction_seed: The seed to use for reproduction
+        - error_type: The error type (e.g., 'None' for logic mismatch)
+        - ut_fuzz: Dict with total, success, failure stats
+        - default_options: Options left at defaults during fuzzing (if any)
+        - disallow_options: Options disallowed during fuzzing (if any)
+
+    The list is sorted by failing_seed (lowest first).
+    """
+    data = load_ut_fuzz_single_game_results(project_root, ut_version, seed)
+
+    if not data or 'results' not in data:
+        return []
+
+    metadata = data.get('metadata', {})
+    base_seed = metadata.get('seed')
+    total_runs = metadata.get('total_runs', 0)
+
+    # If base_seed is None or "random", we can't reproduce deterministically
+    if base_seed is None or base_seed == "random":
+        base_seed = None
+
+    # Extract fuzzer options from metadata
+    default_options = metadata.get('default_options')
+    disallow_options = metadata.get('disallow_options')
+
+    results = data.get('results', {})
+    all_failures = []
+
+    # Find the first game with failures (there should only be one in single-game results)
+    for template_name, result in results.items():
+        ut_fuzz = result.get('ut_fuzz', {})
+
+        if ut_fuzz.get('passed', True):
+            continue
+
+        errors = ut_fuzz.get('errors', {})
+        if not errors:
+            continue
+
+        world_info = result.get('world_info', {})
+        game_name = world_info.get('game_name', template_name.replace('.yaml', ''))
+        world_dir = world_info.get('world_directory', '')
+
+        # Build ut_fuzz stats dict (shared across all failures from this game)
+        ut_fuzz_stats = {
+            'total': ut_fuzz.get('total', 0),
+            'success': ut_fuzz.get('success', 0),
+            'failure': ut_fuzz.get('failure', 0),
+            'timeout': ut_fuzz.get('timeout', 0),
+            'ignored': ut_fuzz.get('ignored', 0),
+            'errors': errors,
+        }
+
+        # Detect if seeds are already actual seeds (--number-by-seed was used)
+        # When --number-by-seed is used, the lowest failing_seed >= base_seed
+        # When not used, failing_seed is an iteration index starting from 0
+        all_seeds = []
+        for seed_list in errors.values():
+            all_seeds.extend(seed_list)
+        min_seed = min(all_seeds) if all_seeds else 0
+
+        # If the minimum seed is >= base_seed, seeds are already actual seeds
+        # Otherwise they're iteration indices that need to be offset
+        seeds_are_actual = base_seed is not None and min_seed >= base_seed
+
+        # Create a failure entry for each failing seed
+        for error_type, seed_list in errors.items():
+            for failing_seed in seed_list:
+                # Calculate reproduction seed
+                if seeds_are_actual:
+                    # Seeds are already actual seeds (--number-by-seed was used)
+                    reproduction_seed = failing_seed
+                elif base_seed is not None:
+                    # Seeds are iteration indices, need to add base_seed
+                    reproduction_seed = base_seed + failing_seed
+                else:
+                    reproduction_seed = None
+
+                all_failures.append({
+                    'game_name': game_name,
+                    'template': template_name,
+                    'world_directory': world_dir,
+                    'base_seed': base_seed,
+                    'failing_seed': failing_seed,
+                    'reproduction_seed': reproduction_seed,
+                    'error_type': error_type,
+                    'ut_fuzz': ut_fuzz_stats,
+                    'default_options': default_options,
+                    'disallow_options': disallow_options,
+                })
+
+    # Sort by failing_seed (lowest first)
+    all_failures.sort(key=lambda x: x['failing_seed'])
+
+    return all_failures
+
+
 def load_worldgen_exclude_list(project_root, include_all_excludes=False):
     """Load the worldgen_test_exclude_list from template-exclude-list.json.
 

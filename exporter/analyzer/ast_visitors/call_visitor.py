@@ -11,10 +11,13 @@ This is the largest visitor method and handles various call patterns including:
 
 import ast
 import logging
+import sys
 from typing import Any, Dict, Optional
 
 from ..utils import is_simple_value, make_json_serializable
 from ..closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
+
+logger = logging.getLogger(__name__)
 
 
 class CallVisitorMixin:
@@ -43,116 +46,6 @@ class CallVisitorMixin:
         - _substitute_variable_in_rule(): Substitutes variables in rules
     """
 
-    def _try_resolve_arg_to_value(self, arg_result: Dict[str, Any]) -> tuple:
-        """
-        Try to resolve an analyzed argument dict to a concrete Python value.
-
-        This is used for factory function execution, where we need to convert
-        analyzed argument structures back to actual values to call the function.
-
-        Args:
-            arg_result: The analyzed argument dict from visiting an AST node
-
-        Returns:
-            A tuple (success: bool, value: Any). If success is False, value is None.
-        """
-        if not isinstance(arg_result, dict):
-            # If it's already a concrete value (shouldn't happen normally)
-            return (True, arg_result)
-
-        arg_type = arg_result.get('type')
-
-        # Handle constant values - already resolved
-        if arg_type == 'constant':
-            return (True, arg_result.get('value'))
-
-        # Handle name references - look up in closure vars
-        if arg_type == 'name':
-            name = arg_result.get('name')
-            if name in self.closure_vars:
-                return (True, self.closure_vars[name])
-            # Try expression resolver as fallback
-            resolved = self.expression_resolver.resolve_variable(name)
-            if resolved is not None:
-                return (True, resolved)
-            return (False, None)
-
-        # Handle attribute access - use expression resolver
-        if arg_type == 'attribute':
-            resolved = self.expression_resolver.resolve_expression(arg_result)
-            if resolved is not None:
-                return (True, resolved)
-            return (False, None)
-
-        # Handle subscript - use expression resolver
-        if arg_type == 'subscript':
-            resolved = self.expression_resolver.resolve_expression(arg_result)
-            if resolved is not None:
-                return (True, resolved)
-            return (False, None)
-
-        # For other types (item_check, state_method, etc.), we can't resolve to a value
-        logging.debug(f"Cannot resolve arg type '{arg_type}' to concrete value")
-        return (False, None)
-
-    def _try_execute_factory_function(self, actual_func, args_with_nodes, func_name: str) -> Optional[Dict[str, Any]]:
-        """
-        Try to execute a factory function (one that returns a callable) and analyze the result.
-
-        Factory functions like path_to_access_rule(path, entrance) return lambdas.
-        If we can resolve all arguments to concrete values, we can execute the function
-        and analyze the returned lambda directly.
-
-        Args:
-            actual_func: The factory function to execute
-            args_with_nodes: List of (ast_node, analyzed_result) tuples for arguments
-            func_name: Name of the function (for logging)
-
-        Returns:
-            Analyzed rule dict if successful, None otherwise
-        """
-        # Try to resolve all arguments to concrete values
-        resolved_args = []
-        for ast_node, arg_result in args_with_nodes:
-            success, value = self._try_resolve_arg_to_value(arg_result)
-            if not success:
-                logging.debug(f"Factory function {func_name}: Could not resolve arg to value")
-                return None
-            resolved_args.append(value)
-
-        # Execute the factory function with resolved arguments
-        try:
-            logging.debug(f"Executing factory function {func_name} with {len(resolved_args)} resolved args")
-            result = actual_func(*resolved_args)
-        except Exception as e:
-            logging.debug(f"Factory function {func_name} execution failed: {e}")
-            return None
-
-        # Check if the result is callable (a lambda/function)
-        if not callable(result):
-            logging.debug(f"Factory function {func_name} returned non-callable: {type(result)}")
-            return None
-
-        # Analyze the returned callable
-        logging.debug(f"Factory function {func_name} returned callable, analyzing it")
-        from ..analysis import analyze_rule
-        analyzed_result = analyze_rule(
-            rule_func=result,
-            closure_vars=self.closure_vars.copy(),
-            seen_funcs=self.seen_funcs,
-            game_handler=self.game_handler,
-            player_context=self.player_context,
-            rule_target_name=getattr(self, 'rule_target_name', None),
-            target_type=getattr(self, 'target_type', None)
-        )
-
-        if analyzed_result and analyzed_result.get('type') != 'error':
-            logging.debug(f"Factory function {func_name}: Successfully analyzed returned callable")
-            return analyzed_result
-
-        logging.debug(f"Factory function {func_name}: analyze_rule returned error")
-        return None
-
     def visit_Call(self, node):
         """
         Visit a function call node.
@@ -177,6 +70,13 @@ class CallVisitorMixin:
         namedtuple_callable = self._try_inline_namedtuple_callable(node)
         if namedtuple_callable is not None:
             return namedtuple_callable
+
+        # *** Special handling for entrance.access_rule(state) patterns ***
+        # Pattern: dungeon_entrance.access_rule(fake_pearl_state(state, player))
+        # where dungeon_entrance is an Entrance object in closure_vars
+        entrance_rule = self._try_handle_entrance_access_rule(node)
+        if entrance_rule is not None:
+            return entrance_rule
 
         # *** Special handling for dict.get(key, default)(state) where dict contains lambdas ***
         # Pattern: rule_map.get(entrance.connected_region.name, lambda: False)(state)
@@ -403,6 +303,69 @@ class CallVisitorMixin:
                 if resolved_func is not None and callable(resolved_func):
                     logging.debug(f"Identified call to function from lambda default parameter: {func_name} -> {resolved_func}")
 
+                    # --- Module-level function factory handling ---
+                    # Handle function factories (like path_to_access_rule) that return lambdas when called.
+                    # This is needed for patterns like: lambda state: path_to_access_rule(args)(state)
+                    # where path_to_access_rule is a module-level function, not a closure variable.
+                    FUNCTION_FACTORY_NAMES = {'path_to_access_rule', 'options_to_access_rule'}
+                    if func_name in FUNCTION_FACTORY_NAMES:
+                        logging.debug(f"Detected module-level function factory call: {func_name}")
+                        try:
+                            # Resolve the arguments to actual values
+                            resolved_arg_values = []
+                            all_args_resolved = True
+                            for arg_node in node.args:
+                                if isinstance(arg_node, ast.Name):
+                                    arg_name = arg_node.id
+                                    if arg_name in self.closure_vars:
+                                        resolved_arg_values.append(self.closure_vars[arg_name])
+                                    else:
+                                        # Try expression resolver
+                                        resolved_value = self.expression_resolver.resolve_variable(arg_name)
+                                        if resolved_value is not None:
+                                            resolved_arg_values.append(resolved_value)
+                                        else:
+                                            logging.debug(f"Could not resolve argument {arg_name} for module-level function factory {func_name}")
+                                            all_args_resolved = False
+                                            break
+                                else:
+                                    logging.debug(f"Argument to module-level function factory is not a simple name: {type(arg_node)}")
+                                    all_args_resolved = False
+                                    break
+
+                            if all_args_resolved and len(resolved_arg_values) == len(node.args):
+                                # Call the function factory to get the resulting lambda
+                                logging.debug(f"Calling module-level function factory {func_name} with {len(resolved_arg_values)} args")
+                                result_lambda = resolved_func(*resolved_arg_values)
+
+                                if callable(result_lambda):
+                                    # Analyze the resulting lambda using ClosureFunctionAnalyzer
+                                    from ..closure_function_analyzer import ClosureFunctionAnalyzer
+                                    from ..rule_analyzer import RuleAnalyzer
+
+                                    # Create a minimal parent analyzer for the ClosureFunctionAnalyzer
+                                    parent_analyzer = RuleAnalyzer(
+                                        closure_vars=self.closure_vars,
+                                        rule_func=result_lambda,
+                                        player_context=self.player_context,
+                                        game_handler=self.game_handler,
+                                        seen_funcs=self.seen_funcs
+                                    )
+
+                                    closure_analyzer = ClosureFunctionAnalyzer(parent_analyzer)
+                                    analyzed_result = closure_analyzer.analyze_function(result_lambda)
+
+                                    if analyzed_result is not None:
+                                        logging.debug(f"Successfully analyzed module-level function factory result for {func_name}")
+                                        return analyzed_result
+                                    else:
+                                        logging.debug(f"ClosureFunctionAnalyzer could not analyze result of module-level {func_name}")
+                                else:
+                                    logging.debug(f"Module-level function factory {func_name} did not return a callable")
+                        except Exception as e:
+                            logging.error(f"Error analyzing module-level function factory {func_name}: {e}")
+                    # --- END Module-level function factory handling ---
+
                     # Check if game handler wants to preserve this as a helper
                     should_preserve = False
                     actual_func_name = None
@@ -587,10 +550,12 @@ class CallVisitorMixin:
                          self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                          return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
-                     # Check if 'state' is passed as an argument (directly or indirectly)
+                     # Check if 'state' or 'item' is passed as an argument (directly or indirectly)
+                     # Access rules use 'state', item rules use 'item' (or 'i')
                      has_state_arg = any(references_state(arg) for arg in node.args)
-                     # Attempt recursion if state arg is present
-                     if has_state_arg:
+                     has_item_arg = any(isinstance(arg, ast.Name) and arg.id in ('item', 'i') for arg in node.args)
+                     # Attempt recursion if state or item arg is present
+                     if has_state_arg or has_item_arg:
                           # Import analyze_rule locally to avoid forward reference issues
                           from ..analysis import analyze_rule
                           # actual_func and closure_func_name already set above
@@ -650,18 +615,71 @@ class CallVisitorMixin:
                       logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
 
-                 # --- Factory function execution logic ---
-                 # If the function doesn't take 'state' as an argument but returns a callable,
-                 # it might be a "factory function" like path_to_access_rule(path, entrance).
-                 # Try to execute it with resolved arguments and analyze the returned callable.
-                 if callable(actual_func):
-                     factory_result = self._try_execute_factory_function(
-                         actual_func, args_with_nodes, closure_func_name or func_name
-                     )
-                     if factory_result is not None:
-                         logging.debug(f"Factory function execution successful for {func_name}")
-                         return factory_result
-                 # --- END Factory function execution logic ---
+                 # --- Function factory handling (e.g., path_to_access_rule) ---
+                 # Handle function factories that return lambdas when called.
+                 # These are functions like path_to_access_rule(path, entrance) that return
+                 # a new lambda capturing the arguments. We need to:
+                 # 1. Resolve the arguments to their actual values
+                 # 2. Call the function to get the resulting lambda
+                 # 3. Analyze that resulting lambda with ClosureFunctionAnalyzer
+                 FUNCTION_FACTORY_NAMES = {'path_to_access_rule', 'options_to_access_rule'}
+                 if closure_func_name in FUNCTION_FACTORY_NAMES and callable(actual_func):
+                     logging.debug(f"Detected function factory call: {closure_func_name}")
+                     try:
+                         # Resolve the arguments to actual values from closure
+                         resolved_arg_values = []
+                         all_args_resolved = True
+                         for arg_node in node.args:
+                             if isinstance(arg_node, ast.Name):
+                                 arg_name = arg_node.id
+                                 if arg_name in self.closure_vars:
+                                     resolved_arg_values.append(self.closure_vars[arg_name])
+                                 else:
+                                     # Try expression resolver
+                                     resolved_value = self.expression_resolver.resolve_variable(arg_name)
+                                     if resolved_value is not None:
+                                         resolved_arg_values.append(resolved_value)
+                                     else:
+                                         logging.debug(f"Could not resolve argument {arg_name} for function factory {closure_func_name}")
+                                         all_args_resolved = False
+                                         break
+                             else:
+                                 logging.debug(f"Argument to function factory is not a simple name: {type(arg_node)}")
+                                 all_args_resolved = False
+                                 break
+
+                         if all_args_resolved and len(resolved_arg_values) == len(node.args):
+                             # Call the function factory to get the resulting lambda
+                             logging.debug(f"Calling function factory {closure_func_name} with {len(resolved_arg_values)} args")
+                             result_lambda = actual_func(*resolved_arg_values)
+
+                             if callable(result_lambda):
+                                 # Analyze the resulting lambda using ClosureFunctionAnalyzer
+                                 from ..closure_function_analyzer import ClosureFunctionAnalyzer
+                                 from ..rule_analyzer import RuleAnalyzer
+
+                                 # Create a minimal parent analyzer for the ClosureFunctionAnalyzer
+                                 parent_analyzer = RuleAnalyzer(
+                                     closure_vars=self.closure_vars,
+                                     rule_func=result_lambda,
+                                     player_context=self.player_context,
+                                     game_handler=self.game_handler,
+                                     seen_funcs=self.seen_funcs
+                                 )
+
+                                 closure_analyzer = ClosureFunctionAnalyzer(parent_analyzer)
+                                 analyzed_result = closure_analyzer.analyze_function(result_lambda)
+
+                                 if analyzed_result is not None:
+                                     logging.debug(f"Successfully analyzed function factory result for {closure_func_name}")
+                                     return analyzed_result
+                                 else:
+                                     logging.debug(f"ClosureFunctionAnalyzer could not analyze result of {closure_func_name}")
+                             else:
+                                 logging.debug(f"Function factory {closure_func_name} did not return a callable")
+                     except Exception as e:
+                         logging.error(f"Error analyzing function factory {closure_func_name}: {e}")
+                 # --- END Function factory handling ---
 
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
@@ -680,6 +698,71 @@ class CallVisitorMixin:
                     logging.debug(f"all(GeneratorExp): Iterator already resolved to '{iterator_type}' rule, returning it directly")
                     # The iterator has already been fully analyzed, just return it
                     return iterator_info['iterator']
+
+                # Handle iterator that's already a constant (e.g., list resolved from closure)
+                if iterator_type == 'constant':
+                    constant_value = iterator_info['iterator'].get('value')
+                    logging.debug(f"all(GeneratorExp): Iterator is constant with {len(constant_value) if isinstance(constant_value, list) else 'non-list'} items")
+
+                    if isinstance(constant_value, list) and len(constant_value) > 0:
+                        # Check if items are callables (bunny rules)
+                        if all(callable(item) for item in constant_value):
+                            from ..analysis import analyze_rule
+                            analyzed_items = []
+                            for item_func in constant_value:
+                                try:
+                                    item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs, game_handler=self.game_handler,
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
+                                    if item_result and item_result.get('type') != 'error':
+                                        analyzed_items.append(item_result)
+                                    else:
+                                        logging.debug(f"Could not analyze item in constant list, checking for fallback")
+                                        analyzed_items = None
+                                        break
+                                except Exception as e:
+                                    logging.debug(f"Error analyzing item in constant list: {e}")
+                                    analyzed_items = None
+                                    break
+
+                            if analyzed_items:
+                                # Successfully analyzed all items - return an 'and' of all items
+                                logging.debug(f"all(GeneratorExp constant): Successfully analyzed {len(analyzed_items)} items, returning 'and' rule")
+                                if len(analyzed_items) == 1:
+                                    return analyzed_items[0]
+                                else:
+                                    return {'type': 'and', 'conditions': analyzed_items}
+                        else:
+                            # Handle non-callable constant values (strings, numbers, etc.) - expand the comprehension
+                            logging.debug(f"all(GeneratorExp): Iterator contains non-callable constant values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"all(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in constant_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"all(GeneratorExp constant): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"all(GeneratorExp constant): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - all() of empty is True
+                                        return {'type': 'constant', 'value': True}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'and', 'conditions': expanded_conditions}
 
                 if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
@@ -815,6 +898,106 @@ class CallVisitorMixin:
                     else:
                         return iterator_rule
 
+                # Handle iterator that's already a constant (e.g., list of functions from closure)
+                if iterator_type == 'constant':
+                    constant_value = iterator_info['iterator'].get('value')
+                    logging.debug(f"any(GeneratorExp): Iterator is constant with {len(constant_value) if isinstance(constant_value, list) else 'non-list'} items")
+
+                    if isinstance(constant_value, list) and len(constant_value) > 0:
+                        # Check if items are callables (bunny rules)
+                        if all(callable(item) for item in constant_value):
+                            from ..analysis import analyze_rule
+                            analyzed_items = []
+                            for item_func in constant_value:
+                                try:
+                                    item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs, game_handler=self.game_handler,
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
+                                    if item_result and item_result.get('type') != 'error':
+                                        analyzed_items.append(item_result)
+                                    else:
+                                        # Try ClosureFunctionAnalyzer as fallback for bunny rules
+                                        logging.debug(f"any(GeneratorExp constant): analyze_rule failed, trying ClosureFunctionAnalyzer")
+                                        closure_analyzer = ClosureFunctionAnalyzer(self)
+                                        fallback_result = closure_analyzer.analyze_function(item_func)
+                                        if fallback_result:
+                                            logging.debug(f"any(GeneratorExp constant): ClosureFunctionAnalyzer succeeded")
+                                            analyzed_items.append(fallback_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item in constant list, checking for bunny rule fallback")
+                                            analyzed_items = None
+                                            break
+                                except Exception as e:
+                                    logging.debug(f"Error analyzing item in constant list: {e}")
+                                    analyzed_items = None
+                                    break
+
+                            if analyzed_items:
+                                # Successfully analyzed all items - return an 'or' of all items
+                                logging.debug(f"any(GeneratorExp constant): Successfully analyzed {len(analyzed_items)} items, returning 'or' rule")
+                                if len(analyzed_items) == 1:
+                                    return analyzed_items[0]
+                                else:
+                                    return {'type': 'or', 'conditions': analyzed_items}
+                            else:
+                                # Analysis failed - check if game handler can identify this as an unanalyzable pattern
+                                first_func = constant_value[0]
+                                is_unanalyzable = False
+                                if self.game_handler and hasattr(self.game_handler, 'is_unanalyzable_rule_pattern'):
+                                    is_unanalyzable = self.game_handler.is_unanalyzable_rule_pattern(first_func)
+                                else:
+                                    # Legacy fallback: check for set_bunny_rules pattern
+                                    func_qualname = getattr(first_func, '__qualname__', '')
+                                    is_unanalyzable = 'set_bunny_rules' in func_qualname
+
+                                if is_unanalyzable:
+                                    # Get game-specific fallback from handler
+                                    fallback = None
+                                    if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                                        fallback = self.game_handler.get_unanalyzable_rule_fallback(first_func)
+                                    if fallback:
+                                        print(
+                                            f"LOSSY FALLBACK: Unanalyzable rule pattern, using game handler fallback",
+                                            file=sys.stderr
+                                        )
+                                        return fallback
+                                    # No fallback available
+                                    print(
+                                        f"LOSSY FALLBACK: Unanalyzable rule pattern, no game handler fallback available",
+                                        file=sys.stderr
+                                    )
+                        else:
+                            # Handle non-callable constant values (strings, numbers, etc.) - expand the comprehension
+                            logging.debug(f"any(GeneratorExp): Iterator contains non-callable constant values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"any(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in constant_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"any(GeneratorExp constant): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"any(GeneratorExp constant): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - any() of empty is False
+                                        return {'type': 'constant', 'value': False}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'or', 'conditions': expanded_conditions}
+
                 if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
                     logging.debug(f"any(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
@@ -879,6 +1062,35 @@ class CallVisitorMixin:
                                     return analyzed_items[0]
                                 else:
                                     return {'type': 'or', 'conditions': analyzed_items}
+                            else:
+                                # Analysis failed for callable list - check if game handler can identify this
+                                # as an unanalyzable pattern
+                                if resolved_value and len(resolved_value) > 0:
+                                    first_func = resolved_value[0]
+                                    is_unanalyzable = False
+                                    if self.game_handler and hasattr(self.game_handler, 'is_unanalyzable_rule_pattern'):
+                                        is_unanalyzable = self.game_handler.is_unanalyzable_rule_pattern(first_func)
+                                    else:
+                                        # Legacy fallback: check for set_bunny_rules pattern
+                                        func_qualname = getattr(first_func, '__qualname__', '')
+                                        is_unanalyzable = 'set_bunny_rules' in func_qualname
+
+                                    if is_unanalyzable:
+                                        # Get game-specific fallback from handler
+                                        fallback = None
+                                        if self.game_handler and hasattr(self.game_handler, 'get_unanalyzable_rule_fallback'):
+                                            fallback = self.game_handler.get_unanalyzable_rule_fallback(first_func)
+                                        if fallback:
+                                            print(
+                                                f"LOSSY FALLBACK: Unanalyzable rule pattern, using game handler fallback",
+                                                file=sys.stderr
+                                            )
+                                            return fallback
+                                        # No fallback available
+                                        print(
+                                            f"LOSSY FALLBACK: Unanalyzable rule pattern, no game handler fallback available",
+                                            file=sys.stderr
+                                        )
 
                         # NEW: Handle nested comprehensions - list of lists of callables
                         # This pattern appears in The Witness: any(all(condition(state) for condition in sub_req) for sub_req in fully_converted_rules)
@@ -1186,6 +1398,22 @@ class CallVisitorMixin:
                 logging.debug(f"Created map result: {result}")
                 return result
 
+            # *** Special handling for closure variable names that should NOT be exported as helpers ***
+            # These are closure variables used by ALttP's rule combinators, NOT helper functions.
+            # If we reach this point, recursive analysis of the captured function failed,
+            # so we must NOT export them as helper references.
+            # - 'old_rule': Used by add_rule/add_alternate_rule to capture the previous access rule
+            # - 'path_to_access_rule': Used by bunny rule generation to capture path traversal rules
+            closure_var_blacklist = {'old_rule', 'path_to_access_rule'}
+            if func_name in closure_var_blacklist:
+                target_name = getattr(self, 'rule_target_name', None) or 'unknown'
+                print(
+                    f"LOSSY FALLBACK: Closure variable '{func_name}' could not be analyzed "
+                    f"for target '{target_name}', using True_ (always accessible) as fallback",
+                    file=sys.stderr
+                )
+                return {'rule': 'True_'}
+
             # Create helper result with filtered args and kwargs (no state/player in JSON)
             result = self._make_helper_rule(func_name, filtered_args, filtered_kwargs)
             logging.debug(f"Created helper result: {result}")
@@ -1461,18 +1689,23 @@ class CallVisitorMixin:
                         else:
                             items.append(item)
                     result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in items]}
-                elif method == '_lttp_has_key' and len(filtered_args) >= 1:
-                    # Unwrap item name if it's a constant
-                    item_arg = filtered_args[0]
-                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
-                        item_value = item_arg.get('value')
-                    elif isinstance(item_arg, str):
-                        item_value = item_arg
+                elif method.startswith('_') and len(filtered_args) >= 1:
+                    # Check if game handler has special handling for game-specific state methods
+                    # (e.g., _lttp_has_key for ALttP)
+                    if self.game_handler and hasattr(self.game_handler, 'handle_game_specific_state_method'):
+                        world = getattr(self.game_handler, 'world', None)
+                        handler_result = self.game_handler.handle_game_specific_state_method(
+                            method, filtered_args, world
+                        )
+                        if handler_result:
+                            logging.debug(f"Game handler handled state method '{method}'")
+                            result = handler_result
+                        else:
+                            # Handler didn't handle it, create default state_method
+                            result = {'type': 'state_method', 'method': method, 'args': filtered_args}
                     else:
-                        item_value = item_arg
-                    # Count is now in position 1 after player is filtered
-                    count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-                    result = {'type': 'count_check', 'item': item_value, 'count': count}
+                        # No handler available, create default state_method
+                        result = {'type': 'state_method', 'method': method, 'args': filtered_args}
                 elif method == 'can_reach' and len(filtered_args) >= 1:
                     # Handle can_reach state method with Location object resolution
                     # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object
@@ -1689,7 +1922,15 @@ class CallVisitorMixin:
                                     return {'type': 'constant', 'value': bool(option_obj.value)}
                         except Exception as e:
                             logging.warning(f"Failed to evaluate {setting_name}.to_bool(): {e}")
-                            # Fall through to let ast_to_rule_builder handle it
+                            # Return OptionValue so the option check is preserved in export
+                            # This is better than losing the option check entirely
+                            logging.debug(f"Returning OptionValue fallback for {setting_name}")
+                            return {'type': 'option_value', 'option': setting_name}
+
+                    # If we have a setting name but couldn't evaluate, return OptionValue
+                    if setting_name:
+                        logging.debug(f"Could not evaluate to_bool, returning OptionValue for {setting_name}")
+                        return {'type': 'option_value', 'option': setting_name}
 
                 # If we can't resolve to_bool at analysis time, let the converter handle it
                 logging.debug(f"Could not evaluate to_bool at analysis time, falling through")

@@ -1,0 +1,665 @@
+name: Test Spoiler Fuzzer (Single Game)
+
+on:
+  workflow_dispatch:
+    inputs:
+      game:
+        description: 'Game template name (e.g., "A Link to the Past.yaml")'
+        required: true
+        type: string
+        default: 'A Link to the Past.yaml'
+
+      runs:
+        description: 'Number of fuzz runs'
+        required: true
+        type: number
+        default: 100
+
+      generation_timeout:
+        description: 'Timeout per seed generation in seconds'
+        required: true
+        type: number
+        default: 300
+
+      test_timeout:
+        description: 'Timeout per spoiler test in seconds'
+        required: true
+        type: number
+        default: 120
+
+      seed:
+        description: 'Random seed for reproducibility (leave empty for random)'
+        required: false
+        type: number
+        default: 1
+
+      spoiler_mode:
+        description: 'Spoiler log mode'
+        required: true
+        type: choice
+        options:
+          - minimal-spoilers
+          - full-spoilers
+        default: minimal-spoilers
+
+      default_options:
+        description: 'Options to leave at defaults (comma-separated, e.g., "mode,entrance_shuffle")'
+        required: false
+        type: string
+
+      disallow_options:
+        description: 'Disallow option values (e.g., "glitches_required=no_logic;mode=inverted")'
+        required: false
+        type: string
+
+      parallel_runners:
+        description: 'Number of parallel GitHub runners (1 or 10)'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '10'
+        default: '1'
+
+permissions:
+  contents: write
+
+jobs:
+  # Single runner job - used when parallel_runners is 1
+  test-single-runner:
+    name: Spoiler Fuzz Test ${{ inputs.game }}
+    if: inputs.parallel_runners == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py ${{ inputs.spoiler_mode }}
+
+      - name: Update world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run spoiler fuzz test
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+
+          echo "========================================"
+          echo "Spoiler Fuzz Test Configuration"
+          echo "========================================"
+          echo "Game: ${{ inputs.game }}"
+          echo "Runs: ${{ inputs.runs }}"
+          echo "Generation Timeout: ${{ inputs.generation_timeout }}s"
+          echo "Test Timeout: ${{ inputs.test_timeout }}s"
+          echo "Seed: ${{ inputs.seed || 'random' }}"
+          echo "Spoiler Mode: ${{ inputs.spoiler_mode }}"
+          echo "Default Options: ${{ inputs.default_options || '(none)' }}"
+          echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
+          echo "========================================"
+
+          # Determine output filename based on seed
+          if [ -n "${{ inputs.seed }}" ]; then
+            OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed }}.json"
+          else
+            OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-random-seed.json"
+          fi
+
+          # Build command with optional arguments
+          CMD="python scripts/test/test-all-spoiler-fuzz.py"
+          CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --output-file \"${OUTPUT_FILE}\""
+          CMD="$CMD --runs ${{ inputs.runs }}"
+          CMD="$CMD --generation-timeout ${{ inputs.generation_timeout }}"
+          CMD="$CMD --test-timeout ${{ inputs.test_timeout }}"
+          CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
+          CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
+          CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
+
+          echo "Running: $CMD"
+          eval $CMD
+
+      - name: Generate branch name
+        id: branch-name
+        if: ${{ !cancelled() }}
+        run: |
+          # Sanitize game name for branch name (replace spaces and special chars)
+          GAME_SLUG=$(echo "${{ inputs.game }}" | sed 's/\.yaml$//' | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          BRANCH_NAME="spoiler-fuzz-single/${GAME_SLUG}/${TIMESTAMP}"
+          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "game_slug=${GAME_SLUG}" >> $GITHUB_OUTPUT
+          echo "Generated branch name: ${BRANCH_NAME}"
+
+      - name: Create branch and commit results
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create new branch from current HEAD
+          git checkout -b "${{ steps.branch-name.outputs.branch_name }}"
+
+          # Add test results (single-game results only)
+          git add -f scripts/output/spoiler-fuzz/test-results-single-game-*.json || true
+
+          # Add fuzz output if it exists (for debugging failures)
+          if [ -d "fuzz_output" ]; then
+            git add -f fuzz_output/ || true
+          fi
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Spoiler fuzz test results for ${{ inputs.game }}
+
+          Workflow run: ${{ github.run_id }}
+          Game: ${{ inputs.game }}
+          Spoiler Mode: ${{ inputs.spoiler_mode }}
+          Seed: ${{ inputs.seed || 'random' }}
+          Runs: ${{ inputs.runs }}
+          Generation Timeout: ${{ inputs.generation_timeout }}s
+          Test Timeout: ${{ inputs.test_timeout }}s
+          Default Options: ${{ inputs.default_options || '(none)' }}
+          Disallow Options: ${{ inputs.disallow_options || '(none)' }}
+          "
+            git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
+            echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
+          else
+            echo "No results to commit"
+          fi
+
+      - name: Upload test results artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ steps.branch-name.outputs.game_slug }}-spoiler-fuzz
+          path: scripts/output/spoiler-fuzz/test-results-single-game-*.json
+          retention-days: 30
+
+      - name: Upload fuzz output artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-${{ steps.branch-name.outputs.game_slug }}-spoiler-fuzz
+          path: fuzz_output/
+          retention-days: 30
+
+      - name: Summary
+        if: ${{ !cancelled() }}
+        run: |
+          echo "## Spoiler Fuzz Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Spoiler Mode:** ${{ inputs.spoiler_mode }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Seed:** ${{ inputs.seed || 'random' }}" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ inputs.default_options }}" ]; then
+            echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ inputs.disallow_options }}" ]; then
+            echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
+
+  # Split runner jobs - used when parallel_runners is 10
+  test-split-runner:
+    name: Spoiler Fuzz Test ${{ inputs.game }} (Split ${{ matrix.split_num }}/10)
+    if: inputs.parallel_runners == '10'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py ${{ inputs.spoiler_mode }}
+
+      - name: Update world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Calculate seed range for this split
+        id: seed-range
+        run: |
+          TOTAL_RUNS=${{ inputs.runs }}
+          SPLIT_NUM=${{ matrix.split_num }}
+          BASE_SEED=${{ inputs.seed || 1 }}
+
+          # Calculate runs per split and this split's starting offset
+          RUNS_PER_SPLIT=$((TOTAL_RUNS / 10))
+          REMAINDER=$((TOTAL_RUNS % 10))
+
+          # Distribute remainder across first splits
+          if [ $SPLIT_NUM -le $REMAINDER ]; then
+            RUNS_THIS_SPLIT=$((RUNS_PER_SPLIT + 1))
+            START_OFFSET=$(( (SPLIT_NUM - 1) * (RUNS_PER_SPLIT + 1) ))
+          else
+            RUNS_THIS_SPLIT=$RUNS_PER_SPLIT
+            START_OFFSET=$(( REMAINDER * (RUNS_PER_SPLIT + 1) + (SPLIT_NUM - 1 - REMAINDER) * RUNS_PER_SPLIT ))
+          fi
+
+          # Calculate starting seed for this split
+          START_SEED=$((BASE_SEED + START_OFFSET))
+
+          echo "runs_this_split=${RUNS_THIS_SPLIT}" >> $GITHUB_OUTPUT
+          echo "start_seed=${START_SEED}" >> $GITHUB_OUTPUT
+          echo "Split $SPLIT_NUM: $RUNS_THIS_SPLIT runs starting at seed $START_SEED"
+
+      - name: Run spoiler fuzz test (Split ${{ matrix.split_num }})
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+
+          echo "========================================"
+          echo "Spoiler Fuzz Test Configuration (Split ${{ matrix.split_num }}/10)"
+          echo "========================================"
+          echo "Game: ${{ inputs.game }}"
+          echo "Total Runs: ${{ inputs.runs }}"
+          echo "Runs this split: ${{ steps.seed-range.outputs.runs_this_split }}"
+          echo "Starting seed: ${{ steps.seed-range.outputs.start_seed }}"
+          echo "Generation Timeout: ${{ inputs.generation_timeout }}s"
+          echo "Test Timeout: ${{ inputs.test_timeout }}s"
+          echo "Spoiler Mode: ${{ inputs.spoiler_mode }}"
+          echo "========================================"
+
+          # Output file includes split number
+          OUTPUT_FILE="scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 1 }}-split-${{ matrix.split_num }}.json"
+
+          # Build command
+          CMD="python scripts/test/test-all-spoiler-fuzz.py"
+          CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --output-file \"${OUTPUT_FILE}\""
+          CMD="$CMD --runs ${{ steps.seed-range.outputs.runs_this_split }}"
+          CMD="$CMD --generation-timeout ${{ inputs.generation_timeout }}"
+          CMD="$CMD --test-timeout ${{ inputs.test_timeout }}"
+          CMD="$CMD --seed ${{ steps.seed-range.outputs.start_seed }}"
+          CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
+          CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
+
+          echo "Running: $CMD"
+          eval $CMD
+
+      - name: Upload split results artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-split-${{ matrix.split_num }}
+          path: scripts/output/spoiler-fuzz/test-results-single-game-*-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+      - name: Upload fuzz output artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-split-${{ matrix.split_num }}
+          path: fuzz_output/
+          retention-days: 7
+
+  # Combine results from split runners
+  combine-results:
+    name: Combine Split Results
+    if: inputs.parallel_runners == '10' && !cancelled()
+    needs: test-split-runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Download all split artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-split-*
+          path: artifacts
+
+      - name: Download all fuzz output artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fuzz-output-split-*
+          path: fuzz-artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p scripts/output/spoiler-fuzz
+          mkdir -p fuzz_output
+
+          # Combine JSON result files
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          import glob
+          import os
+          from datetime import datetime
+
+          # Find all split result files
+          files = glob.glob("artifacts/test-results-split-*/test-results-single-game-*-split-*.json")
+          print(f"Found {len(files)} result files to combine")
+
+          if not files:
+              print("No result files found")
+              exit(0)
+
+          # Combine results
+          combined = {
+              "metadata": {
+                  "created": datetime.now().isoformat(),
+                  "last_updated": datetime.now().isoformat(),
+                  "script_version": "1.0.0",
+                  "combined_from": len(files)
+              },
+              "results": {}
+          }
+
+          total_stats = {
+              "total": 0,
+              "success": 0,
+              "generation_failure": 0,
+              "test_failure": 0,
+              "timeout": 0
+          }
+
+          for f in sorted(files):
+              print(f"Processing: {f}")
+              with open(f) as fp:
+                  data = json.load(fp)
+
+              # Copy metadata from first file
+              if "seed_mode" not in combined["metadata"]:
+                  for key in ["test_type", "world_source", "seed_mode", "seed", "runs_per_game",
+                              "generation_timeout", "test_timeout"]:
+                      if key in data.get("metadata", {}):
+                          combined["metadata"][key] = data["metadata"][key]
+
+              # Aggregate results
+              for template_name, result in data.get("results", {}).items():
+                  if template_name not in combined["results"]:
+                      combined["results"][template_name] = {
+                          "spoiler_fuzz": {
+                              "passed": True,
+                              "total": 0,
+                              "success": 0,
+                              "generation_failure": 0,
+                              "test_failure": 0,
+                              "timeout": 0,
+                              "errors": []
+                          },
+                          "world_info": result.get("world_info", {}),
+                          "timestamp": datetime.now().isoformat()
+                      }
+
+                  spoiler_fuzz = result.get("spoiler_fuzz", {})
+                  combined_sf = combined["results"][template_name]["spoiler_fuzz"]
+
+                  # Aggregate counts
+                  combined_sf["total"] += spoiler_fuzz.get("total", 0)
+                  combined_sf["success"] += spoiler_fuzz.get("success", 0)
+                  combined_sf["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
+                  combined_sf["test_failure"] += spoiler_fuzz.get("test_failure", 0)
+                  combined_sf["timeout"] += spoiler_fuzz.get("timeout", 0)
+
+                  # Update passed status
+                  if spoiler_fuzz.get("test_failure", 0) > 0 or spoiler_fuzz.get("timeout", 0) > 0 or spoiler_fuzz.get("generation_failure", 0) > 0:
+                      combined_sf["passed"] = False
+
+                  # Merge errors (errors is a list of strings)
+                  errors = spoiler_fuzz.get("errors", [])
+                  if isinstance(errors, list):
+                      combined_sf["errors"].extend(errors)
+
+                  # Update total stats
+                  total_stats["total"] += spoiler_fuzz.get("total", 0)
+                  total_stats["success"] += spoiler_fuzz.get("success", 0)
+                  total_stats["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
+                  total_stats["test_failure"] += spoiler_fuzz.get("test_failure", 0)
+                  total_stats["timeout"] += spoiler_fuzz.get("timeout", 0)
+
+          combined["metadata"]["total_runs"] = total_stats["total"]
+          combined["metadata"]["total_templates"] = len(combined["results"])
+
+          # Write combined results
+          output_file = f"scripts/output/spoiler-fuzz/test-results-single-game-seed-${{ inputs.seed || 1 }}.json"
+          with open(output_file, "w") as fp:
+              json.dump(combined, fp, indent=2)
+
+          print(f"Combined results written to {output_file}")
+          print(f"Total: {total_stats['total']}, Success: {total_stats['success']}, Test Failure: {total_stats['test_failure']}, Timeout: {total_stats['timeout']}, Generation Failure: {total_stats['generation_failure']}")
+          PYTHON_SCRIPT
+
+      - name: Combine fuzz output directories
+        run: |
+          # Merge all fuzz output directories
+          for dir in fuzz-artifacts/fuzz-output-split-*/; do
+            if [ -d "$dir" ]; then
+              cp -r "$dir"/* fuzz_output/ 2>/dev/null || true
+            fi
+          done
+          echo "Combined fuzz output:"
+          ls -la fuzz_output/ 2>/dev/null || echo "No fuzz output to combine"
+
+      - name: Generate branch name
+        id: branch-name
+        run: |
+          GAME_SLUG=$(echo "${{ inputs.game }}" | sed 's/\.yaml$//' | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          BRANCH_NAME="spoiler-fuzz-single/${GAME_SLUG}/${TIMESTAMP}"
+          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "game_slug=${GAME_SLUG}" >> $GITHUB_OUTPUT
+
+      - name: Create branch and commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "${{ steps.branch-name.outputs.branch_name }}"
+
+          git add -f scripts/output/spoiler-fuzz/test-results-single-game-*.json || true
+
+          if [ -d "fuzz_output" ] && [ "$(ls -A fuzz_output)" ]; then
+            git add -f fuzz_output/ || true
+          fi
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Spoiler fuzz test results for ${{ inputs.game }} (10 parallel runners)
+
+          Workflow run: ${{ github.run_id }}
+          Game: ${{ inputs.game }}
+          Spoiler Mode: ${{ inputs.spoiler_mode }}
+          Seed: ${{ inputs.seed || 1 }}
+          Runs: ${{ inputs.runs }}
+          Parallel runners: 10
+          Generation Timeout: ${{ inputs.generation_timeout }}s
+          Test Timeout: ${{ inputs.test_timeout }}s
+          Default Options: ${{ inputs.default_options || '(none)' }}
+          Disallow Options: ${{ inputs.disallow_options || '(none)' }}
+          "
+            git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
+            echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
+          else
+            echo "No results to commit"
+          fi
+
+      - name: Upload combined results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ steps.branch-name.outputs.game_slug }}-spoiler-fuzz-combined
+          path: scripts/output/spoiler-fuzz/test-results-single-game-*.json
+          retention-days: 30
+
+      - name: Upload combined fuzz output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-${{ steps.branch-name.outputs.game_slug }}-spoiler-fuzz-combined
+          path: fuzz_output/
+          retention-days: 30
+
+      - name: Summary
+        run: |
+          echo "## Spoiler Fuzz Test Results (Combined from 10 runners)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Spoiler Mode:** ${{ inputs.spoiler_mode }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Total Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Starting Seed:** ${{ inputs.seed || 1 }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Parallel Runners:** 10" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ inputs.default_options }}" ]; then
+            echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ inputs.disallow_options }}" ]; then
+            echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY

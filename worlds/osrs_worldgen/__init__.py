@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -146,81 +146,162 @@ class OSRSWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Reach a Level 10": "Area: Draynor Village",
+        "Activate the \"Protect Item\" Prayer": "Progressive Weapons",
+        "Kill a Zombie": "Progressive Weapons",
+        "Quest: Doric's Quest": "Progressive Weapons",
+        "Quest: Imp Catcher": "Progressive Weapons",
+        "Quest: X Marks the Spot": "Progressive Weapons",
         "Reach a Level 20": "Progressive Weapons",
+        "Cast Bones To Bananas": "Progressive Tools",
+        "Open an Ornate Lockbox": "Progressive Tools",
+        "Quest: Demon Slayer": "Progressive Tools",
+        "Quest: Ernest the Chicken": "Progressive Tools",
+        "Quest: Witch's Potion": "Progressive Tools",
         "Total XP 125,000": "Progressive Tools",
         "Total Level 150": "Area: Citharede Abbey",
         "Get Prompted to Buy Membership": "Area: Ice Mountain",
+        "Equip an Orange Cape": "Progressive Ranged Armor",
+        "Get Sent to Jail in Shantay Pass": "Progressive Ranged Armor",
         "Total Level 50": "Progressive Ranged Armor",
         "Burn a Log": "Area: South of Varrock",
         "Combat Level 15": "Area: Falador Farms",
         "Total XP 25,000": "Area: Central Varrock",
-        "Activate the \"Protect Item\" Prayer": "Progressive Weapons",
         "Quest: Cook's Assistant": "Area: Crandor",
         "Points: Cook's Assistant": "1 QP (Cook's Assistant)",
         "Quest: The Restless Ghost": "Area: Edgeville",
         "Points: The Restless Ghost": "1 QP (The Restless Ghost)",
         "Quest: Rune Mysteries": "Area: Mudskipper Point",
         "Points: Rune Mysteries": "1 QP (Rune Mysteries)",
-        "Quest: X Marks the Spot": "Progressive Weapons",
         "Points: X Marks the Spot": "1 QP (X Marks The Spot)",
         "Quest: Misthalin Mystery": "Area: Al Kharid",
         "Points: Misthalin Mystery": "1 QP (Misthalin Mystery)",
         "Kill a Giant Frog": "Area: Lumbridge Farms",
+        "Cut a Ruby": "Progressive Armor",
+        "Kill a Hill Giant": "Progressive Armor",
+        "Quest: Below Ice Mountain": "Progressive Armor",
         "Quest: Sheep Shearer": "Progressive Armor",
+        "Quest: Shield of Arrav": "Progressive Armor",
+        "Quest: Vampyre Slayer": "Progressive Armor",
         "Points: Sheep Shearer": "1 QP (Sheep Shearer)",
-        "Quest: Demon Slayer": "Progressive Tools",
         "Points: Demon Slayer": "3 QP (Demon Slayer)",
         "Quest: Romeo & Juliet": "Area: Karamja",
         "Points: Romeo & Juliet": "5 QP (Romeo & Juliet)",
-        "Quest: Shield of Arrav": "Progressive Armor",
         "Points: Shield of Arrav": "1 QP (Shield of Arrav)",
         "Have the Apothecary Make a Strength Potion": "Area: Corsair Cove",
         "Enter the Cook's Guild": "Area: Barbarian Village",
-        "Quest: Ernest the Chicken": "Progressive Tools",
         "Points: Ernest the Chicken": "4 QP (Ernest the Chicken)",
-        "Quest: Doric's Quest": "Progressive Weapons",
         "Points: Doric's Quest": "1 QP (Doric's Quest)",
         "Quest: Black Knights' Fortress": "Area: Varrock Palace",
         "Points: Black Knights' Fortress": "3 QP (Black Knights' Fortress)",
-        "Quest: Below Ice Mountain": "Progressive Armor",
         "Points: Below Ice Mountain": "1 QP (Below Ice Mountain)",
         "Quest: Goblin Diplomacy": "Progressive Magic Spell",
+        "Smelt a Gold Bar": "Progressive Magic Spell",
         "Points: Goblin Diplomacy": "5 QP (Goblin Diplomacy)",
-        "Open an Ornate Lockbox": "Progressive Tools",
+        "Burn some Oak Logs": "Progressive Ranged Weapon",
+        "Catch a Lobster": "Progressive Ranged Weapon",
         "Quest: The Knight's Sword": "Progressive Ranged Weapon",
         "Points: The Knight's Sword": "1 QP (The Knight's Sword)",
         "Quest: Pirate's Treasure": "Area: Lumberyard",
         "Points: Pirate's Treasure": "2 QP (Pirate's Treasure)",
         "Quest: Dragon Slayer": "Victory",
-        "Quest: Witch's Potion": "Progressive Tools",
         "Points: Witch's Potion": "1 QP (Witch's Potion)",
         "Quest: The Corsair Curse": "Area: HAM Hideout",
         "Points: The Corsair Curse": "2 QP (The Corsair Curse)",
-        "Quest: Vampyre Slayer": "Progressive Armor",
         "Points: Vampyre Slayer": "3 QP (Vampyre Slayer)",
-        "Equip an Orange Cape": "Progressive Ranged Armor",
-        "Quest: Imp Catcher": "Progressive Weapons",
         "Points: Imp Catcher": "1 QP (Imp Catcher)",
         "Quest: Prince Ali Rescue": "Area: Dwarven Mines",
         "Points: Prince Ali Rescue": "3 QP (Prince Ali Rescue)",
-        "Get Sent to Jail in Shantay Pass": "Progressive Ranged Armor",
         "Cut a Diamond": "Area: Falador",
-        "Cut a Ruby": "Progressive Armor",
         "Smelt an Iron Bar": "Area: Port Sarim",
         "Mine Silver": "Area: West Varrock",
-        "Smelt a Gold Bar": "Progressive Magic Spell",
         "Catch a Trout": "Area: Wizard Tower",
-        "Catch a Lobster": "Progressive Ranged Weapon",
         "Bake a Redberry Pie": "Area: Monastery",
         "Bake a Cake": "Area: Rimmington",
-        "Burn some Oak Logs": "Progressive Ranged Weapon",
         "Burn some Willow Logs": "Area: Lumbridge Swamp",
         "Kill a Barbarian": "Area: Wilderness",
-        "Kill a Zombie": "Progressive Weapons",
-        "Kill a Hill Giant": "Progressive Armor",
-        "Cast Bones To Bananas": "Progressive Tools",
         "Kill a Duck": "Area: Crafting Guild",
         "Find a Needle in a Haystack": "Area: Draynor Manor",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Reach a Level 10": True,
+        "Reach a Level 20": True,
+        "Total XP 125,000": False,
+        "Total Level 150": True,
+        "Get Prompted to Buy Membership": True,
+        "Total Level 50": False,
+        "Burn a Log": True,
+        "Combat Level 15": True,
+        "Total XP 25,000": True,
+        "Activate the \"Protect Item\" Prayer": True,
+        "Quest: Cook's Assistant": True,
+        "Points: Cook's Assistant": True,
+        "Quest: The Restless Ghost": True,
+        "Points: The Restless Ghost": True,
+        "Quest: Rune Mysteries": True,
+        "Points: Rune Mysteries": True,
+        "Quest: X Marks the Spot": True,
+        "Points: X Marks the Spot": True,
+        "Quest: Misthalin Mystery": True,
+        "Points: Misthalin Mystery": True,
+        "Kill a Giant Frog": True,
+        "Quest: Sheep Shearer": True,
+        "Points: Sheep Shearer": True,
+        "Quest: Demon Slayer": False,
+        "Points: Demon Slayer": True,
+        "Quest: Romeo & Juliet": True,
+        "Points: Romeo & Juliet": True,
+        "Quest: Shield of Arrav": True,
+        "Points: Shield of Arrav": True,
+        "Have the Apothecary Make a Strength Potion": True,
+        "Enter the Cook's Guild": True,
+        "Quest: Ernest the Chicken": False,
+        "Points: Ernest the Chicken": True,
+        "Quest: Doric's Quest": True,
+        "Points: Doric's Quest": True,
+        "Quest: Black Knights' Fortress": True,
+        "Points: Black Knights' Fortress": True,
+        "Quest: Below Ice Mountain": True,
+        "Points: Below Ice Mountain": True,
+        "Quest: Goblin Diplomacy": False,
+        "Points: Goblin Diplomacy": True,
+        "Open an Ornate Lockbox": False,
+        "Quest: The Knight's Sword": False,
+        "Points: The Knight's Sword": True,
+        "Quest: Pirate's Treasure": True,
+        "Points: Pirate's Treasure": True,
+        "Quest: Dragon Slayer": True,
+        "Quest: Witch's Potion": False,
+        "Points: Witch's Potion": True,
+        "Quest: The Corsair Curse": True,
+        "Points: The Corsair Curse": True,
+        "Quest: Vampyre Slayer": True,
+        "Points: Vampyre Slayer": True,
+        "Equip an Orange Cape": False,
+        "Quest: Imp Catcher": True,
+        "Points: Imp Catcher": True,
+        "Quest: Prince Ali Rescue": True,
+        "Points: Prince Ali Rescue": True,
+        "Get Sent to Jail in Shantay Pass": False,
+        "Cut a Diamond": True,
+        "Cut a Ruby": True,
+        "Smelt an Iron Bar": True,
+        "Mine Silver": True,
+        "Smelt a Gold Bar": False,
+        "Catch a Trout": True,
+        "Catch a Lobster": False,
+        "Bake a Redberry Pie": True,
+        "Bake a Cake": True,
+        "Burn some Oak Logs": False,
+        "Burn some Willow Logs": True,
+        "Kill a Barbarian": True,
+        "Kill a Zombie": True,
+        "Kill a Hill Giant": True,
+        "Cast Bones To Bananas": False,
+        "Kill a Duck": True,
+        "Find a Needle in a Haystack": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -321,14 +402,38 @@ class OSRSWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = OldSchoolRunescapeWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = OldSchoolRunescapeWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = OldSchoolRunescapeWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -373,27 +478,81 @@ class OSRSWorld(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

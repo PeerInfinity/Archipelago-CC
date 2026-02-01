@@ -15783,6 +15783,7 @@
     "1": {
       "game": "Secret of Evermore WorldGen",
       "world_class_name": "SecretofEvermoreWorldGenWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],

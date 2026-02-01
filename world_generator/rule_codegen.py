@@ -6,7 +6,11 @@ that uses the Rule Builder pattern.
 """
 
 import copy
+import logging
+import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
+
+logger = logging.getLogger(__name__)
 
 
 class RuleCodeGenerator:
@@ -24,6 +28,8 @@ class RuleCodeGenerator:
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        self.entrance_regions: Dict[str, str] = {}  # entrance_name -> parent_region_name
+        self.entrance_connections: Dict[str, str] = {}  # entrance_name -> connected_region_name
         # Context for current location/entrance being processed
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
@@ -54,6 +60,33 @@ class RuleCodeGenerator:
         self.helper_params = helper_params or {}  # helper_name -> list of param names
         self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
         self.placements = placements or {}  # location_name -> item_name
+
+    def set_entrance_regions(self, entrance_regions: Dict[str, str]) -> None:
+        """Set the entrance-to-parent-region mapping.
+
+        This is used to resolve Attribute rules like `entrance.parent_region`
+        when the entrance name is known. For example, 'kikiskip.parent_region'
+        would resolve to the parent region of the 'Kiki Skip' entrance.
+
+        Args:
+            entrance_regions: Dict mapping entrance name (lowercase) to parent region name
+        """
+        self.entrance_regions = entrance_regions
+
+    def set_entrance_connections(self, entrance_connections: Dict[str, str]) -> None:
+        """Set the entrance-to-connected-region mapping.
+
+        This is used to resolve dict_lambda_lookup patterns like:
+            rule_map.get(world.get_entrance('X').connected_region.name, default)
+
+        When entrance shuffle is vanilla, we know the exact connections at export
+        time, so we can resolve the key and return just the matching case instead
+        of OR'ing all cases together.
+
+        Args:
+            entrance_connections: Dict mapping entrance name to connected region name
+        """
+        self.entrance_connections = entrance_connections or {}
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
@@ -925,8 +958,9 @@ class RuleCodeGenerator:
         if not rule_type:
             rb_rule = rule.get('rule', '')
             if rb_rule in ('True_', 'False_', 'Has', 'HasAll', 'HasAny', 'HasGroup',
-                          'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation',
-                          'CanReachEntrance', 'Compare', 'Conditional'):
+                          'HasFromList', 'HasFromListUnique', 'And', 'Or', 'Not',
+                          'CanReachRegion', 'CanReachLocation', 'CanReachEntrance',
+                          'Compare', 'Conditional', 'HelperCall', 'helper'):
                 # Check children recursively
                 for child in rule.get('children', []):
                     if not self._is_rule_builder_convertible(child, depth + 1):
@@ -1134,6 +1168,7 @@ class RuleCodeGenerator:
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
+                    'EntranceAccessRule': 'entrance_access_rule',
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
@@ -1260,6 +1295,18 @@ class RuleCodeGenerator:
                             return f'HelperCall({func_name})'
                     # Unknown capability - fall through to True_()
 
+                # Check if this is an AST_dict_lambda_lookup rule (dict.get(key, default) pattern)
+                if rb_rule == 'AST_dict_lambda_lookup':
+                    args = rule.get('args', {})
+                    lookup_rule = {
+                        'type': 'dict_lambda_lookup',
+                        'dict_name': args.get('dict_name', ''),
+                        'key': args.get('key', {}),
+                        'cases': args.get('cases', {}),
+                        'default': args.get('default', {'rule': 'False_'})
+                    }
+                    return self._convert_dict_lambda_lookup(lookup_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
@@ -1314,7 +1361,10 @@ class RuleCodeGenerator:
     def _convert_rule_builder_format(self, rule: Dict[str, Any], rb_rule: str, rule_type: str) -> str:
         """Convert Rule Builder format rules (with 'rule' key) to Python expressions."""
         args = rule.get('args', {})
+        # Support both 'children' at top level and 'rules' inside args (exporter format)
         children = rule.get('children', [])
+        if not children and isinstance(args, dict):
+            children = args.get('rules', [])
 
         if rb_rule == 'True_':
             return self._make_bool_constant(True)
@@ -1597,6 +1647,17 @@ class RuleCodeGenerator:
             entrance = self._extract_constant_value(args.get('entrance_name', ''), '')
             self.required_imports.add('CanReachEntrance')
             return f'CanReachEntrance({repr(entrance)})'
+
+        if rb_rule == 'EntranceAccessRule':
+            # EntranceAccessRule looks up an entrance's access_rule and evaluates it
+            # This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+            # is called with potentially a fake pearl state
+            entrance_name = self._extract_constant_value(args.get('entrance_name', ''), '')
+            fake_pearl = args.get('fake_pearl', False)
+            # Generate a call to EntranceAccessRuleCall which evaluates the entrance's access_rule
+            # The fake_pearl handling adds Moon Pearl to state before evaluation
+            self.required_imports.add('EntranceAccessRuleCall')
+            return f'EntranceAccessRuleCall({repr(entrance_name)}, fake_pearl={fake_pearl})'
 
         if rb_rule == 'Helper':
             # Convert to the format expected by _convert_helper
@@ -5298,9 +5359,68 @@ class RuleCodeGenerator:
                         self.required_imports.add('Or')
                         return f'Or({", ".join(checks)})'
 
+            # Case 5: element_rule is a helper with name "rule" - items ARE the rules to evaluate
+            # This pattern: any(rule(state) for rule in [rule1_ast, rule2_ast, ...])
+            # Where each rule in the list is itself an AST expression (or Rule Builder format)
+            if (element_rule.get('type') == 'helper' and element_rule.get('name') == 'rule' and
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is an AST/Rule Builder rule - recursively process them
+                checks = []
+                for item in items:
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 6: element_rule is a constant true and items are rule dicts
+            # This pattern: any(rule for rule in [rule1, rule2, ...])
+            # Where iterator items ARE the rules to evaluate (bunny revival pattern)
+            # The element_rule being constant True means "evaluate the rule value"
+            if (element_rule.get('type') == 'constant' and element_rule.get('value') is True and
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is a rule - recursively process them
+                checks = []
+                for item in items:
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
             # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
+                # Check if item is an AST expression (dict with 'type' key)
+                # or Rule Builder format (dict with 'rule' key)
+                if isinstance(item, dict) and ('type' in item or 'rule' in item):
+                    return self._convert_rule(item)
                 item_escaped = self._escape_string(str(item), "'")
                 self.required_imports.add('Has')
                 return f"Has('{item_escaped}')"
@@ -5308,9 +5428,15 @@ class RuleCodeGenerator:
                 # Multiple items - use Or with Has for each
                 has_checks = []
                 for item in items:
-                    item_escaped = self._escape_string(str(item), "'")
-                    has_checks.append(f"Has('{item_escaped}')")
-                self.required_imports.add('Has')
+                    # Check if item is an AST expression (dict with 'type' key)
+                    # or Rule Builder format (dict with 'rule' key)
+                    if isinstance(item, dict) and ('type' in item or 'rule' in item):
+                        check = self._convert_rule(item)
+                        has_checks.append(check)
+                    else:
+                        item_escaped = self._escape_string(str(item), "'")
+                        has_checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
                 self.required_imports.add('Or')
                 return f'Or({", ".join(has_checks)})'
 
@@ -6096,6 +6222,25 @@ class RuleCodeGenerator:
                             arg_strs.append(compare_result)
                         else:
                             arg_strs.append('None')
+                    elif arg_rule == 'Attribute':
+                        # Handle Attribute rules like entrance.parent_region
+                        # This is used by ALttP glitch rules (e.g., can_bomb_clip(kikiskip.parent_region))
+                        obj_info = arg.get('args', {}).get('object', {})
+                        attr_name = arg.get('args', {}).get('attr', '')
+                        if obj_info.get('rule') == 'Name' and attr_name == 'parent_region':
+                            # This is entrance_name.parent_region - resolve to actual region
+                            entrance_var = obj_info.get('args', {}).get('name', '')
+                            # Normalize the entrance name (lowercase, no spaces)
+                            entrance_key = entrance_var.lower().replace(' ', '')
+                            if entrance_key in self.entrance_regions:
+                                region_name = self.entrance_regions[entrance_key]
+                                arg_strs.append(repr(region_name))
+                            else:
+                                # Unknown entrance - fall back to None
+                                arg_strs.append('None')
+                        else:
+                            # Other Attribute patterns - fall back to None
+                            arg_strs.append('None')
                     else:
                         # For complex args, try to convert
                         arg_strs.append('None')
@@ -6133,6 +6278,11 @@ class RuleCodeGenerator:
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
+        print(
+            f"LOSSY FALLBACK: Unknown helper '{helper_name}' in _convert_rule_builder_helper, "
+            f"using True_() (always accessible) as fallback",
+            file=sys.stderr
+        )
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -6186,13 +6336,79 @@ class RuleCodeGenerator:
         return 'None'
 
     def _convert_ast_function_call(self, rule: Dict[str, Any]) -> str:
-        """Convert AST_function_call to resolved constant.
+        """Convert AST_function_call to resolved constant or nested rule.
 
         This handles function calls like options.open_pyramid.to_bool()
         by extracting the option name and resolving it from settings.
+
+        It also handles cases where the function is itself a Rule Builder rule
+        (like And, Or, Has) - these are produced by bunny rule analysis in
+        ALttP where path_to_access_rule returns nested rule expressions.
         """
         args = rule.get('args', {})
         function = args.get('function', {})
+
+        # Check if function is a Rule Builder rule (has 'rule' key with known rule types)
+        # This happens when bunny rules are analyzed and the inner rule is a valid
+        # Rule Builder expression (e.g., And(CanReachEntrance(...), Has(...)))
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            # Rule Builder types that produce complete boolean expressions
+            rule_builder_types = (
+                'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
+                'And', 'Or', 'Not',
+                'True_', 'False_',
+                'Compare', 'Conditional',
+                'HelperCall', 'helper',
+            )
+            if func_rule in rule_builder_types:
+                # Special case: And(CanReachEntrance(...), ...) from bunny rules
+                # The bunny rules code creates rules like:
+                #   can_reach(entrance) AND entrance.access_rule(state)
+                # But CanReachEntrance already checks the entrance's access_rule
+                # at runtime (see BaseClasses.Entrance.can_reach), so conditions
+                # that are part of the entrance's access rule are redundant.
+                #
+                # HOWEVER, bunny rules also add additional conditions like Mirror
+                # that are NOT part of the entrance's access rule and MUST be preserved.
+                # Example: path_to_access_rule(new_path, entrance)(state) and state.has('Magic Mirror', player)
+                #
+                # We preserve item checks (Has, HasAll, HasAny, etc.) because they
+                # are definitely not entrance access rules. We only drop conditions
+                # that look like they came from entrance.access_rule (like Or/And with
+                # option checks, or CanReachRegion that would be redundant).
+                if func_rule == 'And':
+                    children = function.get('children', [])
+                    can_reach_entrance = None
+                    non_entrance_conditions = []
+                    for child in children:
+                        if isinstance(child, dict):
+                            child_rule = child.get('rule', '')
+                            # Check if this is the CanReachEntrance condition
+                            if child_rule == 'CanReachEntrance':
+                                can_reach_entrance = child
+                            # Preserve item checks - these are definitely additional requirements
+                            elif child_rule in ('Has', 'HasAll', 'HasAny', 'HasGroup',
+                                               'HasFromList', 'HasFromListUnique'):
+                                non_entrance_conditions.append(child)
+                            # Preserve helper calls - these might be important game-specific checks
+                            elif child_rule in ('HelperCall', 'helper'):
+                                non_entrance_conditions.append(child)
+                            # Other conditions (Or, And, OptionValue, etc.) might be from
+                            # entrance access rules, so we skip them as potentially redundant
+                    if can_reach_entrance:
+                        if non_entrance_conditions:
+                            # Preserve CanReachEntrance AND the non-entrance conditions
+                            preserved = [can_reach_entrance] + non_entrance_conditions
+                            if len(preserved) == 1:
+                                return self._convert_rule(preserved[0])
+                            return self._convert_rule({'rule': 'And', 'children': preserved})
+                        else:
+                            # No additional conditions to preserve, just use CanReachEntrance
+                            return self._convert_rule(can_reach_entrance)
+                # Recursively convert the nested Rule Builder rule
+                return self._convert_rule(function)
 
         # Try to extract the option name from the function expression
         # Structure: world.worlds[1].options.<option_name>.to_bool()
@@ -6325,15 +6541,9 @@ class RuleCodeGenerator:
         This handles patterns like: rule_map.get(key, default)(state)
         where rule_map contains lambda values that have been analyzed.
 
-        The generated code creates an Or() of all possible cases, since at export time
-        we don't know which entrance shuffle resulted in which region connections.
-        Each case is: (key matches) AND (rule for that key)
-
-        This is a permissive approach - if ANY of the dict's rules could be satisfied,
-        the overall rule passes. This is correct because:
-        1. At runtime, only ONE key will match (the actual region name)
-        2. By OR-ing all cases, we ensure the correct rule is evaluated
-        3. The server uses the same permissive approach when multiple paths exist
+        When we can resolve the key expression (e.g., for vanilla entrance shuffle),
+        we return just the matching case's rule. Otherwise, we fall back to OR'ing
+        all cases together (permissive approach).
 
         Args:
             rule: Dict with 'cases' (analyzed rules for each key), 'key', 'default'
@@ -6348,6 +6558,15 @@ class RuleCodeGenerator:
         if not cases:
             # No cases - just use the default
             return self._convert_rule(default)
+
+        # Try to resolve the key expression if it's a world.get_entrance(X).connected_region.name pattern
+        resolved_key = self._try_resolve_entrance_connected_region(key_expr)
+        if resolved_key is not None:
+            # We resolved the key - return just the matching case or default
+            if resolved_key in cases:
+                return self._convert_rule(cases[resolved_key])
+            else:
+                return self._convert_rule(default)
 
         # If there's only one case, we can simplify
         if len(cases) == 1:
@@ -6385,6 +6604,63 @@ class RuleCodeGenerator:
 
         # Multiple rules - Or them together
         return f'Or({", ".join(case_rules)})'
+
+    def _try_resolve_entrance_connected_region(self, key_expr: Dict[str, Any]) -> Optional[str]:
+        """Try to resolve a key expression that accesses entrance.connected_region.name.
+
+        Handles patterns like:
+            world.get_entrance('Tower of Hera').connected_region.name
+
+        If we have the entrance connections data (set via set_entrance_connections),
+        we can resolve this to the actual connected region name.
+
+        Args:
+            key_expr: The key expression from dict_lambda_lookup
+
+        Returns:
+            The resolved region name, or None if we can't resolve it
+        """
+        if not self.entrance_connections:
+            return None
+
+        if not isinstance(key_expr, dict):
+            return None
+
+        # Pattern: {type: 'attribute', attr: 'name', object: {type: 'attribute', attr: 'connected_region', object: ...}}
+        if key_expr.get('type') != 'attribute' or key_expr.get('attr') != 'name':
+            return None
+
+        inner = key_expr.get('object', {})
+        if inner.get('type') != 'attribute' or inner.get('attr') != 'connected_region':
+            return None
+
+        # Now look for world.get_entrance('X') pattern
+        func_call = inner.get('object', {})
+        if func_call.get('type') != 'function_call':
+            return None
+
+        func = func_call.get('function', {})
+        if func.get('type') != 'attribute' or func.get('attr') != 'get_entrance':
+            return None
+
+        # Get the entrance name from the first argument
+        args = func_call.get('args', [])
+        if not args:
+            return None
+
+        first_arg = args[0]
+        entrance_name = None
+        if isinstance(first_arg, dict):
+            if first_arg.get('type') == 'constant':
+                entrance_name = first_arg.get('value')
+        elif isinstance(first_arg, str):
+            entrance_name = first_arg
+
+        if not entrance_name:
+            return None
+
+        # Look up the connected region
+        return self.entrance_connections.get(entrance_name)
 
     def _try_evaluate_conditional_test(self, test: Dict[str, Any]) -> Optional[bool]:
         """Try to evaluate a conditional test to a constant boolean.
@@ -7324,13 +7600,26 @@ class HelperCodeGenerator:
             # Handle helper calls with _original_ast_type marker
             if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
                 helper_name = rule_type
-                func_name = self.get_function_name(helper_name)
-                # Check for args - this can be a list of arguments to pass to the helper
-                args = expr.get('args', [])
-                if args and isinstance(args, list):
-                    arg_exprs = [self._generate_expression(a) for a in args]
-                    return f'{func_name}(state, player, {", ".join(arg_exprs)})'
-                return f'{func_name}(state, player)'
+                # Only generate function call if helper is known (has a definition)
+                # Unknown helpers should return True as a placeholder to avoid NameError
+                if helper_name in self.known_helpers:
+                    func_name = self.get_function_name(helper_name)
+                    # Check for args - this can be a list of arguments to pass to the helper
+                    args = expr.get('args', [])
+                    if args and isinstance(args, list):
+                        arg_exprs = [self._generate_expression(a) for a in args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+                    return f'{func_name}(state, player)'
+                else:
+                    # Unknown helper - return True as placeholder
+                    # This makes locations more accessible, which is appropriate for worldgen
+                    # since unknown helpers are typically progression checks
+                    print(
+                        f"LOSSY FALLBACK: Unknown helper '{helper_name}' in lambda expression, "
+                        f"using True (always accessible) as fallback",
+                        file=sys.stderr
+                    )
+                    return 'True'
 
             # Handle AST_placement_search (check if item is at any of listed locations)
             if rule_type == 'AST_placement_search':
@@ -7421,6 +7710,28 @@ class HelperCodeGenerator:
                             # Just generate the helper call directly
                             return self._generate_expression(function)
 
+                    # Special case: if the function is a Rule Builder type that already
+                    # produces a complete boolean expression (like CanReachEntrance,
+                    # CanReachRegion, Has, And, Or, etc.), generate it directly without adding ().
+                    # This happens when the analyzer wraps path_to_access_rule results.
+                    func_rule = function.get('rule', '')
+                    func_type = function.get('type', '')
+                    # Rule Builder types that produce complete boolean expressions
+                    rule_builder_bool_types = (
+                        'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
+                        'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
+                        'And', 'Or', 'Not',
+                        'True_', 'False_',
+                        'Compare', 'Conditional',
+                        'HelperCall', 'helper',
+                    )
+                    # Also handle analyzer types (lowercase)
+                    analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
+                                          'can_reach', 'region_check', 'location_check')
+                    if func_rule in rule_builder_bool_types or func_type in analyzer_bool_types:
+                        # These types already produce complete boolean expressions
+                        return self._generate_expression(function)
+
                     # Check if this is a math or logging module function call
                     # and set the appropriate flags for imports
                     if function.get('type') == 'attribute':
@@ -7468,7 +7779,16 @@ class HelperCodeGenerator:
                     helper_name = f'can_{capability}'
                     func_name = self.get_function_name(helper_name)
 
-                    # Get helper data including param_mappings
+                    # Check if helper_args were preserved from the original helper call
+                    # This is critical for helpers like can_use_hat(state, player, hat_id)
+                    # where the specific argument value matters
+                    helper_args = args.get('helper_args', [])
+                    if helper_args:
+                        # Use the preserved helper arguments
+                        arg_exprs = [self._generate_expression(arg) for arg in helper_args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+
+                    # Fall back to param_mappings for helpers that use world attributes
                     helper_info = self.helper_data.get(helper_name, {})
                     params = helper_info.get('params', [])
                     param_mappings = helper_info.get('param_mappings', {})
@@ -7485,7 +7805,7 @@ class HelperCodeGenerator:
                             # Access as world attribute for all param_mapping values
                             arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
                         else:
-                            # No mapping, use None as default
+                            # No mapping and no preserved args - use None as default
                             arg_exprs.append('None')
 
                     if arg_exprs:
@@ -8557,6 +8877,11 @@ class HelperCodeGenerator:
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
+        print(
+            f"LOSSY FALLBACK: Unknown helper '{name}' in _expr_helper, "
+            f"using True (always accessible) as fallback",
+            file=sys.stderr
+        )
         return 'True'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
@@ -8979,7 +9304,7 @@ class HelperCodeGenerator:
         1. A region name (string) - needs to be looked up
         2. A Region object - can be used directly
 
-        We generate code that handles both cases at runtime.
+        We generate code that handles both cases at runtime using getattr with a default.
         For is_light_world/is_dark_world, we default to True if region is None (allows access).
         """
         region_expr = expr.get('region', {})
@@ -8991,17 +9316,17 @@ class HelperCodeGenerator:
 
         # Check if region expression is a parameter reference (variable name)
         # The variable could contain either a region name (string) or a Region object
-        # We generate code that handles both cases at runtime
+        # We generate code that handles both cases at runtime using getattr
         if isinstance(region_expr, dict) and region_expr.get('type') in ('name', 'param_ref', 'variable'):
             region_var = region_expr.get('name', 'region')
             # Generate code that handles both string and Region object cases
-            # Also handle None region by returning default value
+            # Use getattr with default to handle None region gracefully
             region_lookup = f"(state.multiworld.get_region({region_var}, player) if isinstance({region_var}, str) else {region_var})"
-            return f"({default_value} if (_r := {region_lookup}) is None else _r.{attr})"
+            return f"getattr({region_lookup}, {repr(attr)}, {default_value})"
 
         # Otherwise, generate the region expression directly
         region_code = self._generate_expression(region_expr)
-        return f"({default_value} if (_r := {region_code}) is None else _r.{attr})"
+        return f"getattr({region_code}, {repr(attr)}, {default_value})"
 
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""

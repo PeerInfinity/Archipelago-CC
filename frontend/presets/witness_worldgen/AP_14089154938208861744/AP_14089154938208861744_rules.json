@@ -9771,6 +9771,7 @@
     "1": {
       "game": "The Witness WorldGen",
       "world_class_name": "TheWitnessWorldGenWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],

@@ -868,10 +868,6 @@
           "statements": [
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "start"
-              },
               "body": [
                 {
                   "type": "if_statement",
@@ -931,6 +927,14 @@
                   ]
                 }
               ],
+              "start": {
+                "type": "name",
+                "name": "start"
+              },
+              "stop": {
+                "type": "name",
+                "name": "end"
+              },
               "var": "i"
             },
             {

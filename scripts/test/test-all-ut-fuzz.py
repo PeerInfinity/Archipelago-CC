@@ -232,7 +232,9 @@ def run_fuzzer_test(
     seed: Optional[int],
     default_options: Optional[str] = None,
     disallow_options: Optional[str] = None,
-    fractional_spheres: bool = False
+    fractional_spheres: bool = False,
+    stop_on_first_failure: bool = False,
+    number_by_seed: bool = False
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -246,6 +248,8 @@ def run_fuzzer_test(
         default_options: Comma-separated options to leave at defaults
         disallow_options: Options to disallow (format: option=value1,value2;option2=value)
         fractional_spheres: Enable fractional sphere logic for UT comparison
+        stop_on_first_failure: Stop fuzzing after the first failure
+        number_by_seed: Number output files by actual seed instead of iteration index
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -296,6 +300,12 @@ def run_fuzzer_test(
 
     if fractional_spheres:
         cmd.append("--fractional-spheres")
+
+    if stop_on_first_failure:
+        cmd.append("--stop-on-first-failure")
+
+    if number_by_seed:
+        cmd.append("--number-by-seed")
 
     print(f"  Running: {' '.join(cmd[:10])}...")
 
@@ -417,8 +427,8 @@ def main():
     parser.add_argument(
         '-j', '--jobs',
         type=int,
-        default=2,
-        help='Number of parallel jobs (default: 2)'
+        default=os.cpu_count() or 4,
+        help=f'Number of parallel jobs (default: {os.cpu_count() or 4} = CPU count)'
     )
     parser.add_argument(
         '-t', '--timeout',
@@ -501,6 +511,19 @@ def main():
         default=False,
         help='Enable fractional sphere logic for UT comparison. Handles cascading item dependencies '
              'within spheres by iterating until no new locations become accessible.'
+    )
+    parser.add_argument(
+        '--stop-on-first-failure',
+        action='store_true',
+        default=False,
+        help='Stop fuzzing after the first failure or timeout. Useful for debugging.'
+    )
+    parser.add_argument(
+        '--number-by-seed',
+        action='store_true',
+        default=False,
+        help='Number output files and errors by actual seed instead of iteration index. '
+             'Requires --seed to be set.'
     )
 
     args = parser.parse_args()
@@ -654,6 +677,8 @@ def main():
             "runs_per_game": args.runs,
             "jobs": args.jobs,
             "timeout": args.timeout,
+            "default_options": args.default_options,
+            "disallow_options": args.disallow_options,
             "total_templates": len(template_files)
         },
         "results": {}
@@ -686,7 +711,9 @@ def main():
             seed=args.seed,
             default_options=args.default_options,
             disallow_options=args.disallow_options,
-            fractional_spheres=args.fractional_spheres
+            fractional_spheres=args.fractional_spheres,
+            stop_on_first_failure=args.stop_on_first_failure,
+            number_by_seed=args.number_by_seed
         )
 
         # Store result

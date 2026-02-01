@@ -732,6 +732,7 @@
     "1": {
       "game": "VVVVVV WorldGen",
       "world_class_name": "V6World",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "area_cost": false,
@@ -901,10 +902,6 @@
           "statements": [
             {
               "type": "for_range",
-              "count": {
-                "type": "name",
-                "name": "start"
-              },
               "body": [
                 {
                   "type": "if_statement",
@@ -964,6 +961,14 @@
                   ]
                 }
               ],
+              "start": {
+                "type": "name",
+                "name": "start"
+              },
+              "stop": {
+                "type": "name",
+                "name": "end"
+              },
               "var": "i"
             },
             {

@@ -13,11 +13,11 @@ on:
         description: 'Number of fuzz runs'
         required: true
         type: number
-        default: 50
+        default: 100
 
       jobs:
-        description: 'Number of parallel fuzzer jobs'
-        required: true
+        description: 'Number of parallel fuzzer jobs per runner. Leave empty to use CPU count.'
+        required: false
         type: number
         default: 4
 
@@ -58,12 +58,28 @@ on:
         type: boolean
         default: false
 
+      stop_on_first_failure:
+        description: 'Stop fuzzing after the first failure'
+        type: boolean
+        default: false
+
+      parallel_runners:
+        description: 'Number of parallel GitHub runners (1 or 10)'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '10'
+        default: '1'
+
 permissions:
   contents: write
 
 jobs:
-  test-single-game:
+  # Single runner job - used when parallel_runners is 1
+  test-single-runner:
     name: Fuzz Test ${{ inputs.game }}
+    if: inputs.parallel_runners == '1'
     runs-on: ubuntu-latest
     timeout-minutes: 180
 
@@ -145,6 +161,7 @@ jobs:
           echo "Default Options: ${{ inputs.default_options || '(none)' }}"
           echo "Disallow Options: ${{ inputs.disallow_options || '(none)' }}"
           echo "Fractional Spheres: ${{ inputs.fractional_spheres }}"
+          echo "Stop on First Failure: ${{ inputs.stop_on_first_failure }}"
           echo "========================================"
 
           # Determine UT version flags
@@ -156,16 +173,26 @@ jobs:
             UT_FLAGS="--ut-version modified --no-prefer-native-ut"
           fi
 
+          # Determine output filename based on seed
+          if [ -n "${{ inputs.seed }}" ]; then
+            OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed }}.json"
+          else
+            OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-random-seed.json"
+          fi
+
           # Build command with optional arguments
           CMD="python scripts/test/test-all-ut-fuzz.py"
           CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --output-file \"${OUTPUT_FILE}\""
           CMD="$CMD --runs ${{ inputs.runs }}"
-          CMD="$CMD --jobs ${{ inputs.jobs }}"
+          CMD="$CMD ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }}"
           CMD="$CMD --timeout ${{ inputs.timeout }}"
           CMD="$CMD ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }}"
           CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
           CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
           CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
+          CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
+          CMD="$CMD ${{ inputs.seed && '--number-by-seed' || '' }}"
           CMD="$CMD $UT_FLAGS"
 
           echo "Running: $CMD"
@@ -192,8 +219,8 @@ jobs:
           # Create new branch from current HEAD
           git checkout -b "${{ steps.branch-name.outputs.branch_name }}"
 
-          # Add test results
-          git add -f scripts/output/ut-fuzz/test-results-*.json || true
+          # Add test results (single-game results only)
+          git add -f scripts/output/ut-fuzz/test-results-single-game-*.json || true
 
           # Add fuzz output if it exists (for debugging failures)
           if [ -d "fuzz_output" ]; then
@@ -213,6 +240,7 @@ jobs:
           Default Options: ${{ inputs.default_options || '(none)' }}
           Disallow Options: ${{ inputs.disallow_options || '(none)' }}
           Fractional Spheres: ${{ inputs.fractional_spheres }}
+          Stop on First Failure: ${{ inputs.stop_on_first_failure }}
           "
             git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
             echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
@@ -225,11 +253,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}
-          path: scripts/output/ut-fuzz/test-results-*.json
+          path: scripts/output/ut-fuzz/test-results-single-game-*.json
           retention-days: 30
 
       - name: Upload fuzz output artifact
-        if: ${{ !cancelled() && failure() }}
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: fuzz-output-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}
@@ -253,6 +281,401 @@ jobs:
           fi
           if [ "${{ inputs.fractional_spheres }}" = "true" ]; then
             echo "**Fractional Spheres:** enabled" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ inputs.stop_on_first_failure }}" = "true" ]; then
+            echo "**Stop on First Failure:** enabled" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
+
+  # Split runner jobs - used when parallel_runners is 10
+  test-split-runner:
+    name: Fuzz Test ${{ inputs.game }} (Split ${{ matrix.split_num }}/10)
+    if: inputs.parallel_runners == '10'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Update world mapping
+        run: |
+          source .venv/bin/activate
+          python scripts/build/build-world-mapping.py
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Swap to original Universal Tracker
+        if: inputs.ut_version == 'original'
+        run: |
+          echo "Replacing modified tracker with original tracker from FarisTheAncient..."
+          rm -rf worlds/tracker
+          cp -r scripts/test/fixtures/tracker_original worlds/tracker
+          echo "Original tracker installed:"
+          ls -la worlds/tracker/
+
+      - name: Calculate seed range for this split
+        id: seed-range
+        run: |
+          TOTAL_RUNS=${{ inputs.runs }}
+          SPLIT_NUM=${{ matrix.split_num }}
+          BASE_SEED=${{ inputs.seed || 1 }}
+
+          # Calculate runs per split and this split's starting offset
+          RUNS_PER_SPLIT=$((TOTAL_RUNS / 10))
+          REMAINDER=$((TOTAL_RUNS % 10))
+
+          # Distribute remainder across first splits
+          if [ $SPLIT_NUM -le $REMAINDER ]; then
+            RUNS_THIS_SPLIT=$((RUNS_PER_SPLIT + 1))
+            START_OFFSET=$(( (SPLIT_NUM - 1) * (RUNS_PER_SPLIT + 1) ))
+          else
+            RUNS_THIS_SPLIT=$RUNS_PER_SPLIT
+            START_OFFSET=$(( REMAINDER * (RUNS_PER_SPLIT + 1) + (SPLIT_NUM - 1 - REMAINDER) * RUNS_PER_SPLIT ))
+          fi
+
+          # Calculate starting seed for this split
+          START_SEED=$((BASE_SEED + START_OFFSET))
+
+          echo "runs_this_split=${RUNS_THIS_SPLIT}" >> $GITHUB_OUTPUT
+          echo "start_seed=${START_SEED}" >> $GITHUB_OUTPUT
+          echo "Split $SPLIT_NUM: $RUNS_THIS_SPLIT runs starting at seed $START_SEED"
+
+      - name: Run UT fuzz test (Split ${{ matrix.split_num }})
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+
+          echo "========================================"
+          echo "UT Fuzz Test Configuration (Split ${{ matrix.split_num }}/10)"
+          echo "========================================"
+          echo "Game: ${{ inputs.game }}"
+          echo "Total Runs: ${{ inputs.runs }}"
+          echo "Runs this split: ${{ steps.seed-range.outputs.runs_this_split }}"
+          echo "Starting seed: ${{ steps.seed-range.outputs.start_seed }}"
+          echo "Jobs: ${{ inputs.jobs }}"
+          echo "Timeout: ${{ inputs.timeout }}s"
+          echo "UT Version: ${{ inputs.ut_version }}"
+          echo "========================================"
+
+          # Determine UT version flags
+          if [ "${{ inputs.ut_version }}" = "original" ]; then
+            UT_FLAGS="--ut-version original"
+          elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
+            UT_FLAGS="--ut-version modified --prefer-native-ut"
+          else
+            UT_FLAGS="--ut-version modified --no-prefer-native-ut"
+          fi
+
+          # Output file includes split number
+          OUTPUT_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}-split-${{ matrix.split_num }}.json"
+
+          # Build command
+          CMD="python scripts/test/test-all-ut-fuzz.py"
+          CMD="$CMD --include-list \"${{ inputs.game }}\""
+          CMD="$CMD --output-file \"${OUTPUT_FILE}\""
+          CMD="$CMD --runs ${{ steps.seed-range.outputs.runs_this_split }}"
+          CMD="$CMD ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }}"
+          CMD="$CMD --timeout ${{ inputs.timeout }}"
+          CMD="$CMD --seed ${{ steps.seed-range.outputs.start_seed }}"
+          CMD="$CMD ${{ inputs.default_options && format('--default-options {0}', inputs.default_options) || '' }}"
+          CMD="$CMD ${{ inputs.disallow_options && format('--disallow-options \"{0}\"', inputs.disallow_options) || '' }}"
+          CMD="$CMD ${{ inputs.fractional_spheres && '--fractional-spheres' || '' }}"
+          CMD="$CMD ${{ inputs.stop_on_first_failure && '--stop-on-first-failure' || '' }}"
+          CMD="$CMD --number-by-seed"
+          CMD="$CMD $UT_FLAGS"
+
+          echo "Running: $CMD"
+          eval $CMD
+
+      - name: Upload split results artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-split-${{ matrix.split_num }}
+          path: scripts/output/ut-fuzz/test-results-single-game-*-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+      - name: Upload fuzz output artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-split-${{ matrix.split_num }}
+          path: fuzz_output/
+          retention-days: 7
+
+  # Combine results from split runners
+  combine-results:
+    name: Combine Split Results
+    if: inputs.parallel_runners == '10' && !cancelled()
+    needs: test-split-runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Download all split artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-split-*
+          path: artifacts
+
+      - name: Download all fuzz output artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fuzz-output-split-*
+          path: fuzz-artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p scripts/output/ut-fuzz
+          mkdir -p fuzz_output
+
+          # Combine JSON result files
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          import glob
+          import os
+          from datetime import datetime
+
+          # Find all split result files
+          files = glob.glob("artifacts/test-results-split-*/test-results-single-game-*-split-*.json")
+          print(f"Found {len(files)} result files to combine")
+
+          if not files:
+              print("No result files found")
+              exit(0)
+
+          # Combine results
+          combined = {
+              "metadata": {
+                  "created": datetime.now().isoformat(),
+                  "last_updated": datetime.now().isoformat(),
+                  "script_version": "1.0.0",
+                  "combined_from": len(files)
+              },
+              "results": {}
+          }
+
+          total_stats = {
+              "total": 0,
+              "success": 0,
+              "failure": 0,
+              "timeout": 0,
+              "ignored": 0
+          }
+          all_errors = {}
+
+          for f in sorted(files):
+              print(f"Processing: {f}")
+              with open(f) as fp:
+                  data = json.load(fp)
+
+              # Copy metadata from first file
+              if "seed_mode" not in combined["metadata"]:
+                  for key in ["ut_version", "world_source", "seed_mode", "seed", "jobs", "timeout"]:
+                      if key in data.get("metadata", {}):
+                          combined["metadata"][key] = data["metadata"][key]
+
+              # Aggregate results
+              for template_name, result in data.get("results", {}).items():
+                  if template_name not in combined["results"]:
+                      combined["results"][template_name] = {
+                          "ut_fuzz": {
+                              "passed": True,
+                              "total": 0,
+                              "success": 0,
+                              "failure": 0,
+                              "timeout": 0,
+                              "ignored": 0,
+                              "errors": {}
+                          },
+                          "world_info": result.get("world_info", {}),
+                          "timestamp": datetime.now().isoformat()
+                      }
+
+                  ut_fuzz = result.get("ut_fuzz", {})
+                  combined_ut = combined["results"][template_name]["ut_fuzz"]
+
+                  # Aggregate counts
+                  combined_ut["total"] += ut_fuzz.get("total", 0)
+                  combined_ut["success"] += ut_fuzz.get("success", 0)
+                  combined_ut["failure"] += ut_fuzz.get("failure", 0)
+                  combined_ut["timeout"] += ut_fuzz.get("timeout", 0)
+                  combined_ut["ignored"] += ut_fuzz.get("ignored", 0)
+
+                  # Update passed status
+                  if ut_fuzz.get("failure", 0) > 0 or ut_fuzz.get("timeout", 0) > 0:
+                      combined_ut["passed"] = False
+
+                  # Merge errors
+                  for error_type, seeds in ut_fuzz.get("errors", {}).items():
+                      if error_type not in combined_ut["errors"]:
+                          combined_ut["errors"][error_type] = []
+                      combined_ut["errors"][error_type].extend(seeds)
+
+                  # Update total stats
+                  total_stats["total"] += ut_fuzz.get("total", 0)
+                  total_stats["success"] += ut_fuzz.get("success", 0)
+                  total_stats["failure"] += ut_fuzz.get("failure", 0)
+                  total_stats["timeout"] += ut_fuzz.get("timeout", 0)
+                  total_stats["ignored"] += ut_fuzz.get("ignored", 0)
+
+          combined["metadata"]["total_runs"] = total_stats["total"]
+          combined["metadata"]["total_templates"] = len(combined["results"])
+
+          # Write combined results
+          output_file = f"scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json"
+          with open(output_file, "w") as fp:
+              json.dump(combined, fp, indent=2)
+
+          print(f"Combined results written to {output_file}")
+          print(f"Total: {total_stats['total']}, Success: {total_stats['success']}, Failure: {total_stats['failure']}, Timeout: {total_stats['timeout']}")
+          PYTHON_SCRIPT
+
+      - name: Combine fuzz output directories
+        run: |
+          # Merge all fuzz output directories
+          for dir in fuzz-artifacts/fuzz-output-split-*/; do
+            if [ -d "$dir" ]; then
+              cp -r "$dir"/* fuzz_output/ 2>/dev/null || true
+            fi
+          done
+          echo "Combined fuzz output:"
+          ls -la fuzz_output/ 2>/dev/null || echo "No fuzz output to combine"
+
+      - name: Generate branch name
+        id: branch-name
+        run: |
+          GAME_SLUG=$(echo "${{ inputs.game }}" | sed 's/\.yaml$//' | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          BRANCH_NAME="ut-fuzz-single/${GAME_SLUG}/${TIMESTAMP}"
+          echo "branch_name=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "game_slug=${GAME_SLUG}" >> $GITHUB_OUTPUT
+
+      - name: Create branch and commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "${{ steps.branch-name.outputs.branch_name }}"
+
+          git add -f scripts/output/ut-fuzz/test-results-single-game-*.json || true
+
+          if [ -d "fuzz_output" ] && [ "$(ls -A fuzz_output)" ]; then
+            git add -f fuzz_output/ || true
+          fi
+
+          if ! git diff --staged --quiet; then
+            git commit -m "UT fuzz test results for ${{ inputs.game }} (10 parallel runners)
+
+          Workflow run: ${{ github.run_id }}
+          Game: ${{ inputs.game }}
+          UT Version: ${{ inputs.ut_version }}
+          Seed: ${{ inputs.seed || 1 }}
+          Runs: ${{ inputs.runs }}
+          Jobs per runner: ${{ inputs.jobs }}
+          Parallel runners: 10
+          Timeout: ${{ inputs.timeout }}s
+          Default Options: ${{ inputs.default_options || '(none)' }}
+          Disallow Options: ${{ inputs.disallow_options || '(none)' }}
+          Fractional Spheres: ${{ inputs.fractional_spheres }}
+          Stop on First Failure: ${{ inputs.stop_on_first_failure }}
+          "
+            git push -u origin "${{ steps.branch-name.outputs.branch_name }}"
+            echo "Results committed to branch: ${{ steps.branch-name.outputs.branch_name }}"
+          else
+            echo "No results to commit"
+          fi
+
+      - name: Upload combined results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}-combined
+          path: scripts/output/ut-fuzz/test-results-single-game-*.json
+          retention-days: 30
+
+      - name: Upload combined fuzz output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-output-${{ steps.branch-name.outputs.game_slug }}-${{ inputs.ut_version }}-combined
+          path: fuzz_output/
+          retention-days: 30
+
+      - name: Summary
+        run: |
+          echo "## UT Fuzz Test Results (Combined from 10 runners)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Game:** ${{ inputs.game }}" >> $GITHUB_STEP_SUMMARY
+          echo "**UT Version:** ${{ inputs.ut_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Total Runs:** ${{ inputs.runs }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Starting Seed:** ${{ inputs.seed || 1 }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Parallel Runners:** 10" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ inputs.default_options }}" ]; then
+            echo "**Default Options:** ${{ inputs.default_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -n "${{ inputs.disallow_options }}" ]; then
+            echo "**Disallow Options:** ${{ inputs.disallow_options }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ inputs.fractional_spheres }}" = "true" ]; then
+            echo "**Fractional Spheres:** enabled" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ inputs.stop_on_first_failure }}" = "true" ]; then
+            echo "**Stop on First Failure:** enabled" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY

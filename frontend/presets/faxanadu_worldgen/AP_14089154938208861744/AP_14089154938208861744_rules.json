@@ -59,8 +59,14 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Elixir",
@@ -74,8 +80,14 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Key King",
@@ -89,8 +101,14 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Key Jack",
@@ -104,8 +122,14 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Black Onyx",
@@ -119,8 +143,14 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "rule": "can_buy_in_eolis",
-              "_original_ast_type": "helper"
+              "rule": "AST_capability",
+              "args": {
+                "capability": "buy_in_eolis",
+                "inferred": true,
+                "description": "Requires ability to buy in eolis",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wingboots",
@@ -228,7 +258,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -242,7 +272,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -454,7 +484,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -468,7 +498,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -482,7 +512,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -496,7 +526,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -565,7 +595,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -579,7 +609,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -596,7 +626,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -739,7 +769,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -872,7 +902,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -900,7 +930,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1037,13 +1067,15 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper"
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Magic"
+              }
             },
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1106,7 +1138,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1134,7 +1166,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1165,7 +1197,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1247,7 +1279,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1261,7 +1293,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1275,7 +1307,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1340,7 +1372,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1374,7 +1406,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1504,7 +1536,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1546,7 +1578,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1592,7 +1624,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1606,7 +1638,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1783,7 +1815,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1797,7 +1829,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1882,8 +1914,10 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper"
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Magic"
+              }
             },
             "item": {
               "name": "Ring of Elf",
@@ -1965,13 +1999,15 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper"
+              "rule": "Has",
+              "args": {
+                "item_name": "Any_Magic"
+              }
             },
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -1985,7 +2021,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -2059,7 +2095,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -2121,7 +2157,7 @@
             "item": {
               "name": "Red Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -2456,7 +2492,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 35
+        "max_count": 35,
+        "classification_counts": {
+          "filler": 31,
+          "progression": 4
+        }
       },
       "Elixir": {
         "name": "Elixir",
@@ -2604,119 +2644,119 @@
   },
   "canonical_placements": {
     "1": {
+      "Conflate Guru": "Progressive Sword",
+      "Conflate Magic Shield": "Progressive Sword",
       "Eolis Guru": "Progressive Sword",
+      "Tower of Fortress Guru": "Progressive Sword",
       "Eolis Key Jack": "Elixir",
+      "Fraternal Castle Hidden Ointment": "Elixir",
+      "Joker Spring Ruby Ring": "Elixir",
+      "Path to Daybreak Battle Suit": "Elixir",
       "Eolis Hand Dagger": "Key King",
       "Eolis Red Potion": "Key Jack",
       "Eolis Elixir": "Black Onyx",
-      "Eolis Deluge": "Wingboots",
-      "Path to Apolune Magic Shield": "Unlock Wingboots",
-      "Path to Apolune Death": "Hourglass",
-      "Apolune Small Shield": "Hourglass",
-      "Apolune Hand Dagger": "Red Potion",
-      "Apolune Deluge": "Red Potion",
-      "Apolune Red Potion": "Ointment",
       "Apolune Key Jack": "Wingboots",
-      "Tower of Trunk Hidden Mattock": "Progressive Shield",
-      "Tower of Trunk Hidden Hourglass": "Poison",
-      "Tower of Trunk Boss Mattock": "Mattock",
-      "Path to Forepaw Hidden Red Potion": "Poison",
-      "Path to Forepaw Glove": "Poison",
-      "Forepaw Long Sword": "Ring of Ruby",
+      "Eolis Deluge": "Wingboots",
+      "Misty Shop Death": "Wingboots",
+      "Victim Mattock": "Wingboots",
+      "Path to Apolune Magic Shield": "Unlock Wingboots",
+      "Apolune Small Shield": "Hourglass",
+      "Conflate Wingboots": "Hourglass",
+      "Mascon Key Queen": "Hourglass",
+      "Mascon Red Potion": "Hourglass",
+      "Mascon Thunder": "Hourglass",
+      "Misty Shop Red Potion": "Hourglass",
+      "Path to Apolune Death": "Hourglass",
+      "Path to Conflate Hidden Ointment": "Hourglass",
+      "Tower of Fortress Hidden Wingboots": "Hourglass",
+      "Victim Key King": "Hourglass",
       "Forepaw Studded Mail": "Red Potion",
-      "Forepaw Small Shield": "Key Queen",
-      "Forepaw Red Potion": "Red Potion",
-      "Forepaw Wingboots": "Red Potion",
+      "Path to Daybreak Hidden Wingboots 1": "Red Potion",
+      "Tower of Mist Black Onyx": "Red Potion",
+      "Tower of Mist Hidden Ointment": "Red Potion",
+      "Apolune Deluge": "Red Potion",
+      "Apolune Hand Dagger": "Red Potion",
+      "Branches Hidden Ointment": "Red Potion",
+      "Branches Poison": "Red Potion",
+      "Conflate Giant Blade": "Red Potion",
+      "Conflate Red Potion": "Red Potion",
+      "Daybreak Giant Blade": "Red Potion",
+      "Daybreak Red Potion": "Red Potion",
+      "Evil Fortress Poison 2": "Red Potion",
       "Forepaw Key Jack": "Red Potion",
       "Forepaw Key Queen": "Red Potion",
+      "Forepaw Red Potion": "Red Potion",
+      "Forepaw Wingboots": "Red Potion",
+      "Fraternal Castle Guru": "Red Potion",
+      "Fraternal Castle Poison 1": "Red Potion",
+      "Fraternal Castle Shop Hidden Ointment": "Red Potion",
+      "Mascon Large Shield": "Red Potion",
+      "Mascon Mattock": "Red Potion",
+      "Mist Hidden Poison 1": "Red Potion",
+      "Mist Hidden Poison 2": "Red Potion",
+      "Misty Doctor Office": "Red Potion",
+      "Tower of Fortress Elixir": "Red Potion",
+      "Tower of Mist Elixir": "Red Potion",
+      "Tower of Suffer Pendant": "Red Potion",
       "Trunk Hidden Ointment": "Red Potion",
       "Trunk Hidden Red Potion": "Red Potion",
       "Trunk Red Potion": "Red Potion",
+      "Useless Tower": "Red Potion",
+      "Victim Full Plate": "Red Potion",
+      "Victim Red Potion": "Red Potion",
+      "Victim Tavern": "Red Potion",
+      "Apolune Red Potion": "Ointment",
+      "Dartmoor Giant Blade": "Ointment",
+      "Daybreak Key King": "Ointment",
+      "Evil Fortress Ointment": "Ointment",
+      "Misty House": "Ointment",
+      "Misty Magic Hall": "Ointment",
+      "Path to Daybreak Poison": "Ointment",
+      "Tower of Fortress Ointment": "Ointment",
+      "Branches Hidden Mattock": "Progressive Shield",
+      "Daybreak Tilte": "Progressive Shield",
+      "Misty Shop Elixir": "Progressive Shield",
+      "Tower of Trunk Hidden Mattock": "Progressive Shield",
+      "Dartmoor Castle Hidden Hourglass": "Poison",
+      "Evil Fortress Glove": "Poison",
+      "Evil Fortress Hidden Glove": "Poison",
+      "Evil Fortress Poison 1": "Poison",
+      "Fraternal Castle Dragon Slayer": "Poison",
+      "Fraternal Castle Poison 2": "Poison",
+      "Fraternal Castle Poison 3": "Poison",
+      "Helm Branch Hidden Glove": "Poison",
+      "Mist Hidden Wingboots": "Poison",
+      "Path to Conflate Poison": "Poison",
+      "Path to Daybreak Hidden Wingboots 2": "Poison",
+      "Path to Daybreak Magical Rod": "Poison",
+      "Path to Forepaw Glove": "Poison",
+      "Path to Forepaw Hidden Red Potion": "Poison",
+      "Path to Mascon Hidden Wingboots": "Poison",
+      "Tower of Suffer Hidden Hourglass": "Poison",
+      "Tower of Trunk Hidden Hourglass": "Poison",
+      "Tower of Trunk Boss Mattock": "Mattock",
+      "Forepaw Long Sword": "Ring of Ruby",
+      "Forepaw Small Shield": "Key Queen",
       "Sky Spring": "Sky Spring Flow",
-      "Joker Spring Ruby Ring": "Elixir",
       "Joker Spring": "Joker Spring Flow",
       "Tower of Fortress Poison 1": "Key Joker",
       "Tower of Fortress Poison 2": "Spring Elixir",
-      "Tower of Fortress Hidden Wingboots": "Hourglass",
-      "Tower of Fortress Ointment": "Ointment",
-      "Tower of Fortress Boss Wingboots": "Glove",
-      "Tower of Fortress Elixir": "Red Potion",
-      "Tower of Fortress Guru": "Progressive Sword",
-      "Tower of Fortress Spring": "Tower of Fortress Spring Flow",
-      "Path to Mascon Hidden Wingboots": "Poison",
-      "Tower of Red Potion": "Ring of Dworf",
-      "Mascon Large Shield": "Red Potion",
-      "Mascon Thunder": "Hourglass",
-      "Mascon Mattock": "Red Potion",
-      "Mascon Red Potion": "Hourglass",
-      "Mascon Key Jack": "Key Ace",
-      "Mascon Key Queen": "Hourglass",
-      "Misty Shop Death": "Wingboots",
-      "Misty Shop Hourglass": "Death",
-      "Misty Shop Elixir": "Progressive Shield",
-      "Misty Shop Red Potion": "Hourglass",
-      "Misty Doctor Office": "Red Potion",
-      "Tower of Suffer Hidden Wingboots": "Progressive Armor",
-      "Tower of Suffer Hidden Hourglass": "Poison",
-      "Tower of Suffer Pendant": "Red Potion",
-      "Victim Full Plate": "Red Potion",
-      "Victim Mattock": "Wingboots",
-      "Victim Red Potion": "Red Potion",
-      "Victim Key King": "Hourglass",
-      "Victim Key Queen": "Progressive Armor",
-      "Victim Tavern": "Red Potion",
-      "Mist Hidden Poison 1": "Red Potion",
-      "Mist Hidden Poison 2": "Red Potion",
-      "Mist Hidden Wingboots": "Poison",
-      "Misty Magic Hall": "Ointment",
-      "Misty House": "Ointment",
-      "Useless Tower": "Red Potion",
-      "Tower of Mist Hidden Ointment": "Red Potion",
-      "Tower of Mist Elixir": "Red Potion",
-      "Tower of Mist Black Onyx": "Red Potion",
-      "Path to Conflate Hidden Ointment": "Hourglass",
-      "Path to Conflate Poison": "Poison",
-      "Helm Branch Hidden Glove": "Poison",
       "Helm Branch Battle Helmet": "Glove",
-      "Conflate Giant Blade": "Red Potion",
-      "Conflate Magic Shield": "Progressive Sword",
-      "Conflate Wingboots": "Hourglass",
-      "Conflate Red Potion": "Red Potion",
-      "Conflate Guru": "Progressive Sword",
-      "Branches Hidden Ointment": "Red Potion",
-      "Branches Poison": "Red Potion",
-      "Branches Hidden Mattock": "Progressive Shield",
+      "Tower of Fortress Boss Wingboots": "Glove",
+      "Tower of Fortress Spring": "Tower of Fortress Spring Flow",
+      "Tower of Red Potion": "Ring of Dworf",
+      "Mascon Key Jack": "Key Ace",
+      "Misty Shop Hourglass": "Death",
+      "Evil Fortress Poison 3": "Progressive Armor",
+      "Tower of Suffer Hidden Wingboots": "Progressive Armor",
+      "Victim Key Queen": "Progressive Armor",
       "Branches Hidden Hourglass": "Deluge",
-      "Path to Daybreak Hidden Wingboots 1": "Red Potion",
-      "Path to Daybreak Magical Rod": "Poison",
-      "Path to Daybreak Hidden Wingboots 2": "Poison",
-      "Path to Daybreak Poison": "Ointment",
       "Path to Daybreak Glove": "Tilte",
-      "Path to Daybreak Battle Suit": "Elixir",
-      "Daybreak Tilte": "Progressive Shield",
-      "Daybreak Giant Blade": "Red Potion",
-      "Daybreak Red Potion": "Red Potion",
-      "Daybreak Key King": "Ointment",
       "Daybreak Key Queen": "Demons Ring",
-      "Dartmoor Castle Hidden Hourglass": "Poison",
       "Dartmoor Castle Hidden Red Potion": "Ring of Elf",
-      "Dartmoor Giant Blade": "Ointment",
       "Dartmoor Red Potion": "Fire",
       "Dartmoor Key King": "Magical Rod",
-      "Fraternal Castle Hidden Ointment": "Elixir",
-      "Fraternal Castle Shop Hidden Ointment": "Red Potion",
-      "Fraternal Castle Poison 1": "Red Potion",
-      "Fraternal Castle Poison 2": "Poison",
-      "Fraternal Castle Poison 3": "Poison",
       "Fraternal Castle Hidden Hourglass": "Thunder",
-      "Fraternal Castle Dragon Slayer": "Poison",
-      "Fraternal Castle Guru": "Red Potion",
-      "Evil Fortress Ointment": "Ointment",
-      "Evil Fortress Poison 1": "Poison",
-      "Evil Fortress Glove": "Poison",
-      "Evil Fortress Poison 2": "Red Potion",
-      "Evil Fortress Poison 3": "Progressive Armor",
-      "Evil Fortress Hidden Glove": "Poison",
       "Evil One": "Killed Evil One"
     }
   },
@@ -2730,6 +2770,7 @@
     "1": {
       "game": "Faxanadu WorldGen",
       "world_class_name": "FaxanaduWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
