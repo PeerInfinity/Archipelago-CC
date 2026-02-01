@@ -458,7 +458,8 @@ class Hook(BaseHook):
                 return GenOutcome.OptionError, exc
             # Handle FillError when options create impossible-to-fill seeds
             # (e.g., accessibility: minimal combined with level_shuffle in SMW)
-            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
+            # Note: "Unable to place dungeon prizes" wraps "No more spots to place" in ALttP
+            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str or "Unable to place dungeon prizes" in exc_str:
                 return GenOutcome.OptionError, exc
             # Handle FillError for accessibility check failures - this happens when random
             # option combinations create seeds where required locations are unreachable
@@ -630,7 +631,8 @@ class MultiworldHook(BaseHook):
             exc_type = type(exc).__name__
             if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
                 return GenOutcome.OptionError, exc
-            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
+            # Note: "Unable to place dungeon prizes" wraps "No more spots to place" in ALttP
+            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str or "Unable to place dungeon prizes" in exc_str:
                 return GenOutcome.OptionError, exc
             # Handle FillError for accessibility check failures
             if "Could not access required locations for accessibility check" in exc_str:

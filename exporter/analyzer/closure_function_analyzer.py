@@ -306,6 +306,17 @@ class ClosureFunctionAnalyzer:
                     combine_mode = 'and'  # Default to AND if detection disabled
                 return self._analyze_add_rule_pattern(rule_func, old_rule_func, depth, combine_mode)
 
+        # Pattern: locality_rules item_rule wrapper
+        # lambda i, sending_blockers=..., old_rule=location.item_rule: \
+        #     i.name not in sending_blockers[i.player] and old_rule(i)
+        # Created by worlds/generic/Rules.py locality_rules() function
+        # We analyze just old_rule since sending_blockers is a multiworld locality concern
+        if 'old_rule' in closure_vars and 'sending_blockers' in closure_vars:
+            old_rule_func = closure_vars['old_rule']
+            if callable(old_rule_func):
+                logger.debug(f"ClosureFunctionAnalyzer: Detected locality_rules item_rule pattern")
+                return self._analyze_locality_item_rule_pattern(old_rule_func, depth)
+
         # Pattern: Simple item check with 'player' captured
         # lambda state: state.has('Moon Pearl', player)
         if 'player' in closure_vars and len(closure_vars) <= 2:
@@ -445,6 +456,12 @@ class ClosureFunctionAnalyzer:
 
         Returns:
             Analyzed rule combining can_reach and path requirements
+
+        Note:
+            In ALttP's bunny rule BFS, path is built as: new_path = path + [entrance.access_rule]
+            This means the LAST element of path is always the entrance's own access rule.
+            Since CanReachEntrance already checks the entrance's access_rule via Entrance.can_reach(),
+            we skip the last element to avoid double-counting the entrance rule.
         """
         # Feature flag: Limit closure analysis depth
         if self.ENABLE_CLOSURE_DEPTH_LIMIT and depth > self.MAX_CLOSURE_DEPTH:
@@ -474,9 +491,15 @@ class ClosureFunctionAnalyzer:
             'args': {'entrance_name': entrance_name}
         }
 
-        # Analyze each rule in path
+        # Skip the last element of path - it's the entrance's access_rule which is already
+        # checked by CanReachEntrance via Entrance.can_reach(). Including it would double-count
+        # the entrance rule, causing incorrect logic (e.g., requiring Beat Agahnim 2 when
+        # the entrance rule is "open_pyramid OR Beat Agahnim 2").
+        path_to_analyze = path[:-1] if path else []
+
+        # Analyze each rule in path (excluding the last element)
         path_conditions = []
-        for i, rule_func in enumerate(path):
+        for i, rule_func in enumerate(path_to_analyze):
             if callable(rule_func):
                 result = self.analyze_function(rule_func, depth + 1)
                 if result is not None:
@@ -597,6 +620,49 @@ class ClosureFunctionAnalyzer:
                 return simplified[0]
             logger.debug(f"ClosureFunctionAnalyzer: add_rule AND pattern combined: {simplified}")
             return {'rule': 'And', 'children': simplified}
+
+    def _analyze_locality_item_rule_pattern(self, old_rule_func: Callable,
+                                             depth: int) -> Optional[Dict[str, Any]]:
+        """Analyze locality_rules item_rule wrapper pattern.
+
+        This pattern is created by worlds/generic/Rules.py locality_rules() function:
+        lambda i, sending_blockers=..., old_rule=location.item_rule: \
+            i.name not in sending_blockers[i.player] and old_rule(i)
+
+        The sending_blockers check is a multiworld locality concern (local_items,
+        non_local_items options) that we don't need to export for single-world tracking.
+        We just analyze and return the old_rule.
+
+        Args:
+            old_rule_func: The original item_rule function
+            depth: Current recursion depth
+
+        Returns:
+            Analyzed rule from old_rule, or True_ if old_rule can't be analyzed
+        """
+        logger.debug(f"ClosureFunctionAnalyzer: Analyzing locality_rules item_rule at depth {depth}")
+
+        # Check if old_rule is the default Location.item_rule (always returns True)
+        # In this case, we can just return True_
+        from BaseClasses import Location
+        if old_rule_func is Location.item_rule:
+            logger.debug(f"ClosureFunctionAnalyzer: old_rule is default Location.item_rule, returning True_")
+            return {'rule': 'True_'}
+
+        # Try to analyze the old_rule
+        old_rule_result = self.analyze_function(old_rule_func, depth + 1)
+
+        # If analysis failed, try bytecode
+        if old_rule_result is None:
+            old_rule_result = self._analyze_via_bytecode(old_rule_func)
+
+        if old_rule_result is None:
+            # Couldn't analyze old_rule - return True_ as fallback
+            # This is more permissive but avoids losing the rule entirely
+            logger.debug(f"ClosureFunctionAnalyzer: Could not analyze locality item_rule old_rule, using True_")
+            return {'rule': 'True_'}
+
+        return old_rule_result
 
     def _analyze_via_bytecode(self, func: Callable) -> Optional[Dict[str, Any]]:
         """Analyze a function by examining its bytecode constants and names.
@@ -842,20 +908,18 @@ class ClosureFunctionAnalyzer:
                 logger.debug(f"_try_evaluate_option: Option '{option_name}' not found")
                 return None
 
-            # Try to call to_bool() if available
-            if hasattr(option_obj, 'to_bool'):
-                if multiworld is not None:
-                    result = option_obj.to_bool(multiworld, player)
-                else:
-                    # Fallback: use value truthiness
-                    result = bool(getattr(option_obj, 'value', False))
-                logger.debug(f"_try_evaluate_option: {option_name}.to_bool() = {result}")
-                return result
-            else:
-                # Use value truthiness
-                result = bool(getattr(option_obj, 'value', False))
-                logger.debug(f"_try_evaluate_option: {option_name}.value = {result}")
-                return result
+            # Use direct value truthiness, NOT to_bool()
+            # The bytecode pattern detection recognizes direct option access like:
+            #   world.worlds[player].options.open_pyramid
+            # NOT:
+            #   world.worlds[player].options.open_pyramid.to_bool(world, player)
+            # So we must evaluate the option the same way the original code does.
+            # For Choice options, bool(option) uses bool(option.value).
+            # to_bool() may have different semantics (e.g., OpenPyramid.to_bool()
+            # checks goal and entrance_shuffle, not just the value).
+            result = bool(getattr(option_obj, 'value', False))
+            logger.debug(f"_try_evaluate_option: bool({option_name}.value) = {result}")
+            return result
 
         except Exception as e:
             logger.debug(f"_try_evaluate_option: Failed to evaluate '{option_name}': {e}")
@@ -921,7 +985,11 @@ class ClosureFunctionAnalyzer:
         return None
 
     def _extract_closure_vars(self, func: Callable) -> Dict[str, Any]:
-        """Extract closure variables from a function.
+        """Extract closure variables and default argument values from a function.
+
+        This extracts both:
+        1. Closure variables (freevars) - captured from enclosing scope
+        2. Default argument values - often used to capture values at definition time
 
         Args:
             func: The function to extract closure variables from
@@ -930,19 +998,36 @@ class ClosureFunctionAnalyzer:
             Dictionary mapping variable names to their values
         """
         result = {}
-        if not hasattr(func, '__closure__') or func.__closure__ is None:
-            return result
 
-        if not hasattr(func, '__code__'):
-            return result
+        # Extract closure variables (freevars)
+        if hasattr(func, '__closure__') and func.__closure__ is not None:
+            if hasattr(func, '__code__'):
+                freevars = func.__code__.co_freevars
+                for name, cell in zip(freevars, func.__closure__):
+                    try:
+                        result[name] = cell.cell_contents
+                    except ValueError:
+                        # Empty cell
+                        pass
 
-        freevars = func.__code__.co_freevars
-        for name, cell in zip(freevars, func.__closure__):
-            try:
-                result[name] = cell.cell_contents
-            except ValueError:
-                # Empty cell
-                pass
+        # Extract default argument values
+        # These are often used in patterns like:
+        #   lambda i, old_rule=location.item_rule: ... and old_rule(i)
+        if hasattr(func, '__defaults__') and func.__defaults__ is not None:
+            if hasattr(func, '__code__'):
+                code = func.__code__
+                # co_varnames starts with positional args, then *args, **kwargs, then locals
+                # Defaults apply to the last N positional args (where N = len(__defaults__))
+                arg_count = code.co_argcount
+                defaults = func.__defaults__
+                # Match defaults to their parameter names
+                # Default values are right-aligned to parameters
+                first_default_idx = arg_count - len(defaults)
+                for i, default_value in enumerate(defaults):
+                    param_idx = first_default_idx + i
+                    if param_idx < len(code.co_varnames):
+                        param_name = code.co_varnames[param_idx]
+                        result[param_name] = default_value
 
         return result
 
