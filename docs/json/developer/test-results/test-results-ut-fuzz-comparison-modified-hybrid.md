@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-02-01 10:31:06
+**Generated:** 2026-02-01 19:42:16
 
 **Source Data Last Updated:** 2026-01-31T19:51:11
 
@@ -18,18 +18,18 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 ## Summary
 
 - **Total Games Tested:** 85
-- **Passing Both:** 54 (63.5%)
+- **Passing Both:** 60 (70.6%)
 - **Passing Modified Only:** 0 (0.0%)
-- **Passing Hybrid Only:** 15 (17.6%)
+- **Passing Hybrid Only:** 9 (10.6%)
 - **Passing Neither:** 16 (18.8%)
 - **Passing Hybrid with no custom code:** 40 (47.1%)
-- **Passing Hybrid Only with no custom code:** 2 (2.4%)
+- **Passing Hybrid Only with no custom code:** 1 (1.2%)
 
 ## Full Comparison
 
 | Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ⚠️ 97.0% | ✅ 100.0% | 18.0KB | ✅ | 231.3KB |
+| A Hat in Time | ✅ 99.0% | ✅ 100.0% | 18.0KB | ✅ | 231.3KB |
 | A Link to the Past | ✅ 97.0% | ✅ 80.0% | 12.6KB | ✅ | 665.3KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
@@ -66,7 +66,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Kirby's Dream Land 3 | ⚠️ 87.0% | ✅ 100.0% | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ 100.0% | ✅ 100.0% | 3.6KB | ✅ | 210.5KB |
 | Lingo | ❌ 2.0% | ✅ 30.0% | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | ⚠️ 95.0% | ✅ 100.0% | 7.4KB | ✅ | 714.5KB |
+| Links Awakening DX | ✅ 100.0% | ✅ 100.0% | 7.4KB | ✅ | 714.5KB |
 | Lufia II Ancient Cave | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 12.6KB |
@@ -94,16 +94,16 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Subnautica | ⚠️ 94.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ 100.0% | ✅ 100.0% | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ⚠️ 93.0% | ✅ 100.0% | 92.5KB | ✅ | 976.7KB |
+| Super Mario Land 2 | ✅ 98.0% | ✅ 100.0% | 92.5KB | ✅ | 976.7KB |
 | Super Mario World | ✅ 98.0% | ✅ 90.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 0.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.4KB |
 | TOEM original | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
-| TUNIC | ⚠️ 56.0% | ✅ 100.0% | 3.1KB | ✅ | 705.5KB |
+| TUNIC | ⚠️ 59.0% | ✅ 100.0% | 3.1KB | ✅ | 705.5KB |
 | Terraria | ✅ 98.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
-| The Legend of Zelda | ⚠️ 90.0% | ✅ 100.0% | ✅ | ✅ | 555.6KB |
-| The Messenger | ⚠️ 99.0% | ✅ 100.0% | 14.8KB | ✅ | 211.8KB |
-| The Wind Waker | ⚠️ 54.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
+| The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.6KB |
+| The Messenger | ✅ 100.0% | ✅ 100.0% | 14.8KB | ✅ | 211.8KB |
+| The Wind Waker | ✅ 54.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ❌ 11.0% | ✅ 100.0% | 14.1KB | ✅ | 401.1KB |
 | Timespinner | ✅ 99.0% | ✅ 100.0% | 2.2KB | ✅ | 260.8KB |
 | Undertale | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 58.0KB |
@@ -115,12 +115,13 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ 73.0% | ✅ 60.0% | ✅ | ✅ | 155.5KB |
 
-## Games Passing Both (54)
+## Games Passing Both (60)
 
 These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
+| A Hat in Time | 18.0KB | ✅ | 231.3KB |
 | A Link to the Past | 12.6KB | ✅ | 665.3KB |
 | A Short Hike | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | 11.0KB |
@@ -147,6 +148,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Hylics 2 | ✅ | ✅ | 102.2KB |
 | Inscryption | 8.0KB | ✅ | 84.2KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.5KB |
+| Links Awakening DX | 7.4KB | ✅ | 714.5KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ | ✅ | 12.6KB |
@@ -165,10 +167,14 @@ These games have 100% success rate in both Universal Tracker versions.
 | Sonic Adventure 2 Battle | ✅ | ✅ | 266.2KB |
 | Sudoku | ✅ | ✅ | N/A |
 | Super Mario 64 | 21.4KB | ✅ | 92.9KB |
+| Super Mario Land 2 | 92.5KB | ✅ | 976.7KB |
 | Super Mario World | ✅ | ✅ | 178.2KB |
 | TOEM original | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | ✅ | 102.8KB |
 | Terraria | 16.8KB | ✅ | 283.0KB |
+| The Legend of Zelda | ✅ | ✅ | 555.6KB |
+| The Messenger | 14.8KB | ✅ | 211.8KB |
+| The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | Timespinner | 2.2KB | ✅ | 260.8KB |
 | Undertale | ✅ | ✅ | 58.0KB |
 | VVVVVV | 3.8KB | ✅ | 22.8KB |
@@ -176,26 +182,20 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
 | shapez | ✅ | ✅ | 155.5KB |
 
-## Games Passing Hybrid Only (15)
+## Games Passing Hybrid Only (9)
 
 These games pass in the Hybrid UT but fail in the Modified UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Hat in Time | 18.0KB | ✅ | 231.3KB |
 | Blasphemous | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | 1.4KB | 40.3KB | 329.0KB |
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 529.1KB |
 | Lingo | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | 7.4KB | ✅ | 714.5KB |
 | Raft | 6.5KB | ✅ | 485.4KB |
 | Secret of Evermore | 5.3KB | 7.5KB | 418.7KB |
 | Subnautica | 2.2KB | ✅ | 207.8KB |
-| Super Mario Land 2 | 92.5KB | ✅ | 976.7KB |
 | TUNIC | 3.1KB | ✅ | 705.5KB |
-| The Legend of Zelda | ✅ | ✅ | 555.6KB |
-| The Messenger | 14.8KB | ✅ | 211.8KB |
-| The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | The Witness | 14.1KB | ✅ | 401.1KB |
 
 ## Games Passing Neither (16)
