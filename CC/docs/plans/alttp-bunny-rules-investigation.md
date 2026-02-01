@@ -93,34 +93,93 @@ A `BunnyPaths` rule type was implemented to pre-compute and export superbunny pa
 
 **Lesson**: The BunnyPaths approach tried to solve too much at once. A simpler approach might work better.
 
-## Pending Investigation: Superbunny Cave Failures
+## Root Cause: Python Late Binding Bug in ALttP
 
-The 3 Superbunny Cave failures are NOT related to the item_rule LOSSY FALLBACK fix. They are access rule issues.
+**The 3 Superbunny Cave failures are caused by a Python late binding bug in ALttP's `set_bunny_rules()` function.**
 
-### What We Know
+### The Bug
 
-1. All 3 seeds have `glitches_required: hybrid_major_glitches`
-2. The UT/worldgen says Superbunny Cave is accessible
-3. The server logic sphere does NOT include Superbunny Cave locations
-4. Player does NOT have Moon Pearl
+In `worlds/alttp/Rules.py`, lines 1735, 1738, 1741, 1743 create lambdas inside a loop:
 
-### What to Investigate
+```python
+for entrance in current.entrances:
+    new_path = path + [entrance.access_rule]
+    # ...
+    # Lines 1741, 1743 - LATE BINDING BUG:
+    possible_options.append(lambda state: path_to_access_rule(new_path, entrance)(state))
+```
 
-1. **What rule is exported for Superbunny Cave access?**
-   - Generate a failing seed and examine the `_rules.json`
-   - Look at the access rule for Superbunny Cave locations
+Due to Python's late binding, ALL these lambdas capture the SAME `entrance` and `new_path` values - the values from the LAST loop iteration.
 
-2. **What rule does the original ALttP world have?**
-   - Debug the original world's access rule for Superbunny Cave
-   - Compare with exported rule
+**Example demonstrating the bug:**
+```python
+options = []
+for entrance in ['A', 'B', 'C']:
+    options.append(lambda: entrance)
+print([f() for f in options])  # ['C', 'C', 'C'] - all reference last value!
+```
 
-3. **Is CanReachEntrance sufficient?**
-   - The exported rules use `CanReachEntrance(X)` for superbunny paths
-   - Does this correctly capture the path context from the BFS?
+### Why Line 1752 Works Correctly
 
-4. **Is there a simpler fix than BunnyPaths?**
-   - Could we fix the closure analysis to properly export the bunny rule structure?
-   - Is the issue in how the rule is exported or how it's evaluated?
+Line 1752 uses a different pattern that AVOIDS late binding:
+```python
+possible_options.append(path_to_access_rule(new_path, entrance))
+```
+
+This calls `path_to_access_rule` IMMEDIATELY and appends the result. The values are captured at call time, not at lambda evaluation time.
+
+### Detection Strategy
+
+Late-bound lambdas have `path_to_access_rule` in their closure (because they call it at evaluation time).
+Correctly-bound lambdas have `entrance` and `path` in their closure but NOT `path_to_access_rule`.
+
+```python
+# Late-bound (broken): co_freevars includes 'path_to_access_rule'
+lambda state: path_to_access_rule(new_path, entrance)(state)
+
+# Correctly-bound (works): co_freevars is ('entrance', 'path'), no 'path_to_access_rule'
+path_to_access_rule(new_path, entrance)  # returns a lambda
+```
+
+### Impact on Exported Rules
+
+The exported rule for Superbunny Cave - Top becomes:
+```
+Or(
+    And(CanReachEntrance('Palace of Darkness Hint'), Has('Magic Mirror')),
+    CanReachEntrance('Palace of Darkness Hint'),  <-- TOO PERMISSIVE (wrong entrance)
+    Has('Moon Pearl')
+)
+```
+
+The second option should reference a different entrance (the one from Superbunny Cave (Bottom)), but due to late binding, it references the same entrance as the first option.
+
+### Fix Attempt: Skipping Late-Bound Options (Reverted)
+
+**Attempted fix**: Skip all late-bound superbunny options by detecting `path_to_access_rule` in `co_freevars`.
+
+**Implementation**: Added `_is_late_bound_superbunny_option()` to `call_visitor.py` to detect and skip lambdas with `path_to_access_rule` in their closure.
+
+**Result**: Made things MUCH WORSE - failures increased from 3/1000 to 8/20 (40% failure rate).
+
+**Why it failed**: The fix was too aggressive. Many locations only have 1 superbunny path found by the BFS. Even if that path is late-bound, it's still correct because there's no other path to reference incorrectly. The late-binding bug only manifests when MULTIPLE paths are found and all end up referencing the LAST path.
+
+**Better approach needed**: Instead of skipping all late-bound options:
+1. Detect when multiple late-bound lambdas reference the SAME entrance (due to late binding)
+2. Deduplicate them, keeping only one
+
+Or alternatively, fix the bug in ALttP's `Rules.py` itself (but this modifies original Archipelago code).
+
+### Current Status
+
+**Accepting 3/1000 failure rate** as the baseline. The late-binding bug affects a small subset of locations (Superbunny Cave) only when:
+- Multiple superbunny paths are found by BFS
+- Both paths get added via late-bound lambdas
+- All late-bound lambdas reference the wrong (last) entrance
+
+For most locations with bunny rules, either:
+- Only 1 superbunny path exists (late-binding doesn't cause issues)
+- The correctly-bound pattern (line 1752) is used
 
 ## File Locations
 
@@ -137,9 +196,9 @@ The 3 Superbunny Cave failures are NOT related to the item_rule LOSSY FALLBACK f
 ## Fuzzer Test Commands
 
 ```bash
-# Run fuzzer for ALttP (1000 seeds)
+# Run fuzzer for ALttP (use exec on Linux to avoid module caching)
 source .venv/bin/activate
-python scripts/test/ut-fuzz-single-game.py --game alttp --count 1000
+exec python fuzz.py -r 100 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 
 # Generate a specific failing seed
 python Generate.py --weights_file_path "378-0.yaml" --multi 1 --seed 24408062
@@ -148,6 +207,8 @@ python Generate.py --weights_file_path "378-0.yaml" --multi 1 --seed 24408062
 cat fuzz_output/report.json
 cat fuzz_output/error/alttp/168/168.log
 ```
+
+See `CC/docs/fuzzer-testing.md` for detailed fuzzer documentation.
 
 ## Related Documents
 
