@@ -46,8 +46,7 @@ class SubnauticaWorld(World):
     creatures_to_scan: List[str]
 
     def generate_early(self) -> None:
-        weights = self.options.filler_items_distribution.weights_pair[1]
-        if not weights or not weights[-1]:
+        if not self.options.filler_items_distribution.weights_pair[1][-1]:
             raise Exception("Filler Items Distribution needs at least one positive weight.")
         if self.options.early_seaglide:
             self.multiworld.local_early_items[self.player]["Seaglide Fragment"] = 2
