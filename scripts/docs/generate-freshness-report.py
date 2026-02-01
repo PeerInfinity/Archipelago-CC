@@ -30,168 +30,240 @@ TEST_RESULTS_DIR = PROJECT_ROOT / "docs" / "json" / "developer" / "test-results"
 OUTPUT_FILE = TEST_RESULTS_DIR / "test-results-freshness.md"
 
 # Mapping of document name patterns to regeneration commands
-# Keys are regex patterns, values are (command, description) tuples
-REGENERATION_COMMANDS: Dict[str, Tuple[str, str]] = {
+# Keys are regex patterns, values are (command, description, workflow_name, workflow_file) tuples
+# workflow_name and workflow_file can be None if no workflow exists
+REGENERATION_COMMANDS: Dict[str, Tuple[str, str, Optional[str], Optional[str]]] = {
     # Spoiler tests
     r'test-results-spoilers-minimal\.md$': (
         'python scripts/test/test-all-templates.py --minimal-spoilers -p',
-        'Run minimal spoiler tests'
+        'Run minimal spoiler tests',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-spoilers-full\.md$': (
         'python scripts/test/test-all-templates.py --full-spoilers -p',
-        'Run full spoiler tests'
+        'Run full spoiler tests',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-spoilers-minimal-worldgen\.md$': (
         'python scripts/test/test-all-templates.py --minimal-spoilers --worldgen -p',
-        'Run minimal spoiler tests (worldgen)'
+        'Run minimal spoiler tests (worldgen)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-spoilers-full-worldgen\.md$': (
         'python scripts/test/test-all-templates.py --full-spoilers --worldgen -p',
-        'Run full spoiler tests (worldgen)'
+        'Run full spoiler tests (worldgen)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-spoilers-minimal-apworld\.md$': (
         'python scripts/test/test-all-templates.py --minimal-spoilers --apworld -p',
-        'Run minimal spoiler tests (apworld)'
+        'Run minimal spoiler tests (apworld)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-spoilers-full-apworld\.md$': (
         'python scripts/test/test-all-templates.py --full-spoilers --apworld -p',
-        'Run full spoiler tests (apworld)'
+        'Run full spoiler tests (apworld)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
 
     # Multiclient tests
     r'test-results-multiclient\.md$': (
         'python scripts/test/test-all-templates.py --multiclient -p',
-        'Run multiclient tests'
+        'Run multiclient tests',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-multiclient-worldgen\.md$': (
         'python scripts/test/test-all-templates.py --multiclient --worldgen -p',
-        'Run multiclient tests (worldgen)'
+        'Run multiclient tests (worldgen)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-multiclient-apworld\.md$': (
         'python scripts/test/test-all-templates.py --multiclient --apworld -p',
-        'Run multiclient tests (apworld)'
+        'Run multiclient tests (apworld)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
 
     # Multiworld tests
     r'test-results-multiworld\.md$': (
         'python scripts/test/test-all-templates.py --multiworld -p',
-        'Run multiworld tests'
+        'Run multiworld tests',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-multiworld-worldgen\.md$': (
         'python scripts/test/test-all-templates.py --multiworld --worldgen -p',
-        'Run multiworld tests (worldgen)'
+        'Run multiworld tests (worldgen)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
     r'test-results-multiworld-apworld\.md$': (
         'python scripts/test/test-all-templates.py --multiworld --apworld -p',
-        'Run multiworld tests (apworld)'
+        'Run multiworld tests (apworld)',
+        'Test All Templates (Sequential)',
+        'test-all-sequential.yml'
     ),
 
     # UT Fuzz tests
     r'test-results-ut-fuzz\.md$': (
         'python scripts/test/test-all-ut-fuzz.py -p',
-        'Run UT fuzz tests'
+        'Run UT fuzz tests',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
     r'test-results-multiworld-ut-fuzz\.md$': (
         'python scripts/test/test-multiworld-ut-fuzz.py -p',
-        'Run multiworld UT fuzz tests'
+        'Run multiworld UT fuzz tests',
+        'Test Multiworld UT Fuzz Assembly',
+        'test-multiworld-ut-fuzz.yml'
     ),
 
     # Spoiler fuzz tests
     r'test-results-spoiler-fuzz\.md$': (
         'python scripts/test/test-all-spoiler-fuzz.py -p',
-        'Run spoiler fuzz tests'
+        'Run spoiler fuzz tests',
+        'Test Spoiler Fuzzer',
+        'test-spoiler-fuzz.yml'
     ),
     r'test-results-spoiler-fuzz-apworlds\.md$': (
         'python scripts/test/test-all-spoiler-fuzz.py --apworld -p',
-        'Run spoiler fuzz tests (apworld)'
+        'Run spoiler fuzz tests (apworld)',
+        'Test Spoiler Fuzzer',
+        'test-spoiler-fuzz.yml'
     ),
 
     # Fuzz summary
     r'test-results-fuzz-summary\.md$': (
         'python scripts/docs/generate_fuzz_summary_chart.py',
-        'Generate fuzz summary chart'
+        'Generate fuzz summary chart',
+        None,
+        None
     ),
     r'test-results-fuzz-summary-apworlds\.md$': (
         'python scripts/docs/generate_fuzz_summary_chart.py --apworld',
-        'Generate fuzz summary chart (apworld)'
+        'Generate fuzz summary chart (apworld)',
+        None,
+        None
     ),
 
     # Processing times
     r'test-results-processing-times\.md$': (
         'python scripts/docs/generate-test-chart.py --processing-times',
-        'Generate processing times chart'
+        'Generate processing times chart',
+        None,
+        None
     ),
     r'test-results-processing-times-worldgen\.md$': (
         'python scripts/docs/generate-test-chart.py --processing-times --worldgen',
-        'Generate processing times chart (worldgen)'
+        'Generate processing times chart (worldgen)',
+        None,
+        None
     ),
     r'test-results-processing-times-apworld\.md$': (
         'python scripts/docs/generate-test-chart.py --processing-times --apworld',
-        'Generate processing times chart (apworld)'
+        'Generate processing times chart (apworld)',
+        None,
+        None
     ),
 
     # UT fuzz charts
     r'test-results-ut-fuzz-modified\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --modified',
-        'Generate UT fuzz chart (modified)'
+        'Generate UT fuzz chart (modified)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
     r'test-results-ut-fuzz-original\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --original',
-        'Generate UT fuzz chart (original)'
+        'Generate UT fuzz chart (original)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
     r'test-results-ut-fuzz-hybrid\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --hybrid',
-        'Generate UT fuzz chart (hybrid)'
+        'Generate UT fuzz chart (hybrid)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
     r'test-results-ut-fuzz-apworlds-modified\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --apworld --modified',
-        'Generate UT fuzz chart (apworld modified)'
+        'Generate UT fuzz chart (apworld modified)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
     r'test-results-ut-fuzz-apworlds-original\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --apworld --original',
-        'Generate UT fuzz chart (apworld original)'
+        'Generate UT fuzz chart (apworld original)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
     r'test-results-ut-fuzz-apworlds-hybrid\.md$': (
         'python scripts/docs/generate_ut_fuzz_chart.py --apworld --hybrid',
-        'Generate UT fuzz chart (apworld hybrid)'
+        'Generate UT fuzz chart (apworld hybrid)',
+        'Test UT Fuzzer',
+        'test-ut-fuzz.yml'
     ),
 
     # UT fuzz comparison charts
     r'test-results-ut-fuzz-comparison-.*\.md$': (
         'python scripts/docs/compare_ut_fuzz_results.py',
-        'Generate UT fuzz comparison chart'
+        'Generate UT fuzz comparison chart',
+        None,
+        None
     ),
     r'test-results-ut-fuzz-apworlds-comparison-.*\.md$': (
         'python scripts/docs/compare_ut_fuzz_results.py --apworld',
-        'Generate UT fuzz comparison chart (apworld)'
+        'Generate UT fuzz comparison chart (apworld)',
+        None,
+        None
     ),
 
     # Summary charts
     r'test-results-summary\.md$': (
         'python scripts/docs/generate-test-chart.py --summary',
-        'Generate test summary chart'
+        'Generate test summary chart',
+        None,
+        None
     ),
     r'test-results-summary-worldgen\.md$': (
         'python scripts/docs/generate-test-chart.py --summary --worldgen',
-        'Generate test summary chart (worldgen)'
+        'Generate test summary chart (worldgen)',
+        None,
+        None
     ),
     r'test-results-summary-apworld\.md$': (
         'python scripts/docs/generate-test-chart.py --summary --apworld',
-        'Generate test summary chart (apworld)'
+        'Generate test summary chart (apworld)',
+        None,
+        None
     ),
 
     # World generator report
     r'test-results-world-generator\.md$': (
         'python scripts/docs/generate-world-generator-report.py',
-        'Generate world generator report'
+        'Generate world generator report',
+        'Test World Generator',
+        'test-world-generator.yml'
     ),
 
     # Freshness report itself
     r'test-results-freshness\.md$': (
         'python scripts/docs/generate-freshness-report.py',
-        'Generate this freshness report'
+        'Generate this freshness report',
+        None,
+        None
     ),
 }
+
+# GitHub repository for workflow links
+GITHUB_REPO = "PeerInfinity/Archipelago-CC"
 
 
 def parse_generated_date(content: str) -> Optional[datetime]:
@@ -265,15 +337,23 @@ def get_freshness_emoji(days: Optional[int]) -> str:
         return "🔴"  # Stale (over a month)
 
 
-def get_regeneration_command(filename: str) -> Tuple[Optional[str], Optional[str]]:
-    """Get the command to regenerate a document.
+def get_regeneration_info(filename: str) -> Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]:
+    """Get the command and workflow info to regenerate a document.
 
-    Returns (command, description) or (None, None) if no command is known.
+    Returns (command, description, workflow_name, workflow_file) or all None if unknown.
     """
-    for pattern, (cmd, desc) in REGENERATION_COMMANDS.items():
+    for pattern, info in REGENERATION_COMMANDS.items():
         if re.search(pattern, filename):
-            return cmd, desc
-    return None, None
+            return info
+    return None, None, None, None
+
+
+def format_workflow_link(workflow_name: Optional[str], workflow_file: Optional[str]) -> str:
+    """Format a workflow as a clickable GitHub Actions link."""
+    if not workflow_name or not workflow_file:
+        return ""
+    # Link to the workflow run page
+    return f"[{workflow_name}](https://github.com/{GITHUB_REPO}/actions/workflows/{workflow_file})"
 
 
 def run_sync_scripts() -> Dict[str, Dict]:
@@ -355,7 +435,7 @@ def scan_test_results() -> List[Dict]:
         generated_days = calculate_days_ago(generated_date, now)
         source_days = calculate_days_ago(source_date, now)
 
-        regen_cmd, regen_desc = get_regeneration_command(md_file.name)
+        regen_cmd, regen_desc, workflow_name, workflow_file = get_regeneration_info(md_file.name)
 
         results.append({
             'filename': md_file.name,
@@ -365,6 +445,8 @@ def scan_test_results() -> List[Dict]:
             'generated_days': generated_days,
             'regen_command': regen_cmd,
             'regen_description': regen_desc,
+            'workflow_name': workflow_name,
+            'workflow_file': workflow_file,
         })
 
     return results
@@ -443,8 +525,8 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
         md += "\n"
 
     md += "## Document Freshness\n\n"
-    md += "| Status | Document | Source Data | Days Old | How to Update |\n"
-    md += "|--------|----------|-------------|----------|---------------|\n"
+    md += "| Status | Document | Source Data | Days Old | Workflow | Local Command |\n"
+    md += "|--------|----------|-------------|----------|----------|---------------|\n"
 
     for result in results:
         filename = result['filename']
@@ -456,16 +538,22 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
         # Add freshness emoji based on source data date
         freshness_emoji = get_freshness_emoji(result['source_days'])
 
+        # Get workflow link
+        workflow_link = format_workflow_link(result.get('workflow_name'), result.get('workflow_file'))
+        if not workflow_link:
+            workflow_link = "_Local only_"
+
         # Get regeneration command
         if result['regen_command']:
             regen_display = f"`{result['regen_command']}`"
         else:
             regen_display = "_Unknown_"
 
-        md += f"| {freshness_emoji} | {doc_link} | {source_display} | {source_days_display} | {regen_display} |\n"
+        md += f"| {freshness_emoji} | {doc_link} | {source_display} | {source_days_display} | {workflow_link} | {regen_display} |\n"
 
     md += "\n## Regeneration Commands\n\n"
-    md += "Quick reference for updating stale documents:\n\n"
+    md += "Quick reference for updating stale documents. "
+    md += "Use **GitHub Workflows** for CI integration or **Local Commands** for development.\n\n"
 
     # Group by category
     categories = {
@@ -483,24 +571,39 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
         filename = result['filename']
         cmd = result['regen_command']
         desc = result['regen_description'] or filename
+        workflow_name = result.get('workflow_name')
+        workflow_file = result.get('workflow_file')
 
         if 'spoiler' in filename.lower() and 'fuzz' not in filename.lower():
-            categories['Spoiler Tests'].append((desc, cmd))
+            categories['Spoiler Tests'].append((desc, cmd, workflow_name, workflow_file))
         elif 'multiclient' in filename.lower():
-            categories['Multiclient Tests'].append((desc, cmd))
+            categories['Multiclient Tests'].append((desc, cmd, workflow_name, workflow_file))
         elif 'multiworld' in filename.lower():
-            categories['Multiworld Tests'].append((desc, cmd))
+            categories['Multiworld Tests'].append((desc, cmd, workflow_name, workflow_file))
         elif 'fuzz' in filename.lower():
-            categories['Fuzz Tests'].append((desc, cmd))
+            categories['Fuzz Tests'].append((desc, cmd, workflow_name, workflow_file))
         else:
-            categories['Charts & Reports'].append((desc, cmd))
+            categories['Charts & Reports'].append((desc, cmd, workflow_name, workflow_file))
 
     for category, items in categories.items():
         if not items:
             continue
         md += f"### {category}\n\n"
+
+        # Check if any items in this category have workflows
+        has_workflows = any(wf_name for _, _, wf_name, _ in items)
+        if has_workflows:
+            md += "**GitHub Workflows:**\n"
+            seen_workflows = set()
+            for desc, cmd, wf_name, wf_file in items:
+                if wf_name and wf_file and wf_name not in seen_workflows:
+                    seen_workflows.add(wf_name)
+                    md += f"- [{wf_name}](https://github.com/{GITHUB_REPO}/actions/workflows/{wf_file})\n"
+            md += "\n"
+
+        md += "**Local Commands:**\n"
         md += "```bash\n"
-        for desc, cmd in items:
+        for desc, cmd, _, _ in items:
             md += f"# {desc}\n{cmd}\n\n"
         md += "```\n\n"
 
@@ -513,9 +616,11 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
 
     md += "## Notes\n\n"
     md += "- **Source Data Date:** When the underlying test results were generated\n"
-    md += "- **How to Update:** Command to regenerate this document with fresh data\n"
+    md += "- **Workflow:** GitHub Actions workflow for CI-based regeneration (click to run)\n"
+    md += "- **Local Command:** Terminal command to regenerate the document locally\n"
     md += "- The `-p` flag runs post-processing to generate the markdown charts\n"
-    md += "- Documents without regeneration commands may be manually created or use a different workflow\n"
+    md += "- Documents marked _Local only_ have no automated workflow and must be run manually\n"
+    md += f"- See [.github/workflows/README.md](https://github.com/{GITHUB_REPO}/blob/main/.github/workflows/README.md) for workflow documentation\n"
 
     return md
 
