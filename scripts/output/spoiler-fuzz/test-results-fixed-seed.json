@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "created": "2026-02-01T06:02:39.016405",
-    "last_updated": "2026-02-01T06:02:39.016411",
+    "created": "2026-02-01T22:31:25.726953",
+    "last_updated": "2026-02-01T22:31:25.726959",
     "script_version": "1.0.0",
     "combined_from": 10,
     "test_type": "spoiler_fuzz",
@@ -15,21 +15,20 @@
   "results": {
     "A Hat in Time.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 9,
+        "success": 10,
         "generation_failure": 0,
-        "test_failure": 1,
+        "ignored": 0,
+        "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Spoiler test failed"
-        ]
+        "errors": []
       },
       "world_info": {
         "game_name": "A Hat in Time",
         "world_directory": "ahit"
       },
-      "timestamp": "2026-02-01T05:15:41.528683"
+      "timestamp": "2026-02-01T21:45:17.079247"
     },
     "Castlevania 64.yaml": {
       "spoiler_fuzz": {
@@ -37,6 +36,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -45,7 +45,7 @@
         "game_name": "Castlevania 64",
         "world_directory": "cv64"
       },
-      "timestamp": "2026-02-01T05:17:27.247395"
+      "timestamp": "2026-02-01T21:46:58.122801"
     },
     "Dark Souls III.yaml": {
       "spoiler_fuzz": {
@@ -53,6 +53,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -61,7 +62,7 @@
         "game_name": "Dark Souls III",
         "world_directory": "dark_souls_3"
       },
-      "timestamp": "2026-02-01T05:21:40.671482"
+      "timestamp": "2026-02-01T21:51:01.892178"
     },
     "Kirby's Dream Land 3.yaml": {
       "spoiler_fuzz": {
@@ -69,6 +70,7 @@
         "total": 10,
         "success": 5,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 5,
         "timeout": 0,
         "errors": [
@@ -83,7 +85,7 @@
         "game_name": "Kirby's Dream Land 3",
         "world_directory": "kdl3"
       },
-      "timestamp": "2026-02-01T05:37:32.037938"
+      "timestamp": "2026-02-01T22:06:59.945197"
     },
     "Metamath.yaml": {
       "spoiler_fuzz": {
@@ -91,6 +93,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -99,7 +102,7 @@
         "game_name": "Metamath",
         "world_directory": "metamath"
       },
-      "timestamp": "2026-02-01T05:40:16.741207"
+      "timestamp": "2026-02-01T22:09:31.423199"
     },
     "Shivers.yaml": {
       "spoiler_fuzz": {
@@ -107,6 +110,7 @@
         "total": 10,
         "success": 4,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 6,
         "timeout": 0,
         "errors": [
@@ -122,7 +126,7 @@
         "game_name": "Shivers",
         "world_directory": "shivers"
       },
-      "timestamp": "2026-02-01T05:58:54.374734"
+      "timestamp": "2026-02-01T22:27:55.206891"
     },
     "TOEM rule builder.yaml": {
       "spoiler_fuzz": {
@@ -130,6 +134,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -138,7 +143,7 @@
         "game_name": "TOEM rule builder",
         "world_directory": "toem_rule_builder"
       },
-      "timestamp": "2026-02-01T06:00:35.085660"
+      "timestamp": "2026-02-01T22:29:31.627078"
     },
     "Wargroove.yaml": {
       "spoiler_fuzz": {
@@ -146,6 +151,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -154,7 +160,7 @@
         "game_name": "Wargroove",
         "world_directory": "wargroove"
       },
-      "timestamp": "2026-02-01T06:02:12.219652"
+      "timestamp": "2026-02-01T22:31:04.956086"
     },
     "Castlevania - Circle of the Moon.yaml": {
       "spoiler_fuzz": {
@@ -162,6 +168,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -170,7 +177,7 @@
         "game_name": "Castlevania - Circle of the Moon",
         "world_directory": "cvcotm"
       },
-      "timestamp": "2026-02-01T05:14:10.289801"
+      "timestamp": "2026-02-01T21:43:45.811248"
     },
     "DOOM II.yaml": {
       "spoiler_fuzz": {
@@ -178,6 +185,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -186,7 +194,7 @@
         "game_name": "DOOM II",
         "world_directory": "doom_ii"
       },
-      "timestamp": "2026-02-01T05:15:55.563118"
+      "timestamp": "2026-02-01T21:45:31.659322"
     },
     "Kingdom Hearts.yaml": {
       "spoiler_fuzz": {
@@ -194,6 +202,7 @@
         "total": 10,
         "success": 8,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 2,
         "timeout": 0,
         "errors": [
@@ -205,7 +214,7 @@
         "game_name": "Kingdom Hearts",
         "world_directory": "kh1"
       },
-      "timestamp": "2026-02-01T05:19:55.157589"
+      "timestamp": "2026-02-01T21:49:29.565165"
     },
     "Meritous.yaml": {
       "spoiler_fuzz": {
@@ -213,6 +222,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -221,7 +231,7 @@
         "game_name": "Meritous",
         "world_directory": "meritous"
       },
-      "timestamp": "2026-02-01T05:21:28.254039"
+      "timestamp": "2026-02-01T21:51:02.233689"
     },
     "Secret of Evermore.yaml": {
       "spoiler_fuzz": {
@@ -229,6 +239,7 @@
         "total": 10,
         "success": 7,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 3,
         "timeout": 0,
         "errors": [
@@ -241,7 +252,7 @@
         "game_name": "Secret of Evermore",
         "world_directory": "soe"
       },
-      "timestamp": "2026-02-01T05:24:46.112260"
+      "timestamp": "2026-02-01T21:54:19.310176"
     },
     "TOEM original.yaml": {
       "spoiler_fuzz": {
@@ -249,6 +260,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -257,7 +269,7 @@
         "game_name": "TOEM original",
         "world_directory": "toem_original"
       },
-      "timestamp": "2026-02-01T05:26:19.454632"
+      "timestamp": "2026-02-01T21:55:52.409635"
     },
     "VVVVVV.yaml": {
       "spoiler_fuzz": {
@@ -265,6 +277,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -273,34 +286,27 @@
         "game_name": "VVVVVV",
         "world_directory": "v6"
       },
-      "timestamp": "2026-02-01T05:27:53.817407"
+      "timestamp": "2026-02-01T21:57:25.216686"
     },
     "A Link to the Past.yaml": {
       "spoiler_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 0,
-        "generation_failure": 1,
-        "test_failure": 9,
+        "success": 7,
+        "generation_failure": 0,
+        "ignored": 1,
+        "test_failure": 2,
         "timeout": 0,
         "errors": [
           "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Spoiler test failed",
-          "Generation failed:    ^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/alttp/ItemPool.py\", line 482, in generate_itempool\n    raise OptionError(f\"Failed to limit item pool size for player {player}\")\nOptions.OptionError: Failed to limit item pool size for player 1\nException in <bound method generate_itempool of <worlds.alttp.ALTTPWorld object at 0x7f7f2655bd40>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+          "Spoiler test failed"
         ]
       },
       "world_info": {
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-01T05:16:20.163856"
+      "timestamp": "2026-02-01T21:45:13.628046"
     },
     "Celeste (Open World).yaml": {
       "spoiler_fuzz": {
@@ -308,6 +314,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -316,7 +323,7 @@
         "game_name": "Celeste (Open World)",
         "world_directory": "celeste_open_world"
       },
-      "timestamp": "2026-02-01T05:21:10.745714"
+      "timestamp": "2026-02-01T21:49:44.091519"
     },
     "Donkey Kong Country 3.yaml": {
       "spoiler_fuzz": {
@@ -324,6 +331,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -332,7 +340,7 @@
         "game_name": "Donkey Kong Country 3",
         "world_directory": "dkc3"
       },
-      "timestamp": "2026-02-01T05:22:58.190614"
+      "timestamp": "2026-02-01T21:51:22.900085"
     },
     "Landstalker - The Treasures of King Nole.yaml": {
       "spoiler_fuzz": {
@@ -340,6 +348,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -348,7 +357,7 @@
         "game_name": "Landstalker - The Treasures of King Nole",
         "world_directory": "landstalker"
       },
-      "timestamp": "2026-02-01T05:24:43.793254"
+      "timestamp": "2026-02-01T21:52:59.089306"
     },
     "Muse Dash.yaml": {
       "spoiler_fuzz": {
@@ -356,6 +365,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -364,7 +374,7 @@
         "game_name": "Muse Dash",
         "world_directory": "musedash"
       },
-      "timestamp": "2026-02-01T05:28:06.697916"
+      "timestamp": "2026-02-01T21:56:09.950178"
     },
     "Sonic Adventure 2 Battle.yaml": {
       "spoiler_fuzz": {
@@ -372,6 +382,7 @@
         "total": 10,
         "success": 7,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 3,
         "timeout": 0,
         "errors": [
@@ -384,7 +395,7 @@
         "game_name": "Sonic Adventure 2 Battle",
         "world_directory": "sa2b"
       },
-      "timestamp": "2026-02-01T05:34:03.849342"
+      "timestamp": "2026-02-01T22:01:40.609509"
     },
     "TUNIC.yaml": {
       "spoiler_fuzz": {
@@ -392,6 +403,7 @@
         "total": 10,
         "success": 2,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 8,
         "timeout": 0,
         "errors": [
@@ -409,7 +421,7 @@
         "game_name": "TUNIC",
         "world_directory": "tunic"
       },
-      "timestamp": "2026-02-01T05:38:57.704922"
+      "timestamp": "2026-02-01T22:06:13.888198"
     },
     "Yoshi's Island.yaml": {
       "spoiler_fuzz": {
@@ -417,6 +429,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -425,7 +438,7 @@
         "game_name": "Yoshi's Island",
         "world_directory": "yoshisisland"
       },
-      "timestamp": "2026-02-01T05:41:06.977703"
+      "timestamp": "2026-02-01T22:08:12.657160"
     },
     "A Short Hike.yaml": {
       "spoiler_fuzz": {
@@ -433,6 +446,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -441,7 +455,7 @@
         "game_name": "A Short Hike",
         "world_directory": "shorthike"
       },
-      "timestamp": "2026-02-01T05:14:05.949150"
+      "timestamp": "2026-02-01T21:43:52.571879"
     },
     "Celeste 64.yaml": {
       "spoiler_fuzz": {
@@ -449,6 +463,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -457,7 +472,7 @@
         "game_name": "Celeste 64",
         "world_directory": "celeste64"
       },
-      "timestamp": "2026-02-01T05:15:38.806235"
+      "timestamp": "2026-02-01T21:45:29.480875"
     },
     "Factorio.yaml": {
       "spoiler_fuzz": {
@@ -465,6 +480,7 @@
         "total": 10,
         "success": 7,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 3,
         "timeout": 0,
         "errors": [
@@ -477,32 +493,26 @@
         "game_name": "Factorio",
         "world_directory": "factorio"
       },
-      "timestamp": "2026-02-01T05:18:13.528399"
+      "timestamp": "2026-02-01T21:48:08.706783"
     },
     "Lingo.yaml": {
       "spoiler_fuzz": {
         "passed": false,
         "total": 10,
         "success": 2,
-        "generation_failure": 7,
+        "generation_failure": 0,
+        "ignored": 7,
         "test_failure": 1,
         "timeout": 0,
         "errors": [
-          "Generation failed: {world.player_name}\\\" cannot have reduced location checks when ungrouped\"\nOptions.OptionError: Slot \"Player1\" cannot have reduced location checks when ungrouped panels mode door shuffle is on, because there would not be enough locations for all of the panel items.\nException in <bound method LingoWorld.generate_early of <worlds.lingo.LingoWorld object at 0x7fdbf07fce00>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo/player_logic.py\", line 304, in __init__\n    raise OptionError(\"Sunwarps cannot be disabled when pilgrimage is enabled.\")\nOptions.OptionError: Sunwarps cannot be disabled when pilgrimage is enabled.\nException in <bound method LingoWorld.generate_early of <worlds.lingo.LingoWorld object at 0x7f3a7decf950>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Spoiler test failed",
-          "Generation failed: gs)\n          ^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo/__init__.py\", line 128, in create_items\n    raise OptionError(\"Sum of trap weights must be at least one.\")\nOptions.OptionError: Sum of trap weights must be at least one.\nException in <bound method LingoWorld.create_items of <worlds.lingo.LingoWorld object at 0x7f5ca40cad20>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: gs)\n          ^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo/__init__.py\", line 128, in create_items\n    raise OptionError(\"Sum of trap weights must be at least one.\")\nOptions.OptionError: Sum of trap weights must be at least one.\nException in <bound method LingoWorld.create_items of <worlds.lingo.LingoWorld object at 0x7f59f24b06e0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: gs)\n          ^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo/__init__.py\", line 128, in create_items\n    raise OptionError(\"Sum of trap weights must be at least one.\")\nOptions.OptionError: Sum of trap weights must be at least one.\nException in <bound method LingoWorld.create_items of <worlds.lingo.LingoWorld object at 0x7f7ea8abba70>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: gs)\n          ^^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo/__init__.py\", line 128, in create_items\n    raise OptionError(\"Sum of trap weights must be at least one.\")\nOptions.OptionError: Sum of trap weights must be at least one.\nException in <bound method LingoWorld.create_items of <worlds.lingo.LingoWorld object at 0x7f8e8595ae10>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/lingo/player_logic.py\", line 304, in __init__\n    raise OptionError(\"Sunwarps cannot be disabled when pilgrimage is enabled.\")\nOptions.OptionError: Sunwarps cannot be disabled when pilgrimage is enabled.\nException in <bound method LingoWorld.generate_early of <worlds.lingo.LingoWorld object at 0x7fcf929047d0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+          "Spoiler test failed"
         ]
       },
       "world_info": {
         "game_name": "Lingo",
         "world_directory": "lingo"
       },
-      "timestamp": "2026-02-01T05:19:30.341686"
+      "timestamp": "2026-02-01T21:49:28.692992"
     },
     "Noita.yaml": {
       "spoiler_fuzz": {
@@ -510,6 +520,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -518,7 +529,7 @@
         "game_name": "Noita",
         "world_directory": "noita"
       },
-      "timestamp": "2026-02-01T05:21:02.547109"
+      "timestamp": "2026-02-01T21:51:04.598279"
     },
     "Starcraft 2.yaml": {
       "spoiler_fuzz": {
@@ -526,26 +537,27 @@
         "total": 10,
         "success": 0,
         "generation_failure": 10,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": [
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_bu4w_dym.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_2n5h0_ll.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_21g2768p.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_udiof9jz.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_pj0kbged.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_9woviw1w.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_g7u3hz_j.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_xoq0ju1o.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2__058sv64.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_bu4159a4.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_awncnru9.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_6_p1frb6.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_mkwlupm1.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_snyhembe.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_g5z6dal1.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_48afi1a8.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_78wk6w20.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_aks1ryl3.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_phj5zyi1.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_tb4ncid9.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
         ]
       },
       "world_info": {
         "game_name": "Starcraft 2",
         "world_directory": "sc2"
       },
-      "timestamp": "2026-02-01T05:21:35.951437"
+      "timestamp": "2026-02-01T21:51:40.694365"
     },
     "Terraria.yaml": {
       "spoiler_fuzz": {
@@ -553,6 +565,7 @@
         "total": 10,
         "success": 7,
         "generation_failure": 1,
+        "ignored": 0,
         "test_failure": 2,
         "timeout": 0,
         "errors": [
@@ -565,28 +578,24 @@
         "game_name": "Terraria",
         "world_directory": "terraria"
       },
-      "timestamp": "2026-02-01T05:27:35.992389"
+      "timestamp": "2026-02-01T21:57:32.138256"
     },
     "shapez.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
         "success": 6,
-        "generation_failure": 4,
+        "generation_failure": 0,
+        "ignored": 4,
         "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Generation failed: worlds/shapez/__init__.py\", line 185, in generate_early\n    raise OptionError(self.player_name + \": Achievements must be included when belt and extractor are locked\")\nOptions.OptionError: Player1: Achievements must be included when belt and extractor are locked\nException in <bound method ShapezWorld.generate_early of <worlds.shapez.ShapezWorld object at 0x7fbd86d09fd0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: worlds/shapez/__init__.py\", line 185, in generate_early\n    raise OptionError(self.player_name + \": Achievements must be included when belt and extractor are locked\")\nOptions.OptionError: Player1: Achievements must be included when belt and extractor are locked\nException in <bound method ShapezWorld.generate_early of <worlds.shapez.ShapezWorld object at 0x7f973727fb60>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: worlds/shapez/__init__.py\", line 185, in generate_early\n    raise OptionError(self.player_name + \": Achievements must be included when belt and extractor are locked\")\nOptions.OptionError: Player1: Achievements must be included when belt and extractor are locked\nException in <bound method ShapezWorld.generate_early of <worlds.shapez.ShapezWorld object at 0x7f0265b0ec90>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: worlds/shapez/__init__.py\", line 185, in generate_early\n    raise OptionError(self.player_name + \": Achievements must be included when belt and extractor are locked\")\nOptions.OptionError: Player1: Achievements must be included when belt and extractor are locked\nException in <bound method ShapezWorld.generate_early of <worlds.shapez.ShapezWorld object at 0x7f7dbb40dd00>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
-        ]
+        "errors": []
       },
       "world_info": {
         "game_name": "shapez",
         "world_directory": "shapez"
       },
-      "timestamp": "2026-02-01T05:29:12.377431"
+      "timestamp": "2026-02-01T21:59:13.432875"
     },
     "APQuest.yaml": {
       "spoiler_fuzz": {
@@ -594,6 +603,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -602,7 +612,7 @@
         "game_name": "APQuest",
         "world_directory": "apquest"
       },
-      "timestamp": "2026-02-01T05:14:05.185846"
+      "timestamp": "2026-02-01T21:43:54.271739"
     },
     "ChecksFinder.yaml": {
       "spoiler_fuzz": {
@@ -610,6 +620,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -618,7 +629,7 @@
         "game_name": "ChecksFinder",
         "world_directory": "checksfinder"
       },
-      "timestamp": "2026-02-01T05:15:38.745262"
+      "timestamp": "2026-02-01T21:45:29.359204"
     },
     "Faxanadu.yaml": {
       "spoiler_fuzz": {
@@ -626,6 +637,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -634,7 +646,7 @@
         "game_name": "Faxanadu",
         "world_directory": "faxanadu"
       },
-      "timestamp": "2026-02-01T05:17:13.563229"
+      "timestamp": "2026-02-01T21:47:05.260994"
     },
     "Links Awakening DX.yaml": {
       "spoiler_fuzz": {
@@ -642,6 +654,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -650,7 +663,7 @@
         "game_name": "Links Awakening DX",
         "world_directory": "ladx"
       },
-      "timestamp": "2026-02-01T05:19:51.071439"
+      "timestamp": "2026-02-01T21:49:45.733673"
     },
     "Old School Runescape.yaml": {
       "spoiler_fuzz": {
@@ -658,6 +671,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -666,15 +680,16 @@
         "game_name": "Old School Runescape",
         "world_directory": "osrs"
       },
-      "timestamp": "2026-02-01T05:21:39.255110"
+      "timestamp": "2026-02-01T21:51:35.338328"
     },
     "Stardew Valley.yaml": {
       "spoiler_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 1,
+        "success": 2,
         "generation_failure": 0,
-        "test_failure": 9,
+        "ignored": 0,
+        "test_failure": 8,
         "timeout": 0,
         "errors": [
           "Spoiler test timed out after 120s",
@@ -684,15 +699,14 @@
           "Spoiler test timed out after 120s",
           "Spoiler test timed out after 120s",
           "Spoiler test failed",
-          "Spoiler test timed out after 120s",
-          "Spoiler test timed out after 120s"
+          "Spoiler test failed"
         ]
       },
       "world_info": {
         "game_name": "Stardew Valley",
         "world_directory": "stardew_valley"
       },
-      "timestamp": "2026-02-01T05:39:05.413906"
+      "timestamp": "2026-02-01T22:08:22.965255"
     },
     "The Legend of Zelda.yaml": {
       "spoiler_fuzz": {
@@ -700,6 +714,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -708,7 +723,7 @@
         "game_name": "The Legend of Zelda",
         "world_directory": "tloz"
       },
-      "timestamp": "2026-02-01T05:40:50.106572"
+      "timestamp": "2026-02-01T22:10:05.808994"
     },
     "Adventure.yaml": {
       "spoiler_fuzz": {
@@ -716,6 +731,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -724,7 +740,7 @@
         "game_name": "Adventure",
         "world_directory": "adventure"
       },
-      "timestamp": "2026-02-01T05:14:03.631758"
+      "timestamp": "2026-02-01T21:43:51.584148"
     },
     "Choo-Choo Charles.yaml": {
       "spoiler_fuzz": {
@@ -732,6 +748,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -740,7 +757,7 @@
         "game_name": "Choo-Choo Charles",
         "world_directory": "cccharles"
       },
-      "timestamp": "2026-02-01T05:15:57.838023"
+      "timestamp": "2026-02-01T21:45:45.827547"
     },
     "Final Fantasy Mystic Quest.yaml": {
       "spoiler_fuzz": {
@@ -748,6 +765,7 @@
         "total": 10,
         "success": 5,
         "generation_failure": 2,
+        "ignored": 0,
         "test_failure": 3,
         "timeout": 0,
         "errors": [
@@ -762,7 +780,7 @@
         "game_name": "Final Fantasy Mystic Quest",
         "world_directory": "ffmq"
       },
-      "timestamp": "2026-02-01T05:18:00.445055"
+      "timestamp": "2026-02-01T21:47:51.404897"
     },
     "Lufia II Ancient Cave.yaml": {
       "spoiler_fuzz": {
@@ -770,6 +788,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -778,29 +797,24 @@
         "game_name": "Lufia II Ancient Cave",
         "world_directory": "lufia2ac"
       },
-      "timestamp": "2026-02-01T05:19:37.999302"
+      "timestamp": "2026-02-01T21:49:27.696509"
     },
     "Overcooked! 2.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
         "success": 5,
-        "generation_failure": 5,
+        "generation_failure": 0,
+        "ignored": 5,
         "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Generation failed: e 243, in generate_early\n    raise Exception(f\"Invalid OC2 settings({self.player_name}) Need either Level Shuffle disabled or 'Story' DLC enabled\")\nException: Invalid OC2 settings(Player1) Need either Level Shuffle disabled or 'Story' DLC enabled\nException in <bound method Overcooked2World.generate_early of <worlds.overcooked2.Overcooked2World object at 0x7fea1ffc6f00>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: e 243, in generate_early\n    raise Exception(f\"Invalid OC2 settings({self.player_name}) Need either Level Shuffle disabled or 'Story' DLC enabled\")\nException: Invalid OC2 settings(Player1) Need either Level Shuffle disabled or 'Story' DLC enabled\nException in <bound method Overcooked2World.generate_early of <worlds.overcooked2.Overcooked2World object at 0x7f3226dff410>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: e 243, in generate_early\n    raise Exception(f\"Invalid OC2 settings({self.player_name}) Need either Level Shuffle disabled or 'Story' DLC enabled\")\nException: Invalid OC2 settings(Player1) Need either Level Shuffle disabled or 'Story' DLC enabled\nException in <bound method Overcooked2World.generate_early of <worlds.overcooked2.Overcooked2World object at 0x7f9e052e4d10>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: e 243, in generate_early\n    raise Exception(f\"Invalid OC2 settings({self.player_name}) Need either Level Shuffle disabled or 'Story' DLC enabled\")\nException: Invalid OC2 settings(Player1) Need either Level Shuffle disabled or 'Story' DLC enabled\nException in <bound method Overcooked2World.generate_early of <worlds.overcooked2.Overcooked2World object at 0x7f6a6102ef00>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: e 243, in generate_early\n    raise Exception(f\"Invalid OC2 settings({self.player_name}) Need either Level Shuffle disabled or 'Story' DLC enabled\")\nException: Invalid OC2 settings(Player1) Need either Level Shuffle disabled or 'Story' DLC enabled\nException in <bound method Overcooked2World.generate_early of <worlds.overcooked2.Overcooked2World object at 0x7f94013966f0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
-        ]
+        "errors": []
       },
       "world_info": {
         "game_name": "Overcooked! 2",
         "world_directory": "overcooked2"
       },
-      "timestamp": "2026-02-01T05:20:49.452378"
+      "timestamp": "2026-02-01T21:50:40.559231"
     },
     "Subnautica.yaml": {
       "spoiler_fuzz": {
@@ -808,6 +822,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -816,25 +831,24 @@
         "game_name": "Subnautica",
         "world_directory": "subnautica"
       },
-      "timestamp": "2026-02-01T05:23:08.192035"
+      "timestamp": "2026-02-01T21:53:01.461005"
     },
     "The Messenger.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
-        "success": 9,
+        "success": 10,
         "generation_failure": 0,
-        "test_failure": 1,
+        "ignored": 0,
+        "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Spoiler test failed"
-        ]
+        "errors": []
       },
       "world_info": {
         "game_name": "The Messenger",
         "world_directory": "messenger"
       },
-      "timestamp": "2026-02-01T05:25:42.129056"
+      "timestamp": "2026-02-01T21:55:26.751572"
     },
     "Aquaria.yaml": {
       "spoiler_fuzz": {
@@ -842,6 +856,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -850,7 +865,7 @@
         "game_name": "Aquaria",
         "world_directory": "aquaria"
       },
-      "timestamp": "2026-02-01T05:14:22.223326"
+      "timestamp": "2026-02-01T21:44:08.203367"
     },
     "Civilization VI.yaml": {
       "spoiler_fuzz": {
@@ -858,6 +873,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -866,7 +882,7 @@
         "game_name": "Civilization VI",
         "world_directory": "civ_6"
       },
-      "timestamp": "2026-02-01T05:16:50.800939"
+      "timestamp": "2026-02-01T21:46:40.589914"
     },
     "Heretic.yaml": {
       "spoiler_fuzz": {
@@ -874,6 +890,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -882,7 +899,7 @@
         "game_name": "Heretic",
         "world_directory": "heretic"
       },
-      "timestamp": "2026-02-01T05:18:54.091418"
+      "timestamp": "2026-02-01T21:48:47.767795"
     },
     "Mario & Luigi Superstar Saga.yaml": {
       "spoiler_fuzz": {
@@ -890,6 +907,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -898,7 +916,7 @@
         "game_name": "Mario & Luigi Superstar Saga",
         "world_directory": "mlss"
       },
-      "timestamp": "2026-02-01T05:21:10.137053"
+      "timestamp": "2026-02-01T21:51:06.924052"
     },
     "Paint.yaml": {
       "spoiler_fuzz": {
@@ -906,6 +924,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -914,7 +933,7 @@
         "game_name": "Paint",
         "world_directory": "paint"
       },
-      "timestamp": "2026-02-01T05:22:49.208426"
+      "timestamp": "2026-02-01T21:52:48.314627"
     },
     "Super Mario 64.yaml": {
       "spoiler_fuzz": {
@@ -922,6 +941,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -930,29 +950,24 @@
         "game_name": "Super Mario 64",
         "world_directory": "sm64ex"
       },
-      "timestamp": "2026-02-01T05:24:25.645599"
+      "timestamp": "2026-02-01T21:54:27.237389"
     },
     "The Wind Waker.yaml": {
       "spoiler_fuzz": {
-        "passed": false,
+        "passed": true,
         "total": 10,
         "success": 5,
-        "generation_failure": 5,
+        "generation_failure": 0,
+        "ignored": 5,
         "test_failure": 0,
         "timeout": 0,
-        "errors": [
-          "Generation failed: -CC/worlds/tww/randomizers/RequiredBosses.py\", line 41, in validate_boss_options\n    raise OptionError(\"You cannot make bosses required when progression dungeons are disabled.\")\nOptions.OptionError: You cannot make bosses required when progression dungeons are disabled.\nException in <bound method TWWWorld.create_regions of <worlds.tww.TWWWorld object at 0x7fba9ea019a0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: )\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/tww/randomizers/RequiredBosses.py\", line 44, in validate_boss_options\n    raise OptionError(\nOptions.OptionError: A conflict was found in the lists of required and banned dungeons for required bosses mode.\nException in <bound method TWWWorld.create_regions of <worlds.tww.TWWWorld object at 0x7ff6eb54f320>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: edBosses.py\", line 79, in randomize_required_bosses\n    raise OptionError(\nOptions.OptionError: Could not select required bosses to satisfy options set by the user. After removing the excluded dungeons, there are not enough to meet the desired number of required bosses.\nException in <bound method TWWWorld.create_regions of <worlds.tww.TWWWorld object at 0x7f815404a000>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: -CC/worlds/tww/randomizers/RequiredBosses.py\", line 41, in validate_boss_options\n    raise OptionError(\"You cannot make bosses required when progression dungeons are disabled.\")\nOptions.OptionError: You cannot make bosses required when progression dungeons are disabled.\nException in <bound method TWWWorld.create_regions of <worlds.tww.TWWWorld object at 0x7f4761f4b9e0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: -CC/worlds/tww/randomizers/RequiredBosses.py\", line 41, in validate_boss_options\n    raise OptionError(\"You cannot make bosses required when progression dungeons are disabled.\")\nOptions.OptionError: You cannot make bosses required when progression dungeons are disabled.\nException in <bound method TWWWorld.create_regions of <worlds.tww.TWWWorld object at 0x7ffbda951bb0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
-        ]
+        "errors": []
       },
       "world_info": {
         "game_name": "The Wind Waker",
         "world_directory": "tww"
       },
-      "timestamp": "2026-02-01T05:25:49.295650"
+      "timestamp": "2026-02-01T21:55:53.014435"
     },
     "Baking Adventure.yaml": {
       "spoiler_fuzz": {
@@ -960,6 +975,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -968,7 +984,7 @@
         "game_name": "Baking Adventure",
         "world_directory": "bakingadventure"
       },
-      "timestamp": "2026-02-01T05:14:21.560041"
+      "timestamp": "2026-02-01T21:43:47.008367"
     },
     "Coding Adventure.yaml": {
       "spoiler_fuzz": {
@@ -976,6 +992,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -984,7 +1001,7 @@
         "game_name": "Coding Adventure",
         "world_directory": "codingadventure"
       },
-      "timestamp": "2026-02-01T05:15:57.491649"
+      "timestamp": "2026-02-01T21:45:23.470633"
     },
     "Hylics 2.yaml": {
       "spoiler_fuzz": {
@@ -992,6 +1009,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1000,7 +1018,7 @@
         "game_name": "Hylics 2",
         "world_directory": "hylics2"
       },
-      "timestamp": "2026-02-01T05:17:37.468957"
+      "timestamp": "2026-02-01T21:47:02.802035"
     },
     "Math Adventure.yaml": {
       "spoiler_fuzz": {
@@ -1008,6 +1026,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1016,7 +1035,7 @@
         "game_name": "Math Adventure",
         "world_directory": "mathadventure"
       },
-      "timestamp": "2026-02-01T05:19:13.482943"
+      "timestamp": "2026-02-01T21:48:37.638559"
     },
     "Raft.yaml": {
       "spoiler_fuzz": {
@@ -1024,6 +1043,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1032,17 +1052,19 @@
         "game_name": "Raft",
         "world_directory": "raft"
       },
-      "timestamp": "2026-02-01T05:22:03.427792"
+      "timestamp": "2026-02-01T21:51:28.289471"
     },
     "Super Mario Land 2.yaml": {
       "spoiler_fuzz": {
         "passed": false,
         "total": 10,
-        "success": 8,
+        "success": 7,
         "generation_failure": 0,
-        "test_failure": 2,
+        "ignored": 0,
+        "test_failure": 3,
         "timeout": 0,
         "errors": [
+          "Spoiler test failed",
           "Spoiler test failed",
           "Spoiler test timed out after 120s"
         ]
@@ -1051,7 +1073,7 @@
         "game_name": "Super Mario Land 2",
         "world_directory": "marioland2"
       },
-      "timestamp": "2026-02-01T05:26:59.109803"
+      "timestamp": "2026-02-01T21:56:22.894009"
     },
     "The Witness.yaml": {
       "spoiler_fuzz": {
@@ -1059,6 +1081,7 @@
         "total": 10,
         "success": 2,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 8,
         "timeout": 0,
         "errors": [
@@ -1076,7 +1099,7 @@
         "game_name": "The Witness",
         "world_directory": "witness"
       },
-      "timestamp": "2026-02-01T05:30:03.819619"
+      "timestamp": "2026-02-01T21:59:22.621232"
     },
     "Bomb Rush Cyberfunk.yaml": {
       "spoiler_fuzz": {
@@ -1084,6 +1107,7 @@
         "total": 10,
         "success": 8,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 2,
         "timeout": 0,
         "errors": [
@@ -1095,7 +1119,7 @@
         "game_name": "Bomb Rush Cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       },
-      "timestamp": "2026-02-01T05:15:13.339617"
+      "timestamp": "2026-02-01T21:44:55.702786"
     },
     "DLCQuest.yaml": {
       "spoiler_fuzz": {
@@ -1103,6 +1127,7 @@
         "total": 10,
         "success": 9,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 1,
         "timeout": 0,
         "errors": [
@@ -1113,7 +1138,7 @@
         "game_name": "DLCQuest",
         "world_directory": "dlcquest"
       },
-      "timestamp": "2026-02-01T05:18:49.250067"
+      "timestamp": "2026-02-01T21:48:30.602283"
     },
     "Inscryption.yaml": {
       "spoiler_fuzz": {
@@ -1121,6 +1146,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1129,7 +1155,7 @@
         "game_name": "Inscryption",
         "world_directory": "inscryption"
       },
-      "timestamp": "2026-02-01T05:20:25.065378"
+      "timestamp": "2026-02-01T21:50:05.354206"
     },
     "Mega Man 2.yaml": {
       "spoiler_fuzz": {
@@ -1137,6 +1163,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1145,7 +1172,7 @@
         "game_name": "Mega Man 2",
         "world_directory": "mm2"
       },
-      "timestamp": "2026-02-01T05:22:00.568686"
+      "timestamp": "2026-02-01T21:51:40.084696"
     },
     "Risk of Rain 2.yaml": {
       "spoiler_fuzz": {
@@ -1153,6 +1180,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1161,7 +1189,7 @@
         "game_name": "Risk of Rain 2",
         "world_directory": "ror2"
       },
-      "timestamp": "2026-02-01T05:23:46.698905"
+      "timestamp": "2026-02-01T21:53:27.710470"
     },
     "Super Mario World.yaml": {
       "spoiler_fuzz": {
@@ -1169,6 +1197,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1177,7 +1206,7 @@
         "game_name": "Super Mario World",
         "world_directory": "smw"
       },
-      "timestamp": "2026-02-01T05:26:19.958960"
+      "timestamp": "2026-02-01T21:56:02.120779"
     },
     "Timespinner.yaml": {
       "spoiler_fuzz": {
@@ -1185,6 +1214,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1193,7 +1223,7 @@
         "game_name": "Timespinner",
         "world_directory": "timespinner"
       },
-      "timestamp": "2026-02-01T05:28:37.346343"
+      "timestamp": "2026-02-01T21:58:17.272349"
     },
     "Bumper Stickers.yaml": {
       "spoiler_fuzz": {
@@ -1201,6 +1231,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1209,7 +1240,7 @@
         "game_name": "Bumper Stickers",
         "world_directory": "bumpstik"
       },
-      "timestamp": "2026-02-01T05:14:03.517828"
+      "timestamp": "2026-02-01T21:43:51.709426"
     },
     "DOOM 1993.yaml": {
       "spoiler_fuzz": {
@@ -1217,6 +1248,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1225,7 +1257,7 @@
         "game_name": "DOOM 1993",
         "world_directory": "doom_1993"
       },
-      "timestamp": "2026-02-01T05:15:47.900151"
+      "timestamp": "2026-02-01T21:45:37.410973"
     },
     "Kingdom Hearts 2.yaml": {
       "spoiler_fuzz": {
@@ -1233,6 +1265,7 @@
         "total": 10,
         "success": 1,
         "generation_failure": 9,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": [
@@ -1251,7 +1284,7 @@
         "game_name": "Kingdom Hearts 2",
         "world_directory": "kh2"
       },
-      "timestamp": "2026-02-01T05:17:13.562245"
+      "timestamp": "2026-02-01T21:47:03.184676"
     },
     "MegaMan Battle Network 3.yaml": {
       "spoiler_fuzz": {
@@ -1259,6 +1292,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1267,7 +1301,7 @@
         "game_name": "MegaMan Battle Network 3",
         "world_directory": "mmbn3"
       },
-      "timestamp": "2026-02-01T05:18:48.456407"
+      "timestamp": "2026-02-01T21:48:38.037176"
     },
     "Saving Princess.yaml": {
       "spoiler_fuzz": {
@@ -1275,6 +1309,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1283,7 +1318,7 @@
         "game_name": "Saving Princess",
         "world_directory": "saving_princess"
       },
-      "timestamp": "2026-02-01T05:20:21.520070"
+      "timestamp": "2026-02-01T21:50:10.915790"
     },
     "Super Metroid.yaml": {
       "spoiler_fuzz": {
@@ -1291,18 +1326,19 @@
         "total": 10,
         "success": 0,
         "generation_failure": 5,
+        "ignored": 0,
         "test_failure": 5,
         "timeout": 0,
         "errors": [
           "Generation failed:  (green Maridia shinespark), Nothing), (Super Missile (green Maridia), Nothing), (Missile (green Maridia tatori), Nothing), (Super Missile (yellow Maridia), Nothing), (Missile (yellow Maridia false wall), Nothing), (Missile (left Maridia sand pit room), Nothing), (Missile (right Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Nothing)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f6a09c855b0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f23f1dd6cf0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
           "Spoiler test failed",
           "Spoiler test failed",
           "Spoiler test failed",
           "Generation failed: ssile (yellow Maridia), Missile), (Missile (yellow Maridia super missile), Charge Beam), (Missile (yellow Maridia false wall), Nothing), (Missile (left Maridia sand pit room), Nothing), (Missile (right Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Power Bomb), (Super Missile (pink Maridia), Nothing), (Missile (Draygon), Spring Ball)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
           "Spoiler test failed",
-          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7fa9fcef8980>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
-          "Generation failed: per Missile (yellow Maridia), Nothing), (Missile (yellow Maridia super missile), Nothing), (Missile (yellow Maridia false wall), Nothing), (Missile (left Maridia sand pit room), Nothing), (Missile (right Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Nothing), (Super Missile (pink Maridia), Nothing), (Missile (Draygon), Gravity Suit)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f1872c44e30>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: per Missile (yellow Maridia), Nothing), (Missile (yellow Maridia super missile), Nothing), (Missile (yellow Maridia false wall), Nothing), (Missile (left Maridia sand pit room), Nothing), (Missile (right Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Nothing), (Super Missile (pink Maridia), Nothing), (Missile (Draygon), Reserve Tank)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
           "Spoiler test failed"
         ]
       },
@@ -1310,7 +1346,7 @@
         "game_name": "Super Metroid",
         "world_directory": "sm"
       },
-      "timestamp": "2026-02-01T05:22:41.479105"
+      "timestamp": "2026-02-01T21:52:30.016824"
     },
     "Undertale.yaml": {
       "spoiler_fuzz": {
@@ -1318,6 +1354,7 @@
         "total": 10,
         "success": 10,
         "generation_failure": 0,
+        "ignored": 0,
         "test_failure": 0,
         "timeout": 0,
         "errors": []
@@ -1326,7 +1363,7 @@
         "game_name": "Undertale",
         "world_directory": "undertale"
       },
-      "timestamp": "2026-02-01T05:24:16.685586"
+      "timestamp": "2026-02-01T21:54:04.664997"
     }
   }
 }
