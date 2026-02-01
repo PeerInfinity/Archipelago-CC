@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2026-02-01T22:39:32.137745",
-    "last_updated": "2026-02-01T23:20:22.197590",
+    "last_updated": "2026-02-01T22:39:32.137751",
     "script_version": "1.0.0",
     "combined_from": 10,
     "ut_version": "modified",
@@ -611,25 +611,25 @@
     "A Link to the Past.yaml": {
       "ut_fuzz": {
         "passed": true,
-        "total": 100,
-        "success": 97,
+        "total": 10,
+        "success": 8,
         "failure": 0,
         "timeout": 0,
-        "ignored": 3,
+        "ignored": 2,
         "errors": {}
       },
       "world_info": {
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-01T23:19:52.524611",
+      "timestamp": "2026-02-01T22:36:14.176376",
       "explain_stats": {
-        "game": "A Link to the Past WorldGen_55977854110148887761",
-        "total_locations": 226,
-        "locations_with_explain": 113,
-        "locations_default_rule": 85,
-        "locations_without_explain": 28,
-        "explain_coverage_percent": 80.14,
+        "game": "A Link to the Past WorldGen_11408892729106005028",
+        "total_locations": 270,
+        "locations_with_explain": 133,
+        "locations_default_rule": 107,
+        "locations_without_explain": 30,
+        "explain_coverage_percent": 81.6,
         "locations_without_explain_list": [
           {
             "name": "Thieves' Town - Boss",
@@ -676,6 +676,10 @@
             "region": "Ganons Tower (Compass Room)"
           },
           {
+            "name": "Ganons Tower - Conveyor Star Pits Pot Key",
+            "region": "Ganons Tower (Compass Room)"
+          },
+          {
             "name": "Ganons Tower - Firesnake Room",
             "region": "Ganons Tower (Firesnake Room)"
           },
@@ -696,16 +700,16 @@
             "region": "Ganons Tower (Teleport Room)"
           },
           {
-            "name": "Hyrule Castle - Zelda's Chest",
-            "region": "Hyrule Castle"
-          },
-          {
             "name": "Ice Palace - Boss",
             "region": "Ice Palace (Kholdstare)"
           },
           {
             "name": "Mimic Cave",
             "region": "Mimic Cave"
+          },
+          {
+            "name": "Misery Mire - Conveyor Crystal Key Drop",
+            "region": "Misery Mire (Main)"
           },
           {
             "name": "Misery Mire - Boss",
@@ -740,16 +744,30 @@
             "region": "Tower of Hera (Top)"
           },
           {
+            "name": "Turtle Rock - Big Key Chest",
+            "region": "Turtle Rock (Second Section)"
+          },
+          {
             "name": "Turtle Rock - Boss",
             "region": "Turtle Rock (Trinexx)"
           }
         ],
-        "total_entrances": 466,
-        "entrances_with_explain": 219,
-        "entrances_default_rule": 229,
-        "entrances_without_explain": 18,
-        "entrance_explain_coverage_percent": 92.41,
+        "total_entrances": 430,
+        "entrances_with_explain": 202,
+        "entrances_default_rule": 214,
+        "entrances_without_explain": 14,
+        "entrance_explain_coverage_percent": 93.52,
         "entrances_without_explain_list": [
+          {
+            "name": "Ganons Tower",
+            "from_region": "Dark Death Mountain (Top)",
+            "to_region": "Light World Bomb Hut"
+          },
+          {
+            "name": "Pyramid Fairy",
+            "from_region": "East Dark World",
+            "to_region": "Hyrule Castle"
+          },
           {
             "name": "Ganons Tower (Bottom) (East)",
             "from_region": "Ganons Tower (Compass Room)",
@@ -781,24 +799,9 @@
             "to_region": "Ganons Tower (Before Moldorm)"
           },
           {
-            "name": "Inverted Ganons Tower",
-            "from_region": "Hyrule Castle Ledge",
-            "to_region": "Misery Mire (Entrance)"
-          },
-          {
-            "name": "Inverted Pyramid Hole",
-            "from_region": "Hyrule Castle Ledge",
-            "to_region": "Pyramid"
-          },
-          {
             "name": "Ice Palace (East)",
             "from_region": "Ice Palace (Main)",
             "to_region": "Ice Palace (East)"
-          },
-          {
-            "name": "Ice Palace (Main)",
-            "from_region": "Ice Palace (Second Section)",
-            "to_region": "Ice Palace (Main)"
           },
           {
             "name": "Misery Mire (West)",
@@ -821,30 +824,11 @@
             "to_region": "Sewers"
           },
           {
-            "name": "Swamp Palace (Center)",
-            "from_region": "Swamp Palace (Starting Area)",
-            "to_region": "Swamp Palace (Center)"
-          },
-          {
             "name": "Tower of Hera Small Key Door",
             "from_region": "Tower of Hera (Bottom)",
             "to_region": "Tower of Hera (Basement)"
-          },
-          {
-            "name": "Turtle Rock (Chain Chomp Room) (South)",
-            "from_region": "Turtle Rock (Chain Chomp Room)",
-            "to_region": "Turtle Rock (Pokey Room)"
-          },
-          {
-            "name": "Turtle Rock (Pokey Room) (South)",
-            "from_region": "Turtle Rock (Pokey Room)",
-            "to_region": "Turtle Rock (First Section)"
           }
         ]
-      },
-      "updated_from_single_game_test": {
-        "runs": 100,
-        "updated_at": "2026-02-01T23:20:22.197582"
       }
     },
     "Castlevania 64.yaml": {

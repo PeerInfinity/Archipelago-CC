@@ -63,6 +63,11 @@ on:
         type: boolean
         default: false
 
+      update_main_results:
+        description: 'Update the main test results file on ut-fuzz-test branch with this game result'
+        type: boolean
+        default: false
+
       parallel_runners:
         description: 'Number of parallel GitHub runners (1 or 10)'
         required: true
@@ -287,6 +292,147 @@ jobs:
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.update_main_results }}" = "true" ]; then
+            echo "**Main results updated:** Yes (ut-fuzz-test branch)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Update main results on ut-fuzz-test branch
+        if: ${{ !cancelled() && inputs.update_main_results }}
+        run: |
+          # Determine the UT version label for the output filename
+          if [ "${{ inputs.ut_version }}" = "original" ]; then
+            UT_LABEL="original"
+          elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
+            UT_LABEL="hybrid"
+          else
+            UT_LABEL="modified"
+          fi
+
+          # Determine seed mode for the output filename
+          if [ -n "${{ inputs.seed }}" ]; then
+            SEED_MODE="fixed"
+          else
+            SEED_MODE="random"
+          fi
+
+          MAIN_RESULTS_FILE="scripts/output/ut-fuzz/test-results-${UT_LABEL}-${SEED_MODE}-seed.json"
+          SINGLE_GAME_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 'random' }}.json"
+
+          echo "Main results file: ${MAIN_RESULTS_FILE}"
+          echo "Single game file: ${SINGLE_GAME_FILE}"
+
+          # Check if single game results exist
+          if [ ! -f "${SINGLE_GAME_FILE}" ]; then
+            echo "Single game results file not found, skipping update"
+            exit 0
+          fi
+
+          # Stash any changes and fetch ut-fuzz-test branch
+          git stash push -m "stash-for-ut-fuzz-update" || true
+          git fetch origin ut-fuzz-test || { echo "ut-fuzz-test branch not found"; exit 0; }
+
+          # Create a temporary worktree for the ut-fuzz-test branch
+          WORKTREE_DIR=$(mktemp -d)
+          git worktree add "${WORKTREE_DIR}" origin/ut-fuzz-test
+
+          # Restore single game results to the worktree
+          git stash pop || true
+          cp "${SINGLE_GAME_FILE}" "${WORKTREE_DIR}/${SINGLE_GAME_FILE}"
+
+          cd "${WORKTREE_DIR}"
+
+          # Merge results using Python
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          import os
+          from datetime import datetime
+
+          ut_label = os.environ.get('UT_LABEL', 'modified')
+          seed_mode = os.environ.get('SEED_MODE', 'fixed')
+          main_file = os.environ.get('MAIN_RESULTS_FILE')
+          single_file = os.environ.get('SINGLE_GAME_FILE')
+          runs = int(os.environ.get('RUNS', '100'))
+
+          print(f"Loading single game results from {single_file}")
+          with open(single_file) as f:
+              single_data = json.load(f)
+
+          # Load existing main results or create new structure
+          if os.path.exists(main_file):
+              print(f"Loading existing main results from {main_file}")
+              with open(main_file) as f:
+                  main_data = json.load(f)
+          else:
+              print(f"Main results file not found, creating new structure")
+              main_data = {
+                  "metadata": {
+                      "created": datetime.now().isoformat(),
+                      "script_version": "1.0.0",
+                      "ut_version": ut_label,
+                      "world_source": "bundled",
+                      "seed_mode": seed_mode
+                  },
+                  "results": {}
+              }
+
+          # Update results from single game
+          for template_name, result in single_data.get("results", {}).items():
+              print(f"Updating result for {template_name}")
+
+              # Update or add the result
+              main_data["results"][template_name] = result
+
+              # Add note about the update
+              main_data["results"][template_name]["updated_from_single_game_test"] = {
+                  "runs": runs,
+                  "updated_at": datetime.now().isoformat()
+              }
+
+          # Update metadata
+          main_data["metadata"]["last_updated"] = datetime.now().isoformat()
+          main_data["metadata"]["total_templates"] = len(main_data["results"])
+
+          # Write updated results
+          with open(main_file, 'w') as f:
+              json.dump(main_data, f, indent=2)
+
+          print(f"Updated {main_file} with {len(single_data.get('results', {}))} game results")
+          PYTHON_SCRIPT
+
+          # Regenerate documentation
+          python scripts/docs/generate_ut_fuzz_chart.py || true
+
+          # Commit and push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -f "${MAIN_RESULTS_FILE}"
+          git add -f docs/json/developer/test-results/test-results-ut-fuzz*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update UT fuzz results for ${{ inputs.game }} (single-game test)
+
+          Workflow run: ${{ github.run_id }}
+          Game: ${{ inputs.game }}
+          UT Version: ${{ inputs.ut_version }}
+          Runs: ${{ inputs.runs }}
+          Seed: ${{ inputs.seed || 'random' }}
+          "
+            git push origin HEAD:ut-fuzz-test
+            echo "Successfully updated main results on ut-fuzz-test branch"
+          else
+            echo "No changes to commit"
+          fi
+
+          # Cleanup worktree
+          cd -
+          git worktree remove "${WORKTREE_DIR}" --force
+        env:
+          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}
+          SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
+          SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 'random' }}.json
+          RUNS: ${{ inputs.runs }}
 
   # Split runner jobs - used when parallel_runners is 10
   test-split-runner:
@@ -679,3 +825,143 @@ jobs:
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Results branch:** \`${{ steps.branch-name.outputs.branch_name }}\`" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.update_main_results }}" = "true" ]; then
+            echo "**Main results updated:** Yes (ut-fuzz-test branch)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Update main results on ut-fuzz-test branch
+        if: inputs.update_main_results
+        run: |
+          # Determine the UT version label for the output filename
+          if [ "${{ inputs.ut_version }}" = "original" ]; then
+            UT_LABEL="original"
+          elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
+            UT_LABEL="hybrid"
+          else
+            UT_LABEL="modified"
+          fi
+
+          # Determine seed mode for the output filename
+          if [ -n "${{ inputs.seed }}" ]; then
+            SEED_MODE="fixed"
+          else
+            SEED_MODE="random"
+          fi
+
+          MAIN_RESULTS_FILE="scripts/output/ut-fuzz/test-results-${UT_LABEL}-${SEED_MODE}-seed.json"
+          SINGLE_GAME_FILE="scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json"
+
+          echo "Main results file: ${MAIN_RESULTS_FILE}"
+          echo "Single game file: ${SINGLE_GAME_FILE}"
+
+          # Check if single game results exist
+          if [ ! -f "${SINGLE_GAME_FILE}" ]; then
+            echo "Single game results file not found, skipping update"
+            exit 0
+          fi
+
+          # Fetch ut-fuzz-test branch
+          git fetch origin ut-fuzz-test || { echo "ut-fuzz-test branch not found"; exit 0; }
+
+          # Create a temporary worktree for the ut-fuzz-test branch
+          WORKTREE_DIR=$(mktemp -d)
+          git worktree add "${WORKTREE_DIR}" origin/ut-fuzz-test
+
+          # Copy single game results to the worktree
+          cp "${SINGLE_GAME_FILE}" "${WORKTREE_DIR}/${SINGLE_GAME_FILE}"
+
+          cd "${WORKTREE_DIR}"
+
+          # Merge results using Python
+          python3 << 'PYTHON_SCRIPT'
+          import json
+          import os
+          from datetime import datetime
+
+          ut_label = os.environ.get('UT_LABEL', 'modified')
+          seed_mode = os.environ.get('SEED_MODE', 'fixed')
+          main_file = os.environ.get('MAIN_RESULTS_FILE')
+          single_file = os.environ.get('SINGLE_GAME_FILE')
+          runs = int(os.environ.get('RUNS', '100'))
+
+          print(f"Loading single game results from {single_file}")
+          with open(single_file) as f:
+              single_data = json.load(f)
+
+          # Load existing main results or create new structure
+          if os.path.exists(main_file):
+              print(f"Loading existing main results from {main_file}")
+              with open(main_file) as f:
+                  main_data = json.load(f)
+          else:
+              print(f"Main results file not found, creating new structure")
+              main_data = {
+                  "metadata": {
+                      "created": datetime.now().isoformat(),
+                      "script_version": "1.0.0",
+                      "ut_version": ut_label,
+                      "world_source": "bundled",
+                      "seed_mode": seed_mode
+                  },
+                  "results": {}
+              }
+
+          # Update results from single game
+          for template_name, result in single_data.get("results", {}).items():
+              print(f"Updating result for {template_name}")
+
+              # Update or add the result
+              main_data["results"][template_name] = result
+
+              # Add note about the update
+              main_data["results"][template_name]["updated_from_single_game_test"] = {
+                  "runs": runs,
+                  "updated_at": datetime.now().isoformat()
+              }
+
+          # Update metadata
+          main_data["metadata"]["last_updated"] = datetime.now().isoformat()
+          main_data["metadata"]["total_templates"] = len(main_data["results"])
+
+          # Write updated results
+          with open(main_file, 'w') as f:
+              json.dump(main_data, f, indent=2)
+
+          print(f"Updated {main_file} with {len(single_data.get('results', {}))} game results")
+          PYTHON_SCRIPT
+
+          # Regenerate documentation
+          python scripts/docs/generate_ut_fuzz_chart.py || true
+
+          # Commit and push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -f "${MAIN_RESULTS_FILE}"
+          git add -f docs/json/developer/test-results/test-results-ut-fuzz*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update UT fuzz results for ${{ inputs.game }} (single-game test, 10 runners)
+
+          Workflow run: ${{ github.run_id }}
+          Game: ${{ inputs.game }}
+          UT Version: ${{ inputs.ut_version }}
+          Runs: ${{ inputs.runs }}
+          Seed: ${{ inputs.seed || 1 }}
+          Parallel Runners: 10
+          "
+            git push origin HEAD:ut-fuzz-test
+            echo "Successfully updated main results on ut-fuzz-test branch"
+          else
+            echo "No changes to commit"
+          fi
+
+          # Cleanup worktree
+          cd -
+          git worktree remove "${WORKTREE_DIR}" --force
+        env:
+          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}
+          SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
+          SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json
+          RUNS: ${{ inputs.runs }}
