@@ -209,7 +209,9 @@ async function fetchJson(url, errorMessage) {
   const fileName = url.split('/').pop() || url;
 
   try {
-    const response = await fetch(url);
+    // Use cache: 'no-store' to prevent browser caching of JSON files
+    // This is important for test mode where files are rapidly updated
+    const response = await fetch(url, { cache: 'no-store' });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

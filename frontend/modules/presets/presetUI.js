@@ -76,7 +76,8 @@ export class PresetUI {
     this.initialized = false;
 
     try {
-      fetch('./presets/preset_files.json')
+      // Use cache: 'no-store' to prevent browser caching of preset_files.json
+      fetch('./presets/preset_files.json', { cache: 'no-store' })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

@@ -112,13 +112,15 @@ export function executeHelper(manager, name, ...args) {
       // Evaluate the helper body using the rule engine
       const result = evaluateRule(helperDefinition.body, snapshotInterface, 0, helperScope);
 
-      // If definition evaluation succeeded (not undefined), use that result
+      // If definition evaluation succeeded (not undefined or null), use that result
       // Otherwise, fall through to try JavaScript helpers as a fallback
       // This handles cases where the exported Python helper relies on APIs not available in JS
-      if (result !== undefined) {
+      // Note: null is used by some helpers (e.g., shop_price_rules) to indicate
+      // a case they can't handle, signaling to use JS fallback
+      if (result !== undefined && result !== null) {
         return result;
       }
-      // Fall through to JavaScript helpers if definition returned undefined
+      // Fall through to JavaScript helpers if definition returned undefined or null
     } else if (helperDefinition && helperDefinition.type) {
       // Handle rule-type helpers (e.g., {type: 'block', statements: [...]})
       // These helpers ARE rules themselves, not wrappers with {params, body}

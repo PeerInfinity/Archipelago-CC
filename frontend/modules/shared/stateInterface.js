@@ -910,13 +910,14 @@ export function createStateSnapshotInterface(
         // Evaluate the helper body with the resolved parameters
         const result = evaluateRule(helperDefinition.body, finalSnapshotInterface, 0, helperScope);
 
-        // If definition evaluation succeeded (not undefined), use that result
+        // If definition evaluation succeeded (not undefined or null), use that result
         // Otherwise, fall through to try JavaScript helpers as a fallback
         // This handles cases where the exported Python helper relies on APIs not available in JS
-        if (result !== undefined) {
+        // or returns null for cases it can't handle (e.g., shop_price_rules for rupee prices)
+        if (result !== undefined && result !== null) {
           return result;
         }
-        // Fall through to JavaScript helpers if definition returned undefined
+        // Fall through to JavaScript helpers if definition returned undefined or null
       }
 
       // Fall back to game-specific JavaScript helpers
