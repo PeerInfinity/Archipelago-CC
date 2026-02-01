@@ -502,8 +502,7 @@ def main():
 
         # Write collected prompts to file if in --promptfile mode
         if args.promptfile and collected_prompts:
-            output_file = Path(project_root) / 'CC' / 'scripts' / 'prompts' / 'spoiler-fuzz-failures.txt'
-            output_file.parent.mkdir(parents=True, exist_ok=True)
+            output_file = Path(project_root) / 'CC' / 'scripts' / 'prompts.txt'
             write_collected_prompts(collected_prompts, output_file)
 
         return 0
