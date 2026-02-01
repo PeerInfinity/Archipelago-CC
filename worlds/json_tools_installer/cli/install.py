@@ -41,6 +41,7 @@ from ..installer.downloader import (
     get_download_url,
     get_latest_commit_hash,
     check_connectivity,
+    check_installer_compatibility,
 )
 from ..installer.extractor import (
     extract_tools,
@@ -130,6 +131,23 @@ def do_install(
         print("  [ERROR] Cannot reach GitHub. Check your internet connection.")
         return False
     print("  [OK] GitHub is reachable")
+
+    # Check installer compatibility
+    print("\n  Checking installer compatibility...")
+    compat = check_installer_compatibility(source)
+    if not compat.compatible:
+        if compat.error:
+            print(f"  [ERROR] {compat.error}")
+        else:
+            print(f"  [ERROR] Installer version {compat.current_version} is too old.")
+            print(f"          Minimum required version: {compat.required_version}")
+            if compat.message:
+                print(f"\n  {compat.message}")
+            if compat.download_url:
+                print(f"\n  Download the latest installer from:")
+                print(f"  {compat.download_url}")
+        return False
+    print(f"  [OK] Installer v{compat.current_version} is compatible")
 
     # Get latest commit hash
     commit_hash = get_latest_commit_hash(source)
