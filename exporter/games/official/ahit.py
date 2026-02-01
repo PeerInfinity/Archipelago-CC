@@ -55,11 +55,12 @@ ZERO_JUMPS_LOCATIONS = [
 ]
 
 # Enemy items (from hit_list, excluding bosses)
-# Each increments the "Enemy" counter when collected
+# Each increments the "Enemy" counter ONCE when first collected (unique types only)
+# Note: "Triple Enemy Photo" is NOT included - it's not in hit_list.keys()
 ENEMY_ITEMS = [
     "Mafia Goon", "Sleepy Raccoon", "UFO", "Rat", "Shock Squid",
     "Shromb Egg", "Spider", "Crow", "Pompous Crow", "Fiery Crow",
-    "Express Owl", "Ninja Cat", "Triple Enemy Photo"
+    "Express Owl", "Ninja Cat"
 ]
 
 # Boss items (from hit_list bosses)
@@ -300,9 +301,9 @@ class AHitGameExportHandler(GenericGameExportHandler):
             elif item_name == 'Zero Jumps':
                 return self._create_zero_jumps_weighted_sum(count)
             elif item_name == 'Enemy':
-                return self._create_enemy_weighted_sum(count)
+                return self._create_enemy_unique_count(count)
             elif item_name == 'Boss':
-                return self._create_boss_weighted_sum(count)
+                return self._create_boss_unique_count(count)
 
         # Check for AST format: item_check for pseudo-items
         if rule.get('type') == 'item_check':
@@ -319,9 +320,9 @@ class AHitGameExportHandler(GenericGameExportHandler):
             elif item == 'Zero Jumps':
                 return self._create_zero_jumps_weighted_sum(count)
             elif item == 'Enemy':
-                return self._create_enemy_weighted_sum(count)
+                return self._create_enemy_unique_count(count)
             elif item == 'Boss':
-                return self._create_boss_weighted_sum(count)
+                return self._create_boss_unique_count(count)
 
         # Recursively process children for Rule Builder And/Or
         if rule.get('rule') in ('And', 'Or'):
@@ -386,20 +387,21 @@ class AHitGameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def _create_enemy_weighted_sum(self, threshold: int) -> Dict[str, Any]:
-        """Create a weighted_sum rule for Enemy counting.
+    def _create_enemy_unique_count(self, threshold: int) -> Dict[str, Any]:
+        """Create a unique_count rule for Enemy counting.
 
         Enemy items are from the hit_list (excluding bosses).
-        Each item counts as 1 toward the "Enemy" counter.
+        Each UNIQUE item type counts as 1 toward the "Enemy" counter.
+        Unlike weighted_sum, this counts unique types, not total items collected.
         """
         items = []
         for item_name in ENEMY_ITEMS:
             items.append([item_name, 1.0])
 
-        logger.debug(f"Converting Has('Enemy', {threshold}) to weighted_sum with {len(items)} items")
+        logger.debug(f"Converting Has('Enemy', {threshold}) to unique_count with {len(items)} items")
 
         return {
-            "rule": "weighted_sum",
+            "rule": "unique_count",
             "_original_ast_type": "helper",
             "_converted_from_ast": True,
             "args": [
@@ -408,20 +410,21 @@ class AHitGameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def _create_boss_weighted_sum(self, threshold: int) -> Dict[str, Any]:
-        """Create a weighted_sum rule for Boss counting.
+    def _create_boss_unique_count(self, threshold: int) -> Dict[str, Any]:
+        """Create a unique_count rule for Boss counting.
 
         Boss items are from the bosses list in hit_list.
-        Each item counts as 1 toward the "Boss" counter.
+        Each UNIQUE boss type counts as 1 toward the "Boss" counter.
+        Unlike weighted_sum, this counts unique types, not total items collected.
         """
         items = []
         for item_name in BOSS_ITEMS:
             items.append([item_name, 1.0])
 
-        logger.debug(f"Converting Has('Boss', {threshold}) to weighted_sum with {len(items)} items")
+        logger.debug(f"Converting Has('Boss', {threshold}) to unique_count with {len(items)} items")
 
         return {
-            "rule": "weighted_sum",
+            "rule": "unique_count",
             "_original_ast_type": "helper",
             "_converted_from_ast": True,
             "args": [
