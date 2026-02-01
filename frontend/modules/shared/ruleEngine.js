@@ -5254,53 +5254,6 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return evaluateRule({ type: 'can_reach_entrance', entrance: entranceName }, context, depth + 1, localScope);
     }
 
-    // BunnyPaths: Pre-computed bunny access paths (from ALttP glitch modes)
-    // Each option is either a direct item check or a path via an entrance
-    case 'BunnyPaths': {
-      // options can be in rule.options directly or in args.options
-      const options = rule.options || args.options || [];
-      if (options.length === 0) return false;
-
-      // Any option being satisfied means we can access the location
-      for (const option of options) {
-        const optionType = option.type || 'direct';
-        const requires = option.requires || [];
-
-        // Check if we have all required items
-        let hasItems = true;
-        for (const item of requires) {
-          const hasItem = evaluateRule(
-            { type: 'item_check', item: item, count: 1 },
-            context, depth + 1, localScope
-          );
-          if (!hasItem) {
-            hasItems = false;
-            break;
-          }
-        }
-
-        if (!hasItems) continue;
-
-        // For path type, also need to check entrance reachability
-        if (optionType === 'path') {
-          const viaEntrance = option.via_entrance;
-          if (viaEntrance) {
-            const canReach = evaluateRule(
-              { type: 'can_reach_entrance', entrance: viaEntrance },
-              context, depth + 1, localScope
-            );
-            if (!canReach) continue;
-          }
-        }
-
-        // This option is satisfied
-        return true;
-      }
-
-      // No option was satisfied
-      return false;
-    }
-
     // Wrapper rule with filter (option-based filtering)
     case 'Filtered': {
       // For now, just evaluate the child - option filtering is typically world-level

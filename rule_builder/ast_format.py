@@ -67,7 +67,7 @@ def parse_ast_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -
         True_, False_, Has, HasAll, HasAny, HasAllCounts, HasAnyCount,
         HasFromList, HasFromListUnique, HasGroup, HasGroupUnique,
         And, Or, CanReachRegion, CanReachLocation, CanReachEntrance,
-        ASTRule, Not, CountItem, Compare, Conditional, BunnyPaths,
+        ASTRule, Not, CountItem, Compare, Conditional,
     )
 
     rule_type = data.get('type')
@@ -123,9 +123,6 @@ def parse_ast_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) -
 
     elif rule_type == 'binary_op' or rule_type == 'binop':
         return _parse_binary_op(data, world_cls)
-
-    elif rule_type == 'bunny_paths':
-        return _parse_bunny_paths(data)
 
     else:
         # Unknown type - wrap in ASTRule for explain support
@@ -658,32 +655,3 @@ def _parse_arithmetic_operand(operand: Any, world_cls: type["RuleWorldMixin"]) -
         return parse_ast_rule(operand, world_cls)
     except (ValueError, KeyError):
         return 0  # Default to 0 for unknown operands
-
-
-def _parse_bunny_paths(data: Mapping[str, Any]) -> "Rule[Any]":
-    """
-    Parse a bunny_paths rule.
-
-    This rule type is generated during ALttP export for superbunny-accessible
-    locations in glitch modes. It contains pre-computed path options that can
-    be evaluated without the complex BFS logic used at generation time.
-
-    Example:
-        {
-            "type": "bunny_paths",
-            "options": [
-                {"type": "path", "via_entrance": "Some Entrance", "requires": ["Magic Mirror"]},
-                {"type": "direct", "requires": ["Moon Pearl"]}
-            ]
-        }
-
-    Args:
-        data: Rule dict with 'type': 'bunny_paths' and 'options' list
-
-    Returns:
-        A BunnyPaths rule object
-    """
-    from rule_builder.rules import BunnyPaths
-
-    options = data.get('options', [])
-    return BunnyPaths(path_options=list(options))

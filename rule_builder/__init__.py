@@ -75,7 +75,6 @@ from .rules import (
     HelperCall,
     WeightedSum,
     OptionValue,
-    BunnyPaths,
 )
 
 from .ast_format import (
@@ -145,7 +144,6 @@ __all__ = [
     'HelperCall',
     'WeightedSum',
     'OptionValue',
-    'BunnyPaths',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',
