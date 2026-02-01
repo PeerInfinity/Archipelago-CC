@@ -32,6 +32,8 @@ from ..config import (
     update_installation_info,
     clear_installation,
     InstallerConfig,
+    configure_export_settings,
+    EXPORT_PRESETS,
 )
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import (
@@ -93,6 +95,8 @@ def do_install(
     dry_run: bool = False,
     patch_mode: str = "monkey",
     skip_confirmation: bool = False,
+    configure_export: bool = True,
+    export_preset: str = "normal",
 ) -> bool:
     """
     Perform the installation.
@@ -104,6 +108,8 @@ def do_install(
         dry_run: If True, only show what would be done.
         patch_mode: Patch mode - "none", "monkey" (default), or "file".
         skip_confirmation: If True, skip confirmation prompts for file patching.
+        configure_export: If True, configure export settings in host.yaml.
+        export_preset: Export settings preset to use ("normal" or "minimal-spoilers").
 
     Returns:
         True if successful.
@@ -240,6 +246,17 @@ def do_install(
             print("\n  [INFO] No patching selected, skipping patch application.")
             config.patches.method = "none"
 
+    # Configure export settings in host.yaml
+    if configure_export:
+        print(f"\n  Configuring export settings ({export_preset} preset)...")
+        if configure_export_settings(preset=export_preset):
+            print(f"  [OK] Export settings configured in host.yaml")
+            if export_preset == "minimal-spoilers":
+                print("       JSON export and sphere logging are now enabled.")
+        else:
+            print("  [WARN] Could not configure export settings. You may need to run:")
+            print("         python scripts/setup/update_host_settings.py minimal-spoilers")
+
     # Update config
     update_installation_info(config, version, components, commit_hash)
 
@@ -247,8 +264,11 @@ def do_install(
     print("  JSON Tools has been installed successfully!")
     print("\n  Next steps:")
     print("  1. Restart Archipelago to load the new tools")
-    print("  2. Configure host.yaml (run scripts/setup/update_host_settings.py)")
-    print("  3. Generate a seed to test the installation")
+    if not configure_export:
+        print("  2. Configure host.yaml (run scripts/setup/update_host_settings.py)")
+        print("  3. Generate a seed to test the installation")
+    else:
+        print("  2. Generate a seed to test the installation")
 
     return True
 
@@ -408,6 +428,27 @@ def main(args=None):
         help="Skip confirmation prompts (auto-confirm)",
     )
 
+    # Export settings configuration
+    export_group = parser.add_mutually_exclusive_group()
+    export_group.add_argument(
+        "--configure-export",
+        action="store_true",
+        default=True,
+        help="Configure export settings in host.yaml (default: enabled)",
+    )
+    export_group.add_argument(
+        "--no-configure-export",
+        action="store_true",
+        help="Skip configuring export settings in host.yaml",
+    )
+
+    parser.add_argument(
+        "--export-preset",
+        choices=list(EXPORT_PRESETS.keys()),
+        default="normal",
+        help="Export settings preset to use (default: normal). 'minimal-spoilers' enables JSON export.",
+    )
+
     parsed = parser.parse_args(args)
 
     # Load config
@@ -491,6 +532,9 @@ def main(args=None):
     else:
         patch_mode = "monkey"  # Default
 
+    # Determine if we should configure export settings
+    configure_export = not parsed.no_configure_export
+
     success = do_install(
         config,
         version,
@@ -498,6 +542,8 @@ def main(args=None):
         parsed.dry_run,
         patch_mode,
         parsed.yes,  # skip_confirmation
+        configure_export,
+        parsed.export_preset,
     )
     return 0 if success else 1
 

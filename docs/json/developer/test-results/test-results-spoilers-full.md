@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-31 04:30:19
+**Generated:** 2026-02-01 10:31:05
 
 **Source Data Created:** 2026-01-31T04:15:03.561351
 
@@ -35,8 +35,8 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.5KB | ✅ |
-| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 16.2KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.6KB | ✅ |
+| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 1.8KB | ✅ |
@@ -56,7 +56,7 @@
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.6KB | ✅ |
+| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 13.4KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |

@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-31 04:30:19
+**Generated:** 2026-02-01 10:31:05
 
 **Source Data Created:** 2026-01-31T04:30:18.154342
 
@@ -39,8 +39,8 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 12.5KB | ✅ |
-| A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | 16.2KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 12.6KB | ✅ |
+| A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 1.8KB | ✅ |
@@ -60,7 +60,7 @@
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 8.6KB | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 13.4KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |

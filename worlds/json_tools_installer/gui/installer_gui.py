@@ -24,7 +24,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 
-from ..config import load_config, save_config, InstallerConfig
+from ..config import load_config, save_config, InstallerConfig, configure_export_settings, EXPORT_PRESETS
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity
 from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
@@ -62,6 +62,11 @@ class InstallerApp(App):
     apply_monkey_patch = BooleanProperty(True)
     apply_main_patches = BooleanProperty(False)
     apply_romless_patches = BooleanProperty(False)
+
+    # Export settings configuration
+    configure_export = BooleanProperty(True)
+    export_preset_normal = BooleanProperty(True)
+    export_preset_minimal = BooleanProperty(False)
 
     # Store checkbox references for updating
     component_checkboxes = {}
@@ -272,6 +277,76 @@ class InstallerApp(App):
 
         root.add_widget(options_box)
 
+        # Export settings configuration
+        export_label = Label(
+            text='Configure export settings in host.yaml:',
+            size_hint_y=None,
+            height=25,
+            halign='left',
+        )
+        export_label.bind(size=export_label.setter('text_size'))
+        root.add_widget(export_label)
+
+        export_box = BoxLayout(size_hint_y=None, height=35, spacing=10)
+
+        # Configure export checkbox
+        config_export_row = BoxLayout(size_hint_x=0.4)
+        self.config_export_cb = CheckBox(
+            active=self.configure_export,
+            size_hint_x=None,
+            width=40,
+        )
+        self.config_export_cb.bind(active=lambda inst, val: setattr(self, 'configure_export', val))
+        config_export_row.add_widget(self.config_export_cb)
+        config_label = Label(
+            text='Configure host.yaml',
+            halign='left',
+            valign='middle',
+        )
+        config_label.bind(size=config_label.setter('text_size'))
+        config_export_row.add_widget(config_label)
+        export_box.add_widget(config_export_row)
+
+        # Normal preset radio
+        normal_row = BoxLayout(size_hint_x=0.3)
+        self.preset_normal_cb = CheckBox(
+            group='export_preset',
+            active=True,
+            size_hint_x=None,
+            width=40,
+        )
+        self.preset_normal_cb.bind(active=self.on_preset_normal)
+        normal_row.add_widget(self.preset_normal_cb)
+        normal_label = Label(
+            text='Normal',
+            halign='left',
+            valign='middle',
+        )
+        normal_label.bind(size=normal_label.setter('text_size'))
+        normal_row.add_widget(normal_label)
+        export_box.add_widget(normal_row)
+
+        # Minimal-spoilers preset radio
+        minimal_row = BoxLayout(size_hint_x=0.3)
+        self.preset_minimal_cb = CheckBox(
+            group='export_preset',
+            active=False,
+            size_hint_x=None,
+            width=40,
+        )
+        self.preset_minimal_cb.bind(active=self.on_preset_minimal)
+        minimal_row.add_widget(self.preset_minimal_cb)
+        minimal_label = Label(
+            text='Minimal spoilers',
+            halign='left',
+            valign='middle',
+        )
+        minimal_label.bind(size=minimal_label.setter('text_size'))
+        minimal_row.add_widget(minimal_label)
+        export_box.add_widget(minimal_row)
+
+        root.add_widget(export_box)
+
         # Status area
         self.status_label = Label(
             text=self.status_text,
@@ -355,6 +430,22 @@ class InstallerApp(App):
             # Uncheck monkey patch when main patches is checked
             self.apply_monkey_patch = False
             self.monkey_patch_cb.active = False
+
+    def on_preset_normal(self, instance, value: bool):
+        """Handle normal preset selection."""
+        if value:
+            self.export_preset_normal = True
+            self.export_preset_minimal = False
+
+    def on_preset_minimal(self, instance, value: bool):
+        """Handle minimal-spoilers preset selection."""
+        if value:
+            self.export_preset_minimal = True
+            self.export_preset_normal = False
+
+    def get_selected_export_preset(self) -> str:
+        """Get the selected export preset name."""
+        return "minimal-spoilers" if self.export_preset_minimal else "normal"
 
     def do_check_all(self, instance):
         """Check all component checkboxes."""
@@ -476,6 +567,18 @@ Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patc
 Additional patches that allow seed generation for games that normally require ROM files. Useful for testing.
 
 Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
+
+EXPORT SETTINGS
+Configure how Archipelago exports game data to host.yaml:
+
+[b]Configure host.yaml[/b]
+When enabled, the installer automatically adds export settings to your host.yaml file. This eliminates the need to manually run setup scripts after installation.
+
+[b]Normal[/b]
+Standard settings with JSON export disabled. Use this if you only want the tools installed but don't need automatic JSON export during seed generation.
+
+[b]Minimal spoilers[/b]
+Enables JSON rules export and sphere logging. This is what you need to use the frontend web UI for viewing game logic and playthroughs. Automatically updates frontend presets when generating seeds.
 
 COMPONENTS
 Select which parts of JSON Tools to install:
@@ -640,6 +743,22 @@ For more information, see the README.md file."""
                     romless_result = apply_romless_patches(self.config)
                     if not romless_result.success:
                         self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
+
+                # Configure export settings in host.yaml
+                if self.configure_export:
+                    preset = self.get_selected_export_preset()
+                    self.update_status(f"Configuring export settings ({preset})...")
+                    self.update_progress(95)
+                    if configure_export_settings(preset=preset):
+                        if preset == "minimal-spoilers":
+                            self.update_status("Export settings configured (JSON export enabled)")
+                    else:
+                        self.show_message(
+                            "Warning",
+                            "Could not configure export settings in host.yaml.\n"
+                            "You may need to run:\n"
+                            "python scripts/setup/update_host_settings.py minimal-spoilers"
+                        )
 
                 self.update_progress(100)
                 self.update_status("Installation complete!")

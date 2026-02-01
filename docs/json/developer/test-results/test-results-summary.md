@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-01-31 04:30:19
+**Generated:** 2026-02-01 10:31:05
 
 **Source Data Created:** 2026-01-31T04:08:42.835914
 
@@ -53,23 +53,23 @@ Additional information:
 
 Of the 73 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 38/73 (52.1%)
+- **Passing with Generic Exporter:** 39/73 (53.4%)
 - **Passing with Generic Logic:** 67/73 (91.8%)
-- **Passing with Both Generic:** 38/73 (52.1%)
+- **Passing with Both Generic:** 39/73 (53.4%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 507.1KB
+- **Total Exporter Code:** 491.2KB
 - **Total Game Logic Code:** 271.1KB
-- **Combined Total:** 778.2KB
+- **Combined Total:** 762.3KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.5KB | ✅ | 665.3KB |
-| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | ✅ | 410.7KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.6KB | ✅ | 665.3KB |
+| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 275.4KB |
@@ -89,7 +89,7 @@ Of the 73 templates passing all 4 tests:
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.6KB | ✅ | 497.8KB |
+| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.8KB | ✅ | 497.8KB |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.4KB | ✅ | 549.0KB |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 367.5KB |
@@ -170,31 +170,30 @@ Of the 73 templates passing all 4 tests:
 | 8 | Stardew Valley | 18.8KB |
 | 9 | A Hat in Time | 18.0KB |
 | 10 | Terraria | 16.8KB |
-| 11 | A Short Hike | 16.2KB |
-| 12 | The Messenger | 14.8KB |
-| 13 | The Witness | 14.1KB |
-| 14 | Final Fantasy Mystic Quest | 13.4KB |
-| 15 | A Link to the Past | 12.5KB |
-| 16 | Kirby's Dream Land 3 | 10.1KB |
-| 17 | Yoshi's Island | 9.2KB |
-| 18 | Factorio | 8.6KB |
-| 19 | Inscryption | 8.0KB |
-| 20 | Links Awakening DX | 7.4KB |
-| 21 | The Wind Waker | 7.0KB |
-| 22 | Raft | 6.5KB |
-| 23 | Secret of Evermore | 5.3KB |
-| 24 | Celeste 64 | 4.1KB |
-| 25 | Castlevania - Circle of the Moon | 4.0KB |
-| 26 | VVVVVV | 3.8KB |
-| 27 | Landstalker - The Treasures of King Nole | 3.6KB |
-| 28 | TUNIC | 3.1KB |
-| 29 | Paint | 2.7KB |
-| 30 | Timespinner | 2.2KB |
-| 31 | Subnautica | 2.2KB |
-| 32 | Aquaria | 1.8KB |
-| 33 | Bomb Rush Cyberfunk | 1.4KB |
-| 34 | DLCQuest | 1.2KB |
-| 35 | Old School Runescape | 1.0KB |
+| 11 | The Messenger | 14.8KB |
+| 12 | The Witness | 14.1KB |
+| 13 | Final Fantasy Mystic Quest | 13.4KB |
+| 14 | A Link to the Past | 12.6KB |
+| 15 | Kirby's Dream Land 3 | 10.1KB |
+| 16 | Yoshi's Island | 9.2KB |
+| 17 | Factorio | 8.8KB |
+| 18 | Inscryption | 8.0KB |
+| 19 | Links Awakening DX | 7.4KB |
+| 20 | The Wind Waker | 7.0KB |
+| 21 | Raft | 6.5KB |
+| 22 | Secret of Evermore | 5.3KB |
+| 23 | Celeste 64 | 4.1KB |
+| 24 | Castlevania - Circle of the Moon | 4.0KB |
+| 25 | VVVVVV | 3.8KB |
+| 26 | Landstalker - The Treasures of King Nole | 3.6KB |
+| 27 | TUNIC | 3.1KB |
+| 28 | Paint | 2.7KB |
+| 29 | Timespinner | 2.2KB |
+| 30 | Subnautica | 2.2KB |
+| 31 | Aquaria | 1.8KB |
+| 32 | Bomb Rush Cyberfunk | 1.4KB |
+| 33 | DLCQuest | 1.2KB |
+| 34 | Old School Runescape | 1.0KB |
 
 ### GameLogic Files by Size
 

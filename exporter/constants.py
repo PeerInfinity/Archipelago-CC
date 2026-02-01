@@ -37,11 +37,21 @@ MAX_HELPER_DISCOVERY_ITERATIONS = 10
 MAX_RULE_SIZE_KB = 100
 
 # Maximum size of total export data in megabytes (per game).
-# Checked periodically during region processing.
 # The effective limit is: BASE + (EXTRA_PER_GAME * (num_players - 1))
 # This allows larger exports for multiworld while still catching loops.
-MAX_EXPORT_SIZE_MB_BASE = 10
-MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
+#
+# INTERIM size limits - checked periodically during region processing.
+# These are higher because interim measurements use Python object string
+# representations which are larger than final JSON. For example, a 658 KB
+# final file may measure as 12.9 MB during processing. Set higher to
+# accommodate complex games like LADX (377+ regions) during processing.
+MAX_INTERIM_EXPORT_SIZE_MB_BASE = 20
+MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME = 2
+
+# FINAL size limits - checked when writing the final JSON file.
+# These are the actual limits for the output file size.
+MAX_FINAL_EXPORT_SIZE_MB_BASE = 10
+MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
 
 # =============================================================================
 # Sorting Configuration
