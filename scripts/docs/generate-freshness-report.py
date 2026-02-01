@@ -9,7 +9,10 @@ Scans all markdown files in docs/json/developer/test-results/ and extracts:
 - Days since each date
 - Command to regenerate the document
 
-Also runs documentation sync scripts and includes their status.
+Also queries documentation sync scripts (with --json) to include their coverage
+status in the report. Note: this only checks status; it does not perform any
+actual documentation syncing. To run all document generators, use:
+    python scripts/docs/generate-all-docs.py
 
 Output: docs/json/developer/test-results/test-results-freshness.md
 """
@@ -630,6 +633,7 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
     md += "- The `-p` flag runs post-processing to generate the markdown charts\n"
     md += "- Documents marked _Local only_ have no automated workflow and must be run manually\n"
     md += f"- See [.github/workflows/README.md](https://github.com/{GITHUB_REPO}/blob/main/.github/workflows/README.md) for workflow documentation\n"
+    md += "- To regenerate all documents at once, run: `python scripts/docs/generate-all-docs.py`\n"
 
     return md
 

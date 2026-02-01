@@ -58,6 +58,8 @@ INTERNAL_DIRECTORIES = {
     'scripts/lib',
     'scripts/docs/chart_generators',
     'scripts/test/fixtures',
+    'scripts/.venv',  # Virtual environment (git-ignored)
+    'scripts/output',  # Test output directory (git-ignored)
 }
 
 # Scripts that are test fixtures or support files

@@ -2,15 +2,15 @@
 
 This report shows when each test result document was generated, how fresh the underlying data is, and how to regenerate each document.
 
-**Report Generated:** 2026-02-01 07:49:32
+**Report Generated:** 2026-02-01 10:31:06
 
 ## Summary
 
 - **Total Documents:** 36
 - **With Date Info:** 36
 - 🟢 **Fresh (0-1 days):** 10
-- 🟡 **Recent (2-7 days):** 11
-- 🟠 **Aging (8-30 days):** 15
+- 🟡 **Recent (2-7 days):** 10
+- 🟠 **Aging (8-30 days):** 16
 - 🔴 **Stale (>30 days):** 0
 
 ## Documentation Sync Status
@@ -29,11 +29,11 @@ Status of documentation coverage across the codebase:
 | Status | Document | Source Data | Days Old | Workflow | Local Command |
 |--------|----------|-------------|----------|----------|---------------|
 | 🟠 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | 2026-01-24 05:05 | 8 days | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` |
-| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-01-31 01:30 | 1 day | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
+| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-02-01 05:06 |  | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
 | 🟠 | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-01-24 07:47 | 8 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --apworld -p` |
 | 🟠 | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-01-08 06:08 | 24 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --worldgen -p` |
 | 🟢 | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-01-31 04:22 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient -p` |
-| 🟡 | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-01-24 09:07 | 7 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --apworld -p` |
+| 🟠 | [test-results-multiworld-apworld.md](./test-results-multiworld-apworld.md) | 2026-01-24 09:07 | 8 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --apworld -p` |
 | 🟠 | [test-results-multiworld-ut-fuzz.md](./test-results-multiworld-ut-fuzz.md) | 2026-01-12 05:56 | 20 days | [Test Multiworld UT Fuzz Assembly](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-multiworld-ut-fuzz.yml) | `python scripts/test/test-multiworld-ut-fuzz.py -p` |
 | 🟠 | [test-results-multiworld-worldgen.md](./test-results-multiworld-worldgen.md) | 2026-01-08 06:23 | 24 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld --worldgen -p` |
 | 🟢 | [test-results-multiworld.md](./test-results-multiworld.md) | 2026-01-31 04:30 | 1 day | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiworld -p` |
@@ -240,3 +240,4 @@ python scripts/docs/generate-world-generator-report.py
 - The `-p` flag runs post-processing to generate the markdown charts
 - Documents marked _Local only_ have no automated workflow and must be run manually
 - See [.github/workflows/README.md](https://github.com/PeerInfinity/Archipelago-CC/blob/main/.github/workflows/README.md) for workflow documentation
+- To regenerate all documents at once, run: `python scripts/docs/generate-all-docs.py`

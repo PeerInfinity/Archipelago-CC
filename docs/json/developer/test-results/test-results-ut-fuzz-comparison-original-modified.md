@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Modified
 
-**Generated:** 2026-02-01 05:06:28
+**Generated:** 2026-02-01 10:31:06
 
 **Source Data Last Updated:** 2026-01-26T04:45:29
 
@@ -22,7 +22,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Passing Original Only:** 7 (8.2%)
 - **Passing Modified Only:** 23 (27.1%)
 - **Passing Neither:** 24 (28.2%)
-- **Passing Modified with no custom code:** 37 (43.5%)
+- **Passing Modified with no custom code:** 38 (44.7%)
 - **Passing Modified Only with no custom code:** 13 (15.3%)
 
 ## Full Comparison
@@ -30,8 +30,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ⚠️ 97.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0.0% | ✅ 97.0% | 12.5KB | ✅ | 665.3KB |
-| A Short Hike | ✅ 100.0% | ✅ 100.0% | 16.2KB | ✅ | 410.7KB |
+| A Link to the Past | ❌ 0.0% | ✅ 97.0% | 12.6KB | ✅ | 665.3KB |
+| A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94.0% | ✅ 100.0% | ✅ | ✅ | 26.0KB |
 | Aquaria | ✅ 100.0% | ✅ 100.0% | 1.8KB | ✅ | 275.4KB |
@@ -52,7 +52,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ⚠️ 52.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0.0% | ✅ 100.0% | 8.6KB | ✅ | 497.8KB |
+| Factorio | ❌ 0.0% | ✅ 100.0% | 8.8KB | ✅ | 497.8KB |
 | Faxanadu | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ❌ 1.0% | ⚠️ 81.0% | 13.4KB | ✅ | 549.0KB |
@@ -84,7 +84,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
 | Raft | ✅ 100.0% | ❌ 0.0% | 6.5KB | ✅ | 485.4KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
-| SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.3KB | 51.3KB | 1044.7KB |
+| SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.4KB | 51.3KB | 1044.7KB |
 | Saving Princess | ❌ 28.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ 100.0% | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
@@ -121,7 +121,7 @@ These games have 100% success rate in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Short Hike | 16.2KB | ✅ | 410.7KB |
+| A Short Hike | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | 11.0KB |
 | Aquaria | 1.8KB | ✅ | 275.4KB |
 | Baking Adventure | ✅ | ✅ | 18.2KB |
@@ -173,12 +173,12 @@ These games pass in the Modified UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Link to the Past | 12.5KB | ✅ | 665.3KB |
+| A Link to the Past | 12.6KB | ✅ | 665.3KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | DLCQuest | 1.2KB | ✅ | 51.0KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
-| Factorio | 8.6KB | ✅ | 497.8KB |
+| Factorio | 8.8KB | ✅ | 497.8KB |
 | Faxanadu | ✅ | ✅ | 68.7KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.5KB |
 | Mega Man 2 | ✅ | ✅ | 52.9KB |
@@ -216,7 +216,7 @@ These games fail in both Universal Tracker versions.
 | Ocarina of Time | ✅ | ✅ | N/A |
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
-| SMZ3 | 61.3KB | 51.3KB | 1044.7KB |
+| SMZ3 | 61.4KB | 51.3KB | 1044.7KB |
 | Starcraft 2 | 28.7KB | 90.1KB | 1126.6KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | 2.2KB | ✅ | 207.8KB |
