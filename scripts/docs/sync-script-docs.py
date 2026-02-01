@@ -170,9 +170,44 @@ def extract_documented_scripts(readme_path: Path, doc_name: str = "README.md") -
 def find_all_readmes(scripts_dir: Path) -> list[Path]:
     """Find all README files in the scripts directory."""
     readmes = []
-    for readme in scripts_dir.rglob('README*.md'):
+    # Match both README.md and files with README anywhere in the name
+    for readme in scripts_dir.rglob('*README*.md'):
         readmes.append(readme)
+    # Also match lowercase readme
+    for readme in scripts_dir.rglob('*readme*.md'):
+        if readme not in readmes:
+            readmes.append(readme)
     return readmes
+
+
+def extract_linked_docs(readme_path: Path, project_root: Path) -> list[Path]:
+    """
+    Extract paths to documentation files linked from a README.
+
+    Looks for markdown links like [text](path/to/file.md) and resolves them
+    relative to the README's directory.
+    """
+    linked_docs = []
+    if not readme_path.exists():
+        return linked_docs
+
+    content = readme_path.read_text()
+    readme_dir = readme_path.parent
+
+    # Pattern for markdown links: [text](path.md) or [text](path/to/file.md)
+    link_pattern = re.compile(r'\[([^\]]+)\]\(([^)]+\.md)\)')
+
+    for match in link_pattern.finditer(content):
+        link_path = match.group(2)
+        # Skip external URLs
+        if link_path.startswith('http://') or link_path.startswith('https://'):
+            continue
+        # Resolve relative to README directory
+        resolved = (readme_dir / link_path).resolve()
+        if resolved.exists() and resolved not in linked_docs:
+            linked_docs.append(resolved)
+
+    return linked_docs
 
 
 def categorize_script(path: str) -> str:
@@ -249,6 +284,22 @@ def main():
         documented = extract_documented_scripts(readme, rel_readme)
         if documented:
             print(f"  {rel_readme}: {len(documented)} references")
+            all_documented.update(documented)
+
+    # Also check documentation files linked from the main README
+    checked_docs: set[Path] = {main_readme}
+    for readme in find_all_readmes(scripts_dir):
+        checked_docs.add(readme)
+
+    linked_docs = extract_linked_docs(main_readme, root)
+    for linked_doc in linked_docs:
+        if linked_doc in checked_docs:
+            continue
+        checked_docs.add(linked_doc)
+        rel_doc = str(linked_doc.relative_to(root))
+        documented = extract_documented_scripts(linked_doc, rel_doc)
+        if documented:
+            print(f"  {rel_doc} (linked): {len(documented)} references")
             all_documented.update(documented)
 
     # Match scripts to documentation
