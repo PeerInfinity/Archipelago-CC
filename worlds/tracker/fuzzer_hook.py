@@ -466,6 +466,10 @@ class Hook(BaseHook):
             # (e.g., Terraria with certain goal/calamity combinations)
             if "Could not access required locations for accessibility check" in exc_str:
                 return GenOutcome.OptionError, exc
+            # Handle FillError when options create more progression items than locations
+            # (e.g., Wind Waker with certain progression_* option combinations)
+            if "insufficient locations to place progression items" in exc_str:
+                return GenOutcome.OptionError, exc
             # Handle FFMQ API errors - the game requires external API for shuffle options
             # but the API may not be available in test environments
             if "Failed to fetch map shuffle data for FFMQ" in exc_str:
@@ -636,6 +640,10 @@ class MultiworldHook(BaseHook):
                 return GenOutcome.OptionError, exc
             # Handle FillError for accessibility check failures
             if "Could not access required locations for accessibility check" in exc_str:
+                return GenOutcome.OptionError, exc
+            # Handle FillError when options create more progression items than locations
+            # (e.g., Wind Waker with certain progression_* option combinations)
+            if "insufficient locations to place progression items" in exc_str:
                 return GenOutcome.OptionError, exc
             # Handle FFMQ API errors - the game requires external API for shuffle options
             # but the API may not be available in test environments
