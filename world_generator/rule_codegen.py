@@ -6335,6 +6335,48 @@ class RuleCodeGenerator:
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Handle Python built-in functions that can be evaluated at generation time
+        if helper_name == 'int':
+            # Evaluate the int() call - typically used for int(x / y) floor division patterns
+            args = rule.get('args', [])
+            if args and len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, dict):
+                    # Try to evaluate arithmetic expression
+                    if arg.get('rule') == 'Arithmetic':
+                        arith_result = self._evaluate_arithmetic_constant(arg)
+                        if arith_result and arith_result != 'None':
+                            try:
+                                # Apply int() to the arithmetic result
+                                int_result = int(eval(arith_result))
+                                return repr(int_result)
+                            except (ValueError, TypeError, SyntaxError):
+                                pass
+                    # Handle nested int() or other patterns by extracting constant
+                    elif arg.get('rule') == 'Constant':
+                        value = arg.get('args', {}).get('value')
+                        if isinstance(value, (int, float)):
+                            return repr(int(value))
+                elif isinstance(arg, (int, float)):
+                    return repr(int(arg))
+            # If we can't evaluate, return 0 as a conservative default
+            # This is better than True_() which would make rules always pass
+            return repr(0)
+
+        if helper_name == 'len':
+            # len() on collections - try to evaluate if we have a constant list/dict
+            args = rule.get('args', [])
+            if args and len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, (list, tuple)):
+                    return repr(len(arg))
+                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                    value = arg.get('args', {}).get('value')
+                    if isinstance(value, (list, tuple, dict, str)):
+                        return repr(len(value))
+            # Can't evaluate - return 0 as conservative default
+            return repr(0)
+
         # Unknown helper - return True_() as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
