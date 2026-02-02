@@ -1,0 +1,1835 @@
+{
+  "metadata": {
+    "created": "2026-02-02T01:25:32.988534",
+    "last_updated": "2026-02-02T01:25:32.988540",
+    "script_version": "1.0.0",
+    "combined_from": 10,
+    "test_type": "spoiler_fuzz",
+    "seed_mode": "fixed",
+    "seed": 1,
+    "runs_per_game": 10,
+    "generation_timeout": 300,
+    "test_timeout": 120,
+    "total_templates": 73
+  },
+  "results": {
+    "A Hat in Time.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "A Hat in Time",
+        "world_directory": "ahit"
+      },
+      "timestamp": "2026-02-02T00:38:34.249457"
+    },
+    "Castlevania 64.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Castlevania 64",
+        "world_directory": "cv64"
+      },
+      "timestamp": "2026-02-02T00:40:21.433560"
+    },
+    "Dark Souls III.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Dark Souls III",
+        "world_directory": "dark_souls_3"
+      },
+      "timestamp": "2026-02-02T00:44:38.296247"
+    },
+    "Kirby's Dream Land 3.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 5,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 5,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            2,
+            4,
+            6,
+            7,
+            8
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kirby's Dream Land 3",
+        "world_directory": "kdl3"
+      },
+      "timestamp": "2026-02-02T01:00:25.852514"
+    },
+    "Metamath.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Metamath",
+        "world_directory": "metamath"
+      },
+      "timestamp": "2026-02-02T01:03:09.191373"
+    },
+    "Shivers.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 4,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 6,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            2,
+            3,
+            5,
+            6,
+            8,
+            9
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Shivers",
+        "world_directory": "shivers"
+      },
+      "timestamp": "2026-02-02T01:21:47.293136"
+    },
+    "TOEM rule builder.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "TOEM rule builder",
+        "world_directory": "toem_rule_builder"
+      },
+      "timestamp": "2026-02-02T01:23:29.866475"
+    },
+    "Wargroove.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Wargroove",
+        "world_directory": "wargroove"
+      },
+      "timestamp": "2026-02-02T01:25:08.923287"
+    },
+    "Castlevania - Circle of the Moon.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Castlevania - Circle of the Moon",
+        "world_directory": "cvcotm"
+      },
+      "timestamp": "2026-02-02T00:36:58.643954"
+    },
+    "DOOM II.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "DOOM II",
+        "world_directory": "doom_ii"
+      },
+      "timestamp": "2026-02-02T00:38:49.674070"
+    },
+    "Kingdom Hearts.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 8,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 2,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            5,
+            9
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kingdom Hearts",
+        "world_directory": "kh1"
+      },
+      "timestamp": "2026-02-02T00:42:54.433366"
+    },
+    "Meritous.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Meritous",
+        "world_directory": "meritous"
+      },
+      "timestamp": "2026-02-02T00:44:28.148464"
+    },
+    "Secret of Evermore.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 7,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 3,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            3,
+            4,
+            5
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Secret of Evermore",
+        "world_directory": "soe"
+      },
+      "timestamp": "2026-02-02T00:47:46.192285"
+    },
+    "TOEM original.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "TOEM original",
+        "world_directory": "toem_original"
+      },
+      "timestamp": "2026-02-02T00:49:21.446172"
+    },
+    "VVVVVV.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "VVVVVV",
+        "world_directory": "v6"
+      },
+      "timestamp": "2026-02-02T00:50:55.621817"
+    },
+    "A Link to the Past.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 7,
+        "generation_failure": 0,
+        "ignored": 1,
+        "test_failure": 2,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            3,
+            4
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "A Link to the Past",
+        "world_directory": "alttp"
+      },
+      "timestamp": "2026-02-02T00:38:40.250886"
+    },
+    "Celeste (Open World).yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Celeste (Open World)",
+        "world_directory": "celeste_open_world"
+      },
+      "timestamp": "2026-02-02T00:43:23.250492"
+    },
+    "Donkey Kong Country 3.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Donkey Kong Country 3",
+        "world_directory": "dkc3"
+      },
+      "timestamp": "2026-02-02T00:45:09.615052"
+    },
+    "Landstalker - The Treasures of King Nole.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Landstalker - The Treasures of King Nole",
+        "world_directory": "landstalker"
+      },
+      "timestamp": "2026-02-02T00:46:53.854444"
+    },
+    "Muse Dash.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Muse Dash",
+        "world_directory": "musedash"
+      },
+      "timestamp": "2026-02-02T00:50:00.271746"
+    },
+    "Sonic Adventure 2 Battle.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Sonic Adventure 2 Battle",
+        "world_directory": "sa2b"
+      },
+      "timestamp": "2026-02-02T00:56:46.964288"
+    },
+    "TUNIC.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 2,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 8,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            5,
+            6,
+            7,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "TUNIC",
+        "world_directory": "tunic"
+      },
+      "timestamp": "2026-02-02T01:01:31.713042"
+    },
+    "Yoshi's Island.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Yoshi's Island",
+        "world_directory": "yoshisisland"
+      },
+      "timestamp": "2026-02-02T01:03:35.343784"
+    },
+    "A Short Hike.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "A Short Hike",
+        "world_directory": "shorthike"
+      },
+      "timestamp": "2026-02-02T00:36:52.785051"
+    },
+    "Celeste 64.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Celeste 64",
+        "world_directory": "celeste64"
+      },
+      "timestamp": "2026-02-02T00:38:27.449898"
+    },
+    "Factorio.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 7,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 3,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            2,
+            3,
+            5
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Factorio",
+        "world_directory": "factorio"
+      },
+      "timestamp": "2026-02-02T00:41:04.408271"
+    },
+    "Lingo.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 2,
+        "generation_failure": 0,
+        "ignored": 7,
+        "test_failure": 1,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            5
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Lingo",
+        "world_directory": "lingo"
+      },
+      "timestamp": "2026-02-02T00:42:22.956022"
+    },
+    "Noita.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Noita",
+        "world_directory": "noita"
+      },
+      "timestamp": "2026-02-02T00:43:57.408964"
+    },
+    "Starcraft 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 10,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_y5wyvws_.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_elzsdigd.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_k1nbynq4.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2__pei2u20.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_2aoah9sc.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_apn_4b8j.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_tvljwhcw.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_a6jzxw4y.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_gi1lgj1m.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: CC/Archipelago-CC/Generate.py\", line 602, in <module>\n    erargs, seed = main()\n                   ^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/Generate.py\", line 235, in main\n    raise ValueError(f\"File {path} is invalid. Please fix your yaml.\") from e\nValueError: File /home/runner/work/Archipelago-CC/Archipelago-CC/Players/fuzz_sc2_gpt756vz.yaml is invalid. Please fix your yaml.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+        ],
+        "failing_seeds": {
+          "generation_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Starcraft 2",
+        "world_directory": "sc2"
+      },
+      "timestamp": "2026-02-02T00:44:32.228364"
+    },
+    "Terraria.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 9,
+        "generation_failure": 1,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [
+          "Generation failed: Fuel Rod, Nuclear Fuel Rod), (Acid Rain Tier 2, Reward: Trinket of Chi), (Mechanical Eye, Mechanical Eye), (Mechanical Worm, Mechanical Worm), (Mechanical Skull, Mechanical Skull), (Ocram's Razor, Ocram's Razor), (The Twins, Post-The Twins), (Brimstone Elemental, Post-Old One's Army Tier 1), (The Destroyer, Post-The Destroyer), (Cryogen, Reward: Lava Charm), (Skeletron Prime, Post-Skeletron Prime)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+        ],
+        "failing_seeds": {
+          "generation_failure": [
+            6
+          ],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Terraria",
+        "world_directory": "terraria"
+      },
+      "timestamp": "2026-02-02T00:48:50.553279"
+    },
+    "shapez.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "shapez",
+        "world_directory": "shapez"
+      },
+      "timestamp": "2026-02-02T00:52:39.522310"
+    },
+    "APQuest.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "APQuest",
+        "world_directory": "apquest"
+      },
+      "timestamp": "2026-02-02T00:36:45.135881"
+    },
+    "ChecksFinder.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "ChecksFinder",
+        "world_directory": "checksfinder"
+      },
+      "timestamp": "2026-02-02T00:38:18.523244"
+    },
+    "Faxanadu.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Faxanadu",
+        "world_directory": "faxanadu"
+      },
+      "timestamp": "2026-02-02T00:39:52.992069"
+    },
+    "Links Awakening DX.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Links Awakening DX",
+        "world_directory": "ladx"
+      },
+      "timestamp": "2026-02-02T00:42:29.902307"
+    },
+    "Old School Runescape.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Old School Runescape",
+        "world_directory": "osrs"
+      },
+      "timestamp": "2026-02-02T00:44:15.264787"
+    },
+    "Stardew Valley.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 2,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 8,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test timed out after 120s",
+          "Spoiler test timed out after 120s",
+          "Spoiler test failed",
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Stardew Valley",
+        "world_directory": "stardew_valley"
+      },
+      "timestamp": "2026-02-02T01:01:31.710864"
+    },
+    "The Legend of Zelda.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "The Legend of Zelda",
+        "world_directory": "tloz"
+      },
+      "timestamp": "2026-02-02T01:03:13.113294"
+    },
+    "Adventure.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Adventure",
+        "world_directory": "adventure"
+      },
+      "timestamp": "2026-02-02T00:36:56.971487"
+    },
+    "Choo-Choo Charles.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Choo-Choo Charles",
+        "world_directory": "cccharles"
+      },
+      "timestamp": "2026-02-02T00:38:50.559158"
+    },
+    "Final Fantasy Mystic Quest.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 5,
+        "generation_failure": 2,
+        "ignored": 0,
+        "test_failure": 3,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Generation failed: ^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ffmq/Regions.py\", line 231, in stage_set_rules\n    raise Exception(f\"Not enough filler/trap items for FFMQ players with full and items accessibility. \"\nException: Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: ^^^^^^^^^^^^\n  File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/ffmq/Regions.py\", line 231, in stage_set_rules\n    raise Exception(f\"Not enough filler/trap items for FFMQ players with full and items accessibility. \"\nException: Not enough filler/trap items for FFMQ players with full and items accessibility. Add more items or change the 'Enemies Density' option to something besides 'none'\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [
+            3,
+            7
+          ],
+          "test_failure": [
+            1,
+            9,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Final Fantasy Mystic Quest",
+        "world_directory": "ffmq"
+      },
+      "timestamp": "2026-02-02T00:40:53.978144"
+    },
+    "Lufia II Ancient Cave.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Lufia II Ancient Cave",
+        "world_directory": "lufia2ac"
+      },
+      "timestamp": "2026-02-02T00:42:30.899400"
+    },
+    "Overcooked! 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 5,
+        "generation_failure": 0,
+        "ignored": 5,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Overcooked! 2",
+        "world_directory": "overcooked2"
+      },
+      "timestamp": "2026-02-02T00:43:42.036159"
+    },
+    "Subnautica.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Subnautica",
+        "world_directory": "subnautica"
+      },
+      "timestamp": "2026-02-02T00:46:00.402992"
+    },
+    "The Messenger.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "The Messenger",
+        "world_directory": "messenger"
+      },
+      "timestamp": "2026-02-02T00:48:25.483130"
+    },
+    "Aquaria.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Aquaria",
+        "world_directory": "aquaria"
+      },
+      "timestamp": "2026-02-02T00:37:04.520038"
+    },
+    "Civilization VI.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Civilization VI",
+        "world_directory": "civ_6"
+      },
+      "timestamp": "2026-02-02T00:39:33.582488"
+    },
+    "Heretic.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Heretic",
+        "world_directory": "heretic"
+      },
+      "timestamp": "2026-02-02T00:41:40.154948"
+    },
+    "Mario & Luigi Superstar Saga.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Mario & Luigi Superstar Saga",
+        "world_directory": "mlss"
+      },
+      "timestamp": "2026-02-02T00:43:59.670083"
+    },
+    "Paint.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Paint",
+        "world_directory": "paint"
+      },
+      "timestamp": "2026-02-02T00:45:40.499061"
+    },
+    "Super Mario 64.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Super Mario 64",
+        "world_directory": "sm64ex"
+      },
+      "timestamp": "2026-02-02T00:47:19.190690"
+    },
+    "The Wind Waker.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 5,
+        "generation_failure": 0,
+        "ignored": 5,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "The Wind Waker",
+        "world_directory": "tww"
+      },
+      "timestamp": "2026-02-02T00:48:44.585027"
+    },
+    "Baking Adventure.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Baking Adventure",
+        "world_directory": "bakingadventure"
+      },
+      "timestamp": "2026-02-02T00:37:07.561087"
+    },
+    "Coding Adventure.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Coding Adventure",
+        "world_directory": "codingadventure"
+      },
+      "timestamp": "2026-02-02T00:38:43.181523"
+    },
+    "Hylics 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Hylics 2",
+        "world_directory": "hylics2"
+      },
+      "timestamp": "2026-02-02T00:40:22.541395"
+    },
+    "Math Adventure.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Math Adventure",
+        "world_directory": "mathadventure"
+      },
+      "timestamp": "2026-02-02T00:41:57.214119"
+    },
+    "Raft.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Raft",
+        "world_directory": "raft"
+      },
+      "timestamp": "2026-02-02T00:44:45.996018"
+    },
+    "Super Mario Land 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 7,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 3,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Super Mario Land 2",
+        "world_directory": "marioland2"
+      },
+      "timestamp": "2026-02-02T00:49:37.525302"
+    },
+    "The Witness.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 2,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 8,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            9
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "The Witness",
+        "world_directory": "witness"
+      },
+      "timestamp": "2026-02-02T00:52:42.333790"
+    },
+    "Bomb Rush Cyberfunk.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 8,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 2,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            4,
+            6
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Bomb Rush Cyberfunk",
+        "world_directory": "bomb_rush_cyberfunk"
+      },
+      "timestamp": "2026-02-02T00:37:52.974891"
+    },
+    "DLCQuest.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 9,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 1,
+        "timeout": 0,
+        "errors": [
+          "Spoiler test timed out after 120s"
+        ],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [
+            6
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "DLCQuest",
+        "world_directory": "dlcquest"
+      },
+      "timestamp": "2026-02-02T00:41:30.417947"
+    },
+    "Inscryption.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Inscryption",
+        "world_directory": "inscryption"
+      },
+      "timestamp": "2026-02-02T00:43:06.621495"
+    },
+    "Mega Man 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Mega Man 2",
+        "world_directory": "mm2"
+      },
+      "timestamp": "2026-02-02T00:44:40.465473"
+    },
+    "Risk of Rain 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Risk of Rain 2",
+        "world_directory": "ror2"
+      },
+      "timestamp": "2026-02-02T00:46:25.629429"
+    },
+    "Super Mario World.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Super Mario World",
+        "world_directory": "smw"
+      },
+      "timestamp": "2026-02-02T00:48:55.642712"
+    },
+    "Timespinner.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Timespinner",
+        "world_directory": "timespinner"
+      },
+      "timestamp": "2026-02-02T00:51:10.838047"
+    },
+    "Bumper Stickers.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Bumper Stickers",
+        "world_directory": "bumpstik"
+      },
+      "timestamp": "2026-02-02T00:36:53.344744"
+    },
+    "DOOM 1993.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "DOOM 1993",
+        "world_directory": "doom_1993"
+      },
+      "timestamp": "2026-02-02T00:38:39.689161"
+    },
+    "Kingdom Hearts 2.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 1,
+        "generation_failure": 9,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [
+          "Generation failed: , Dodge Roll), (Level 35, Anti Form), (Level 36, Gull Wing), (Level 37, Limit Form), (Level 38, Anti Form), (Level 39, Magnet Element), (Level 40, Torn Page), (Level 41, Dodge Roll), (Level 42, Dodge Roll), (Level 43, Dodge Roll), (Level 44, Anti Form), (Level 45, Anti Form), (Level 46, Dodge Roll), (Level 47, Air Combo Plus), (Level 48, Anti Form), (Level 49, Fire Element), (Level 50, Dodge Roll)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: l 42, Proof of Peace), (Level 43, Quick Run), (Level 44, Stitch), (Level 45, Chicken Little), (Level 46, Stitch), (Level 47, Proof of Peace), (Level 48, Glide), (Level 49, Glide), (Level 50, Sword of the Ancestor), (Summon level 2, Stitch), (Summon level 3, Sword of the Ancestor), (Summon level 4, Air Combo Plus), (Summon level 5, Stitch), (Summon level 6, Chicken Little), (Summon level 7, Bounty)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: m), (Level 34, Bone Fist), (Level 36, Slapshot), (Level 39, Bone Fist), (Level 41, Ultimate Mushroom), (Level 44, Chicken Little), (Level 46, Chicken Little), (Level 48, Wisdom Form), (Level 50, Chicken Little), (Summon level 2, Wisdom Form), (Summon level 3, Bone Fist), (Summon level 4, Wisdom Form), (Summon level 5, Proof of Connection), (Summon level 6, Bone Fist), (Summon level 7, Wisdom Form)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: agnet Element), (Level 37, Magnet Element), (Level 38, Magnet Element), (Level 39, Promise Charm), (Level 40, Magnet Element), (Level 41, Promise Charm), (Level 42, Disney Castle Key), (Level 43, Glide), (Level 44, Magnet Element), (Level 45, Promise Charm), (Level 46, Magnet Element), (Level 47, Thunder Element), (Level 48, Magnet Element), (Level 49, Promise Charm), (Level 50, Disney Castle Key)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: ar), (Level 91, Final Form), (Level 92, Quick Run), (Level 93, Master Form), (Level 94, Scimitar), (Level 95, Quick Run), (Level 96, Quick Run), (Level 97, Quick Run), (Level 98, Scimitar), (Level 99, Quick Run), (Summon level 2, Final Form), (Summon level 3, Aerial Dodge), (Summon level 4, Drive Converter), (Summon level 5, Final Form), (Summon level 6, Master Form), (Summon level 7, Master Form)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: el 90, Torn Page), (Level 91, Torn Page), (Level 92, Scimitar), (Level 93, Torn Page), (Level 94, Proud Fang), (Level 95, Torn Page), (Level 96, Stitch), (Level 97, Proud Fang), (Level 98, Blizzard Element), (Level 99, Lucky Emblem), (Summon level 2, Stitch), (Summon level 3, Torn Page), (Summon level 4, Torn Page), (Summon level 5, Final Form), (Summon level 6, Scimitar), (Summon level 7, Bounty)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: m), (Level 92, Bone Fist), (Level 93, Sword of the Ancestor), (Level 94, Dodge Roll), (Level 95, Bone Fist), (Level 96, Form Boost), (Level 97, Way to the Dawn), (Level 98, Dodge Roll), (Level 99, Lucky Emblem), (Summon level 2, Way to the Dawn), (Summon level 3, Lucky Emblem), (Summon level 4, Chicken Little), (Summon level 5, Bone Fist), (Summon level 6, Chicken Little), (Summon level 7, Bounty)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: evel 44, Peter Pan), (Level 45, Aerial Finish), (Level 46, Skill and Crossbones), (Level 47, Skill and Crossbones), (Level 48, Battlefields of War), (Level 49, Skill and Crossbones), (Level 50, Stitch), (Summon level 2, Skill and Crossbones), (Summon level 3, Sleeping Lion), (Summon level 4, Chicken Little), (Summon level 5, Lucky Emblem), (Summon level 6, Air Combo Plus), (Summon level 7, Stitch)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: n Page), (Level 92, Beast's Claw), (Level 93, Chicken Little), (Level 94, Master Form), (Level 95, Master Form), (Level 96, Beast's Claw), (Level 97, Reflect Element), (Level 98, Chicken Little), (Level 99, Aerial Dodge), (Summon level 2, Torn Page), (Summon level 3, Aerial Dodge), (Summon level 4, Bone Fist), (Summon level 5, Torn Page), (Summon level 6, Torn Page), (Summon level 7, Aerial Dodge)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n"
+        ],
+        "failing_seeds": {
+          "generation_failure": [
+            1,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Kingdom Hearts 2",
+        "world_directory": "kh2"
+      },
+      "timestamp": "2026-02-02T00:40:07.426674"
+    },
+    "MegaMan Battle Network 3.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "MegaMan Battle Network 3",
+        "world_directory": "mmbn3"
+      },
+      "timestamp": "2026-02-02T00:41:45.158036"
+    },
+    "Saving Princess.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Saving Princess",
+        "world_directory": "saving_princess"
+      },
+      "timestamp": "2026-02-02T00:43:20.536294"
+    },
+    "Super Metroid.yaml": {
+      "spoiler_fuzz": {
+        "passed": false,
+        "total": 10,
+        "success": 0,
+        "generation_failure": 5,
+        "ignored": 0,
+        "test_failure": 5,
+        "timeout": 0,
+        "errors": [
+          "Generation failed:  (green Maridia shinespark), Nothing), (Super Missile (green Maridia), Nothing), (Missile (green Maridia tatori), Nothing), (Super Missile (yellow Maridia), Nothing), (Missile (yellow Maridia false wall), Nothing), (Missile (left Maridia sand pit room), Nothing), (Missile (right Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Nothing)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7f3d05c28ef0>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Generation failed: g), (Missile (Wrecked Ship top), Nothing), (Super Missile (Wrecked Ship left), Nothing), (Super Missile (green Maridia), Power Bomb), (Missile (green Maridia tatori), No Energy), (Super Missile (yellow Maridia), Nothing), (Missile (left Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Nothing), (Super Missile (pink Maridia), No Energy)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Spoiler test failed",
+          "Generation failed:   File \"/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/sm/variaRandomizer/randomizer.py\", line 309, in __init__\n    raise Exception(\"varia_custom was chosen but varia_custom_preset is missing.\")\nException: varia_custom was chosen but varia_custom_preset is missing.\nException in <bound method SMWorld.generate_early of <worlds.sm.SMWorld object at 0x7fc81ff27560>> for player 1, named Player1.\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Generation failed: uper Missile (yellow Maridia), Nothing), (Missile (yellow Maridia super missile), Nothing), (Missile (yellow Maridia false wall), Nothing), (Missile (left Maridia sand pit room), Nothing), (Missile (right Maridia sand pit room), Nothing), (Power Bomb (right Maridia sand pit room), Nothing), (Missile (pink Maridia), Nothing), (Super Missile (pink Maridia), Nothing), (Missile (Draygon), Energy Tank)]\nException ignored in atexit callback: <built-in function input>\nEOFError: EOF when reading a line\n",
+          "Spoiler test failed"
+        ],
+        "failing_seeds": {
+          "generation_failure": [
+            1,
+            2,
+            6,
+            8,
+            9
+          ],
+          "test_failure": [
+            3,
+            4,
+            5,
+            7,
+            10
+          ],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Super Metroid",
+        "world_directory": "sm"
+      },
+      "timestamp": "2026-02-02T00:45:42.881952"
+    },
+    "Undertale.yaml": {
+      "spoiler_fuzz": {
+        "passed": true,
+        "total": 10,
+        "success": 10,
+        "generation_failure": 0,
+        "ignored": 0,
+        "test_failure": 0,
+        "timeout": 0,
+        "errors": [],
+        "failing_seeds": {
+          "generation_failure": [],
+          "test_failure": [],
+          "timeout": []
+        }
+      },
+      "world_info": {
+        "game_name": "Undertale",
+        "world_directory": "undertale"
+      },
+      "timestamp": "2026-02-02T00:47:18.438786"
+    }
+  }
+}
