@@ -756,8 +756,15 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
     spoiler_results = spoiler_fuzz_data.get('results', {})
 
     # Get base_seed from spoiler fuzz metadata for reproduction
+    # Backwards compatibility: older results have 'seed' but not 'base_seed'
     spoiler_metadata = spoiler_fuzz_data.get('metadata', {})
-    base_seed = spoiler_metadata.get('base_seed')  # None if random mode
+    base_seed = spoiler_metadata.get('base_seed')
+    if base_seed is None:
+        # Fall back to 'seed' field if seed_mode is 'fixed' and seed is an integer
+        seed_mode = spoiler_metadata.get('seed_mode')
+        seed_value = spoiler_metadata.get('seed')
+        if seed_mode == 'fixed' and isinstance(seed_value, int):
+            base_seed = seed_value
 
     failures = []
 
