@@ -626,8 +626,28 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             result = evaluateRule(firstArg, context, depth + 1);
           } else {
             // Evaluate all args and return true if any is truthy
-            const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1));
-            result = evalArgs.some(val => val === true);
+            const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            // Python's any(iterable) iterates over the iterable
+            // If there's a single arg that evaluates to an array, iterate over its elements
+            // This handles patterns like: any(rules) where rules is a variable holding an array
+            if (evalArgs.length === 1 && Array.isArray(evalArgs[0])) {
+              // Iterate over the array elements
+              const items = evalArgs[0];
+              let anyTrue = false;
+              for (const item of items) {
+                // If item is a rule object, evaluate it; otherwise use its truthiness directly
+                const val = (item && typeof item === 'object' && (item.type || item.rule))
+                  ? evaluateRule(item, context, depth + 1, localScope)
+                  : item;
+                if (val === true || (val && val !== false && val !== undefined && val !== null && val !== 0)) {
+                  anyTrue = true;
+                  break;
+                }
+              }
+              result = anyTrue;
+            } else {
+              result = evalArgs.some(val => val === true);
+            }
           }
           break;
         }
@@ -643,8 +663,28 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           if (firstArg && firstArg.type === 'generator_expression') {
             result = evaluateRule(firstArg, context, depth + 1);
           } else {
-            const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1));
-            result = evalArgs.every(val => val === true);
+            const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            // Python's all(iterable) iterates over the iterable
+            // If there's a single arg that evaluates to an array, iterate over its elements
+            // This handles patterns like: all(rules) where rules is a variable holding an array
+            if (evalArgs.length === 1 && Array.isArray(evalArgs[0])) {
+              // Iterate over the array elements
+              const items = evalArgs[0];
+              let allTrue = true;
+              for (const item of items) {
+                // If item is a rule object, evaluate it; otherwise use its truthiness directly
+                const val = (item && typeof item === 'object' && (item.type || item.rule))
+                  ? evaluateRule(item, context, depth + 1, localScope)
+                  : item;
+                if (val !== true && !(val && val !== false && val !== undefined && val !== null && val !== 0)) {
+                  allTrue = false;
+                  break;
+                }
+              }
+              result = allTrue;
+            } else {
+              result = evalArgs.every(val => val === true);
+            }
           }
           break;
         }
@@ -1594,6 +1634,20 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             return { __regionCanReach: true, regionName: baseObject.regionName };
           }
 
+          // Special handling for entrance objects (from get_entrance())
+          // When we access .can_reach on an entrance object, return a special marker
+          // that the function_call handler will recognize for entrance reachability
+          // The entrance is reachable if its parent region is reachable AND its access_rule passes
+          if (baseObject.__entranceRef && rule.attr === 'can_reach') {
+            // Return a marker for entrance reachability check including the exit's access_rule
+            return {
+              __entranceCanReach: true,
+              entranceName: baseObject.name,
+              parentRegionName: baseObject.parent_region_name,
+              accessRule: baseObject.access_rule
+            };
+          }
+
           // Special handling for parent_region attribute on location objects
           if (rule.attr === 'parent_region' && baseObject.parent_region_name) {
             // Dynamically resolve the parent region from the context
@@ -1883,11 +1937,12 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           if (context.currentExit && context.currentExit === exitName) {
             // For the current exit being evaluated, return an object with parent_region
             return {
+              __entranceRef: true,
               name: exitName,
               parent_region: context.parent_region
             };
           }
-          
+
           // Otherwise, try to find the exit in static data
           if (context.getStaticData) {
             const staticData = context.getStaticData();
@@ -1898,9 +1953,11 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
                 const exit = regionData.exits.find(ex => ex.name === exitName);
                 if (exit) {
                   return {
+                    __entranceRef: true,
                     name: exit.name,
                     parent_region: regionData,
-                    parent_region_name: regionName
+                    parent_region_name: regionName,
+                    access_rule: exit.access_rule  // Include the exit's access rule for can_reach
                   };
                 }
               }
@@ -2287,6 +2344,34 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
+        // Special case: If func is a __entranceCanReach marker from attribute access on entrance object
+        // This handles patterns like: state.multiworld.get_entrance("Name").can_reach()
+        // An entrance is reachable if its parent region is reachable AND its access_rule passes
+        if (func && typeof func === 'object' && func.__entranceCanReach) {
+          const { parentRegionName, accessRule } = func;
+
+          // First check if parent region is reachable
+          let parentReachable = false;
+          if (typeof context.isRegionReachable === 'function' && parentRegionName) {
+            parentReachable = context.isRegionReachable(parentRegionName);
+          }
+
+          if (!parentReachable) {
+            // If parent region is not reachable, entrance is not reachable
+            result = false;
+            break;
+          }
+
+          // If there's an access rule, evaluate it
+          if (accessRule) {
+            result = evaluateRule(accessRule, context, depth + 1, localScope);
+          } else {
+            // No access rule means it's always accessible if parent region is reachable
+            result = true;
+          }
+          break;
+        }
+
         // Special case: If func is a rule object (not a JavaScript function),
         // evaluate it directly. This handles cases like boss.defeat_rule where
         // defeat_rule is a rule object that needs evaluation, not a function call.
@@ -2402,10 +2487,12 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             if (rule.function?.type === 'attribute' && rule.function.object) {
               // If the function was an attribute access (e.g., obj.method()),
               // 'this' should be the object it was accessed on.
+              // Pass localScope to resolve local variables (e.g., rules.append() where rules is local)
               thisContext = evaluateRule(
                 rule.function.object,
                 context,
-                depth + 1
+                depth + 1,
+                localScope
               );
             } else {
               // Otherwise, default to the main context (snapshotInterface)
