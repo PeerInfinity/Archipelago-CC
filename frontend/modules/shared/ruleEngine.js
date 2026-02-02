@@ -3819,7 +3819,30 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           for (const item of iteratorValue) {
             // Create new localScope with the target variable bound
             const iterationScope = localScope ? { ...localScope } : {};
-            if (targetName) {
+
+            // Handle tuple unpacking (e.g., for key, value in dict.items())
+            const target = comp.target;
+            if (target && target.type === 'tuple' && target.elements && Array.isArray(target.elements)) {
+              // Value should be an array [key, value] for dict items
+              if (Array.isArray(item)) {
+                target.elements.forEach((element, index) => {
+                  if (element.type === 'name' && element.name) {
+                    iterationScope[element.name] = item[index];
+                  }
+                });
+              }
+            }
+            // Handle list type (alternative format for tuple unpacking)
+            else if (target && target.type === 'list' && Array.isArray(target.value) && Array.isArray(item)) {
+              for (let i = 0; i < target.value.length && i < item.length; i++) {
+                const targetElem = target.value[i];
+                if (targetElem && targetElem.type === 'name' && targetElem.name) {
+                  iterationScope[targetElem.name] = item[i];
+                }
+              }
+            }
+            // Handle simple name binding
+            else if (targetName) {
               iterationScope[targetName] = item;
             }
 
@@ -4968,6 +4991,42 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         type: 'function_call',
         function: funcExpr,
         args: funcArgs
+      }, context, depth + 1, localScope);
+    }
+
+    // AST_all_of (from converted AST format) - delegate to AST all_of handler
+    // Structure: { rule: 'AST_all_of', args: { element_rule: {...}, iterator_info: {...} } }
+    // The args contain the same structure as an AST all_of rule
+    case 'AST_all_of': {
+      // If the element_rule is already a complete all_of rule with its own iterator_info,
+      // evaluate it directly to avoid double iteration
+      if (args.element_rule && args.element_rule.type === 'all_of' && args.element_rule.iterator_info) {
+        return evaluateRule(args.element_rule, context, depth + 1, localScope);
+      }
+
+      // Otherwise, convert Rule Builder format to AST format and delegate
+      return evaluateRule({
+        type: 'all_of',
+        element_rule: args.element_rule,
+        iterator_info: args.iterator_info
+      }, context, depth + 1, localScope);
+    }
+
+    // AST_any_of (from converted AST format) - delegate to AST any_of handler
+    // Structure: { rule: 'AST_any_of', args: { element_rule: {...}, iterator_info: {...} } }
+    // The args contain the same structure as an AST any_of rule
+    case 'AST_any_of': {
+      // If the element_rule is already a complete any_of rule with its own iterator_info,
+      // evaluate it directly to avoid double iteration
+      if (args.element_rule && args.element_rule.type === 'any_of' && args.element_rule.iterator_info) {
+        return evaluateRule(args.element_rule, context, depth + 1, localScope);
+      }
+
+      // Otherwise, convert Rule Builder format to AST format and delegate
+      return evaluateRule({
+        type: 'any_of',
+        element_rule: args.element_rule,
+        iterator_info: args.iterator_info
       }, context, depth + 1, localScope);
     }
 

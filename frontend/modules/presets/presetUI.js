@@ -76,7 +76,10 @@ export class PresetUI {
     this.initialized = false;
 
     try {
-      fetch('./presets/preset_files.json')
+      // Use cache: 'reload' to validate with server (allows 304 Not Modified)
+      // Use cache: 'no-store' when ?nocache=1 is in URL (completely bypasses cache for testing)
+      const noCache = new URLSearchParams(window.location.search).has('nocache');
+      fetch('./presets/preset_files.json', { cache: noCache ? 'no-store' : 'reload' })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
