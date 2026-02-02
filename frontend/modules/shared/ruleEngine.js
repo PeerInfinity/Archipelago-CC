@@ -2022,6 +2022,49 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           return undefined;
         }
 
+        // Special handling for world.get_entrance() calls
+        // Returns an entrance reference object with connected_region info
+        // Used in ALttP for entrance randomization rules (e.g., checking where Ganons Tower connects)
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'get_entrance' &&
+            rule.function.object?.type === 'name' &&
+            rule.function.object.name === 'world') {
+
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
+          const entranceName = args[0];
+
+          if (!entranceName) {
+            log('warn', '[evaluateRule] world.get_entrance() called without entrance name');
+            return undefined;
+          }
+
+          // Get the entrance data from static data
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+
+            // Search all regions for this exit/entrance
+            // Regions is always a Map
+            for (const [regionName, regionData] of staticData.regions.entries()) {
+              if (regionData.exits) {
+                const exit = regionData.exits.find(ex => ex.name === entranceName);
+                if (exit) {
+                  return {
+                    name: exit.name,
+                    connected_region: {
+                      name: exit.connected_region
+                    },
+                    parent_region: {
+                      name: regionName
+                    }
+                  };
+                }
+              }
+            }
+          }
+
+          return undefined;
+        }
+
         // Special handling for shop.has(item) method calls
         // Shop objects have 'inventory' array; has() checks if any inventory item matches
         if (rule.function?.type === 'attribute' &&
@@ -5260,6 +5303,19 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         type: 'function_call',
         function: funcExpr,
         args: funcArgs
+      }, context, depth + 1, localScope);
+    }
+
+    // AST_dict_lambda_lookup (from converted AST format) - delegate to dict_lambda_lookup handler
+    // Used for entrance-dependent rules in ALttP (checking where entrances connect to)
+    // Structure: { rule: 'AST_dict_lambda_lookup', args: { dict_name, key, cases, default } }
+    case 'AST_dict_lambda_lookup': {
+      // Convert to AST format and evaluate
+      return evaluateRule({
+        type: 'dict_lambda_lookup',
+        key: args.key,
+        cases: args.cases,
+        default: args.default
       }, context, depth + 1, localScope);
     }
 
