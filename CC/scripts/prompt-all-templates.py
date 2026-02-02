@@ -470,7 +470,7 @@ def main():
         if not quiet_mode:
             print(f"Found {len(failures)} games that pass UT fuzz but fail spoiler fuzz ({args.ut_version} UT, {args.spoiler_seed_mode} seed)")
 
-        for i, failure in enumerate(sorted(failures, key=lambda x: x['spoiler_fuzz']['success_rate'])):
+        for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
             game_name = failure['game_name']
             template_file = failure['template']
             world_dir = failure['world_directory']
