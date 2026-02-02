@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-02 04:21:01
+**Generated:** 2026-02-02 05:52:42
 
-**Source Data Created:** 2026-02-02T04:21:01.194742
+**Source Data Created:** 2026-02-02T05:52:41.895162
 
-**Source Data Last Updated:** 2026-02-02T04:21:01.194748
+**Source Data Last Updated:** 2026-02-02T05:52:41.895167
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,12 +21,12 @@
 ## Summary
 
 - **Total Games:** 73
-- **Games with 100% Pass Rate:** 60 (82.2%)
-- **Games with Failures:** 13 (17.8%)
+- **Games with 100% Pass Rate:** 61 (83.6%)
+- **Games with Failures:** 12 (16.4%)
 - **Total Fuzz Runs:** 730
-- **Successful Runs:** 636 (87.1%)
+- **Successful Runs:** 639 (87.5%)
 - **Generation Failures:** 14
-- **Test Failures:** 49
+- **Test Failures:** 46
 - **Timed Out Runs:** 0
 
 ## Test Results
@@ -34,7 +34,7 @@
 | Game Name | Result | Total | Success | Gen Fail | Test Fail | Timeout | Success Rate | Rules Size |
 |-----------|:------:|:-----:|:-------:|:--------:|:---------:|:-------:|:------------:|:----------:|
 | A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 231.3KB |
-| A Link to the Past | ❌ | 10 | 7 | 0 | 2 | 0 | ⚠️ 70.0% | 665.3KB |
+| A Link to the Past | ✅ | 10 | 9 | 0 | 0 | 0 | 90.0% | 665.3KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 410.7KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 26.0KB |
@@ -57,7 +57,7 @@
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 122.5KB |
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 497.8KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 68.7KB |
-| Final Fantasy Mystic Quest | ❌ | 10 | 5 | 2 | 3 | 0 | ⚠️ 50.0% | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 6 | 2 | 2 | 0 | ⚠️ 60.0% | 549.0KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 367.5KB |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.2KB |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 84.2KB |
