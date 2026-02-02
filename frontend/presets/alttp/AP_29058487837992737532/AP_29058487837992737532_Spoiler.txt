@@ -1,0 +1,1287 @@
+﻿Archipelago Version 0.6.5  -  Seed: 62
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            A Link to the Past
+Location Count:                  249
+Progression Balancing:           73
+Accessibility:                   Minimal
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Plando Connections:              
+Plando Texts:                    {}
+Start Inventory from Pool:       
+Goal:                            Crystals
+Mode:                            Standard
+Glitches Required:               Hybrid Major Glitches
+Dark Room Logic:                 Torches
+Open Pyramid Hole:               Goal
+Crystals for GT:                 2
+Crystals for Ganon:              2
+Triforce Pieces Mode:            Extra
+Triforce Pieces Percentage:      107
+Triforce Pieces Required:        34
+Triforce Pieces Available:       82
+Triforce Pieces Extra:           21
+Entrance Shuffle:                Dungeons Simple
+Entrance Shuffle Seed:           8717045051198157018
+Big Key Shuffle:                 Original Dungeon
+Small Key Shuffle:               Start With
+Key Drop Shuffle:                No
+Compass Shuffle:                 Any World
+Map Shuffle:                     Own Dungeons
+Prevent Dungeon Item on Boss:    Yes
+Item Pool:                       Expert
+Item Functionality:              Easy
+Enemy Health:                    Expert
+Enemy Damage:                    Shuffled
+Progressive Items:               On
+Swordless:                       Yes
+Dungeon Counters:                Off
+Retro Bow:                       No
+Retro Caves:                     Yes
+Hints:                           Full
+Scams:                           Off
+Boss Shuffle:                    Chaos
+Pot Shuffle:                     No
+Enemy Shuffle:                   Yes
+Killable Thieves:                No
+Bush Shuffle:                    No
+Available Shop Slots:            19
+Randomize Shop Inventories:      Randomize Each
+Shuffle Shop Inventories:        No
+Include Witch's Hut:             No
+Randomize Shop Prices:           No
+Randomize Cost Types:            No
+Shop Price Modifier:             127
+Shuffle Capacity Upgrades:       Off
+Bombless Start:                  No
+Shuffle Prizes:                  Bonk
+Tile Shuffle:                    Yes
+Misery Mire Medallion:           Bombos
+Turtle Rock Medallion:           Bombos
+Glitched Starting Boots:         No
+Beemizer Total Chance:           47
+Beemizer Trap Chance:            72
+Timer:                           Timed
+Countdown Start Time:            175
+Red Clock Time:                  -42
+Blue Clock Time:                 -9
+Green Clock Time:                9
+Death Link:                      Yes
+Allow Collection of checks for other players:Yes
+Overworld Palette:               Negative
+Underworld Palette:              Dizzy
+Menu Palette:                    Default
+Sword Palette:                   Grayscale
+Shield Palette:                  Sick
+Heart Beep Rate:                 Off
+Heart Color:                     Red
+L/R Quickswapping:               No
+Menu Speed:                      Normal
+Play music:                      Yes
+Reduce Screen Flashes:           No
+Display Method for Triforce Hunt:Hide Goal
+
+
+Entrances:
+
+Links House <=> Links House Exit
+Links House <= Chris Houlihan Room Exit
+Skull Woods First Section Hole (East) => Skull Woods First Section (Right)
+Skull Woods First Section Hole (West) => Skull Woods Second Section (Drop)
+Skull Woods First Section Hole (North) => Skull Woods First Section (Left)
+Skull Woods Second Section Hole => Skull Woods First Section (Top)
+Skull Woods First Section Door <=> Skull Woods Second Section Exit (East)
+Skull Woods Second Section Door (East) <=> Skull Woods First Section Exit
+Skull Woods Second Section Door (West) <=> Skull Woods Second Section Exit (West)
+Eastern Palace <=> Eastern Palace Exit
+Tower of Hera <=> Ganons Tower Exit
+Thieves Town <=> Misery Mire Exit
+Skull Woods Final Section <=> Swamp Palace Exit
+Palace of Darkness <=> Palace of Darkness Exit
+Ice Palace <=> Thieves Town Exit
+Misery Mire <=> Tower of Hera Exit
+Swamp Palace <=> Ice Palace Exit
+Ganons Tower <=> Skull Woods Final Section Exit
+Hyrule Castle Entrance (South) <=> Hyrule Castle Exit (South)
+Hyrule Castle Entrance (East) <=> Hyrule Castle Exit (East)
+Hyrule Castle Entrance (West) <=> Hyrule Castle Exit (West)
+Agahnims Tower <=> Agahnims Tower Exit
+Desert Palace Entrance (South) <=> Desert Palace Exit (South)
+Desert Palace Entrance (East) <=> Desert Palace Exit (East)
+Desert Palace Entrance (West) <=> Desert Palace Exit (West)
+Desert Palace Entrance (North) <=> Desert Palace Exit (North)
+Turtle Rock <=> Turtle Rock Exit (Front)
+Turtle Rock Isolated Ledge Entrance <=> Turtle Rock Isolated Ledge Exit
+Dark Death Mountain Ledge (West) <=> Turtle Rock Ledge Exit (West)
+Dark Death Mountain Ledge (East) <=> Turtle Rock Ledge Exit (East)
+Light Hype Fairy => Old Man Sword Cave
+Bonk Fairy (Light) => Take-Any #1
+Fortune Teller (Dark) => Take-Any #2
+Snitch Lady (East) => Take-Any #3
+Dark Death Mountain Fairy => Take-Any #4
+
+Medallions:
+
+Misery Mire (Player1): Bombos
+Turtle Rock (Player1): Bombos
+
+Fairy Fountain Bottle Fill:
+
+Pyramid Fairy (Player1): Bottle (Bee)
+Waterfall Fairy (Player1): Bottle (Blue Potion)
+
+Bosses:
+    Eastern Palace: Moldorm
+    Desert Palace: Vitreous
+    Tower Of Hera: Mothula
+    Hyrule Castle: Agahnim
+    Palace Of Darkness: Arrghus
+    Swamp Palace: Trinexx
+    Skull Woods: Armos Knights
+    Thieves Town: Trinexx
+    Ice Palace: Blind
+    Misery Mire: Trinexx
+    Turtle Rock: Armos Knights
+    Ganons Tower: Agahnim 2
+    Ganon: Ganon
+    Ganons Tower Basement: Lanmolas
+    Ganons Tower Middle: Vitreous
+    Ganons Tower Top: Kholdstare
+
+Shops:
+
+Cave Shop (Dark Death Mountain) [Shop]
+    Magic Upgrade (1/2) - 245 Rupees x 1, Blue Shield - 50 Rupees
+    Ice Rod - 205 Rupees x 1, Good Bee - 100 Rupees
+    Bombs (10) - 50 Rupees
+Red Shield Shop [Shop]
+    Bombs (3) - 51 Rupees x 1, Good Bee - 100 Rupees
+    Green Clock - 15 Rupees x 1, Bombs (3) - 30 Rupees
+    Apple - 50 Rupees
+Dark Lake Hylia Shop [Shop]
+    Red Shield - 500 Rupees
+    Green Clock - 68 Rupees x 1, Bombs (3) - 30 Rupees
+    Single Bomb - 10 Rupees
+Dark World Lumberjack Shop [Shop]
+    Compass (Misery Mire) - 24 Rupees x 1, Single Arrow - 5 Rupees
+    Arrows (10) - 66 Rupees x 1, Blue Shield - 50 Rupees
+    Red Clock - 42 Rupees x 1, Faerie - 100 Rupees
+Village of Outcasts Shop [Shop]
+    Green Clock - 42 Rupees x 1, Green Potion - 90 Rupees
+    Arrows (10) - 24 Rupees x 1, Single Arrow - 5 Rupees
+    Single Bomb - 10 Rupees
+Dark World Potion Shop [Shop]
+    Boss Heart Container - 65 Rupees x 1, Bombs (10) - 50 Rupees
+    Arrows (10) - 72 Rupees x 1, Arrows (10) - 50 Rupees
+    Bombs (3) - 50 Rupees x 1, Small Heart - 10 Rupees
+Light World Death Mountain Shop [Shop]
+    Faerie - 100 Rupees
+    Boss Heart Container - 100 Rupees x 1, Magic Jar - 100 Rupees
+    Progressive Mail - 205 Rupees x 1, Blue Potion - 190 Rupees
+Kakariko Shop [Shop]
+    Red Clock - 82 Rupees x 1, Green Potion - 90 Rupees
+    Red Potion - 150 Rupees
+    Blue Shield - 50 Rupees
+Cave Shop (Lake Hylia) [Shop]
+    Bombos - 175 Rupees x 1, Small Heart - 10 Rupees
+    Bombs (3) - 84 Rupees x 1, Single Bomb - 10 Rupees
+    Piece of Heart - 9 Rupees x 1, Green Potion - 90 Rupees
+Potion Shop [Shop]
+    Red Potion - 120 Rupees
+    Green Potion - 60 Rupees
+    Blue Potion - 160 Rupees
+Capacity Upgrade [Shop]
+    Bomb Upgrade (+5) - 100 Rupees x 7
+    Arrow Upgrade (+5) - 100 Rupees x 7
+Old Man Sword Cave [Take Any]
+    Rupees (300) - 0 Rupees
+Take-Any #1 [Take Any]
+    Blue Potion - 0 Rupees
+    Boss Heart Container - 0 Rupees
+Take-Any #2 [Take Any]
+    Blue Potion - 0 Rupees
+    Boss Heart Container - 0 Rupees
+Take-Any #3 [Take Any]
+    Blue Potion - 0 Rupees
+    Boss Heart Container - 0 Rupees
+Take-Any #4 [Take Any]
+    Blue Potion - 0 Rupees
+    Boss Heart Container - 0 Rupees
+
+
+Starting Items:
+
+Small Key (Ganons Tower)
+Small Key (Ganons Tower)
+Small Key (Ganons Tower)
+Small Key (Ganons Tower)
+Small Key (Turtle Rock)
+Small Key (Turtle Rock)
+Small Key (Turtle Rock)
+Small Key (Turtle Rock)
+Small Key (Misery Mire)
+Small Key (Misery Mire)
+Small Key (Misery Mire)
+Small Key (Ice Palace)
+Small Key (Ice Palace)
+Small Key (Swamp Palace)
+Small Key (Skull Woods)
+Small Key (Skull Woods)
+Small Key (Skull Woods)
+Small Key (Thieves Town)
+Small Key (Palace of Darkness)
+Small Key (Palace of Darkness)
+Small Key (Palace of Darkness)
+Small Key (Palace of Darkness)
+Small Key (Palace of Darkness)
+Small Key (Palace of Darkness)
+Small Key (Agahnims Tower)
+Small Key (Agahnims Tower)
+Small Key (Tower of Hera)
+Small Key (Desert Palace)
+Small Key (Hyrule Castle)
+
+Locations:
+
+Mushroom: Blue Clock
+Bottle Merchant: Green Clock
+Flute Spot: Bombs (3)
+Sunken Treasure: Compass (Desert Palace)
+Purple Chest: Arrows (10)
+Flute Activation Spot: Activated Flute
+Blind's Hideout - Top: Arrows (10)
+Blind's Hideout - Left: Bombs (3)
+Blind's Hideout - Right: Bee Trap
+Blind's Hideout - Far Left: Piece of Heart
+Blind's Hideout - Far Right: Rupees (300)
+Link's Uncle: Cane of Byrna
+Secret Passage: Bottle (Good Bee)
+King Zora: Rupees (20)
+Zora's Ledge: Rupees (50)
+Waterfall Fairy - Left: Green Clock
+Waterfall Fairy - Right: Pegasus Boots
+King's Tomb: Blue Clock
+Floodgate: Open Floodgate
+Floodgate Chest: Flippers
+Link's House: Compass (Ganons Tower)
+Kakariko Tavern: Rupees (50)
+Chicken House: Rupees (20)
+Aginah's Cave: Rupees (20)
+Sahasrahla's Hut - Left: Arrows (10)
+Sahasrahla's Hut - Middle: Boss Heart Container
+Sahasrahla's Hut - Right: Rupees (50)
+Sahasrahla: Progressive Shield
+Kakariko Well - Top: Green Clock
+Kakariko Well - Left: Rupees (100)
+Kakariko Well - Middle: Rupees (20)
+Kakariko Well - Right: Green Clock
+Kakariko Well - Bottom: Green Clock
+Blacksmith: Bombs (3)
+Missing Smith: Return Smith
+Magic Bat: Compass (Turtle Rock)
+Sick Kid: Rupees (20)
+Hobo: Piece of Heart
+Lost Woods Hideout: Boss Heart Container
+Lumberjack Tree: Bottle (Blue Potion)
+Cave 45: Green Clock
+Graveyard Cave: Blue Boomerang
+Checkerboard Cave: Moon Pearl
+Mini Moldorm Cave - Far Left: Red Clock
+Mini Moldorm Cave - Left: Piece of Heart
+Mini Moldorm Cave - Right: Green Clock
+Mini Moldorm Cave - Far Right: Bee
+Mini Moldorm Cave - Generous Guy: Bee Trap
+Ice Rod Cave: Rupees (50)
+Bonk Rock Cave: Bombs (3)
+Library: Bombs (3)
+Potion Shop: Piece of Heart
+Lake Hylia Island: Rupees (300)
+Capacity Upgrade Shop: Capacity Upgrade Shop
+Maze Race: Rupees (300)
+Desert Ledge: Red Clock
+Desert Palace - Big Chest: Compass (Tower of Hera)
+Desert Palace - Torch: Big Key (Desert Palace)
+Desert Palace - Map Chest: Book of Mudora
+Desert Palace - Compass Chest: Rupees (50)
+Desert Palace - Big Key Chest: Compass (Eastern Palace)
+Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
+Desert Palace - Beamos Hall Pot Key: Small Key (Desert Palace)
+Desert Palace - Desert Tiles 2 Pot Key: Small Key (Desert Palace)
+Desert Palace - Boss: Quake
+Desert Palace - Prize: Crystal 4
+Eastern Palace - Compass Chest: Magic Mirror
+Eastern Palace - Big Chest: Progressive Shield
+Eastern Palace - Cannonball Chest: Big Key (Eastern Palace)
+Eastern Palace - Dark Square Pot Key: Small Key (Eastern Palace)
+Eastern Palace - Dark Eyegore Key Drop: Small Key (Eastern Palace)
+Eastern Palace - Big Key Chest: Green Clock
+Eastern Palace - Map Chest: Bombs (3)
+Eastern Palace - Boss: Bombs (3)
+Eastern Palace - Prize: Crystal 6
+Master Sword Pedestal: Red Clock
+Hyrule Castle - Boomerang Chest: Progressive Glove
+Hyrule Castle - Map Chest: Map (Thieves Town)
+Hyrule Castle - Zelda's Chest: Piece of Heart
+Hyrule Castle - Map Guard Key Drop: Small Key (Hyrule Castle)
+Hyrule Castle - Boomerang Guard Key Drop: Small Key (Hyrule Castle)
+Hyrule Castle - Big Key Drop: Big Key (Hyrule Castle)
+Sewers - Dark Cross: Rupees (50)
+Sewers - Key Rat Key Drop: Small Key (Hyrule Castle)
+Sewers - Secret Room - Left: Bombs (3)
+Sewers - Secret Room - Middle: Green Clock
+Sewers - Secret Room - Right: Arrows (10)
+Sanctuary: Arrows (10)
+Castle Tower - Room 03: Boss Heart Container
+Castle Tower - Dark Maze: Rupees (20)
+Castle Tower - Dark Archer Key Drop: Small Key (Agahnims Tower)
+Castle Tower - Circle of Pots Key Drop: Small Key (Agahnims Tower)
+Agahnim 1: Beat Agahnim 1
+Old Man: Sanctuary Heart Container
+Spectacle Rock Cave: Bombs (3)
+Paradox Cave Lower - Far Left: Bombs (3)
+Paradox Cave Lower - Left: Blue Clock
+Paradox Cave Lower - Right: Arrows (10)
+Paradox Cave Lower - Far Right: Progressive Bow
+Paradox Cave Lower - Middle: Rupees (50)
+Paradox Cave Upper - Left: Green Clock
+Paradox Cave Upper - Right: Bombs (3)
+Spiral Cave: Single Arrow
+Ether Tablet: Green Clock
+Spectacle Rock: Bombs (3)
+Tower of Hera - Basement Cage: Rupees (300)
+Tower of Hera - Map Chest: Hammer
+Tower of Hera - Big Key Chest: Big Key (Tower of Hera)
+Tower of Hera - Compass Chest: Blue Clock
+Tower of Hera - Big Chest: Rupees (50)
+Tower of Hera - Boss: Piece of Heart
+Tower of Hera - Prize: Crystal 5
+Pyramid: Piece of Heart
+Catfish: Boss Heart Container
+Stumpy: Blue Clock
+Digging Game: Arrows (10)
+Bombos Tablet: Bombs (3)
+Hype Cave - Top: Rupee (1)
+Hype Cave - Middle Right: Rupees (50)
+Hype Cave - Middle Left: Rupees (20)
+Hype Cave - Bottom: Arrows (10)
+Hype Cave - Generous Guy: Red Clock
+Frog: Get Frog
+Dark Blacksmith Ruins: Pick Up Purple Chest
+Peg Cave: Bombs (3)
+Pyramid Fairy - Left: Rupees (20)
+Pyramid Fairy - Right: Rupees (50)
+Brewery: Mushroom
+C-Shaped House: Blue Clock
+Chest Game: Rupees (100)
+Bumper Cave Ledge: Piece of Heart
+Mire Shed - Left: Green Clock
+Mire Shed - Right: Shovel
+Superbunny Cave - Top: Arrows (10)
+Superbunny Cave - Bottom: Bottle (Blue Potion)
+Spike Cave: Rupees (50)
+Hookshot Cave - Top Right: Piece of Heart
+Hookshot Cave - Top Left: Progressive Shield
+Hookshot Cave - Bottom Right: Piece of Heart
+Hookshot Cave - Bottom Left: Ether
+Floating Island: Rupees (50)
+Mimic Cave: Piece of Heart
+Swamp Palace - Entrance: Cape
+Swamp Palace - Map Chest: Green Clock
+Swamp Palace - Pot Row Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Trench 1 Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Big Chest: Bombs (3)
+Swamp Palace - Compass Chest: Green Clock
+Swamp Palace - Hookshot Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Trench 2 Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Big Key Chest: Big Key (Swamp Palace)
+Swamp Palace - West Chest: Rupee (1)
+Swamp Palace - Flooded Room - Left: Map (Swamp Palace)
+Swamp Palace - Flooded Room - Right: Map (Desert Palace)
+Swamp Palace - Waterway Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Waterfall Room: Arrows (10)
+Swamp Palace - Boss: Boss Heart Container
+Swamp Palace - Prize: Crystal 7
+Thieves' Town - Big Key Chest: Compass (Ice Palace)
+Thieves' Town - Map Chest: Piece of Heart
+Thieves' Town - Compass Chest: Progressive Bow
+Thieves' Town - Ambush Chest: Blue Clock
+Thieves' Town - Attic: Bombs (3)
+Thieves' Town - Big Chest: Arrows (10)
+Thieves' Town - Hallway Pot Key: Small Key (Thieves Town)
+Thieves' Town - Spike Switch Pot Key: Small Key (Thieves Town)
+Thieves' Town - Blind's Cell: Big Key (Thieves Town)
+Thieves' Town - Boss: Piece of Heart
+Thieves' Town - Prize: Red Pendant
+Skull Woods - Map Chest: Rupees (50)
+Skull Woods - Pinball Room: Map (Hyrule Castle)
+Skull Woods - Compass Chest: Big Key (Skull Woods)
+Skull Woods - Pot Prison: Rupees (50)
+Skull Woods - Big Chest: Bombs (3)
+Skull Woods - Big Key Chest: Piece of Heart
+Skull Woods - West Lobby Pot Key: Small Key (Skull Woods)
+Skull Woods - Bridge Room: Rupees (20)
+Skull Woods - Spike Corner Key Drop: Small Key (Skull Woods)
+Skull Woods - Boss: Rupees (50)
+Skull Woods - Prize: Blue Pendant
+Ice Palace - Jelly Key Drop: Small Key (Ice Palace)
+Ice Palace - Compass Chest: Piece of Heart
+Ice Palace - Conveyor Key Drop: Small Key (Ice Palace)
+Ice Palace - Freezor Chest: Compass (Thieves Town)
+Ice Palace - Many Pots Pot Key: Small Key (Ice Palace)
+Ice Palace - Big Chest: Rupees (20)
+Ice Palace - Iced T Room: Bombs (3)
+Ice Palace - Spike Room: Boss Heart Container
+Ice Palace - Big Key Chest: Rupees (20)
+Ice Palace - Map Chest: Big Key (Ice Palace)
+Ice Palace - Hammer Block Key Drop: Small Key (Ice Palace)
+Ice Palace - Boss: Lamp
+Ice Palace - Prize: Crystal 3
+Misery Mire - Big Chest: Piece of Heart
+Misery Mire - Map Chest: Boss Heart Container
+Misery Mire - Main Lobby: Big Key (Misery Mire)
+Misery Mire - Bridge Chest: Bombs (10)
+Misery Mire - Spike Chest: Map (Tower of Hera)
+Misery Mire - Spikes Pot Key: Small Key (Misery Mire)
+Misery Mire - Fishbone Pot Key: Small Key (Misery Mire)
+Misery Mire - Conveyor Crystal Key Drop: Small Key (Misery Mire)
+Misery Mire - Compass Chest: Hookshot
+Misery Mire - Big Key Chest: Bottle (Green Potion)
+Misery Mire - Boss: Piece of Heart
+Misery Mire - Prize: Green Pendant
+Turtle Rock - Compass Chest: Piece of Heart
+Turtle Rock - Roller Room - Left: Green Clock
+Turtle Rock - Roller Room - Right: Map (Turtle Rock)
+Turtle Rock - Pokey 1 Key Drop: Small Key (Turtle Rock)
+Turtle Rock - Chain Chomps: Bombs (3)
+Turtle Rock - Big Key Chest: Fire Rod
+Turtle Rock - Pokey 2 Key Drop: Small Key (Turtle Rock)
+Turtle Rock - Big Chest: Map (Ice Palace)
+Turtle Rock - Crystaroller Room: Bee Trap
+Turtle Rock - Eye Bridge - Bottom Left: Bee Trap
+Turtle Rock - Eye Bridge - Bottom Right: Flute
+Turtle Rock - Eye Bridge - Top Left: Big Key (Turtle Rock)
+Turtle Rock - Eye Bridge - Top Right: Cane of Somaria
+Turtle Rock - Boss: Progressive Mail
+Turtle Rock - Prize: Crystal 1
+Palace of Darkness - Shooter Room: Red Clock
+Palace of Darkness - The Arena - Bridge: Rupees (20)
+Palace of Darkness - Stalfos Basement: Piece of Heart
+Palace of Darkness - Big Key Chest: Rupees (20)
+Palace of Darkness - The Arena - Ledge: Big Key (Palace of Darkness)
+Palace of Darkness - Map Chest: Magic Powder
+Palace of Darkness - Compass Chest: Rupees (50)
+Palace of Darkness - Dark Basement - Left: Map (Palace of Darkness)
+Palace of Darkness - Dark Basement - Right: Red Clock
+Palace of Darkness - Dark Maze - Top: Piece of Heart
+Palace of Darkness - Dark Maze - Bottom: Blue Clock
+Palace of Darkness - Big Chest: Blue Clock
+Palace of Darkness - Harmless Hellway: Bee Trap
+Palace of Darkness - Boss: Red Clock
+Palace of Darkness - Prize: Crystal 2
+Ganons Tower - Bob's Torch: Rupees (20)
+Ganons Tower - Hope Room - Left: Boss Heart Container
+Ganons Tower - Hope Room - Right: Piece of Heart
+Ganons Tower - Conveyor Cross Pot Key: Small Key (Ganons Tower)
+Ganons Tower - Tile Room: Green Clock
+Ganons Tower - Compass Room - Top Left: Map (Misery Mire)
+Ganons Tower - Compass Room - Top Right: Rupees (50)
+Ganons Tower - Compass Room - Bottom Left: Rupees (300)
+Ganons Tower - Compass Room - Bottom Right: Map (Ganons Tower)
+Ganons Tower - Conveyor Star Pits Pot Key: Small Key (Ganons Tower)
+Ganons Tower - DMs Room - Top Left: Big Key (Ganons Tower)
+Ganons Tower - DMs Room - Top Right: Map (Skull Woods)
+Ganons Tower - DMs Room - Bottom Left: Rupee (1)
+Ganons Tower - DMs Room - Bottom Right: Compass (Skull Woods)
+Ganons Tower - Double Switch Pot Key: Small Key (Ganons Tower)
+Ganons Tower - Map Chest: Piece of Heart
+Ganons Tower - Firesnake Room: Compass (Swamp Palace)
+Ganons Tower - Randomizer Room - Top Left: Red Boomerang
+Ganons Tower - Randomizer Room - Top Right: Piece of Heart
+Ganons Tower - Randomizer Room - Bottom Left: Green Clock
+Ganons Tower - Randomizer Room - Bottom Right: Arrows (10)
+Ganons Tower - Bob's Chest: Rupees (50)
+Ganons Tower - Big Chest: Progressive Glove
+Ganons Tower - Big Key Room - Left: Bee Trap
+Ganons Tower - Big Key Room - Right: Compass (Palace of Darkness)
+Ganons Tower - Big Key Chest: Bug Catching Net
+Ganons Tower - Mini Helmasaur Room - Left: Red Clock
+Ganons Tower - Mini Helmasaur Room - Right: Blue Clock
+Ganons Tower - Pre-Moldorm Chest: Map (Eastern Palace)
+Ganons Tower - Mini Helmasaur Key Drop: Small Key (Ganons Tower)
+Ganons Tower - Validation Chest: Bombs (3)
+Agahnim 2: Beat Agahnim 2
+Ganon: Triforce
+Cave Shop (Dark Death Mountain) Left: Magic Upgrade (1/2)
+Cave Shop (Dark Death Mountain) Center: Ice Rod
+Red Shield Shop Left: Bombs (3)
+Red Shield Shop Center: Green Clock
+Dark Lake Hylia Shop Center: Green Clock
+Dark World Lumberjack Shop Left: Compass (Misery Mire)
+Dark World Lumberjack Shop Center: Arrows (10)
+Dark World Lumberjack Shop Right: Red Clock
+Village of Outcasts Shop Left: Green Clock
+Village of Outcasts Shop Center: Arrows (10)
+Dark World Potion Shop Left: Boss Heart Container
+Dark World Potion Shop Center: Arrows (10)
+Dark World Potion Shop Right: Bombs (3)
+Light World Death Mountain Shop Center: Boss Heart Container
+Light World Death Mountain Shop Right: Progressive Mail
+Kakariko Shop Left: Red Clock
+Cave Shop (Lake Hylia) Left: Bombos
+Cave Shop (Lake Hylia) Center: Bombs (3)
+Cave Shop (Lake Hylia) Right: Piece of Heart
+Take-Any #1: Boss Heart Container
+Take-Any #2: Boss Heart Container
+Take-Any #3: Boss Heart Container
+Take-Any #4: Boss Heart Container
+
+Playthrough:
+
+0: {
+  Small Key (Agahnims Tower)
+  Small Key (Agahnims Tower)
+  Small Key (Desert Palace)
+  Small Key (Ganons Tower)
+  Small Key (Ganons Tower)
+  Small Key (Ganons Tower)
+  Small Key (Ganons Tower)
+  Small Key (Hyrule Castle)
+  Small Key (Ice Palace)
+  Small Key (Ice Palace)
+  Small Key (Misery Mire)
+  Small Key (Misery Mire)
+  Small Key (Misery Mire)
+  Small Key (Palace of Darkness)
+  Small Key (Palace of Darkness)
+  Small Key (Palace of Darkness)
+  Small Key (Palace of Darkness)
+  Small Key (Palace of Darkness)
+  Small Key (Palace of Darkness)
+  Small Key (Skull Woods)
+  Small Key (Skull Woods)
+  Small Key (Skull Woods)
+  Small Key (Swamp Palace)
+  Small Key (Thieves Town)
+  Small Key (Tower of Hera)
+  Small Key (Turtle Rock)
+  Small Key (Turtle Rock)
+  Small Key (Turtle Rock)
+  Small Key (Turtle Rock)
+}
+1: {
+  Hyrule Castle - Boomerang Chest: Progressive Glove
+  Hyrule Castle - Boomerang Guard Key Drop: Small Key (Hyrule Castle)
+  Hyrule Castle - Map Guard Key Drop: Small Key (Hyrule Castle)
+  Link's Uncle: Cane of Byrna
+  Secret Passage: Bottle (Good Bee)
+}
+2: {
+  Hyrule Castle - Big Key Drop: Big Key (Hyrule Castle)
+}
+3: {
+  Sewers - Key Rat Key Drop: Small Key (Hyrule Castle)
+}
+4: {
+  Capacity Upgrade Shop: Capacity Upgrade Shop
+  Cave Shop (Lake Hylia) Left: Bombos
+  Eastern Palace - Cannonball Chest: Big Key (Eastern Palace)
+  Floodgate: Open Floodgate
+  Floodgate Chest: Flippers
+  Sahasrahla's Hut - Middle: Boss Heart Container
+}
+5: {
+  Waterfall Fairy - Right: Pegasus Boots
+}
+6: {
+  Checkerboard Cave: Moon Pearl
+  Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
+  Desert Palace - Map Chest: Book of Mudora
+  Desert Palace - Torch: Big Key (Desert Palace)
+  Ganons Tower - Conveyor Cross Pot Key: Small Key (Ganons Tower)
+  Graveyard Cave: Blue Boomerang
+  Paradox Cave Lower - Far Right: Progressive Bow
+}
+7: {
+  Brewery: Mushroom
+  Cave Shop (Dark Death Mountain) Center: Ice Rod
+  Cave Shop (Dark Death Mountain) Left: Magic Upgrade (1/2)
+  Ice Palace - Conveyor Key Drop: Small Key (Ice Palace)
+  Ice Palace - Jelly Key Drop: Small Key (Ice Palace)
+  Ice Palace - Many Pots Pot Key: Small Key (Ice Palace)
+  Mire Shed - Right: Shovel
+  Misery Mire - Main Lobby: Big Key (Misery Mire)
+  Misery Mire - Spikes Pot Key: Small Key (Misery Mire)
+  Skull Woods - Compass Chest: Big Key (Skull Woods)
+  Skull Woods - West Lobby Pot Key: Small Key (Skull Woods)
+  Superbunny Cave - Bottom: Bottle (Blue Potion)
+  Thieves' Town - Compass Chest: Progressive Bow
+  Tower of Hera - Map Chest: Hammer
+}
+8: {
+  Ganons Tower - DMs Room - Top Left: Big Key (Ganons Tower)
+  Ganons Tower - Double Switch Pot Key: Small Key (Ganons Tower)
+  Ice Palace - Hammer Block Key Drop: Small Key (Ice Palace)
+  Ice Palace - Map Chest: Big Key (Ice Palace)
+  Misery Mire - Fishbone Pot Key: Small Key (Misery Mire)
+}
+9: {
+  Ice Palace - Boss: Lamp
+  Ice Palace - Prize: Crystal 3
+  Misery Mire - Conveyor Crystal Key Drop: Small Key (Misery Mire)
+}
+10: {
+  Agahnim 1: Beat Agahnim 1
+  Misery Mire - Big Key Chest: Bottle (Green Potion)
+  Misery Mire - Compass Chest: Hookshot
+  Tower of Hera - Big Key Chest: Big Key (Tower of Hera)
+  Tower of Hera - Prize: Crystal 5
+}
+11: {
+  Ganon: Triforce
+  Hookshot Cave - Bottom Left: Ether
+  Hookshot Cave - Top Left: Progressive Shield
+  Lumberjack Tree: Bottle (Blue Potion)
+}
+
+Unreachable Progression Items:
+
+Beat Agahnim 2: Agahnim 2
+Small Key (Agahnims Tower): Castle Tower - Circle of Pots Key Drop
+Small Key (Agahnims Tower): Castle Tower - Dark Archer Key Drop
+Pick Up Purple Chest: Dark Blacksmith Ruins
+Small Key (Desert Palace): Desert Palace - Beamos Hall Pot Key
+Quake: Desert Palace - Boss
+Small Key (Desert Palace): Desert Palace - Desert Tiles 2 Pot Key
+Crystal 4: Desert Palace - Prize
+Progressive Shield: Eastern Palace - Big Chest
+Magic Mirror: Eastern Palace - Compass Chest
+Small Key (Eastern Palace): Eastern Palace - Dark Eyegore Key Drop
+Small Key (Eastern Palace): Eastern Palace - Dark Square Pot Key
+Crystal 6: Eastern Palace - Prize
+Activated Flute: Flute Activation Spot
+Get Frog: Frog
+Progressive Glove: Ganons Tower - Big Chest
+Bug Catching Net: Ganons Tower - Big Key Chest
+Small Key (Ganons Tower): Ganons Tower - Conveyor Star Pits Pot Key
+Small Key (Ganons Tower): Ganons Tower - Mini Helmasaur Key Drop
+Red Boomerang: Ganons Tower - Randomizer Room - Top Left
+Green Pendant: Misery Mire - Prize
+Return Smith: Missing Smith
+Magic Powder: Palace of Darkness - Map Chest
+Crystal 2: Palace of Darkness - Prize
+Big Key (Palace of Darkness): Palace of Darkness - The Arena - Ledge
+Progressive Shield: Sahasrahla
+Blue Pendant: Skull Woods - Prize
+Small Key (Skull Woods): Skull Woods - Spike Corner Key Drop
+Big Key (Swamp Palace): Swamp Palace - Big Key Chest
+Cape: Swamp Palace - Entrance
+Small Key (Swamp Palace): Swamp Palace - Hookshot Pot Key
+Small Key (Swamp Palace): Swamp Palace - Pot Row Pot Key
+Crystal 7: Swamp Palace - Prize
+Small Key (Swamp Palace): Swamp Palace - Trench 1 Pot Key
+Small Key (Swamp Palace): Swamp Palace - Trench 2 Pot Key
+Small Key (Swamp Palace): Swamp Palace - Waterway Pot Key
+Big Key (Thieves Town): Thieves' Town - Blind's Cell
+Small Key (Thieves Town): Thieves' Town - Hallway Pot Key
+Red Pendant: Thieves' Town - Prize
+Small Key (Thieves Town): Thieves' Town - Spike Switch Pot Key
+Fire Rod: Turtle Rock - Big Key Chest
+Flute: Turtle Rock - Eye Bridge - Bottom Right
+Big Key (Turtle Rock): Turtle Rock - Eye Bridge - Top Left
+Cane of Somaria: Turtle Rock - Eye Bridge - Top Right
+Small Key (Turtle Rock): Turtle Rock - Pokey 1 Key Drop
+Small Key (Turtle Rock): Turtle Rock - Pokey 2 Key Drop
+Crystal 1: Turtle Rock - Prize
+
+Paths:
+
+Agahnim 1
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Hyrule Castle Exit (East)
+   =>   Hyrule Castle Ledge -> Agahnims Tower
+   =>   Agahnims Tower -> Agahnim 1
+   =>   Agahnim 1
+Brewery
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Brewery
+   =>   Brewery
+Capacity Upgrade Shop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Lake Hylia Central Island Pier
+   =>   Lake Hylia Central Island -> Capacity Upgrade
+   =>   Capacity Upgrade
+Cave Shop (Dark Death Mountain) Center
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Ganons Tower Ascent
+   =>   Dark Death Mountain (Top) -> Dark Death Mountain Drop (East)
+   =>   Dark Death Mountain (East Bottom) -> Cave Shop (Dark Death Mountain)
+   =>   Cave Shop (Dark Death Mountain)
+Cave Shop (Dark Death Mountain) Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Ganons Tower Ascent
+   =>   Dark Death Mountain (Top) -> Dark Death Mountain Drop (East)
+   =>   Dark Death Mountain (East Bottom) -> Cave Shop (Dark Death Mountain)
+   =>   Cave Shop (Dark Death Mountain)
+Cave Shop (Lake Hylia) Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Cave Shop (Lake Hylia)
+   =>   Cave Shop (Lake Hylia)
+Checkerboard Cave
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Northern Cliffs
+   =>   Desert Northern Cliffs -> Desert Ledge (Northeast) Dropdown
+   =>   Desert Ledge (Northeast) -> Checkerboard Cave
+   =>   Checkerboard Cave
+Desert Palace - Desert Tiles 1 Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Northern Cliffs
+   =>   Desert Northern Cliffs -> Desert Palace Entrance Dropdown
+   =>   Desert Palace Entrance (North) Spot -> Desert Palace Entrance (North)
+   =>   Desert Palace North
+Desert Palace - Map Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Northern Cliffs
+   =>   Desert Northern Cliffs -> Desert Ledge Dropdown
+   =>   Desert Ledge -> Desert Palace Entrance (West)
+   =>   Desert Palace Main (Outer)
+Desert Palace - Torch
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Northern Cliffs
+   =>   Desert Northern Cliffs -> Desert Ledge Dropdown
+   =>   Desert Ledge -> Desert Palace Entrance (West)
+   =>   Desert Palace Main (Outer)
+Eastern Palace - Cannonball Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Eastern Palace
+   =>   Eastern Palace
+Floodgate
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Dam
+   =>   Dam
+Floodgate Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Dam
+   =>   Dam
+Ganon
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> East Dark World River Pier
+   =>   East Dark World -> Pyramid Hole
+   =>   Pyramid
+Ganons Tower - Conveyor Cross Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Hera Ascent
+   =>   Death Mountain (Top) -> Tower of Hera
+   =>   Ganons Tower (Entrance)
+Ganons Tower - DMs Room - Top Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Hera Ascent
+   =>   Death Mountain (Top) -> Tower of Hera
+   =>   Ganons Tower (Entrance) -> Ganons Tower (Hookshot Room)
+   =>   Ganons Tower (Hookshot Room)
+Ganons Tower - Double Switch Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Hera Ascent
+   =>   Death Mountain (Top) -> Tower of Hera
+   =>   Ganons Tower (Entrance) -> Ganons Tower (Hookshot Room)
+   =>   Ganons Tower (Hookshot Room)
+Graveyard Cave
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Graveyard Ledge Clip Spot
+   =>   Graveyard Ledge -> Graveyard Cave
+   =>   Graveyard Cave
+Hookshot Cave - Bottom Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Ganons Tower Ascent
+   =>   Dark Death Mountain (Top) -> Hookshot Cave
+   =>   Hookshot Cave
+Hookshot Cave - Top Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Ganons Tower Ascent
+   =>   Dark Death Mountain (Top) -> Hookshot Cave
+   =>   Hookshot Cave
+Hyrule Castle - Big Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Hyrule Castle - Boomerang Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Hyrule Castle - Boomerang Guard Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Hyrule Castle - Map Guard Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Ice Palace - Boss
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance) -> Ice Palace (Second Section)
+   =>   Ice Palace (Second Section) -> Ice Palace (Main)
+   =>   Ice Palace (Main) -> Ice Palace (Kholdstare)
+   =>   Ice Palace (Kholdstare)
+Ice Palace - Conveyor Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance) -> Ice Palace (Second Section)
+   =>   Ice Palace (Second Section)
+Ice Palace - Hammer Block Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance) -> Ice Palace (Second Section)
+   =>   Ice Palace (Second Section) -> Ice Palace (Main)
+   =>   Ice Palace (Main) -> Ice Palace (East)
+   =>   Ice Palace (East) -> Ice Palace (East Top)
+   =>   Ice Palace (East Top)
+Ice Palace - Jelly Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance)
+Ice Palace - Many Pots Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance) -> Ice Palace (Second Section)
+   =>   Ice Palace (Second Section) -> Ice Palace (Main)
+   =>   Ice Palace (Main)
+Ice Palace - Map Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance) -> Ice Palace (Second Section)
+   =>   Ice Palace (Second Section) -> Ice Palace (Main)
+   =>   Ice Palace (Main) -> Ice Palace (East)
+   =>   Ice Palace (East) -> Ice Palace (East Top)
+   =>   Ice Palace (East Top)
+Ice Palace - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Swamp Palace
+   =>   Ice Palace (Entrance) -> Ice Palace (Second Section)
+   =>   Ice Palace (Second Section) -> Ice Palace (Main)
+   =>   Ice Palace (Main) -> Ice Palace (Kholdstare)
+   =>   Ice Palace (Kholdstare)
+Link's Uncle
+        Hyrule Castle Secret Entrance
+Lumberjack Tree
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Lumberjack Tree Tree
+   =>   Lumberjack Tree (top)
+Mire Shed - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Dark Desert Cliffs Clip Spot
+   =>   Dark Desert -> Mire Shed
+   =>   Mire Shed
+Misery Mire - Big Key Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Thieves Town
+   =>   Misery Mire (Entrance) -> Misery Mire Entrance Gap
+   =>   Misery Mire (Main) -> Misery Mire (West)
+   =>   Misery Mire (West)
+Misery Mire - Compass Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Thieves Town
+   =>   Misery Mire (Entrance) -> Misery Mire Entrance Gap
+   =>   Misery Mire (Main) -> Misery Mire (West)
+   =>   Misery Mire (West)
+Misery Mire - Conveyor Crystal Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Thieves Town
+   =>   Misery Mire (Entrance) -> Misery Mire Entrance Gap
+   =>   Misery Mire (Main)
+Misery Mire - Fishbone Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Thieves Town
+   =>   Misery Mire (Entrance) -> Misery Mire Entrance Gap
+   =>   Misery Mire (Main)
+Misery Mire - Main Lobby
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Thieves Town
+   =>   Misery Mire (Entrance) -> Misery Mire Entrance Gap
+   =>   Misery Mire (Main)
+Misery Mire - Spikes Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Thieves Town
+   =>   Misery Mire (Entrance) -> Misery Mire Entrance Gap
+   =>   Misery Mire (Main)
+Paradox Cave Lower - Far Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Glitched Bridge
+   =>   East Death Mountain (Top) -> Paradox Cave (Top)
+   =>   Paradox Cave -> Paradox Cave Drop
+   =>   Paradox Cave Chest Area
+Sahasrahla's Hut - Middle
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Sahasrahlas Hut
+   =>   Sahasrahlas Hut
+Secret Passage
+        Hyrule Castle Secret Entrance
+Sewers - Key Rat Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark)
+Skull Woods - Compass Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods First Section Hole (North)
+   =>   Skull Woods First Section (Left)
+Skull Woods - West Lobby Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods First Section Door
+   =>   Skull Woods Second Section
+Superbunny Cave - Bottom
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Ganons Tower Ascent
+   =>   Dark Death Mountain (Top) -> Superbunny Cave (Top)
+   =>   Superbunny Cave (Top)
+Thieves' Town - Compass Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Ice Palace Clip
+   =>   Dark Lake Hylia Central Island -> Ice Palace
+   =>   Thieves Town (Entrance)
+Tower of Hera - Big Key Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Dark Desert Cliffs Clip Spot
+   =>   Dark Desert -> Misery Mire
+   =>   Tower of Hera (Bottom) -> Tower of Hera Small Key Door
+   =>   Tower of Hera (Basement)
+Tower of Hera - Map Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Dark Desert Cliffs Clip Spot
+   =>   Dark Desert -> Misery Mire
+   =>   Tower of Hera (Bottom)
+Tower of Hera - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Light World DMA Clip Spot
+   =>   Death Mountain -> Death Mountain Teleporter
+   =>   Dark Death Mountain (West Bottom) -> Dark Death Mountain Descent
+   =>   West Dark World -> Village of Outcasts Drop
+   =>   South Dark World -> Dark Desert Cliffs Clip Spot
+   =>   Dark Desert -> Misery Mire
+   =>   Tower of Hera (Bottom) -> Tower of Hera Big Key Door
+   =>   Tower of Hera (Top)
+Waterfall Fairy - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Waterfall of Wishing
+   =>   Waterfall of Wishing

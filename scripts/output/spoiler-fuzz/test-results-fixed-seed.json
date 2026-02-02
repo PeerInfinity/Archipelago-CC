@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "created": "2026-02-02T18:23:35.073125",
-    "last_updated": "2026-02-02T18:23:58.256839",
+    "created": "2026-02-02T19:52:08.386759",
+    "last_updated": "2026-02-02T19:52:42.140097",
     "script_version": "1.1.0",
     "test_type": "spoiler_fuzz",
     "seed_mode": "fixed",
-    "seed": 47,
-    "base_seed": 47,
+    "seed": 100,
+    "base_seed": 100,
     "runs_per_game": 1,
     "generation_timeout": 300,
     "test_timeout": 120,
@@ -28,7 +28,7 @@
         "failing_seeds": {
           "generation_failure": [],
           "test_failure": [
-            47
+            100
           ],
           "timeout": []
         }
@@ -37,7 +37,7 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-02T18:23:58.256654"
+      "timestamp": "2026-02-02T19:52:42.139802"
     }
   }
 }
