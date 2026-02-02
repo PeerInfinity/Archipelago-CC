@@ -5364,14 +5364,25 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // AST_prog_item_count (from DLCQuest and other games with accumulator items)
     // Returns the count of a progression item from state.prog_items[player][key]
+    // Inlined for performance - this is called frequently in games with coinsanity
     case 'AST_prog_item_count': {
       const progKey = args.key;
       if (progKey === undefined) {
         log('warn', '[evaluateRuleBuilderRule] AST_prog_item_count: missing key');
         return undefined;
       }
-      // Delegate to the prog_item_count handler
-      return evaluateRule({ type: 'prog_item_count', key: progKey }, context, depth + 1, localScope);
+      // Inline the prog_item_count logic to avoid recursive evaluateRule overhead
+      if (typeof context.countProgItem === 'function') {
+        return context.countProgItem(progKey) ?? 0;
+      }
+      // Fallback: check prog_items directly from snapshot
+      const snapshot = context.snapshot || context;
+      const playerId = context.playerId || context.getPlayerId?.() || 1;
+      const progItems = snapshot?.prog_items;
+      // Use standard player ID format (string keys in JSON)
+      return progItems?.[playerId]?.[progKey] ??
+             progItems?.[String(playerId)]?.[progKey] ??
+             0;
     }
 
     // Reachability rules
@@ -5463,9 +5474,36 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       const op = args.op || '==';
       const right = args.right;
 
-      // Recursively evaluate left and right operands
-      const leftValue = evaluateRule(left, context, depth + 1, localScope);
-      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+      // Fast path: Handle common AST_prog_item_count >= number pattern directly
+      // This is very common in games with coinsanity (DLCQuest, etc.)
+      // Bypasses 2-3 levels of function call overhead
+      let leftValue;
+      if (left && typeof left === 'object' && left.rule === 'AST_prog_item_count') {
+        const progKey = left.args?.key;
+        if (progKey !== undefined) {
+          if (typeof context.countProgItem === 'function') {
+            leftValue = context.countProgItem(progKey) ?? 0;
+          } else {
+            const snapshot = context.snapshot || context;
+            const playerId = context.playerId || context.getPlayerId?.() || 1;
+            const progItems = snapshot?.prog_items;
+            leftValue = progItems?.[playerId]?.[progKey] ??
+                       progItems?.[String(playerId)]?.[progKey] ??
+                       0;
+          }
+        } else {
+          leftValue = evaluateRule(left, context, depth + 1, localScope);
+        }
+      } else if (typeof left !== 'object' || left === null) {
+        leftValue = left;
+      } else {
+        leftValue = evaluateRule(left, context, depth + 1, localScope);
+      }
+
+      // Optimize: skip evaluateRule for primitive values (common case)
+      const rightValue = (typeof right !== 'object' || right === null)
+        ? right
+        : evaluateRule(right, context, depth + 1, localScope);
 
       // If either operand is undefined, we can't compare
       if (leftValue === undefined || rightValue === undefined) {
