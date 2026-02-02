@@ -502,9 +502,11 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       rbResult = rbResult.bool === true && rbResult.difficulty <= maxDiff;
     }
 
-    // If the result is itself a rule object (has 'type' property), evaluate it recursively
+    // If the result is itself a rule object (has 'type' property that is a string), evaluate it recursively
     // This handles helpers that return rules (e.g., get_prison_keeper_rules returns a compare rule)
-    if (rbResult && typeof rbResult === 'object' && rbResult.type && !('__isReturn' in rbResult)) {
+    // Note: We check typeof type === 'string' because data objects like regionRef have numeric 'type' fields
+    // that represent data (region types) rather than rule types
+    if (rbResult && typeof rbResult === 'object' && typeof rbResult.type === 'string' && !('__isReturn' in rbResult)) {
       rbResult = evaluateRule(rbResult, context, depth + 1, localScope);
     }
 
@@ -533,7 +535,6 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           // Convert playerId to string for JSON key lookup (JSON keys are always strings)
           const playerIdKey = String(playerId);
           const helperDefinition = staticData?.helpers?.[playerIdKey]?.[rule.name];
-
           if (helperDefinition) {
             // Found a helper definition in rules.json - evaluate it recursively
             // Helper definitions may have params and body, or just be a rule directly
@@ -554,7 +555,8 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
 
             // Then, override with actual argument values
             for (let i = 0; i < params.length && i < args.length; i++) {
-              helperLocalScope[params[i]] = evaluateRule(args[i], context, depth + 1, localScope);
+              const argValue = evaluateRule(args[i], context, depth + 1, localScope);
+              helperLocalScope[params[i]] = argValue;
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
@@ -2004,7 +2006,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
 
             if (regionData) {
               // Return a region reference with the needed attributes
-              return {
+              const regionRef = {
                 __regionRef: true,
                 regionName: regionName,
                 name: regionName,
@@ -2013,10 +2015,10 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
                 type: regionData.type,
                 dungeon: regionData.dungeon
               };
+              return regionRef;
             }
           }
 
-          log('debug', `[evaluateRule] world.get_region("${regionName}") - region not found`);
           return undefined;
         }
 
