@@ -824,7 +824,4 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
             },
         })
 
-    # Sort by spoiler fuzz success rate (lowest first) so worst failures come first
-    failures.sort(key=lambda x: x['spoiler_fuzz']['success_rate'])
-
     return failures
