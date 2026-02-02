@@ -1981,19 +1981,37 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         }
 
         // Special handling for shop.has_unlimited(item) method calls
-        // Checks if shop has the item with unlimited stock (max === 0)
+        // Checks if shop has the item with unlimited stock
+        // The exporter pre-computes unlimited_items array for efficiency
         if (rule.function?.type === 'attribute' &&
             rule.function.attr === 'has_unlimited' &&
             rule.function.object?.type === 'name') {
           // Resolve the shop object from local scope (bound in any_of iteration)
           const shopObj = evaluateRule(rule.function.object, context, depth + 1, localScope);
-          if (shopObj && Array.isArray(shopObj.inventory)) {
+          if (shopObj) {
             const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
             const itemName = args[0];
-            // Check if any inventory entry has this item with unlimited stock
-            const hasUnlimited = shopObj.inventory.some(inv => inv && inv.item === itemName && inv.max === 0);
-            result = hasUnlimited;
-            break;
+
+            // Prefer using pre-computed unlimited_items array from exporter
+            if (Array.isArray(shopObj.unlimited_items)) {
+              result = shopObj.unlimited_items.includes(itemName);
+              break;
+            }
+
+            // Fallback: check inventory directly (for backward compatibility)
+            // An item is unlimited if:
+            // - max === 0 and inv.item matches (base item is unlimited)
+            // - max > 0 and inv.replacement matches (replacement is unlimited)
+            if (Array.isArray(shopObj.inventory)) {
+              const hasUnlimited = shopObj.inventory.some(inv => {
+                if (!inv) return false;
+                if (!inv.max && inv.item === itemName) return true;  // max is 0 or falsy
+                if (inv.max && inv.replacement === itemName) return true;  // max > 0, check replacement
+                return false;
+              });
+              result = hasUnlimited;
+              break;
+            }
           }
         }
 
