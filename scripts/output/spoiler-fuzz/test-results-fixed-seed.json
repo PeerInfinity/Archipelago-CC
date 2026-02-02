@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2026-02-02T01:25:32.988534",
-    "last_updated": "2026-02-02T01:25:32.988540",
+    "last_updated": "2026-02-02T03:17:08.112989",
     "script_version": "1.0.0",
     "combined_from": 10,
     "test_type": "spoiler_fuzz",
@@ -386,13 +386,36 @@
     "A Link to the Past.yaml": {
       "spoiler_fuzz": {
         "passed": false,
-        "total": 10,
-        "success": 7,
+        "total": 100,
+        "success": 72,
         "generation_failure": 0,
-        "ignored": 1,
-        "test_failure": 2,
+        "test_failure": 26,
         "timeout": 0,
         "errors": [
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
+          "Spoiler test failed",
           "Spoiler test failed",
           "Spoiler test failed"
         ],
@@ -400,7 +423,31 @@
           "generation_failure": [],
           "test_failure": [
             3,
-            4
+            4,
+            94,
+            98,
+            100,
+            12,
+            14,
+            16,
+            17,
+            21,
+            25,
+            33,
+            35,
+            41,
+            43,
+            47,
+            52,
+            53,
+            54,
+            61,
+            62,
+            63,
+            66,
+            67,
+            83,
+            89
           ],
           "timeout": []
         }
@@ -409,7 +456,11 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-02T00:38:40.250886"
+      "timestamp": "2026-02-02T03:16:41.585790",
+      "updated_from_single_game_test": {
+        "runs": 100,
+        "updated_at": "2026-02-02T03:17:08.112983"
+      }
     },
     "Celeste (Open World).yaml": {
       "spoiler_fuzz": {

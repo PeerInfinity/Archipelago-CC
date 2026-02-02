@@ -670,6 +670,7 @@ jobs:
                               "total": 0,
                               "success": 0,
                               "generation_failure": 0,
+                              "ignored": 0,
                               "test_failure": 0,
                               "timeout": 0,
                               "errors": [],
@@ -690,6 +691,7 @@ jobs:
                   combined_sf["total"] += spoiler_fuzz.get("total", 0)
                   combined_sf["success"] += spoiler_fuzz.get("success", 0)
                   combined_sf["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
+                  combined_sf["ignored"] += spoiler_fuzz.get("ignored", 0)
                   combined_sf["test_failure"] += spoiler_fuzz.get("test_failure", 0)
                   combined_sf["timeout"] += spoiler_fuzz.get("timeout", 0)
 
@@ -708,6 +710,12 @@ jobs:
                       seeds = failing_seeds.get(failure_type, [])
                       if seeds:
                           combined_sf["failing_seeds"][failure_type].extend(seeds)
+
+          # Sort failing_seeds for cleaner output
+          for template_name in combined["results"]:
+              fs = combined["results"][template_name]["spoiler_fuzz"]["failing_seeds"]
+              for failure_type in fs:
+                  fs[failure_type] = sorted(fs[failure_type])
 
                   # Update total stats
                   total_stats["total"] += spoiler_fuzz.get("total", 0)
