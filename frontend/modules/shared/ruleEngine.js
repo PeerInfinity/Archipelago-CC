@@ -4809,6 +4809,138 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'call': {
+        // Handle simple function calls: {"type": "call", "func": "max", "args": [...]}
+        // This format is used by the world generator for Python built-in functions
+        const funcName = rule.func;
+        const callArgs = rule.args || [];
+
+        // Evaluate all arguments
+        const evaluatedArgs = callArgs.map(arg =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+
+        // If any argument is undefined, the result is undefined
+        if (evaluatedArgs.some(arg => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+
+        switch (funcName) {
+          case 'max':
+            if (evaluatedArgs.length === 0) {
+              result = undefined;
+            } else if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              // max(iterable) - single array argument
+              const arr = evaluatedArgs[0];
+              result = arr.length > 0 ? Math.max(...arr) : undefined;
+            } else {
+              // max(a, b, c, ...) - multiple arguments
+              result = Math.max(...evaluatedArgs);
+            }
+            break;
+
+          case 'min':
+            if (evaluatedArgs.length === 0) {
+              result = undefined;
+            } else if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              // min(iterable) - single array argument
+              const arr = evaluatedArgs[0];
+              result = arr.length > 0 ? Math.min(...arr) : undefined;
+            } else {
+              // min(a, b, c, ...) - multiple arguments
+              result = Math.min(...evaluatedArgs);
+            }
+            break;
+
+          case 'len':
+            if (evaluatedArgs.length === 1) {
+              const val = evaluatedArgs[0];
+              if (Array.isArray(val)) {
+                result = val.length;
+              } else if (typeof val === 'string') {
+                result = val.length;
+              } else if (val && typeof val === 'object') {
+                result = Object.keys(val).length;
+              } else {
+                result = undefined;
+              }
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'sum':
+            if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              const arr = evaluatedArgs[0];
+              result = arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
+            } else if (evaluatedArgs.length === 2 && Array.isArray(evaluatedArgs[0])) {
+              // sum(iterable, start)
+              const arr = evaluatedArgs[0];
+              const start = evaluatedArgs[1];
+              result = arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), start);
+            } else {
+              result = evaluatedArgs.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
+            }
+            break;
+
+          case 'abs':
+            if (evaluatedArgs.length === 1 && typeof evaluatedArgs[0] === 'number') {
+              result = Math.abs(evaluatedArgs[0]);
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'int':
+            if (evaluatedArgs.length === 1) {
+              const val = evaluatedArgs[0];
+              if (typeof val === 'number') {
+                result = Math.trunc(val);
+              } else if (typeof val === 'string') {
+                const parsed = parseInt(val, 10);
+                result = isNaN(parsed) ? undefined : parsed;
+              } else if (typeof val === 'boolean') {
+                result = val ? 1 : 0;
+              } else {
+                result = undefined;
+              }
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'bool':
+            if (evaluatedArgs.length === 1) {
+              result = Boolean(evaluatedArgs[0]);
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'any':
+            if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              result = evaluatedArgs[0].some(val => Boolean(val));
+            } else {
+              result = evaluatedArgs.some(val => Boolean(val));
+            }
+            break;
+
+          case 'all':
+            if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              result = evaluatedArgs[0].every(val => Boolean(val));
+            } else {
+              result = evaluatedArgs.every(val => Boolean(val));
+            }
+            break;
+
+          default:
+            log('warn', `[evaluateRule] Unknown call function: ${funcName}`, { rule });
+            result = undefined;
+        }
+        break;
+      }
+
       default: {
         log('warn', `[evaluateRule] Unknown rule type: ${ruleType}`, { rule });
         result = undefined;
