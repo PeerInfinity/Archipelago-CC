@@ -450,8 +450,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["test_type", "world_source", "seed_mode", "seed", "runs_per_game",
-                              "generation_timeout", "test_timeout"]:
+                  for key in ["test_type", "world_source", "seed_mode", "seed", "base_seed",
+                              "runs_per_game", "generation_timeout", "test_timeout"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
