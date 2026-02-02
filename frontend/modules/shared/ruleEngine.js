@@ -3637,10 +3637,18 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
         if (!Array.isArray(iterable)) {
-          log('warn', '[evaluateRule] all_of iterator is not an array', { rule, iterable });
-          result = false;
-          break;
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] all_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('warn', '[evaluateRule] all_of iterator is not an array or object', { rule, iterable });
+            result = false;
+            break;
+          }
         }
 
         result = true;
@@ -3686,10 +3694,18 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
         if (!Array.isArray(iterable)) {
-          log('debug', '[evaluateRule] any_of iterator is not an array (treating as empty)', { rule, iterable });
-          result = false;
-          break;
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] any_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('debug', '[evaluateRule] any_of iterator is not an array or object (treating as empty)', { rule, iterable });
+            result = false;
+            break;
+          }
         }
 
         // If the iterable is empty, any_of should return false
@@ -5149,8 +5165,10 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     // The args contain the same structure as an AST all_of rule
     case 'AST_all_of': {
       // If the element_rule is already a complete all_of rule with its own iterator_info,
-      // evaluate it directly to avoid double iteration
-      if (args.element_rule && args.element_rule.type === 'all_of' && args.element_rule.iterator_info) {
+      // AND the outer AST_all_of has no iterator_info of its own,
+      // evaluate it directly to avoid double iteration.
+      // BUT if the outer has iterator_info, we MUST iterate to bind variables that the inner may reference.
+      if (args.element_rule && args.element_rule.type === 'all_of' && args.element_rule.iterator_info && !args.iterator_info) {
         return evaluateRule(args.element_rule, context, depth + 1, localScope);
       }
 
@@ -5167,8 +5185,10 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     // The args contain the same structure as an AST any_of rule
     case 'AST_any_of': {
       // If the element_rule is already a complete any_of rule with its own iterator_info,
-      // evaluate it directly to avoid double iteration
-      if (args.element_rule && args.element_rule.type === 'any_of' && args.element_rule.iterator_info) {
+      // AND the outer AST_any_of has no iterator_info of its own,
+      // evaluate it directly to avoid double iteration.
+      // BUT if the outer has iterator_info, we MUST iterate to bind variables that the inner may reference.
+      if (args.element_rule && args.element_rule.type === 'any_of' && args.element_rule.iterator_info && !args.iterator_info) {
         return evaluateRule(args.element_rule, context, depth + 1, localScope);
       }
 
