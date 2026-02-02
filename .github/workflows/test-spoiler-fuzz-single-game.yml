@@ -656,8 +656,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["test_type", "world_source", "seed_mode", "seed", "runs_per_game",
-                              "generation_timeout", "test_timeout"]:
+                  for key in ["test_type", "world_source", "seed_mode", "seed", "base_seed",
+                              "runs_per_game", "generation_timeout", "test_timeout"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
@@ -672,7 +672,12 @@ jobs:
                               "generation_failure": 0,
                               "test_failure": 0,
                               "timeout": 0,
-                              "errors": []
+                              "errors": [],
+                              "failing_seeds": {
+                                  "generation_failure": [],
+                                  "test_failure": [],
+                                  "timeout": []
+                              }
                           },
                           "world_info": result.get("world_info", {}),
                           "timestamp": datetime.now().isoformat()
@@ -696,6 +701,13 @@ jobs:
                   errors = spoiler_fuzz.get("errors", [])
                   if isinstance(errors, list):
                       combined_sf["errors"].extend(errors)
+
+                  # Merge failing_seeds
+                  failing_seeds = spoiler_fuzz.get("failing_seeds", {})
+                  for failure_type in ["generation_failure", "test_failure", "timeout"]:
+                      seeds = failing_seeds.get(failure_type, [])
+                      if seeds:
+                          combined_sf["failing_seeds"][failure_type].extend(seeds)
 
                   # Update total stats
                   total_stats["total"] += spoiler_fuzz.get("total", 0)

@@ -673,7 +673,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["ut_version", "world_source", "seed_mode", "seed", "jobs", "timeout"]:
+                  for key in ["ut_version", "prefer_native_ut", "world_source", "seed_mode", "seed",
+                              "runs_per_game", "jobs", "timeout", "default_options", "disallow_options"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
