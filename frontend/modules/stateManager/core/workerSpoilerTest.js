@@ -180,14 +180,25 @@ export class WorkerSpoilerTest {
         this.log('debug', '[WorkerSpoilerTest] Cleared state for sphere 0');
 
         // Add starting items - use sm.rules, not sm.staticData
+        // Consolidate items into counts first for efficiency (fuzz tests can generate
+        // hundreds of thousands of items when start_inventory has large counts)
         const startingItems = this.sm.rules?.starting_items?.[this.playerIdKey] || [];
         this.log('info', `[WorkerSpoilerTest] Starting items for player ${this.playerIdKey}: ${startingItems.length} items`);
         if (startingItems.length > 0) {
+          // Consolidate duplicate items into counts
+          const itemCounts = {};
           for (const itemName of startingItems) {
-            this.sm.addItemToInventory(itemName, 1);
-            result.itemsAdded++;
+            itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
           }
-          this.log('info', `[WorkerSpoilerTest] Added ${startingItems.length} starting items`);
+          const uniqueItemCount = Object.keys(itemCounts).length;
+          this.log('debug', `[WorkerSpoilerTest] Consolidated into ${uniqueItemCount} unique items`);
+
+          // Add each unique item with its total count
+          for (const [itemName, count] of Object.entries(itemCounts)) {
+            this.sm.addItemToInventory(itemName, count);
+            result.itemsAdded += count;
+          }
+          this.log('info', `[WorkerSpoilerTest] Added ${startingItems.length} starting items (${uniqueItemCount} unique)`);
         }
       }
 
