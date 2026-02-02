@@ -347,7 +347,7 @@ def main():
         if not quiet_mode:
             print(f"Found {len(failures)} apworlds that fail UT fuzz ({args.ut_version} UT, {args.ut_seed_mode} seed)")
 
-        for i, failure in enumerate(failures):  # Already sorted by success rate (worst first)
+        for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
             game_name = failure['game_name']
             template_file = failure['template']
             world_dir = failure['world_directory']

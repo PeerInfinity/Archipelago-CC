@@ -719,9 +719,6 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
 
         failures.append(failure_entry)
 
-    # Sort by success rate (lowest first) so worst failures come first
-    failures.sort(key=lambda x: x['ut_fuzz']['success_rate'])
-
     return failures
 
 
