@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-02 03:30:28
+**Generated:** 2026-02-02 04:21:01
 
 **Source Data Created:** 2026-02-02T00:18:50.845727
 
@@ -26,22 +26,22 @@ This summary combines results from fuzz tests that validate game configurations 
 - **UT Fuzz Original:** 38/85 passed (44.7%)
 - **UT Fuzz Modified:** 61/85 passed (71.8%)
 - **UT Fuzz Hybrid:** 69/85 passed (81.2%)
-- **Spoiler Fuzz:** 55/73 passed (75.3%)
+- **Spoiler Fuzz:** 60/73 passed (82.2%)
 
 ### Combined Results
 
 - **Games passing all 4 fuzz tests:** 30/85 (35.3%)
-- **Games passing 3 fuzz tests:** 26/85 (30.6%)
-- **Games passing 2 fuzz tests:** 11/85 (12.9%)
-- **Games passing 1 fuzz test:** 3/85 (3.5%)
-- **Games passing 0 fuzz tests:** 15/85 (17.6%)
+- **Games passing 3 fuzz tests:** 30/85 (35.3%)
+- **Games passing 2 fuzz tests:** 7/85 (8.2%)
+- **Games passing 1 fuzz test:** 4/85 (4.7%)
+- **Games passing 0 fuzz tests:** 14/85 (16.5%)
 
 ## Test Results
 
 | Game Name | [UT Original](./test-results-ut-fuzz-original.md) | [UT Modified](./test-results-ut-fuzz-modified.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | [Spoiler Fuzz](./test-results-spoiler-fuzz.md) | Rules Size |
 |-----------|:------------:|:------------:|:----------:|:-------------:|:----------:|
 | A Hat in Time | ❌ 17% | ✅ | ✅ | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0% | ✅ | ✅ | 🔶 72% | 665.3KB |
+| A Link to the Past | ❌ 0% | ✅ | ✅ | 🔶 70% | 665.3KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94% | ✅ | ✅ | ✅ | 26.0KB |
@@ -58,12 +58,12 @@ This summary combines results from fuzz tests that validate game configurations 
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | 282.3KB |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | 166.9KB |
 | Coding Adventure | ✅ | ✅ | ✅ | ✅ | 54.9KB |
-| DLCQuest | ❌ 46% | ✅ | ✅ | ⚠️ 90% | 51.0KB |
+| DLCQuest | ❌ 46% | ✅ | ✅ | ✅ | 51.0KB |
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | 280.1KB |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | 🔶 52% | ✅ | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0% | ✅ | ✅ | 🔶 70% | 497.8KB |
+| Factorio | ❌ 0% | ✅ | ✅ | ✅ | 497.8KB |
 | Faxanadu | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | ✅ | ✅ | — | N/A |
 | Final Fantasy Mystic Quest | ❌ 1% | 🔶 80% | 🔶 70% | 🔶 50% | 549.0KB |
@@ -73,7 +73,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | Inscryption | ✅ | ✅ | ✅ | ✅ | 84.2KB |
 | Jak and Daxter: The Precursor Legacy | 🔶 62% | ❌ 1% | ❌ 0% | — | 298.6KB |
 | Kingdom Hearts | ❌ 18% | ❌ 15% | ❌ 10% | 🔶 80% | 757.5KB |
-| Kingdom Hearts 2 | ❌ 37% | ❌ 0% | ❌ 0% | ❌ 10% | 1675.2KB |
+| Kingdom Hearts 2 | ❌ 37% | ❌ 0% | ❌ 0% | ✅ | 1675.2KB |
 | Kirby's Dream Land 3 | ❌ 3% | 🔶 87% | ✅ | 🔶 50% | 529.1KB |
 | Landstalker - The Treasures of King Nole | ❌ 20% | ✅ | ✅ | ✅ | 210.5KB |
 | Lingo | ❌ 21% | ❌ 2% | ✅ | ❌ 20% | 946.3KB |
@@ -98,20 +98,20 @@ This summary combines results from fuzz tests that validate game configurations 
 | SMZ3 | ❌ 1% | ❌ 0% | ❌ 0% | — | 1044.7KB |
 | Saving Princess | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ | ❌ 0% | ✅ | 🔶 70% | 418.7KB |
-| Shivers | ❌ 0% | ✅ | ✅ | ❌ 40% | 151.3KB |
+| Shivers | ❌ 0% | ✅ | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ 8% | ✅ | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.6KB |
-| Stardew Valley | ❌ 4% | ❌ 0% | ❌ 0% | ❌ 20% | 2430.2KB |
+| Stardew Valley | ❌ 4% | ❌ 0% | ❌ 0% | ❌ 10% | 2430.2KB |
 | Subnautica | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | ✅ | ✅ | ✅ | — | N/A |
 | Super Mario 64 | ❌ 29% | ✅ | ✅ | ✅ | 92.9KB |
-| Super Mario Land 2 | ❌ 10% | ✅ | ✅ | 🔶 70% | 976.7KB |
+| Super Mario Land 2 | ❌ 10% | ✅ | ✅ | ⚠️ 90% | 976.7KB |
 | Super Mario World | 🔶 54% | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 1% | ❌ 0% | ❌ 0% | ❌ 0% | 625.4KB |
 | TOEM original | ✅ | ✅ | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | ✅ | ✅ | ✅ | 102.8KB |
 | TUNIC | ✅ | 🔶 59% | ✅ | ❌ 20% | 705.5KB |
-| Terraria | ⚠️ 98% | ✅ | ✅ | ⚠️ 90% | 283.0KB |
+| Terraria | ⚠️ 98% | ✅ | ✅ | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | 555.6KB |
 | The Messenger | ❌ 2% | ✅ | ✅ | ✅ | 211.8KB |
 | The Wind Waker | ❌ 3% | ✅ | ✅ | ✅ | 253.9KB |
