@@ -769,11 +769,25 @@ export function createStateSnapshotInterface(
 
       // Evaluate the entrance's access rule
       if (entrance.access_rule) {
+        // Create an enhanced entrance object with parent_region_name for attribute access
+        const enhancedEntrance = {
+          ...entrance,
+          parent_region_name: sourceRegion,
+          parent_region: sourceRegion  // Also add parent_region directly for simpler access
+        };
+
+        // Normalize the entrance name for variable binding (matches Python exporter convention)
+        // "Kiki Skip" -> "kikiskip"
+        const normalizedName = entrance.name?.toLowerCase().replace(/\s+/g, '');
+
         // Create a context for evaluating the entrance's access rule
+        // Bind the entrance under both standard names and its normalized name
         const entranceContext = createStateSnapshotInterface(snapshot, staticData, {
           ...contextVariables,
-          entrance: entrance,
-          currentEntrance: entrance
+          entrance: enhancedEntrance,
+          currentEntrance: enhancedEntrance,
+          // Bind under normalized name so rules like "kikiskip.parent_region" work
+          ...(normalizedName ? { [normalizedName]: enhancedEntrance } : {})
         });
         return evaluateRule(entrance.access_rule, entranceContext);
       }
