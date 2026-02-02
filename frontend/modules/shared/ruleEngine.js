@@ -1981,19 +1981,37 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         }
 
         // Special handling for shop.has_unlimited(item) method calls
-        // Checks if shop has the item with unlimited stock (max === 0)
+        // Checks if shop has the item with unlimited stock
+        // The exporter pre-computes unlimited_items array for efficiency
         if (rule.function?.type === 'attribute' &&
             rule.function.attr === 'has_unlimited' &&
             rule.function.object?.type === 'name') {
           // Resolve the shop object from local scope (bound in any_of iteration)
           const shopObj = evaluateRule(rule.function.object, context, depth + 1, localScope);
-          if (shopObj && Array.isArray(shopObj.inventory)) {
+          if (shopObj) {
             const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
             const itemName = args[0];
-            // Check if any inventory entry has this item with unlimited stock
-            const hasUnlimited = shopObj.inventory.some(inv => inv && inv.item === itemName && inv.max === 0);
-            result = hasUnlimited;
-            break;
+
+            // Prefer using pre-computed unlimited_items array from exporter
+            if (Array.isArray(shopObj.unlimited_items)) {
+              result = shopObj.unlimited_items.includes(itemName);
+              break;
+            }
+
+            // Fallback: check inventory directly (for backward compatibility)
+            // An item is unlimited if:
+            // - max === 0 and inv.item matches (base item is unlimited)
+            // - max > 0 and inv.replacement matches (replacement is unlimited)
+            if (Array.isArray(shopObj.inventory)) {
+              const hasUnlimited = shopObj.inventory.some(inv => {
+                if (!inv) return false;
+                if (!inv.max && inv.item === itemName) return true;  // max is 0 or falsy
+                if (inv.max && inv.replacement === itemName) return true;  // max > 0, check replacement
+                return false;
+              });
+              result = hasUnlimited;
+              break;
+            }
           }
         }
 
@@ -3619,10 +3637,18 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
         if (!Array.isArray(iterable)) {
-          log('warn', '[evaluateRule] all_of iterator is not an array', { rule, iterable });
-          result = false;
-          break;
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] all_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('warn', '[evaluateRule] all_of iterator is not an array or object', { rule, iterable });
+            result = false;
+            break;
+          }
         }
 
         result = true;
@@ -3668,10 +3694,18 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
         if (!Array.isArray(iterable)) {
-          log('debug', '[evaluateRule] any_of iterator is not an array (treating as empty)', { rule, iterable });
-          result = false;
-          break;
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] any_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('debug', '[evaluateRule] any_of iterator is not an array or object (treating as empty)', { rule, iterable });
+            result = false;
+            break;
+          }
         }
 
         // If the iterable is empty, any_of should return false
@@ -4791,6 +4825,138 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'call': {
+        // Handle simple function calls: {"type": "call", "func": "max", "args": [...]}
+        // This format is used by the world generator for Python built-in functions
+        const funcName = rule.func;
+        const callArgs = rule.args || [];
+
+        // Evaluate all arguments
+        const evaluatedArgs = callArgs.map(arg =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+
+        // If any argument is undefined, the result is undefined
+        if (evaluatedArgs.some(arg => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+
+        switch (funcName) {
+          case 'max':
+            if (evaluatedArgs.length === 0) {
+              result = undefined;
+            } else if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              // max(iterable) - single array argument
+              const arr = evaluatedArgs[0];
+              result = arr.length > 0 ? Math.max(...arr) : undefined;
+            } else {
+              // max(a, b, c, ...) - multiple arguments
+              result = Math.max(...evaluatedArgs);
+            }
+            break;
+
+          case 'min':
+            if (evaluatedArgs.length === 0) {
+              result = undefined;
+            } else if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              // min(iterable) - single array argument
+              const arr = evaluatedArgs[0];
+              result = arr.length > 0 ? Math.min(...arr) : undefined;
+            } else {
+              // min(a, b, c, ...) - multiple arguments
+              result = Math.min(...evaluatedArgs);
+            }
+            break;
+
+          case 'len':
+            if (evaluatedArgs.length === 1) {
+              const val = evaluatedArgs[0];
+              if (Array.isArray(val)) {
+                result = val.length;
+              } else if (typeof val === 'string') {
+                result = val.length;
+              } else if (val && typeof val === 'object') {
+                result = Object.keys(val).length;
+              } else {
+                result = undefined;
+              }
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'sum':
+            if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              const arr = evaluatedArgs[0];
+              result = arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
+            } else if (evaluatedArgs.length === 2 && Array.isArray(evaluatedArgs[0])) {
+              // sum(iterable, start)
+              const arr = evaluatedArgs[0];
+              const start = evaluatedArgs[1];
+              result = arr.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), start);
+            } else {
+              result = evaluatedArgs.reduce((acc, val) => acc + (typeof val === 'number' ? val : 0), 0);
+            }
+            break;
+
+          case 'abs':
+            if (evaluatedArgs.length === 1 && typeof evaluatedArgs[0] === 'number') {
+              result = Math.abs(evaluatedArgs[0]);
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'int':
+            if (evaluatedArgs.length === 1) {
+              const val = evaluatedArgs[0];
+              if (typeof val === 'number') {
+                result = Math.trunc(val);
+              } else if (typeof val === 'string') {
+                const parsed = parseInt(val, 10);
+                result = isNaN(parsed) ? undefined : parsed;
+              } else if (typeof val === 'boolean') {
+                result = val ? 1 : 0;
+              } else {
+                result = undefined;
+              }
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'bool':
+            if (evaluatedArgs.length === 1) {
+              result = Boolean(evaluatedArgs[0]);
+            } else {
+              result = undefined;
+            }
+            break;
+
+          case 'any':
+            if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              result = evaluatedArgs[0].some(val => Boolean(val));
+            } else {
+              result = evaluatedArgs.some(val => Boolean(val));
+            }
+            break;
+
+          case 'all':
+            if (evaluatedArgs.length === 1 && Array.isArray(evaluatedArgs[0])) {
+              result = evaluatedArgs[0].every(val => Boolean(val));
+            } else {
+              result = evaluatedArgs.every(val => Boolean(val));
+            }
+            break;
+
+          default:
+            log('warn', `[evaluateRule] Unknown call function: ${funcName}`, { rule });
+            result = undefined;
+        }
+        break;
+      }
+
       default: {
         log('warn', `[evaluateRule] Unknown rule type: ${ruleType}`, { rule });
         result = undefined;
@@ -4999,8 +5165,10 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     // The args contain the same structure as an AST all_of rule
     case 'AST_all_of': {
       // If the element_rule is already a complete all_of rule with its own iterator_info,
-      // evaluate it directly to avoid double iteration
-      if (args.element_rule && args.element_rule.type === 'all_of' && args.element_rule.iterator_info) {
+      // AND the outer AST_all_of has no iterator_info of its own,
+      // evaluate it directly to avoid double iteration.
+      // BUT if the outer has iterator_info, we MUST iterate to bind variables that the inner may reference.
+      if (args.element_rule && args.element_rule.type === 'all_of' && args.element_rule.iterator_info && !args.iterator_info) {
         return evaluateRule(args.element_rule, context, depth + 1, localScope);
       }
 
@@ -5017,8 +5185,10 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     // The args contain the same structure as an AST any_of rule
     case 'AST_any_of': {
       // If the element_rule is already a complete any_of rule with its own iterator_info,
-      // evaluate it directly to avoid double iteration
-      if (args.element_rule && args.element_rule.type === 'any_of' && args.element_rule.iterator_info) {
+      // AND the outer AST_any_of has no iterator_info of its own,
+      // evaluate it directly to avoid double iteration.
+      // BUT if the outer has iterator_info, we MUST iterate to bind variables that the inner may reference.
+      if (args.element_rule && args.element_rule.type === 'any_of' && args.element_rule.iterator_info && !args.iterator_info) {
         return evaluateRule(args.element_rule, context, depth + 1, localScope);
       }
 
@@ -5346,14 +5516,25 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // AST_prog_item_count (from DLCQuest and other games with accumulator items)
     // Returns the count of a progression item from state.prog_items[player][key]
+    // Inlined for performance - this is called frequently in games with coinsanity
     case 'AST_prog_item_count': {
       const progKey = args.key;
       if (progKey === undefined) {
         log('warn', '[evaluateRuleBuilderRule] AST_prog_item_count: missing key');
         return undefined;
       }
-      // Delegate to the prog_item_count handler
-      return evaluateRule({ type: 'prog_item_count', key: progKey }, context, depth + 1, localScope);
+      // Inline the prog_item_count logic to avoid recursive evaluateRule overhead
+      if (typeof context.countProgItem === 'function') {
+        return context.countProgItem(progKey) ?? 0;
+      }
+      // Fallback: check prog_items directly from snapshot
+      const snapshot = context.snapshot || context;
+      const playerId = context.playerId || context.getPlayerId?.() || 1;
+      const progItems = snapshot?.prog_items;
+      // Use standard player ID format (string keys in JSON)
+      return progItems?.[playerId]?.[progKey] ??
+             progItems?.[String(playerId)]?.[progKey] ??
+             0;
     }
 
     // Reachability rules
@@ -5445,9 +5626,36 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       const op = args.op || '==';
       const right = args.right;
 
-      // Recursively evaluate left and right operands
-      const leftValue = evaluateRule(left, context, depth + 1, localScope);
-      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+      // Fast path: Handle common AST_prog_item_count >= number pattern directly
+      // This is very common in games with coinsanity (DLCQuest, etc.)
+      // Bypasses 2-3 levels of function call overhead
+      let leftValue;
+      if (left && typeof left === 'object' && left.rule === 'AST_prog_item_count') {
+        const progKey = left.args?.key;
+        if (progKey !== undefined) {
+          if (typeof context.countProgItem === 'function') {
+            leftValue = context.countProgItem(progKey) ?? 0;
+          } else {
+            const snapshot = context.snapshot || context;
+            const playerId = context.playerId || context.getPlayerId?.() || 1;
+            const progItems = snapshot?.prog_items;
+            leftValue = progItems?.[playerId]?.[progKey] ??
+                       progItems?.[String(playerId)]?.[progKey] ??
+                       0;
+          }
+        } else {
+          leftValue = evaluateRule(left, context, depth + 1, localScope);
+        }
+      } else if (typeof left !== 'object' || left === null) {
+        leftValue = left;
+      } else {
+        leftValue = evaluateRule(left, context, depth + 1, localScope);
+      }
+
+      // Optimize: skip evaluateRule for primitive values (common case)
+      const rightValue = (typeof right !== 'object' || right === null)
+        ? right
+        : evaluateRule(right, context, depth + 1, localScope);
 
       // If either operand is undefined, we can't compare
       if (leftValue === undefined || rightValue === undefined) {

@@ -656,8 +656,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["test_type", "world_source", "seed_mode", "seed", "runs_per_game",
-                              "generation_timeout", "test_timeout"]:
+                  for key in ["test_type", "world_source", "seed_mode", "seed", "base_seed",
+                              "runs_per_game", "generation_timeout", "test_timeout"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
@@ -670,9 +670,15 @@ jobs:
                               "total": 0,
                               "success": 0,
                               "generation_failure": 0,
+                              "ignored": 0,
                               "test_failure": 0,
                               "timeout": 0,
-                              "errors": []
+                              "errors": [],
+                              "failing_seeds": {
+                                  "generation_failure": [],
+                                  "test_failure": [],
+                                  "timeout": []
+                              }
                           },
                           "world_info": result.get("world_info", {}),
                           "timestamp": datetime.now().isoformat()
@@ -685,6 +691,7 @@ jobs:
                   combined_sf["total"] += spoiler_fuzz.get("total", 0)
                   combined_sf["success"] += spoiler_fuzz.get("success", 0)
                   combined_sf["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
+                  combined_sf["ignored"] += spoiler_fuzz.get("ignored", 0)
                   combined_sf["test_failure"] += spoiler_fuzz.get("test_failure", 0)
                   combined_sf["timeout"] += spoiler_fuzz.get("timeout", 0)
 
@@ -696,6 +703,19 @@ jobs:
                   errors = spoiler_fuzz.get("errors", [])
                   if isinstance(errors, list):
                       combined_sf["errors"].extend(errors)
+
+                  # Merge failing_seeds
+                  failing_seeds = spoiler_fuzz.get("failing_seeds", {})
+                  for failure_type in ["generation_failure", "test_failure", "timeout"]:
+                      seeds = failing_seeds.get(failure_type, [])
+                      if seeds:
+                          combined_sf["failing_seeds"][failure_type].extend(seeds)
+
+          # Sort failing_seeds for cleaner output
+          for template_name in combined["results"]:
+              fs = combined["results"][template_name]["spoiler_fuzz"]["failing_seeds"]
+              for failure_type in fs:
+                  fs[failure_type] = sorted(fs[failure_type])
 
                   # Update total stats
                   total_stats["total"] += spoiler_fuzz.get("total", 0)
