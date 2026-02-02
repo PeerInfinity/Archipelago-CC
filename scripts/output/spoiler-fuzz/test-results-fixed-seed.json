@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2026-02-02T01:25:32.988534",
-    "last_updated": "2026-02-02T03:17:08.112989",
+    "last_updated": "2026-02-02T03:30:28.107784",
     "script_version": "1.0.0",
     "combined_from": 10,
     "test_type": "spoiler_fuzz",
@@ -389,6 +389,7 @@
         "total": 100,
         "success": 72,
         "generation_failure": 0,
+        "ignored": 2,
         "test_failure": 26,
         "timeout": 0,
         "errors": [
@@ -424,9 +425,6 @@
           "test_failure": [
             3,
             4,
-            94,
-            98,
-            100,
             12,
             14,
             16,
@@ -447,7 +445,10 @@
             66,
             67,
             83,
-            89
+            89,
+            94,
+            98,
+            100
           ],
           "timeout": []
         }
@@ -456,10 +457,10 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-02T03:16:41.585790",
+      "timestamp": "2026-02-02T03:30:00.843760",
       "updated_from_single_game_test": {
         "runs": 100,
-        "updated_at": "2026-02-02T03:17:08.112983"
+        "updated_at": "2026-02-02T03:30:28.107777"
       }
     },
     "Celeste (Open World).yaml": {
