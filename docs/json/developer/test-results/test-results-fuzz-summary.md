@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-02 04:21:01
+**Generated:** 2026-02-02 06:51:56
 
 **Source Data Created:** 2026-02-02T00:18:50.845727
 
@@ -41,7 +41,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | Game Name | [UT Original](./test-results-ut-fuzz-original.md) | [UT Modified](./test-results-ut-fuzz-modified.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | [Spoiler Fuzz](./test-results-spoiler-fuzz.md) | Rules Size |
 |-----------|:------------:|:------------:|:----------:|:-------------:|:----------:|
 | A Hat in Time | ❌ 17% | ✅ | ✅ | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0% | ✅ | ✅ | 🔶 70% | 665.3KB |
+| A Link to the Past | ❌ 0% | ✅ | ✅ | 🔶 89% | 665.3KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94% | ✅ | ✅ | ✅ | 26.0KB |
@@ -66,7 +66,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | Factorio | ❌ 0% | ✅ | ✅ | ✅ | 497.8KB |
 | Faxanadu | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | ✅ | ✅ | — | N/A |
-| Final Fantasy Mystic Quest | ❌ 1% | 🔶 80% | 🔶 70% | 🔶 50% | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ 1% | 🔶 80% | 🔶 70% | 🔶 60% | 549.0KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 11% | ❌ 0% | ❌ 0% | — | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | 102.2KB |
