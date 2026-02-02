@@ -4161,6 +4161,20 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             break;
           }
           regionName = regionExpr.regionName;
+        } else if (typeof regionExpr === 'object' && regionExpr !== null) {
+          // regionExpr might be the actual region data object (resolved from parent_region)
+          // If the attribute is directly on the object, return it
+          if (attrName in regionExpr) {
+            result = regionExpr[attrName];
+            break;
+          }
+          // Try to get the region name for lookup
+          regionName = regionExpr.name || regionExpr.regionName;
+          if (!regionName) {
+            log('debug', '[evaluateRule] region_attribute: region object has no name, checking attribute directly', { regionExpr, attrName });
+            result = undefined;
+            break;
+          }
         } else {
           log('debug', '[evaluateRule] region_attribute: cannot determine region name (returning undefined)', { regionExpr, rule });
           result = undefined;
