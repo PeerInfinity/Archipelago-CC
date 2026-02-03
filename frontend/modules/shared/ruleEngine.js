@@ -229,6 +229,17 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * Clear the helper cache on a context object.
+ * Should be called when the state changes to ensure helper results are re-evaluated.
+ * @param {Object} context - The snapshot interface context
+ */
+export function clearHelperCache(context) {
+  if (context && context._helperCache) {
+    context._helperCache.clear();
+  }
+}
+
 class RuleTrace {
   constructor(rule, depth) {
     this.type = rule?.type || 'unknown';
@@ -554,9 +565,23 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             }
 
             // Then, override with actual argument values
+            // Also build evaluated args array for cache key
+            const evaluatedArgs = [];
             for (let i = 0; i < params.length && i < args.length; i++) {
               const argValue = evaluateRule(args[i], context, depth + 1, localScope);
               helperLocalScope[params[i]] = argValue;
+              evaluatedArgs.push(argValue);
+            }
+
+            // Check helper cache before evaluating the body
+            // The cache is stored on the context and is per-evaluation-cycle
+            // This significantly improves performance when the same helper is called
+            // multiple times with the same arguments (e.g., is_auto_scroll in coinsanity)
+            const helperCache = context._helperCache || (context._helperCache = new Map());
+            const cacheKey = `${rule.name}:${JSON.stringify(evaluatedArgs)}`;
+            if (helperCache.has(cacheKey)) {
+              result = helperCache.get(cacheKey);
+              break;
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
@@ -573,6 +598,8 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             // If definition evaluation succeeded (not undefined), use that result
             // Otherwise, fall through to try JavaScript helpers as a fallback
             if (result !== undefined) {
+              // Store in cache before returning
+              helperCache.set(cacheKey, result);
               break;
             }
             log('debug', `[evaluateRule] Helper definition for '${rule.name}' returned undefined, trying JavaScript fallback`);
@@ -589,8 +616,11 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           let helperLocalScope = localScope ? { ...localScope } : {};
 
           // Map arguments to parameter names if available, otherwise use positional naming
+          // Also build evaluated args array for cache key
+          const evaluatedArgs = [];
           for (let i = 0; i < args.length; i++) {
             const argValue = evaluateRule(args[i], context, depth + 1, localScope);
+            evaluatedArgs.push(argValue);
             if (params[i]) {
               // Use the actual parameter name from the helper definition
               helperLocalScope[params[i]] = argValue;
@@ -600,6 +630,14 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             }
           }
 
+          // Check helper cache before evaluating inline body
+          const helperCache = context._helperCache || (context._helperCache = new Map());
+          const cacheKey = `inline:${rule.name}:${JSON.stringify(evaluatedArgs)}`;
+          if (helperCache.has(cacheKey)) {
+            result = helperCache.get(cacheKey);
+            break;
+          }
+
           result = evaluateRule(rule.body, context, depth + 1, helperLocalScope);
 
           // Unwrap return marker if present
@@ -607,6 +645,8 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             result = result.value;
           }
           if (result !== undefined) {
+            // Store in cache before returning
+            helperCache.set(cacheKey, result);
             break;
           }
           log('debug', `[evaluateRule] Inline body for '${rule.name}' returned undefined, trying fallbacks`);

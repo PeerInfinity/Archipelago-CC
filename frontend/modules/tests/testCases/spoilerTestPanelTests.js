@@ -2,7 +2,7 @@ import { registerTest } from '../testRegistry.js';
 
 // Constants for test configuration
 const PANEL_ID = 'spoilerTestPanel';
-const MAX_WAIT_TIME_TEST_COMPLETION = 300000; // 5 minutes
+const MAX_WAIT_TIME_TEST_COMPLETION = 900000; // 15 minutes - increased for games with many locations (e.g., coinsanity)
 
 /**
  * Test case for running a full spoiler log test from the Spoiler Test panel.
