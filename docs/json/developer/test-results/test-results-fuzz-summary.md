@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-03 04:39:38
+**Generated:** 2026-02-03 19:55:58
 
 **Source Data Created:** 2026-02-02T00:18:50.845727
 
@@ -26,13 +26,13 @@ This summary combines results from fuzz tests that validate game configurations 
 - **UT Fuzz Original:** 38/85 passed (44.7%)
 - **UT Fuzz Modified:** 61/85 passed (71.8%)
 - **UT Fuzz Hybrid:** 69/85 passed (81.2%)
-- **Spoiler Fuzz:** 60/73 passed (82.2%)
+- **Spoiler Fuzz:** 61/73 passed (83.6%)
 
 ### Combined Results
 
 - **Games passing all 4 fuzz tests:** 30/85 (35.3%)
-- **Games passing 3 fuzz tests:** 30/85 (35.3%)
-- **Games passing 2 fuzz tests:** 7/85 (8.2%)
+- **Games passing 3 fuzz tests:** 31/85 (36.5%)
+- **Games passing 2 fuzz tests:** 6/85 (7.1%)
 - **Games passing 1 fuzz test:** 4/85 (4.7%)
 - **Games passing 0 fuzz tests:** 14/85 (16.5%)
 
@@ -41,7 +41,7 @@ This summary combines results from fuzz tests that validate game configurations 
 | Game Name | [UT Original](./test-results-ut-fuzz-original.md) | [UT Modified](./test-results-ut-fuzz-modified.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | [Spoiler Fuzz](./test-results-spoiler-fuzz.md) | Rules Size |
 |-----------|:------------:|:------------:|:----------:|:-------------:|:----------:|
 | A Hat in Time | ❌ 17% | ✅ | ✅ | ✅ | 231.3KB |
-| A Link to the Past | ❌ 0% | ✅ | ✅ | ⚠️ 94% | 665.3KB |
+| A Link to the Past | ❌ 0% | ✅ | ✅ | ✅ | 665.3KB |
 | A Short Hike | ✅ | ✅ | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | ✅ | ✅ | ✅ | 11.0KB |
 | Adventure | ⚠️ 94% | ✅ | ✅ | ✅ | 26.0KB |
