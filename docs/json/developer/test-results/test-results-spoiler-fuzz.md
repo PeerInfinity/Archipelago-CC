@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-02 05:52:42
+**Generated:** 2026-02-03 03:19:01
 
-**Source Data Created:** 2026-02-02T05:52:41.895162
+**Source Data Created:** 2026-02-03T03:19:01.480259
 
-**Source Data Last Updated:** 2026-02-02T05:52:41.895167
+**Source Data Last Updated:** 2026-02-03T03:19:01.480265
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -26,7 +26,7 @@
 - **Total Fuzz Runs:** 730
 - **Successful Runs:** 639 (87.5%)
 - **Generation Failures:** 14
-- **Test Failures:** 46
+- **Test Failures:** 45
 - **Timed Out Runs:** 0
 
 ## Test Results
@@ -57,7 +57,7 @@
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 122.5KB |
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 497.8KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 68.7KB |
-| Final Fantasy Mystic Quest | ❌ | 10 | 6 | 2 | 2 | 0 | ⚠️ 60.0% | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 5 | 2 | 3 | 0 | ⚠️ 50.0% | 549.0KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 367.5KB |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.2KB |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 84.2KB |
@@ -86,12 +86,12 @@
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 266.2KB |
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1126.6KB |
-| Stardew Valley | ❌ | 10 | 1 | 0 | 9 | 0 | ❌ 10.0% | 2430.2KB |
+| Stardew Valley | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 2430.2KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 207.8KB |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 92.9KB |
 | Super Mario Land 2 | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 976.7KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 2 | 5 | 0 | ❌ 0.0% | 625.4KB |
+| Super Metroid | ❌ | 10 | 0 | 2 | 4 | 0 | ❌ 0.0% | 625.4KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TUNIC | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 705.5KB |
