@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2026-02-02T05:52:41.895162",
-    "last_updated": "2026-02-02T19:14:29.238328",
+    "last_updated": "2026-02-03T00:50:49.549796",
     "script_version": "1.0.0",
     "combined_from": 10,
     "test_type": "spoiler_fuzz",
@@ -373,13 +373,16 @@
     "A Link to the Past.yaml": {
       "spoiler_fuzz": {
         "passed": false,
-        "total": 100,
-        "success": 92,
+        "total": 1000,
+        "success": 945,
         "generation_failure": 0,
-        "ignored": 2,
-        "test_failure": 6,
+        "ignored": 46,
+        "test_failure": 9,
         "timeout": 0,
         "errors": [
+          "Spoiler test timed out (detected in output)",
+          "Spoiler test timed out (detected in output)",
+          "Spoiler test timed out (detected in output)",
           "Spoiler test timed out (detected in output)",
           "Spoiler test timed out (detected in output)",
           "Spoiler test timed out (detected in output)",
@@ -390,12 +393,15 @@
         "failing_seeds": {
           "generation_failure": [],
           "test_failure": [
-            54,
-            62,
-            63,
-            66,
-            67,
-            100
+            194,
+            433,
+            590,
+            634,
+            671,
+            681,
+            783,
+            800,
+            822
           ],
           "timeout": []
         }
@@ -404,10 +410,10 @@
         "game_name": "A Link to the Past",
         "world_directory": "alttp"
       },
-      "timestamp": "2026-02-02T19:14:02.094228",
+      "timestamp": "2026-02-03T00:50:14.494882",
       "updated_from_single_game_test": {
-        "runs": 100,
-        "updated_at": "2026-02-02T19:14:29.238319"
+        "runs": 1000,
+        "updated_at": "2026-02-03T00:50:49.549789"
       }
     },
     "Celeste (Open World).yaml": {
