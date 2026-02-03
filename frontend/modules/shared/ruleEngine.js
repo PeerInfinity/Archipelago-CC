@@ -739,7 +739,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           break;
         }
 
-        // Handle can_buy and can_buy_unlimited using shop_items data
+        // Handle can_buy and can_buy_unlimited using shop data
         // TODO: This is ALttP-specific logic that should be moved to a game-specific module.
         // Find a more generic solution (e.g., game-specific helper registry or exported helper definitions).
         if (rule.name === 'can_buy' || rule.name === 'can_buy_unlimited') {
@@ -748,8 +748,54 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             result = undefined;
             break;
           }
-          // Get shop_items from settings
-          const shopItems = context.getSetting?.('shop_items');
+
+          // Try to get shop_items first (legacy format)
+          let shopItems = context.getSetting?.('shop_items');
+
+          // If shop_items not found, try to build it from shops array
+          // The exporter provides shops as: [{region, unlimited_items, inventory}, ...]
+          // We need to convert to: {itemName: {unlimited: [regions], limited: [regions]}}
+          if (!shopItems) {
+            const shops = context.getSetting?.('shops');
+            if (Array.isArray(shops) && shops.length > 0) {
+              shopItems = {};
+              for (const shop of shops) {
+                const regionName = shop.region;
+                if (!regionName) continue;
+
+                // Add unlimited items
+                if (Array.isArray(shop.unlimited_items)) {
+                  for (const item of shop.unlimited_items) {
+                    if (!shopItems[item]) {
+                      shopItems[item] = { unlimited: [], limited: [] };
+                    }
+                    if (!shopItems[item].unlimited.includes(regionName)) {
+                      shopItems[item].unlimited.push(regionName);
+                    }
+                  }
+                }
+
+                // Add limited items from inventory (max > 0 means limited stock of base item)
+                if (Array.isArray(shop.inventory)) {
+                  for (const inv of shop.inventory) {
+                    if (!inv || !inv.item) continue;
+                    // max > 0 means limited stock of base item
+                    // max === 0 means unlimited stock (already handled above)
+                    if (inv.max && inv.max > 0) {
+                      if (!shopItems[inv.item]) {
+                        shopItems[inv.item] = { unlimited: [], limited: [] };
+                      }
+                      if (!shopItems[inv.item].limited.includes(regionName)) {
+                        shopItems[inv.item].limited.push(regionName);
+                      }
+                    }
+                  }
+                }
+              }
+              log('debug', `[evaluateRule] ${rule.name}: converted shops array to shop_items with ${Object.keys(shopItems).length} items`);
+            }
+          }
+
           if (!shopItems || !shopItems[itemName]) {
             log('debug', `[evaluateRule] ${rule.name}: item '${itemName}' not found in shop_items`);
             result = false;
