@@ -417,7 +417,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                 outfilebase,
                 settings.general_options.update_frontend_presets,
                 settings.general_options.skip_preset_copy_if_rules_identical,
-                settings.general_options.rules_json_format
+                settings.general_options.rules_json_format,
+                clear_game_presets=settings.general_options.clear_game_presets,
+                clear_all_presets=settings.general_options.clear_all_presets
             )
             # Clear exporter caches to allow GC
             clear_rule_cache()

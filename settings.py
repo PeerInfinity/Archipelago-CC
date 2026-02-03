@@ -537,6 +537,8 @@ class GeneralOptions(Group):
     auto_collect_events: bool = False  # Auto-collect event items when locations become accessible
     filter_event_items: bool = False  # Filter out event locations/items from sphere log output (matches UT behavior)
     update_frontend_presets: bool = False
+    clear_game_presets: bool = False  # Delete all existing presets for the current game before generating new ones
+    clear_all_presets: bool = False  # Delete all existing presets for ALL games before generating new ones
     skip_export_for_native_ut: bool = False  # Skip rule export for worlds with native UT support (ut_can_gen_without_yaml)
     skip_export_from_list: bool = False  # When combined with skip_export_for_native_ut, use a list of games instead of checking ut_can_gen_without_yaml
 
