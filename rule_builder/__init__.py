@@ -76,6 +76,8 @@ from .rules import (
     WeightedSum,
     UniqueCount,
     OptionValue,
+    # Rule type collections
+    BOOLEAN_RULE_TYPES,
 )
 
 from .ast_format import (
@@ -146,6 +148,8 @@ __all__ = [
     'WeightedSum',
     'UniqueCount',
     'OptionValue',
+    # Rule type collections
+    'BOOLEAN_RULE_TYPES',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',
