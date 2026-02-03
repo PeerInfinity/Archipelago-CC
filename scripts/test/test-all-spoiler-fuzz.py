@@ -248,12 +248,6 @@ def run_spoiler_test(game_name: str, seed: int, project_root: Path, headed: bool
                 result_dict["sphere_reached"] = int(sphere_match.group(1))
                 result_dict["total_spheres"] = int(sphere_match.group(2))
 
-        # Check for timeout in output (e.g., Playwright internal timeout)
-        if not result_dict["success"]:
-            output_lower = output.lower()
-            if "timeout" in output_lower or "timed out" in output_lower:
-                result_dict["error"] = f"Spoiler test timed out (detected in output)"
-
         return result_dict["success"], result_dict
 
     except subprocess.TimeoutExpired:
@@ -406,16 +400,16 @@ def run_fuzz_test(
                 if verbose:
                     print("PASS")
             else:
-                run_result["error"] = test_result.get("error") or "Spoiler test failed"
-                if "timeout" in run_result["error"].lower():
+                if test_result.get("error") and "timeout" in test_result["error"].lower():
                     result["timeout"] += 1
                     if verbose:
                         print("TIMEOUT")
                 else:
                     result["test_failure"] += 1
-                    result["errors"].append(run_result["error"])
                     if verbose:
                         print("FAIL")
+                run_result["error"] = test_result.get("error") or "Spoiler test failed"
+                result["errors"].append(run_result["error"])
 
             result["runs"].append(run_result)
 
