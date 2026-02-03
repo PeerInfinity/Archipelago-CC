@@ -399,6 +399,9 @@ jobs:
           print(f"Updated {main_file} with {len(single_data.get('results', {}))} game results")
           PYTHON_SCRIPT
 
+          # Install pyyaml for doc generation scripts
+          pip install pyyaml
+
           # Regenerate documentation
           python scripts/docs/generate_ut_fuzz_chart.py || true
 
@@ -936,6 +939,9 @@ jobs:
 
           print(f"Updated {main_file} with {len(single_data.get('results', {}))} game results")
           PYTHON_SCRIPT
+
+          # Install pyyaml for doc generation scripts
+          pip install pyyaml
 
           # Regenerate documentation
           python scripts/docs/generate_ut_fuzz_chart.py || true
