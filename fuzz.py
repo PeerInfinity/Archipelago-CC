@@ -399,15 +399,6 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
 def call_generate(yaml_path, args, output_path):
     from settings import get_settings
 
-    # Clear any cached state from previous generations
-    # Some worlds (like Landstalker) use class-level caches that persist
-    # across generations and can cause issues with stale player IDs
-    try:
-        from worlds.landstalker import LandstalkerWorld
-        LandstalkerWorld.cached_spheres = []
-    except ImportError:
-        pass
-
     settings = get_settings()
 
     args = Namespace(

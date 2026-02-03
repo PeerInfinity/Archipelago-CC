@@ -5,7 +5,7 @@ This document describes the modifications made to the Universal Tracker compared
 - **Original version:** v0.2.24.1
 - **Modified version:** v0.2.23 (based on earlier version with extensive additions)
 - **Location in this repository:** `worlds/tracker/`
-- **Last compared:** 2026-01-14
+- **Last compared:** 2026-02-02
 
 ## Summary of Changes
 
@@ -14,6 +14,9 @@ The modifications extend Universal Tracker with:
 2. **Direct AST rule explanation** from JSON rules files
 3. **UT comparison testing infrastructure** for automated verification
 4. **Debug logging and sphere log output** for test analysis
+5. **Multiworld fuzz testing** via `MultiworldHook` class
+6. **ALttP entrance shuffle seed handling** for deterministic regeneration
+7. **Fractional sphere logic** option for finer-grained sphere comparison
 
 These changes integrate UT with the JSON Export system, allowing it to explain rules for any world that has exported rules, not just worlds with native Rule Builder support.
 
@@ -23,7 +26,7 @@ These changes integrate UT with the JSON Export system, allowing it to explain r
 
 ### `TrackerCore.py`
 
-**Lines:** 513 → 1059 (~546 lines added)
+**Lines:** 513 → 1055 (~542 lines added)
 
 This file received the most significant modifications, adding worldgen and AST explain integration.
 
@@ -95,6 +98,7 @@ Adds testing infrastructure and debug logging capabilities.
 | Method | Purpose |
 |--------|---------|
 | `_handle_ut_test_sync_bounce()` | Handle test synchronization protocol for UT comparison testing |
+| `_send_ut_ready_bounce()` | Send UT ready signal via bounce protocol |
 | `_log_sphere_state()` | Log current sphere state to sphere log file |
 | `_close_sphere_log()` | Close sphere log file |
 | `_open_debug_log()` | Open debug log file for detailed event logging |
@@ -123,23 +127,58 @@ def _handle_ut_test_sync_bounce(self, args: dict):
 
 ### `fuzzer_hook.py`
 
-**Lines:** 98 → 453 (~355 lines added)
+**Lines:** 98 → 667 (~569 lines added)
 
-Extended for comprehensive testing with explain stats collection.
+Extended for comprehensive testing with explain stats collection, ALttP entrance shuffle handling, fractional sphere logic, and multiworld support.
 
 #### New Features
 
 - **Explain stats collection**: Collects statistics about which locations can be explained
 - **Worldgen integration**: Auto-discovers and loads rules JSON for worldgen tracking
 - **Run ID tracking**: Tracks run IDs for organizing explain stats output
+- **ALttP entrance shuffle seed handling**: Pre-generates and fixes entrance shuffle seeds for deterministic regeneration
+- **Fractional sphere logic**: Optional finer-grained sphere comparison within integer spheres
+- **Multiworld testing**: `MultiworldHook` class for testing each player independently
 
-#### New Variables
+#### New Variables (Hook class)
 
 ```python
 EXPLAIN_STATS_DIR = "fuzz_output/explain_stats"
 run_id: int = 0
 explain_stats_collected: bool = False
+use_fractional_spheres: bool = False  # Toggle for fractional sphere logic
 ```
+
+#### New Methods (Hook class)
+
+| Method | Purpose |
+|--------|---------|
+| `_collect_explain_stats()` | Collect explain support statistics for locations and entrances |
+| `_write_explain_stats()` | Write explain stats to JSON file |
+| `_pregenerate_alttp_entrance_shuffle_seed()` | Pre-generate numeric entrance_shuffle_seed before generation |
+| `_fix_alttp_entrance_shuffle_seed()` | Rewrite ALttP YAML with actual er_seed after generation |
+| `reclassify_outcome()` | Reclassify test outcomes (e.g., treat fill errors as OptionError) |
+
+#### MultiworldHook Class
+
+A new class for multiworld UT fuzz testing that tests each player in the multiworld independently:
+
+```python
+class MultiworldHook(BaseHook):
+    player_files_path: str
+    status: Optional[int] = None
+    failed_players: Dict[int, str]  # player_id -> failure reason
+    player_results: Dict[int, bool]  # player_id -> passed
+```
+
+| Method | Purpose |
+|--------|---------|
+| `before_generate()` | Initialize state before generation |
+| `_test_player()` | Test a single player in the multiworld |
+| `after_generate()` | Test all players after generation completes |
+| `reclassify_outcome()` | Reclassify test outcomes |
+| `get_failed_players()` | Return dict of failed player IDs to failure reasons |
+| `get_player_results()` | Return dict of all player IDs to pass/fail status |
 
 ---
 
@@ -247,11 +286,11 @@ if tracker.auto_discover_rules_json():
 
 | File | Original Lines | Modified Lines | Lines Added |
 |------|---------------|----------------|-------------|
-| `TrackerCore.py` | 513 | 1059 | ~546 |
+| `TrackerCore.py` | 513 | 1055 | ~542 |
 | `TrackerClient.py` | 1613 | 1970 | ~357 |
-| `fuzzer_hook.py` | 98 | 453 | ~355 |
+| `fuzzer_hook.py` | 98 | 667 | ~569 |
 | `__init__.py` | 191 | 190 | -1 |
-| **Total** | 2415 | 3672 | **~1257** |
+| **Total** | 2415 | 3882 | **~1467** |
 
 ---
 

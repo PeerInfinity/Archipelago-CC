@@ -673,7 +673,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["ut_version", "world_source", "seed_mode", "seed", "jobs", "timeout"]:
+                  for key in ["ut_version", "prefer_native_ut", "world_source", "seed_mode", "seed",
+                              "runs_per_game", "jobs", "timeout", "default_options", "disallow_options"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
@@ -723,6 +724,12 @@ jobs:
 
           combined["metadata"]["total_runs"] = total_stats["total"]
           combined["metadata"]["total_templates"] = len(combined["results"])
+
+          # Sort error seed lists for cleaner output
+          for template_name in combined["results"]:
+              errors = combined["results"][template_name]["ut_fuzz"]["errors"]
+              for error_type in errors:
+                  errors[error_type] = sorted(errors[error_type])
 
           # Write combined results
           output_file = f"scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json"

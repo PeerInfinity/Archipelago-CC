@@ -389,12 +389,33 @@ export function runBFSPass(sm) {
       }
 
       // Check if exit is traversable using the *injected* evaluateRule engine
-      const snapshotInterfaceContext = sm._createSelfSnapshotInterface();
+      // Create an enhanced exit object with parent_region info for attribute access
+      const enhancedExit = {
+        ...exit,
+        parent_region_name: fromRegion,
+        parent_region: fromRegion  // Also add parent_region directly for simpler access
+      };
+
+      // Normalize the exit name for variable binding (matches Python exporter convention)
+      // "Kiki Skip" -> "kikiskip"
+      const normalizedExitName = exit.name?.toLowerCase().replace(/\s+/g, '');
+
+      // Build context variables for the exit's access rule evaluation
+      // This binds the exit under its normalized name so rules like "kikiskip.parent_region" work
+      const exitContextVariables = {
+        entrance: enhancedExit,
+        currentEntrance: enhancedExit,
+        currentExit: exit.name
+      };
+      // Add the normalized name binding if valid
+      if (normalizedExitName) {
+        exitContextVariables[normalizedExitName] = enhancedExit;
+      }
+
+      const snapshotInterfaceContext = sm._createSelfSnapshotInterface(exitContextVariables);
       // Set parent_region context for exit evaluation - needs to be the region object, not just the name
       // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(fromRegion)
       snapshotInterfaceContext.parent_region = sm.regions.get(fromRegion);
-      // Set currentExit so get_entrance can detect self-references
-      snapshotInterfaceContext.currentExit = exit.name;
 
       const ruleEvaluationResult = exit.access_rule
         ? sm.evaluateRuleFromEngine(

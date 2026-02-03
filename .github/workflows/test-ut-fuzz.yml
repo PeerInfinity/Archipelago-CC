@@ -52,6 +52,11 @@ on:
         type: boolean
         default: false
 
+      delete_exporter_games:
+        description: 'Delete exporter/games files before testing (not committed)'
+        type: boolean
+        default: false
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -254,6 +259,14 @@ jobs:
           source .venv/bin/activate
           python scripts/build/build-world-mapping.py
 
+      - name: Delete exporter/games files
+        if: inputs.delete_exporter_games
+        run: |
+          echo "Deleting exporter/games files (not committed)..."
+          rm -rf exporter/games/official/*
+          rm -rf exporter/games/unofficial/*
+          echo "Deleted exporter/games files"
+
       - name: Download APWorld Manager artifact
         if: inputs.test_apworlds
         uses: actions/download-artifact@v4
@@ -438,7 +451,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["ut_version", "world_source", "seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
+                  for key in ["ut_version", "prefer_native_ut", "world_source", "seed_mode", "seed",
+                              "runs_per_game", "jobs", "timeout", "default_options", "disallow_options"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 

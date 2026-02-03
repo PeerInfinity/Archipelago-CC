@@ -129,13 +129,19 @@ def get_template_files(templates_dir: Path, skip_list: List[str], include_list: 
 
 def is_option_error(output: str) -> bool:
     """
-    Check if the generation output indicates an OptionError (invalid option combination).
+    Check if the generation output indicates an OptionError or FillError.
 
-    These are expected failures when random option combinations are invalid,
-    and should be counted as "ignored" rather than "failure" (same as UT fuzzer).
+    These are expected failures when random option combinations are invalid
+    or result in impossible games, and should be counted as "ignored" rather
+    than "failure" (same as UT fuzzer).
     """
-    # Check for explicit OptionError in traceback
+    # Check for explicit OptionError or FillError in traceback
     if "OptionError" in output:
+        return True
+
+    # FillError occurs when the randomized options result in an impossible game
+    # (e.g., required locations can't be accessed due to boss ordering constraints)
+    if "FillError" in output:
         return True
 
     # Check for common option validation error patterns

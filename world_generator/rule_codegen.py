@@ -10,6 +10,8 @@ import logging
 import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
+from rule_builder import BOOLEAN_RULE_TYPES
+
 logger = logging.getLogger(__name__)
 
 
@@ -6457,16 +6459,9 @@ class RuleCodeGenerator:
         # Rule Builder expression (e.g., And(CanReachEntrance(...), Has(...)))
         if isinstance(function, dict) and function.get('rule'):
             func_rule = function.get('rule')
-            # Rule Builder types that produce complete boolean expressions
-            rule_builder_types = (
-                'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
-                'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
-                'And', 'Or', 'Not',
-                'True_', 'False_',
-                'Compare', 'Conditional',
-                'HelperCall', 'helper',
-            )
-            if func_rule in rule_builder_types:
+            # Check for Rule Builder types that produce complete boolean expressions,
+            # plus 'helper' which is a special AST marker for helper references
+            if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper':
                 # Special case: And(CanReachEntrance(...), ...) from bunny rules
                 # The bunny rules code creates rules like:
                 #   can_reach(entrance) AND entrance.access_rule(state)
@@ -7820,19 +7815,11 @@ class HelperCodeGenerator:
                     # This happens when the analyzer wraps path_to_access_rule results.
                     func_rule = function.get('rule', '')
                     func_type = function.get('type', '')
-                    # Rule Builder types that produce complete boolean expressions
-                    rule_builder_bool_types = (
-                        'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
-                        'Has', 'HasAll', 'HasAny', 'HasGroup', 'HasFromList', 'HasFromListUnique',
-                        'And', 'Or', 'Not',
-                        'True_', 'False_',
-                        'Compare', 'Conditional',
-                        'HelperCall', 'helper',
-                    )
-                    # Also handle analyzer types (lowercase)
+                    # Also handle analyzer types (lowercase) - these are AST analyzer output types
                     analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
                                           'can_reach', 'region_check', 'location_check')
-                    if func_rule in rule_builder_bool_types or func_type in analyzer_bool_types:
+                    # Check for Rule Builder types, 'helper' AST marker, or analyzer types
+                    if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper' or func_type in analyzer_bool_types:
                         # These types already produce complete boolean expressions
                         return self._generate_expression(function)
 

@@ -1277,6 +1277,25 @@ This will:
 1. Generate a random YAML using `random.seed({first_failing})`
 2. Run seed generation with seed {first_failing}
 3. Run the spoiler test against the generated rules
+
+After running the fuzz test, you can repeat just the spoiler test against the generated rules:
+
+```bash
+npm test -- --mode=test-spoilers --game={world_dir} --seed={first_failing}
+```
+
+**Important**: Do NOT use these commands to reproduce the failure - they use the original
+template file, not the randomly-generated one from the fuzz test:
+
+```bash
+# WRONG - uses original template, not the fuzzed one
+python scripts/test/test-all-templates.py --include-list "{template_file}" --seed {first_failing}
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed {first_failing}
+```
+
+The fuzz test generates a temporary YAML file with randomized options. To manually run
+Generate.py with the same options, you would need to save the generated YAML before
+the fuzz test deletes it.
 """
         else:
             repro_example = """
