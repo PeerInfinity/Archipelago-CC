@@ -5798,6 +5798,81 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return evaluateRule({ type: 'can_reach_entrance', entrance: entranceName }, context, depth + 1, localScope);
     }
 
+    case 'EntranceAccessRule': {
+      // Evaluate an entrance's access_rule, optionally with a fake Moon Pearl state.
+      // This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+      // is called with a fake pearl state, simulating having Moon Pearl.
+      const entranceName = args.entrance_name;
+      const fakePearl = args.fake_pearl || false;
+
+      if (!entranceName) {
+        log('warn', '[evaluateRuleBuilderRule] EntranceAccessRule missing entrance_name');
+        return undefined;
+      }
+
+      // Find the entrance in the regions data
+      let entrance = null;
+
+      if (typeof context.getStaticData === 'function') {
+        const staticData = context.getStaticData();
+        const regionsData = staticData?.regions;
+
+        if (regionsData && regionsData instanceof Map) {
+          // Search for the entrance in all regions
+          for (const [regionName, regionData] of regionsData.entries()) {
+            const exits = regionData.exits || [];
+            const foundExit = exits.find(exit => exit.name === entranceName);
+            if (foundExit) {
+              entrance = foundExit;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!entrance) {
+        // Entrance not found - conservatively return true (matches Python behavior)
+        log('debug', `[evaluateRuleBuilderRule] EntranceAccessRule: entrance "${entranceName}" not found, returning true`);
+        return true;
+      }
+
+      // If no access_rule, the entrance is accessible
+      if (!entrance.access_rule) {
+        return true;
+      }
+
+      // If fake_pearl is true, create a modified context that includes Moon Pearl
+      let evalContext = context;
+      if (fakePearl) {
+        // Check if we already have Moon Pearl
+        const hasMoonPearl = typeof context.hasItem === 'function' && context.hasItem('Moon Pearl');
+
+        if (!hasMoonPearl) {
+          // Create a wrapper context that pretends to have Moon Pearl
+          evalContext = {
+            ...context,
+            hasItem: (itemName) => {
+              if (itemName === 'Moon Pearl') {
+                return true;
+              }
+              return typeof context.hasItem === 'function' ? context.hasItem(itemName) : undefined;
+            },
+            countItem: (itemName) => {
+              if (itemName === 'Moon Pearl') {
+                // Return at least 1 (or add 1 to existing count)
+                const existing = typeof context.countItem === 'function' ? context.countItem(itemName) : 0;
+                return Math.max(1, (existing || 0) + 1);
+              }
+              return typeof context.countItem === 'function' ? context.countItem(itemName) : 0;
+            }
+          };
+        }
+      }
+
+      // Evaluate the entrance's access rule
+      return evaluateRule(entrance.access_rule, evalContext, depth + 1, localScope);
+    }
+
     // Wrapper rule with filter (option-based filtering)
     case 'Filtered': {
       // For now, just evaluate the child - option filtering is typically world-level
