@@ -50,6 +50,11 @@ on:
           - 'full-spoilers'
         default: 'minimal-spoilers'
 
+      delete_exporter_games:
+        description: 'Delete exporter/games files before testing (not committed)'
+        type: boolean
+        default: false
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -259,6 +264,14 @@ jobs:
         run: |
           source .venv/bin/activate
           python scripts/build/build-world-mapping.py
+
+      - name: Delete exporter/games files
+        if: inputs.delete_exporter_games
+        run: |
+          echo "Deleting exporter/games files (not committed)..."
+          rm -rf exporter/games/official/*
+          rm -rf exporter/games/unofficial/*
+          echo "Deleted exporter/games files"
 
       - name: Download APWorld Manager artifact
         if: inputs.test_apworlds

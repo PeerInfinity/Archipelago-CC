@@ -159,6 +159,40 @@ The second option should reference a different entrance, but due to late binding
 
 ---
 
+## Testing Methodology
+
+These bugs were discovered using the **UT Fuzz test** with the **modified Universal Tracker** (which uses worldgen-based tracking rather than native game integration).
+
+### What is the UT Fuzz Test?
+
+The UT Fuzz test validates game logic by comparing two independent calculations of location accessibility:
+
+1. **Python's sphere calculations** - The authoritative logic computed during seed generation
+2. **Universal Tracker's calculations** - An independent implementation that tracks game progress
+
+The test generates seeds with randomized option configurations and, at each sphere, compares what Python says is accessible vs what Universal Tracker calculates. Mismatches indicate bugs in either the game's logic code or the rule export/tracking system.
+
+### Test Command
+
+```bash
+python fuzz.py -r 1000 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+```
+
+This runs 1000 seeds with 4 parallel workers, testing ALttP with a single player and the UT fuzzer hook enabled.
+
+### Why Modified UT?
+
+The modified Universal Tracker uses worldgen-based tracking, which:
+- Generates a temporary world from the exported `rules.json`
+- Uses the Rule Builder to evaluate accessibility
+- Is independent of any game's native UT integration
+
+This independence is what allowed it to detect the bug: the exported rules correctly captured `path_to_access_rule()` returning a callable, while the buggy Python code was evaluating the callable as truthy instead of invoking it.
+
+For more details on fuzz testing, see [Fuzz Tests documentation](../../developer/tests/test-fuzz.md).
+
+---
+
 ## Verification
 
 After both fixes:
