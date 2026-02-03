@@ -8,6 +8,7 @@ for that file.
 import json
 import re
 from typing import Any, Dict, List, Optional, Set
+from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
@@ -276,15 +277,7 @@ def _rule_needs_lambda(rule: dict) -> bool:
         function = args.get('function', {})
         if isinstance(function, dict) and function.get('rule'):
             func_rule = function.get('rule')
-            rule_builder_types = (
-                'CanReachEntrance', 'CanReachRegion', 'CanReachLocation',
-                'Has', 'HasAll', 'HasAny', 'HasGroup',
-                'And', 'Or', 'Not',
-                'True_', 'False_',
-                'Compare', 'Conditional',
-                'HelperCall',
-            )
-            if func_rule in rule_builder_types:
+            if func_rule in BOOLEAN_RULE_TYPES:
                 # Function is a Rule Builder rule - check if IT needs lambda
                 # (it might have nested dynamic references)
                 return _rule_needs_lambda(function)

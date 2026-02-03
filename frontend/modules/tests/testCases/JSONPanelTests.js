@@ -714,6 +714,27 @@ export async function testJSONPanelGameStateImportExport(testController) {
     }
     testController.reportCondition('Mushroom location status changed to checked', true);
 
+    // Step 3b: Wait for state manager to persist the checked location
+    // (UI updates faster than state persistence, causing race condition in CI)
+    testController.log(`[${testRunId}] Step 3b: Waiting for state manager to persist checked location...`);
+    const stateManagerProxyModule = await import('../../stateManager/index.js');
+    const stateManagerProxy = stateManagerProxyModule.stateManagerProxySingleton;
+
+    const stateUpdated = await testController.pollForCondition(
+      () => {
+        const stateData = stateManagerProxy.getSavableStateData();
+        return stateData && stateData.checkedLocations && stateData.checkedLocations.includes('Mushroom');
+      },
+      'State manager has Mushroom in checkedLocations',
+      5000,
+      100
+    );
+
+    if (!stateUpdated) {
+      throw new Error('State manager did not persist Mushroom to checkedLocations');
+    }
+    testController.reportCondition('State manager persisted Mushroom location', true);
+
     // Step 4: Activate the JSON panel
     testController.log(`[${testRunId}] Step 4: Activating JSON panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'tests');

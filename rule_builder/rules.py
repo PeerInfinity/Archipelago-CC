@@ -4019,3 +4019,25 @@ DEFAULT_RULES = {
     for rule_name, rule_class in locals().items()
     if isinstance(rule_class, type) and issubclass(rule_class, Rule) and rule_class is not Rule
 }
+
+# Rule types that produce boolean expressions (as opposed to numeric values).
+# Used by world_generator to identify rules that can be used directly in boolean contexts.
+# Excludes numeric rules like CountItem, CountFromList, CountGroup, Arithmetic,
+# MinValue, MaxValue, WeightedSum, UniqueCount, and OptionValue.
+BOOLEAN_RULE_TYPES: frozenset[str] = frozenset({
+    # Reachability rules
+    'CanReachEntrance', 'CanReachRegion', 'CanReachLocation', 'EntranceAccessRuleCall',
+    # Item rules
+    'Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount',
+    'HasFromList', 'HasFromListUnique', 'HasGroup', 'HasGroupUnique',
+    # Logic rules
+    'And', 'Or', 'Not',
+    # Boolean constants
+    'True_', 'False_',
+    # Comparison and conditional (produce booleans)
+    'Compare', 'Conditional',
+    # Helper calls
+    'HelperCall',
+    # Wrapper rules
+    'Filtered', 'ASTRule',
+})

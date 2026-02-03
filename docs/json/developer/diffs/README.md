@@ -22,7 +22,13 @@ Changes to configuration and repository setup files:
 
 These files configure the development environment and CI/CD pipeline.
 
-### 3. `world-init-files.diff` (494 lines)
+### 3. `alttp-bunny-rules.diff` (26 lines)
+Bug fixes for ALttP's `set_bunny_rules()` function:
+- **worlds/alttp/Rules.py** - Fixed missing `(state)` invocation and Python late binding bug in superbunny path lambdas
+
+These bugs caused superbunny access rules to always evaluate to `True` in glitch modes with entrance shuffle. For full details, see [ALttP Bunny Rules Bug Documentation](../../upstream-bugs/alttp/bunny-rules.md).
+
+### 4. `world-init-files.diff` (494 lines)
 Changes to world implementation initialization files to support `skip_required_files` mode:
 - **worlds/alttp/__init__.py** - A Link to the Past
 - **worlds/apsudoku/__init__.py** - AP Sudoku
@@ -69,7 +75,7 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 ## Notes
 
 - These diffs were last updated on 2026-01-14 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
-- Total lines changed across all diffs: 823 lines (178 + 151 + 494)
+- Total lines changed across all diffs: 849 lines (178 + 151 + 26 + 494)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
