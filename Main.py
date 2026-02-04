@@ -19,7 +19,7 @@ from Utils import __version__, output_path, restricted_dumps, version_tuple
 from settings import get_settings
 from worlds import AutoWorld
 from worlds.generic.Rules import exclusion_rules, locality_rules
-from exporter import export_game_rules
+from exporter import export_game_rules, export_multiworld_pickle
 
 __all__ = ["main"]
 
@@ -294,6 +294,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
 
                 for slot in multiworld.player_ids:
                     slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
+                    # Cache slot_data on the world for the exporter to use
+                    # This avoids calling fill_slot_data twice
+                    multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
 
                 def precollect_hint(location: Location, auto_status: HintStatus):
                     entrance = er_hint_data.get(location.player, {}).get(location.address, "")
@@ -401,17 +404,35 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
         if args.spoiler:
             multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
 
-        # New: export the rules data to a json file
+        # Export rules data after create_playthrough so sphere_log.jsonl is included.
+        # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
+        # so it won't repopulate caches that were cleared by stage_modify_multidata.
+        # The export functions handle the decision logic internally based on settings.
         settings = get_settings()
-        if settings.general_options.save_rules_json:
-            export_game_rules(
-                multiworld,
-                temp_dir,
-                outfilebase,
-                settings.general_options.update_frontend_presets,
-                settings.general_options.skip_preset_copy_if_rules_identical,
-                settings.general_options.rules_json_format
-            )
+        from exporter import clear_rule_cache
+        from exporter.games import clear_handler_cache
+        export_game_rules(
+            multiworld,
+            temp_dir,
+            outfilebase,
+            settings.general_options.update_frontend_presets,
+            settings.general_options.skip_preset_copy_if_rules_identical,
+            settings.general_options.rules_json_format,
+            clear_game_presets=settings.general_options.clear_game_presets,
+            clear_all_presets=settings.general_options.clear_all_presets
+        )
+        # Clear exporter caches to allow GC
+        clear_rule_cache()
+        clear_handler_cache()
+
+        # Export multiworld as pickle for tracker (alternative to rules_json)
+        export_multiworld_pickle(
+            multiworld,
+            temp_dir,
+            outfilebase,
+            settings.general_options.update_frontend_presets,
+            settings.general_options.skip_preset_copy_if_rules_identical,
+        )
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")

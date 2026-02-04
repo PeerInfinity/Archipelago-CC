@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SCRIPT_DIR = Path(__file__).parent
 DATA_DIR = SCRIPT_DIR / "data"
 MAPPING_FILE = DATA_DIR / "apworld-spreadsheet-mapping.json"
+DOWNLOAD_URLS_FILE = DATA_DIR / "apworld-download-urls.json"
 
 # Status values considered "working" by default
 DEFAULT_STATUSES = ["Stable"]
@@ -61,6 +62,46 @@ def install_world_silent(world, repositories):
 
     path = repositories.download_remote_world(world["latest_version"])
     _install_apworld(path)
+
+
+def save_download_urls(apworlds):
+    """Save download URLs for all available apworlds to a JSON file.
+
+    This allows other scripts (like test-all-ut-fuzz.py) to look up download
+    URLs without needing to refresh repositories again.
+    """
+    from datetime import datetime
+
+    urls = {}
+    for world in apworlds:
+        latest = world.get('latest_version')
+        if latest and hasattr(latest, 'id') and hasattr(latest, 'download_url'):
+            try:
+                world_id = latest.id.lower()
+                download_url = latest.download_url
+                if download_url:
+                    urls[world_id] = {
+                        'download_url': download_url,
+                        'title': world.get('title', ''),
+                        'world_version': getattr(latest, 'world_version', ''),
+                    }
+            except Exception:
+                # Skip if we can't get the download URL
+                pass
+
+    output = {
+        'metadata': {
+            'created': datetime.now().isoformat(),
+            'total_urls': len(urls),
+        },
+        'urls': urls
+    }
+
+    DOWNLOAD_URLS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(DOWNLOAD_URLS_FILE, 'w') as f:
+        json.dump(output, f, indent=2)
+
+    print(f"Saved {len(urls)} download URLs to {DOWNLOAD_URLS_FILE}")
 
 
 def main():
@@ -135,6 +176,9 @@ def main():
     repositories.refresh()
 
     apworlds = refresh_apworld_table()
+
+    # Save download URLs for use by other scripts
+    save_download_urls(apworlds)
 
     def matches_status_filter(world):
         """Check if a world matches the status filter."""

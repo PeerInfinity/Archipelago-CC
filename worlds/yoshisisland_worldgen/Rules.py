@@ -16,12 +16,16 @@ if TYPE_CHECKING:
 
 
 # Helper functions
+def _13Game(state: "CollectionState", player: int) -> bool:
+    return (state.has('Key', player) if ('Easy' == 'Easy') else (state.has('Key', player) if ('Easy' == 'Normal') else state.has('Key', player)))
+
+
 def _14Boss(state: "CollectionState", player: int) -> bool:
     return (state.has('Egg Plant', player) if ('Easy' == 'Easy') else (state.has('Egg Plant', player) if ('Easy' == 'Normal') else (state.has('Egg Capacity Upgrade', player, 5)) or (state.has('Egg Plant', player))))
 
 
 def _14CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Burt The Bashful's Boss Room", 'Location', player) else None)
+    return state.can_reach("Burt The Bashful's Boss Room", 'Location', player)
 
 
 def _14Clear(state: "CollectionState", player: int) -> bool:
@@ -37,11 +41,19 @@ def _18Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _18CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Salvo The Slime's Boss Room", 'Location', player) else None)
+    return state.can_reach("Salvo The Slime's Boss Room", 'Location', player)
 
 
 def _18Clear(state: "CollectionState", player: int) -> bool:
     return (state.has_all(['Arrow Wheel', 'Key'], player) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Key'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Key'], player)))
+
+
+def _21Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Key', 'Large Spring Ball', 'Poochy'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Large Spring Ball', 'Poochy'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Large Spring Ball', 'Poochy'], player)))
+
+
+def _23Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Key', 'Mole Tank Morph'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Mole Tank Morph'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Mole Tank Morph'], player)))
 
 
 def _24Boss(state: "CollectionState", player: int) -> bool:
@@ -49,7 +61,7 @@ def _24Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _24CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Bigger Boo's Boss Room", 'Location', player) else None)
+    return state.can_reach("Bigger Boo's Boss Room", 'Location', player)
 
 
 def _24Clear(state: "CollectionState", player: int) -> bool:
@@ -69,11 +81,15 @@ def _28Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _28CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Roger The Ghost's Boss Room", 'Location', player) else None)
+    return state.can_reach("Roger The Ghost's Boss Room", 'Location', player)
 
 
 def _28Clear(state: "CollectionState", player: int) -> bool:
     return ((state.has_all(['Arrow Wheel', 'Key'], player)) and (state.has('Egg Capacity Upgrade', player)) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Key'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Key'], player)))
+
+
+def _32Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Dashed Stairs', 'Key', 'Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Dashed Stairs', 'Key'], player) if ('Easy' == 'Normal') else state.has_all(['Dashed Stairs', 'Key'], player)))
 
 
 def _34Boss(state: "CollectionState", player: int) -> bool:
@@ -81,11 +97,15 @@ def _34Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _34CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Prince Froggy's Boss Room", 'Location', player) else None)
+    return state.can_reach("Prince Froggy's Boss Room", 'Location', player)
 
 
 def _34Clear(state: "CollectionState", player: int) -> bool:
     return (state.has('Dashed Platform', player) if ('Easy' == 'Easy') else ((state.has('Dashed Platform', player)) or (has_midring(state, player)) if ('Easy' == 'Normal') else True))
+
+
+def _37Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has('Key', player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _38Boss(state: "CollectionState", player: int) -> bool:
@@ -93,11 +113,15 @@ def _38Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _38CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Naval Piranha's Boss Room", 'Location', player) else None)
+    return state.can_reach("Naval Piranha's Boss Room", 'Location', player)
 
 
 def _38Clear(state: "CollectionState", player: int) -> bool:
     return ((state.has('Egg Capacity Upgrade', player, 3)) or (combat_item(state, player)) if ('Easy' == 'Easy') else ((state.has('Egg Capacity Upgrade', player)) or (combat_item(state, player)) if ('Easy' == 'Normal') else True))
+
+
+def _42Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _44Boss(state: "CollectionState", player: int) -> bool:
@@ -105,11 +129,15 @@ def _44Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _44CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Marching Milde's Boss Room", 'Location', player) else None)
+    return state.can_reach("Marching Milde's Boss Room", 'Location', player)
 
 
 def _44Clear(state: "CollectionState", player: int) -> bool:
     return ((state.has_all(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'], player)) and ((state.has('Egg Capacity Upgrade', player)) or (combat_item(state, player))) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'], player)))
+
+
+def _46Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Key', 'Large Spring Ball'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Large Spring Ball'], player)))
 
 
 def _47Game(state: "CollectionState", player: int) -> bool:
@@ -121,11 +149,15 @@ def _48Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _48CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Hookbill The Koopa's Boss Room", 'Location', player) else None)
+    return state.can_reach("Hookbill The Koopa's Boss Room", 'Location', player)
 
 
 def _48Clear(state: "CollectionState", player: int) -> bool:
     return (state.has_all(['Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'], player) if ('Easy' == 'Easy') else (state.has_all(['Dashed Stairs', 'Key', 'Large Spring Ball', 'Vanishing Arrow Wheel'], player) if ('Easy' == 'Normal') else state.has_all(['Key', 'Large Spring Ball'], player)))
+
+
+def _51Game(state: "CollectionState", player: int) -> bool:
+    return (state.has('Key', player) if ('Easy' == 'Easy') else (state.has('Key', player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _54Boss(state: "CollectionState", player: int) -> bool:
@@ -133,7 +165,7 @@ def _54Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _54CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Sluggy The Unshaven's Boss Room", 'Location', player) else None)
+    return state.can_reach("Sluggy The Unshaven's Boss Room", 'Location', player)
 
 
 def _54Clear(state: "CollectionState", player: int) -> bool:
@@ -145,11 +177,15 @@ def _58Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _58CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Raphael The Raven's Boss Room", 'Location', player) else None)
+    return state.can_reach("Raphael The Raven's Boss Room", 'Location', player)
 
 
 def _58Clear(state: "CollectionState", player: int) -> bool:
     return (state.has_all(['Arrow Wheel', 'Large Spring Ball'], player) if ('Easy' == 'Easy') else (state.has_all(['Arrow Wheel', 'Large Spring Ball'], player) if ('Easy' == 'Normal') else state.has_all(['Arrow Wheel', 'Large Spring Ball'], player)))
+
+
+def _61Game(state: "CollectionState", player: int) -> bool:
+    return (state.has_all(['Beanstalk', 'Dashed Platform', 'Key'], player) if ('Easy' == 'Easy') else (state.has_all(['Beanstalk', 'Dashed Platform', 'Key'], player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _64Boss(state: "CollectionState", player: int) -> bool:
@@ -157,11 +193,15 @@ def _64Boss(state: "CollectionState", player: int) -> bool:
 
 
 def _64CanFightBoss(state: "CollectionState", player: int) -> bool:
-    return (True if state.can_reach("Tap-Tap The Red Nose's Boss Room", 'Location', player) else None)
+    return state.can_reach("Tap-Tap The Red Nose's Boss Room", 'Location', player)
 
 
 def _64Clear(state: "CollectionState", player: int) -> bool:
     return ((state.has_all(['Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'], player)) and ((state.has('Egg Capacity Upgrade', player, 3)) or (combat_item(state, player))) if ('Easy' == 'Easy') else ((state.has_all(['Egg Plant', 'Key', 'Large Spring Ball'], player)) and ((state.has('Egg Capacity Upgrade', player, 2)) or (combat_item(state, player))) if ('Easy' == 'Normal') else (state.has_all(['Egg Plant', 'Key'], player)) and ((state.has('Egg Capacity Upgrade', player)) or (combat_item(state, player)))))
+
+
+def _67Game(state: "CollectionState", player: int) -> bool:
+    return (state.has('Key', player) if ('Easy' == 'Easy') else (state.has('Key', player) if ('Easy' == 'Normal') else state.has('Key', player)))
 
 
 def _68Clear(state: "CollectionState", player: int) -> bool:
@@ -169,11 +209,11 @@ def _68Clear(state: "CollectionState", player: int) -> bool:
 
 
 def _68CollectibleRoute(state: "CollectionState", player: int) -> bool:
-    return (True if (0 == 0) else (bowserdoor_1(state, player) if (0 == 1) else (bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else (bowserdoor_1(state, player) if (0 == 5) else None))))))
+    return (True if (0 == 0) else (bowserdoor_1(state, player) if (0 == 1) else (bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else (bowserdoor_1(state, player) if (0 == 5) else True))))))
 
 
 def _68Route(state: "CollectionState", player: int) -> bool:
-    return (True if (0 == 0) else (bowserdoor_1(state, player) if (0 == 1) else (bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else ((bowserdoor_1(state, player)) and (bowserdoor_2(state, player)) and (bowserdoor_3(state, player)) if (0 == 5) else None))))))
+    return (True if (0 == 0) else (bowserdoor_1(state, player) if (0 == 1) else (bowserdoor_2(state, player) if (0 == 2) else (True if (0 == 3) else (True if (0 == 4) else ((bowserdoor_1(state, player)) and (bowserdoor_2(state, player)) and (bowserdoor_3(state, player)) if (0 == 5) else True))))))
 
 
 def bandit_bonus(state: "CollectionState", player: int) -> bool:
@@ -840,7 +880,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Stars", player),
-        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Tulip', '! Switch'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('! Switch', 'Tulip'))
     )
 
     world.set_rule(
@@ -965,7 +1005,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Stars", player),
-        Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), Has('Tulip'))
+        Or(And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), Has('Tulip'))
     )
 
     world.set_rule(

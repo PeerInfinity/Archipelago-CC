@@ -354,6 +354,7 @@
     "1": {
       "game": "APQuest WorldGen",
       "world_class_name": "APQuestWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "confetti_explosiveness": 3,

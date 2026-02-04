@@ -27,6 +27,8 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -40,15 +42,28 @@ from lib.test_utils import (
     get_world_directory_name_from_game_name,
     build_and_load_world_mapping
 )
+from setup.update_host_settings import update_host_yaml
+
+# Global variable to cache apworld download URLs
+_apworld_download_urls: Dict[str, str] = {}
 
 # Project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
+
+# Path to saved download URLs file (created by install_apworlds.py)
+DOWNLOAD_URLS_FILE = PROJECT_ROOT / "scripts" / "data" / "apworld-download-urls.json"
 
 # Default fuzzer output directory
 FUZZ_OUTPUT_DIR = PROJECT_ROOT / "fuzz_output"
 
 # Explain stats file location (written by fuzzer_hook)
 EXPLAIN_STATS_FILE = FUZZ_OUTPUT_DIR / "explain_stats" / "explain_stats.json"
+
+# Per-game fuzzer options configuration file
+GAME_OPTIONS_FILE = PROJECT_ROOT / "scripts" / "data" / "ut-fuzz-game-options.json"
+
+# Cache for game-specific fuzzer options
+_game_fuzzer_options: Optional[Dict] = None
 
 
 def cleanup_empty_worldgen_dirs():
@@ -84,6 +99,51 @@ def cleanup_empty_worldgen_dirs():
         print(f"Cleaned up {removed_count} empty worldgen directories")
 
 
+def load_game_fuzzer_options() -> Dict:
+    """
+    Load per-game fuzzer options from configuration file.
+
+    Returns a dict mapping template names to their fuzzer option overrides.
+    """
+    global _game_fuzzer_options
+
+    if _game_fuzzer_options is not None:
+        return _game_fuzzer_options
+
+    _game_fuzzer_options = {}
+
+    if GAME_OPTIONS_FILE.exists():
+        try:
+            with open(GAME_OPTIONS_FILE, 'r') as f:
+                data = json.load(f)
+            _game_fuzzer_options = data.get('game_options', {})
+            if _game_fuzzer_options:
+                print(f"Loaded fuzzer options for {len(_game_fuzzer_options)} games from {GAME_OPTIONS_FILE.name}")
+        except Exception as e:
+            print(f"Warning: Error loading game fuzzer options: {e}")
+
+    return _game_fuzzer_options
+
+
+def get_game_fuzzer_options(template_name: str) -> Dict[str, Optional[str]]:
+    """
+    Get fuzzer options for a specific game.
+
+    Args:
+        template_name: The template filename (e.g., 'Subnautica.yaml')
+
+    Returns:
+        Dict with 'default_options' and 'disallow_options' keys (values may be None)
+    """
+    game_options = load_game_fuzzer_options()
+    config = game_options.get(template_name, {})
+
+    return {
+        'default_options': config.get('default_options'),
+        'disallow_options': config.get('disallow_options')
+    }
+
+
 def get_template_files(templates_dir: Path, skip_list: List[str], include_list: Optional[List[str]] = None) -> List[Path]:
     """Get list of template files to test."""
     yaml_files = sorted(templates_dir.glob("*.yaml"))
@@ -117,12 +177,118 @@ def read_explain_stats() -> Optional[Dict]:
     return None
 
 
+def load_apworld_download_urls() -> Dict[str, str]:
+    """
+    Load download URLs for all available apworlds.
+
+    First tries to load from the JSON file created by install_apworlds.py.
+    Falls back to querying the apworld_manager repositories if the file doesn't exist.
+
+    Returns a dict mapping world_id (lowercase) to download URL.
+    The URL can be used to download the apworld file directly.
+    """
+    global _apworld_download_urls
+
+    if _apworld_download_urls:
+        return _apworld_download_urls
+
+    # First try to load from the saved JSON file (created by install_apworlds.py)
+    if DOWNLOAD_URLS_FILE.exists():
+        try:
+            with open(DOWNLOAD_URLS_FILE, 'r') as f:
+                data = json.load(f)
+            urls = data.get('urls', {})
+            for world_id, info in urls.items():
+                if isinstance(info, dict) and 'download_url' in info:
+                    _apworld_download_urls[world_id.lower()] = info['download_url']
+                elif isinstance(info, str):
+                    # Handle simple string format for backwards compatibility
+                    _apworld_download_urls[world_id.lower()] = info
+            print(f"Loaded {len(_apworld_download_urls)} apworld download URLs from {DOWNLOAD_URLS_FILE}")
+            return _apworld_download_urls
+        except Exception as e:
+            print(f"Warning: Error loading download URLs from file: {e}")
+            # Fall through to repository loading
+
+    # Fall back to loading from apworld_manager repositories
+    try:
+        from worlds.apworld_manager.world_manager import (
+            repositories, refresh_apworld_table
+        )
+
+        print("Loading apworld download URLs from repositories...")
+        repositories.load_repos_from_settings()
+        repositories.refresh()
+
+        apworlds = refresh_apworld_table()
+
+        for world in apworlds:
+            latest = world.get('latest_version')
+            if latest and hasattr(latest, 'id'):
+                world_id = latest.id.lower()
+                # Get the download URL from the latest_version object
+                try:
+                    if hasattr(latest, 'download_url'):
+                        _apworld_download_urls[world_id] = latest.download_url
+                    elif hasattr(latest, 'url'):
+                        _apworld_download_urls[world_id] = latest.url
+                except Exception:
+                    # Skip if download_url property throws an error
+                    pass
+
+        print(f"Loaded {len(_apworld_download_urls)} apworld download URLs from repositories")
+        return _apworld_download_urls
+
+    except ImportError as e:
+        print(f"Warning: Could not load apworld_manager: {e}")
+        return {}
+    except Exception as e:
+        print(f"Warning: Error loading apworld download URLs: {e}")
+        return {}
+
+
+def get_apworld_download_url(world_directory: str, world_mapping: Dict) -> Optional[str]:
+    """
+    Get the download URL for a specific apworld.
+
+    Args:
+        world_directory: The world directory name (e.g., 'actraiser')
+        world_mapping: The world mapping dict from build_and_load_world_mapping()
+
+    Returns:
+        The download URL if available, None otherwise.
+    """
+    # First check if we have it cached
+    if world_directory.lower() in _apworld_download_urls:
+        return _apworld_download_urls[world_directory.lower()]
+
+    # Try to find it in the world mapping
+    for game_name, info in world_mapping.items():
+        if info.get('world_directory') == world_directory:
+            apworld_path = info.get('apworld_path')
+            if apworld_path:
+                # Extract world_id from apworld path
+                # apworld_path is like "custom_worlds/actraiser.apworld"
+                apworld_filename = Path(apworld_path).stem  # "actraiser"
+                if apworld_filename.lower() in _apworld_download_urls:
+                    return _apworld_download_urls[apworld_filename.lower()]
+            break
+
+    return None
+
+
 def run_fuzzer_test(
     world_dir: str,
     runs: int,
     jobs: int,
     timeout: int,
-    seed: Optional[int]
+    seed: Optional[int],
+    default_options: Optional[str] = None,
+    disallow_options: Optional[str] = None,
+    fractional_spheres: bool = False,
+    stop_on_first_failure: bool = False,
+    number_by_seed: bool = False,
+    process_timeout: Optional[int] = None
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -133,6 +299,13 @@ def run_fuzzer_test(
         jobs: Number of parallel jobs
         timeout: Timeout per generation in seconds
         seed: Random seed for reproducibility (None = random)
+        default_options: Comma-separated options to leave at defaults
+        disallow_options: Options to disallow (format: option=value1,value2;option2=value)
+        fractional_spheres: Enable fractional sphere logic for UT comparison
+        stop_on_first_failure: Stop fuzzing after the first failure
+        number_by_seed: Number output files by actual seed instead of iteration index
+        process_timeout: Total timeout for the entire fuzz.py subprocess in seconds.
+                        If None, calculated as (runs * timeout) + 300.
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -154,8 +327,17 @@ def run_fuzzer_test(
         "ignored": 0,
         "error": None,
         "errors": {},
-        "explain_stats": None
+        "explain_stats": None,
+        "elapsed_seconds": 0.0
     }
+
+    # Track elapsed time
+    start_time = time.perf_counter()
+
+    # Calculate process timeout if not specified
+    # Default: per-generation timeout * runs + 5 min buffer for UT verification
+    if process_timeout is None:
+        process_timeout = (runs * timeout) + 300
 
     # Clean up any previous fuzz output
     if FUZZ_OUTPUT_DIR.exists():
@@ -175,16 +357,73 @@ def run_fuzzer_test(
     if seed is not None:
         cmd.extend(["--seed", str(seed)])
 
+    if default_options:
+        cmd.extend(["--default-options", default_options])
+
+    if disallow_options:
+        cmd.extend(["--disallow-options", disallow_options])
+
+    if fractional_spheres:
+        cmd.append("--fractional-spheres")
+
+    if stop_on_first_failure:
+        cmd.append("--stop-on-first-failure")
+
+    if number_by_seed:
+        cmd.append("--number-by-seed")
+
     print(f"  Running: {' '.join(cmd[:10])}...")
+    print(f"  Process timeout: {process_timeout}s")
 
     try:
-        proc = subprocess.run(
+        # Stream output in real-time for progress visibility
+        # Use Popen to capture stderr while streaming stdout
+        proc = subprocess.Popen(
             cmd,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=runs * timeout + 300,  # Allow extra time for overhead
             cwd=str(PROJECT_ROOT)
         )
+
+        # Set up a timer to kill the process if it exceeds the timeout
+        process_timed_out = [False]  # Use list to allow modification in nested function
+
+        def kill_on_timeout():
+            process_timed_out[0] = True
+            print(f"    Process timeout ({process_timeout}s) exceeded, killing...")
+            proc.kill()
+
+        timer = threading.Timer(process_timeout, kill_on_timeout)
+        timer.start()
+
+        try:
+            # Read and print stdout in real-time
+            stdout_lines = []
+            while True:
+                line = proc.stdout.readline()
+                if line:
+                    print(f"    {line.rstrip()}")
+                    stdout_lines.append(line)
+                    sys.stdout.flush()
+                elif proc.poll() is not None:
+                    # Process finished, read any remaining output
+                    for remaining_line in proc.stdout:
+                        print(f"    {remaining_line.rstrip()}")
+                        stdout_lines.append(remaining_line)
+                    break
+
+            # Get stderr after process completes
+            stderr_output = proc.stderr.read()
+            returncode = proc.returncode
+        finally:
+            timer.cancel()
+
+        # Check if we timed out
+        if process_timed_out[0]:
+            result["error"] = f"Process timed out after {process_timeout} seconds"
+            result["elapsed_seconds"] = time.perf_counter() - start_time
+            return result
 
         # Check for report.json
         report_file = FUZZ_OUTPUT_DIR / "report.json"
@@ -213,18 +452,18 @@ def run_fuzzer_test(
             # No report file - check for errors
             error_details = []
             error_details.append("Report file not found")
-            if proc.returncode != 0:
-                error_details.append(f"Exit code: {proc.returncode}")
-            if proc.stderr:
-                stderr = proc.stderr.strip()
+            if returncode != 0:
+                error_details.append(f"Exit code: {returncode}")
+            if stderr_output:
+                stderr = stderr_output.strip()
                 if len(stderr) > 1000:
                     stderr = "..." + stderr[-1000:]
                 error_details.append(f"stderr: {stderr}")
-            if proc.stdout:
-                stdout = proc.stdout.strip()
-                if len(stdout) > 1000:
-                    stdout = "..." + stdout[-1000:]
-                error_details.append(f"stdout: {stdout}")
+            stdout_text = ''.join(stdout_lines)
+            if stdout_text:
+                if len(stdout_text) > 1000:
+                    stdout_text = "..." + stdout_text[-1000:]
+                error_details.append(f"stdout: {stdout_text}")
             result["error"] = " | ".join(error_details)
 
     except subprocess.TimeoutExpired:
@@ -232,6 +471,8 @@ def run_fuzzer_test(
     except Exception as e:
         result["error"] = str(e)
 
+    # Record elapsed time
+    result["elapsed_seconds"] = time.perf_counter() - start_time
     return result
 
 
@@ -274,14 +515,21 @@ def main():
     parser.add_argument(
         '-j', '--jobs',
         type=int,
-        default=2,
-        help='Number of parallel jobs (default: 2)'
+        default=os.cpu_count() or 4,
+        help=f'Number of parallel jobs (default: {os.cpu_count() or 4} = CPU count)'
     )
     parser.add_argument(
         '-t', '--timeout',
         type=int,
         default=60,
         help='Timeout per generation in seconds (default: 60)'
+    )
+    parser.add_argument(
+        '--process-timeout',
+        type=int,
+        default=None,
+        help='Total timeout for the entire fuzz subprocess in seconds. '
+             'If not specified, calculated as (runs * timeout) + 300'
     )
     parser.add_argument(
         '--seed',
@@ -304,9 +552,10 @@ def main():
     parser.add_argument(
         '--ut-version',
         type=str,
-        choices=['modified', 'original'],
+        choices=['modified', 'original', 'pickle'],
         default='modified',
-        help='Which version of Universal Tracker to test (default: modified)'
+        help='Which version of Universal Tracker to test: modified (worldgen-based), '
+             'original (YAML-based), or pickle (pickle-based, fastest) (default: modified)'
     )
     parser.add_argument(
         '--custom-worlds-only',
@@ -321,7 +570,91 @@ def main():
         help='World source for output filename: bundled (default) or apworlds'
     )
 
+    # Add mutually exclusive group for tracking config
+    tracking_config_group = parser.add_mutually_exclusive_group()
+    tracking_config_group.add_argument(
+        '--use-tracking-config',
+        dest='use_tracking_config',
+        action='store_true',
+        default=True,
+        help='Use tracking-mode-config.json for per-game mode selection (default: enabled)'
+    )
+    tracking_config_group.add_argument(
+        '--no-use-tracking-config',
+        dest='use_tracking_config',
+        action='store_false',
+        help='Disable config-based mode selection, use same mode for all worlds'
+    )
+
+    # Fuzzer options passed through to fuzz.py
+    parser.add_argument(
+        '--default-options',
+        type=str,
+        default=None,
+        help='Comma-separated list of option names to leave at defaults instead of randomizing. '
+             'Example: --default-options mode,entrance_shuffle,glitches_required'
+    )
+    parser.add_argument(
+        '--disallow-options',
+        type=str,
+        default=None,
+        help='Disallow specific values for options. Format: option=value1,value2;option2=value. '
+             'Example: --disallow-options glitches_required=minor_glitches,overworld_glitches;mode=inverted'
+    )
+    parser.add_argument(
+        '--fractional-spheres',
+        action='store_true',
+        default=False,
+        help='Enable fractional sphere logic for UT comparison. Handles cascading item dependencies '
+             'within spheres by iterating until no new locations become accessible.'
+    )
+    parser.add_argument(
+        '--stop-on-first-failure',
+        action='store_true',
+        default=False,
+        help='Stop fuzzing after the first failure or timeout. Useful for debugging.'
+    )
+    parser.add_argument(
+        '--number-by-seed',
+        action='store_true',
+        default=False,
+        help='Number output files and errors by actual seed instead of iteration index. '
+             'Requires --seed to be set.'
+    )
+
     args = parser.parse_args()
+
+    # Configure host settings for UT fuzz testing
+    # When use_tracking_config is True (hybrid mode), use the tracking-mode-config.json system
+    # which determines the best export format (rules.json vs pickle) per-game based on test results.
+    # Otherwise, use the legacy flag-based system.
+    print("Configuring host settings for UT fuzz testing...")
+    print(f"  ut_version: {args.ut_version}")
+    print(f"  use_tracking_config: {args.use_tracking_config}")
+
+    use_pickle_mode = args.ut_version == "pickle"
+
+    if args.use_tracking_config and args.ut_version not in ("original", "pickle"):
+        # Hybrid mode: use tracking-mode-config.json for per-game export decisions
+        print(f"  use_tracking_mode_config: True")
+        print(f"  (Config determines export format per-game based on test results)")
+        update_host_yaml({
+            'use_tracking_mode_config': True,
+            'skip_export_for_native_ut': False,
+            'skip_export_from_list': False,
+            'save_rules_json': False,  # Config decides
+            'save_tracker_pickle': False,  # Config decides
+        })
+    else:
+        # Legacy flag-based system (modified, original, pickle modes)
+        print(f"  use_tracking_mode_config: False")
+        print(f"  save_tracker_pickle: {use_pickle_mode}")
+        update_host_yaml({
+            'use_tracking_mode_config': False,
+            'skip_export_for_native_ut': False,
+            'skip_export_from_list': False,
+            'save_tracker_pickle': use_pickle_mode,
+        })
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()
@@ -329,7 +662,20 @@ def main():
     # Determine seed mode and UT version
     is_random_seed_mode = args.seed is None
     seed_type = "random" if is_random_seed_mode else "fixed"
-    ut_version = args.ut_version  # 'modified' or 'original'
+
+    # Determine UT version label for output files
+    # - "original" = original UT from FarisTheAncient
+    # - "modified" = modified UT using worldgen-based tracking for all worlds
+    # - "hybrid" = modified UT with config-based per-game mode selection
+    # - "pickle" = modified UT using pickle-based tracking (fastest, preserves exact lambdas)
+    if args.ut_version == "original":
+        ut_version = "original"
+    elif args.ut_version == "pickle":
+        ut_version = "pickle"
+    elif args.use_tracking_config:
+        ut_version = "hybrid"
+    else:
+        ut_version = "modified"
 
     # Determine world source (for output filename)
     # If --world-source is specified, use it; otherwise infer from --custom-worlds-only
@@ -369,14 +715,17 @@ def main():
         print(f"Error: Templates directory not found: {templates_dir}")
         return 1
 
-    # Get skip list (use only permanent exclusions - not main_test_exclude_list)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
+    # Get skip list (permanent + ut_fuzz exclusions for games that hang/timeout)
+    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='ut_fuzz')
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
     if not template_files:
         print("No template files found to test")
         return 1
+
+    # Initialize world_mapping - needed for custom worlds filtering and download URLs
+    world_mapping = {}
 
     # Apply --custom-worlds-only filtering if requested
     if args.custom_worlds_only:
@@ -407,6 +756,10 @@ def main():
             print("Error: No templates remaining after custom_worlds filter")
             return 1
 
+    # Load apworld download URLs when testing apworlds
+    if world_source == "apworlds":
+        load_apworld_download_urls()
+
     # Apply every-nth and skip-first filters for parallel splitting
     if args.skip_first > 0 or args.every_nth > 1:
         original_count = len(template_files)
@@ -435,12 +788,15 @@ def main():
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
             "ut_version": ut_version,
+            "use_tracking_config": args.use_tracking_config if args.ut_version != "original" else None,
             "world_source": world_source,
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
             "runs_per_game": args.runs,
             "jobs": args.jobs,
             "timeout": args.timeout,
+            "default_options": args.default_options,
+            "disallow_options": args.disallow_options,
             "total_templates": len(template_files)
         },
         "results": {}
@@ -464,13 +820,42 @@ def main():
 
         print(f"[{i}/{len(template_files)}] Testing {game_name} (world: {world_dir})...")
 
+        # Get game-specific fuzzer options and merge with command-line options
+        game_opts = get_game_fuzzer_options(template_name)
+
+        # Merge default_options: command-line takes precedence, game-specific adds to it
+        effective_default_options = args.default_options
+        if game_opts['default_options']:
+            if effective_default_options:
+                # Combine both, avoiding duplicates
+                cli_opts = set(effective_default_options.split(','))
+                game_specific_opts = set(game_opts['default_options'].split(','))
+                effective_default_options = ','.join(cli_opts | game_specific_opts)
+            else:
+                effective_default_options = game_opts['default_options']
+
+        # Merge disallow_options: command-line takes precedence, game-specific adds to it
+        effective_disallow_options = args.disallow_options
+        if game_opts['disallow_options']:
+            if effective_disallow_options:
+                # Combine both with semicolon separator
+                effective_disallow_options = f"{effective_disallow_options};{game_opts['disallow_options']}"
+            else:
+                effective_disallow_options = game_opts['disallow_options']
+
         # Run the fuzzer
         test_result = run_fuzzer_test(
             world_dir=world_dir,
             runs=args.runs,
             jobs=args.jobs,
             timeout=args.timeout,
-            seed=args.seed
+            seed=args.seed,
+            default_options=effective_default_options,
+            disallow_options=effective_disallow_options,
+            fractional_spheres=args.fractional_spheres,
+            stop_on_first_failure=args.stop_on_first_failure,
+            number_by_seed=args.number_by_seed,
+            process_timeout=args.process_timeout
         )
 
         # Store result
@@ -482,7 +867,8 @@ def main():
                 "failure": test_result["failure"],
                 "timeout": test_result["timeout"],
                 "ignored": test_result["ignored"],
-                "errors": test_result["errors"]
+                "errors": test_result["errors"],
+                "elapsed_seconds": round(test_result["elapsed_seconds"], 2)
             },
             "world_info": {
                 "game_name": game_name,
@@ -490,6 +876,12 @@ def main():
             },
             "timestamp": datetime.now().isoformat()
         }
+
+        # Include apworld download URL if testing apworlds
+        if world_source == "apworlds":
+            download_url = get_apworld_download_url(world_dir, world_mapping)
+            if download_url:
+                result_entry["world_info"]["apworld_download_url"] = download_url
 
         # Include explain stats if available
         if test_result.get("explain_stats"):
@@ -512,8 +904,10 @@ def main():
             status = "FAIL"
 
         # Print summary
+        elapsed = test_result['elapsed_seconds']
         print(f"  {status}: {test_result['success']}/{test_result['total']} success, "
-              f"{test_result['failure']} failures, {test_result['timeout']} timeouts")
+              f"{test_result['failure']} failures, {test_result['timeout']} timeouts "
+              f"({elapsed:.1f}s)")
 
         if test_result["error"]:
             error_msg = test_result["error"]

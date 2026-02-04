@@ -1508,8 +1508,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Progressive Glide",
-                  "Progressive Fire"
+                  "Progressive Fire",
+                  "Progressive Glide"
                 ]
               }
             },
@@ -4525,8 +4525,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Glide",
-                      "High Jump"
+                      "High Jump",
+                      "Progressive Glide"
                     ]
                   }
                 }
@@ -4592,8 +4592,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Glide",
-                      "High Jump"
+                      "High Jump",
+                      "Progressive Glide"
                     ]
                   }
                 }
@@ -4659,8 +4659,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Glide",
-                      "High Jump"
+                      "High Jump",
+                      "Progressive Glide"
                     ]
                   }
                 }
@@ -7344,8 +7344,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Glide",
-                  "High Jump"
+                  "High Jump",
+                  "Progressive Glide"
                 ]
               }
             },
@@ -7378,19 +7378,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "High Jump",
                       "Progressive Glide"
                     ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
                   }
                 }
               ]
@@ -7935,8 +7935,8 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Glide",
-                      "High Jump"
+                      "High Jump",
+                      "Progressive Glide"
                     ]
                   }
                 },
@@ -7963,8 +7963,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Glide",
-                  "High Jump"
+                  "High Jump",
+                  "Progressive Glide"
                 ]
               }
             },
@@ -7983,8 +7983,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Glide",
-                  "High Jump"
+                  "High Jump",
+                  "Progressive Glide"
                 ]
               }
             },
@@ -9341,15 +9341,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Progressive Glide",
-                      "High Jump"
-                    ]
-                  }
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -9366,6 +9357,15 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
+                  }
                 }
               ]
             },
@@ -9384,15 +9384,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Progressive Glide",
-                      "High Jump"
-                    ]
-                  }
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -9409,6 +9400,15 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
+                  }
                 }
               ]
             },
@@ -10979,13 +10979,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "has_emblems",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -11012,6 +11005,13 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 }
               ]
             },
@@ -11103,13 +11103,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "has_emblems",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -11136,6 +11129,13 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 }
               ]
             },
@@ -11408,13 +11408,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "has_emblems",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -11483,6 +11476,13 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 }
               ]
             },
@@ -11503,13 +11503,6 @@
                 {
                   "rule": "Or",
                   "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    },
                     {
                       "rule": "has_emblems",
                       "_original_ast_type": "helper",
@@ -11579,6 +11572,13 @@
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 3
+                      }
                     }
                   ]
                 },
@@ -11615,13 +11615,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "has_emblems",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -11690,6 +11683,13 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 }
               ]
             },
@@ -11710,13 +11710,6 @@
                 {
                   "rule": "Or",
                   "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump",
-                        "count": 3
-                      }
-                    },
                     {
                       "rule": "has_emblems",
                       "_original_ast_type": "helper",
@@ -11786,6 +11779,13 @@
                           "_converted_from_ast": true
                         }
                       ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "High Jump",
+                        "count": 3
+                      }
                     }
                   ]
                 },
@@ -12672,13 +12672,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -12716,6 +12709,13 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13019,19 +13019,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump",
-                    "count": 3
-                  }
-                },
-                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "High Jump",
                       "Progressive Blizzard"
                     ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "High Jump",
+                    "count": 3
                   }
                 }
               ]
@@ -25779,29 +25779,24 @@
           "type": "and",
           "conditions": [
             {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Emblem Piece (Chest)"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Emblem Piece (Flame)"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Emblem Piece (Fountain)"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Emblem Piece (Statue)"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hollow Bastion"
-                }
-              ]
+              "type": "item_check",
+              "item": "Emblem Piece (Chest)"
+            },
+            {
+              "type": "item_check",
+              "item": "Emblem Piece (Flame)"
+            },
+            {
+              "type": "item_check",
+              "item": "Emblem Piece (Fountain)"
+            },
+            {
+              "type": "item_check",
+              "item": "Emblem Piece (Statue)"
+            },
+            {
+              "type": "item_check",
+              "item": "Hollow Bastion"
             },
             {
               "type": "helper",
@@ -26076,45 +26071,40 @@
               ]
             },
             {
-              "type": "or",
+              "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "logic_difficulty"
-                      },
-                      "op": ">",
-                      "right": {
-                        "type": "constant",
-                        "value": 5
-                      }
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "High Jump",
-                      "count": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
+                  "type": "compare",
+                  "left": {
+                    "type": "name",
+                    "name": "logic_difficulty"
+                  },
+                  "op": ">",
+                  "right": {
+                    "type": "constant",
+                    "value": 5
+                  }
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "High Jump"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Progressive Glide"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "High Jump",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "High Jump"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Progressive Glide"
                 }
               ]
             },
@@ -26273,10 +26263,6 @@
             },
             {
               "type": "for_range",
-              "count": {
-                "type": "constant",
-                "value": 13
-              },
               "body": [
                 {
                   "type": "if_statement",
@@ -26647,6 +26633,10 @@
                   ]
                 }
               ],
+              "count": {
+                "type": "constant",
+                "value": 13
+              },
               "var": "i"
             },
             {

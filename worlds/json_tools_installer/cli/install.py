@@ -32,6 +32,8 @@ from ..config import (
     update_installation_info,
     clear_installation,
     InstallerConfig,
+    configure_export_settings,
+    EXPORT_PRESETS,
 )
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import (
@@ -39,6 +41,7 @@ from ..installer.downloader import (
     get_download_url,
     get_latest_commit_hash,
     check_connectivity,
+    check_installer_compatibility,
 )
 from ..installer.extractor import (
     extract_tools,
@@ -91,8 +94,10 @@ def do_install(
     version: str,
     components: list,
     dry_run: bool = False,
-    use_monkey_patch: bool = False,
-    use_bundled_patches: bool = False,
+    patch_mode: str = "monkey",
+    skip_confirmation: bool = False,
+    configure_export: bool = True,
+    export_preset: str = "normal",
 ) -> bool:
     """
     Perform the installation.
@@ -102,8 +107,10 @@ def do_install(
         version: Version to install ("stable" or "dev").
         components: List of component names to install.
         dry_run: If True, only show what would be done.
-        use_monkey_patch: If True, use runtime patching instead of file patches.
-        use_bundled_patches: If True, use bundled patch files instead of downloading.
+        patch_mode: Patch mode - "none", "monkey" (default), or "file".
+        skip_confirmation: If True, skip confirmation prompts for file patching.
+        configure_export: If True, configure export settings in host.yaml.
+        export_preset: Export settings preset to use ("normal" or "minimal-spoilers").
 
     Returns:
         True if successful.
@@ -124,6 +131,23 @@ def do_install(
         print("  [ERROR] Cannot reach GitHub. Check your internet connection.")
         return False
     print("  [OK] GitHub is reachable")
+
+    # Check installer compatibility
+    print("\n  Checking installer compatibility...")
+    compat = check_installer_compatibility(source)
+    if not compat.compatible:
+        if compat.error:
+            print(f"  [ERROR] {compat.error}")
+        else:
+            print(f"  [ERROR] Installer version {compat.current_version} is too old.")
+            print(f"          Minimum required version: {compat.required_version}")
+            if compat.message:
+                print(f"\n  {compat.message}")
+            if compat.download_url:
+                print(f"\n  Download the latest installer from:")
+                print(f"  {compat.download_url}")
+        return False
+    print(f"  [OK] Installer v{compat.current_version} is compatible")
 
     # Get latest commit hash
     commit_hash = get_latest_commit_hash(source)
@@ -170,33 +194,86 @@ def do_install(
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")
 
-        # Apply patches (unless using monkey patching)
-        if use_monkey_patch:
+        # Apply patches based on selected mode
+        if patch_mode == "monkey":
             print("\n  Setting up monkey patching...")
             from ..monkey_patches import install_hooks
             hook_results = install_hooks()
             success_count = sum(1 for v in hook_results.values() if v)
             print(f"  [OK] Installed {success_count}/{len(hook_results)} runtime hooks")
             config.patches.method = "monkey"
+
+        elif patch_mode == "file":
+            # File-based patching - needs confirmation
+            from ..installer.patcher import PATCH_FILES
+
+            print("\n  File-based patching will modify the following core Archipelago files:")
+            for f in PATCH_FILES:
+                print(f"    - {f}")
+            print("\n  These patches enable JSON export and sphere logging functionality.")
+            print("  Original files will be backed up and can be restored later.")
+
+            if not skip_confirmation:
+                response = input("\n  Proceed with file-based patching? [y/N]: ")
+                if response.lower() != 'y':
+                    print("  [INFO] File patching cancelled, no patches applied.")
+                    config.patches.method = "none"
+                    # Continue with installation without patching
+                else:
+                    print("\n  Applying patches from downloaded patch files...")
+                    patch_result = apply_bundled_patches(config)
+
+                    if patch_result.warnings:
+                        for warning in patch_result.warnings:
+                            print(f"  [WARN] {warning}")
+
+                    if not patch_result.success:
+                        print("  [ERROR] Patching failed:")
+                        for error in patch_result.errors:
+                            print(f"    - {error}")
+                        return False
+
+                    if patch_result.patched_files:
+                        print(f"  [OK] Patched {len(patch_result.patched_files)} files")
+                        for f in patch_result.patched_files:
+                            print(f"    - {f}")
+                    config.patches.method = "file"
+            else:
+                # Skip confirmation with --yes flag
+                print("\n  Applying patches from downloaded patch files...")
+                patch_result = apply_bundled_patches(config)
+
+                if patch_result.warnings:
+                    for warning in patch_result.warnings:
+                        print(f"  [WARN] {warning}")
+
+                if not patch_result.success:
+                    print("  [ERROR] Patching failed:")
+                    for error in patch_result.errors:
+                        print(f"    - {error}")
+                    return False
+
+                if patch_result.patched_files:
+                    print(f"  [OK] Patched {len(patch_result.patched_files)} files")
+                    for f in patch_result.patched_files:
+                        print(f"    - {f}")
+                config.patches.method = "file"
+
         else:
-            # Default: use bundled/downloaded patches
-            print("\n  Applying patches from downloaded patch files...")
-            patch_result = apply_bundled_patches(config)
+            # No patching (patch_mode == "none")
+            print("\n  [INFO] No patching selected, skipping patch application.")
+            config.patches.method = "none"
 
-            if patch_result.warnings:
-                for warning in patch_result.warnings:
-                    print(f"  [WARN] {warning}")
-
-            if not patch_result.success:
-                print("  [ERROR] Patching failed:")
-                for error in patch_result.errors:
-                    print(f"    - {error}")
-                return False
-
-            if patch_result.patched_files:
-                print(f"  [OK] Patched {len(patch_result.patched_files)} files")
-                for f in patch_result.patched_files:
-                    print(f"    - {f}")
+    # Configure export settings in host.yaml
+    if configure_export:
+        print(f"\n  Configuring export settings ({export_preset} preset)...")
+        if configure_export_settings(preset=export_preset):
+            print(f"  [OK] Export settings configured in host.yaml")
+            if export_preset == "minimal-spoilers":
+                print("       JSON export and sphere logging are now enabled.")
+        else:
+            print("  [WARN] Could not configure export settings. You may need to run:")
+            print("         python scripts/setup/update_host_settings.py minimal-spoilers")
 
     # Update config
     update_installation_info(config, version, components, commit_hash)
@@ -205,8 +282,11 @@ def do_install(
     print("  JSON Tools has been installed successfully!")
     print("\n  Next steps:")
     print("  1. Restart Archipelago to load the new tools")
-    print("  2. Configure host.yaml (run scripts/setup/update_host_settings.py)")
-    print("  3. Generate a seed to test the installation")
+    if not configure_export:
+        print("  2. Configure host.yaml (run scripts/setup/update_host_settings.py)")
+        print("  3. Generate a seed to test the installation")
+    else:
+        print("  2. Generate a seed to test the installation")
 
     return True
 
@@ -345,15 +425,46 @@ def main(args=None):
         action="store_true",
         help="Show what would be done without making changes",
     )
-    parser.add_argument(
-        "--monkey-patch",
+
+    # Patch mode options (mutually exclusive)
+    patch_group = parser.add_mutually_exclusive_group()
+    patch_group.add_argument(
+        "--no-patch",
         action="store_true",
-        help="Use runtime monkey patching instead of file patches",
+        help="Do not apply any patches (JSON export will not work without manual setup)",
     )
-    parser.add_argument(
-        "--use-bundled-patches",
+    patch_group.add_argument(
+        "--file-patch",
         action="store_true",
-        help="Use bundled patch files instead of downloading",
+        help="Use file-based patching instead of monkey patching (modifies core files)",
+    )
+    # Note: monkey patching is the default, no flag needed
+
+    parser.add_argument(
+        "--yes", "-y",
+        action="store_true",
+        help="Skip confirmation prompts (auto-confirm)",
+    )
+
+    # Export settings configuration
+    export_group = parser.add_mutually_exclusive_group()
+    export_group.add_argument(
+        "--configure-export",
+        action="store_true",
+        default=True,
+        help="Configure export settings in host.yaml (default: enabled)",
+    )
+    export_group.add_argument(
+        "--no-configure-export",
+        action="store_true",
+        help="Skip configuring export settings in host.yaml",
+    )
+
+    parser.add_argument(
+        "--export-preset",
+        choices=list(EXPORT_PRESETS.keys()),
+        default="normal",
+        help="Export settings preset to use (default: normal). 'minimal-spoilers' enables JSON export.",
     )
 
     parsed = parser.parse_args(args)
@@ -368,11 +479,14 @@ def main(args=None):
 
     if not version_info.is_supported:
         print(f"\n[WARNING] {version_info.notes}")
-        if not parsed.dry_run:
+        if not parsed.dry_run and not parsed.yes:
             response = input("Continue anyway? [y/N]: ")
             if response.lower() != 'y':
                 print("Aborted.")
                 return 1
+        elif parsed.yes:
+            print("  (Auto-confirmed with --yes)")
+
 
     # Handle actions
     if parsed.uninstall:
@@ -428,13 +542,26 @@ def main(args=None):
         version = config.installation.version
         print(f"\nUpdating existing {version} installation...")
 
+    # Determine patch mode (default is monkey patching)
+    if parsed.no_patch:
+        patch_mode = "none"
+    elif parsed.file_patch:
+        patch_mode = "file"
+    else:
+        patch_mode = "monkey"  # Default
+
+    # Determine if we should configure export settings
+    configure_export = not parsed.no_configure_export
+
     success = do_install(
         config,
         version,
         components,
         parsed.dry_run,
-        parsed.monkey_patch,
-        parsed.use_bundled_patches,
+        patch_mode,
+        parsed.yes,  # skip_confirmation
+        configure_export,
+        parsed.export_preset,
     )
     return 0 if success else 1
 

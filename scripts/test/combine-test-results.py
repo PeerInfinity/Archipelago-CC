@@ -77,24 +77,6 @@ def merge_errors(existing_errors: Any, new_errors: Any) -> Dict[str, List[str]]:
     return merged
 
 
-def is_ut_comparison_structure(results: Dict[str, Any]) -> bool:
-    """
-    Detect if results have UT comparison structure.
-
-    UT comparison structure: results -> template_name -> {ut_comparison: {...}, world_info: {...}}
-    """
-    if 'results' not in results or not results['results']:
-        return False
-
-    # Check the first item in results
-    first_value = next(iter(results['results'].values()))
-
-    if isinstance(first_value, dict) and 'ut_comparison' in first_value:
-        return True
-
-    return False
-
-
 def combine_results(input_files: List[str]) -> Dict[str, Any]:
     """
     Combine multiple test results files into a single structure.
@@ -121,54 +103,7 @@ def combine_results(input_files: List[str]) -> Dict[str, Any]:
 
     print(f"Loaded {len(all_results)} test result files")
 
-    # Detect structure type
-    if is_ut_comparison_structure(all_results[0]):
-        print("Detected UT comparison structure")
-        return combine_ut_comparison_results(all_results)
-    else:
-        print("Detected standard structure")
-        return combine_standard_results(all_results)
-
-
-def combine_ut_comparison_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """
-    Combine UT comparison results from parallel runs.
-
-    Since UT comparison tests split templates across jobs (not seeds),
-    we simply merge all template results together.
-    """
-    combined_results = {}
-
-    # Get metadata from first file (should be same across all)
-    first_metadata = all_results[0].get('metadata', {})
-    seed = first_metadata.get('seed', '1')
-    runs_per_template = first_metadata.get('runs_per_template', 1)
-
-    # Merge all template results
-    for result_data in all_results:
-        for template_name, template_result in result_data.get('results', {}).items():
-            if template_name not in combined_results:
-                combined_results[template_name] = template_result
-            else:
-                # If template appears in multiple files, keep the one with more data
-                # (shouldn't happen with proper splitting, but handle it gracefully)
-                print(f"Warning: Template {template_name} appears in multiple result files")
-
-    # Create combined output structure
-    combined = {
-        'metadata': {
-            'created': datetime.now().isoformat(),
-            'last_updated': datetime.now().isoformat(),
-            'script_version': '1.0.0',
-            'seed': seed,
-            'runs_per_template': runs_per_template,
-            'combined_from': len(all_results),
-            'total_templates': len(combined_results)
-        },
-        'results': combined_results
-    }
-
-    return combined
+    return combine_standard_results(all_results)
 
 
 def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -249,6 +184,19 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         if 'seed' in metadata:
             seeds_used.append(str(metadata['seed']))
 
+    # Collect preserved metadata fields from input files
+    # These fields should be consistent across all input files (from parallel splits)
+    preserved_fields = [
+        'test_type', 'seed_mode', 'base_seed', 'runs_per_game',
+        'generation_timeout', 'test_timeout', 'total_templates'
+    ]
+    preserved_metadata = {}
+    for result_data in all_results:
+        metadata = result_data.get('metadata', {})
+        for field in preserved_fields:
+            if field in metadata and field not in preserved_metadata:
+                preserved_metadata[field] = metadata[field]
+
     # Create combined output structure
     combined = {
         'metadata': {
@@ -256,7 +204,8 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
             'last_updated': datetime.now().isoformat(),
             'script_version': '1.0.0',
             'combined_from': len(all_results),
-            'combination_note': 'Results combined from parallel seed tests'
+            'combination_note': 'Results combined from parallel seed tests',
+            **preserved_metadata  # Include preserved fields from input files
         },
         'results': combined_results
     }
@@ -433,16 +382,9 @@ def main():
 
     # Auto-compute output filename if not specified
     if args.output_file is None:
-        # Detect seed type from input filenames
-        input_files_str = " ".join(input_files)
-        if "random" in input_files_str:
-            seed_type = "random"
-        elif "fixed" in input_files_str:
-            seed_type = "fixed"
-        else:
-            # Default to the first file's directory for output
-            seed_type = "combined"
-        args.output_file = f"scripts/output/ut-comparison/test-results-{seed_type}-seed.json"
+        # Use the directory of the first input file
+        first_input = Path(input_files[0])
+        args.output_file = str(first_input.parent / "test-results-combined.json")
         print(f"Auto-computed output file: {args.output_file}")
 
     print(f"Combining {len(input_files)} test result files:")

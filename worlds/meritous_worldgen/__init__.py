@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -24,6 +24,7 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Agate Knife": 1,
     "Circuit Booster": 1,
     "Circuit Charge upgrade": 23,
     "Circuit Refill upgrade": 22,
@@ -32,8 +33,10 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Crystals x1000": 5,
     "Crystals x2000": 5,
     "Crystals x500": 7,
+    "Cursed Seal": 1,
     "Dodge Enhancer": 1,
     "Ethereal Monocle": 1,
+    "Evolution Trap": 3,
     "Map": 1,
     "Metabolism": 1,
     "PSI Key 1": 1,
@@ -46,13 +49,8 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Place of Power": "Cursed Seal",
-    "The Last Place You'll Look": "Agate Knife",
-    "Meridian": "Evolution Trap",
     "Meridian Defeat": "Meridian Defeated",
-    "Ataraxia": "Evolution Trap",
     "Ataraxia Defeat": "Ataraxia Defeated",
-    "Merodach": "Evolution Trap",
     "Merodach Defeat": "Merodach Defeated",
     "Wervyn Anixil": "Victory",
     "Wervyn Anixil?": "Full Victory",
@@ -122,114 +120,228 @@ class MeritousWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Alpha Cache 1": "Ethereal Monocle",
+        "Alpha Cache 12": "Reflect Shield upgrade",
         "Alpha Cache 2": "Reflect Shield upgrade",
-        "Alpha Cache 3": "PSI Key 3",
-        "Alpha Cache 4": "Circuit Charge upgrade",
-        "Alpha Cache 5": "Crystals x500",
-        "Alpha Cache 6": "Crystals x2000",
-        "Beta Cache 1": "Circuit Charge upgrade",
+        "Alpha Cache 9": "Reflect Shield upgrade",
+        "Beta Cache 11": "Reflect Shield upgrade",
+        "Beta Cache 17": "Reflect Shield upgrade",
+        "Beta Cache 18": "Reflect Shield upgrade",
         "Beta Cache 2": "Reflect Shield upgrade",
-        "Beta Cache 3": "Circuit Charge upgrade",
-        "Beta Cache 4": "Circuit Refill upgrade",
+        "Beta Cache 21": "Reflect Shield upgrade",
+        "Beta Cache 23": "Reflect Shield upgrade",
         "Beta Cache 5": "Reflect Shield upgrade",
-        "Beta Cache 6": "Crystals x1000",
-        "Gamma Cache 1": "Circuit Refill upgrade",
+        "Beta Cache 9": "Reflect Shield upgrade",
+        "Gamma Cache 10": "Reflect Shield upgrade",
+        "Gamma Cache 13": "Reflect Shield upgrade",
+        "Gamma Cache 15": "Reflect Shield upgrade",
         "Gamma Cache 2": "Reflect Shield upgrade",
-        "Gamma Cache 3": "Circuit Charge upgrade",
-        "Gamma Cache 4": "Circuit Refill upgrade",
-        "Gamma Cache 5": "Circuit Refill upgrade",
-        "Gamma Cache 6": "Circuit Refill upgrade",
+        "Gamma Cache 20": "Reflect Shield upgrade",
+        "PSI Key Storage 3": "Reflect Shield upgrade",
         "Reward Chest 1": "Reflect Shield upgrade",
-        "Reward Chest 2": "Circuit Charge upgrade",
+        "Reward Chest 10": "Reflect Shield upgrade",
+        "Reward Chest 20": "Reflect Shield upgrade",
+        "Reward Chest 23": "Reflect Shield upgrade",
         "Reward Chest 3": "Reflect Shield upgrade",
         "Reward Chest 4": "Reflect Shield upgrade",
         "Reward Chest 5": "Reflect Shield upgrade",
         "Reward Chest 6": "Reflect Shield upgrade",
-        "PSI Key Storage 1": "Circuit Booster",
-        "Alpha Cache 7": "Circuit Charge upgrade",
-        "Alpha Cache 8": "Circuit Charge upgrade",
-        "Alpha Cache 9": "Reflect Shield upgrade",
-        "Alpha Cache 10": "Crystals x2000",
-        "Alpha Cache 11": "Circuit Refill upgrade",
-        "Alpha Cache 12": "Reflect Shield upgrade",
-        "Beta Cache 7": "Circuit Refill upgrade",
-        "Beta Cache 8": "PSI Key 2",
-        "Beta Cache 9": "Reflect Shield upgrade",
-        "Beta Cache 10": "Crystals x500",
-        "Beta Cache 11": "Reflect Shield upgrade",
-        "Beta Cache 12": "Crystals x1000",
-        "Gamma Cache 7": "Crystals x1000",
-        "Gamma Cache 8": "Circuit Charge upgrade",
-        "Gamma Cache 9": "Circuit Refill upgrade",
-        "Gamma Cache 10": "Reflect Shield upgrade",
-        "Gamma Cache 11": "Circuit Refill upgrade",
-        "Gamma Cache 12": "Dodge Enhancer",
-        "Reward Chest 7": "Portable Compass",
-        "Reward Chest 8": "Metabolism",
-        "Reward Chest 9": "Crystals x1000",
-        "Reward Chest 10": "Reflect Shield upgrade",
-        "Reward Chest 11": "Crystal Efficiency",
-        "Reward Chest 12": "Circuit Refill upgrade",
-        "PSI Key Storage 2": "Circuit Refill upgrade",
-        "Alpha Cache 13": "Shield Boost",
+        "Alpha Cache 3": "PSI Key 3",
         "Alpha Cache 14": "Circuit Charge upgrade",
         "Alpha Cache 15": "Circuit Charge upgrade",
         "Alpha Cache 16": "Circuit Charge upgrade",
-        "Alpha Cache 17": "Map",
         "Alpha Cache 18": "Circuit Charge upgrade",
+        "Alpha Cache 20": "Circuit Charge upgrade",
+        "Alpha Cache 21": "Circuit Charge upgrade",
+        "Alpha Cache 4": "Circuit Charge upgrade",
+        "Alpha Cache 7": "Circuit Charge upgrade",
+        "Alpha Cache 8": "Circuit Charge upgrade",
+        "Beta Cache 1": "Circuit Charge upgrade",
+        "Beta Cache 20": "Circuit Charge upgrade",
+        "Beta Cache 3": "Circuit Charge upgrade",
+        "Gamma Cache 14": "Circuit Charge upgrade",
+        "Gamma Cache 17": "Circuit Charge upgrade",
+        "Gamma Cache 19": "Circuit Charge upgrade",
+        "Gamma Cache 23": "Circuit Charge upgrade",
+        "Gamma Cache 24": "Circuit Charge upgrade",
+        "Gamma Cache 3": "Circuit Charge upgrade",
+        "Gamma Cache 8": "Circuit Charge upgrade",
+        "Reward Chest 14": "Circuit Charge upgrade",
+        "Reward Chest 16": "Circuit Charge upgrade",
+        "Reward Chest 18": "Circuit Charge upgrade",
+        "Reward Chest 2": "Circuit Charge upgrade",
+        "Alpha Cache 24": "Crystals x500",
+        "Alpha Cache 5": "Crystals x500",
+        "Beta Cache 10": "Crystals x500",
+        "Reward Chest 17": "Crystals x500",
+        "Reward Chest 19": "Crystals x500",
+        "Reward Chest 22": "Crystals x500",
+        "Reward Chest 24": "Crystals x500",
+        "Alpha Cache 10": "Crystals x2000",
+        "Alpha Cache 22": "Crystals x2000",
+        "Alpha Cache 6": "Crystals x2000",
+        "Gamma Cache 16": "Crystals x2000",
+        "Gamma Cache 22": "Crystals x2000",
+        "Alpha Cache 11": "Circuit Refill upgrade",
+        "Alpha Cache 19": "Circuit Refill upgrade",
+        "Alpha Cache 23": "Circuit Refill upgrade",
         "Beta Cache 13": "Circuit Refill upgrade",
         "Beta Cache 14": "Circuit Refill upgrade",
         "Beta Cache 15": "Circuit Refill upgrade",
         "Beta Cache 16": "Circuit Refill upgrade",
-        "Beta Cache 17": "Reflect Shield upgrade",
-        "Beta Cache 18": "Reflect Shield upgrade",
-        "Gamma Cache 13": "Reflect Shield upgrade",
-        "Gamma Cache 14": "Circuit Charge upgrade",
-        "Gamma Cache 15": "Reflect Shield upgrade",
-        "Gamma Cache 16": "Crystals x2000",
-        "Gamma Cache 17": "Circuit Charge upgrade",
-        "Gamma Cache 18": "PSI Key 1",
-        "Reward Chest 13": "Circuit Refill upgrade",
-        "Reward Chest 14": "Circuit Charge upgrade",
-        "Reward Chest 15": "Crystal Gatherer",
-        "Reward Chest 16": "Circuit Charge upgrade",
-        "Reward Chest 17": "Crystals x500",
-        "Reward Chest 18": "Circuit Charge upgrade",
-        "PSI Key Storage 3": "Reflect Shield upgrade",
-        "Alpha Cache 19": "Circuit Refill upgrade",
-        "Alpha Cache 20": "Circuit Charge upgrade",
-        "Alpha Cache 21": "Circuit Charge upgrade",
-        "Alpha Cache 22": "Crystals x2000",
-        "Alpha Cache 23": "Circuit Refill upgrade",
-        "Alpha Cache 24": "Crystals x500",
         "Beta Cache 19": "Circuit Refill upgrade",
-        "Beta Cache 20": "Circuit Charge upgrade",
-        "Beta Cache 21": "Reflect Shield upgrade",
-        "Beta Cache 22": "Crystals x1000",
-        "Beta Cache 23": "Reflect Shield upgrade",
         "Beta Cache 24": "Circuit Refill upgrade",
-        "Gamma Cache 19": "Circuit Charge upgrade",
-        "Gamma Cache 20": "Reflect Shield upgrade",
+        "Beta Cache 4": "Circuit Refill upgrade",
+        "Beta Cache 7": "Circuit Refill upgrade",
+        "Gamma Cache 1": "Circuit Refill upgrade",
+        "Gamma Cache 11": "Circuit Refill upgrade",
         "Gamma Cache 21": "Circuit Refill upgrade",
-        "Gamma Cache 22": "Crystals x2000",
-        "Gamma Cache 23": "Circuit Charge upgrade",
-        "Gamma Cache 24": "Circuit Charge upgrade",
-        "Reward Chest 19": "Crystals x500",
-        "Reward Chest 20": "Reflect Shield upgrade",
+        "Gamma Cache 4": "Circuit Refill upgrade",
+        "Gamma Cache 5": "Circuit Refill upgrade",
+        "Gamma Cache 6": "Circuit Refill upgrade",
+        "Gamma Cache 9": "Circuit Refill upgrade",
+        "PSI Key Storage 2": "Circuit Refill upgrade",
+        "Reward Chest 12": "Circuit Refill upgrade",
+        "Reward Chest 13": "Circuit Refill upgrade",
         "Reward Chest 21": "Circuit Refill upgrade",
-        "Reward Chest 22": "Crystals x500",
-        "Reward Chest 23": "Reflect Shield upgrade",
-        "Reward Chest 24": "Crystals x500",
+        "Beta Cache 12": "Crystals x1000",
+        "Beta Cache 22": "Crystals x1000",
+        "Beta Cache 6": "Crystals x1000",
+        "Gamma Cache 7": "Crystals x1000",
+        "Reward Chest 9": "Crystals x1000",
+        "PSI Key Storage 1": "Circuit Booster",
+        "Beta Cache 8": "PSI Key 2",
+        "Gamma Cache 12": "Dodge Enhancer",
+        "Reward Chest 7": "Portable Compass",
+        "Reward Chest 8": "Metabolism",
+        "Reward Chest 11": "Crystal Efficiency",
+        "Alpha Cache 13": "Shield Boost",
+        "Alpha Cache 17": "Map",
+        "Gamma Cache 18": "PSI Key 1",
+        "Reward Chest 15": "Crystal Gatherer",
         "Place of Power": "Cursed Seal",
         "The Last Place You'll Look": "Agate Knife",
-        "Meridian": "Evolution Trap",
-        "Meridian Defeat": "Meridian Defeated",
         "Ataraxia": "Evolution Trap",
-        "Ataraxia Defeat": "Ataraxia Defeated",
+        "Meridian": "Evolution Trap",
         "Merodach": "Evolution Trap",
+        "Meridian Defeat": "Meridian Defeated",
+        "Ataraxia Defeat": "Ataraxia Defeated",
         "Merodach Defeat": "Merodach Defeated",
         "Wervyn Anixil": "Victory",
         "Wervyn Anixil?": "Full Victory",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Alpha Cache 1": False,
+        "Alpha Cache 2": False,
+        "Alpha Cache 3": True,
+        "Alpha Cache 4": False,
+        "Alpha Cache 5": False,
+        "Alpha Cache 6": False,
+        "Beta Cache 1": False,
+        "Beta Cache 2": False,
+        "Beta Cache 3": False,
+        "Beta Cache 4": False,
+        "Beta Cache 5": False,
+        "Beta Cache 6": False,
+        "Gamma Cache 1": False,
+        "Gamma Cache 2": False,
+        "Gamma Cache 3": False,
+        "Gamma Cache 4": False,
+        "Gamma Cache 5": False,
+        "Gamma Cache 6": False,
+        "Reward Chest 1": False,
+        "Reward Chest 2": False,
+        "Reward Chest 3": False,
+        "Reward Chest 4": False,
+        "Reward Chest 5": False,
+        "Reward Chest 6": False,
+        "PSI Key Storage 1": True,
+        "Alpha Cache 7": False,
+        "Alpha Cache 8": False,
+        "Alpha Cache 9": False,
+        "Alpha Cache 10": False,
+        "Alpha Cache 11": False,
+        "Alpha Cache 12": False,
+        "Beta Cache 7": False,
+        "Beta Cache 8": True,
+        "Beta Cache 9": False,
+        "Beta Cache 10": False,
+        "Beta Cache 11": False,
+        "Beta Cache 12": False,
+        "Gamma Cache 7": False,
+        "Gamma Cache 8": False,
+        "Gamma Cache 9": False,
+        "Gamma Cache 10": False,
+        "Gamma Cache 11": False,
+        "Gamma Cache 12": True,
+        "Reward Chest 7": False,
+        "Reward Chest 8": True,
+        "Reward Chest 9": False,
+        "Reward Chest 10": False,
+        "Reward Chest 11": False,
+        "Reward Chest 12": False,
+        "PSI Key Storage 2": False,
+        "Alpha Cache 13": True,
+        "Alpha Cache 14": False,
+        "Alpha Cache 15": False,
+        "Alpha Cache 16": False,
+        "Alpha Cache 17": False,
+        "Alpha Cache 18": False,
+        "Beta Cache 13": False,
+        "Beta Cache 14": False,
+        "Beta Cache 15": False,
+        "Beta Cache 16": False,
+        "Beta Cache 17": False,
+        "Beta Cache 18": False,
+        "Gamma Cache 13": False,
+        "Gamma Cache 14": False,
+        "Gamma Cache 15": False,
+        "Gamma Cache 16": False,
+        "Gamma Cache 17": False,
+        "Gamma Cache 18": True,
+        "Reward Chest 13": False,
+        "Reward Chest 14": False,
+        "Reward Chest 15": False,
+        "Reward Chest 16": False,
+        "Reward Chest 17": False,
+        "Reward Chest 18": False,
+        "PSI Key Storage 3": False,
+        "Alpha Cache 19": False,
+        "Alpha Cache 20": False,
+        "Alpha Cache 21": False,
+        "Alpha Cache 22": False,
+        "Alpha Cache 23": False,
+        "Alpha Cache 24": False,
+        "Beta Cache 19": False,
+        "Beta Cache 20": False,
+        "Beta Cache 21": False,
+        "Beta Cache 22": False,
+        "Beta Cache 23": False,
+        "Beta Cache 24": False,
+        "Gamma Cache 19": False,
+        "Gamma Cache 20": False,
+        "Gamma Cache 21": False,
+        "Gamma Cache 22": False,
+        "Gamma Cache 23": False,
+        "Gamma Cache 24": False,
+        "Reward Chest 19": False,
+        "Reward Chest 20": False,
+        "Reward Chest 21": False,
+        "Reward Chest 22": False,
+        "Reward Chest 23": False,
+        "Reward Chest 24": False,
+        "Place of Power": True,
+        "The Last Place You'll Look": True,
+        "Meridian": False,
+        "Meridian Defeat": True,
+        "Ataraxia": False,
+        "Ataraxia Defeat": True,
+        "Merodach": False,
+        "Merodach Defeat": True,
+        "Wervyn Anixil": True,
+        "Wervyn Anixil?": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -328,14 +440,38 @@ class MeritousWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = MeritousWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = MeritousWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = MeritousWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -380,27 +516,81 @@ class MeritousWorld(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

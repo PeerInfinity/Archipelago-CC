@@ -11,7 +11,10 @@ to prevent infinite loops and runaway resource usage.
 
 # Maximum number of times analyze_rule can be called in a single export.
 # This catches infinite loops where rules keep spawning new analyze_rule calls.
-MAX_ANALYZE_RULE_CALLS = 10000
+# Set to 15000 to accommodate complex configurations like ALttP's entrance_shuffle=full
+# which creates many more region/entrance rules that need analysis.
+# With closure function identity caching, this limit is rarely hit.
+MAX_ANALYZE_RULE_CALLS = 15000
 
 # Maximum number of AST node visits within a single RuleAnalyzer instance.
 # This catches infinite loops within a single rule's AST traversal.
@@ -33,9 +36,22 @@ MAX_HELPER_DISCOVERY_ITERATIONS = 10
 # Rules larger than this likely indicate runaway expansion.
 MAX_RULE_SIZE_KB = 100
 
-# Maximum size of total export data in megabytes.
-# Checked periodically during region processing.
-MAX_EXPORT_SIZE_MB = 10
+# Maximum size of total export data in megabytes (per game).
+# The effective limit is: BASE + (EXTRA_PER_GAME * (num_players - 1))
+# This allows larger exports for multiworld while still catching loops.
+#
+# INTERIM size limits - checked periodically during region processing.
+# These are higher because interim measurements use Python object string
+# representations which are larger than final JSON. For example, a 658 KB
+# final file may measure as 12.9 MB during processing. Set higher to
+# accommodate complex games like LADX (377+ regions) during processing.
+MAX_INTERIM_EXPORT_SIZE_MB_BASE = 20
+MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME = 2
+
+# FINAL size limits - checked when writing the final JSON file.
+# These are the actual limits for the output file size.
+MAX_FINAL_EXPORT_SIZE_MB_BASE = 10
+MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME = 1
 
 # =============================================================================
 # Sorting Configuration

@@ -54215,7 +54215,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification_counts": {
+          "progression": 3,
+          "useful": 1
+        }
       },
       "Progressive Fishing Rod": {
         "name": "Progressive Fishing Rod",
@@ -67415,7 +67419,7 @@
         "death_link": 0,
         "trap_items": "",
         "ut_seed": 9783613927619360491,
-        "seed": 437057968,
+        "seed": 119280605,
         "randomized_entrances": {},
         "modified_bundles": {
           "Pantry": {

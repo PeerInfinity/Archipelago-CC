@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -290,50 +290,86 @@ class MMBN3World(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "ACDC SonicWav W Trade": "Unlocker",
+        "Hades GrabBack K Trade": "Unlocker",
+        "Hospital 1 North BMD": "Unlocker",
+        "Hospital 2 Central BMD": "Unlocker",
+        "Job: My Navi is sick": "Unlocker",
+        "Numberman Code 03": "Unlocker",
+        "Numberman Code 14": "Unlocker",
+        "Numberman Code 15": "Unlocker",
+        "Undernet 4 Top North BMD": "Unlocker",
+        "Undernet 7 Upper BMD": "Unlocker",
         "ACDC Bubbler C Trade": "10 BugFrags",
+        "Job: Help me with my son!": "10 BugFrags",
+        "Secret 2 Island BMD": "10 BugFrags",
         "ACDC Recov120 S Trade": "Needle",
         "ACDC School Desk": "VarSword F",
         "ACDC Class 5B Bookshelf": "StepSwrd O",
         "School 1 Entrance BMD": "AntiNavi M",
+        "ACDC Dog House BMD": "RegUP2",
+        "ACDC School Blackboard BMD": "RegUP2",
+        "Beach Hospital Tree": "RegUP2",
+        "Beach TV BMD": "RegUP2",
+        "Chocolate Shop 06": "RegUP2",
+        "Chocolate Shop 12": "RegUP2",
+        "Dex's HP BMD 1": "RegUP2",
+        "Hospital 5 Southwest BMD": "RegUP2",
+        "Job: Help with a will": "RegUP2",
+        "Numberman Code 01": "RegUP2",
         "School 1 North Central BMD": "RegUP2",
+        "School 2 CodeA BMD": "RegUP2",
+        "Yoka Quiz Master": "RegUP2",
         "School 1 Far West BMD 2": "Speed+1 (Yellow)",
         "School 1 KeyDataA BMD": "Snake D",
+        "Hospital 1 West BMD": "CopyDmg *",
         "School 1 KeyDataB BMD": "CopyDmg *",
+        "Undernet 7 Northeast BMD": "CopyDmg *",
         "School 1 KeyDataC BMD": "Jungle",
         "School 2 South BMD": "Recov300 R",
         "School 2 Entrance BMD": "FlamMan V3 F",
         "School 2 Mainframe BMD": "800z",
-        "School 2 CodeA BMD": "RegUP2",
-        "School 2 CodeB BMD": "HPMemory",
-        "School 2 CodeC BMD": "GutPunch B",
-        "ACDC Dog House BMD": "RegUP2",
+        "Yai's HP BMD 2": "800z",
         "ACDC Lan's Security Panel BMD": "HPMemory",
+        "Beach DNN Kiosk": "HPMemory",
+        "Beach DNN WideSwrd C Trade": "HPMemory",
+        "Beach News Van BMD": "HPMemory",
+        "Chocolate Shop 17": "HPMemory",
+        "Chocolate Shop 25": "HPMemory",
+        "Chocolate Shop 32": "HPMemory",
+        "Hades Gargoyle BMD": "HPMemory",
+        "Hospital 3 Northwest BMD": "HPMemory",
+        "Hospital 5 Island BMD": "HPMemory",
+        "Job: Be my boyfriend": "HPMemory",
+        "Job: Catching gang members": "HPMemory",
+        "Numberman Code 08": "HPMemory",
+        "Numberman Code 12": "HPMemory",
+        "Numberman Code 17": "HPMemory",
+        "Numberman Code 19": "HPMemory",
+        "Numberman Code 27": "HPMemory",
+        "Numberman Code 28": "HPMemory",
+        "School 2 CodeB BMD": "HPMemory",
+        "Undernet 3 Central BMD": "HPMemory",
+        "Undernet 3 South BMD": "HPMemory",
+        "Yoka Inn Jars": "HPMemory",
+        "Zoo Panda PMD": "HPMemory",
+        "School 2 CodeC BMD": "GutPunch B",
         "ACDC Yai's Phone BMD": "Barr100 E",
         "ACDC NumberMan Display BMD": "SpinWht",
         "ACDC Tank BMD 1": "Recov30 *",
         "ACDC Tank BMD 2": "Hammer",
         "ACDC School Server BMD 1": "Humor",
         "ACDC School Server BMD 2": "FireSwrd P",
-        "ACDC School Blackboard BMD": "RegUP2",
-        "Numberman Code 01": "RegUP2",
         "Numberman Code 02": "HeroSwrd P",
-        "Numberman Code 03": "Unlocker",
         "Numberman Code 04": "AntiRecv B",
         "Numberman Code 05": "SpinGrn",
         "Numberman Code 06": "SubPET",
         "Numberman Code 07": "FlamMan V2 F",
-        "Numberman Code 08": "HPMemory",
         "Numberman Code 09": "Spreader *",
         "Numberman Code 10": "SloGauge *",
         "Numberman Code 11": "MiniEnrg",
-        "Numberman Code 12": "HPMemory",
         "Numberman Code 13": "CACDCPas",
-        "Numberman Code 14": "Unlocker",
-        "Numberman Code 15": "Unlocker",
         "Numberman Code 16": "Punk P",
-        "Numberman Code 17": "HPMemory",
         "Numberman Code 18": "Fountain *",
-        "Numberman Code 19": "HPMemory",
         "Numberman Code 20": "Navi+40 *",
         "Numberman Code 21": "AirShot3 *",
         "Numberman Code 22": "Aura F",
@@ -341,19 +377,23 @@ class MMBN3World(RuleWorldMixin, World):
         "Numberman Code 24": "HiCannon *",
         "Numberman Code 25": "CYokaPas",
         "Numberman Code 26": "Recov120 *",
-        "Numberman Code 27": "HPMemory",
-        "Numberman Code 28": "HPMemory",
         "Numberman Code 29": "BlckMnd",
         "Numberman Code 30": "Geddon1 *",
         "Numberman Code 31": "DynaWave V",
         "Mayl's HP BMD": "FlashMan F",
         "Yai's HP BMD 1": "CBeacPas",
-        "Yai's HP BMD 2": "800z",
-        "Dex's HP BMD 1": "RegUP2",
+        "Beach Hospital Bed BMD": "Progressive Undernet Rank",
+        "Chocolate Shop 05": "Progressive Undernet Rank",
+        "Chocolate Shop 21": "Progressive Undernet Rank",
+        "Chocolate Shop 26": "Progressive Undernet Rank",
         "Dex's HP BMD 2": "Progressive Undernet Rank",
+        "Hospital 3 Central BMD": "Progressive Undernet Rank",
+        "Undernet 2 Upper BMD": "Progressive Undernet Rank",
+        "Undernet 4 Bottom West BMD": "Progressive Undernet Rank",
         "Mayl's HP PMD": "KingMan V3 K",
         "ACDC 1 Southwest BMD": "WpnLV+1 (Pink)",
         "ACDC 1 Northeast BMD": "Charge+1 (White)",
+        "Chocolate Shop 03": "Charge+1 (White)",
         "ACDC 1 PMD": "BeastMan V3 B",
         "ACDC 2 Center BMD": "Airshoes",
         "ACDC 2 North BMD": "Thndrblt *",
@@ -367,20 +407,18 @@ class MMBN3World(RuleWorldMixin, World):
         "SciLab Dad's Computer BMD": "AirShoes *",
         "SciLab Dad's Computer PMD": "GutImpct J",
         "Job: Please deliver this": "Repair *",
-        "Job: My Navi is sick": "Unlocker",
-        "Job: Help me with my son!": "10 BugFrags",
         "Job: Transmission error": "1000z",
         "Job: Chip Prices": "StpCross S",
         "Job: I'm broke?!": "Roll V2 R",
         "Job: Rare chips for cheap!": "Collect",
-        "Job: Be my boyfriend": "HPMemory",
         "Job: Will you deliver?": "Recov10 *",
         "Job: Somebody, please help!": "FlamMan F",
         "Job: Looking for condor": "GutImpact H",
+        "Beach Battle Console BMD": "RegUP1",
+        "Chocolate Shop 11": "RegUP1",
         "Job: Help with rehab": "RegUP1",
         "Job: Help with rehab bonus": "PlantMan V3 P",
         "Job: Old Master": "SpinOrange",
-        "Job: Catching gang members": "HPMemory",
         "Job: Please adopt a virus!": "HubBatc",
         "Job: Legendary Tomes": "SpinPurple",
         "Job: Legendary Tomes - Treasure": "SpinPink",
@@ -392,21 +430,25 @@ class MMBN3World(RuleWorldMixin, World):
         "Job: Finding the blue Navi": "KingMan K",
         "Job: Give your support": "SideGun S",
         "Job: Stamp collecting": "Prism Q",
-        "Job: Help with a will": "RegUP2",
         "SciLab 1 East BMD": "ProtoMan V2 B",
         "SciLab 1 WWW BMD": "Muramasa M",
         "SciLab 2 South BMD": "10000z",
+        "Chocolate Shop 10": "1 BugFrag",
+        "Chocolate Shop 13": "1 BugFrag",
         "SciLab 2 West BMD": "1 BugFrag",
+        "Secret 3 Island BMD": "1 BugFrag",
+        "WWW Wily's Desk": "1 BugFrag",
+        "Yoka TV BMD": "1 BugFrag",
         "Yoka Mr Quiz": "MetalMan V3 M",
-        "Yoka Quiz Master": "RegUP2",
         "Yoka FireSwrd P Trade": "Bass+ X",
-        "Yoka Inn Jars": "HPMemory",
         "Yoka Zoo Garbage": "PETCase",
-        "Zoo Panda PMD": "HPMemory",
         "Zoo 1 East BMD": "Hole *",
         "Zoo 1 North BMD": "AlphaArmΩ V",
         "Zoo 1 Central BMD": "AntiSword Y",
+        "Secret 2 Upper BMD": "Charge+1 (Pink)",
         "Zoo 2 East BMD": "Charge+1 (Pink)",
+        "Chocolate Shop 30": "FullEnrg",
+        "Secret 2 Lower BMD": "FullEnrg",
         "Zoo 2 Central BMD": "FullEnrg",
         "Zoo 2 West BMD": "50000z",
         "Zoo 3 North BMD": "Panic C",
@@ -416,7 +458,7 @@ class MMBN3World(RuleWorldMixin, World):
         "Zoo 4 West BMD": "GigFldr1",
         "Zoo 4 Northwest BMD": "BlkBomb1 P",
         "Zoo 4 Southeast BMD": "Guardian O",
-        "Yoka TV BMD": "1 BugFrag",
+        "Beach DNN Poster": "ExpMem",
         "Yoka Armor BMD": "ExpMem",
         "Yoka Hot Spring BMD": "DesertMan V2 D",
         "Yoka Ticket Machine BMD": "BambooSword N",
@@ -427,36 +469,23 @@ class MMBN3World(RuleWorldMixin, World):
         "Comedian": "Snctuary C",
         "Chocolate Shop 01": "Barrier E",
         "Chocolate Shop 02": "Attack+1 (White)",
-        "Chocolate Shop 03": "Charge+1 (White)",
         "Chocolate Shop 04": "Team2 *",
-        "Chocolate Shop 05": "Progressive Undernet Rank",
-        "Chocolate Shop 06": "RegUP2",
         "Chocolate Shop 07": "FireRat H",
         "Chocolate Shop 08": "StepCross Q",
         "Chocolate Shop 09": "Magnum1 A",
-        "Chocolate Shop 10": "1 BugFrag",
-        "Chocolate Shop 11": "RegUP1",
-        "Chocolate Shop 12": "RegUP2",
-        "Chocolate Shop 13": "1 BugFrag",
         "Chocolate Shop 14": "Tornado L",
         "Chocolate Shop 15": "HeatSide T",
         "Chocolate Shop 16": "SpinRed",
-        "Chocolate Shop 17": "HPMemory",
         "Chocolate Shop 18": "Team1 *",
         "Chocolate Shop 19": "Spreader P",
         "Chocolate Shop 20": "WWW ID",
-        "Chocolate Shop 21": "Progressive Undernet Rank",
         "Chocolate Shop 22": "HP+500 (Yellow)",
         "Chocolate Shop 23": "Poltergeist G",
         "Chocolate Shop 24": "ZeusHammer Z",
-        "Chocolate Shop 25": "HPMemory",
-        "Chocolate Shop 26": "Progressive Undernet Rank",
         "Chocolate Shop 27": "Geyser B",
         "Chocolate Shop 28": "ProtoMan V3 B",
         "Chocolate Shop 29": "BeastMan B",
-        "Chocolate Shop 30": "FullEnrg",
         "Chocolate Shop 31": "Lance S",
-        "Chocolate Shop 32": "HPMemory",
         "Yoka 1 North BMD": "WideSwrd E",
         "Yoka 1 WWW BMD": "OilBody",
         "Yoka 1 PMD": "DesertMan V3 D",
@@ -465,47 +494,32 @@ class MMBN3World(RuleWorldMixin, World):
         "Hospital Quiz Queen": "FlashMan V3 F",
         "Hades Quiz King": "SpinDark",
         "Hospital DynaWav V Trade": "StepSwrd M",
-        "Beach DNN WideSwrd C Trade": "HPMemory",
         "Beach DNN HoleMetr H Trade": "SpinBlue",
         "Beach DNN Shadow J Trade": "HP+200 (Yellow)",
-        "Hades GrabBack K Trade": "Unlocker",
         "Beach Department Store": "Aqua+30 *",
         "Beach Hospital Plaque": "Bubbler C",
         "Beach Hospital Pink Door": "BowlMan V3 B",
-        "Beach Hospital Tree": "RegUP2",
         "Beach Hospital Hidden Conversation": "Geddon3 U",
         "Beach Hospital Girl": "StepCross R",
-        "Beach DNN Kiosk": "HPMemory",
         "Beach DNN Boxes": "RegUP3",
-        "Beach DNN Poster": "ExpMem",
+        "Undernet 6 TV BMD": "RegUP3",
+        "WWW 3 East BMD": "RegUP3",
+        "WWW 4 Central BMD": "RegUP3",
         "Hades Boat Dock": "BubblMan B",
+        "Beach DNN Main Console PMD": "SubMem",
         "Hades South BMD": "SubMem",
-        "Hades Gargoyle BMD": "HPMemory",
-        "Hospital 1 North BMD": "Unlocker",
-        "Hospital 1 West BMD": "CopyDmg *",
         "Hospital 1 Center BMD": "DarkAura A",
         "Hospital 2 Island BMD": "UnderSht",
-        "Hospital 2 Central BMD": "Unlocker",
         "Hospital 2 Southwest BMD": "FstGauge *",
         "Hospital 3 West BMD": "DeltaRay Z",
-        "Hospital 3 Central BMD": "Progressive Undernet Rank",
-        "Hospital 3 Northwest BMD": "HPMemory",
         "Hospital 4 North BMD": "GaiaBlde *",
         "Hospital 4 Central BMD": "Salamndr *",
         "Hospital 4 Southeast BMD": "GutsMan V2 G",
-        "Hospital 5 Island BMD": "HPMemory",
         "Hospital 5 Northeast BMD": "2000z",
-        "Hospital 5 Southwest BMD": "RegUP2",
-        "Beach Hospital Bed BMD": "Progressive Undernet Rank",
-        "Beach TV BMD": "RegUP2",
         "Beach Vending Machine BMD": "Barr200 E",
-        "Beach News Van BMD": "HPMemory",
-        "Beach Battle Console BMD": "RegUP1",
         "Beach Security System BMD": "Spreader N",
         "Beach Broadcast Computer BMD": "Recov150 P",
         "Beach DNN Security Panel PMD": "3000z",
-        "Beach DNN Main Console PMD": "SubMem",
-        "Undernet 6 TV BMD": "RegUP3",
         "Beach 1 BMD": "Roll V3 R",
         "Beach 1 PMD": "GutStrgt Q",
         "Beach 2 East BMD": "SneakRun",
@@ -514,12 +528,7 @@ class MMBN3World(RuleWorldMixin, World):
         "Undernet 1 South BMD": "Shadow J",
         "Undernet 1 WWW BMD": "QuickGge",
         "Undernet 2 Lower BMD": "WideSwrd C",
-        "Undernet 2 Upper BMD": "Progressive Undernet Rank",
-        "Undernet 3 South BMD": "HPMemory",
-        "Undernet 3 Central BMD": "HPMemory",
         "Undernet 4 Pillar Prog": "Roll R",
-        "Undernet 4 Top North BMD": "Unlocker",
-        "Undernet 4 Bottom West BMD": "Progressive Undernet Rank",
         "Undernet 4 Top Pillar BMD": "Slasher B",
         "Undernet 5 Upper BMD": "GtStrght S",
         "Undernet 5 Lower BMD": "OrderSys",
@@ -527,32 +536,292 @@ class MMBN3World(RuleWorldMixin, World):
         "Undernet 6 Central BMD": "CSciPass",
         "Undernet 7 PMD": "Hammer T",
         "Undernet 7 West BMD": "SetSand",
-        "Undernet 7 Northeast BMD": "CopyDmg *",
         "Undernet 7 Northwest BMD": "MetalMan V2 M",
-        "Undernet 7 Upper BMD": "Unlocker",
         "WWW Control Room 1 Screen": "500z",
-        "WWW Wily's Desk": "1 BugFrag",
         "WWW Wall BMD": "DrillMan V3 D",
         "WWW 1 East BMD": "SpinYllw",
         "WWW 1 West BMD": "BrkChrg",
         "WWW 1 Central BMD": "Mr Famous' Wristband",
         "WWW 2 East BMD": "DrillMan D",
         "WWW 2 Northwest BMD": "CustSwrd Z",
-        "WWW 3 East BMD": "RegUP3",
         "WWW 3 North BMD": "Jealousy J",
-        "WWW 4 Central BMD": "RegUP3",
         "WWW 4 Northwest BMD": "Invis *",
         "Alpha Defeated": "Victory",
         "Secret 1 South BMD": "GutsMan G",
         "Secret 1 Northeast BMD": "Untrap",
         "Secret 1 Northwest BMD": "HP+100 (Yellow)",
-        "Secret 2 Island BMD": "10 BugFrags",
-        "Secret 2 Lower BMD": "FullEnrg",
-        "Secret 2 Upper BMD": "Charge+1 (Pink)",
-        "Secret 3 Island BMD": "1 BugFrag",
         "Secret 3 South BMD": "LongSwrd E",
         "Secret 3 BugFrag BMD": "Fire+30 *",
         "Serenade": "SandStage C",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "ACDC SonicWav W Trade": True,
+        "ACDC Bubbler C Trade": False,
+        "ACDC Recov120 S Trade": True,
+        "ACDC School Desk": False,
+        "ACDC Class 5B Bookshelf": False,
+        "School 1 Entrance BMD": False,
+        "School 1 North Central BMD": False,
+        "School 1 Far West BMD 2": False,
+        "School 1 KeyDataA BMD": False,
+        "School 1 KeyDataB BMD": False,
+        "School 1 KeyDataC BMD": False,
+        "School 2 South BMD": False,
+        "School 2 Entrance BMD": False,
+        "School 2 Mainframe BMD": False,
+        "School 2 CodeA BMD": False,
+        "School 2 CodeB BMD": False,
+        "School 2 CodeC BMD": False,
+        "ACDC Dog House BMD": False,
+        "ACDC Lan's Security Panel BMD": False,
+        "ACDC Yai's Phone BMD": False,
+        "ACDC NumberMan Display BMD": False,
+        "ACDC Tank BMD 1": True,
+        "ACDC Tank BMD 2": True,
+        "ACDC School Server BMD 1": True,
+        "ACDC School Server BMD 2": True,
+        "ACDC School Blackboard BMD": False,
+        "Numberman Code 01": False,
+        "Numberman Code 02": False,
+        "Numberman Code 03": True,
+        "Numberman Code 04": False,
+        "Numberman Code 05": False,
+        "Numberman Code 06": True,
+        "Numberman Code 07": False,
+        "Numberman Code 08": False,
+        "Numberman Code 09": False,
+        "Numberman Code 10": False,
+        "Numberman Code 11": False,
+        "Numberman Code 12": False,
+        "Numberman Code 13": True,
+        "Numberman Code 14": True,
+        "Numberman Code 15": True,
+        "Numberman Code 16": False,
+        "Numberman Code 17": False,
+        "Numberman Code 18": False,
+        "Numberman Code 19": False,
+        "Numberman Code 20": False,
+        "Numberman Code 21": False,
+        "Numberman Code 22": False,
+        "Numberman Code 23": False,
+        "Numberman Code 24": False,
+        "Numberman Code 25": True,
+        "Numberman Code 26": False,
+        "Numberman Code 27": False,
+        "Numberman Code 28": False,
+        "Numberman Code 29": True,
+        "Numberman Code 30": False,
+        "Numberman Code 31": True,
+        "Mayl's HP BMD": False,
+        "Yai's HP BMD 1": True,
+        "Yai's HP BMD 2": False,
+        "Dex's HP BMD 1": False,
+        "Dex's HP BMD 2": True,
+        "Mayl's HP PMD": False,
+        "ACDC 1 Southwest BMD": False,
+        "ACDC 1 Northeast BMD": False,
+        "ACDC 1 PMD": False,
+        "ACDC 2 Center BMD": False,
+        "ACDC 2 North BMD": False,
+        "ACDC 3 Southwest BMD": False,
+        "ACDC 3 Northeast BMD": False,
+        "SciLab Shake1 S Trade": False,
+        "SciLab Garbage Can": False,
+        "SciLab Vending Machine BMD": True,
+        "SciLab Virus Lab Door BMD 1": False,
+        "SciLab Virus Lab Door BMD 2": False,
+        "SciLab Dad's Computer BMD": False,
+        "SciLab Dad's Computer PMD": False,
+        "Job: Please deliver this": False,
+        "Job: My Navi is sick": True,
+        "Job: Help me with my son!": False,
+        "Job: Transmission error": False,
+        "Job: Chip Prices": False,
+        "Job: I'm broke?!": False,
+        "Job: Rare chips for cheap!": False,
+        "Job: Be my boyfriend": False,
+        "Job: Will you deliver?": False,
+        "Job: Somebody, please help!": False,
+        "Job: Looking for condor": False,
+        "Job: Help with rehab": False,
+        "Job: Help with rehab bonus": False,
+        "Job: Old Master": False,
+        "Job: Catching gang members": False,
+        "Job: Please adopt a virus!": False,
+        "Job: Legendary Tomes": False,
+        "Job: Legendary Tomes - Treasure": False,
+        "Job: Hide and seek! First Child": True,
+        "Job: Hide and seek! Second Child": True,
+        "Job: Hide and seek! Third Child": True,
+        "Job: Hide and seek! Fourth Child": False,
+        "Job: Hide and seek! Completion": False,
+        "Job: Finding the blue Navi": False,
+        "Job: Give your support": False,
+        "Job: Stamp collecting": False,
+        "Job: Help with a will": False,
+        "SciLab 1 East BMD": False,
+        "SciLab 1 WWW BMD": False,
+        "SciLab 2 South BMD": False,
+        "SciLab 2 West BMD": False,
+        "Yoka Mr Quiz": False,
+        "Yoka Quiz Master": False,
+        "Yoka FireSwrd P Trade": False,
+        "Yoka Inn Jars": False,
+        "Yoka Zoo Garbage": True,
+        "Zoo Panda PMD": False,
+        "Zoo 1 East BMD": False,
+        "Zoo 1 North BMD": False,
+        "Zoo 1 Central BMD": False,
+        "Zoo 2 East BMD": False,
+        "Zoo 2 Central BMD": False,
+        "Zoo 2 West BMD": False,
+        "Zoo 3 North BMD": False,
+        "Zoo 3 Central BMD": False,
+        "Zoo 3 Path BMD": False,
+        "Zoo 3 Northwest BMD": False,
+        "Zoo 4 West BMD": False,
+        "Zoo 4 Northwest BMD": False,
+        "Zoo 4 Southeast BMD": False,
+        "Yoka TV BMD": False,
+        "Yoka Armor BMD": False,
+        "Yoka Hot Spring BMD": False,
+        "Yoka Ticket Machine BMD": False,
+        "Yoka Giraffe BMD": False,
+        "Yoka Panda BMD": False,
+        "Tamako's HP BMD": False,
+        "Tamako's HP PMD": True,
+        "Comedian": False,
+        "Chocolate Shop 01": False,
+        "Chocolate Shop 02": False,
+        "Chocolate Shop 03": False,
+        "Chocolate Shop 04": False,
+        "Chocolate Shop 05": True,
+        "Chocolate Shop 06": False,
+        "Chocolate Shop 07": False,
+        "Chocolate Shop 08": False,
+        "Chocolate Shop 09": True,
+        "Chocolate Shop 10": False,
+        "Chocolate Shop 11": False,
+        "Chocolate Shop 12": False,
+        "Chocolate Shop 13": False,
+        "Chocolate Shop 14": False,
+        "Chocolate Shop 15": False,
+        "Chocolate Shop 16": False,
+        "Chocolate Shop 17": False,
+        "Chocolate Shop 18": False,
+        "Chocolate Shop 19": False,
+        "Chocolate Shop 20": True,
+        "Chocolate Shop 21": True,
+        "Chocolate Shop 22": False,
+        "Chocolate Shop 23": False,
+        "Chocolate Shop 24": False,
+        "Chocolate Shop 25": False,
+        "Chocolate Shop 26": True,
+        "Chocolate Shop 27": False,
+        "Chocolate Shop 28": False,
+        "Chocolate Shop 29": False,
+        "Chocolate Shop 30": False,
+        "Chocolate Shop 31": False,
+        "Chocolate Shop 32": False,
+        "Yoka 1 North BMD": False,
+        "Yoka 1 WWW BMD": False,
+        "Yoka 1 PMD": False,
+        "Yoka 2 Lower BMD": False,
+        "Yoka 2 Upper BMD": False,
+        "Hospital Quiz Queen": False,
+        "Hades Quiz King": False,
+        "Hospital DynaWav V Trade": False,
+        "Beach DNN WideSwrd C Trade": False,
+        "Beach DNN HoleMetr H Trade": False,
+        "Beach DNN Shadow J Trade": False,
+        "Hades GrabBack K Trade": True,
+        "Beach Department Store": False,
+        "Beach Hospital Plaque": True,
+        "Beach Hospital Pink Door": False,
+        "Beach Hospital Tree": False,
+        "Beach Hospital Hidden Conversation": False,
+        "Beach Hospital Girl": False,
+        "Beach DNN Kiosk": False,
+        "Beach DNN Boxes": False,
+        "Beach DNN Poster": False,
+        "Hades Boat Dock": False,
+        "Hades South BMD": False,
+        "Hades Gargoyle BMD": False,
+        "Hospital 1 North BMD": True,
+        "Hospital 1 West BMD": False,
+        "Hospital 1 Center BMD": False,
+        "Hospital 2 Island BMD": False,
+        "Hospital 2 Central BMD": True,
+        "Hospital 2 Southwest BMD": False,
+        "Hospital 3 West BMD": False,
+        "Hospital 3 Central BMD": True,
+        "Hospital 3 Northwest BMD": False,
+        "Hospital 4 North BMD": False,
+        "Hospital 4 Central BMD": False,
+        "Hospital 4 Southeast BMD": False,
+        "Hospital 5 Island BMD": False,
+        "Hospital 5 Northeast BMD": False,
+        "Hospital 5 Southwest BMD": False,
+        "Beach Hospital Bed BMD": True,
+        "Beach TV BMD": False,
+        "Beach Vending Machine BMD": False,
+        "Beach News Van BMD": False,
+        "Beach Battle Console BMD": False,
+        "Beach Security System BMD": False,
+        "Beach Broadcast Computer BMD": False,
+        "Beach DNN Security Panel PMD": False,
+        "Beach DNN Main Console PMD": False,
+        "Undernet 6 TV BMD": False,
+        "Beach 1 BMD": False,
+        "Beach 1 PMD": False,
+        "Beach 2 East BMD": False,
+        "Beach 2 West BMD": False,
+        "Villain": True,
+        "Undernet 1 South BMD": True,
+        "Undernet 1 WWW BMD": False,
+        "Undernet 2 Lower BMD": True,
+        "Undernet 2 Upper BMD": True,
+        "Undernet 3 South BMD": False,
+        "Undernet 3 Central BMD": False,
+        "Undernet 4 Pillar Prog": False,
+        "Undernet 4 Top North BMD": True,
+        "Undernet 4 Bottom West BMD": True,
+        "Undernet 4 Top Pillar BMD": False,
+        "Undernet 5 Upper BMD": False,
+        "Undernet 5 Lower BMD": False,
+        "Undernet 6 East BMD": False,
+        "Undernet 6 Central BMD": True,
+        "Undernet 7 PMD": False,
+        "Undernet 7 West BMD": False,
+        "Undernet 7 Northeast BMD": False,
+        "Undernet 7 Northwest BMD": False,
+        "Undernet 7 Upper BMD": True,
+        "WWW Control Room 1 Screen": False,
+        "WWW Wily's Desk": False,
+        "WWW Wall BMD": False,
+        "WWW 1 East BMD": False,
+        "WWW 1 West BMD": False,
+        "WWW 1 Central BMD": False,
+        "WWW 2 East BMD": False,
+        "WWW 2 Northwest BMD": False,
+        "WWW 3 East BMD": False,
+        "WWW 3 North BMD": False,
+        "WWW 4 Central BMD": False,
+        "WWW 4 Northwest BMD": False,
+        "Alpha Defeated": True,
+        "Secret 1 South BMD": False,
+        "Secret 1 Northeast BMD": False,
+        "Secret 1 Northwest BMD": False,
+        "Secret 2 Island BMD": False,
+        "Secret 2 Lower BMD": False,
+        "Secret 2 Upper BMD": False,
+        "Secret 3 Island BMD": False,
+        "Secret 3 South BMD": False,
+        "Secret 3 BugFrag BMD": False,
+        "Serenade": False,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -648,14 +917,38 @@ class MMBN3World(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = MegaManBattleNetwork3WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = MegaManBattleNetwork3WorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = MegaManBattleNetwork3WorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -700,27 +993,81 @@ class MMBN3World(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

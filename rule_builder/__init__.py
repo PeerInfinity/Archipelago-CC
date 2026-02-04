@@ -29,7 +29,8 @@ See docs/json/developer/guides/format-converter.md for format details.
 """
 
 from .rules import (
-    # World mixin
+    # Logic and World mixins
+    RuleBuilderLogicMixin,
     RuleWorldMixin,
     # Option filtering
     OptionFilter,
@@ -59,10 +60,13 @@ from .rules import (
     CanReachLocation,
     CanReachRegion,
     CanReachEntrance,
+    EntranceAccessRuleCall,
     # AST format support
     ASTRule,
     Not,
     CountItem,
+    CountFromList,
+    CountGroup,
     Compare,
     Arithmetic,
     MinValue,
@@ -70,7 +74,10 @@ from .rules import (
     Conditional,
     HelperCall,
     WeightedSum,
+    UniqueCount,
     OptionValue,
+    # Rule type collections
+    BOOLEAN_RULE_TYPES,
 )
 
 from .ast_format import (
@@ -91,13 +98,11 @@ from .pathfinding import (
     check_region_property,
     # Entrance chain conditions
     EntranceChainCondition,
-    # ALttP-specific helpers
-    BunnyAccessibilityCheck,
-    can_reach_via_bunny_path,
 )
 
 __all__ = [
-    # World mixin
+    # Logic and World mixins
+    'RuleBuilderLogicMixin',
     'RuleWorldMixin',
     # Option filtering
     'OptionFilter',
@@ -127,10 +132,13 @@ __all__ = [
     'CanReachLocation',
     'CanReachRegion',
     'CanReachEntrance',
+    'EntranceAccessRuleCall',
     # AST format support classes
     'ASTRule',
     'Not',
     'CountItem',
+    'CountFromList',
+    'CountGroup',
     'Compare',
     'Arithmetic',
     'MinValue',
@@ -138,7 +146,10 @@ __all__ = [
     'Conditional',
     'HelperCall',
     'WeightedSum',
+    'UniqueCount',
     'OptionValue',
+    # Rule type collections
+    'BOOLEAN_RULE_TYPES',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',
@@ -151,6 +162,4 @@ __all__ = [
     'ALTTP_REGION_PROPERTIES',
     'check_region_property',
     'EntranceChainCondition',
-    'BunnyAccessibilityCheck',
-    'can_reach_via_bunny_path',
 ]

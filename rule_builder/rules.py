@@ -16,6 +16,32 @@ if TYPE_CHECKING:
 else:
     World = object
 
+from worlds.AutoWorld import LogicMixin
+
+
+class RuleBuilderLogicMixin(LogicMixin):
+    """A LogicMixin that adds rule caching support to CollectionState.
+
+    This mixin is required for worlds that use the Rule Builder's caching system.
+    It adds a `rule_cache` attribute to CollectionState that stores the results
+    of rule evaluations, keyed by player and rule id.
+
+    Based on PR #5048 (https://github.com/ArchipelagoMW/Archipelago/pull/5048).
+    """
+
+    multiworld: MultiWorld
+    rule_cache: dict[int, dict[int, bool]]
+
+    def init_mixin(self, multiworld: MultiWorld) -> None:
+        players = multiworld.get_all_ids()
+        self.rule_cache = {player: {} for player in players}
+
+    def copy_mixin(self, new_state: "RuleBuilderLogicMixin") -> "RuleBuilderLogicMixin":
+        new_state.rule_cache = {
+            player: rule_results.copy() for player, rule_results in self.rule_cache.items()
+        }
+        return new_state
+
 
 class RuleWorldMixin(World):
     """A World mixin that provides helpers for interacting with the rule builder"""
@@ -2263,6 +2289,103 @@ class CanReachEntrance(Rule[TWorld], game="Archipelago"):
             return {"entrance_name": self.entrance_name}
 
 
+@dataclasses.dataclass()
+class EntranceAccessRuleCall(Rule[TWorld], game="Archipelago"):
+    """A rule that evaluates an entrance's access_rule.
+
+    This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+    is called, potentially with a fake pearl state. The entrance is looked up by name
+    and its access_rule is evaluated.
+
+    When fake_pearl is True, Moon Pearl is temporarily added to the state before
+    evaluating the access rule. This simulates the "fake_pearl_state" function from
+    ALttP UnderworldGlitchRules.py.
+    """
+
+    entrance_name: str
+    """The name of the entrance whose access_rule to evaluate"""
+
+    fake_pearl: bool = False
+    """If True, evaluate the rule as if the player has Moon Pearl"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.entrance_name,
+            self.fake_pearl,
+            player=world.player,
+            multiworld=world.multiworld,
+            caching_enabled=world.rule_caching_enabled,
+        )
+
+    @override
+    def __str__(self) -> str:
+        fp = ", fake_pearl=True" if self.fake_pearl else ""
+        return f"{self.__class__.__name__}({self.entrance_name!r}{fp})"
+
+    class Resolved(Rule.Resolved):
+        entrance_name: str
+        fake_pearl: bool
+        multiworld: Any  # MultiWorld
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            try:
+                entrance = self.multiworld.get_entrance(self.entrance_name, self.player)
+            except KeyError:
+                # Entrance not found - conservatively return True
+                return True
+
+            eval_state = state
+            if self.fake_pearl:
+                # Create a fake state with Moon Pearl
+                if not state.has('Moon Pearl', self.player):
+                    eval_state = state.copy()
+                    eval_state.prog_items[self.player]['Moon Pearl'] += 1
+
+            # Evaluate the entrance's access_rule
+            return entrance.access_rule(eval_state)
+
+        @override
+        def entrance_dependencies(self) -> dict[str, set[int]]:
+            return {self.entrance_name: {id(self)}}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            if state is None:
+                verb = "Can access"
+            elif self(state):
+                verb = "Can access"
+            else:
+                verb = "Cannot access"
+            return [
+                {"type": "text", "text": f"{verb} entrance "},
+                {"type": "entrance_name", "text": self.entrance_name, "player": self.player},
+                {"type": "text", "text": f" access rule{fp_text}"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            if state is None:
+                return str(self)
+            prefix = "Can access" if self(state) else "Cannot access"
+            return f"{prefix} entrance {self.entrance_name} access rule{fp_text}"
+
+        @override
+        def __str__(self) -> str:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            return f"Entrance {self.entrance_name} access rule{fp_text}"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            result = {"entrance_name": self.entrance_name}
+            if self.fake_pearl:
+                result["fake_pearl"] = True
+            return result
+
+
 # =============================================================================
 # AST Format Support Classes
 # =============================================================================
@@ -2427,6 +2550,169 @@ class CountItem(Rule[TWorld], game="Archipelago"):
         @override
         def _get_args_dict(self) -> dict[str, Any]:
             return {"item_name": self.item_name}
+
+
+@dataclasses.dataclass(init=False)
+class CountFromList(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the cumulative count of items from a list.
+
+    This is the Rule Builder equivalent of state.count_from_list().
+    For a list like ["Key", "Key", "Door"], if the player has 2 Keys and 1 Door,
+    the count would be 2 + 2 + 1 = 5 (each occurrence in the list is counted).
+
+    When used as a boolean (in _evaluate), returns True if count > 0.
+    Also provides get_count() for use in comparisons.
+
+    Usage:
+        rule = CountFromList("Key", "Door", "Key")  # counts Key twice, Door once
+    """
+    item_names: tuple[str, ...] = ()
+
+    def __init__(self, *item_names: str, options: OptionFilter | tuple[OptionFilter, ...] = ()):
+        super().__init__(options=options)
+        self.item_names = item_names
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.item_names,
+            player=world.player,
+            caching_enabled=False,  # Count can change frequently
+        )
+
+    @override
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any], world_cls: type[RuleWorldMixin]) -> Self:
+        args = {**data.get("args", {})}
+        item_names = args.pop("item_names", ())
+        options = OptionFilter.multiple_from_dict(data.get("options", ()))
+        return cls(*item_names, **args, options=options)
+
+    @override
+    def __str__(self) -> str:
+        items = ", ".join(self.item_names)
+        return f"CountFromList({items})"
+
+    class Resolved(Rule.Resolved):
+        item_names: tuple[str, ...]
+        skip_cache: ClassVar[bool] = True
+
+        def get_count(self, state: CollectionState) -> int:
+            """Get the cumulative count of all items in the list."""
+            return state.count_from_list(self.item_names, self.player)
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if count > 0
+            return self.get_count(state) > 0
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            return {item: {id(self)} for item in self.item_names}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "CountFromList("}]
+            for i, item in enumerate(self.item_names):
+                if i > 0:
+                    messages.append({"type": "text", "text": ", "})
+                messages.append({"type": "item_name", "text": item, "player": self.player, "flags": 0})
+            messages.append({"type": "text", "text": ")"})
+            if state is not None:
+                count = self.get_count(state)
+                messages.append({"type": "text", "text": f": {count}"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            items = ", ".join(self.item_names)
+            if state is not None:
+                return f"CountFromList({items}): {self.get_count(state)}"
+            return f"CountFromList({items})"
+
+        @override
+        def __str__(self) -> str:
+            items = ", ".join(self.item_names)
+            return f"CountFromList({items})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"item_names": self.item_names}
+
+
+@dataclasses.dataclass()
+class CountGroup(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the count of items in a named group.
+
+    When used as a boolean (in _evaluate), returns True if count > 0.
+    Also provides get_count() for use in comparisons and arithmetic.
+
+    This rule is used to count items that belong to a named item group,
+    as defined by the world's item_name_groups.
+
+    Usage:
+        rule = CountGroup("Letters")  # True if player has at least 1 item from "Letters" group
+        rule = Compare(CountGroup("Keys"), ">=", 3)  # True if player has 3+ items from "Keys"
+    """
+    group_name: str = ""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.group_name,
+            player=world.player,
+            caching_enabled=False,  # Count can change frequently
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"CountGroup({self.group_name})"
+
+    class Resolved(Rule.Resolved):
+        group_name: str
+        skip_cache: ClassVar[bool] = True
+
+        def get_count(self, state: CollectionState) -> int:
+            """Get the count of items in this group."""
+            return state.count_group(self.group_name, self.player)
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if count > 0
+            return self.get_count(state) > 0
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            # Group dependencies are complex - items in the group may vary
+            # Return empty as we can't easily determine item names from group
+            return {}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is not None:
+                count = self.get_count(state)
+                return [
+                    {"type": "text", "text": f"CountGroup({self.group_name}): {count}"},
+                ]
+            return [
+                {"type": "text", "text": f"CountGroup({self.group_name})"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                return f"CountGroup({self.group_name}): {self.get_count(state)}"
+            return f"CountGroup({self.group_name})"
+
+        @override
+        def __str__(self) -> str:
+            return f"CountGroup({self.group_name})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"group_name": self.group_name}
 
 
 @dataclasses.dataclass()
@@ -3174,10 +3460,19 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             args=(),
             body_data={"type": "item_check", "item": "Flippers"}
         )
+
+        # With keyword arguments
+        rule = HelperCall(
+            helper_func=_game_enough_cats,
+            helper_name="enough_cats",
+            args=(walls_table, 1),
+            kwargs={"strange": True}
+        )
     """
     helper_func: Callable[..., bool] | None = None
     helper_name: str = ""
     args: tuple[Any, ...] = ()
+    kwargs: dict[str, Any] | None = None
     body_rule: "Rule[TWorld] | None" = None
     body_data: dict | None = None
 
@@ -3192,6 +3487,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             self.helper_func,
             self.helper_name,
             self.args,
+            self.kwargs or {},
             resolved_body_rule,
             self.body_data,
             player=world.player,
@@ -3200,9 +3496,13 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
     @override
     def __str__(self) -> str:
+        parts = []
         if self.args:
-            args_str = ", ".join(repr(a) for a in self.args)
-            return f"Helper:{self.helper_name}({args_str})"
+            parts.append(", ".join(repr(a) for a in self.args))
+        if self.kwargs:
+            parts.append(", ".join(f"{k}={repr(v)}" for k, v in self.kwargs.items()))
+        if parts:
+            return f"Helper:{self.helper_name}({', '.join(parts)})"
         return f"Helper:{self.helper_name}"
 
     @override
@@ -3210,7 +3510,7 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         """Returns a JSON compatible dict representation of this helper call.
 
         This outputs the format expected by the frontend, matching the AST exporter format.
-        Empty 'options' and 'args' are omitted.
+        Empty 'options', 'args', and 'kwargs' are omitted.
         """
         result: dict[str, Any] = {
             "rule": self.helper_name,
@@ -3229,12 +3529,24 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
                 else:
                     exported_args.append(arg)
             result["args"] = exported_args
+        if self.kwargs:
+            # Convert boolean kwargs to AST format for frontend compatibility
+            exported_kwargs = {}
+            for k, v in self.kwargs.items():
+                if v is True:
+                    exported_kwargs[k] = {"rule": "True_"}
+                elif v is False:
+                    exported_kwargs[k] = {"rule": "False_"}
+                else:
+                    exported_kwargs[k] = v
+            result["kwargs"] = exported_kwargs
         return result
 
     class Resolved(Rule.Resolved):
         helper_func: Callable[..., bool] | None
         helper_name: str
         args: tuple[Any, ...]
+        kwargs: dict[str, Any]
         body_rule: "Rule.Resolved | None"
         body_data: dict | None
         skip_cache: ClassVar[bool] = True
@@ -3247,10 +3559,40 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             # Tier 2/3: Fall back to Python function
             if self.helper_func is not None:
-                return self.helper_func(state, self.player, *self.args)
+                return self.helper_func(state, self.player, *self.args, **self.kwargs)
 
             # No evaluation available
             return True
+
+        def get_value(self, state: CollectionState) -> int | float:
+            """Get the numeric value from this helper for use in Arithmetic.
+
+            Some helpers (like double_jump_height) return integer counts rather than
+            booleans. When used in Arithmetic expressions, we need the actual numeric
+            value, not a boolean conversion.
+            """
+            # Tier 1: Check if body_rule has get_value
+            if self.body_rule is not None:
+                if hasattr(self.body_rule, 'get_value'):
+                    return self.body_rule.get_value(state)
+                if hasattr(self.body_rule, 'get_count'):
+                    return self.body_rule.get_count(state)
+                # Fall back to boolean conversion
+                return 1 if self.body_rule(state) else 0
+
+            # Tier 2/3: Call helper function and return its value
+            if self.helper_func is not None:
+                result = self.helper_func(state, self.player, *self.args, **self.kwargs)
+                # If result is numeric, return it directly
+                if isinstance(result, (int, float)):
+                    return result
+                # Otherwise treat as boolean
+                return 1 if result else 0
+
+            return 0
+
+        # Alias for Arithmetic compatibility
+        get_count = get_value
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
@@ -3466,6 +3808,126 @@ class WeightedSum(Rule[TWorld], game="Archipelago"):
 
 
 @dataclasses.dataclass()
+class UniqueCount(Rule[TWorld], game="Archipelago"):
+    """
+    Check if the count of unique items collected meets or exceeds a threshold.
+
+    Unlike WeightedSum which counts total items (count * weight), this counts
+    unique item types only (1 * weight if count > 0, else 0).
+
+    This is used for rules like A Hat in Time's Enemy counter which only
+    increments once per enemy type, regardless of how many of that enemy
+    are collected.
+
+    Usage:
+        rule = UniqueCount(
+            threshold=12,
+            items=[("Mafia Goon", 1.0), ("Crow", 1.0), ...]
+        )
+    """
+    threshold: float = 1.0
+    items: list[tuple[str, float]] = dataclasses.field(default_factory=list)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.threshold,
+            tuple(self.items),
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        item_strs = [f"{name}:{weight}" for name, weight in self.items]
+        return f"UniqueCount({self.threshold}, [{', '.join(item_strs)}])"
+
+    class Resolved(Rule.Resolved):
+        threshold: float
+        items: tuple[tuple[str, float], ...]
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            total = 0.0
+            for item_name, weight in self.items:
+                count = state.count(item_name, self.player)
+                if count > 0:
+                    total += weight
+                    # Early exit optimization
+                    if total >= self.threshold - 0.001:
+                        return True
+            return total >= self.threshold - 0.001
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            return {item_name: {id(self)} for item_name, _ in self.items}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = []
+            if state is not None:
+                total = 0.0
+                for item_name, weight in self.items:
+                    count = state.count(item_name, self.player)
+                    if count > 0:
+                        total += weight
+                messages.append({
+                    "type": "text",
+                    "text": f"Unique count: {total:.0f}/{self.threshold:.0f}"
+                })
+            else:
+                messages.append({
+                    "type": "text",
+                    "text": f"Unique count >= {self.threshold}"
+                })
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                total = 0.0
+                for item_name, weight in self.items:
+                    count = state.count(item_name, self.player)
+                    if count > 0:
+                        total += weight
+                return f"Unique count: {total:.0f}/{self.threshold:.0f}"
+            return f"Unique count >= {self.threshold}"
+
+        @override
+        def __str__(self) -> str:
+            return f"UniqueCount({self.threshold})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"threshold": self.threshold, "items": list(self.items)}
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Returns a JSON compatible dict that matches the unique_count helper format.
+
+            This outputs the format expected by the frontend JavaScript evaluator.
+            """
+            return {
+                "rule": "unique_count",
+                "_original_ast_type": "helper",
+                "_converted_from_ast": True,
+                "args": [
+                    {
+                        "rule": "Constant",
+                        "args": {"value": self.threshold},
+                        "_converted_from_ast": True,
+                    },
+                    {
+                        "rule": "Constant",
+                        "args": {"value": list(self.items)},
+                        "_converted_from_ast": True,
+                    }
+                ]
+            }
+
+
+@dataclasses.dataclass()
 class OptionValue(Rule[TWorld], game="Archipelago"):
     """A rule that evaluates to the truthiness of a world option at runtime.
 
@@ -3557,3 +4019,25 @@ DEFAULT_RULES = {
     for rule_name, rule_class in locals().items()
     if isinstance(rule_class, type) and issubclass(rule_class, Rule) and rule_class is not Rule
 }
+
+# Rule types that produce boolean expressions (as opposed to numeric values).
+# Used by world_generator to identify rules that can be used directly in boolean contexts.
+# Excludes numeric rules like CountItem, CountFromList, CountGroup, Arithmetic,
+# MinValue, MaxValue, WeightedSum, UniqueCount, and OptionValue.
+BOOLEAN_RULE_TYPES: frozenset[str] = frozenset({
+    # Reachability rules
+    'CanReachEntrance', 'CanReachRegion', 'CanReachLocation', 'EntranceAccessRuleCall',
+    # Item rules
+    'Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount',
+    'HasFromList', 'HasFromListUnique', 'HasGroup', 'HasGroupUnique',
+    # Logic rules
+    'And', 'Or', 'Not',
+    # Boolean constants
+    'True_', 'False_',
+    # Comparison and conditional (produce booleans)
+    'Compare', 'Conditional',
+    # Helper calls
+    'HelperCall',
+    # Wrapper rules
+    'Filtered', 'ASTRule',
+})

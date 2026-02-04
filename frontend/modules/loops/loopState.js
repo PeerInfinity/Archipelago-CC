@@ -563,6 +563,18 @@ export class LoopState {
     } else {
       const queue = this.getActionQueue();
       if (queue.length > 0) {
+        // Check if we need to reset the loop before resuming
+        // This handles the case where the queue finished and user unpauses
+        const needsReset = this._shouldResetOnResume(queue);
+
+        if (needsReset) {
+          // Reset loop to refill mana and reset action progress
+          this._resetLoop();
+          // _resetLoop will pause if autoRestartQueue is false,
+          // so we need to unpause again
+          this.isPaused = false;
+        }
+
         this.startProcessing();
         this.eventBus.publish('loopState:resumed', { isPaused: false }, 'loops');
       } else {
@@ -572,6 +584,56 @@ export class LoopState {
         }, 'loops');
       }
     }
+  }
+
+  /**
+   * Check if we should reset the loop when resuming from pause
+   * Returns true if all actions are completed or if we've reached the end of the queue
+   * @param {Array} queue - The action queue
+   * @returns {boolean} - Whether to reset
+   */
+  _shouldResetOnResume(queue) {
+    if (!queue || queue.length === 0) {
+      return false;
+    }
+
+    // Find the first real action index (skip initial start region)
+    let firstRealActionIndex = 0;
+    if (this.isInitialStartEntry(queue[0])) {
+      firstRealActionIndex = 1;
+    }
+
+    // If there are no real actions, no need to reset
+    if (firstRealActionIndex >= queue.length) {
+      return false;
+    }
+
+    // Check if all real actions are completed
+    let allCompleted = true;
+    for (let i = firstRealActionIndex; i < queue.length; i++) {
+      const action = queue[i];
+      // Skip checkLocation actions for already-checked locations
+      if (action.type === 'checkLocation') {
+        const snapshot = this.stateManager.getLatestStateSnapshot();
+        const isChecked = snapshot?.checkedLocations?.includes(action.locationName);
+        if (isChecked) {
+          continue; // This one doesn't count, it's already done
+        }
+      }
+      // Check if action is completed
+      if (!action.completed && action.progress < 100) {
+        allCompleted = false;
+        break;
+      }
+    }
+
+    // Also reset if currentActionIndex is past the end of the queue
+    // (this means we finished processing)
+    if (this.currentActionIndex >= queue.length) {
+      return true;
+    }
+
+    return allCompleted;
   }
 
   /**

@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -147,96 +147,191 @@ class MuseDashWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "Aqua Stars-0": "Great To Perfect (10 Pack)",
+        "Bass Telekinesis-1": "Great To Perfect (10 Pack)",
         "Breaking Dawn-0": "Great To Perfect (10 Pack)",
-        "Breaking Dawn-1": "Ira",
-        "Best One feat.tooko-0": "Music Sheet",
-        "Best One feat.tooko-1": "Mopemope",
-        "I don't care about Christmas though-0": "Music Sheet",
-        "I don't care about Christmas though-1": "Music Sheet",
-        "Koi no Moonlight-0": "Bass Telekinesis",
-        "Koi no Moonlight-1": "Dohna Dohna no Uta",
-        "Yuki no Shizuku Ame no Oto-0": "Stargazer",
-        "Yuki no Shizuku Ame no Oto-1": "Miss To Great (5 Pack)",
+        "Clock Room & Spiritual World-0": "Great To Perfect (10 Pack)",
+        "Etude -Sunset--0": "Great To Perfect (10 Pack)",
+        "Evolution-1": "Great To Perfect (10 Pack)",
+        "Frost Land-0": "Great To Perfect (10 Pack)",
+        "Funkotsu Saishin Casino-0": "Great To Perfect (10 Pack)",
         "Iyaiya-0": "Great To Perfect (10 Pack)",
         "Iyaiya-1": "Great To Perfect (10 Pack)",
-        "Heart Message feat. Aoi Tokimori-0": "Miss To Great (5 Pack)",
-        "Heart Message feat. Aoi Tokimori-1": "Medicine of Sing",
+        "Lian Ai Audio Navigation-1": "Great To Perfect (10 Pack)",
+        "Lights of Muse-1": "Great To Perfect (10 Pack)",
+        "Medicine of Sing-0": "Great To Perfect (10 Pack)",
+        "Mezame Eurythmics-1": "Great To Perfect (10 Pack)",
+        "Yume Ou Mono Yo-1": "Great To Perfect (10 Pack)",
+        "Breaking Dawn-1": "Ira",
         "irregulyze-0": "Ira",
-        "irregulyze-1": "Dolphin and Broadcast",
-        "Clock Room & Spiritual World-0": "Great To Perfect (10 Pack)",
+        "Best One feat.tooko-0": "Music Sheet",
+        "EXIST-0": "Music Sheet",
+        "Goodbye Boss-1": "Music Sheet",
+        "Heart-Pounding Flight-0": "Music Sheet",
+        "I don't care about Christmas though-0": "Music Sheet",
+        "I don't care about Christmas though-1": "Music Sheet",
+        "Lights of Muse-0": "Music Sheet",
+        "Medicine of Sing-1": "Music Sheet",
+        "Shenri Kuaira -repeat--1": "Music Sheet",
+        "Best One feat.tooko-1": "Mopemope",
+        "Koi no Moonlight-0": "Bass Telekinesis",
+        "Koi no Moonlight-1": "Dohna Dohna no Uta",
+        "Aqua Stars-1": "Dohna Dohna no Uta",
+        "Ira-1": "Stargazer",
+        "Yuki no Shizuku Ame no Oto-0": "Stargazer",
         "Clock Room & Spiritual World-1": "Miss To Great (5 Pack)",
+        "Confession-1": "Miss To Great (5 Pack)",
+        "Heart Message feat. Aoi Tokimori-0": "Miss To Great (5 Pack)",
+        "Yuki no Shizuku Ame no Oto-1": "Miss To Great (5 Pack)",
+        "Heart Message feat. Aoi Tokimori-1": "Medicine of Sing",
+        "irregulyze-1": "Dolphin and Broadcast",
+        "Bass Telekinesis-0": "Dolphin and Broadcast",
+        "Night Wander-0": "Evolution",
         "Latitude-0": "Evolution",
         "Latitude-1": "Lys Tourbillon",
-        "Etude -Sunset--0": "Great To Perfect (10 Pack)",
+        "Ira-0": "Lys Tourbillon",
+        "Yume Ou Mono Yo-0": "Heart Message feat. Aoi Tokimori",
         "Etude -Sunset--1": "Heart Message feat. Aoi Tokimori",
-        "Evolution-0": "Out of Sense",
-        "Evolution-1": "Great To Perfect (10 Pack)",
-        "Blackest Luxury Car-0": "Galaxy Striker",
         "Blackest Luxury Car-1": "Out of Sense",
-        "Bass Telekinesis-0": "Dolphin and Broadcast",
-        "Bass Telekinesis-1": "Great To Perfect (10 Pack)",
+        "Evolution-0": "Out of Sense",
+        "Blackest Luxury Car-0": "Galaxy Striker",
+        "Heart-Pounding Flight-1": "Galaxy Striker",
+        "DISCO NIGHT-1": "From the New World",
         "Confession-0": "From the New World",
-        "Confession-1": "Miss To Great (5 Pack)",
+        "Dohna Dohna no Uta-0": "Pancake is Love",
         "Lys Tourbillon-0": "Pancake is Love",
+        "Mopemope-1": "Frost Land",
         "Lys Tourbillon-1": "Frost Land",
         "Pancake is Love-0": "Departure Road",
         "Pancake is Love-1": "Shenri Kuaira -repeat-",
         "umpopoff-0": "irregulyze",
         "umpopoff-1": "Yume Ou Mono Yo",
-        "Night Wander-0": "Evolution",
         "Night Wander-1": "Iyaiya",
+        "From the New World-0": "Heart-Pounding Flight",
         "Dolphin and Broadcast-0": "Heart-Pounding Flight",
         "Dolphin and Broadcast-1": "Aqua Stars",
         "Mezame Eurythmics-0": "Extra Life",
-        "Mezame Eurythmics-1": "Great To Perfect (10 Pack)",
         "Mujinku-Vacuum-0": "Goodbye Boss",
+        "Candy-coloured Love Theory-0": "EXIST",
         "Mujinku-Vacuum-1": "EXIST",
         "Departure Road-0": "MilK",
         "Departure Road-1": "Blackest Luxury Car",
-        "MilK-0": "Mujinku-Vacuum",
-        "MilK-1": "Candy-coloured Love Theory",
-        "Yume Ou Mono Yo-0": "Heart Message feat. Aoi Tokimori",
-        "Yume Ou Mono Yo-1": "Great To Perfect (10 Pack)",
-        "Frost Land-0": "Great To Perfect (10 Pack)",
         "Frost Land-1": "Blackest Luxury Car",
+        "MilK-0": "Mujinku-Vacuum",
+        "Stargazer-0": "Candy-coloured Love Theory",
+        "MilK-1": "Candy-coloured Love Theory",
         "Say! Fanfare!-0": "Etude -Sunset-",
+        "Mopemope-0": "Etude -Sunset-",
         "Say! Fanfare!-1": "umpopoff",
         "Out of Sense-0": "Clock Room & Spiritual World",
-        "Out of Sense-1": "Night Wander",
-        "Funkotsu Saishin Casino-0": "Great To Perfect (10 Pack)",
         "Funkotsu Saishin Casino-1": "Clock Room & Spiritual World",
-        "Medicine of Sing-0": "Great To Perfect (10 Pack)",
-        "Medicine of Sing-1": "Music Sheet",
+        "Out of Sense-1": "Night Wander",
         "Goodbye Boss-0": "Latitude",
-        "Goodbye Boss-1": "Music Sheet",
-        "Dohna Dohna no Uta-0": "Pancake is Love",
         "Dohna Dohna no Uta-1": "Confession",
-        "Heart-Pounding Flight-0": "Music Sheet",
-        "Heart-Pounding Flight-1": "Galaxy Striker",
-        "Stargazer-0": "Candy-coloured Love Theory",
-        "Stargazer-1": "DISCO NIGHT",
-        "Aqua Stars-0": "Great To Perfect (10 Pack)",
-        "Aqua Stars-1": "Dohna Dohna no Uta",
-        "Ira-0": "Lys Tourbillon",
-        "Ira-1": "Stargazer",
-        "Mopemope-0": "Etude -Sunset-",
-        "Mopemope-1": "Frost Land",
-        "DISCO NIGHT-0": "Say! Fanfare!",
-        "DISCO NIGHT-1": "From the New World",
-        "From the New World-0": "Heart-Pounding Flight",
-        "From the New World-1": "Lian Ai Audio Navigation",
-        "Lights of Muse-0": "Music Sheet",
-        "Lights of Muse-1": "Great To Perfect (10 Pack)",
-        "Shenri Kuaira -repeat--0": "Lights of Muse",
-        "Shenri Kuaira -repeat--1": "Music Sheet",
-        "EXIST-0": "Music Sheet",
-        "EXIST-1": "Mezame Eurythmics",
         "Lian Ai Audio Navigation-0": "Confession",
-        "Lian Ai Audio Navigation-1": "Great To Perfect (10 Pack)",
-        "Candy-coloured Love Theory-0": "EXIST",
-        "Candy-coloured Love Theory-1": "Lights of Muse",
-        "Galaxy Striker-0": "Funkotsu Saishin Casino",
+        "Stargazer-1": "DISCO NIGHT",
+        "DISCO NIGHT-0": "Say! Fanfare!",
         "Galaxy Striker-1": "Lian Ai Audio Navigation",
+        "From the New World-1": "Lian Ai Audio Navigation",
+        "Candy-coloured Love Theory-1": "Lights of Muse",
+        "Shenri Kuaira -repeat--0": "Lights of Muse",
+        "EXIST-1": "Mezame Eurythmics",
+        "Galaxy Striker-0": "Funkotsu Saishin Casino",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Breaking Dawn-0": False,
+        "Breaking Dawn-1": True,
+        "Best One feat.tooko-0": True,
+        "Best One feat.tooko-1": True,
+        "I don't care about Christmas though-0": True,
+        "I don't care about Christmas though-1": True,
+        "Koi no Moonlight-0": True,
+        "Koi no Moonlight-1": True,
+        "Yuki no Shizuku Ame no Oto-0": False,
+        "Yuki no Shizuku Ame no Oto-1": False,
+        "Iyaiya-0": False,
+        "Iyaiya-1": False,
+        "Heart Message feat. Aoi Tokimori-0": False,
+        "Heart Message feat. Aoi Tokimori-1": True,
+        "irregulyze-0": False,
+        "irregulyze-1": True,
+        "Clock Room & Spiritual World-0": False,
+        "Clock Room & Spiritual World-1": False,
+        "Latitude-0": False,
+        "Latitude-1": True,
+        "Etude -Sunset--0": False,
+        "Etude -Sunset--1": False,
+        "Evolution-0": False,
+        "Evolution-1": False,
+        "Blackest Luxury Car-0": True,
+        "Blackest Luxury Car-1": True,
+        "Bass Telekinesis-0": False,
+        "Bass Telekinesis-1": False,
+        "Confession-0": False,
+        "Confession-1": False,
+        "Lys Tourbillon-0": False,
+        "Lys Tourbillon-1": False,
+        "Pancake is Love-0": True,
+        "Pancake is Love-1": True,
+        "umpopoff-0": True,
+        "umpopoff-1": True,
+        "Night Wander-0": True,
+        "Night Wander-1": True,
+        "Dolphin and Broadcast-0": False,
+        "Dolphin and Broadcast-1": True,
+        "Mezame Eurythmics-0": False,
+        "Mezame Eurythmics-1": False,
+        "Mujinku-Vacuum-0": True,
+        "Mujinku-Vacuum-1": False,
+        "Departure Road-0": True,
+        "Departure Road-1": True,
+        "MilK-0": True,
+        "MilK-1": False,
+        "Yume Ou Mono Yo-0": True,
+        "Yume Ou Mono Yo-1": False,
+        "Frost Land-0": False,
+        "Frost Land-1": False,
+        "Say! Fanfare!-0": True,
+        "Say! Fanfare!-1": True,
+        "Out of Sense-0": True,
+        "Out of Sense-1": True,
+        "Funkotsu Saishin Casino-0": False,
+        "Funkotsu Saishin Casino-1": False,
+        "Medicine of Sing-0": False,
+        "Medicine of Sing-1": True,
+        "Goodbye Boss-0": True,
+        "Goodbye Boss-1": True,
+        "Dohna Dohna no Uta-0": True,
+        "Dohna Dohna no Uta-1": True,
+        "Heart-Pounding Flight-0": True,
+        "Heart-Pounding Flight-1": False,
+        "Stargazer-0": True,
+        "Stargazer-1": True,
+        "Aqua Stars-0": False,
+        "Aqua Stars-1": False,
+        "Ira-0": False,
+        "Ira-1": True,
+        "Mopemope-0": False,
+        "Mopemope-1": True,
+        "DISCO NIGHT-0": True,
+        "DISCO NIGHT-1": True,
+        "From the New World-0": True,
+        "From the New World-1": False,
+        "Lights of Muse-0": True,
+        "Lights of Muse-1": False,
+        "Shenri Kuaira -repeat--0": False,
+        "Shenri Kuaira -repeat--1": True,
+        "EXIST-0": True,
+        "EXIST-1": True,
+        "Lian Ai Audio Navigation-0": False,
+        "Lian Ai Audio Navigation-1": False,
+        "Candy-coloured Love Theory-0": True,
+        "Candy-coloured Love Theory-1": True,
+        "Galaxy Striker-0": True,
+        "Galaxy Striker-1": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -334,14 +429,38 @@ class MuseDashWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = MuseDashWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = MuseDashWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = MuseDashWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -368,32 +487,114 @@ class MuseDashWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = MuseDashWorldGenItem(name, data.classification, data.id, self.player)
+        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = MuseDashWorldGenItem(name, classification, data.id, self.player)
+        else:
+            item = MuseDashWorldGenItem(name, data.classification, data.id, self.player)
         if data.hint_text:
             item._hint_text = data.hint_text
         return item

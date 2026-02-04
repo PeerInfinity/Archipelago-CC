@@ -42,6 +42,12 @@ from .worldgen_analysis import (
     load_ut_fuzz_test_results,
     get_ut_fuzz_worldgen_pass_failures,
     categorize_ut_fuzz_error,
+    get_ut_fuzz_apworld_failures,
+    load_ut_fuzz_single_game_results,
+    get_ut_fuzz_single_failure,
+    get_ut_fuzz_all_single_failures,
+    load_spoiler_fuzz_test_results,
+    get_spoiler_fuzz_ut_pass_failures,
 )
 
 from .prompt_generators import (
@@ -61,6 +67,11 @@ from .prompt_generators import (
     generate_worldgen_rules_comp_failure_prompt,
     # ut fuzz
     generate_ut_fuzz_failure_prompt,
+    generate_ut_fuzz_single_failure_prompt,
+    # apworld fuzz
+    generate_ut_fuzz_apworld_failure_prompt,
+    # spoiler fuzz
+    generate_spoiler_fuzz_failure_prompt,
 )
 
 from .execution import (
@@ -109,6 +120,12 @@ __all__ = [
     'load_ut_fuzz_test_results',
     'get_ut_fuzz_worldgen_pass_failures',
     'categorize_ut_fuzz_error',
+    'get_ut_fuzz_apworld_failures',
+    'load_ut_fuzz_single_game_results',
+    'get_ut_fuzz_single_failure',
+    'get_ut_fuzz_all_single_failures',
+    'load_spoiler_fuzz_test_results',
+    'get_spoiler_fuzz_ut_pass_failures',
     # prompt_generators.standard
     'generate_helper_export_prompt',
     'generate_exporter_simplify_prompt',
@@ -125,6 +142,11 @@ __all__ = [
     'generate_worldgen_rules_comp_failure_prompt',
     # prompt_generators.ut_fuzz
     'generate_ut_fuzz_failure_prompt',
+    'generate_ut_fuzz_single_failure_prompt',
+    # prompt_generators.apworld_fuzz
+    'generate_ut_fuzz_apworld_failure_prompt',
+    # prompt_generators.spoiler_fuzz
+    'generate_spoiler_fuzz_failure_prompt',
     # execution
     'run_template_test',
     'run_prompt_for_game',

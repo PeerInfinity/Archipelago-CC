@@ -6,7 +6,8 @@ like world.options access, multiworld subscripts, etc.
 """
 
 import ast
-from typing import Any, Optional, Set, Tuple
+import logging
+from typing import Any, Dict, Optional, Set, Tuple
 
 
 class PatternDetectionMixin:
@@ -417,13 +418,372 @@ class PatternDetectionMixin:
 
         param_name = node.value.id
 
+        # Check if this is a walrus operator variable that should be resolved
+        # to the original region parameter
+        if hasattr(self, 'walrus_assignments') and param_name in self.walrus_assignments:
+            walrus_value = self.walrus_assignments[param_name]
+            # Extract the region parameter from the walrus assignment
+            # The walrus value might be a conditional (isinstance check) or direct name
+            resolved_param = self._extract_region_param_from_walrus(walrus_value)
+            if resolved_param:
+                logging.debug(f"Resolved walrus variable {param_name} to region param {resolved_param}")
+                return resolved_param, attr_name
+
         # If we have a list of known region parameters, check against it
         if region_param_names is not None:
             if param_name not in region_param_names:
                 return None, None
         else:
             # Default known region parameter names
+            # Note: walrus operator variables like '_r' are handled by
+            # _extract_region_param_from_walrus above, so they don't need
+            # to be in this list
             if param_name not in ('region', 'cave', 'r', 'reg'):
                 return None, None
 
         return param_name, attr_name
+
+    def _extract_region_param_from_walrus(self, walrus_value: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract the original region parameter name from a walrus assignment value.
+
+        Handles patterns like:
+            - {"type": "name", "name": "region"} -> "region"
+            - {"type": "conditional", ..., "if_false": {"type": "name", "name": "region"}} -> "region"
+            - Nested function calls that reference region parameter
+
+        Returns the region parameter name if found, None otherwise.
+        """
+        if not isinstance(walrus_value, dict):
+            return None
+
+        value_type = walrus_value.get('type')
+
+        # Direct name reference
+        if value_type == 'name':
+            name = walrus_value.get('name', '')
+            if name in ('region', 'cave', 'r', 'reg'):
+                return name
+
+        # Conditional expression (isinstance check pattern)
+        # e.g., get_region(region, player) if isinstance(region, str) else region
+        if value_type == 'conditional':
+            # Check the if_false branch for the direct region reference
+            if_false = walrus_value.get('if_false', {})
+            if isinstance(if_false, dict) and if_false.get('type') == 'name':
+                name = if_false.get('name', '')
+                if name in ('region', 'cave', 'r', 'reg'):
+                    return name
+            # Also check if_true for the region name in function call args
+            if_true = walrus_value.get('if_true', {})
+            return self._extract_region_param_from_walrus(if_true)
+
+        # Function call (e.g., get_region(region, player))
+        if value_type == 'function_call':
+            args = walrus_value.get('args', [])
+            for arg in args:
+                if isinstance(arg, dict) and arg.get('type') == 'name':
+                    name = arg.get('name', '')
+                    if name in ('region', 'cave', 'r', 'reg'):
+                        return name
+
+        return None
+
+    def _try_handle_entrance_access_rule(self, node) -> Optional[Dict[str, Any]]:
+        """
+        Detect and handle the pattern: entrance_var.access_rule(...)
+        where entrance_var is an Entrance object in closure_vars.
+
+        This pattern appears in ALttP UnderworldGlitchRules.py:
+            dungeon_entrance = [r for r in world.get_region(...).entrances if r.name != clip.name][0]
+            add_rule(clip, lambda state: dungeon_entrance.access_rule(fake_pearl_state(state, player)))
+
+        The dungeon_entrance variable is a closure capture of an Entrance object.
+        We export this as an EntranceAccessRule that can be resolved at runtime
+        by looking up the entrance's access_rule from the exported region data.
+
+        Args:
+            node: The AST Call node to check
+
+        Returns:
+            An EntranceAccessRule dict if pattern matches, None otherwise
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check if func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute):
+            return None
+
+        attr_name = func.attr
+
+        # We're looking for .access_rule or .can_reach patterns
+        if attr_name not in ('access_rule', 'can_reach'):
+            return None
+
+        # Check if the object is a simple name (variable reference)
+        if not isinstance(func.value, ast.Name):
+            return None
+
+        var_name = func.value.id
+
+        # Check if the variable is in closure_vars
+        if not hasattr(self, 'closure_vars') or var_name not in self.closure_vars:
+            return None
+
+        closure_obj = self.closure_vars[var_name]
+
+        # Check if it's an Entrance object (has 'connected_region' attribute)
+        # This distinguishes Entrance from Location (which has parent_region but not connected_region)
+        if not hasattr(closure_obj, 'connected_region') or not hasattr(closure_obj, 'name'):
+            return None
+
+        entrance_name = closure_obj.name
+        logging.debug(f"_try_handle_entrance_access_rule: Detected {var_name}.{attr_name} on Entrance '{entrance_name}'")
+
+        # Check if any argument is a fake_pearl_state call
+        has_fake_pearl = False
+        for arg in node.args:
+            if isinstance(arg, ast.Call):
+                if isinstance(arg.func, ast.Name) and arg.func.id == 'fake_pearl_state':
+                    has_fake_pearl = True
+                    break
+                elif isinstance(arg.func, ast.Attribute) and arg.func.attr == 'fake_pearl_state':
+                    has_fake_pearl = True
+                    break
+
+        if attr_name == 'access_rule':
+            # Export as EntranceAccessRule
+            result = {
+                'rule': 'EntranceAccessRule',
+                'args': {
+                    'entrance_name': entrance_name,
+                    'fake_pearl': has_fake_pearl
+                }
+            }
+            logging.debug(f"_try_handle_entrance_access_rule: Exported as EntranceAccessRule: {result}")
+            return result
+        elif attr_name == 'can_reach':
+            # For can_reach, convert to state_method can_reach with Entrance type
+            # This is already handled elsewhere, but we can provide a consistent output
+            result = {
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': entrance_name},
+                    {'type': 'constant', 'value': 'Entrance'}
+                ]
+            }
+            if has_fake_pearl:
+                result['fake_pearl'] = True
+            logging.debug(f"_try_handle_entrance_access_rule: Converted can_reach to state_method: {result}")
+            return result
+
+        return None
+
+    def _try_inline_namedtuple_callable(self, node) -> Optional[Dict[str, Any]]:
+        """
+        Detect and inline callable attributes on NamedTuple closure variables.
+
+        Pattern: loc.access_rule(state, player) where:
+        - loc is a NamedTuple in closure_vars (e.g., LocationData)
+        - access_rule is an attribute that holds a callable (function)
+
+        This handles apworlds like rac2 that store rule functions in LocationData NamedTuples.
+        Instead of creating a non-functional reference, we inline the actual rule function.
+
+        Returns:
+            The analyzed rule dict if the pattern matches, None otherwise.
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check if func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute):
+            return None
+
+        attr_name = func.attr
+
+        # Check if the object is a simple name (variable reference)
+        if not isinstance(func.value, ast.Name):
+            return None
+
+        var_name = func.value.id
+
+        # Check if the variable is in closure_vars
+        if not hasattr(self, 'closure_vars') or var_name not in self.closure_vars:
+            return None
+
+        closure_obj = self.closure_vars[var_name]
+
+        # Check if it's a NamedTuple (has _fields) with the requested attribute
+        if not hasattr(closure_obj, '_fields') or not hasattr(closure_obj, attr_name):
+            return None
+
+        attr_value = getattr(closure_obj, attr_name, None)
+
+        # Check if the attribute is a callable
+        if attr_value is None or not callable(attr_value):
+            return None
+
+        logging.debug(f"_try_inline_namedtuple_callable: Detected {var_name}.{attr_name} as callable on NamedTuple")
+
+        # Inline the callable by analyzing it recursively
+        from ..analysis import analyze_rule
+        analyzed = analyze_rule(
+            rule_func=attr_value,
+            closure_vars=self.closure_vars.copy(),
+            seen_funcs=self.seen_funcs,
+            game_handler=self.game_handler,
+            player_context=self.player_context,
+            rule_target_name=getattr(self, 'rule_target_name', None),
+            target_type=getattr(self, 'target_type', None)
+        )
+
+        if analyzed and analyzed.get('type') != 'error':
+            logging.debug(f"_try_inline_namedtuple_callable: Successfully inlined {var_name}.{attr_name}: {analyzed.get('type')}")
+            return analyzed
+        else:
+            logging.warning(f"_try_inline_namedtuple_callable: Failed to analyze {var_name}.{attr_name}")
+            return None
+
+    def _try_handle_dict_lambda_lookup(self, node) -> Optional[Dict[str, Any]]:
+        """
+        Detect and handle the pattern: dict.get(key, default)(state)
+        where dict contains callable (lambda) values.
+
+        This pattern is common in ALttP underworld glitch rules:
+            rule_map = {
+                'Misery Mire (Entrance)': (lambda state: True),
+                'Tower of Hera (Bottom)': (lambda state: state.can_reach(...))
+            }
+            rule_map.get(world.get_entrance('X').connected_region.name, lambda state: False)(state)
+
+        Args:
+            node: The AST Call node to check
+
+        Returns:
+            A dict_lambda_lookup rule structure if pattern matches, None otherwise
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # The outer call should have 'state' as the argument
+        # Pattern: something(state) or something(state, player)
+        has_state_arg = False
+        for arg in node.args:
+            if isinstance(arg, ast.Name) and arg.id == 'state':
+                has_state_arg = True
+                break
+        if not has_state_arg:
+            return None
+
+        # The function being called should be another Call (dict.get(...))
+        if not isinstance(node.func, ast.Call):
+            return None
+
+        inner_call = node.func
+
+        # Inner call should be attribute.get (dict.get)
+        if not isinstance(inner_call.func, ast.Attribute):
+            return None
+        if inner_call.func.attr != 'get':
+            return None
+
+        # The object should be a variable name (the dict)
+        if not isinstance(inner_call.func.value, ast.Name):
+            return None
+
+        dict_var_name = inner_call.func.value.id
+        logging.debug(f"_try_handle_dict_lambda_lookup: Detected potential dict.get pattern with dict '{dict_var_name}'")
+
+        # Get the dict from closure variables
+        if not hasattr(self, 'closure_vars') or dict_var_name not in self.closure_vars:
+            logging.debug(f"_try_handle_dict_lambda_lookup: Dict '{dict_var_name}' not found in closure_vars")
+            return None
+
+        dict_value = self.closure_vars[dict_var_name]
+        if not isinstance(dict_value, dict):
+            logging.debug(f"_try_handle_dict_lambda_lookup: '{dict_var_name}' is not a dict")
+            return None
+
+        # Check if dict values are callable (lambdas)
+        has_callable_values = any(callable(v) for v in dict_value.values())
+        if not has_callable_values:
+            logging.debug(f"_try_handle_dict_lambda_lookup: Dict '{dict_var_name}' has no callable values")
+            return None
+
+        logging.debug(f"_try_handle_dict_lambda_lookup: Found dict with callable values, analyzing...")
+
+        # Get the key expression (first arg to .get)
+        if len(inner_call.args) < 1:
+            return None
+
+        key_node = inner_call.args[0]
+        key_result = self.visit(key_node)
+
+        # Get the default value (second arg to .get, or False if not provided)
+        default_result = {'rule': 'False_'}
+        if len(inner_call.args) >= 2:
+            default_node = inner_call.args[1]
+            # If default is a lambda, analyze it
+            if isinstance(default_node, ast.Lambda):
+                default_result = self.visit(default_node)
+            elif isinstance(default_node, ast.Name) and default_node.id in self.closure_vars:
+                default_val = self.closure_vars[default_node.id]
+                if callable(default_val):
+                    from ..analysis import analyze_rule
+                    analyzed = analyze_rule(
+                        rule_func=default_val,
+                        closure_vars=self.closure_vars.copy(),
+                        seen_funcs=self.seen_funcs,
+                        game_handler=self.game_handler,
+                        player_context=self.player_context
+                    )
+                    if analyzed and analyzed.get('type') != 'error':
+                        default_result = analyzed
+            elif isinstance(default_node, ast.Constant) and default_node.value is False:
+                default_result = {'rule': 'False_'}
+
+        # Analyze each lambda value in the dict
+        from ..analysis import analyze_rule
+        analyzed_cases = {}
+        for key, value in dict_value.items():
+            if callable(value):
+                analyzed = analyze_rule(
+                    rule_func=value,
+                    closure_vars=self.closure_vars.copy(),
+                    seen_funcs=self.seen_funcs,
+                    game_handler=self.game_handler,
+                    player_context=self.player_context
+                )
+                if analyzed and analyzed.get('type') != 'error':
+                    analyzed_cases[key] = analyzed
+                    logging.debug(f"_try_handle_dict_lambda_lookup: Analyzed case '{key}': {analyzed.get('type')}")
+                else:
+                    logging.warning(f"_try_handle_dict_lambda_lookup: Failed to analyze case '{key}'")
+                    # Use True_ as fallback for failed analysis
+                    analyzed_cases[key] = {'rule': 'True_'}
+            else:
+                # Non-callable value - convert to constant
+                if value is True:
+                    analyzed_cases[key] = {'rule': 'True_'}
+                elif value is False:
+                    analyzed_cases[key] = {'rule': 'False_'}
+                else:
+                    analyzed_cases[key] = {'type': 'constant', 'value': value}
+
+        logging.debug(f"_try_handle_dict_lambda_lookup: Successfully analyzed {len(analyzed_cases)} cases")
+
+        # Create the dict_lambda_lookup rule structure
+        result = {
+            'type': 'dict_lambda_lookup',
+            'dict_name': dict_var_name,
+            'key': key_result,
+            'cases': analyzed_cases,
+            'default': default_result
+        }
+
+        return result

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAll, HelperCall, Or
+from rule_builder import True_, False_, And, Has, HasAll, HasAny, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -112,27 +112,27 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Eolis Key Jack", player),
-        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis")
+        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis", body_rule=HasAny('Deluge', 'Progressive Sword', 'Ring of Elf'))
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Hand Dagger", player),
-        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis")
+        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis", body_rule=HasAny('Deluge', 'Progressive Sword', 'Ring of Elf'))
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Red Potion", player),
-        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis")
+        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis", body_rule=HasAny('Deluge', 'Progressive Sword', 'Ring of Elf'))
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Elixir", player),
-        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis")
+        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis", body_rule=HasAny('Deluge', 'Progressive Sword', 'Ring of Elf'))
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Deluge", player),
-        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis")
+        HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis", body_rule=HasAny('Deluge', 'Progressive Sword', 'Ring of Elf'))
     )
 
     world.set_rule(
@@ -187,7 +187,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misty Doctor Office", player),
-        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic")
+        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
     )
 
     world.set_rule(
@@ -227,12 +227,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
-        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic")
+        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
     )
 
     world.set_rule(
         multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player),
-        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic")
+        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
     )
 
     world.set_rule(

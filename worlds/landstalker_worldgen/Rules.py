@@ -292,5 +292,5 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Mercator: Fahl's dojo challenge reward", player),
-        HelperCall(helper_func=_landstalker_has_health, helper_name="_landstalker_has_health", args=(15,))
+        HelperCall(helper_func=_landstalker_has_health, helper_name="_landstalker_has_health", args=(15,), body_rule=Has("Life Stock", 15))
     )

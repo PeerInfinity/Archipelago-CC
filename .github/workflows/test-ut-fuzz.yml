@@ -10,16 +10,21 @@ on:
         default: 10
 
       jobs:
-        description: 'Number of parallel fuzzer jobs (per runner)'
-        required: true
+        description: 'Number of parallel fuzzer jobs (per runner). Leave empty to use CPU count.'
+        required: false
         type: number
-        default: 2
+        default: 4
 
       timeout:
         description: 'Timeout per generation in seconds'
         required: true
         type: number
         default: 60
+
+      process_timeout:
+        description: 'Total timeout per game in seconds (default: auto-calculated)'
+        required: false
+        type: number
 
       seed:
         description: 'Random seed for reproducibility (leave empty for random)'
@@ -37,13 +42,24 @@ on:
         type: boolean
         default: false
 
-      test_original_ut:
-        description: 'Test original Universal Tracker (from FarisTheAncient) instead of modified version'
-        type: boolean
-        default: false
+      ut_mode:
+        description: 'Universal Tracker mode to test'
+        required: true
+        type: choice
+        default: 'modified'
+        options:
+          - 'original'
+          - 'modified'
+          - 'pickle'
+          - 'hybrid'
 
       test_apworlds:
         description: 'Test stable APWorlds from community index instead of bundled worlds'
+        type: boolean
+        default: false
+
+      delete_exporter_games:
+        description: 'Delete exporter/games files before testing (not committed)'
         type: boolean
         default: false
 
@@ -102,6 +118,90 @@ jobs:
             git push origin ut-fuzz-test
           fi
 
+      - name: Install system dependencies for apworld setup
+        if: inputs.test_apworlds
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment for setup
+        if: inputs.test_apworlds
+        uses: actions/cache@v4
+        id: cache-venv-setup
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies for setup
+        if: inputs.test_apworlds && steps.cache-venv-setup.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate for setup
+        if: inputs.test_apworlds
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Download and install APWorld Manager
+        if: inputs.test_apworlds
+        run: |
+          source .venv/bin/activate
+          echo "Downloading APWorld Manager..."
+
+          # Download the apworld_manager.apworld file
+          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
+          mkdir -p /tmp/apworld_manager
+          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
+
+          # Extract to worlds/apworld_manager/
+          echo "Installing APWorld Manager to worlds/apworld_manager/..."
+          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
+
+          echo "APWorld Manager installed:"
+          ls -la worlds/apworld_manager/
+
+      - name: Install stable APWorlds
+        if: inputs.test_apworlds
+        run: |
+          source .venv/bin/activate
+          echo "Installing stable APWorlds..."
+
+          # Create custom_worlds directory
+          mkdir -p custom_worlds
+
+          # Install apworlds (filtered by Stable status from spreadsheet)
+          # In debug mode, only install Clique
+          if [ "${{ inputs.debug_mode }}" = "true" ]; then
+            echo "Debug mode: only installing Clique apworld"
+            python scripts/install_apworlds.py --install clique
+          else
+            echo "Installing all Stable apworlds..."
+            python scripts/install_apworlds.py --install-all
+          fi
+
+          echo "Installed APWorlds:"
+          ls -la custom_worlds/ || echo "No apworlds installed"
+
+      - name: Upload APWorld Manager artifact
+        if: inputs.test_apworlds
+        uses: actions/upload-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+          retention-days: 1
+
+      - name: Upload custom worlds artifact
+        if: inputs.test_apworlds
+        uses: actions/upload-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+          retention-days: 1
+
   # UT Fuzz Tests
   test-ut-fuzz:
     name: Test UT Fuzz Split ${{ matrix.split_num }}
@@ -154,11 +254,6 @@ jobs:
           source .venv/bin/activate
           python ModuleUpdate.py --yes
 
-      - name: Generate template files
-        run: |
-          source .venv/bin/activate
-          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
-
       - name: Configure host settings
         run: |
           source .venv/bin/activate
@@ -170,56 +265,53 @@ jobs:
           source .venv/bin/activate
           python scripts/build/build-world-mapping.py
 
-      - name: Download and install APWorld Manager
+      - name: Delete exporter/games files
+        if: inputs.delete_exporter_games
+        run: |
+          echo "Deleting exporter/games files (not committed)..."
+          rm -rf exporter/games/official/*
+          rm -rf exporter/games/unofficial/*
+          echo "Deleted exporter/games files"
+
+      - name: Download APWorld Manager artifact
+        if: inputs.test_apworlds
+        uses: actions/download-artifact@v4
+        with:
+          name: apworld-manager
+          path: worlds/apworld_manager/
+
+      - name: Download custom worlds artifact
+        if: inputs.test_apworlds
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-worlds
+          path: custom_worlds/
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Setup APWorlds
         if: inputs.test_apworlds
         run: |
           source .venv/bin/activate
-          echo "Downloading APWorld Manager..."
-
-          # Download the apworld_manager.apworld file
-          MANAGER_URL="https://github.com/silasary/Archipelago/releases/download/apworld_manager-0.0.20/apworld_manager.apworld"
-          mkdir -p /tmp/apworld_manager
-          curl -L -o /tmp/apworld_manager/apworld_manager.apworld "$MANAGER_URL"
-
-          # Extract to worlds/apworld_manager/
-          echo "Installing APWorld Manager to worlds/apworld_manager/..."
-          unzip -o /tmp/apworld_manager/apworld_manager.apworld -d worlds/
-
           echo "APWorld Manager installed:"
           ls -la worlds/apworld_manager/
 
-      - name: Install stable APWorlds
-        if: inputs.test_apworlds
-        run: |
-          source .venv/bin/activate
-          echo "Installing stable APWorlds..."
-
-          # Create custom_worlds directory
-          mkdir -p custom_worlds
-
-          # Install apworlds (filtered by Stable status from spreadsheet)
-          # In debug mode, only install Clique
-          if [ "${{ inputs.debug_mode }}" = "true" ]; then
-            echo "Debug mode: only installing Clique apworld"
-            python scripts/install_apworlds.py --install clique
-          else
-            echo "Installing all Stable apworlds..."
-            python scripts/install_apworlds.py --install-all
-          fi
-
-          echo "Installed APWorlds:"
-          ls -la custom_worlds/ || echo "No apworlds installed"
+          echo "Custom worlds installed:"
+          ls -la custom_worlds/
 
           # Regenerate templates for installed apworlds
           echo "Regenerating templates..."
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-          # Update world mapping to include new apworlds
-          echo "Updating world mapping..."
-          python scripts/build/build-world-mapping.py
+          # Update world mapping for apworlds (generates world-mapping-unofficial.json)
+          echo "Updating world mapping for apworlds..."
+          python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Swap to original Universal Tracker
-        if: inputs.test_original_ut
+        if: inputs.ut_mode == 'original'
         run: |
           echo "Replacing modified tracker with original tracker from FarisTheAncient..."
           rm -rf worlds/tracker
@@ -233,7 +325,7 @@ jobs:
         run: |
           source .venv/bin/activate
           echo "Using seed: ${{ inputs.seed || 'random' }}"
-          echo "UT version: ${{ inputs.test_original_ut && 'original' || 'modified' }}"
+          echo "UT mode: ${{ inputs.ut_mode }}"
           echo "World source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}"
 
           # Determine debug mode include list
@@ -247,14 +339,26 @@ jobs:
             fi
           fi
 
+          # Map ut_mode to command line arguments
+          UT_VERSION="${{ inputs.ut_mode }}"
+          TRACKING_CONFIG=""
+          if [ "$UT_VERSION" = "hybrid" ]; then
+            UT_VERSION="modified"
+            TRACKING_CONFIG="--use-tracking-config"
+          else
+            TRACKING_CONFIG="--no-use-tracking-config"
+          fi
+
           python scripts/test/test-all-ut-fuzz.py \
             --runs ${{ inputs.runs_per_game }} \
-            --jobs ${{ inputs.jobs }} \
+            ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }} \
             --timeout ${{ inputs.timeout }} \
+            ${{ inputs.process_timeout && format('--process-timeout {0}', inputs.process_timeout) || '' }} \
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --ut-version ${{ inputs.test_original_ut && 'original' || 'modified' }} \
+            --ut-version $UT_VERSION \
+            $TRACKING_CONFIG \
             ${{ inputs.test_apworlds && '--custom-worlds-only --world-source apworlds' || '' }} \
             $DEBUG_INCLUDE
 
@@ -262,7 +366,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-${{ matrix.split_num }}
+          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-ut-fuzz-split-${{ matrix.split_num }}
           path: scripts/output/ut-fuzz/test-results-*-split-${{ matrix.split_num }}.json
           retention-days: 7
 
@@ -270,8 +374,16 @@ jobs:
         if: ${{ !cancelled() && failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-split-${{ matrix.split_num }}
+          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-split-${{ matrix.split_num }}
           path: fuzz_output/
+          retention-days: 7
+
+      - name: Upload world mapping for apworlds
+        if: ${{ inputs.test_apworlds && matrix.split_num == 1 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data/world-mapping-unofficial.json
           retention-days: 7
 
   # Combine UT fuzz results
@@ -301,12 +413,19 @@ jobs:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || 'modified' }}-ut-fuzz-split-*
+          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-ut-fuzz-split-*
           path: artifacts
+
+      - name: Download world mapping for apworlds
+        if: inputs.test_apworlds
+        uses: actions/download-artifact@v4
+        with:
+          name: world-mapping-unofficial
+          path: scripts/data
 
       - name: Combine test results
         env:
-          UT_VERSION: ${{ inputs.test_original_ut && 'original' || 'modified' }}
+          UT_VERSION: ${{ inputs.ut_mode }}
           WORLD_SOURCE: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
         run: |
           mkdir -p scripts/output/ut-fuzz
@@ -348,7 +467,8 @@ jobs:
 
               # Copy metadata from first file
               if "seed_mode" not in combined["metadata"]:
-                  for key in ["ut_version", "world_source", "seed_mode", "seed", "runs_per_game", "jobs", "timeout"]:
+                  for key in ["ut_version", "prefer_native_ut", "world_source", "seed_mode", "seed",
+                              "runs_per_game", "jobs", "timeout", "default_options", "disallow_options"]:
                       if key in data.get("metadata", {}):
                           combined["metadata"][key] = data["metadata"][key]
 
@@ -390,12 +510,17 @@ jobs:
           # Add generated documentation (includes test-results-ut-fuzz.md and test-results-ut-fuzz-*.md)
           git add -f docs/json/developer/test-results/test-results-ut-fuzz*.md || true
 
+          # Add world mapping for apworlds (if it exists)
+          if [ -f scripts/data/world-mapping-unofficial.json ]; then
+            git add -f scripts/data/world-mapping-unofficial.json
+          fi
+
           if ! git diff --staged --quiet; then
-            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.test_original_ut && 'original' || 'modified' }} UT)
+            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.ut_mode }} UT)
 
             Generated by workflow run: ${{ github.run_id }}
             World Source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
-            UT Version: ${{ inputs.test_original_ut && 'original' || 'modified' }}
+            UT Mode: ${{ inputs.ut_mode }}
             Seed: ${{ inputs.seed || 'random' }}
             Runs per game: ${{ inputs.runs_per_game }}
             Jobs: ${{ inputs.jobs }}
@@ -404,6 +529,7 @@ jobs:
             Includes:
             - Test results JSON
             - Generated documentation (test-results-ut-fuzz.md)
+            ${{ inputs.test_apworlds && '- World mapping for apworlds (world-mapping-unofficial.json)' || '' }}
             "
             git push origin ut-fuzz-test
           fi

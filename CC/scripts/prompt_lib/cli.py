@@ -65,8 +65,20 @@ def create_argument_parser():
                        help='Which world generator test results to use (default: canonical)')
     parser.add_argument('--ut-fuzz-failures', action='store_true',
                        help='Generate prompts for games that pass canonical worldgen but fail UT fuzz testing')
-    parser.add_argument('--ut-version', type=str, choices=['original', 'modified'], default='modified',
-                       help='Which UT version results to use for --ut-fuzz-failures (default: modified)')
+    parser.add_argument('--ut-fuzz-apworld-failures', action='store_true',
+                       help='Generate prompts for community apworlds that fail UT fuzz testing')
+    parser.add_argument('--ut-fuzz-single-failure', action='store_true',
+                       help='Generate a prompt for debugging the lowest-numbered failing seed from single-game UT fuzz results')
+    parser.add_argument('--spoiler-fuzz-failures', action='store_true',
+                       help='Generate prompts for games that pass UT fuzz but fail spoiler fuzz (frontend rule evaluation issues)')
+    parser.add_argument('--spoiler-seed-mode', type=str, choices=['fixed', 'random'], default='fixed',
+                       help='Which seed mode results to use for --spoiler-fuzz-failures (default: fixed)')
+    parser.add_argument('--ut-version', type=str, choices=['original', 'modified', 'hybrid'], default='modified',
+                       help='Which UT version results to use for --ut-fuzz-* modes (default: modified)')
+    parser.add_argument('--ut-seed-mode', type=str, choices=['fixed', 'random'], default='fixed',
+                       help='Which seed mode results to use for --ut-fuzz-apworld-failures (default: fixed)')
+    parser.add_argument('--ut-seed', type=int, default=None,
+                       help='Specific seed number to load single-game UT fuzz results for (default: auto-detect most recent)')
     parser.add_argument('--all-promptfiles', action='store_true',
                        help='Run all prompt-generating modes and output to separate files in CC/scripts/prompts/')
     parser.add_argument('--exclude-pattern', type=str,
@@ -189,6 +201,54 @@ def validate_arguments(args):
 
     if args.ut_fuzz_failures and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
         print("Error: --ut-fuzz-failures cannot be combined with other debugging modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_apworld_failures and (args.multiclient or args.multiworld):
+        print("Error: --ut-fuzz-apworld-failures cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.ut_fuzz_apworld_failures and any(worldgen_modes):
+        print("Error: --ut-fuzz-apworld-failures cannot be combined with --worldgen-* modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_apworld_failures and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
+        print("Error: --ut-fuzz-apworld-failures cannot be combined with other debugging modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_apworld_failures and args.ut_fuzz_failures:
+        print("Error: --ut-fuzz-apworld-failures and --ut-fuzz-failures are mutually exclusive")
+        sys.exit(1)
+
+    if args.ut_fuzz_single_failure and (args.multiclient or args.multiworld):
+        print("Error: --ut-fuzz-single-failure cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.ut_fuzz_single_failure and any(worldgen_modes):
+        print("Error: --ut-fuzz-single-failure cannot be combined with --worldgen-* modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_single_failure and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
+        print("Error: --ut-fuzz-single-failure cannot be combined with other debugging modes")
+        sys.exit(1)
+
+    if args.ut_fuzz_single_failure and (args.ut_fuzz_failures or args.ut_fuzz_apworld_failures):
+        print("Error: --ut-fuzz-single-failure cannot be combined with --ut-fuzz-failures or --ut-fuzz-apworld-failures")
+        sys.exit(1)
+
+    if args.spoiler_fuzz_failures and (args.multiclient or args.multiworld):
+        print("Error: --spoiler-fuzz-failures cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.spoiler_fuzz_failures and any(worldgen_modes):
+        print("Error: --spoiler-fuzz-failures cannot be combined with --worldgen-* modes")
+        sys.exit(1)
+
+    if args.spoiler_fuzz_failures and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
+        print("Error: --spoiler-fuzz-failures cannot be combined with other debugging modes")
+        sys.exit(1)
+
+    if args.spoiler_fuzz_failures and (args.ut_fuzz_failures or args.ut_fuzz_apworld_failures or args.ut_fuzz_single_failure):
+        print("Error: --spoiler-fuzz-failures cannot be combined with --ut-fuzz-* modes")
         sys.exit(1)
 
     if args.include_pattern and args.exclude_pattern:

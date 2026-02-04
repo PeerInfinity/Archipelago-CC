@@ -477,6 +477,12 @@ class PythonToJSON:
                 return {'type': 'can_reach_entrance', 'entrance': target}
 
         # No explicit type argument - infer from object type
+        # Check if target is an Entrance object (has connected_region attribute)
+        # This must be checked BEFORE Location since both have parent_region
+        if hasattr(target, 'connected_region'):
+            entrance_name = target.name if hasattr(target, 'name') else str(target)
+            return {'type': 'can_reach_entrance', 'entrance': entrance_name}
+
         # Check if target is a Location object (has parent_region but not entrances)
         if hasattr(target, 'parent_region') and not hasattr(target, 'entrances'):
             location_name = target.name if hasattr(target, 'name') else str(target)

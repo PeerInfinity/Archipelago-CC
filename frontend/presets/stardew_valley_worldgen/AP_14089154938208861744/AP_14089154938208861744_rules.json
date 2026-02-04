@@ -22520,6 +22520,7 @@
     "1": {
       "game": "Stardew Valley WorldGen",
       "world_class_name": "StardewValleyWorldGenWorld",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -23020,14 +23021,6 @@
               {
                 "type": "item_check",
                 "item": "Fall"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -23043,14 +23036,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -23171,10 +23156,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "helper",
                 "name": "has_coal"
               },
@@ -23217,14 +23198,6 @@
               "type": "constant",
               "value": 16
             }
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -23266,14 +23239,6 @@
                   "type": "constant",
                   "value": 2
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -24592,8 +24557,75 @@
                         }
                       },
                       {
+                        "type": "item_check",
+                        "item": "Iron Bar (Logic event)"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Fishing Level",
+                    "count": {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "can_reach",
+                    "args": [
+                      {
                         "type": "constant",
-                        "value": true
+                        "value": "The Mines - Floor 5"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Region"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Shipping Bin"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
                       },
                       {
                         "type": "item_check",
@@ -24667,8 +24699,75 @@
                         }
                       },
                       {
+                        "type": "item_check",
+                        "item": "Iron Bar (Logic event)"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Fishing Level",
+                    "count": {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "can_reach",
+                    "args": [
+                      {
                         "type": "constant",
-                        "value": true
+                        "value": "The Mines - Floor 5"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Region"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Shipping Bin"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
                       },
                       {
                         "type": "item_check",
@@ -24742,8 +24841,75 @@
                         }
                       },
                       {
+                        "type": "item_check",
+                        "item": "Iron Bar (Logic event)"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Fishing Level",
+                    "count": {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "can_reach",
+                    "args": [
+                      {
                         "type": "constant",
-                        "value": true
+                        "value": "The Mines - Floor 5"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Region"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Shipping Bin"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
                       },
                       {
                         "type": "item_check",
@@ -24817,8 +24983,75 @@
                         }
                       },
                       {
+                        "type": "item_check",
+                        "item": "Iron Bar (Logic event)"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Fishing Level",
+                    "count": {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "can_reach",
+                    "args": [
+                      {
                         "type": "constant",
-                        "value": true
+                        "value": "The Mines - Floor 5"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Region"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Shipping Bin"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fishing Level",
+                        "count": {
+                          "type": "constant",
+                          "value": 3
+                        }
                       },
                       {
                         "type": "item_check",
@@ -24892,10 +25125,6 @@
                         }
                       },
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "item_check",
                         "item": "Iron Bar (Logic event)"
                       }
@@ -24965,310 +25194,6 @@
                           "type": "constant",
                           "value": 3
                         }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Iron Bar (Logic event)"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Fishing Level",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "The Mines - Floor 5"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Shipping Bin"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Iron Bar (Logic event)"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Fishing Level",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "The Mines - Floor 5"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Shipping Bin"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Iron Bar (Logic event)"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Fishing Level",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "The Mines - Floor 5"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Shipping Bin"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Iron Bar (Logic event)"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Fishing Level",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "The Mines - Floor 5"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Shipping Bin"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Fishing Level",
-                        "count": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       },
                       {
                         "type": "item_check",
@@ -25697,14 +25622,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -25720,14 +25637,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -25766,14 +25675,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -25789,14 +25690,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -25863,14 +25756,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -26000,10 +25885,6 @@
             "item": "Shipping Bin"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -26052,14 +25933,6 @@
                 "item": "Banana Sapling"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -26097,14 +25970,6 @@
           {
             "type": "item_check",
             "item": "Banana Sapling"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -26318,14 +26183,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -26339,10 +26196,6 @@
               "type": "constant",
               "value": 3
             }
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -26383,10 +26236,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "item_check",
                 "item": "Copper Bar (Logic event)"
               }
@@ -26423,10 +26272,6 @@
                 "item": "Fall"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -26454,10 +26299,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -26575,14 +26416,6 @@
               {
                 "type": "item_check",
                 "item": "Summer"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -26598,14 +26431,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -26636,14 +26461,6 @@
               {
                 "type": "item_check",
                 "item": "Fall"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -26659,14 +26476,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -26801,10 +26610,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "item_check",
             "item": "Mr Qi's Plane Ride"
           }
@@ -26816,10 +26621,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -26843,14 +26644,6 @@
           {
             "type": "item_check",
             "item": "Broccoli Seeds"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -26918,10 +26711,6 @@
                       "type": "constant",
                       "value": 3
                     }
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "item_check",
@@ -26993,10 +26782,6 @@
                       "type": "constant",
                       "value": 3
                     }
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "item_check",
@@ -27113,14 +26898,6 @@
                     "item": "Cactus Seeds"
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -27148,14 +26925,6 @@
             "item": "Cactus Seeds"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -27177,14 +26946,6 @@
           {
             "type": "item_check",
             "item": "Carrot Seeds"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "item_check",
@@ -27233,14 +26994,6 @@
               {
                 "type": "item_check",
                 "item": "Spring"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -27256,14 +27009,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -27361,14 +27106,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -27420,14 +27157,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -27442,10 +27171,6 @@
                 "item": "Progressive Coop"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "or",
                 "conditions": [
                   {
@@ -27455,18 +27180,6 @@
                   {
                     "type": "and",
                     "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
                       {
                         "type": "state_method",
                         "method": "can_reach",
@@ -27482,10 +27195,6 @@
                         ]
                       },
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "state_method",
                         "method": "can_reach",
                         "args": [
@@ -27498,10 +27207,6 @@
                             "value": "Region"
                           }
                         ]
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       },
                       {
                         "type": "state_method",
@@ -27520,10 +27225,6 @@
                     ]
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -27535,10 +27236,6 @@
                 "item": "Progressive Coop"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "or",
                 "conditions": [
                   {
@@ -27548,18 +27245,6 @@
                   {
                     "type": "and",
                     "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
                       {
                         "type": "state_method",
                         "method": "can_reach",
@@ -27575,10 +27260,6 @@
                         ]
                       },
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "state_method",
                         "method": "can_reach",
                         "args": [
@@ -27591,10 +27272,6 @@
                             "value": "Region"
                           }
                         ]
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       },
                       {
                         "type": "state_method",
@@ -27613,10 +27290,6 @@
                     ]
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -27628,10 +27301,6 @@
                 "item": "Progressive Coop"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "or",
                 "conditions": [
                   {
@@ -27641,18 +27310,6 @@
                   {
                     "type": "and",
                     "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
                       {
                         "type": "state_method",
                         "method": "can_reach",
@@ -27668,10 +27325,6 @@
                         ]
                       },
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "state_method",
                         "method": "can_reach",
                         "args": [
@@ -27684,10 +27337,6 @@
                             "value": "Region"
                           }
                         ]
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       },
                       {
                         "type": "state_method",
@@ -27706,10 +27355,6 @@
                     ]
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "item_check",
@@ -27725,10 +27370,6 @@
                 "item": "Progressive Coop"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "or",
                 "conditions": [
                   {
@@ -27738,18 +27379,6 @@
                   {
                     "type": "and",
                     "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
                       {
                         "type": "state_method",
                         "method": "can_reach",
@@ -27765,10 +27394,6 @@
                         ]
                       },
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "state_method",
                         "method": "can_reach",
                         "args": [
@@ -27781,10 +27406,6 @@
                             "value": "Region"
                           }
                         ]
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       },
                       {
                         "type": "state_method",
@@ -27803,10 +27424,6 @@
                     ]
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "item_check",
@@ -27839,14 +27456,6 @@
                           "type": "constant",
                           "value": 3
                         }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       }
                     ]
                   },
@@ -27864,14 +27473,6 @@
                           "type": "constant",
                           "value": 3
                         }
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       }
                     ]
                   }
@@ -27887,14 +27488,6 @@
                       "type": "constant",
                       "value": 7
                     }
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "helper",
@@ -28105,10 +27698,6 @@
             "item": "Shipping Bin"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -28179,14 +27768,6 @@
                 "item": "Fall"
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -28220,10 +27801,6 @@
                   "type": "constant",
                   "value": 3
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "item_check",
@@ -28260,101 +27837,6 @@
               {
                 "type": "item_check",
                 "item": "Fall"
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Shipping Bin"
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "can_reach",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Fishing"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Region"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "can_reach",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "The Mines - Floor 5"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Region"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "can_reach",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Secret Woods"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Region"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -28438,10 +27920,6 @@
                 "name": "has_cranberry_seeds"
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -28455,101 +27933,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Shipping Bin"
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Fishing"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "The Mines - Floor 5"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Secret Woods"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -28608,14 +27991,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -28671,10 +28046,6 @@
           {
             "type": "item_check",
             "item": "Iridium Bar (Logic event)"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -28789,14 +28160,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "helper",
                 "name": "has_fire_quartz"
               }
@@ -28818,14 +28181,6 @@
               "type": "constant",
               "value": 2
             }
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -28845,14 +28200,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "item_check",
             "item": "Silo"
           }
@@ -28867,10 +28214,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -28902,10 +28245,6 @@
                   "type": "constant",
                   "value": 5
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -29106,10 +28445,6 @@
             "item": "Progressive Coop"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -29119,18 +28454,6 @@
               {
                 "type": "and",
                 "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
                   {
                     "type": "state_method",
                     "method": "can_reach",
@@ -29146,10 +28469,6 @@
                     ]
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -29162,10 +28481,6 @@
                         "value": "Region"
                       }
                     ]
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -29184,10 +28499,6 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -29199,10 +28510,6 @@
             "item": "Progressive Coop"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -29212,18 +28519,6 @@
               {
                 "type": "and",
                 "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
                   {
                     "type": "state_method",
                     "method": "can_reach",
@@ -29239,10 +28534,6 @@
                     ]
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -29255,10 +28546,6 @@
                         "value": "Region"
                       }
                     ]
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -29277,10 +28564,6 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -29294,14 +28577,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -29408,14 +28683,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -29786,20 +29053,8 @@
             "item": "Fall"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "item_check",
             "item": "Copper Ore (Logic event)"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -29887,10 +29142,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "item_check",
                 "item": "Received Progression Percent",
                 "count": {
@@ -29914,10 +29165,6 @@
                   "type": "constant",
                   "value": 5
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -29961,10 +29208,6 @@
           {
             "type": "item_check",
             "item": "Copper Ore (Logic event)"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -29978,14 +29221,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -30096,14 +29331,6 @@
                   {
                     "type": "item_check",
                     "item": "Fall"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               }
@@ -30121,14 +29348,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -30244,10 +29463,6 @@
                     }
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "helper",
                     "name": "has_coal"
                   },
@@ -30309,14 +29524,6 @@
               {
                 "type": "item_check",
                 "item": "Summer"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -30332,14 +29539,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -30357,10 +29556,6 @@
               "type": "constant",
               "value": 6
             }
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -30405,14 +29600,6 @@
               {
                 "type": "item_check",
                 "item": "Summer"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -30422,21 +29609,12 @@
         "type": "or",
         "conditions": [
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Received Progression Percent",
-                "count": {
-                  "type": "constant",
-                  "value": 4
-                }
-              },
-              {
-                "type": "constant",
-                "value": true
-              }
-            ]
+            "type": "item_check",
+            "item": "Received Progression Percent",
+            "count": {
+              "type": "constant",
+              "value": 4
+            }
           },
           {
             "type": "and",
@@ -30452,10 +29630,6 @@
                   "type": "constant",
                   "value": 5
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -30538,14 +29712,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -30600,10 +29766,6 @@
                   "type": "constant",
                   "value": 5
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -30873,10 +30035,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "item_check",
                 "item": "Copper Bar (Logic event)"
               },
@@ -30919,14 +30077,6 @@
               {
                 "type": "item_check",
                 "item": "Spring"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -30942,14 +30092,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -30963,10 +30105,6 @@
               "type": "constant",
               "value": 8
             }
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "item_check",
@@ -30988,10 +30126,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "item_check",
                 "item": "Copper Bar (Logic event)"
               }
@@ -31007,10 +30141,6 @@
             "item": "Progressive Coop"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -31020,18 +30150,6 @@
               {
                 "type": "and",
                 "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
                   {
                     "type": "state_method",
                     "method": "can_reach",
@@ -31047,10 +30165,6 @@
                     ]
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -31063,10 +30177,6 @@
                         "value": "Region"
                       }
                     ]
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -31085,10 +30195,6 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "item_check",
@@ -31104,10 +30210,6 @@
             "item": "Progressive Coop"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -31117,18 +30219,6 @@
               {
                 "type": "and",
                 "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
                   {
                     "type": "state_method",
                     "method": "can_reach",
@@ -31144,10 +30234,6 @@
                     ]
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -31160,10 +30246,6 @@
                         "value": "Region"
                       }
                     ]
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -31182,10 +30264,6 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "item_check",
@@ -31567,10 +30645,6 @@
                     }
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "item_check",
                     "item": "Iron Bar (Logic event)"
                   }
@@ -31619,14 +30693,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "and",
             "conditions": [
               {
@@ -31636,10 +30702,6 @@
                   "type": "constant",
                   "value": 4
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "item_check",
@@ -31749,14 +30811,6 @@
                 "item": "Received Progression Percent"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -31800,14 +30854,6 @@
             "item": "Received Progression Percent"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -31847,14 +30893,6 @@
               "type": "constant",
               "value": 2
             }
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -31943,14 +30981,6 @@
               {
                 "type": "item_check",
                 "item": "Summer"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -31966,14 +30996,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -32017,10 +31039,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -34675,10 +33693,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -34827,10 +33841,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -34974,14 +33984,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -34997,14 +33999,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35044,10 +34038,6 @@
                   "type": "constant",
                   "value": 8
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "item_check",
@@ -35110,10 +34100,6 @@
                 "name": "has_large_egg_brown"
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35144,14 +34130,6 @@
               {
                 "type": "item_check",
                 "item": "Spring"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -35167,14 +34145,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35213,14 +34183,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -35236,14 +34198,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35319,14 +34273,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35379,14 +34325,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "helper",
                 "name": "has_coal"
               }
@@ -35422,18 +34360,6 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -35448,10 +34374,6 @@
                     ]
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -35464,10 +34386,6 @@
                         "value": "Region"
                       }
                     ]
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -35514,14 +34432,6 @@
                 "item": "Pineapple Seeds"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -35559,14 +34469,6 @@
           {
             "type": "item_check",
             "item": "Pineapple Seeds"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -35633,14 +34535,6 @@
               {
                 "type": "item_check",
                 "item": "Shipping Bin"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -35656,14 +34550,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35677,14 +34563,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35715,14 +34593,6 @@
               {
                 "type": "item_check",
                 "item": "Spring"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -35738,14 +34608,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -35772,14 +34634,6 @@
               {
                 "type": "item_check",
                 "item": "Powdermelon Seeds"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "item_check",
@@ -35809,14 +34663,6 @@
           {
             "type": "item_check",
             "item": "Powdermelon Seeds"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "item_check",
@@ -35850,14 +34696,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -35888,10 +34726,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -35988,14 +34822,6 @@
               {
                 "type": "item_check",
                 "item": "Fall"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -36011,14 +34837,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -36069,10 +34887,6 @@
           {
             "type": "item_check",
             "item": "Copper Bar (Logic event)"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -36196,10 +35010,6 @@
                   "type": "constant",
                   "value": 9
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "or",
@@ -38032,10 +36842,6 @@
             "item": "Open Professor Snail Cave"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -38543,20 +37349,8 @@
                 "item": "Fall"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "item_check",
                 "item": "Copper Ore (Logic event)"
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -38570,14 +37364,6 @@
               {
                 "type": "item_check",
                 "item": "Summer"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -38600,14 +37386,6 @@
                     "item": "Fall"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -38621,14 +37399,6 @@
               {
                 "type": "item_check",
                 "item": "Spring"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -38859,14 +37629,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "item_check",
             "item": "Silo"
           }
@@ -38889,10 +37651,6 @@
                   "type": "constant",
                   "value": 5
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -38922,18 +37680,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -38961,14 +37707,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -39024,18 +37762,6 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -39050,10 +37776,6 @@
                     ]
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -39066,10 +37788,6 @@
                         "value": "Region"
                       }
                     ]
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -39106,17 +37824,8 @@
         ]
       },
       "has_rat_problem": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "constant",
+        "value": true
       },
       "has_recycling_machine": {
         "type": "and",
@@ -39128,14 +37837,6 @@
               "type": "constant",
               "value": 4
             }
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "item_check",
@@ -39170,14 +37871,6 @@
               {
                 "type": "item_check",
                 "item": "Summer"
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -39193,14 +37886,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -39234,10 +37919,6 @@
                   {
                     "type": "item_check",
                     "item": "Copper Ore (Logic event)"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               },
@@ -39284,10 +37965,6 @@
                   {
                     "type": "item_check",
                     "item": "Copper Ore (Logic event)"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               },
@@ -39350,14 +38027,6 @@
                       "type": "constant",
                       "value": 4
                     }
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "item_check",
@@ -39429,10 +38098,6 @@
                 "item": "Spring"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -39456,10 +38121,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -39497,14 +38158,6 @@
                 "name": "has_rhubarb_seeds"
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -39518,10 +38171,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -39549,14 +38198,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -39683,10 +38324,6 @@
           {
             "type": "item_check",
             "item": "Winter"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -41475,10 +40112,6 @@
             "item": "Farming Level"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "or",
             "conditions": [
               {
@@ -41500,10 +40133,6 @@
                 ]
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -41540,10 +40169,6 @@
               "type": "constant",
               "value": 9
             }
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -41934,14 +40559,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -42016,10 +40633,6 @@
             "item": "Shipping Bin"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -42064,97 +40677,6 @@
                 "item": "Summer"
               },
               {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Shipping Bin"
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "can_reach",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Fishing"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Region"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "can_reach",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "The Mines - Floor 5"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Region"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "can_reach",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Secret Woods"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Region"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -42182,97 +40704,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Shipping Bin"
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Fishing"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "The Mines - Floor 5"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "can_reach",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Secret Woods"
-                      },
-                      {
-                        "type": "constant",
-                        "value": "Region"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
           },
           {
             "type": "state_method",
@@ -42354,10 +40785,6 @@
                 "item": "Spring"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -42385,10 +40812,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -42476,18 +40899,6 @@
             "item": "Summer Squash Seeds"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -42558,14 +40969,6 @@
                     "item": "Fall"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -42590,14 +40993,6 @@
                 "item": "Fall"
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -42683,18 +41078,6 @@
                     "type": "and",
                     "conditions": [
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "state_method",
                         "method": "can_reach",
                         "args": [
@@ -42709,10 +41092,6 @@
                         ]
                       },
                       {
-                        "type": "constant",
-                        "value": true
-                      },
-                      {
                         "type": "state_method",
                         "method": "can_reach",
                         "args": [
@@ -42725,10 +41104,6 @@
                             "value": "Region"
                           }
                         ]
-                      },
-                      {
-                        "type": "constant",
-                        "value": true
                       },
                       {
                         "type": "state_method",
@@ -42778,10 +41153,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "item_check",
             "item": "Copper Bar (Logic event)"
           }
@@ -42812,14 +41183,6 @@
                 "item": "Taro Tuber"
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "helper",
                 "name": "has_bone_fragment"
               },
@@ -42847,14 +41210,6 @@
           {
             "type": "item_check",
             "item": "Taro Tuber"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -42969,10 +41324,6 @@
                     "item": "Winter"
                   },
                   {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
                     "type": "state_method",
                     "method": "can_reach",
                     "args": [
@@ -42989,14 +41340,6 @@
                   {
                     "type": "helper",
                     "name": "has_summer_seeds"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               },
@@ -43006,10 +41349,6 @@
                   {
                     "type": "item_check",
                     "item": "Winter"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -43028,14 +41367,6 @@
                   {
                     "type": "helper",
                     "name": "has_spring_seeds"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               },
@@ -43045,10 +41376,6 @@
                   {
                     "type": "item_check",
                     "item": "Winter"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -43067,14 +41394,6 @@
                   {
                     "type": "helper",
                     "name": "has_fall_seeds"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               },
@@ -43084,10 +41403,6 @@
                   {
                     "type": "item_check",
                     "item": "Winter"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   },
                   {
                     "type": "state_method",
@@ -43106,14 +41421,6 @@
                   {
                     "type": "helper",
                     "name": "has_winter_seeds"
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "constant",
-                    "value": true
                   }
                 ]
               }
@@ -43147,10 +41454,6 @@
               {
                 "type": "item_check",
                 "item": "Winter"
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -43190,14 +41493,6 @@
                     "item": "Summer"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -43207,10 +41502,6 @@
               {
                 "type": "item_check",
                 "item": "Winter"
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -43250,14 +41541,6 @@
                     "item": "Spring"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -43267,10 +41550,6 @@
               {
                 "type": "item_check",
                 "item": "Winter"
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -43314,14 +41593,6 @@
                     "name": "has_blackberry"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -43331,10 +41602,6 @@
               {
                 "type": "item_check",
                 "item": "Winter"
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "state_method",
@@ -43378,14 +41645,6 @@
                     "item": "Winter"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -43431,10 +41690,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -43475,10 +41730,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -43499,14 +41750,6 @@
       "has_the_diamond_hunter": {
         "type": "and",
         "conditions": [
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
           {
             "type": "and",
             "conditions": [
@@ -43603,14 +41846,6 @@
           {
             "type": "item_check",
             "item": "Summer"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -43682,10 +41917,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "and",
                 "conditions": [
                   {
@@ -43726,10 +41957,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -43751,46 +41978,20 @@
         "type": "or",
         "conditions": [
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Foraging Level",
-                "count": {
-                  "type": "constant",
-                  "value": 7
-                }
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              }
-            ]
+            "type": "item_check",
+            "item": "Foraging Level",
+            "count": {
+              "type": "constant",
+              "value": 7
+            }
           },
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Foraging Level",
-                "count": {
-                  "type": "constant",
-                  "value": 7
-                }
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              }
-            ]
+            "type": "item_check",
+            "item": "Foraging Level",
+            "count": {
+              "type": "constant",
+              "value": 7
+            }
           }
         ]
       },
@@ -43816,14 +42017,6 @@
               "type": "constant",
               "value": 3
             }
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "or",
@@ -43869,14 +42062,6 @@
                   "type": "constant",
                   "value": 3
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               },
               {
                 "type": "or",
@@ -43944,14 +42129,6 @@
           {
             "type": "item_check",
             "item": "Spring"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -44141,14 +42318,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "helper",
                 "name": "has_earth_crystal"
               },
@@ -44273,10 +42442,6 @@
             }
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "state_method",
             "method": "can_reach",
             "args": [
@@ -44310,10 +42475,6 @@
           {
             "type": "item_check",
             "item": "Power: Way Of The Wind pt. 1"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -44386,14 +42547,6 @@
                     "item": "Fall"
                   }
                 ]
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -44418,14 +42571,6 @@
                 "item": "Fall"
               }
             ]
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -44477,10 +42622,6 @@
           {
             "type": "item_check",
             "item": "Shipping Bin"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "state_method",
@@ -44538,10 +42679,6 @@
                 }
               },
               {
-                "type": "constant",
-                "value": true
-              },
-              {
                 "type": "state_method",
                 "method": "can_reach",
                 "args": [
@@ -44576,14 +42713,6 @@
                   "type": "constant",
                   "value": 3
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           },
@@ -44601,14 +42730,6 @@
                   "type": "constant",
                   "value": 3
                 }
-              },
-              {
-                "type": "constant",
-                "value": true
-              },
-              {
-                "type": "constant",
-                "value": true
               }
             ]
           }
@@ -44624,14 +42745,6 @@
           {
             "type": "item_check",
             "item": "Fall"
-          },
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       }

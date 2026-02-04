@@ -9,6 +9,60 @@ from BaseClasses import MultiWorld, Location, Entrance, ItemClassification
 from NetUtils import NetworkItem
 logger = logging.getLogger("Fuzzer")
 
+
+# Error patterns that indicate option-related generation failures
+# These are expected failures from random option combinations, not logic bugs
+IGNORED_ERROR_PATTERNS = [
+    "Not enough filler/trap items",
+    "No more spots to place",
+    "Remaining locations are invalid",
+    "Unable to place dungeon prizes",
+    "Could not access required locations for accessibility check",
+    "insufficient locations to place progression items",
+    "Failed to fetch map shuffle data for FFMQ",
+    "Invalid OC2 settings",
+    "OC2 needs at least",
+]
+
+
+def should_ignore_generation_error(exc: Exception) -> bool:
+    """
+    Check if an exception should be treated as an "ignored" option error
+    rather than a real failure.
+
+    These are generation failures caused by random option combinations that
+    create impossible-to-fill seeds, external API failures, or game-specific
+    validation errors. They are expected when fuzzing and should not be
+    counted as test failures.
+
+    Args:
+        exc: The exception that was raised during generation
+
+    Returns:
+        True if the error should be ignored, False if it's a real failure
+    """
+    if exc is None:
+        return False
+
+    exc_str = str(exc)
+    exc_type = type(exc).__name__
+
+    # Check explicit patterns
+    for pattern in IGNORED_ERROR_PATTERNS:
+        if pattern in exc_str:
+            return True
+
+    # Check for filler-related errors (case-insensitive)
+    if "filler" in exc_str.lower():
+        return True
+
+    # Handle FFMQ's AttributeError when API fails with an exception
+    # The error handling code assumes HTTP response but may get an exception instead
+    if exc_type == "AttributeError" and "status_code" in exc_str:
+        return True
+
+    return False
+
 # Directory for explain stats output (relative to fuzz output directory)
 EXPLAIN_STATS_DIR = "fuzz_output/explain_stats"
 
@@ -19,14 +73,21 @@ class Hook(BaseHook):
     status = None
     run_id: int = 0  # Track run ID for explain stats files
     explain_stats_collected: bool = False  # Track if we've collected explain stats for this game
+    use_fractional_spheres: bool = False  # Toggle for fractional sphere logic
 
     def before_generate(self, args):
         self.status = None
         self.player_files_path = args.player_files_path
+
+        # Pre-generate ALttP entrance shuffle seed if needed
+        # This must happen BEFORE generation so the original world uses our seed
+        self._pregenerate_alttp_entrance_shuffle_seed()
+
         self.ut_core = TrackerCore.TrackerCore(logger,False,False)
         self.ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
         self.ut_core.run_generator(None,None,args.player_files_path) #initial UT gen
         self.run_id = getattr(args, 'run_id', self.run_id)
+        self.use_fractional_spheres = getattr(args, 'fractional_spheres', False)
 
     def after_generate(self, mw:MultiWorld, output_path):
         if mw is None:
@@ -48,10 +109,26 @@ class Hook(BaseHook):
 
         slot_data = temp["slot_data"][1] #slot 0 is reserved
 
+        # Fix ALttP entrance shuffle regeneration by setting entrance_shuffle_seed
+        # to the actual er_seed from the original generation. This ensures TrackerCore
+        # regenerates with the same entrance connections when using YAML-based regeneration.
+        # Note: For worldgen-based tracking (what the fuzzer uses), the rules.json is
+        # exported BEFORE we can apply this fix, so remaining failures may be due to:
+        # - Bunny rule export differences (e.g., Magic Mirror requirements)
+        # - Complex entrance shuffle modes (crossed, insanity)
+        # - Inverted mode interactions with glitch rules
+        if mw.worlds[1].game == "A Link to the Past" and hasattr(mw.worlds[1], 'er_seed'):
+            er_seed = mw.worlds[1].er_seed
+            if er_seed != "vanilla":
+                self._fix_alttp_entrance_shuffle_seed(er_seed)
+
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
-        # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
+        # Set seed_name to enable auto-discovery of pickle/rules.json for tracking
         self.ut_core.seed_name = mw.seed_name
+        # Try pickle first (fastest), then fall back to rules.json
+        self.ut_core.auto_discover_pickle()
         self.ut_core.auto_discover_rules_json()
+        # initalize_tracker_core will use pickle/worldgen-based tracking if paths are set
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 
@@ -68,7 +145,7 @@ class Hook(BaseHook):
         new_items = []
         new_inventory = []
 
-        # Recalc spheres
+        # Recalc spheres - use fractional sphere logic if enabled
         for sphere_number, sphere in enumerate(mw.get_sendable_spheres()):
             current_sphere: Dict[str,Location] = {}
             for sphere_location in sphere:
@@ -78,39 +155,100 @@ class Hook(BaseHook):
             new_inventory.clear()
             new_items.clear()
             if current_sphere:
-                self.ut_core.set_missing_locations(set(remaining_locations))
-                self.ut_core.set_items_received(current_inventory)
-                update_ret = self.ut_core.updateTracker()
-                missed_locations = []
-                for in_logic_location in update_ret.in_logic_locations:
-                    if in_logic_location in current_sphere:
-                        location = current_sphere[in_logic_location]
-                        true_item = location.item
-                        # Use location.address directly instead of true_item.location.address
-                        # Some worlds set location.item without setting item.location back-reference
-                        new_items.append(NetworkItem(true_item.code, location.address, true_item.player, true_item.classification))
-                        if ItemClassification.progression in true_item.classification:
-                            new_inventory.append(true_item.name)
-                        remaining_locations.remove(location.address)
-                        del current_sphere[in_logic_location]
-                    else:
-                        missed_locations.append(in_logic_location)
-                if len(current_sphere) > 0:
-                    print(f"Locations `{','.join(current_sphere.keys())}` were in server logic but not expected in UT")
-                    print(f"UT logic sphere `{','.join(update_ret.in_logic_locations)}`")
-                    print(f"Locations that weren't created in UT = [{','.join([loc for loc in current_sphere if loc not in self.ut_core.multiworld.regions.location_cache[self.ut_core.player_id]])}]")
-                if len(missed_locations) > 0:
-                    print(f"Locations {','.join(missed_locations)} were expected to be in logic but weren't")
-                    print(f"Server logic sphere `{','.join([location.name for location in sphere if location.address is not None])}`")
-                if len(current_sphere)>0 or len(missed_locations)>0:
-                    print(f"After sphere #{sphere_number}")
-                    item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
-                    print(f"New Inventory = [{','.join(new_inventory)}]")
-                    print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
-                    print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
-                    print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
-                    self.status = GenOutcome.Failure
-                    return
+                if self.use_fractional_spheres:
+                    # Fractional sphere logic: iterate within each integer sphere
+                    # until all locations are collected or no progress can be made
+                    fractional_sphere = 0
+                    server_sphere_locations = set(current_sphere.keys())  # Track original server sphere
+                    while current_sphere:
+                        self.ut_core.set_missing_locations(set(remaining_locations))
+                        self.ut_core.set_items_received(current_inventory)
+                        update_ret = self.ut_core.updateTracker()
+
+                        # On first pass, check for UT locations not in server sphere
+                        # (detect UT being too permissive with pre-sphere inventory)
+                        if fractional_sphere == 0:
+                            missed_locations = [loc for loc in update_ret.in_logic_locations
+                                               if loc not in server_sphere_locations]
+                            if missed_locations:
+                                print(f"Locations {','.join(missed_locations)} were expected to be in logic but weren't in server sphere")
+                                print(f"Server logic sphere `{','.join(server_sphere_locations)}`")
+                                print(f"After sphere #{sphere_number}")
+                                item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
+                                print(f"New Inventory = [{','.join(new_inventory)}]")
+                                print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
+                                print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
+                                print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
+                                self.status = GenOutcome.Failure
+                                return
+
+                        # Find locations in BOTH server sphere AND UT logic
+                        collected_this_pass = []
+                        for loc_name in list(current_sphere.keys()):
+                            if loc_name in update_ret.in_logic_locations:
+                                location = current_sphere[loc_name]
+                                true_item = location.item
+                                # Collect the item immediately for next iteration
+                                new_item = NetworkItem(true_item.code, location.address, true_item.player, true_item.classification)
+                                new_items.append(new_item)
+                                current_inventory.append(new_item)  # Add to current for next fractional sphere
+                                if ItemClassification.progression in true_item.classification:
+                                    new_inventory.append(true_item.name)
+                                remaining_locations.remove(location.address)
+                                del current_sphere[loc_name]
+                                collected_this_pass.append(loc_name)
+
+                        if not collected_this_pass:
+                            # No progress made - remaining locations in current_sphere are unreachable
+                            print(f"Sphere {sphere_number}.{fractional_sphere}: No progress - {len(current_sphere)} locations remain unreachable")
+                            print(f"Locations `{','.join(current_sphere.keys())}` were in server logic but not expected in UT")
+                            print(f"UT logic sphere `{','.join(update_ret.in_logic_locations)}`")
+                            print(f"Locations that weren't created in UT = [{','.join([loc for loc in current_sphere if loc not in self.ut_core.multiworld.regions.location_cache[self.ut_core.player_id]])}]")
+                            item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
+                            print(f"New Inventory = [{','.join(new_inventory)}]")
+                            print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
+                            print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
+                            print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
+                            self.status = GenOutcome.Failure
+                            return
+
+                        fractional_sphere += 1
+                    # All locations in this integer sphere collected successfully
+                else:
+                    # Original logic: single pass per integer sphere
+                    self.ut_core.set_missing_locations(set(remaining_locations))
+                    self.ut_core.set_items_received(current_inventory)
+                    update_ret = self.ut_core.updateTracker()
+                    missed_locations = []
+                    for in_logic_location in update_ret.in_logic_locations:
+                        if in_logic_location in current_sphere:
+                            location = current_sphere[in_logic_location]
+                            true_item = location.item
+                            # Use location.address directly instead of true_item.location.address
+                            # Some worlds set location.item without setting item.location back-reference
+                            new_items.append(NetworkItem(true_item.code, location.address, true_item.player, true_item.classification))
+                            if ItemClassification.progression in true_item.classification:
+                                new_inventory.append(true_item.name)
+                            remaining_locations.remove(location.address)
+                            del current_sphere[in_logic_location]
+                        else:
+                            missed_locations.append(in_logic_location)
+                    if len(current_sphere) > 0:
+                        print(f"Locations `{','.join(current_sphere.keys())}` were in server logic but not expected in UT")
+                        print(f"UT logic sphere `{','.join(update_ret.in_logic_locations)}`")
+                        print(f"Locations that weren't created in UT = [{','.join([loc for loc in current_sphere if loc not in self.ut_core.multiworld.regions.location_cache[self.ut_core.player_id]])}]")
+                    if len(missed_locations) > 0:
+                        print(f"Locations {','.join(missed_locations)} were expected to be in logic but weren't")
+                        print(f"Server logic sphere `{','.join([location.name for location in sphere if location.address is not None])}`")
+                    if len(current_sphere)>0 or len(missed_locations)>0:
+                        print(f"After sphere #{sphere_number}")
+                        item_id_to_name = self.ut_core.multiworld.worlds[self.ut_core.player_id].item_id_to_name
+                        print(f"New Inventory = [{','.join(new_inventory)}]")
+                        print(f"Current Inventory = [{','.join([item_id_to_name[item.item] for item in current_inventory if item.flags & 1])}]")
+                        print(f"UT accessable regions `{','.join([region.name for region in update_ret.state.reachable_regions[1]])}`")
+                        print(f"State inventory = `{','.join([f'{k}:{v}' for k,v in update_ret.state.prog_items[1].items()])}`")
+                        self.status = GenOutcome.Failure
+                        return
             else:
                 return #if get_sendable_spheres returns an empty sphere that means we're done, the next sphere will be any unreachable locations... which aren't reachable...
 
@@ -137,13 +275,15 @@ class Hook(BaseHook):
         - entrances_without_explain: Entrances with custom rules but no explain_json
         """
         try:
-            # Use the worldgen multiworld from TrackerCore
-            worldgen_mw = self.ut_core.multiworld
+            # Use the worldgen multiworld from TrackerCore (has Rule Builder rules with explain_json)
+            # NOT the tracking multiworld (which has the original game's rules without explain support)
+            worldgen_mw = self.ut_core.worldgen_multiworld
             if not worldgen_mw:
                 logger.warning("No worldgen multiworld available for explain stats")
                 return
 
-            world = worldgen_mw.worlds[self.ut_core.player_id]
+            # Worldgen world always uses player ID 1
+            world = worldgen_mw.worlds[1]
 
             # Collect location stats
             locations = list(world.get_locations())
@@ -183,7 +323,7 @@ class Hook(BaseHook):
             entrances_without_explain = 0
             entrances_without_explain_names = []
 
-            for region in worldgen_mw.get_regions(self.ut_core.player_id):
+            for region in worldgen_mw.get_regions(1):
                 for entrance in region.exits:
                     total_entrances += 1
                     access_rule = entrance.access_rule
@@ -243,35 +383,134 @@ class Hook(BaseHook):
         except Exception as e:
             logger.warning(f"Failed to write explain stats: {e}")
 
+    def _pregenerate_alttp_entrance_shuffle_seed(self):
+        """Safety net to ensure entrance_shuffle_seed is numeric for ALttP.
+
+        Note: fuzz.py's get_random_value() now always generates numeric seeds for
+        entrance_shuffle_seed, so this function mainly serves as a backup for edge
+        cases like manually-created YAMLs or other generation paths.
+
+        When ALttP has entrance_shuffle != "vanilla" and entrance_shuffle_seed == "random"
+        (or invalid garbage), it generates a random er_seed in generate_early(). This
+        causes problems for worldgen-based tracking because the exported rules.json
+        uses one er_seed but any regeneration would use a different one.
+
+        By validating/pre-generating a numeric seed and writing it to the YAML before
+        generation, we ensure the original generation uses an explicit seed, which then
+        gets exported in rules.json and used consistently.
+        """
+        import os
+        import random
+        import yaml
+
+        yaml_dir = self.player_files_path
+        if not os.path.isdir(yaml_dir):
+            return
+
+        for filename in os.listdir(yaml_dir):
+            if not filename.endswith('.yaml'):
+                continue
+            filepath = os.path.join(yaml_dir, filename)
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+
+                if not data:
+                    continue
+
+                modified = False
+                for game_name, game_data in data.items():
+                    if game_name in ('A Link to the Past', 'alttp') and isinstance(game_data, dict):
+                        # Check if entrance_shuffle is non-vanilla
+                        entrance_shuffle = game_data.get('entrance_shuffle', 'vanilla')
+                        # Handle weighted options format
+                        if isinstance(entrance_shuffle, dict):
+                            # If it's a weighted dict, check if vanilla is the only option
+                            if list(entrance_shuffle.keys()) == ['vanilla']:
+                                continue  # vanilla only, no need to pre-generate
+                            # Otherwise, some non-vanilla shuffle is possible
+                        elif entrance_shuffle == 'vanilla':
+                            continue  # vanilla, no need to pre-generate
+
+                        # Check if entrance_shuffle_seed is random or not set
+                        entrance_shuffle_seed = game_data.get('entrance_shuffle_seed', 'random')
+                        if isinstance(entrance_shuffle_seed, dict):
+                            # Weighted format - check if 'random' is the only/primary option
+                            if 'random' not in entrance_shuffle_seed:
+                                continue  # Has explicit seed(s), don't override
+                        elif entrance_shuffle_seed != 'random':
+                            # Check if it's actually a valid numeric seed
+                            # The fuzzer may generate random FreeText garbage that isn't numeric
+                            seed_str = str(entrance_shuffle_seed)
+                            if seed_str.isdigit():
+                                # Already has a valid explicit numeric seed
+                                continue
+                            # Otherwise, it's garbage (e.g., random Unicode from fuzzer) - replace it
+                            logger.debug(f"Replacing invalid entrance_shuffle_seed '{seed_str[:50]}...' with numeric seed")
+
+                        # Generate a random 64-bit integer (same as ALttP's generate_early)
+                        er_seed = random.randint(0, 2 ** 64)
+                        game_data['entrance_shuffle_seed'] = str(er_seed)
+                        modified = True
+                        logger.debug(f"Pre-generated ALttP entrance_shuffle_seed in {filename}: {er_seed}")
+                        break
+
+                if modified:
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        yaml.safe_dump(data, f, default_flow_style=False, allow_unicode=True)
+
+            except Exception as e:
+                logger.warning(f"Failed to pre-generate entrance_shuffle_seed in {filename}: {e}")
+
+    def _fix_alttp_entrance_shuffle_seed(self, er_seed):
+        """Rewrite ALttP YAML files to use the actual er_seed as entrance_shuffle_seed.
+
+        This ensures TrackerCore regenerates with the same entrance connections as
+        the original generation. Without this, ALttP's generate_early would create
+        a different er_seed, leading to different entrance shuffle and different
+        key rules (especially for Turtle Rock).
+
+        Note: This is now mostly a backup - _pregenerate_alttp_entrance_shuffle_seed
+        handles the common case. This method still helps if the pre-generation didn't
+        run or if the seed format changed.
+        """
+        import os
+        import yaml
+
+        yaml_dir = self.player_files_path
+        if not os.path.isdir(yaml_dir):
+            return
+
+        for filename in os.listdir(yaml_dir):
+            if not filename.endswith('.yaml'):
+                continue
+            filepath = os.path.join(yaml_dir, filename)
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+
+                if not data:
+                    continue
+
+                # Find the ALttP game section
+                for game_name, game_data in data.items():
+                    if game_name in ('A Link to the Past', 'alttp') and isinstance(game_data, dict):
+                        # Set entrance_shuffle_seed to the actual er_seed
+                        # ALttP will use this directly when it's a numeric string
+                        game_data['entrance_shuffle_seed'] = str(er_seed)
+
+                        with open(filepath, 'w', encoding='utf-8') as f:
+                            yaml.safe_dump(data, f, default_flow_style=False, allow_unicode=True)
+                        logger.debug(f"Fixed ALttP entrance_shuffle_seed in {filename} to {er_seed}")
+                        break
+            except Exception as e:
+                logger.warning(f"Failed to fix entrance_shuffle_seed in {filename}: {e}")
+
     def reclassify_outcome(self, outcome, exc):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
         # These are configuration issues, not logic mismatches
         if exc is not None and self.status is None:
-            exc_str = str(exc)
-            exc_type = type(exc).__name__
-            # Handle various fill-related errors that are caused by option configurations
-            if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
-                return GenOutcome.OptionError, exc
-            # Handle FillError when options create impossible-to-fill seeds
-            # (e.g., accessibility: minimal combined with level_shuffle in SMW)
-            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FillError for accessibility check failures - this happens when random
-            # option combinations create seeds where required locations are unreachable
-            # (e.g., Terraria with certain goal/calamity combinations)
-            if "Could not access required locations for accessibility check" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ API errors - the game requires external API for shuffle options
-            # but the API may not be available in test environments
-            if "Failed to fetch map shuffle data for FFMQ" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
-            # The error handling code assumes HTTP response but may get an exception instead
-            if exc_type == "AttributeError" and "status_code" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle Overcooked! 2 option validation errors
-            # These occur when the fuzzer generates invalid option combinations
-            if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
+            if should_ignore_generation_error(exc):
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
@@ -422,25 +661,7 @@ class MultiworldHook(BaseHook):
     def reclassify_outcome(self, outcome, exc):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
         if exc is not None and self.status is None:
-            exc_str = str(exc)
-            exc_type = type(exc).__name__
-            if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
-                return GenOutcome.OptionError, exc
-            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FillError for accessibility check failures
-            if "Could not access required locations for accessibility check" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ API errors - the game requires external API for shuffle options
-            # but the API may not be available in test environments
-            if "Failed to fetch map shuffle data for FFMQ" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
-            if exc_type == "AttributeError" and "status_code" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle Overcooked! 2 option validation errors
-            # These occur when the fuzzer generates invalid option combinations
-            if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
+            if should_ignore_generation_error(exc):
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 

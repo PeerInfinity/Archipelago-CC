@@ -35,7 +35,7 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
     def __init__(self, closure_vars=None, seen_funcs=None,
                  game_handler=None, rule_func=None, player_context=None,
                  preserve_parameter_names=False, rule_target_name=None,
-                 target_type=None):
+                 target_type=None, evaluate_dict_methods=True):
         """
         Initialize the RuleAnalyzer.
 
@@ -50,6 +50,8 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             rule_target_name: Name of the rule target (e.g., location name) for detecting
                              closure-captured references that should be replaced with 'location'
             target_type: Type of target ('Location', 'Entrance', etc.) for context-specific handling
+            evaluate_dict_methods: If True, evaluate dict.keys/values/items/get at analysis time
+                                  when the dict is a constant. Default True.
         """
         self.closure_vars = closure_vars or {}
         self.seen_funcs = seen_funcs or {}
@@ -57,6 +59,7 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         self.rule_func = rule_func
         self.player_context = player_context
         self.preserve_parameter_names = preserve_parameter_names
+        self.evaluate_dict_methods = evaluate_dict_methods
         self.debug_log = []
         self.error_log = []
 
@@ -112,7 +115,7 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
     def _is_state_or_player_or_world_arg(self, arg_node, arg_result):
         """
-        Check if an argument is the 'state', 'player', or 'world' parameter.
+        Check if an argument is the 'state', 'player', 'world', or 'self' parameter.
 
         Args:
             arg_node: The AST node for the argument
@@ -120,11 +123,13 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
         Returns:
             Tuple of (is_state, is_player, is_world) booleans
+            Note: 'self' is treated the same as 'world' since both represent the world instance
         """
-        # Check for direct 'state', 'player', or 'world' names
+        # Check for direct 'state', 'player', 'world', or 'self' names
         if isinstance(arg_node, ast.Name):
             name = arg_node.id
-            return (name == 'state', name == 'player', name == 'world')
+            # 'self' represents the world object in methods, treat it same as 'world'
+            return (name == 'state', name == 'player', name in ('world', 'self'))
 
         # Check for attribute access like 'world.player', 'self.player', etc.
         if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
@@ -162,6 +167,29 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             is_state, is_player, is_world = self._is_state_or_player_or_world_arg(arg_node, arg_result)
             if not (is_state or is_player or is_world):
                 filtered.append(arg_result)
+        return filtered
+
+    def _filter_special_kwargs(self, kwargs_with_nodes):
+        """
+        Filter out state, player, and world keyword arguments.
+
+        Args:
+            kwargs_with_nodes: List of (ast.keyword, arg_result) tuples
+
+        Returns:
+            Dict of kwarg_name -> arg_result with state/player/world filtered out
+        """
+        filtered = {}
+        for kw_node, kw_result in kwargs_with_nodes:
+            kw_name = kw_node.arg
+            # Skip keyword arguments with names like 'state', 'player', 'world'
+            if kw_name in ('state', 'player', 'world'):
+                logging.debug(f"_filter_special_kwargs: Filtering out keyword arg '{kw_name}'")
+                continue
+            # Also check if the value is a reference to state/player/world
+            is_state, is_player, is_world = self._is_state_or_player_or_world_arg(kw_node.value, kw_result)
+            if not (is_state or is_player or is_world):
+                filtered[kw_name] = kw_result
         return filtered
 
     def _build_parameter_mapping(self, func, args_with_nodes):

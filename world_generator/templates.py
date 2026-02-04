@@ -8,31 +8,16 @@ for that file.
 import json
 import re
 from typing import Any, Dict, List, Optional, Set
+from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
+from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
-def sanitize_class_name(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
-
-
-def sanitize_option_name(name: str) -> str:
-    """Sanitize an option name to be a valid Python identifier.
-
-    Replaces non-alphanumeric characters (except underscores) with underscores.
-    Collapses multiple consecutive underscores into one.
-    """
-    # Replace any non-alphanumeric character (except underscore) with underscore
-    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
-    # Collapse multiple underscores into one
-    sanitized = re.sub(r'_+', '_', sanitized)
-    # Remove leading/trailing underscores
-    return sanitized.strip('_')
+# Backwards-compatible aliases
+sanitize_class_name = sanitize_for_class_name
+sanitize_option_name = sanitize_for_identifier
 
 
 def is_valid_identifier(name: str) -> bool:
@@ -252,20 +237,44 @@ def _rule_needs_lambda(rule: dict) -> bool:
     # Dynamic references need lambda to generate proper runtime access patterns
     # These are evaluated to constants in Rule Builder but should be preserved
     # as dynamic option/attribute access for proper re-export
-    if rule_type in ('setting_value',):
+    # - setting_value: legacy setting access
+    # - placement_lookup: location_item_name() calls require state
+    # - option_value: world options require state.multiworld access
+    if rule_type in ('setting_value', 'placement_lookup', 'option_value'):
         return True
 
     # AST format dynamic references also need lambda
-    # AST_function_call is included because it may reference 'location' or 'entrance'
-    # variables that are substituted at generation time via set_context(), and
-    # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
     # WorldAttribute and OptionValue need lambda because they generate
     # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
     # to be defined (only available in lambda context).
     # AST_capability needs lambda because it calls helper functions with runtime arguments
     # from options/world attributes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
         return True
+
+    # AST_function_call may need lambda, but not if the function is a Rule Builder rule
+    # (e.g., And, Or, Has, CanReachEntrance) - those can be converted directly.
+    # This happens when bunny rules are analyzed and path_to_access_rule returns
+    # nested Rule Builder expressions wrapped in AST_function_call.
+    if rule_name == 'AST_function_call':
+        args = rule.get('args', {})
+        function = args.get('function', {})
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            if func_rule in BOOLEAN_RULE_TYPES:
+                # Function is a Rule Builder rule - check if IT needs lambda
+                # (it might have nested dynamic references)
+                return _rule_needs_lambda(function)
+        # Unknown function call structure - needs lambda
+        return True
+
+    # HasFromList/HasFromListUnique with dynamic count (dict instead of int) need lambda
+    # because the Rule Builder class expects count to be a static int
+    if rule_name in ('HasFromList', 'HasFromListUnique'):
+        args = rule.get('args', {})
+        count = args.get('count', 1)
+        if isinstance(count, dict):
+            return True
 
     # Recursively check all dict and list values
     for value in rule.values():
@@ -832,8 +841,26 @@ def generate_rules_py(data: ExtractedData) -> str:
         if helper_data.defaults
     }
 
-    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values)
+    rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values, data.metadata.option_definitions)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
+
+    # Build entrance-to-parent-region mapping for resolving Attribute rules
+    # like entrance.parent_region (used by ALttP glitch rules)
+    entrance_regions = {}
+    for exit_name, exit_data in data.exits.items():
+        # Normalize entrance name: lowercase, no spaces (matches how exporter creates variable names)
+        normalized_name = exit_name.lower().replace(' ', '')
+        entrance_regions[normalized_name] = exit_data.source_region
+    rule_builder_generator.set_entrance_regions(entrance_regions)
+
+    # Build entrance-to-connected-region mapping for resolving dict_lambda_lookup patterns
+    # like rule_map.get(world.get_entrance('X').connected_region.name, default)
+    # With vanilla entrance shuffle, we can resolve the key to return just the matching case
+    entrance_connections = {}
+    for exit_name, exit_data in data.exits.items():
+        if exit_data.target_region:
+            entrance_connections[exit_name] = exit_data.target_region
+    rule_builder_generator.set_entrance_connections(entrance_connections)
 
     helper_generator = HelperCodeGenerator(
         game_name,
@@ -1028,91 +1055,13 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
-    # Check if game has no_logic mode in glitches_required option
-    # If so, add early return for single-player no_logic (skip all rules)
-    no_logic_handling = ''
-    option_defs = data.metadata.option_definitions
-    if 'glitches_required' in option_defs:
-        glitch_opt = option_defs['glitches_required']
-        name_lookup = glitch_opt.get('name_lookup', {})
-        # Check if there's a no_logic option value
-        no_logic_value = None
-        for value, name in name_lookup.items():
-            if name == 'no_logic':
-                no_logic_value = value
-                break
-        if no_logic_value is not None:
-            no_logic_handling = f'''
-    # For no_logic mode, skip all rules (for single-player)
-    if hasattr(world.options, 'glitches_required') and world.options.glitches_required.value == {no_logic_value}:
-        if multiworld.players == 1:
-            for exit in multiworld.get_region('Menu', player).exits:
-                exit.hide_path = True
-            return
-'''
-    # Prepend no_logic handling to rules_content
-    if no_logic_handling:
-        rules_content = no_logic_handling + rules_content
-
-    # Check if any rules use bunny_accessibility_check
-    # If so, add the check_bunny_accessibility helper function
-    needs_bunny_helper = _check_for_bunny_rules(data)
-    bunny_helper_section = ''
-    bunny_import_section = ''
-    if needs_bunny_helper:
-        bunny_import_section = 'from rule_builder.pathfinding import can_reach_via_bunny_path\n'
-        bunny_helper_section = '''
-
-# Bunny accessibility helper for ALttP-style path-dependent rules
-def check_bunny_accessibility(state: "CollectionState", player: int, location_name: str = None, target_region: str = None) -> bool:
-    """Check if a location/region is accessible considering bunny form.
-
-    Returns True if:
-    1. Player has Moon Pearl, OR
-    2. There's a path from a link region without needing Moon Pearl
-
-    Reads inverted mode and glitch mode from world options at evaluation time.
-    """
-    # Quick check: Moon Pearl always allows access
-    if state.has('Moon Pearl', player):
-        return True
-
-    # Get options from world
-    world = state.multiworld.worlds[player]
-    is_inverted = getattr(world.options, 'mode', None)
-    if is_inverted is not None:
-        is_inverted = str(is_inverted) == 'inverted' or getattr(is_inverted, 'value', 0) == 2
-    else:
-        is_inverted = False
-
-    glitch_mode = getattr(world.options, 'glitches_required', None)
-    if glitch_mode is not None:
-        glitch_value = getattr(glitch_mode, 'value', 0)
-        glitch_names = {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches',
-                       3: 'hybrid_major_glitches', 4: 'no_logic'}
-        glitch_mode = glitch_names.get(glitch_value, 'no_glitches')
-    else:
-        glitch_mode = 'no_glitches'
-
-    # Determine target region for pathfinding
-    region_name = target_region
-    if not region_name and location_name:
-        try:
-            location = state.multiworld.get_location(location_name, player)
-            region_name = location.parent_region.name
-        except (KeyError, AttributeError):
-            return False
-
-    if not region_name:
-        return False
-
-    return can_reach_via_bunny_path(state, player, region_name, is_inverted, glitch_mode)
-check_bunny_accessibility._internal_function = True
-'''
-
-    # Add bunny helper to helpers section
-    if bunny_helper_section:
-        helpers_section += bunny_helper_section
+    # Note: We intentionally do NOT add no_logic early return here.
+    # The exported rules already represent the correct logic for the seed.
+    # In particular, shop price rules (has_hearts, can_use_bombs, can_hold_arrows)
+    # were exported because they should be enforced even in no_logic mode.
+    # In the original ALttP world, shop price rules are added in create_shops()
+    # before set_rules(), so they're not skipped by the no_logic early return.
+    # By applying all exported rules, we correctly match the original behavior.
 
     # Add dungeon boss setup call if dungeons exist
     dungeon_setup_section = ''
@@ -1161,15 +1110,20 @@ def _setup_dungeon_bosses(multiworld, player: int) -> None:
     if rule_builder_imports:
         imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
 
-    # Add CollectionState import if we have helpers, lambda rules, dungeons, or bunny rules
+    # Add CollectionState import if we have helpers, lambda rules, or dungeons
     collection_state_import = ''
-    if has_helpers or needs_lambda or defeat_rule_functions or needs_bunny_helper:
+    if has_helpers or needs_lambda or defeat_rule_functions:
         collection_state_import = 'from BaseClasses import CollectionState\n'
 
     # Add math import if needed for sqrt, floor, etc.
     math_import = ''
     if helper_generator.uses_math:
         math_import = 'import math\n'
+
+    # Add logging import if needed for logging.debug, etc.
+    logging_import = ''
+    if helper_generator.uses_logging:
+        logging_import = 'import logging\n'
 
     # Add placement function imports if placement_lookup/search is used
     placement_lookup_import = ''
@@ -1190,8 +1144,8 @@ Auto-generated by world_generator.
 """
 
 from typing import {typing_import_str}
-{math_import}
-{placement_lookup_import}{collection_state_import}{bunny_import_section}{imports_section}
+{math_import}{logging_import}
+{placement_lookup_import}{collection_state_import}{imports_section}
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
     from worlds.AutoWorld import World
@@ -1246,48 +1200,6 @@ def _collect_rule_settings(data: ExtractedData) -> Set[str]:
             _extract_setting_values(exit_data.access_rule, settings)
 
     return settings - BUILTIN_SETTINGS
-
-
-def _check_for_bunny_rules(data: ExtractedData) -> bool:
-    """Check if any rules in the data use bunny_accessibility_check type.
-
-    Used to determine if we need to generate the check_bunny_accessibility helper.
-    """
-    def has_bunny_check(rule: Any) -> bool:
-        if not isinstance(rule, dict):
-            return False
-        # Check both native format and AST format
-        if rule.get('type') == 'bunny_accessibility_check':
-            return True
-        if rule.get('rule') == 'AST_bunny_accessibility_check':
-            return True
-        # Check nested structures
-        for value in rule.values():
-            if isinstance(value, dict):
-                if has_bunny_check(value):
-                    return True
-            elif isinstance(value, list):
-                for item in value:
-                    if isinstance(item, dict) and has_bunny_check(item):
-                        return True
-        return False
-
-    # Check location access rules
-    for loc_data in data.locations.values():
-        if loc_data.access_rule and has_bunny_check(loc_data.access_rule):
-            return True
-
-    # Check exit access rules
-    for exit_data in data.exits.values():
-        if exit_data.access_rule and has_bunny_check(exit_data.access_rule):
-            return True
-
-    # Check helper bodies
-    for helper_data in data.helpers.values():
-        if helper_data.body and has_bunny_check(helper_data.body):
-            return True
-
-    return False
 
 
 def _generate_option_class_from_definition(setting_name: str, option_def: Dict[str, Any]) -> tuple:
@@ -1648,6 +1560,7 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
     canonical_class_attr_entries = []  # For the class attribute (exporter to read)
+    advancement_loc_entries = []  # Locations that should have advancement items
     if canonical_seed is not None:
         # Prefer canonical_placements (from world class attribute) over original_placements
         placements_source = data.canonical_placements if data.canonical_placements else data.original_placements
@@ -1657,9 +1570,22 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 placement_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
                 canonical_class_attr_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
+                # Track locations that should have advancement items
+                if data.canonical_placement_advancements.get(loc_name, False):
+                    advancement_loc_entries.append(f'        "{loc_escaped}",')
 
     placements_content = '\n'.join(placement_entries)
     canonical_class_attr_content = '\n'.join(canonical_class_attr_entries)
+    advancement_loc_content = '\n'.join(advancement_loc_entries)
+
+    # Build canonical advancement dict (maps location -> original advancement value)
+    # This is used by the exporter to preserve original advancement values during cross-validation
+    canonical_advancement_entries = []
+    if canonical_seed is not None and data.canonical_placement_advancements:
+        for loc_name, advancement in data.canonical_placement_advancements.items():
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
+    canonical_advancement_content = '\n'.join(canonical_advancement_entries)
 
     # Find victory location and item
     victory_location = None
@@ -1772,26 +1698,76 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
         During tracking (generation_is_fake=True), we always place canonical items
         so that location_item_name() checks work correctly for self-locking rules.
         """
-        if not self.options.randomize_items.value or self.multiworld.generation_is_fake:
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 '''
     else:
         pre_fill_section = ''
@@ -1805,12 +1781,14 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
 '''
 
     # Build locked_placements dictionary
-    # When canonical_placements is available, LOCKED_PLACEMENTS should only contain
-    # items that are ALWAYS locked (like Victory events), not items that are
-    # canonical but should be randomizable.
+    # When canonical_placements is available OR canonical_seed is enabled,
+    # LOCKED_PLACEMENTS should only contain items that are ALWAYS locked
+    # (like Victory events), not items that are canonical but should be randomizable.
     # We determine this by checking if the item is an event (id=None).
+    # When canonical_seed is set, we build canonical_placements from original_placements,
+    # so non-event items will be placed via canonical_placements instead of LOCKED_PLACEMENTS.
     locked_entries = []
-    if data.canonical_placements:
+    if data.canonical_placements or canonical_seed is not None:
         # Only include truly locked items (events) - not canonical placements
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
@@ -1983,6 +1961,22 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     else:
         canonical_placements_section = ''
 
+    # Generate canonical_placement_advancements class attribute (for items with mixed classification)
+    canonical_placement_advancements_section = ''
+    if canonical_seed is not None and data.canonical_placement_advancements:
+        adv_entries = []
+        for loc_name, is_advancement in data.canonical_placement_advancements.items():
+            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+            adv_entries.append(f'        "{loc_escaped}": {is_advancement},')
+        adv_content = '\n'.join(adv_entries)
+        canonical_placement_advancements_section = f'''
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {{
+{adv_content}
+    }}
+'''
+
     # Generate __init__ method for world_attributes (game-specific instance attributes)
     init_section = ''
     needs_types_import = False
@@ -2037,16 +2031,45 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             shop_wrapper_section = '''
 
 class _RegionWrapper:
-    """Wrapper for region to provide can_reach interface for worldgen shops."""
+    """Wrapper for region to provide can_reach interface for worldgen shops.
+
+    This wrapper stores a region name and lazily resolves it to the actual
+    Region object. Once resolved, the Region object is cached to ensure
+    consistent behavior with the original ALttP world's shop.region.
+    """
     def __init__(self, region_name: str, world):
         self.name = region_name
         self._world = world
+        self._region = None  # Cache for the actual Region object
+        self.player = world.player if hasattr(world, 'player') else 1  # For compatibility
 
-    def can_reach(self, state) -> bool:
-        """Check if the region is reachable."""
+    def _get_region(self):
+        """Get the actual Region object, caching it for future use.
+
+        Only caches successful lookups to handle the case where this is called
+        before regions are created (during __init__).
+        """
+        if self._region is not None:
+            return self._region
         try:
             region = self._world.multiworld.get_region(self.name, self._world.player)
-            return state.can_reach_region(self.name, self._world.player)
+            self._region = region  # Cache only on success
+            return region
+        except KeyError:
+            return None
+
+    def can_reach(self, state) -> bool:
+        """Check if the region is reachable.
+
+        Delegates to the actual Region.can_reach() method to ensure proper
+        handling of state.stale checks and BFS updates. This is important
+        because Region.can_reach() will trigger a BFS update if the state
+        is stale, ensuring consistent behavior with the original world.
+        """
+        try:
+            # Look up the region from the STATE's multiworld and delegate to it
+            region = state.multiworld.get_region(self.name, self._world.player)
+            return region.can_reach(state)
         except KeyError:
             return False
 
@@ -2057,6 +2080,8 @@ class _ShopWrapper:
         self._data = shop_data
         self.region = _RegionWrapper(shop_data.get('region', ''), world)
         self.inventory = shop_data.get('inventory', [])
+        # New simplified format: list of unlimited item names
+        self.unlimited_items = shop_data.get('unlimited_items', [])
         self.room_id = shop_data.get('room_id', 0)
         self.shopkeeper_config = shop_data.get('shopkeeper_config', 0)
         self.custom = shop_data.get('custom', False)
@@ -2064,15 +2089,28 @@ class _ShopWrapper:
         self.sram_offset = shop_data.get('sram_offset', 0)
 
     def has_unlimited(self, item: str) -> bool:
-        """Check if the shop has unlimited supply of an item."""
+        """Check if the shop has unlimited supply of an item.
+
+        In ALttP's shop system:
+        - max: 0 (or not present) means unlimited stock of the base item
+        - max: N (N > 0) means limited stock, switches to replacement after N sales
+        """
+        # Check simplified unlimited_items list first (new format from ALttP exporter)
+        if item in self.unlimited_items:
+            return True
+        # Fall back to legacy inventory format
         for inv in self.inventory:
             if inv is None:
                 continue
-            if inv.get('max'):
+            max_stock = inv.get('max', 0)
+            if max_stock == 0:
+                # Unlimited stock of the base item
+                if inv.get('item') == item:
+                    return True
+            else:
+                # Limited stock, but the replacement is unlimited after stock runs out
                 if inv.get('replacement') == item:
                     return True
-            elif inv.get('item') == item:
-                return True
         return False
 
     def has(self, item: str) -> bool:
@@ -2101,11 +2139,12 @@ class _ShopWrapper:
 {create_shops_method}'''
 
     # Build itempool_counts dictionary
-    # When canonical_placements is available, we use the full itempool_counts
-    # (items are either in the pool for randomization, or placed canonically for seed=1).
-    # Subtract event items and starting items from the pool.
+    # When canonical_placements is available OR canonical_seed is enabled,
+    # we use the full itempool_counts (items are either in the pool for randomization,
+    # or placed canonically for seed=1). Only subtract event items and starting items.
+    # Non-event locked items are placed via canonical_placements in _place_original_items().
     itempool_entries = []
-    if data.canonical_placements:
+    if data.canonical_placements or canonical_seed is not None:
         # Count only event items that are locked (these are subtracted from pool)
         event_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
@@ -2126,7 +2165,8 @@ class _ShopWrapper:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements - subtract all locked items and starting items
+        # No canonical_placements and no canonical_seed - subtract all locked items and starting items
+        # (locked items are truly locked and won't go into the random pool)
         locked_item_counts: Dict[str, int] = {}
         for loc_name, item_name in data.locked_placements.items():
             if item_name:
@@ -2264,13 +2304,52 @@ class _ShopWrapper:
             item._hint_text = data.hint_text
 ''' if has_hint_text else ''
 
+    # Check if any items have classification_counts for create_item method
+    has_classification_counts = any(item.classification_counts for item in data.items.values())
+
+    # Generate create_item method with or without classification_counts handling
+    if has_classification_counts:
+        create_item_body = f'''        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {{}}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {{}}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {{
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }}
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = {class_name}Item(name, classification, data.id, self.player)
+        else:
+            item = {class_name}Item(name, data.classification, data.id, self.player)
+{hint_text_code}        return item'''
+    else:
+        create_item_body = f'''        item = {class_name}Item(name, data.classification, data.id, self.player)
+{hint_text_code}        return item'''
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
 Auto-generated by world_generator.
 """
 {canonical_imports}{types_import}
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -2335,7 +2414,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{progression_mapping_section}{canonical_placements_section}{canonical_placement_advancements_section}{init_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -2363,6 +2442,7 @@ class {world_class}(RuleWorldMixin, World):
                 # Create items with per-classification counts
                 classification_map = {{
                     'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
                     'useful': ItemClassification.useful,
                     'trap': ItemClassification.trap,
                     'filler': ItemClassification.filler,
@@ -2415,8 +2495,7 @@ class {world_class}(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = {class_name}Item(name, data.classification, data.id, self.player)
-{hint_text_code}        return item
+{create_item_body}
 
 {collect_item_section}{fill_slot_data_section}'''
 

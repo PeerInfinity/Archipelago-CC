@@ -392,18 +392,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           }
         ],
@@ -498,18 +491,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 2",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -648,18 +634,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 3",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -787,18 +766,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 4",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           }
         ],
@@ -1056,18 +1028,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 5",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           }
         ],
@@ -1159,18 +1124,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 6",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -1292,18 +1250,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Train"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -1420,18 +1371,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Barrel Battle)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dead Bird Studio"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1580,18 +1531,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1752,18 +1703,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1845,18 +1796,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 2",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Train"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -2487,18 +2431,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2654,18 +2591,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 2",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2815,18 +2745,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 3",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2999,18 +2922,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 4",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -3161,18 +3077,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 5",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -3349,28 +3258,26 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "_converted_from_ast": true,
+                  "kwargs": {
+                    "umbrella_only": {
+                      "rule": "True_"
+                    }
+                  }
                 },
                 {
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_relic_combo",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Crayon"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
                 }
               ]
             }
@@ -3696,11 +3603,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hookshot",
@@ -4217,18 +4119,11 @@
             "name": "Time Rift - Alpine Skyline Portal - Entrance 2",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Crayon"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Crayon",
+                "count": 4
+              }
             }
           },
           {
@@ -6577,7 +6472,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 50,
+        "classification_counts": {
+          "progression_skip_balancing": 40,
+          "progression": 10
+        }
       },
       "Time Piece": {
         "name": "Time Piece",
@@ -6588,7 +6487,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 40
+        "max_count": 40,
+        "classification_counts": {
+          "progression_skip_balancing": 26,
+          "progression": 14
+        }
       },
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",
@@ -9118,7 +9021,14 @@
                 "type": "constant",
                 "value": true
               },
-              "if_false": null
+              "if_false": {
+                "type": "item_check",
+                "item": "Progressive Painting Unlock",
+                "count": {
+                  "type": "name",
+                  "name": "count"
+                }
+              }
             },
             "if_false": {
               "type": "item_check",
@@ -9132,39 +9042,6 @@
         },
         "defaults": {
           "allow_skip": true
-        }
-      },
-      "has_relic_combo": {
-        "params": [
-          "relic"
-        ],
-        "body": {
-          "type": "group_check",
-          "group": {
-            "type": "name",
-            "name": "relic"
-          },
-          "count": {
-            "type": "helper",
-            "name": "len",
-            "args": [
-              {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "item_name_groups"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "relic"
-                }
-              }
-            ]
-          }
         }
       },
       "painting_logic": {
@@ -9409,24 +9286,62 @@
             "name": "can_shoot_arrows"
           },
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Blue Boomerang",
-                  "Cane of Byrna",
-                  "Cane of Somaria",
-                  "Fire Rod",
-                  "Hookshot",
-                  "Ice Rod",
-                  "Red Boomerang"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Blue Boomerang"
+          },
+          {
+            "type": "item_check",
+            "item": "Cane of Byrna"
+          },
+          {
+            "type": "item_check",
+            "item": "Cane of Somaria"
+          },
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Hookshot"
+          },
+          {
+            "type": "item_check",
+            "item": "Ice Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Red Boomerang"
           }
         ]
+      },
+      "can_bomb_clip": {
+        "params": [
+          "region"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_use_bombs"
+            },
+            {
+              "type": "helper",
+              "name": "is_not_bunny",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "region"
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Pegasus Boots"
+            }
+          ]
+        }
       },
       "can_bomb_or_bonk": {
         "type": "or",
@@ -9440,6 +9355,70 @@
             "name": "can_use_bombs"
           }
         ]
+      },
+      "can_boots_clip_dw": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "option_value",
+            "option": "mode"
+          },
+          "op": "!=",
+          "right": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Pegasus Boots"
+            },
+            {
+              "type": "item_check",
+              "item": "Moon Pearl"
+            }
+          ]
+        },
+        "if_false": {
+          "type": "item_check",
+          "item": "Pegasus Boots"
+        }
+      },
+      "can_boots_clip_lw": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "option_value",
+            "option": "mode"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Pegasus Boots"
+            },
+            {
+              "type": "item_check",
+              "item": "Moon Pearl"
+            }
+          ]
+        },
+        "if_false": {
+          "type": "item_check",
+          "item": "Pegasus Boots"
+        }
       },
       "can_buy": {
         "params": [
@@ -9798,6 +9777,90 @@
           "smallmagic": 16,
           "fullrefill": false
         }
+      },
+      "can_get_glitched_speed_dw": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "rules",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                },
+                {
+                  "type": "helper",
+                  "name": "any",
+                  "args": [
+                    {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot"
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_sword"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "option_value",
+                "option": "mode"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            "body": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "rules"
+                  },
+                  "attr": "append"
+                },
+                "args": [
+                  {
+                    "type": "item_check",
+                    "item": "Moon Pearl"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "helper",
+              "name": "all",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "rules"
+                }
+              ]
+            }
+          }
+        ]
       },
       "can_get_good_bee": {
         "type": "block",
@@ -10230,6 +10293,79 @@
           "enemies": 5
         }
       },
+      "can_kill_standard_start": {
+        "params": [
+          "enemies"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "has_melee_weapon"
+            },
+            {
+              "type": "item_check",
+              "item": "Cane of Somaria"
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Cane of Byrna"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "name",
+                        "name": "enemies"
+                      },
+                      "op": "<",
+                      "right": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_extend_magic"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Bow"
+            },
+            {
+              "type": "item_check",
+              "item": "Progressive Bow"
+            },
+            {
+              "type": "item_check",
+              "item": "Fire Rod"
+            },
+            {
+              "type": "helper",
+              "name": "can_use_bombs",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "enemies"
+                }
+              ]
+            }
+          ]
+        },
+        "defaults": {
+          "enemies": 5
+        }
+      },
       "can_lift_heavy_rocks": {
         "type": "item_check",
         "item": "Titans Mitts"
@@ -10634,9 +10770,6 @@
               }
             }
           ]
-        },
-        "param_mappings": {
-          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -10708,6 +10841,54 @@
           {
             "type": "item_check",
             "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_triforce_pieces": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "count",
+            "value": {
+              "type": "world_attribute",
+              "attribute": "treasure_hunt_required"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Triforce Piece"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Power Star"
+                    }
+                  ]
+                }
+              },
+              "op": ">=",
+              "right": {
+                "type": "name",
+                "name": "count"
+              }
+            }
           }
         ]
       },
@@ -10858,6 +11039,127 @@
                 "name": "region"
               },
               "attr": "is_dark_world"
+            }
+          }
+        }
+      },
+      "shop_price_rules": {
+        "params": [
+          "location"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "location"
+              },
+              "attr": "shop_price_type"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 1
+            }
+          },
+          "if_true": {
+            "type": "helper",
+            "name": "has_hearts",
+            "args": [
+              {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "attr": "shop_price"
+                  },
+                  "op": "//",
+                  "right": {
+                    "type": "constant",
+                    "value": 8
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "location"
+                },
+                "attr": "shop_price_type"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            "if_true": {
+              "type": "helper",
+              "name": "can_use_bombs",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "shop_price"
+                }
+              ]
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "shop_price_type"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 4
+                }
+              },
+              "if_true": {
+                "type": "helper",
+                "name": "can_hold_arrows",
+                "args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "attr": "shop_price"
+                  }
+                ]
+              },
+              "if_false": null
             }
           }
         }

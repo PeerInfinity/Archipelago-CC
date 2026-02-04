@@ -24,9 +24,9 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 
-from ..config import load_config, save_config, InstallerConfig
+from ..config import load_config, save_config, InstallerConfig, configure_export_settings, EXPORT_PRESETS
 from ..installer.version_detector import detect_ap_version, get_version_support_status
-from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity
+from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity, check_installer_compatibility
 from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
 from ..installer.patcher import apply_bundled_patches, revert_patches, get_patch_summary
 from ..installer.romless_patcher import apply_romless_patches, revert_romless_patches
@@ -58,9 +58,15 @@ class InstallerApp(App):
     comp_testing = BooleanProperty(False)
     comp_worldgen_worlds = BooleanProperty(False)
 
-    # Post-install options
-    apply_main_patches_after = BooleanProperty(True)
-    apply_romless_patches_after = BooleanProperty(True)
+    # Patch options (monkey patch and main patches are mutually exclusive)
+    apply_monkey_patch = BooleanProperty(True)
+    apply_main_patches = BooleanProperty(False)
+    apply_romless_patches = BooleanProperty(False)
+
+    # Export settings configuration
+    configure_export = BooleanProperty(True)
+    export_preset_normal = BooleanProperty(True)
+    export_preset_minimal = BooleanProperty(False)
 
     # Store checkbox references for updating
     component_checkboxes = {}
@@ -203,9 +209,9 @@ class InstallerApp(App):
         scroll_view.add_widget(components_box)
         root.add_widget(scroll_view)
 
-        # Post-install options
+        # Patch options
         options_label = Label(
-            text='Post-Install Options:',
+            text='Apply patches after download:',
             size_hint_y=None,
             height=25,
             halign='left',
@@ -215,17 +221,35 @@ class InstallerApp(App):
 
         options_box = BoxLayout(size_hint_y=None, height=35, spacing=10)
 
-        # Apply main patches checkbox
-        main_patch_row = BoxLayout(size_hint_x=0.5)
-        self.apply_main_cb = CheckBox(
-            active=self.apply_main_patches_after,
+        # Monkey patch checkbox (default checked)
+        monkey_row = BoxLayout(size_hint_x=0.33)
+        self.monkey_patch_cb = CheckBox(
+            active=self.apply_monkey_patch,
             size_hint_x=None,
             width=40,
         )
-        self.apply_main_cb.bind(active=lambda inst, val: setattr(self, 'apply_main_patches_after', val))
-        main_patch_row.add_widget(self.apply_main_cb)
+        self.monkey_patch_cb.bind(active=self.on_monkey_patch_toggle)
+        monkey_row.add_widget(self.monkey_patch_cb)
+        monkey_label = Label(
+            text='Monkey patch',
+            halign='left',
+            valign='middle',
+        )
+        monkey_label.bind(size=monkey_label.setter('text_size'))
+        monkey_row.add_widget(monkey_label)
+        options_box.add_widget(monkey_row)
+
+        # Main patches checkbox (default unchecked, mutually exclusive with monkey patch)
+        main_patch_row = BoxLayout(size_hint_x=0.33)
+        self.main_patch_cb = CheckBox(
+            active=self.apply_main_patches,
+            size_hint_x=None,
+            width=40,
+        )
+        self.main_patch_cb.bind(active=self.on_main_patch_toggle)
+        main_patch_row.add_widget(self.main_patch_cb)
         main_patch_label = Label(
-            text='Apply main patches after download',
+            text='Main patches',
             halign='left',
             valign='middle',
         )
@@ -233,17 +257,17 @@ class InstallerApp(App):
         main_patch_row.add_widget(main_patch_label)
         options_box.add_widget(main_patch_row)
 
-        # Apply romless patches checkbox
-        romless_row = BoxLayout(size_hint_x=0.5)
-        self.apply_romless_cb = CheckBox(
-            active=self.apply_romless_patches_after,
+        # ROM-less patches checkbox (default unchecked)
+        romless_row = BoxLayout(size_hint_x=0.33)
+        self.romless_patch_cb = CheckBox(
+            active=self.apply_romless_patches,
             size_hint_x=None,
             width=40,
         )
-        self.apply_romless_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches_after', val))
-        romless_row.add_widget(self.apply_romless_cb)
+        self.romless_patch_cb.bind(active=lambda inst, val: setattr(self, 'apply_romless_patches', val))
+        romless_row.add_widget(self.romless_patch_cb)
         romless_label = Label(
-            text='Apply ROM-less patches after download',
+            text='ROM-less patches',
             halign='left',
             valign='middle',
         )
@@ -252,6 +276,76 @@ class InstallerApp(App):
         options_box.add_widget(romless_row)
 
         root.add_widget(options_box)
+
+        # Export settings configuration
+        export_label = Label(
+            text='Configure export settings in host.yaml:',
+            size_hint_y=None,
+            height=25,
+            halign='left',
+        )
+        export_label.bind(size=export_label.setter('text_size'))
+        root.add_widget(export_label)
+
+        export_box = BoxLayout(size_hint_y=None, height=35, spacing=10)
+
+        # Configure export checkbox
+        config_export_row = BoxLayout(size_hint_x=0.4)
+        self.config_export_cb = CheckBox(
+            active=self.configure_export,
+            size_hint_x=None,
+            width=40,
+        )
+        self.config_export_cb.bind(active=lambda inst, val: setattr(self, 'configure_export', val))
+        config_export_row.add_widget(self.config_export_cb)
+        config_label = Label(
+            text='Configure host.yaml',
+            halign='left',
+            valign='middle',
+        )
+        config_label.bind(size=config_label.setter('text_size'))
+        config_export_row.add_widget(config_label)
+        export_box.add_widget(config_export_row)
+
+        # Normal preset radio
+        normal_row = BoxLayout(size_hint_x=0.3)
+        self.preset_normal_cb = CheckBox(
+            group='export_preset',
+            active=True,
+            size_hint_x=None,
+            width=40,
+        )
+        self.preset_normal_cb.bind(active=self.on_preset_normal)
+        normal_row.add_widget(self.preset_normal_cb)
+        normal_label = Label(
+            text='Normal',
+            halign='left',
+            valign='middle',
+        )
+        normal_label.bind(size=normal_label.setter('text_size'))
+        normal_row.add_widget(normal_label)
+        export_box.add_widget(normal_row)
+
+        # Minimal-spoilers preset radio
+        minimal_row = BoxLayout(size_hint_x=0.3)
+        self.preset_minimal_cb = CheckBox(
+            group='export_preset',
+            active=False,
+            size_hint_x=None,
+            width=40,
+        )
+        self.preset_minimal_cb.bind(active=self.on_preset_minimal)
+        minimal_row.add_widget(self.preset_minimal_cb)
+        minimal_label = Label(
+            text='Minimal spoilers',
+            halign='left',
+            valign='middle',
+        )
+        minimal_label.bind(size=minimal_label.setter('text_size'))
+        minimal_row.add_widget(minimal_label)
+        export_box.add_widget(minimal_row)
+
+        root.add_widget(export_box)
 
         # Status area
         self.status_label = Label(
@@ -287,10 +381,18 @@ class InstallerApp(App):
 
         root.add_widget(button_box)
 
-        # Close button
-        close_btn = Button(text='Close', size_hint_y=None, height=40)
+        # Bottom button row (Help and Close)
+        bottom_btn_box = BoxLayout(size_hint_y=None, height=40, spacing=10)
+
+        help_btn = Button(text='Help')
+        help_btn.bind(on_press=self.show_help)
+        bottom_btn_box.add_widget(help_btn)
+
+        close_btn = Button(text='Close')
         close_btn.bind(on_press=self.stop)
-        root.add_widget(close_btn)
+        bottom_btn_box.add_widget(close_btn)
+
+        root.add_widget(bottom_btn_box)
 
         return root
 
@@ -312,6 +414,38 @@ class InstallerApp(App):
         prop_name = f'comp_{name}'
         if hasattr(self, prop_name):
             setattr(self, prop_name, value)
+
+    def on_monkey_patch_toggle(self, instance, value: bool):
+        """Handle monkey patch checkbox toggle - mutually exclusive with main patches."""
+        self.apply_monkey_patch = value
+        if value and self.apply_main_patches:
+            # Uncheck main patches when monkey patch is checked
+            self.apply_main_patches = False
+            self.main_patch_cb.active = False
+
+    def on_main_patch_toggle(self, instance, value: bool):
+        """Handle main patch checkbox toggle - mutually exclusive with monkey patch."""
+        self.apply_main_patches = value
+        if value and self.apply_monkey_patch:
+            # Uncheck monkey patch when main patches is checked
+            self.apply_monkey_patch = False
+            self.monkey_patch_cb.active = False
+
+    def on_preset_normal(self, instance, value: bool):
+        """Handle normal preset selection."""
+        if value:
+            self.export_preset_normal = True
+            self.export_preset_minimal = False
+
+    def on_preset_minimal(self, instance, value: bool):
+        """Handle minimal-spoilers preset selection."""
+        if value:
+            self.export_preset_minimal = True
+            self.export_preset_normal = False
+
+    def get_selected_export_preset(self) -> str:
+        """Get the selected export preset name."""
+        return "minimal-spoilers" if self.export_preset_minimal else "normal"
 
     def do_check_all(self, instance):
         """Check all component checkboxes."""
@@ -360,6 +494,138 @@ class InstallerApp(App):
 
         Clock.schedule_once(show)
 
+    def show_confirmation_dialog(self, title: str, message: str, event: threading.Event, result_holder: list):
+        """
+        Show a confirmation dialog and set the event when user responds.
+
+        Args:
+            title: Dialog title.
+            message: Dialog message.
+            event: Threading event to signal when dialog is dismissed.
+            result_holder: List to store the result (True for confirm, False for cancel).
+        """
+        def show(dt):
+            content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+
+            # Message label with text wrapping
+            msg_label = Label(
+                text=message,
+                halign='left',
+                valign='top',
+                size_hint_y=0.8,
+            )
+            msg_label.bind(size=msg_label.setter('text_size'))
+            content.add_widget(msg_label)
+
+            # Button row
+            btn_box = BoxLayout(size_hint_y=None, height=40, spacing=10)
+
+            proceed_btn = Button(text='Proceed')
+            cancel_btn = Button(text='Cancel')
+
+            btn_box.add_widget(proceed_btn)
+            btn_box.add_widget(cancel_btn)
+            content.add_widget(btn_box)
+
+            popup = Popup(
+                title=title,
+                content=content,
+                size_hint=(0.85, 0.6),
+                auto_dismiss=False,
+            )
+
+            def on_proceed(instance):
+                result_holder.append(True)
+                popup.dismiss()
+                event.set()
+
+            def on_cancel(instance):
+                result_holder.append(False)
+                popup.dismiss()
+                event.set()
+
+            proceed_btn.bind(on_press=on_proceed)
+            cancel_btn.bind(on_press=on_cancel)
+            popup.open()
+
+        Clock.schedule_once(show)
+
+    def show_help(self, instance):
+        """Show help information about the installer."""
+        help_text = """JSON Tools Installer Help
+
+PATCH OPTIONS
+The installer offers three ways to enable JSON export functionality:
+
+[b]Monkey Patch[/b] (Recommended)
+Runtime patching that hooks into Archipelago without modifying files. Safe, reversible, and works across AP versions.
+
+[b]Main Patches[/b]
+Replaces core Archipelago files (Main.py, BaseClasses.py, settings.py) with patched versions. Original files are backed up. Requires confirmation before applying.
+
+[b]ROM-less Patches[/b]
+Additional patches that allow seed generation for games that normally require ROM files. Useful for testing.
+
+Note: Monkey patch and Main patches are mutually exclusive - you can use one or the other, or neither.
+
+EXPORT SETTINGS
+Configure how Archipelago exports game data to host.yaml:
+
+[b]Configure host.yaml[/b]
+When enabled, the installer automatically adds export settings to your host.yaml file. This eliminates the need to manually run setup scripts after installation.
+
+[b]Normal[/b]
+Standard settings with JSON export disabled. Use this if you only want the tools installed but don't need automatic JSON export during seed generation.
+
+[b]Minimal spoilers[/b]
+Enables JSON rules export and sphere logging. This is what you need to use the frontend web UI for viewing game logic and playthroughs. Automatically updates frontend presets when generating seeds.
+
+COMPONENTS
+Select which parts of JSON Tools to install:
+- Core modules (exporter, rule_builder, world_generator)
+- Frontend web UI for viewing game logic
+- Scripts for testing and setup
+- Documentation
+- Demo worlds for learning
+
+VERSION
+- Stable: Release-quality code from JSONExport branch
+- Dev: Latest development code (may be unstable)
+
+For more information, see the README.md file."""
+
+        content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+
+        # Use ScrollView for the help text
+        scroll = ScrollView(size_hint_y=0.9, do_scroll_x=False)
+        help_label = Label(
+            text=help_text,
+            markup=True,
+            halign='left',
+            valign='top',
+            size_hint=(1, None),
+            text_size=(None, None),
+        )
+        # Bind width to scroll width (minus padding) for text wrapping
+        def update_text_width(instance, value):
+            help_label.text_size = (value - 20, None)
+        scroll.bind(width=update_text_width)
+        # Bind height to texture height for scrolling
+        help_label.bind(texture_size=lambda inst, size: setattr(inst, 'height', size[1]))
+        scroll.add_widget(help_label)
+        content.add_widget(scroll)
+
+        ok_btn = Button(text='OK', size_hint_y=None, height=40)
+        content.add_widget(ok_btn)
+
+        popup = Popup(
+            title='JSON Tools Installer Help',
+            content=content,
+            size_hint=(0.9, 0.85),
+        )
+        ok_btn.bind(on_press=popup.dismiss)
+        popup.open()
+
     def do_install(self, instance):
         """Start installation in background thread."""
         if self.is_working:
@@ -385,6 +651,23 @@ class InstallerApp(App):
 
             if not check_connectivity():
                 self.show_message("Error", "Cannot reach GitHub. Check your internet connection.")
+                return
+
+            self.update_status(f"Checking installer compatibility...")
+            self.update_progress(7)
+
+            compat = check_installer_compatibility(source)
+            if not compat.compatible:
+                if compat.error:
+                    self.show_message("Error", compat.error)
+                else:
+                    error_msg = f"Installer version {compat.current_version} is too old.\n"
+                    error_msg += f"Minimum required: {compat.required_version}\n\n"
+                    if compat.message:
+                        error_msg += f"{compat.message}\n\n"
+                    if compat.download_url:
+                        error_msg += f"Download the latest installer from:\n{compat.download_url}"
+                    self.show_message("Installer Update Required", error_msg)
                 return
 
             self.update_status(f"Downloading from {source.repo}...")
@@ -418,21 +701,81 @@ class InstallerApp(App):
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
 
-                # Apply main patches if selected and checkbox is checked
-                if "main_patches" in components and self.apply_main_patches_after:
-                    self.update_status("Applying main patches...")
+                # Apply patches based on selected option
+                if self.apply_monkey_patch:
+                    # Monkey patching - runtime hooks
+                    self.update_status("Installing monkey patch hooks...")
                     self.update_progress(85)
-                    patch_result = apply_bundled_patches(self.config)
-                    if not patch_result.success:
-                        self.show_message("Warning", f"Main patch issues: {patch_result.errors}")
+                    from ..monkey_patches import install_hooks
+                    hook_results = install_hooks()
+                    success_count = sum(1 for v in hook_results.values() if v)
+                    if success_count < len(hook_results):
+                        self.show_message("Warning", f"Only {success_count}/{len(hook_results)} hooks installed")
+                    self.config.patches.method = "monkey"
 
-                # Apply ROM-less patches if selected and checkbox is checked
-                if "romless_patches" in components and self.apply_romless_patches_after:
+                elif self.apply_main_patches and "main_patches" in components:
+                    # File-based patching - needs confirmation
+                    from ..installer.patcher import PATCH_FILES
+
+                    confirm_message = (
+                        "File-based patching will modify the following core Archipelago files:\n\n"
+                        + "\n".join(f"  - {f}" for f in PATCH_FILES) +
+                        "\n\n"
+                        "These patches enable JSON export and sphere logging functionality.\n"
+                        "Original files will be backed up and can be restored later.\n\n"
+                        "Do you want to proceed with file-based patching?"
+                    )
+
+                    # Show confirmation dialog and wait for response
+                    confirm_event = threading.Event()
+                    confirm_result = []
+                    self.show_confirmation_dialog(
+                        "Confirm File Patching",
+                        confirm_message,
+                        confirm_event,
+                        confirm_result,
+                    )
+                    confirm_event.wait()  # Block until user responds
+
+                    if confirm_result and confirm_result[0]:
+                        self.update_status("Applying main patches...")
+                        self.update_progress(85)
+                        patch_result = apply_bundled_patches(self.config)
+                        if not patch_result.success:
+                            self.show_message("Warning", f"Main patch issues: {patch_result.errors}")
+                        else:
+                            self.config.patches.method = "file"
+                    else:
+                        self.update_status("File patching cancelled, using no patches...")
+                        self.config.patches.method = "none"
+
+                else:
+                    # No patching selected
+                    self.config.patches.method = "none"
+
+                # Apply ROM-less patches if checkbox is checked
+                if self.apply_romless_patches and "romless_patches" in components:
                     self.update_status("Applying ROM-less patches...")
                     self.update_progress(90)
                     romless_result = apply_romless_patches(self.config)
                     if not romless_result.success:
                         self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
+
+                # Configure export settings in host.yaml
+                if self.configure_export:
+                    preset = self.get_selected_export_preset()
+                    self.update_status(f"Configuring export settings ({preset})...")
+                    self.update_progress(95)
+                    if configure_export_settings(preset=preset):
+                        if preset == "minimal-spoilers":
+                            self.update_status("Export settings configured (JSON export enabled)")
+                    else:
+                        self.show_message(
+                            "Warning",
+                            "Could not configure export settings in host.yaml.\n"
+                            "You may need to run:\n"
+                            "python scripts/setup/update_host_settings.py minimal-spoilers"
+                        )
 
                 self.update_progress(100)
                 self.update_status("Installation complete!")

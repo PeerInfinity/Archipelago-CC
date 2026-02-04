@@ -6,22 +6,42 @@ that uses the Rule Builder pattern.
 """
 
 import copy
+import logging
+import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
+
+from rule_builder import BOOLEAN_RULE_TYPES
+from ._codegen_utils import (
+    is_placement_lookup,
+    extract_placement_location,
+    extract_items_from_list,
+    check_placement_comparison,
+    escape_string,
+    generate_world_attribute_expr,
+    extract_constant,
+    get_helper_function_name,
+)
+
+logger = logging.getLogger(__name__)
 
 
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from AST format rules."""
 
-    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None) -> None:
+    def __init__(self, game_name: str = "", settings: Dict[str, Any] = None,
+                 option_definitions: Dict[str, Any] = None) -> None:
         self.required_imports: Set[str] = set()
         self.game_name = game_name
         self.settings = settings or {}  # Resolved settings for evaluating setting_value nodes
+        self.option_definitions = option_definitions or {}  # Option definitions for Choice value lookups
         # Sanitize game name for use in Python identifiers
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower() if game_name else ""
         self.known_helpers: Set[str] = set()
         self.helper_bodies: Dict[str, Dict[str, Any]] = {}  # helper_name -> AST format body
         self._inline_counter: int = 0  # Counter for generating unique variable prefixes
+        self.entrance_regions: Dict[str, str] = {}  # entrance_name -> parent_region_name
+        self.entrance_connections: Dict[str, str] = {}  # entrance_name -> connected_region_name
         # Context for current location/entrance being processed
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
@@ -52,6 +72,33 @@ class RuleCodeGenerator:
         self.helper_params = helper_params or {}  # helper_name -> list of param names
         self.helper_defaults = helper_defaults or {}  # helper_name -> dict of param_name -> default_value
         self.placements = placements or {}  # location_name -> item_name
+
+    def set_entrance_regions(self, entrance_regions: Dict[str, str]) -> None:
+        """Set the entrance-to-parent-region mapping.
+
+        This is used to resolve Attribute rules like `entrance.parent_region`
+        when the entrance name is known. For example, 'kikiskip.parent_region'
+        would resolve to the parent region of the 'Kiki Skip' entrance.
+
+        Args:
+            entrance_regions: Dict mapping entrance name (lowercase) to parent region name
+        """
+        self.entrance_regions = entrance_regions
+
+    def set_entrance_connections(self, entrance_connections: Dict[str, str]) -> None:
+        """Set the entrance-to-connected-region mapping.
+
+        This is used to resolve dict_lambda_lookup patterns like:
+            rule_map.get(world.get_entrance('X').connected_region.name, default)
+
+        When entrance shuffle is vanilla, we know the exact connections at export
+        time, so we can resolve the key and return just the matching case instead
+        of OR'ing all cases together.
+
+        Args:
+            entrance_connections: Dict mapping entrance name to connected region name
+        """
+        self.entrance_connections = entrance_connections or {}
 
     def _expand_helper_refs(self, rule: Dict[str, Any], visited: Set[str] = None, depth: int = 0) -> Dict[str, Any]:
         """
@@ -330,6 +377,218 @@ class RuleCodeGenerator:
 
         return None
 
+    def _evaluate_compare_rule(self, arg: Dict[str, Any]) -> Optional[str]:
+        """
+        Evaluate a Compare rule to a boolean repr string if possible.
+
+        Handles comparisons where one or both sides can be resolved to constants
+        at generation time. This is particularly useful for option comparisons
+        like `options.logic == "glitched"` which can be evaluated based on the
+        settings values available during generation.
+
+        Returns:
+            'True' or 'False' if the comparison can be evaluated,
+            None if the comparison cannot be fully resolved.
+        """
+        if not isinstance(arg, dict):
+            return None
+
+        # Handle both AST format (type='compare') and Rule Builder format (rule='Compare')
+        arg_rule = arg.get('rule', '')
+        arg_type = arg.get('type', '')
+
+        if arg_rule == 'Compare':
+            args = arg.get('args', {})
+            left = args.get('left')
+            op = args.get('op', '==')
+            right = args.get('right')
+        elif arg_type == 'compare':
+            left = arg.get('left')
+            op = arg.get('op', '==')
+            right = arg.get('right')
+        else:
+            return None
+
+        # Resolve left operand
+        left_val = self._resolve_compare_operand(left)
+        # Resolve right operand
+        right_val = self._resolve_compare_operand(right)
+
+        if left_val is None or right_val is None:
+            return None
+
+        # Handle Choice option comparisons where the setting value is numeric
+        # but the comparison is against a string option key (e.g., logic == "glitched")
+        # In this case, we need to convert the string to its numeric value
+        if isinstance(left_val, int) and isinstance(right_val, str):
+            # First try to get the setting name from the operand
+            setting_name = self._get_setting_name_from_operand(left)
+            if setting_name:
+                converted = self._convert_option_key_to_value(setting_name, right_val)
+                if converted is not None:
+                    right_val = converted
+            else:
+                # If the operand was already resolved to a raw value, try all option definitions
+                converted = self._try_convert_option_key_all_defs(left_val, right_val)
+                if converted is not None:
+                    right_val = converted
+        elif isinstance(right_val, int) and isinstance(left_val, str):
+            # Same for reversed operands
+            setting_name = self._get_setting_name_from_operand(right)
+            if setting_name:
+                converted = self._convert_option_key_to_value(setting_name, left_val)
+                if converted is not None:
+                    left_val = converted
+            else:
+                # If the operand was already resolved to a raw value, try all option definitions
+                converted = self._try_convert_option_key_all_defs(right_val, left_val)
+                if converted is not None:
+                    left_val = converted
+
+        # Evaluate the comparison
+        try:
+            if op in ('==', 'eq'):
+                result = left_val == right_val
+            elif op in ('!=', 'ne', 'noteq'):
+                result = left_val != right_val
+            elif op in ('<', 'lt'):
+                result = left_val < right_val
+            elif op in ('<=', 'le', 'lte'):
+                result = left_val <= right_val
+            elif op in ('>', 'gt'):
+                result = left_val > right_val
+            elif op in ('>=', 'ge', 'gte'):
+                result = left_val >= right_val
+            elif op == 'in':
+                result = left_val in right_val
+            elif op in ('not in', 'notin'):
+                result = left_val not in right_val
+            else:
+                return None
+            return repr(result)
+        except (TypeError, ValueError):
+            return None
+
+    def _get_setting_name_from_operand(self, operand: Any) -> Optional[str]:
+        """Extract the setting name from a SettingValue/OptionValue operand."""
+        if not isinstance(operand, dict):
+            return None
+        rule_type = operand.get('rule', '')
+        ast_type = operand.get('type', '')
+
+        if rule_type == 'SettingValue':
+            return operand.get('args', {}).get('setting', '')
+        if rule_type == 'OptionValue':
+            return operand.get('args', {}).get('option', '')
+        if ast_type == 'setting_value':
+            return operand.get('setting', '')
+        if ast_type == 'option_value':
+            return operand.get('option', '')
+        if rule_type == 'AST_setting_value':
+            return operand.get('args', {}).get('setting', '')
+        return None
+
+    def _convert_option_key_to_value(self, setting_name: str, key: str) -> Optional[int]:
+        """
+        Convert an option key string (like 'glitched') to its numeric value.
+
+        For Choice options, keys map to values via option_<key> = <value> pattern.
+        This looks up the option definition to find the mapping.
+        """
+        # Check option_definitions if available
+        if hasattr(self, 'option_definitions') and setting_name in self.option_definitions:
+            opt_def = self.option_definitions[setting_name]
+            # name_lookup maps int -> string, so we need to reverse it
+            name_lookup = opt_def.get('name_lookup', {})
+            for int_val, str_key in name_lookup.items():
+                if str_key == key:
+                    return int(int_val)
+            # Also try choices format (string -> int) for compatibility
+            choices = opt_def.get('choices', {})
+            if key in choices:
+                return choices[key]
+        return None
+
+    def _try_convert_option_key_all_defs(self, int_val: int, str_key: str) -> Optional[int]:
+        """
+        Try to convert a string option key to its numeric value by checking all option definitions.
+
+        This is used when the Compare operand was already resolved to a raw integer value
+        (e.g., the exporter resolved options.logic to 1), and we need to find if the string
+        matches this value in any option definition.
+
+        Returns the integer value if a match is found, None otherwise.
+        """
+        if not hasattr(self, 'option_definitions'):
+            return None
+
+        for setting_name, opt_def in self.option_definitions.items():
+            # Check name_lookup (int -> string mapping)
+            name_lookup = opt_def.get('name_lookup', {})
+            for defined_int, defined_str in name_lookup.items():
+                if defined_str == str_key and int(defined_int) == int_val:
+                    # Found a match: the string key maps to the same int value
+                    return int_val
+            # Also try choices format (string -> int)
+            choices = opt_def.get('choices', {})
+            if str_key in choices and choices[str_key] == int_val:
+                return int_val
+        return None
+
+    def _resolve_compare_operand(self, operand: Any) -> Any:
+        """
+        Resolve a compare operand to a concrete value if possible.
+
+        Handles:
+        - Raw values (strings, numbers, bools)
+        - Constant rules (AST and Rule Builder formats)
+        - SettingValue rules (resolves from self.settings)
+        - OptionValue rules (resolves from self.settings)
+        - WorldAttribute rules (resolves from self.world_attributes)
+        """
+        if operand is None:
+            return None
+
+        # Raw value
+        if not isinstance(operand, dict):
+            return operand
+
+        rule_type = operand.get('rule', '')
+        ast_type = operand.get('type', '')
+
+        # Constant values
+        if rule_type == 'Constant':
+            return operand.get('args', {}).get('value')
+        if ast_type == 'constant':
+            return operand.get('value')
+
+        # Setting/Option values
+        if rule_type == 'SettingValue':
+            setting = operand.get('args', {}).get('setting', '')
+            return self.settings.get(setting)
+        if rule_type == 'OptionValue':
+            option = operand.get('args', {}).get('option', '')
+            return self.settings.get(option)
+        if ast_type == 'setting_value':
+            setting = operand.get('setting', '')
+            return self.settings.get(setting)
+        if ast_type == 'option_value':
+            option = operand.get('option', '')
+            return self.settings.get(option)
+        if rule_type == 'AST_setting_value':
+            setting = operand.get('args', {}).get('setting', '')
+            return self.settings.get(setting)
+
+        # World attributes
+        if rule_type == 'WorldAttribute':
+            attribute = operand.get('args', {}).get('attribute', '')
+            return self.world_attributes.get(attribute)
+        if ast_type == 'world_attribute':
+            attribute = operand.get('attribute', '')
+            return self.world_attributes.get(attribute)
+
+        return None
+
     def _evaluate_arithmetic_constant(self, arg: Dict[str, Any]) -> Optional[str]:
         """
         Evaluate an Arithmetic rule to a constant repr string if possible.
@@ -372,6 +631,88 @@ class RuleCodeGenerator:
             return repr(result)
         except (ZeroDivisionError, TypeError, ValueError):
             return 'None'
+
+    def _evaluate_binary_op_constant(self, arg: Dict[str, Any]) -> Optional[str]:
+        """
+        Evaluate an AST-format binary_op to a constant repr string if possible.
+
+        This handles the AST format:
+        {"type": "binary_op", "left": {...}, "op": "*", "right": {...}}
+
+        Returns repr(result) if both operands are numeric constants,
+        'None' if evaluation fails or operands aren't constants,
+        or None if arg is not a binary_op.
+        """
+        if not isinstance(arg, dict):
+            return None
+        if arg.get('type') != 'binary_op':
+            return None
+
+        left_node = arg.get('left', {})
+        op = arg.get('op', '+')
+        right_node = arg.get('right', {})
+
+        # Extract values from operand nodes
+        left = self._extract_constant_value(left_node)
+        right = self._extract_constant_value(right_node)
+
+        # Both operands must be numeric constants
+        if not (isinstance(left, (int, float)) and isinstance(right, (int, float))):
+            return 'None'
+
+        try:
+            if op == '+':
+                result = left + right
+            elif op == '-':
+                result = left - right
+            elif op == '*':
+                result = left * right
+            elif op == '/':
+                result = left / right
+            elif op == '//':
+                result = left // right
+            elif op == '%':
+                result = left % right
+            elif op == '**':
+                result = left ** right
+            else:
+                return 'None'
+            return repr(result)
+        except (ZeroDivisionError, TypeError, ValueError):
+            return 'None'
+
+    def _extract_constant_value(self, node: Any) -> Any:
+        """
+        Extract a constant value from an AST node.
+
+        Handles:
+        - {"type": "constant", "value": X}
+        - {"rule": "Constant", "args": {"value": X}}
+        - Primitive values (int, float, str, etc.)
+        - Nested binary_op (recursively evaluated)
+        """
+        if not isinstance(node, dict):
+            return node
+
+        node_type = node.get('type', '')
+        node_rule = node.get('rule', '')
+
+        if node_type == 'constant':
+            return node.get('value')
+        elif node_rule == 'Constant':
+            return node.get('args', {}).get('value')
+        elif node_type == 'binary_op':
+            # Recursively evaluate nested binary_op
+            result = self._evaluate_binary_op_constant(node)
+            if result and result != 'None':
+                # Parse the repr string back to a value
+                try:
+                    return eval(result)
+                except (SyntaxError, ValueError):
+                    return None
+            return None
+        else:
+            return None
 
     def _deep_equals(self, a: Any, b: Any) -> bool:
         """Deep equality comparison that works with lists."""
@@ -548,13 +889,51 @@ class RuleCodeGenerator:
         return result
 
     def get_function_name(self, helper_name: str) -> str:
-        """Get the Python function name for a helper.
+        """Get the Python function name for a helper."""
+        return get_helper_function_name(helper_name)
 
-        Returns the helper name as-is, without any prefix. The helpers are
-        defined in the world's Rules.py module, so they're already namespaced
-        and don't need a game-specific prefix.
+    def _contains_dynamic_reference(self, value: Any, depth: int = 0) -> bool:
         """
-        return helper_name
+        Check if a value contains dynamic references (option_value, setting_value, etc.)
+        that cannot be statically resolved at generation time.
+
+        Args:
+            value: A rule dict, primitive, or nested structure
+            depth: Recursion depth for cycle prevention
+
+        Returns:
+            True if the value contains dynamic references
+        """
+        if depth > 20:
+            return True  # Assume dynamic at max depth
+
+        if not isinstance(value, dict):
+            return False
+
+        value_type = value.get('type', '')
+
+        # These types represent dynamic runtime values
+        dynamic_types = {
+            'option_value',
+            'setting_value',
+            'world_attribute',
+            'attribute',  # attribute access can wrap option_value
+        }
+
+        if value_type in dynamic_types:
+            return True
+
+        # Recursively check all dict values
+        for v in value.values():
+            if isinstance(v, dict):
+                if self._contains_dynamic_reference(v, depth + 1):
+                    return True
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict) and self._contains_dynamic_reference(item, depth + 1):
+                        return True
+
+        return False
 
     def _is_rule_builder_convertible(self, rule: Dict[str, Any], depth: int = 0) -> bool:
         """
@@ -586,8 +965,9 @@ class RuleCodeGenerator:
         if not rule_type:
             rb_rule = rule.get('rule', '')
             if rb_rule in ('True_', 'False_', 'Has', 'HasAll', 'HasAny', 'HasGroup',
-                          'And', 'Or', 'Not', 'CanReachRegion', 'CanReachLocation',
-                          'CanReachEntrance', 'Compare', 'Conditional'):
+                          'HasFromList', 'HasFromListUnique', 'And', 'Or', 'Not',
+                          'CanReachRegion', 'CanReachLocation', 'CanReachEntrance',
+                          'Compare', 'Conditional', 'HelperCall', 'helper'):
                 # Check children recursively
                 for child in rule.get('children', []):
                     if not self._is_rule_builder_convertible(child, depth + 1):
@@ -629,12 +1009,16 @@ class RuleCodeGenerator:
                         self._is_rule_builder_convertible(if_false, depth + 1))
             return False
 
-        # For item_check and count_check, verify the item name is a constant
-        # (not a dynamic reference like world_attribute)
-        if rule_type in ('item_check', 'count_check'):
-            item = rule.get('item')
-            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value'):
+        # For item_check and count_check, verify the item name and count are constants
+        # (not dynamic references like world_attribute, option_value, etc.)
+        if rule_type in ('item_check', 'count_check', 'group_check'):
+            item = rule.get('item') or rule.get('group')
+            if isinstance(item, dict) and item.get('type') in ('world_attribute', 'setting_value', 'option_value', 'attribute'):
                 # Dynamic item reference - not convertible to static Rule Builder
+                return False
+            # Also check the count field - dynamic counts can't be statically converted
+            count = rule.get('count')
+            if self._contains_dynamic_reference(count):
                 return False
 
         # Recursively check nested rules
@@ -791,6 +1175,7 @@ class RuleCodeGenerator:
                     'CanReachRegion': 'can_reach',
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
+                    'EntranceAccessRule': 'entrance_access_rule',
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
@@ -809,6 +1194,8 @@ class RuleCodeGenerator:
                     'CountItem': 'count_item',  # Item count for arithmetic/comparisons
                     'AST_min': 'min',  # Min operation from AST export
                     'List': 'list',  # Rule Builder format list for comparisons
+                    'AST_group_count': 'AST_group_count',  # Group count for comparisons (state.count_group)
+                    'group_count': 'group_count',  # Group count for comparisons
                 }
                 rule_type = rb_to_type.get(rb_rule, '')
 
@@ -819,6 +1206,10 @@ class RuleCodeGenerator:
                 # Check if this is a weighted_sum helper (used by Overcooked 2 and similar games)
                 if rb_rule == 'weighted_sum' and rule.get('_original_ast_type') == 'helper':
                     return self._convert_weighted_sum(rule)
+
+                # Check if this is a unique_count helper (used by A Hat in Time for Enemy/Boss counting)
+                if rb_rule == 'unique_count' and rule.get('_original_ast_type') == 'helper':
+                    return self._convert_unique_count(rule)
 
                 # Check if this is a helper call from AST exporter format
                 # AST exporter outputs helpers with rule=helper_name and _original_ast_type="helper"
@@ -915,10 +1306,24 @@ class RuleCodeGenerator:
                             return f'HelperCall({func_name})'
                     # Unknown capability - fall through to True_()
 
+                # Check if this is an AST_dict_lambda_lookup rule (dict.get(key, default) pattern)
+                if rb_rule == 'AST_dict_lambda_lookup':
+                    args = rule.get('args', {})
+                    lookup_rule = {
+                        'type': 'dict_lambda_lookup',
+                        'dict_name': args.get('dict_name', ''),
+                        'key': args.get('key', {}),
+                        'cases': args.get('cases', {}),
+                        'default': args.get('default', {'rule': 'False_'})
+                    }
+                    return self._convert_dict_lambda_lookup(lookup_rule)
+
         # Dispatch based on rule type
         converters = {
             'constant': self._convert_constant,
             'item_check': self._convert_item_check,
+            'item_check_any': self._convert_item_check_any,
+            'item_check_all': self._convert_item_check_all,
             'count_check': self._convert_count_check,
             'group_check': self._convert_group_check,
             'and': self._convert_and,
@@ -940,11 +1345,15 @@ class RuleCodeGenerator:
             'binary_op': self._convert_binary_op,
             'sum': self._convert_sum,
             'setting_value': self._convert_setting_value,
+            'world_attribute': self._expr_world_attribute,
+            'option_value': self._expr_option_value,
             'ast_all_of': self._convert_ast_all_of,
             'ast_any_of': self._convert_ast_any_of,
             'count_true': self._convert_count_true,
             'block': self._convert_ast_block,
-            'bunny_accessibility_check': self._convert_bunny_accessibility_check,
+            'AST_group_count': self._convert_ast_group_count,
+            'group_count': self._convert_ast_group_count,
+            'dict_lambda_lookup': self._convert_dict_lambda_lookup,
         }
 
         converter = converters.get(rule_type)
@@ -956,10 +1365,6 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_block':
             return self._convert_ast_block(rule)
 
-        # Check for AST_bunny_accessibility_check in Rule Builder format
-        if rb_rule == 'AST_bunny_accessibility_check':
-            return self._convert_bunny_accessibility_check(rule)
-
         # Unknown rule type - return True_() as placeholder
         # Don't use inline comments as they break multi-line expressions
         return 'True_()'
@@ -967,7 +1372,10 @@ class RuleCodeGenerator:
     def _convert_rule_builder_format(self, rule: Dict[str, Any], rb_rule: str, rule_type: str) -> str:
         """Convert Rule Builder format rules (with 'rule' key) to Python expressions."""
         args = rule.get('args', {})
+        # Support both 'children' at top level and 'rules' inside args (exporter format)
         children = rule.get('children', [])
+        if not children and isinstance(args, dict):
+            children = args.get('rules', [])
 
         if rb_rule == 'True_':
             return self._make_bool_constant(True)
@@ -997,7 +1405,13 @@ class RuleCodeGenerator:
             if not children:
                 return self._make_bool_constant(True)
             if len(children) == 1:
-                return self._convert_rule(children[0])
+                # Handle single Constant child with integer value in boolean context
+                single_child = children[0]
+                if single_child.get('rule') == 'Constant':
+                    const_val = single_child.get('args', {}).get('value')
+                    if isinstance(const_val, (int, float)) and not isinstance(const_val, bool):
+                        return self._make_bool_constant(const_val != 0)
+                return self._convert_rule(single_child)
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAll instead of And(Has(...), Has(...), ...)
             # This matches the Rule Builder's _simplify_and behavior
@@ -1006,6 +1420,22 @@ class RuleCodeGenerator:
             for child in children:
                 child_rule = child.get('rule', '')
                 child_args = child.get('args', {})
+                # Handle Constant children specially - these come from option checks like
+                # `options.wheel_tricks` that resolve to integers at export time.
+                # In boolean context: non-zero = True (skip in And), zero = False (whole And is False)
+                if child_rule == 'Constant':
+                    const_value = child_args.get('value')
+                    if isinstance(const_value, (int, float)) and not isinstance(const_value, bool):
+                        if const_value == 0:
+                            # And with False = False
+                            return self._make_bool_constant(False)
+                        else:
+                            # And with True = skip (no effect)
+                            continue
+                    elif const_value is False:
+                        return self._make_bool_constant(False)
+                    elif const_value is True:
+                        continue  # True in And has no effect
                 if child_rule == 'Has' and child_args.get('count', 1) == 1:
                     item_name = child_args.get('item_name', '')
                     if item_name:
@@ -1017,6 +1447,9 @@ class RuleCodeGenerator:
 
             # Convert other children
             child_exprs = [self._convert_rule(child) for child in other_children]
+            # If any child returns None (needs lambda mode), propagate that signal
+            if any(expr is None for expr in child_exprs):
+                return None
 
             # Add simple Has items as HasAll (if 2+) or Has (if 1)
             if len(simple_has_items) >= 2:
@@ -1037,7 +1470,13 @@ class RuleCodeGenerator:
             if not children:
                 return self._make_bool_constant(False)
             if len(children) == 1:
-                return self._convert_rule(children[0])
+                # Handle single Constant child with integer value in boolean context
+                single_child = children[0]
+                if single_child.get('rule') == 'Constant':
+                    const_val = single_child.get('args', {}).get('value')
+                    if isinstance(const_val, (int, float)) and not isinstance(const_val, bool):
+                        return self._make_bool_constant(const_val != 0)
+                return self._convert_rule(single_child)
             # Optimization: If all children are simple Has rules with count=1,
             # use HasAny instead of Or(Has(...), Has(...), ...)
             # This matches the Rule Builder's _simplify_or behavior
@@ -1046,6 +1485,22 @@ class RuleCodeGenerator:
             for child in children:
                 child_rule = child.get('rule', '')
                 child_args = child.get('args', {})
+                # Handle Constant children specially - these come from option checks like
+                # `options.wheel_tricks` that resolve to integers at export time.
+                # In boolean context: non-zero = True (whole Or is True), zero = False (skip in Or)
+                if child_rule == 'Constant':
+                    const_value = child_args.get('value')
+                    if isinstance(const_value, (int, float)) and not isinstance(const_value, bool):
+                        if const_value == 0:
+                            # Or with False = skip (no effect)
+                            continue
+                        else:
+                            # Or with True = True
+                            return self._make_bool_constant(True)
+                    elif const_value is True:
+                        return self._make_bool_constant(True)
+                    elif const_value is False:
+                        continue  # False in Or has no effect
                 if child_rule == 'Has' and child_args.get('count', 1) == 1:
                     item_name = child_args.get('item_name', '')
                     if item_name:
@@ -1057,6 +1512,9 @@ class RuleCodeGenerator:
 
             # Convert other children
             child_exprs = [self._convert_rule(child) for child in other_children]
+            # If any child returns None (needs lambda mode), propagate that signal
+            if any(expr is None for expr in child_exprs):
+                return None
 
             # Add simple Has items as HasAny (if 2+) or Has (if 1)
             if len(simple_has_items) >= 2:
@@ -1139,8 +1597,22 @@ class RuleCodeGenerator:
                 return f'HasGroupUnique({repr(group)}, {count})'
 
         if rb_rule == 'HasFromList':
-            items = args.get('items', [])
+            items_raw = args.get('items', [])
             count = args.get('count', 1)
+            if not items_raw:
+                return self._make_bool_constant(True)
+            # HasFromList expects count to be an int, not a complex expression
+            # If count is a dict (expression), return None to signal lambda mode needed
+            if isinstance(count, dict):
+                return None  # Signal that lambda mode is needed
+            # Try to resolve items if it's a complex expression (e.g., list(dict.values()))
+            if isinstance(items_raw, dict):
+                resolved_items = self._resolve_items_list_expression(items_raw)
+                if resolved_items is None:
+                    return None  # Can't resolve, need lambda mode
+                items = resolved_items
+            else:
+                items = items_raw
             if not items:
                 return self._make_bool_constant(True)
             self.required_imports.add('HasFromList')
@@ -1149,8 +1621,22 @@ class RuleCodeGenerator:
             return f'HasFromList({items_str}, count={count})'
 
         if rb_rule == 'HasFromListUnique':
-            items = args.get('items', [])
+            items_raw = args.get('items', [])
             count = args.get('count', 1)
+            if not items_raw:
+                return self._make_bool_constant(True)
+            # HasFromListUnique expects count to be an int, not a complex expression
+            # If count is a dict (expression), return None to signal lambda mode needed
+            if isinstance(count, dict):
+                return None  # Signal that lambda mode is needed
+            # Try to resolve items if it's a complex expression (e.g., list(dict.values()))
+            if isinstance(items_raw, dict):
+                resolved_items = self._resolve_items_list_expression(items_raw)
+                if resolved_items is None:
+                    return None  # Can't resolve, need lambda mode
+                items = resolved_items
+            else:
+                items = items_raw
             if not items:
                 return self._make_bool_constant(True)
             self.required_imports.add('HasFromListUnique')
@@ -1172,6 +1658,17 @@ class RuleCodeGenerator:
             entrance = self._extract_constant_value(args.get('entrance_name', ''), '')
             self.required_imports.add('CanReachEntrance')
             return f'CanReachEntrance({repr(entrance)})'
+
+        if rb_rule == 'EntranceAccessRule':
+            # EntranceAccessRule looks up an entrance's access_rule and evaluates it
+            # This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+            # is called with potentially a fake pearl state
+            entrance_name = self._extract_constant_value(args.get('entrance_name', ''), '')
+            fake_pearl = args.get('fake_pearl', False)
+            # Generate a call to EntranceAccessRuleCall which evaluates the entrance's access_rule
+            # The fake_pearl handling adds Moon Pearl to state before evaluation
+            self.required_imports.add('EntranceAccessRuleCall')
+            return f'EntranceAccessRuleCall({repr(entrance_name)}, fake_pearl={fake_pearl})'
 
         if rb_rule == 'Helper':
             # Convert to the format expected by _convert_helper
@@ -1247,7 +1744,7 @@ class RuleCodeGenerator:
 
         if rb_rule == 'Constant':
             # Handle Constant rule
-            # Values can be booleans (True/False) or integers (0/1) representing boolean conditions
+            # Values can be booleans (True/False) or integers
             value = args.get('value')
             if value is True:
                 self.required_imports.add('True_')
@@ -1256,14 +1753,19 @@ class RuleCodeGenerator:
                 self.required_imports.add('False_')
                 return 'False_()'
             elif isinstance(value, int):
-                # Integer values represent boolean conditions (0 = false, non-zero = true)
-                # This handles cases like settings that resolve to 0/1 instead of False/True
-                if value:
+                # Only treat 0/1 as boolean, preserve larger integers as numeric literals
+                # This handles:
+                # - Settings that resolve to 0/1 instead of False/True (boolean context)
+                # - Actual count values like 2, 3, 4 in Conditional branches (numeric context)
+                if value == 0:
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                elif value == 1:
                     self.required_imports.add('True_')
                     return 'True_()'
                 else:
-                    self.required_imports.add('False_')
-                    return 'False_()'
+                    # Preserve as numeric literal for count/arithmetic contexts
+                    return repr(value)
             else:
                 return repr(value)
 
@@ -1322,6 +1824,13 @@ class RuleCodeGenerator:
         if rb_rule == 'AST_count_item':
             item_name = args.get('item', '')
             return self._make_count_item(item_name)
+
+        # Handle AST_group_count rule (from AST format, counts items in a group)
+        # This comes from state.count_group() calls in access rules
+        if rb_rule == 'AST_group_count':
+            group = args.get('group', '')
+            self.required_imports.add('CountGroup')
+            return f'CountGroup({repr(group)})'
 
         if rb_rule == 'AST_block':
             # Convert AST block to evaluated result
@@ -1433,12 +1942,190 @@ class RuleCodeGenerator:
                 converted_items.append(repr(item))
         return f'[{", ".join(converted_items)}]'
 
+    def _resolve_items_list_expression(self, items: Any) -> Optional[List[str]]:
+        """
+        Resolve an items expression to a list of item names.
+
+        Handles patterns like:
+        - list(dict.values()) where dict is a constant
+        - Direct list of strings
+        - Helper expressions wrapping dict.values()
+
+        Args:
+            items: The items expression (can be a list, dict, or complex expression)
+
+        Returns:
+            List of item names if resolvable, None otherwise
+        """
+        # Already a list of strings
+        if isinstance(items, list):
+            result = []
+            for item in items:
+                if isinstance(item, str):
+                    result.append(item)
+                elif isinstance(item, dict) and item.get('type') == 'constant':
+                    value = item.get('value')
+                    if value is not None and isinstance(value, str):
+                        result.append(value)
+                    # Skip None or non-string values silently
+                else:
+                    return None  # Contains non-resolvable items
+            return result
+
+        if not isinstance(items, dict):
+            return None
+
+        # Handle helper pattern: {"type": "helper", "name": "list", "args": [...]}
+        if items.get('type') == 'helper' and items.get('name') == 'list':
+            helper_args = items.get('args', [])
+            if len(helper_args) == 1:
+                inner_arg = helper_args[0]
+                # Check for function_call pattern (dict.values())
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'function_call':
+                    return self._extract_dict_values(inner_arg)
+                # Check for generator_expression pattern (list comprehension)
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'generator_expression':
+                    return self._extract_from_generator_expression(inner_arg)
+            return None
+
+        # Handle direct function_call pattern
+        if items.get('type') == 'function_call':
+            return self._extract_dict_values(items)
+
+        # Handle direct generator_expression pattern
+        if items.get('type') == 'generator_expression':
+            return self._extract_from_generator_expression(items)
+
+        return None
+
+    def _extract_from_generator_expression(self, gen_expr: dict) -> Optional[List[str]]:
+        """
+        Extract items from a generator expression pattern.
+
+        Expected patterns:
+        - list(key for key, _ in dict.items()) -> returns dict keys
+        - list(value for _, value in dict.items()) -> returns dict values
+
+        Returns:
+            List of extracted items, or None if pattern not supported
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Get the iterator (should be dict.items() or dict.keys() or dict.values())
+        iterator = comprehension.get('iterator', {})
+        if not isinstance(iterator, dict) or iterator.get('type') != 'function_call':
+            return None
+
+        function = iterator.get('function', {})
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return None
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .items(), .keys(), or .values() on a constant dict
+        if not isinstance(obj, dict) or obj.get('type') != 'constant':
+            return None
+
+        const_value = obj.get('value', {})
+        if not isinstance(const_value, dict):
+            return None
+
+        # Get the target variable(s) from the comprehension
+        target = comprehension.get('target', {})
+
+        # Determine which part of dict we need based on the element
+        if attr == 'items':
+            # For dict.items(), target is usually a tuple (key, value) or (key, _)
+            # We need to determine if element references the key or value
+            if isinstance(element, dict) and element.get('type') == 'name':
+                elem_name = element.get('name', '')
+                # Check if the target is a tuple and match the element name
+                if isinstance(target, dict) and target.get('type') == 'tuple':
+                    target_elements = target.get('elements', [])
+                    if len(target_elements) == 2:
+                        first_elem = target_elements[0]
+                        second_elem = target_elements[1]
+                        first_name = first_elem.get('name', '') if isinstance(first_elem, dict) else ''
+                        second_name = second_elem.get('name', '') if isinstance(second_elem, dict) else ''
+
+                        if elem_name == first_name:
+                            # Element is the key
+                            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                        elif elem_name == second_name:
+                            # Element is the value - but values might be NamedTuples, extract first element
+                            result = []
+                            for v in const_value.values():
+                                if isinstance(v, str):
+                                    result.append(v)
+                                elif isinstance(v, dict) and '_namedtuple_type' in v:
+                                    # NamedTuple - we want the item name (the key)
+                                    pass
+                            # If values are complex (NamedTuples), return keys instead
+                            if not result:
+                                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                            return result
+
+            # Fallback: return dict keys
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'keys':
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'values':
+            return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        return None
+
+    def _extract_dict_values(self, func_call: dict) -> Optional[List[str]]:
+        """
+        Extract values from a dict.values() function call pattern.
+
+        Expected pattern:
+        {
+            "type": "function_call",
+            "function": {
+                "type": "attribute",
+                "object": {"type": "constant", "value": {"key": "ItemName", ...}},
+                "attr": "values"
+            }
+        }
+
+        Returns:
+            List of item names (dict values) if pattern matches, None otherwise
+        """
+        function = func_call.get('function', {})
+
+        # Check for attribute access pattern
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return None
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .values() or .keys() call on a constant dict
+        if attr == 'values' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict values as a list, filtering out None values
+                return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        if attr == 'keys' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict keys as a list, filtering out None values
+                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        return None
+
     def _extract_constant_value(self, value: Any, default: Any = None) -> Any:
         """
         Extract a constant value from either a raw value or a constant rule dict.
 
         Args:
             value: Either a raw value (int, str, etc.) or a dict like {"type": "constant", "value": X}
+                   or an f_string where all parts are constants
             default: Default value if extraction fails
 
         Returns:
@@ -1447,80 +2134,43 @@ class RuleCodeGenerator:
         if isinstance(value, dict):
             if value.get('type') == 'constant':
                 return value.get('value', default)
+            # Handle f_strings with all-constant parts (e.g., after parameter substitution)
+            if value.get('type') == 'f_string':
+                parts = value.get('parts', [])
+                result_parts = []
+                for part in parts:
+                    if isinstance(part, dict):
+                        part_type = part.get('type', '')
+                        if part_type == 'constant':
+                            result_parts.append(str(part.get('value', '')))
+                        elif part_type == 'formatted_value':
+                            # Try to extract constant from the inner value
+                            inner = part.get('value', {})
+                            inner_val = self._extract_constant_value(inner, None)
+                            if inner_val is None:
+                                return default  # Not all parts are constants
+                            result_parts.append(str(inner_val))
+                        else:
+                            return default  # Unknown part type
+                    elif isinstance(part, str):
+                        result_parts.append(part)
+                    else:
+                        return default
+                return ''.join(result_parts)
             return default
         return value if value is not None else default
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
-        """Extract constant value from complex expressions.
-
-        Handles constants, binary operations (like 'Axe' + 's' -> 'Axes'),
-        and subscript operations (like item_groups["Axes"]).
-        """
-        if isinstance(value, dict):
-            if value.get('type') == 'constant':
-                return value.get('value', default)
-            if value.get('type') == 'value':
-                return value.get('value', default)
-            if value.get('type') == 'set':
-                elements = value.get('elements', [])
-                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
-
-            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
-            if value.get('type') in ('binary_op', 'binop'):
-                left = self._extract_constant(value.get('left', {}), None)
-                right = self._extract_constant(value.get('right', {}), None)
-                op = value.get('op', '+')
-                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
-                op = op_map.get(op, op)
-                if left is not None and right is not None:
-                    try:
-                        if op == '+':
-                            return left + right
-                        elif op == '-':
-                            return left - right
-                        elif op == '*':
-                            return left * right
-                        elif op == '/':
-                            return left / right
-                        elif op == '//':
-                            return left // right
-                    except TypeError:
-                        pass
-                return default
-
-            # Handle subscript (e.g., item_groups["Axes"])
-            if value.get('type') == 'subscript':
-                base_value = self._extract_constant(value.get('value', {}), None)
-                index = self._extract_constant(value.get('index', {}), None)
-                if base_value is not None and index is not None:
-                    try:
-                        return base_value[index]
-                    except (IndexError, KeyError, TypeError):
-                        pass
-                return default
-
-            return default
-        return value if value is not None else default
+        """Extract constant value from complex expressions."""
+        return extract_constant(value, default)  # No settings for RuleCodeGenerator
 
     # =========================================================================
     # Helper methods to reduce code duplication
     # =========================================================================
 
     def _escape_string(self, s: str, quote_char: str = '"') -> str:
-        """Escape a string for use in generated Python code.
-
-        Args:
-            s: The string to escape
-            quote_char: The quote character to escape (" or ')
-
-        Returns:
-            The escaped string (without surrounding quotes)
-        """
-        escaped = s.replace('\\', '\\\\')
-        if quote_char == '"':
-            return escaped.replace('"', '\\"')
-        else:
-            return escaped.replace("'", "\\'")
+        """Escape a string for use in generated Python code."""
+        return escape_string(s, quote_char)
 
     def _make_count_item(self, item_name: str) -> str:
         """Generate CountItem expression for the given item name.
@@ -1578,9 +2228,10 @@ class RuleCodeGenerator:
         self.required_imports.add('Has')
 
         item_raw = rule.get('item', '')
-        item = self._extract_constant_value(item_raw, '')
+        # Use _extract_constant to handle binary_op (e.g., "Letter " + letter -> "Letter O")
+        item = self._extract_constant(item_raw, '')
         count_raw = rule.get('count', 1)
-        count = self._extract_constant_value(count_raw, 1)
+        count = self._extract_constant(count_raw, 1)
 
         item_escaped = self._escape_string(item)
 
@@ -1588,6 +2239,50 @@ class RuleCodeGenerator:
             return f'Has("{item_escaped}")'
         else:
             return f'Has("{item_escaped}", {count})'
+
+    def _convert_item_check_any(self, rule: Dict[str, Any]) -> str:
+        """Convert item_check_any to HasAny().
+
+        item_check_any represents "has any of these items" checks.
+        Used by game-specific exporters like Soul Blazer.
+        """
+        items_raw = rule.get('items', [])
+        items = [self._extract_constant_value(item, str(item)) for item in items_raw]
+
+        if not items:
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if len(items) == 1:
+            self.required_imports.add('Has')
+            item_escaped = self._escape_string(items[0])
+            return f'Has("{item_escaped}")'
+
+        self.required_imports.add('HasAny')
+        items_str = ', '.join(repr(item) for item in items)
+        return f'HasAny({items_str})'
+
+    def _convert_item_check_all(self, rule: Dict[str, Any]) -> str:
+        """Convert item_check_all to HasAll().
+
+        item_check_all represents "has all of these items" checks.
+        Used by game-specific exporters like Soul Blazer.
+        """
+        items_raw = rule.get('items', [])
+        items = [self._extract_constant_value(item, str(item)) for item in items_raw]
+
+        if not items:
+            self.required_imports.add('True_')
+            return 'True_()'
+
+        if len(items) == 1:
+            self.required_imports.add('Has')
+            item_escaped = self._escape_string(items[0])
+            return f'Has("{item_escaped}")'
+
+        self.required_imports.add('HasAll')
+        items_str = ', '.join(repr(item) for item in items)
+        return f'HasAll({items_str})'
 
     def _convert_count_check(self, rule: Dict[str, Any]) -> str:
         """Convert count_check to Has().
@@ -1625,39 +2320,22 @@ class RuleCodeGenerator:
         else:
             return f'HasGroup("{group_escaped}", {count})'
 
-    def _convert_bunny_accessibility_check(self, rule: Dict[str, Any]) -> str:
-        """Convert bunny_accessibility_check to a HelperCall.
+    def _convert_ast_group_count(self, rule: Dict[str, Any]) -> str:
+        """Convert AST_group_count to CountGroup().
 
-        This generates code that calls check_bunny_accessibility() at runtime,
-        which evaluates Moon Pearl OR path from link region based on current
-        game options (inverted mode, glitch mode).
-
-        The generated code uses the check_bunny_accessibility helper function
-        which must be defined in the Rules.py (added by templates.py when
-        bunny_accessibility_check rules are present).
-
-        Handles both native format (type: bunny_accessibility_check with args at top level)
-        and AST format (rule: AST_bunny_accessibility_check with args in 'args' dict).
+        This handles state.count_group() calls from access rules, converting
+        them to CountGroup rules that return the count of items in a group.
+        Used in arithmetic expressions like score calculations.
         """
-        self.required_imports.add('HelperCall')
+        self.required_imports.add('CountGroup')
 
-        # Handle both native format (args at top level) and AST format (args in 'args' dict)
+        # Handle both AST format and Rule Builder format
         args = rule.get('args', {})
-        location_name = args.get('location_name', '') or rule.get('location_name', '')
-        target_region = args.get('target_region', '') or rule.get('target_region', '')
+        group = args.get('group', '') if args else rule.get('group', '')
+        group = self._extract_constant_value(group, '')
 
-        location_escaped = self._escape_string(location_name)
-
-        # Mark that we need the bunny accessibility helper
-        self._needs_bunny_helper = True
-
-        # Generate a HelperCall to check_bunny_accessibility
-        # Pass location_name and target_region through the args tuple
-        if target_region:
-            region_escaped = self._escape_string(target_region)
-            return f'HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("{location_escaped}", "{region_escaped}"))'
-        else:
-            return f'HelperCall(helper_func=check_bunny_accessibility, helper_name="check_bunny_accessibility", args=("{location_escaped}",))'
+        group_escaped = self._escape_string(group)
+        return f'CountGroup("{group_escaped}")'
 
     def _convert_and(self, rule: Dict[str, Any]) -> str:
         """Convert and rule to & expression."""
@@ -1763,33 +2441,42 @@ class RuleCodeGenerator:
 
         if all_item_checks:
             # Extract item names
+            # Use HasFromListUnique because count_true with item_checks means
+            # "at least N different items from this list", not "at least N total items"
             items = [c.get('item', '') for c in conditions]
             items_str = ', '.join(repr(item) for item in items)
-            self.required_imports.add('HasFromList')
-            return f'HasFromList({items_str}, count={count})'
+            self.required_imports.add('HasFromListUnique')
+            return f'HasFromListUnique({items_str}, count={count})'
 
         # For mixed conditions, we need to generate combinations
-        # To avoid combinatorial explosion, we'll generate a more compact representation
-        # using a custom approach: And(Or(combinations), Or(combinations), ...)
+        # "At least count of n conditions" = Or of all ways to choose count conditions
+        # Each way is an And of those count conditions
         #
-        # For "at least 2 of N", we need all pairs that could work.
-        # But this gets complex, so for now, fall back to Or of all And combinations
-        # Limited to small counts to avoid explosion
-        if count <= 3 and n <= 10:
-            from itertools import combinations
-            combos = list(combinations(range(n), count))
-            if len(combos) <= 50:  # Reasonable limit
-                combo_exprs = []
-                for combo in combos:
-                    combo_conditions = [conditions[i] for i in combo]
-                    converted = [self._convert_rule(c) for c in combo_conditions]
-                    and_expr = ' & '.join(f'({c})' for c in converted)
-                    combo_exprs.append(f'({and_expr})')
-                return ' | '.join(combo_exprs)
+        # Calculate the number of combinations: C(n, count)
+        from math import comb
+        from itertools import combinations
 
-        # Fallback for complex cases: generate True_() with a warning
+        num_combos = comb(n, count)
+
+        # Reasonable limit to avoid code explosion
+        # 120 covers common cases like 5-of-6 (6 combos), 4-of-6 (15), 5-of-7 (21), 6-of-8 (28)
+        if num_combos <= 120:
+            combos = list(combinations(range(n), count))
+            combo_exprs = []
+            for combo in combos:
+                combo_conditions = [conditions[i] for i in combo]
+                converted = [self._convert_rule(c) for c in combo_conditions]
+                and_expr = ' & '.join(f'({c})' for c in converted)
+                combo_exprs.append(f'({and_expr})')
+            return ' | '.join(combo_exprs)
+
+        # Fallback for truly complex cases: generate True_() with a warning
         # This is conservative - locations will be accessible earlier than they should be
-        # TODO: Implement lambda-based counting for complex cases
+        import logging
+        logging.getLogger(__name__).warning(
+            f"count_true rule with count={count} of {n} conditions ({num_combos} combinations) "
+            f"is too complex to expand, falling back to True_() - tracking may be inaccurate"
+        )
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -1898,8 +2585,51 @@ class RuleCodeGenerator:
             self.required_imports.add(class_name)
             return extractor(class_name, args)
 
+        # Handle count_from_list - returns a count, used in arithmetic expressions
+        # count_from_list([]) returns 0, count_from_list([items]) returns CountFromList(*items)
+        if method == 'count_from_list':
+            items = self._extract_items_from_args(args)
+            if not items:
+                # Empty list means count is always 0
+                return '0'
+            # For non-empty lists, use CountFromList which returns the count
+            self.required_imports.add('CountFromList')
+            items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+            return f'CountFromList({items_str})'
+
         # Unknown state method - return True_() as placeholder
         return 'True_()'
+
+    def _extract_items_from_args(self, args: List[Any]) -> List[str]:
+        """Extract item list from state method arguments.
+
+        Handles various formats:
+        - {"type": "constant", "value": ["item1", "item2"]}
+        - {"rule": "Constant", "args": {"value": ["item1", "item2"]}}
+        - [{"type": "constant", "value": "item1"}, ...]
+
+        Returns an empty list if items cannot be extracted.
+        """
+        if not args:
+            return []
+
+        first_arg = args[0]
+        if not isinstance(first_arg, dict):
+            return []
+
+        # Handle AST format constant: {"type": "constant", "value": [...]}
+        if first_arg.get('type') == 'constant':
+            value = first_arg.get('value', [])
+            if isinstance(value, list):
+                return [str(item) for item in value]
+
+        # Handle Rule Builder format: {"rule": "Constant", "args": {"value": [...]}}
+        if first_arg.get('rule') == 'Constant':
+            value = first_arg.get('args', {}).get('value', [])
+            if isinstance(value, list):
+                return [str(item) for item in value]
+
+        return []
 
     def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list for HasAll/HasAny.
@@ -1953,9 +2683,82 @@ class RuleCodeGenerator:
                 return f'{class_name}({items_repr})'
             # If extraction failed or returned empty, fall through to True_()
 
+        # Handle generator expressions like [m.name for m in match]
+        # where match is a constant list of objects with a 'name' attribute
+        if first_arg.get('type') == 'generator_expression':
+            items = self._evaluate_generator_expression(first_arg)
+            if items is not None and items:
+                items_repr = ', '.join(repr(item) for item in items)
+                return f'{class_name}({items_repr})'
+            # If evaluation failed or returned empty, fall through to True_()
+
         # Unknown format - return True_ as safe fallback
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _evaluate_generator_expression(self, gen_expr: Dict[str, Any]) -> Optional[List[str]]:
+        """
+        Evaluate a generator expression with a constant iterator.
+
+        Handles patterns like [m.name for m in match] where match is a constant
+        list of objects with a 'name' attribute. This is common in has_any/has_all
+        calls with pre-resolved item lists (e.g., Vehicle rules in Shadow The Hedgehog).
+
+        Args:
+            gen_expr: A generator_expression dict with 'element' and 'comprehension' keys
+
+        Returns:
+            A list of extracted string values if evaluation succeeds, None otherwise.
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Check if this is a simple attribute access pattern: m.name for m in items
+        if element.get('type') != 'attribute':
+            return None
+
+        attr_name = element.get('attr')
+        target_obj = element.get('object', {})
+
+        # The target should be a name reference (e.g., 'm')
+        if target_obj.get('type') != 'name':
+            return None
+
+        target_name = target_obj.get('name')
+
+        # Check comprehension structure
+        comp_details = comprehension
+        if comp_details.get('type') != 'comprehension_details':
+            return None
+
+        # Check that the comprehension target matches the attribute object
+        comp_target = comp_details.get('target', {})
+        if comp_target.get('type') != 'name' or comp_target.get('name') != target_name:
+            return None
+
+        # Get the iterator value
+        iterator = comp_details.get('iterator', {})
+        if iterator.get('type') != 'constant':
+            return None
+
+        iterator_value = iterator.get('value', [])
+        if not isinstance(iterator_value, list):
+            return None
+
+        # Evaluate the element expression for each item in the iterator
+        result = []
+        for item in iterator_value:
+            # Get the attribute from the item
+            if hasattr(item, attr_name):
+                value = getattr(item, attr_name)
+                result.append(str(value))
+            elif isinstance(item, dict) and attr_name in item:
+                result.append(str(item[attr_name]))
+            else:
+                # Can't evaluate this expression
+                return None
+
+        return result
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
@@ -2014,6 +2817,28 @@ class RuleCodeGenerator:
 
         # Try to recognize the pattern: state.prog_items[player][item_name] >= count
         result = self._try_convert_prog_items_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Try to recognize count_from_list_unique pattern:
+        # state.count_from_list_unique(items, player) >= count
+        # Converts to: HasFromListUnique(*items, count=count)
+        result = self._try_convert_count_from_list_unique_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Try to recognize count_from_list pattern:
+        # state.count_from_list(items, player) >= count
+        # Also handles: state.count_from_list(items, player) + 0 >= count
+        # Converts to: HasFromList(*items, count=count)
+        result = self._try_convert_count_from_list_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Try to recognize AST_sum_of pattern (sum comprehension counting items):
+        # sum(state.has(item, player) for item in items) >= count
+        # Converts to: HasFromListUnique(*items, count=count)
+        result = self._try_convert_ast_sum_of_compare(left, op, right)
         if result is not None:
             return result
 
@@ -2086,131 +2911,21 @@ class RuleCodeGenerator:
         return f'Compare({left_code}, "{op}", {right_code})'
 
     def _is_placement_lookup(self, operand: Any) -> bool:
-        """
-        Check if an operand is a placement_lookup rule.
-
-        Placement lookups (location_item_name checks) depend on actual item placements
-        which are not available during tracking. These checks should be treated as False
-        during code generation so that tracking works correctly.
-
-        This is used to fix self-locking rules like:
-            OR(location_item_name(state, loc, player) == (item, 1), state.has(item, player))
-        Which should simplify to just Has(item) for tracking purposes.
-        """
-        if not isinstance(operand, dict):
-            return False
-
-        # Check for placement_lookup type
-        if operand.get('type') == 'placement_lookup':
-            return True
-
-        # Check for Rule Builder format AST_placement_lookup
-        if operand.get('rule') == 'AST_placement_lookup':
-            return True
-
-        return False
+        """Check if an operand is a placement_lookup rule."""
+        return is_placement_lookup(operand)
 
     def _extract_placement_location(self, operand: Any) -> Optional[str]:
-        """
-        Extract the location name from a placement_lookup expression.
-        Returns the location name as a string, or None if it cannot be extracted.
-        """
-        if not isinstance(operand, dict):
-            return None
-
-        # Handle placement_lookup type
-        if operand.get('type') == 'placement_lookup':
-            location_rule = operand.get('location', {})
-            if isinstance(location_rule, dict):
-                if location_rule.get('type') == 'constant':
-                    return location_rule.get('value', '')
-            elif isinstance(location_rule, str):
-                return location_rule
-            return None
-
-        # Handle Rule Builder format AST_placement_lookup
-        if operand.get('rule') == 'AST_placement_lookup':
-            args = operand.get('args', {})
-            return args.get('location', None)
-
-        return None
+        """Extract the location name from a placement_lookup expression."""
+        return extract_placement_location(operand)
 
     def _check_placement_comparison(self, left: Any, right: Any, op: str) -> Optional[bool]:
-        """
-        Check if a placement comparison can be resolved to a boolean using actual placements.
+        """Check if a placement comparison can be resolved using actual placements."""
+        placements = self.placements if hasattr(self, 'placements') else {}
+        return check_placement_comparison(left, right, op, placements)
 
-        For self-locking rules like:
-            location_item_name(state, "Location A", player) == ("Left Tower Key", 1)
-
-        We check if the actual item placed at "Location A" matches the expected item.
-        Returns True/False if the comparison can be resolved, None otherwise.
-        """
-        # Determine which side is the placement_lookup
-        placement_operand = None
-        expected_operand = None
-
-        if self._is_placement_lookup(left):
-            placement_operand = left
-            expected_operand = right
-        elif self._is_placement_lookup(right):
-            placement_operand = right
-            expected_operand = left
-        else:
-            return None
-
-        # Extract the location name from the placement_lookup
-        location_name = self._extract_placement_location(placement_operand)
-        if not location_name:
-            return None
-
-        # Get the actual item placed at this location
-        actual_item = self.placements.get(location_name) if hasattr(self, 'placements') else None
-
-        # Extract the expected item from the comparison value
-        # Expected format is typically [item_name, player] or (item_name, player)
-        expected_item = None
-        if isinstance(expected_operand, list) and len(expected_operand) >= 1:
-            expected_item = expected_operand[0]
-        elif isinstance(expected_operand, dict):
-            # Could be a Tuple or list type in AST format
-            if expected_operand.get('type') == 'list':
-                values = expected_operand.get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('rule') == 'Tuple':
-                values = expected_operand.get('args', {}).get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('type') == 'tuple':
-                # Handle tuple type with 'elements' key: {"type": "tuple", "elements": [...]}
-                elements = expected_operand.get('elements', [])
-                if elements and len(elements) >= 1:
-                    first_val = elements[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-
-        if expected_item is None:
-            return None
-
-        # Now compare actual vs expected
-        if op in ('==', 'eq'):
-            if actual_item is None:
-                return False  # No item placed means comparison fails
-            return actual_item == expected_item
-        elif op in ('!=', 'ne'):
-            if actual_item is None:
-                return True  # No item placed means inequality succeeds
-            return actual_item != expected_item
-
-        return None
+    def _extract_items_from_list(self, operand: Any) -> Optional[set]:
+        """Extract item names from a list of tuples for 'in' operator comparisons."""
+        return extract_items_from_list(operand)
 
     def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
@@ -2481,8 +3196,10 @@ class RuleCodeGenerator:
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
         # They are blacklisted from normal helper export but need to be converted to CountItem
         if operand.get('_original_ast_type') == 'helper':
-            # Get the helper's first argument which is typically the item name
+            helper_name = operand.get('rule', '')
             args = operand.get('args', [])
+
+            # First, try to convert simple item-counting helpers to CountItem
             if args and isinstance(args[0], dict):
                 arg = args[0]
                 # Extract item name from Constant or constant format
@@ -2493,9 +3210,68 @@ class RuleCodeGenerator:
                 else:
                     item_name = ''
 
-                if item_name:
+                if item_name and isinstance(item_name, str):
                     # Convert helper call to CountItem for the item
                     return self._make_count_item(item_name)
+
+            # Handle get_item_perc_amount helper statically
+            # This helper calculates floor(items * (perc / 100)) when multiworld is None
+            # Pizza Tower and other games use this pattern for boss entrance requirements
+            if helper_name == 'get_item_perc_amount' and len(args) >= 3:
+                # Extract constant arguments: multiworld (ignored), items, perc
+                def _extract_constant(arg):
+                    if arg is None:
+                        return None
+                    if isinstance(arg, (int, float)):
+                        return arg
+                    if isinstance(arg, dict):
+                        if arg.get('rule') == 'Constant':
+                            return arg.get('args', {}).get('value')
+                        if arg.get('type') == 'constant':
+                            return arg.get('value')
+                    return None
+
+                # Args: [multiworld (None), items (int), perc (int)]
+                items = _extract_constant(args[1])
+                perc = _extract_constant(args[2])
+
+                if items is not None and perc is not None:
+                    # Calculate: floor(items * (perc / 100))
+                    # This matches the original helper behavior when multiworld is None
+                    import math
+                    result = math.floor(items * (perc / 100))
+                    return repr(result)
+
+            # For other helpers (like get_item_perc_amount), generate a HelperCall
+            # These are integer-returning helpers used as count arguments
+            if helper_name and helper_name in self.known_helpers:
+                self.required_imports.add('HelperCall')
+                func_name = self.get_function_name(helper_name)
+
+                # Convert arguments to Python code
+                arg_strs = []
+                for arg in args:
+                    if arg is None:
+                        arg_strs.append('None')
+                    elif isinstance(arg, dict):
+                        if arg.get('rule') == 'Constant':
+                            arg_strs.append(repr(arg.get('args', {}).get('value')))
+                        elif arg.get('type') == 'constant':
+                            arg_strs.append(repr(arg.get('value')))
+                        elif arg.get('rule') == 'SettingValue':
+                            setting = arg.get('args', {}).get('setting', '')
+                            if setting in self.settings:
+                                arg_strs.append(repr(self.settings[setting]))
+                            else:
+                                arg_strs.append('None')
+                        else:
+                            # For other complex expressions, try to convert
+                            arg_strs.append(self._convert_arithmetic_operand(arg))
+                    else:
+                        arg_strs.append(repr(arg))
+
+                args_tuple = f"({', '.join(arg_strs)},)" if arg_strs else "()"
+                return f'HelperCall(helper_func={func_name}, helper_name="{helper_name}", args={args_tuple})'
 
         # For other types, try to convert as a rule
         return self._convert_rule(operand)
@@ -2552,6 +3328,17 @@ class RuleCodeGenerator:
                 'right': rb_args.get('right', {})
             }
             return self._convert_binary_op(binary_op_rule)
+
+        # Handle Name expressions (e.g., multiworld reference)
+        # When a helper function expects multiworld as a parameter, it's passed as None
+        # at worldgen time because we don't have access to the actual multiworld object
+        if rb_rule == 'Name':
+            name = operand.get('args', {}).get('name', '')
+            # multiworld, state, player are runtime values - return None or appropriate default
+            if name in ('multiworld', 'state', 'player', 'world'):
+                return 'None'
+            # For other names, return as variable reference
+            return name
 
         # Handle Rule Builder format SettingValue in arithmetic operand
         if rb_rule == 'SettingValue':
@@ -2724,47 +3511,30 @@ class RuleCodeGenerator:
         return 'False_()'
 
     def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access a world attribute at runtime.
-
-        World attributes are properties on the world object that are set
-        during game generation. Examples include logic settings like
-        'logic_obscure_1' in The Wind Waker.
-
-        Always generates: state.multiworld.worlds[player].<name>
-        This pattern is recognized by the exporter's pattern detection.
-        """
-        attribute = expr.get('attribute', '')
-        base_path = f'state.multiworld.worlds[player].{attribute}'
-
-        # Handle indexed access (e.g., required_medallions[0])
-        if 'index' in expr:
-            index = expr['index']
-            if isinstance(index, int):
-                return f'{base_path}[{index}]'
-            elif isinstance(index, str):
-                return f'{base_path}[{repr(index)}]'
-
-        return base_path
+        """Generate code to access a world attribute at runtime."""
+        return generate_world_attribute_expr(expr)
 
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
         """Generate code to access an option at runtime.
 
-        Options are accessed via the world's options attribute at runtime.
-        This generates: state.multiworld.worlds[player].options.<name>
-        This pattern is recognized by the exporter's _is_world_options_pattern().
+        For Rule Builder context, we generate OptionValue('option_name') which is a
+        proper Rule Builder object that can be composed with And/Or operators.
+        This allows options to be checked at rule evaluation time.
         """
         option = expr.get('option', '')
-        base_path = f'state.multiworld.worlds[player].options.{option}'
 
-        # Handle indexed access (not common for options, but supported)
+        # Handle indexed access (not common for options, use raw Python for this case)
         if 'index' in expr:
             index = expr['index']
+            base_path = f'state.multiworld.worlds[player].options.{option}'
             if isinstance(index, int):
                 return f'{base_path}[{index}]'
             elif isinstance(index, str):
                 return f'{base_path}[{repr(index)}]'
 
-        return base_path
+        # Generate OptionValue for proper Rule Builder composition
+        self.required_imports.add('OptionValue')
+        return f"OptionValue({repr(option)})"
 
     def _convert_ast_block(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_block rule to Python Rule Builder expression.
@@ -3094,9 +3864,11 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_' if result else 'False_')
                 return 'True_()' if result else 'False_()'
 
-        # Can't evaluate - default to False (conservative for accessibility)
-        self.required_imports.add('False_')
-        return 'False_()'
+        # Can't evaluate - default to True (accessible) to avoid blocking locations
+        # Note: This may allow access to locations that should have stricter rules,
+        # but it's better than permanently blocking locations the player should reach.
+        self.required_imports.add('True_')
+        return 'True_()'
 
     def _try_evaluate_expr(self, expr: Dict[str, Any], local_vars: Dict[str, Any]) -> Any:
         """Try to evaluate an expression to a constant value."""
@@ -3132,7 +3904,7 @@ class RuleCodeGenerator:
     def _contains_state_method(self, statements: List[Dict[str, Any]]) -> bool:
         """Check if any statement contains runtime-dependent checks like item_check or state_method."""
         # Types that require runtime evaluation (player state)
-        runtime_types = {'state_method', 'item_check', 'count_check', 'group_check'}
+        runtime_types = {'state_method', 'item_check', 'count_check', 'group_check', 'helper'}
 
         def check_value(value: Any) -> bool:
             if not isinstance(value, dict):
@@ -3534,6 +4306,26 @@ class RuleCodeGenerator:
                 return self.settings[setting_name]
             return 0
 
+        if expr_type == 'attribute':
+            # Handle attribute access like options.first_person_mode_glitch_in_logic
+            obj = expr.get('object', {})
+            attr = expr.get('attr', '')
+
+            # Check if object is a name referencing 'options' (from get_options helper)
+            if obj.get('type') == 'name':
+                obj_name = obj.get('name', '')
+                if obj_name in var_expressions:
+                    var_val = var_expressions[obj_name]
+                    # If var_val is the options path, look up the attribute in settings
+                    if 'options' in var_val and attr in self.settings:
+                        return self.settings[attr]
+
+            # Try to evaluate the object and access the attribute
+            obj_val = self._try_eval_constant(obj, var_expressions)
+            if obj_val is not None and hasattr(obj_val, attr):
+                return getattr(obj_val, attr)
+            return None
+
         # For item_check, state_method, etc. - these are runtime dependent
         return None
 
@@ -3567,6 +4359,25 @@ class RuleCodeGenerator:
                     item_name = item_arg.get('value', '')
                     self.required_imports.add('CountItem')
                     return f'CountItem("{item_name}")'
+
+            if method == 'has_any' and len(args) == 1:
+                items_arg = args[0]
+                if items_arg.get('type') == 'constant':
+                    items = items_arg.get('value', [])
+                    if isinstance(items, list):
+                        self.required_imports.add('HasAny')
+                        items_str = ', '.join(f'"{self._escape_string(item, chr(34))}"' for item in items)
+                        return f'HasAny({items_str})'
+
+            if method == 'has_all' and len(args) == 1:
+                items_arg = args[0]
+                if items_arg.get('type') == 'constant':
+                    items = items_arg.get('value', [])
+                    if isinstance(items, list):
+                        self.required_imports.add('HasAll')
+                        items_str = ', '.join(f'"{self._escape_string(item, chr(34))}"' for item in items)
+                        return f'HasAll({items_str})'
+
             # Unsupported state_method
             return None
 
@@ -3603,12 +4414,22 @@ class RuleCodeGenerator:
             else:
                 return f'Has("{item_escaped}")'
 
-        # Handle conditional - convert to Conditional()
+        # Handle conditional - convert to Conditional() or short-circuit if test is known
         if expr_type == 'conditional':
             test = expr.get('test', {})
             if_true = expr.get('if_true', {})
             if_false = expr.get('if_false', {})
 
+            # Try to evaluate the test to a constant boolean
+            test_result = self._try_evaluate_conditional_test_expr(test, var_expressions)
+            if test_result is True:
+                # Short-circuit to true branch
+                return self._expr_to_rule_builder(if_true, var_expressions)
+            elif test_result is False:
+                # Short-circuit to false branch
+                return self._expr_to_rule_builder(if_false, var_expressions)
+
+            # Fall back to generating a Conditional
             test_expr = self._expr_to_rule_builder(test, var_expressions)
             true_expr = self._expr_to_rule_builder(if_true, var_expressions)
             false_expr = self._expr_to_rule_builder(if_false, var_expressions)
@@ -3846,6 +4667,20 @@ class RuleCodeGenerator:
             # Default to 0 if setting not found
             return '0'
 
+        # Handle world_attribute - access world properties at runtime
+        if expr_type == 'world_attribute':
+            attribute = expr.get('attribute', '')
+            # For 'options' attribute, we can't directly convert to Rule Builder
+            # Return the path string which may be used in var_expressions
+            base_path = f'state.multiworld.worlds[player].{attribute}'
+            if 'index' in expr:
+                index = expr['index']
+                if isinstance(index, int):
+                    base_path = f'{base_path}[{index}]'
+                elif isinstance(index, str):
+                    base_path = f'{base_path}[{repr(index)}]'
+            return base_path
+
         # Handle helper - helper function calls
         if expr_type == 'helper':
             name = expr.get('name', '')
@@ -3877,17 +4712,44 @@ class RuleCodeGenerator:
                     pass
 
             # For other helpers or non-constant args, generate a HelperCall
-            arg_exprs = []
-            for arg in args:
-                arg_expr = self._expr_to_rule_builder(arg, var_expressions)
-                if arg_expr is None:
-                    return None
-                arg_exprs.append(arg_expr)
+            # Use the same logic as _convert_helper for proper Rule Builder format
+            if name in self.known_helpers:
+                self.required_imports.add('HelperCall')
+                func_name = self.get_function_name(name)
 
-            self.required_imports.add('HelperCall')
-            helper_func_name = self.get_function_name(name)
-            args_str = ', '.join(arg_exprs)
-            return f'HelperCall("{helper_func_name}", [{args_str}])'
+                # Convert arguments to Python code (simplified for AST context)
+                arg_strs = []
+                for arg in args:
+                    if isinstance(arg, dict) and arg.get('type') == 'constant':
+                        arg_strs.append(repr(arg.get('value')))
+                    elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
+                        setting = arg.get('setting', '')
+                        if setting in self.settings:
+                            arg_strs.append(repr(self.settings[setting]))
+                        else:
+                            arg_strs.append('None')
+                    else:
+                        arg_expr = self._expr_to_rule_builder(arg, var_expressions)
+                        if arg_expr is None:
+                            arg_strs.append('None')
+                        else:
+                            arg_strs.append(arg_expr)
+
+                # Build HelperCall with helper_func reference
+                body_rule_code = self._try_convert_helper_body_to_rule(name, args)
+
+                parts = [f'helper_func={func_name}', f'helper_name="{name}"']
+
+                if arg_strs:
+                    parts.append(f'args=({", ".join(arg_strs)},)')
+
+                if body_rule_code:
+                    parts.append(f'body_rule={body_rule_code}')
+
+                return f'HelperCall({", ".join(parts)})'
+            else:
+                # Unknown helper - return None to signal we can't convert
+                return None
 
         # Unsupported expression type
         return None
@@ -4179,9 +5041,145 @@ class RuleCodeGenerator:
                             self.required_imports.add('Or')
                             return f'Or({", ".join(checks)})'
 
+            # Case 3: state_method with has_all_counts - handle item requirement dicts
+            # Pattern: any(state.has_all_counts(sublist) for sublist in [{item: count, ...}, ...])
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'has_all_counts':
+                # Filter out empty dicts - has_all_counts({}) is always True
+                non_empty_items = [item for item in items if isinstance(item, dict) and item]
+
+                if not non_empty_items:
+                    # All dicts are empty - always True (has_all_counts({}) is always True)
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                # Generate HasAllCounts for each non-empty dict
+                # HasAllCounts expects a dict: {'item_name': count, ...}
+                checks = []
+                for item_dict in non_empty_items:
+                    if isinstance(item_dict, dict):
+                        # Convert {item: count, ...} to HasAllCounts dict format
+                        items_dict_str = "{" + ", ".join(
+                            f"'{self._escape_string(k, chr(39))}': {v}" for k, v in item_dict.items()
+                        ) + "}"
+                        checks.append(f"HasAllCounts({items_dict_str})")
+                self.required_imports.add('HasAllCounts')
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 4: state_method with has_all - handle list of lists of item names
+            # Pattern: any(state.has_all(sublist, player) for sublist in [[item1, item2], [item3], ...])
+            # This is commonly used in ANIMAL WELL and similar worlds
+            if element_rule.get('type') == 'state_method' and element_rule.get('method') == 'has_all':
+                # Check if all items in the iterator are lists (list of lists pattern)
+                if all(isinstance(item, list) for item in items):
+                    # Filter out empty lists - has_all([]) is always True
+                    non_empty_sublists = [item for item in items if item]
+
+                    if not non_empty_sublists:
+                        # All sublists are empty - always True (has_all([]) is always True)
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                    # Generate HasAll or Has for each sublist
+                    checks = []
+                    for sublist in non_empty_sublists:
+                        if len(sublist) == 1:
+                            # Single item - use Has
+                            item = sublist[0]
+                            # Skip None items
+                            if item is None:
+                                continue
+                            item_escaped = self._escape_string(str(item), "'")
+                            self.required_imports.add('Has')
+                            checks.append(f"Has('{item_escaped}')")
+                        else:
+                            # Multiple items - use HasAll
+                            # Filter out None values
+                            valid_items = [item for item in sublist if item is not None]
+                            if not valid_items:
+                                continue
+                            items_str = ', '.join(
+                                f"'{self._escape_string(str(item), chr(39))}'" for item in valid_items
+                            )
+                            self.required_imports.add('HasAll')
+                            checks.append(f'HasAll({items_str})')
+
+                    if not checks:
+                        # All sublists only contained None - always True
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                    if len(checks) == 1:
+                        return checks[0]
+                    else:
+                        self.required_imports.add('Or')
+                        return f'Or({", ".join(checks)})'
+
+            # Case 5: element_rule is a helper with name "rule" - items ARE the rules to evaluate
+            # This pattern: any(rule(state) for rule in [rule1_ast, rule2_ast, ...])
+            # Where each rule in the list is itself an AST expression (or Rule Builder format)
+            if (element_rule.get('type') == 'helper' and element_rule.get('name') == 'rule' and
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is an AST/Rule Builder rule - recursively process them
+                checks = []
+                for item in items:
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
+            # Case 6: element_rule is a constant true and items are rule dicts
+            # This pattern: any(rule for rule in [rule1, rule2, ...])
+            # Where iterator items ARE the rules to evaluate (bunny revival pattern)
+            # The element_rule being constant True means "evaluate the rule value"
+            if (element_rule.get('type') == 'constant' and element_rule.get('value') is True and
+                    all(isinstance(item, dict) and ('type' in item or 'rule' in item) for item in items)):
+                # Each item is a rule - recursively process them
+                checks = []
+                for item in items:
+                    check = self._convert_rule(item)
+                    if check and check not in ('True', 'True_()'):
+                        checks.append(check)
+                    elif check in ('True', 'True_()'):
+                        # If any condition is always true, the any() is always true
+                        self.required_imports.add('True_')
+                        return 'True_()'
+
+                if not checks:
+                    # All conditions were True - any() is True
+                    self.required_imports.add('True_')
+                    return 'True_()'
+
+                if len(checks) == 1:
+                    return checks[0]
+                else:
+                    self.required_imports.add('Or')
+                    return f'Or({", ".join(checks)})'
+
             # Default: Generate Or check for items directly
             if len(items) == 1:
                 item = items[0]
+                # Check if item is an AST expression (dict with 'type' key)
+                # or Rule Builder format (dict with 'rule' key)
+                if isinstance(item, dict) and ('type' in item or 'rule' in item):
+                    return self._convert_rule(item)
                 item_escaped = self._escape_string(str(item), "'")
                 self.required_imports.add('Has')
                 return f"Has('{item_escaped}')"
@@ -4189,9 +5187,15 @@ class RuleCodeGenerator:
                 # Multiple items - use Or with Has for each
                 has_checks = []
                 for item in items:
-                    item_escaped = self._escape_string(str(item), "'")
-                    has_checks.append(f"Has('{item_escaped}')")
-                self.required_imports.add('Has')
+                    # Check if item is an AST expression (dict with 'type' key)
+                    # or Rule Builder format (dict with 'rule' key)
+                    if isinstance(item, dict) and ('type' in item or 'rule' in item):
+                        check = self._convert_rule(item)
+                        has_checks.append(check)
+                    else:
+                        item_escaped = self._escape_string(str(item), "'")
+                        has_checks.append(f"Has('{item_escaped}')")
+                        self.required_imports.add('Has')
                 self.required_imports.add('Or')
                 return f'Or({", ".join(has_checks)})'
 
@@ -4235,6 +5239,303 @@ class RuleCodeGenerator:
             return f'Has("{item_escaped}")'
         else:
             return f'Has("{item_escaped}", {count})'
+
+    def _try_convert_count_from_list_unique_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a count_from_list_unique comparison to HasFromListUnique().
+
+        Pattern: state.count_from_list_unique(items, player) >= count
+        Converts to: HasFromListUnique(*items, count=count)
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Get the count from the right side
+        # Handle constant, Constant, or Arithmetic rules
+        count = None
+        if isinstance(right, dict):
+            if right.get('type') == 'constant':
+                count = right.get('value', 0)
+            elif right.get('rule') == 'Constant':
+                count = right.get('args', {}).get('value', 0)
+            elif right.get('rule') == 'Arithmetic':
+                # Handle Arithmetic (e.g., 8 * 1.0 for eggs_required * factor)
+                arith_args = right.get('args', {})
+                left_val = arith_args.get('left')
+                right_val = arith_args.get('right')
+                op_arith = arith_args.get('op', '')
+                # Try to evaluate simple arithmetic with constants
+                if isinstance(left_val, (int, float)) and isinstance(right_val, (int, float)):
+                    if op_arith == '*':
+                        count = int(left_val * right_val)
+                    elif op_arith == '+':
+                        count = int(left_val + right_val)
+                    elif op_arith == '-':
+                        count = int(left_val - right_val)
+                    elif op_arith == '/':
+                        count = int(left_val / right_val) if right_val != 0 else None
+
+        if count is None:
+            return None
+
+        # Check if left side is a StateMethod with count_from_list_unique
+        method = None
+        args = []
+
+        # Check for Rule Builder format: {"rule": "StateMethod", "args": {"method": ..., "args": [...]}}
+        if left.get('rule') == 'StateMethod':
+            rb_args = left.get('args', {})
+            method = rb_args.get('method', '')
+            args = rb_args.get('args', [])
+        # Check for lowercase state_method format
+        elif left.get('type') == 'state_method':
+            method = left.get('method', '')
+            args = left.get('args', [])
+
+        if method != 'count_from_list_unique':
+            return None
+
+        # Extract item list from args
+        items = []
+        if args and isinstance(args[0], dict):
+            if args[0].get('type') == 'constant':
+                items = args[0].get('value', [])
+
+        if not items:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        # Generate HasFromListUnique with the items and count
+        self.required_imports.add('HasFromListUnique')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromListUnique({items_str}, count={count})'
+
+    def _try_convert_ast_sum_of_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert an AST_sum_of comparison to HasFromListUnique().
+
+        Pattern: sum(state.has(item, player) for item in items) >= count
+        Exported as: Compare(AST_sum_of(...), ">=", count)
+        Converts to: HasFromListUnique(*items, count=count)
+
+        This handles the common pattern of counting how many items from a list
+        the player has, used for boss gates and similar mechanics.
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Check if left side is an AST_sum_of rule
+        rb_rule = left.get('rule', '')
+        if rb_rule != 'AST_sum_of':
+            return None
+
+        args = left.get('args', {})
+
+        # Get the element_rule - should be an item_check on the iterator variable
+        element_rule = args.get('element_rule', {})
+
+        # Get the iterator_info
+        iterator_info = args.get('iterator_info', {})
+        target = iterator_info.get('target', {})
+        iterator = iterator_info.get('iterator', {})
+
+        # Verify this is a simple item counting pattern:
+        # element_rule should check state.has(variable) where variable is the iterator target
+        # We support: {"type": "item_check", "item": {"type": "name", "name": "<var>"}}
+        if element_rule.get('type') != 'item_check':
+            return None
+
+        item_spec = element_rule.get('item', {})
+        if not isinstance(item_spec, dict):
+            return None
+
+        # The item should be a reference to the iterator variable
+        if item_spec.get('type') != 'name':
+            return None
+
+        item_var_name = item_spec.get('name', '')
+        target_var_name = target.get('name', '') if isinstance(target, dict) else ''
+
+        # Verify the item check uses the iterator variable
+        if item_var_name != target_var_name:
+            return None
+
+        # Extract the list of items from the iterator
+        items = []
+        if isinstance(iterator, dict) and iterator.get('type') == 'constant':
+            items = iterator.get('value', [])
+        elif isinstance(iterator, list):
+            items = iterator
+
+        if not items or not isinstance(items, list):
+            return None
+
+        # Get the count from the right side
+        count = self._extract_numeric_constant(right)
+        if count is None:
+            # Try other formats
+            if isinstance(right, dict):
+                if right.get('type') == 'constant':
+                    count = right.get('value', 0)
+                elif right.get('rule') == 'Constant':
+                    count = right.get('args', {}).get('value', 0)
+            elif isinstance(right, (int, float)):
+                count = int(right)
+
+        if count is None:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        elif op == '<=' and count >= len(items):
+            # <= max_items is always true if you can have all items
+            self.required_imports.add('True_')
+            return 'True_()'
+        elif op == '<':
+            # < count doesn't fit the HasFromListUnique pattern well
+            return None
+        else:
+            return None
+
+        # Ensure count doesn't exceed the number of items
+        count = min(count, len(items))
+
+        # Generate HasFromListUnique with the items and count
+        self.required_imports.add('HasFromListUnique')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromListUnique({items_str}, count={count})'
+
+    def _try_convert_count_from_list_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a count_from_list comparison to HasFromList().
+
+        Pattern: state.count_from_list(items, player) >= count
+        Also handles: state.count_from_list(items, player) + 0 >= count (Arithmetic wrapper)
+        Converts to: HasFromList(*items, count=count)
+
+        Returns None if the pattern doesn't match.
+        """
+        if not isinstance(left, dict):
+            return None
+
+        # Get the count from the right side
+        count = self._extract_numeric_constant(right)
+        if count is None:
+            return None
+
+        # Check if left side is a StateMethod with count_from_list
+        # or an Arithmetic wrapping a StateMethod (e.g., count_from_list + 0)
+        method = None
+        args = []
+
+        # Direct StateMethod case
+        if left.get('rule') == 'StateMethod':
+            rb_args = left.get('args', {})
+            method = rb_args.get('method', '')
+            args = rb_args.get('args', [])
+        elif left.get('type') == 'state_method':
+            method = left.get('method', '')
+            args = left.get('args', [])
+        # Arithmetic wrapper case: Arithmetic(StateMethod, "+", 0)
+        elif left.get('rule') == 'Arithmetic':
+            arith_args = left.get('args', {})
+            arith_left = arith_args.get('left', {})
+            arith_op = arith_args.get('op', '')
+            arith_right = arith_args.get('right')
+
+            # Check if it's StateMethod + 0 or StateMethod + some constant
+            if arith_op == '+' and self._extract_numeric_constant({'type': 'constant', 'value': arith_right}) == 0:
+                if isinstance(arith_left, dict):
+                    if arith_left.get('rule') == 'StateMethod':
+                        rb_args = arith_left.get('args', {})
+                        method = rb_args.get('method', '')
+                        args = rb_args.get('args', [])
+                    elif arith_left.get('type') == 'state_method':
+                        method = arith_left.get('method', '')
+                        args = arith_left.get('args', [])
+
+        if method != 'count_from_list':
+            return None
+
+        # Extract item list from args
+        items = []
+        if args and isinstance(args[0], dict):
+            if args[0].get('type') == 'constant':
+                items = args[0].get('value', [])
+            elif args[0].get('rule') == 'Constant':
+                items = args[0].get('args', {}).get('value', [])
+
+        if not items:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        # Generate HasFromList with the items and count
+        self.required_imports.add('HasFromList')
+        items_str = ', '.join(f"'{self._escape_string(str(item), chr(39))}'" for item in items)
+        return f'HasFromList({items_str}, count={count})'
+
+    def _extract_numeric_constant(self, value: Any) -> Optional[int]:
+        """Extract a numeric constant from various formats."""
+        if isinstance(value, (int, float)):
+            return int(value)
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                val = value.get('value')
+                if isinstance(val, (int, float)):
+                    return int(val)
+            elif value.get('rule') == 'Constant':
+                val = value.get('args', {}).get('value')
+                if isinstance(val, (int, float)):
+                    return int(val)
+            elif value.get('rule') == 'Arithmetic':
+                # Handle simple arithmetic with constants
+                arith_args = value.get('args', {})
+                left_val = self._extract_numeric_constant(arith_args.get('left'))
+                right_val = self._extract_numeric_constant(arith_args.get('right'))
+                op = arith_args.get('op', '')
+                if left_val is not None and right_val is not None:
+                    if op == '*':
+                        return int(left_val * right_val)
+                    elif op == '+':
+                        return int(left_val + right_val)
+                    elif op == '-':
+                        return int(left_val - right_val)
+                    elif op == '/' and right_val != 0:
+                        return int(left_val / right_val)
+        return None
 
     def _extract_prog_items_item_name(self, expr: Any) -> Optional[str]:
         """
@@ -4295,62 +5596,33 @@ class RuleCodeGenerator:
         """Convert helper rule to HelperCall()."""
         helper_name = rule.get('name', '')
         args = rule.get('args', [])
+        kwargs = rule.get('kwargs', {})
 
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
             self.required_imports.add('HelperCall')
             func_name = self.get_function_name(helper_name)
 
+            # Pre-process args to resolve Name references that can be inferred from adjacent dict args
+            # This handles patterns like: helper(keys, data, ...) where keys=data.keys()
+            # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
+            processed_args = self._infer_keys_from_dict_args(args)
+
             # Convert arguments to Python code
             arg_strs = []
-            for arg in args:
-                if isinstance(arg, dict) and arg.get('type') == 'constant':
-                    arg_strs.append(repr(arg.get('value')))
-                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
-                    # Rule Builder format constant
-                    arg_strs.append(repr(arg.get('args', {}).get('value')))
-                elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
-                    # Resolve setting_value args to their actual values
-                    setting = arg.get('setting', '')
-                    if setting in self.settings:
-                        arg_strs.append(repr(self.settings[setting]))
-                    else:
-                        arg_strs.append('None')
-                elif isinstance(arg, dict) and arg.get('rule') == 'AST_setting_value':
-                    # Rule Builder format setting value (from CC converter)
-                    setting = arg.get('args', {}).get('setting', '')
-                    if setting in self.settings:
-                        arg_strs.append(repr(self.settings[setting]))
-                    else:
-                        arg_strs.append('None')
-                elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
-                    arith_result = self._evaluate_arithmetic_constant(arg)
-                    arg_strs.append(arith_result if arith_result else 'None')
-                elif isinstance(arg, dict) and arg.get('type') == 'attribute':
-                    # Handle attribute access on setting_value (e.g., world.options.goal.value)
-                    obj = arg.get('object', {})
-                    if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
-                        setting = obj.get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    else:
-                        arg_strs.append('None')
-                elif isinstance(arg, dict) and arg.get('type') == 'name':
-                    # Handle name references from AST format
-                    name = arg.get('name', '')
-                    if name in ('self', 'world'):
-                        # 'self' or 'world' references represent the game world object in the
-                        # original rule lambda. For worldgen helpers, this is implicitly available
-                        # via state.multiworld.worlds[player], so we skip this argument entirely.
-                        pass  # Skip this argument - don't add to arg_strs
-                    else:
-                        # Unknown name reference - default to None
-                        arg_strs.append('None')
-                else:
-                    # For complex args, try to convert
-                    arg_strs.append(repr(arg) if not isinstance(arg, dict) else 'None')
+            for arg in processed_args:
+                arg_strs.append(self._convert_helper_arg(arg))
+
+            # Convert keyword arguments to Python code
+            kwarg_strs = []
+            for kw_name, kw_value in kwargs.items():
+                kw_value_str = self._convert_helper_arg(kw_value)
+                # Skip None values that represent filtered args
+                if kw_value_str != 'None' or not isinstance(kw_value, dict):
+                    kwarg_strs.append(f'"{kw_name}": {kw_value_str}')
+
+            # Filter out None values from arg_strs (which represent skipped args like 'world')
+            arg_strs = [a for a in arg_strs if a is not None]
 
             # Build HelperCall with helper_func reference
             # Try to convert the helper body to a Rule Builder expression for Tier 1 support
@@ -4361,6 +5633,10 @@ class RuleCodeGenerator:
 
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
+
+            if kwarg_strs:
+                # Pass kwargs as a dict to HelperCall
+                parts.append(f'kwargs={{{", ".join(kwarg_strs)}}}')
 
             if body_rule_code:
                 # Tier 1: Include body_rule for full explain support
@@ -4374,6 +5650,226 @@ class RuleCodeGenerator:
         # under default/normal game settings
         self.required_imports.add('True_')
         return 'True_()'
+
+    def _infer_keys_from_dict_args(self, args: List[Any]) -> List[Any]:
+        """Infer 'keys' parameter values from adjacent dict arguments.
+
+        Some apworlds use patterns like:
+            lambda state, keys=some_dict.keys(), data=some_dict: helper(state, keys, data, ...)
+
+        When the analyzer exports this, it captures 'keys' as a Name reference instead of
+        evaluating some_dict.keys(). This method detects such patterns and replaces the
+        Name reference with the actual keys from the adjacent dict constant.
+
+        Pattern detected:
+            - arg[i] is a Name reference with name 'keys'
+            - arg[i+1] is a dict constant (the 'data' parameter)
+            => Replace arg[i] with a constant containing data.keys()
+
+        Handles both AST format and Rule Builder format:
+            AST format: {"type": "name", "name": "keys"}
+            Rule Builder format: {"rule": "Name", "args": {"name": "keys"}}
+
+        Args:
+            args: List of arguments to the helper function
+
+        Returns:
+            Processed list of arguments with inferred keys
+        """
+        if len(args) < 2:
+            return args
+
+        def get_name_value(arg: Any) -> Optional[str]:
+            """Extract name from either AST or Rule Builder format Name node."""
+            if not isinstance(arg, dict):
+                return None
+            # AST format: {"type": "name", "name": "keys"}
+            if arg.get('type') == 'name':
+                return arg.get('name')
+            # Rule Builder format: {"rule": "Name", "args": {"name": "keys"}}
+            if arg.get('rule') == 'Name':
+                return arg.get('args', {}).get('name')
+            return None
+
+        def get_dict_value(arg: Any) -> Optional[dict]:
+            """Extract dict value from either AST or Rule Builder format Constant node."""
+            if not isinstance(arg, dict):
+                return None
+            # AST format: {"type": "constant", "value": {...}}
+            if arg.get('type') == 'constant':
+                val = arg.get('value')
+                if isinstance(val, dict):
+                    return val
+            # Rule Builder format: {"rule": "Constant", "args": {"value": {...}}}
+            if arg.get('rule') == 'Constant':
+                val = arg.get('args', {}).get('value')
+                if isinstance(val, dict):
+                    return val
+            return None
+
+        result = []
+        i = 0
+        while i < len(args):
+            arg = args[i]
+            name_value = get_name_value(arg)
+
+            # Check if this is a Name reference to 'keys' followed by a dict constant
+            if name_value == 'keys' and i + 1 < len(args):
+                dict_value = get_dict_value(args[i + 1])
+                if dict_value is not None:
+                    # Replace the Name reference with the dict keys
+                    result.append({'type': 'constant', 'value': list(dict_value.keys())})
+                else:
+                    # Keep original if we couldn't extract dict keys
+                    result.append(arg)
+            else:
+                result.append(arg)
+            i += 1
+
+        return result
+
+    def _convert_helper_arg(self, arg: Any) -> str:
+        """Convert a single helper argument to Python code string.
+
+        This is the unified method for converting helper arguments from both
+        AST format and Rule Builder format. It handles all argument types
+        including constants, settings, options, world attributes, nested helpers,
+        and special references.
+
+        Args:
+            arg: The argument value (can be a dict with type info or a raw value)
+
+        Returns:
+            Python code string representation of the argument, or None if it should be skipped
+        """
+        if not isinstance(arg, dict):
+            return repr(arg)
+
+        # Get rule type (Rule Builder format) and ast type (AST format)
+        rule_type = arg.get('rule', '')
+        ast_type = arg.get('type', '')
+
+        # ===== Constants =====
+        if ast_type == 'constant':
+            return repr(arg.get('value'))
+        if rule_type == 'Constant':
+            return repr(arg.get('args', {}).get('value'))
+
+        # ===== Boolean Constants =====
+        if rule_type == 'True_':
+            return 'True'
+        if rule_type == 'False_':
+            return 'False'
+
+        # ===== Setting/Option/WorldAttribute Values =====
+        # AST format
+        if ast_type == 'setting_value':
+            setting = arg.get('setting', '')
+            if setting in self.settings:
+                return repr(self.settings[setting])
+            return 'None'
+        if ast_type == 'option_value':
+            option = arg.get('option', '')
+            if option in self.settings:
+                return repr(self.settings[option])
+            return 'None'
+        if ast_type == 'world_attribute':
+            attribute = arg.get('attribute', '')
+            if attribute in self.world_attributes:
+                return repr(self.world_attributes[attribute])
+            return 'None'
+
+        # Rule Builder format
+        if rule_type == 'SettingValue':
+            setting = arg.get('args', {}).get('setting', '')
+            if setting in self.settings:
+                return repr(self.settings[setting])
+            return 'None'
+        if rule_type == 'AST_setting_value':
+            setting = arg.get('args', {}).get('setting', '')
+            if setting in self.settings:
+                return repr(self.settings[setting])
+            return 'None'
+        if rule_type == 'OptionValue':
+            option = arg.get('args', {}).get('option', '')
+            if option in self.settings:
+                return repr(self.settings[option])
+            return 'None'
+        if rule_type == 'WorldAttribute':
+            attribute = arg.get('args', {}).get('attribute', '')
+            if attribute in self.world_attributes:
+                return repr(self.world_attributes[attribute])
+            return 'None'
+
+        # ===== Arithmetic Expressions =====
+        if rule_type == 'Arithmetic':
+            arith_result = self._evaluate_arithmetic_constant(arg)
+            return arith_result if arith_result else 'None'
+        if ast_type == 'binary_op':
+            binop_result = self._evaluate_binary_op_constant(arg)
+            return binop_result if binop_result else 'None'
+
+        # ===== Compare Expressions =====
+        if rule_type == 'Compare' or ast_type == 'compare':
+            compare_result = self._evaluate_compare_rule(arg)
+            return compare_result if compare_result is not None else 'None'
+
+        # ===== Name References =====
+        if ast_type == 'name':
+            name = arg.get('name', '')
+            if name in ('self', 'world'):
+                return None  # Signal to skip this argument
+            return 'None'
+        if rule_type == 'Name':
+            name = arg.get('args', {}).get('name', '')
+            if name == 'location' and self._current_location:
+                escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
+                return f'multiworld.get_location("{escaped}", player)'
+            if name == 'entrance' and self._current_entrance:
+                escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
+                return f'multiworld.get_entrance("{escaped}", player)'
+            if name in ('self', 'world'):
+                return None  # Signal to skip this argument
+            return 'None'
+
+        # ===== Attribute Access =====
+        if ast_type == 'attribute':
+            obj = arg.get('object', {})
+            if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
+                setting = obj.get('setting', '')
+                if setting in self.settings:
+                    return repr(self.settings[setting])
+                return 'None'
+            return 'None'
+        if rule_type == 'Attribute':
+            obj_info = arg.get('args', {}).get('object', {})
+            attr_name = arg.get('args', {}).get('attr', '')
+            if obj_info.get('rule') == 'Name' and attr_name == 'parent_region':
+                entrance_var = obj_info.get('args', {}).get('name', '')
+                entrance_key = entrance_var.lower().replace(' ', '')
+                if entrance_key in self.entrance_regions:
+                    region_name = self.entrance_regions[entrance_key]
+                    return repr(region_name)
+                return 'None'
+            return 'None'
+
+        # ===== Nested Helper Calls =====
+        if arg.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
+            nested_helper = rule_type
+            if nested_helper in self.known_helpers:
+                helper_body = self.helper_bodies.get(nested_helper, {})
+                if isinstance(helper_body, dict) and helper_body.get('type') == 'constant':
+                    const_val = helper_body.get('value')
+                    return repr(const_val)
+                else:
+                    # Complex helper - evaluate to True as approximation
+                    return 'True'
+            else:
+                # Unknown nested helper - assume True
+                return 'True'
+
+        # ===== Fallback =====
+        return 'None'
 
     def _convert_weighted_sum(self, rule: Dict[str, Any]) -> str:
         """Convert weighted_sum helper to WeightedSum rule.
@@ -4429,6 +5925,64 @@ class RuleCodeGenerator:
 
         return f'WeightedSum(threshold={threshold}, items=[{items_str}])'
 
+    def _convert_unique_count(self, rule: Dict[str, Any]) -> str:
+        """Convert unique_count helper to UniqueCount rule.
+
+        unique_count checks if the count of unique items (item present >= 1) from a list
+        meets or exceeds a threshold. Unlike weighted_sum which counts total items,
+        this only counts whether each item type is present (1 if count > 0, else 0).
+
+        Used by A Hat in Time for Enemy/Boss counting where the game tracks unique types
+        collected, not total items.
+
+        Format expected:
+        {
+            "rule": "unique_count",
+            "_original_ast_type": "helper",
+            "args": [
+                {"rule": "Constant", "args": {"value": 12.0}},  # threshold
+                {"rule": "Constant", "args": {"value": [["Enemy1", 1.0], ["Enemy2", 1.0], ...]}}  # items
+            ]
+        }
+        """
+        args = rule.get('args', [])
+
+        # Extract threshold (first arg)
+        threshold = 1.0
+        if len(args) >= 1:
+            arg0 = args[0]
+            if isinstance(arg0, dict):
+                if arg0.get('rule') == 'Constant':
+                    threshold = arg0.get('args', {}).get('value', 1.0)
+                elif arg0.get('type') == 'constant':
+                    threshold = arg0.get('value', 1.0)
+
+        # Extract items with weights (second arg)
+        items = []
+        if len(args) >= 2:
+            arg1 = args[1]
+            if isinstance(arg1, dict):
+                if arg1.get('rule') == 'Constant':
+                    raw_items = arg1.get('args', {}).get('value', [])
+                elif arg1.get('type') == 'constant':
+                    raw_items = arg1.get('value', [])
+                else:
+                    raw_items = []
+
+                # Convert raw items to list of tuples
+                if isinstance(raw_items, list):
+                    for item in raw_items:
+                        if isinstance(item, (list, tuple)) and len(item) >= 2:
+                            items.append((item[0], item[1]))
+
+        # Generate UniqueCount rule
+        self.required_imports.add('UniqueCount')
+
+        # Build the items list as Python code
+        items_str = ', '.join(f'({repr(name)}, {weight})' for name, weight in items)
+
+        return f'UniqueCount(threshold={threshold}, items=[{items_str}])'
+
     def _convert_rule_builder_helper(self, rule: Dict[str, Any], helper_name: str) -> str:
         """Convert Rule Builder format helper rule to HelperCall().
 
@@ -4437,119 +5991,31 @@ class RuleCodeGenerator:
         instead of AST format with 'type': 'helper'.
         """
         args = rule.get('args', [])
+        kwargs = rule.get('kwargs', {})
+
+        # Pre-process args to resolve Name references that can be inferred from adjacent dict args
+        # This handles patterns like: helper(keys, data, ...) where keys=data.keys()
+        # Common in apworlds like Shadow The Hedgehog's CountRegionAccessibility helper
+        args = self._infer_keys_from_dict_args(args)
 
         # If we know about this helper, generate a proper HelperCall
         if helper_name in self.known_helpers:
             self.required_imports.add('HelperCall')
             func_name = self.get_function_name(helper_name)
 
-            # Convert arguments to Python code
+            # Convert arguments to Python code using the shared method
             arg_strs = []
             for arg in args:
-                if isinstance(arg, dict):
-                    # Handle Rule Builder format args (SettingValue, Constant, etc.)
-                    arg_rule = arg.get('rule', '')
-                    if arg_rule == 'SettingValue':
-                        # Resolve setting_value args to their actual values (legacy)
-                        setting = arg.get('args', {}).get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'OptionValue':
-                        # Resolve option_value args to their actual values
-                        option = arg.get('args', {}).get('option', '')
-                        if option in self.settings:
-                            arg_strs.append(repr(self.settings[option]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'WorldAttribute':
-                        # Resolve world_attribute args to their actual values
-                        attribute = arg.get('args', {}).get('attribute', '')
-                        if attribute in self.world_attributes:
-                            arg_strs.append(repr(self.world_attributes[attribute]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'AST_setting_value':
-                        # Rule Builder format setting value from CC converter
-                        setting = arg.get('args', {}).get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'Constant':
-                        # Handle Rule Builder format Constant: {'rule': 'Constant', 'args': {'value': ...}}
-                        value = arg.get('args', {}).get('value')
-                        arg_strs.append(repr(value))
-                    elif arg.get('type') == 'constant':
-                        # Handle AST format constant: {'type': 'constant', 'value': ...}
-                        arg_strs.append(repr(arg.get('value')))
-                    elif arg.get('type') == 'setting_value':
-                        setting = arg.get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg.get('type') == 'option_value':
-                        option = arg.get('option', '')
-                        if option in self.settings:
-                            arg_strs.append(repr(self.settings[option]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg.get('type') == 'world_attribute':
-                        attribute = arg.get('attribute', '')
-                        if attribute in self.world_attributes:
-                            arg_strs.append(repr(self.world_attributes[attribute]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'False_':
-                        # Handle Rule Builder format boolean False: {'rule': 'False_'}
-                        arg_strs.append('False')
-                    elif arg_rule == 'True_':
-                        # Handle Rule Builder format boolean True: {'rule': 'True_'}
-                        arg_strs.append('True')
-                    elif arg.get('_original_ast_type') == 'helper' or arg_rule in self.known_helpers:
-                        # Nested helper call - check if we know about it
-                        nested_helper = arg_rule
-                        if nested_helper in self.known_helpers:
-                            # Check helper body - if it returns constant True/False, inline it
-                            helper_body = self.helper_bodies.get(nested_helper, {})
-                            if isinstance(helper_body, dict) and helper_body.get('type') == 'constant':
-                                const_val = helper_body.get('value')
-                                arg_strs.append(repr(const_val))
-                            else:
-                                # Complex helper - evaluate to True as approximation
-                                # (Most SM canXXX/knowsXXX helpers are simplified to True)
-                                arg_strs.append('True')
-                        else:
-                            # Unknown nested helper - assume True (optimistic approximation)
-                            arg_strs.append('True')
-                    elif arg_rule == 'Name':
-                        # Handle Name references - check for location/entrance context
-                        name = arg.get('args', {}).get('name', '')
-                        if name == 'location' and self._current_location:
-                            escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
-                            arg_strs.append(f'multiworld.get_location("{escaped}", player)')
-                        elif name == 'entrance' and self._current_entrance:
-                            escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
-                            arg_strs.append(f'multiworld.get_entrance("{escaped}", player)')
-                        elif name in ('self', 'world'):
-                            # 'self' or 'world' references represent the game world object in the
-                            # original rule lambda. For worldgen helpers, this is implicitly available
-                            # via state.multiworld.worlds[player], so we skip this argument entirely.
-                            # The helper function handles world access internally.
-                            pass  # Skip this argument - don't add to arg_strs
-                        else:
-                            # Unknown name reference - default to None
-                            arg_strs.append('None')
-                    elif arg_rule == 'Arithmetic':
-                        arith_result = self._evaluate_arithmetic_constant(arg)
-                        arg_strs.append(arith_result if arith_result else 'None')
-                    else:
-                        # For complex args, try to convert
-                        arg_strs.append('None')
-                else:
-                    arg_strs.append(repr(arg))
+                arg_str = self._convert_helper_arg(arg)
+                if arg_str is not None:  # None means skip this argument
+                    arg_strs.append(arg_str)
+
+            # Convert keyword arguments using the same shared method
+            kwarg_strs = []
+            for kw_name, kw_value in kwargs.items():
+                kw_value_str = self._convert_helper_arg(kw_value)
+                if kw_value_str is not None:
+                    kwarg_strs.append(f'"{kw_name}": {kw_value_str}')
 
             # Build HelperCall with helper_func reference
             # Try to convert the helper body to a Rule Builder expression for Tier 1 support
@@ -4560,17 +6026,68 @@ class RuleCodeGenerator:
             if arg_strs:
                 parts.append(f'args=({", ".join(arg_strs)},)')
 
+            if kwarg_strs:
+                # Pass kwargs as a dict to HelperCall
+                parts.append(f'kwargs={{{", ".join(kwarg_strs)}}}')
+
             if body_rule_code:
                 # Tier 1: Include body_rule for full explain support
                 parts.append(f'body_rule={body_rule_code}')
 
             return f'HelperCall({", ".join(parts)})'
 
+        # Handle Python built-in functions that can be evaluated at generation time
+        if helper_name == 'int':
+            # Evaluate the int() call - typically used for int(x / y) floor division patterns
+            args = rule.get('args', [])
+            if args and len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, dict):
+                    # Try to evaluate arithmetic expression
+                    if arg.get('rule') == 'Arithmetic':
+                        arith_result = self._evaluate_arithmetic_constant(arg)
+                        if arith_result and arith_result != 'None':
+                            try:
+                                # Apply int() to the arithmetic result
+                                int_result = int(eval(arith_result))
+                                return repr(int_result)
+                            except (ValueError, TypeError, SyntaxError):
+                                pass
+                    # Handle nested int() or other patterns by extracting constant
+                    elif arg.get('rule') == 'Constant':
+                        value = arg.get('args', {}).get('value')
+                        if isinstance(value, (int, float)):
+                            return repr(int(value))
+                elif isinstance(arg, (int, float)):
+                    return repr(int(arg))
+            # If we can't evaluate, return 0 as a conservative default
+            # This is better than True_() which would make rules always pass
+            return repr(0)
+
+        if helper_name == 'len':
+            # len() on collections - try to evaluate if we have a constant list/dict
+            args = rule.get('args', [])
+            if args and len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, (list, tuple)):
+                    return repr(len(arg))
+                elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
+                    value = arg.get('args', {}).get('value')
+                    if isinstance(value, (list, tuple, dict, str)):
+                        return repr(len(value))
+            # Can't evaluate - return 0 as conservative default
+            return repr(0)
+
         # Unknown helper - return True_() as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
         # (This matches the behavior of _convert_helper for consistency)
+        print(
+            f"LOSSY FALLBACK: Unknown helper '{helper_name}' in _convert_rule_builder_helper, "
+            f"using True_() (always accessible) as fallback",
+            file=sys.stderr
+        )
         self.required_imports.add('True_')
         return 'True_()'
 
@@ -4593,13 +6110,72 @@ class RuleCodeGenerator:
         return 'None'
 
     def _convert_ast_function_call(self, rule: Dict[str, Any]) -> str:
-        """Convert AST_function_call to resolved constant.
+        """Convert AST_function_call to resolved constant or nested rule.
 
         This handles function calls like options.open_pyramid.to_bool()
         by extracting the option name and resolving it from settings.
+
+        It also handles cases where the function is itself a Rule Builder rule
+        (like And, Or, Has) - these are produced by bunny rule analysis in
+        ALttP where path_to_access_rule returns nested rule expressions.
         """
         args = rule.get('args', {})
         function = args.get('function', {})
+
+        # Check if function is a Rule Builder rule (has 'rule' key with known rule types)
+        # This happens when bunny rules are analyzed and the inner rule is a valid
+        # Rule Builder expression (e.g., And(CanReachEntrance(...), Has(...)))
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            # Check for Rule Builder types that produce complete boolean expressions,
+            # plus 'helper' which is a special AST marker for helper references
+            if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper':
+                # Special case: And(CanReachEntrance(...), ...) from bunny rules
+                # The bunny rules code creates rules like:
+                #   can_reach(entrance) AND entrance.access_rule(state)
+                # But CanReachEntrance already checks the entrance's access_rule
+                # at runtime (see BaseClasses.Entrance.can_reach), so conditions
+                # that are part of the entrance's access rule are redundant.
+                #
+                # HOWEVER, bunny rules also add additional conditions like Mirror
+                # that are NOT part of the entrance's access rule and MUST be preserved.
+                # Example: path_to_access_rule(new_path, entrance)(state) and state.has('Magic Mirror', player)
+                #
+                # We preserve item checks (Has, HasAll, HasAny, etc.) because they
+                # are definitely not entrance access rules. We only drop conditions
+                # that look like they came from entrance.access_rule (like Or/And with
+                # option checks, or CanReachRegion that would be redundant).
+                if func_rule == 'And':
+                    children = function.get('children', [])
+                    can_reach_entrance = None
+                    non_entrance_conditions = []
+                    for child in children:
+                        if isinstance(child, dict):
+                            child_rule = child.get('rule', '')
+                            # Check if this is the CanReachEntrance condition
+                            if child_rule == 'CanReachEntrance':
+                                can_reach_entrance = child
+                            # Preserve item checks - these are definitely additional requirements
+                            elif child_rule in ('Has', 'HasAll', 'HasAny', 'HasGroup',
+                                               'HasFromList', 'HasFromListUnique'):
+                                non_entrance_conditions.append(child)
+                            # Preserve helper calls - these might be important game-specific checks
+                            elif child_rule in ('HelperCall', 'helper'):
+                                non_entrance_conditions.append(child)
+                            # Other conditions (Or, And, OptionValue, etc.) might be from
+                            # entrance access rules, so we skip them as potentially redundant
+                    if can_reach_entrance:
+                        if non_entrance_conditions:
+                            # Preserve CanReachEntrance AND the non-entrance conditions
+                            preserved = [can_reach_entrance] + non_entrance_conditions
+                            if len(preserved) == 1:
+                                return self._convert_rule(preserved[0])
+                            return self._convert_rule({'rule': 'And', 'children': preserved})
+                        else:
+                            # No additional conditions to preserve, just use CanReachEntrance
+                            return self._convert_rule(can_reach_entrance)
+                # Recursively convert the nested Rule Builder rule
+                return self._convert_rule(function)
 
         # Try to extract the option name from the function expression
         # Structure: world.worlds[1].options.<option_name>.to_bool()
@@ -4703,6 +6279,13 @@ class RuleCodeGenerator:
             # Option-filtered rule - just return the if_true branch
             return self._convert_rule(if_true)
 
+        # Try to evaluate the test to a constant if we have settings
+        test_result = self._try_evaluate_conditional_test(test)
+        if test_result is True:
+            return self._convert_rule(if_true)
+        elif test_result is False:
+            return self._convert_rule(if_false)
+
         # Check if test is an OptionValue - generate OptionValue rule for runtime evaluation
         test_rb_rule = test.get('rule', '') if isinstance(test, dict) else ''
         test_type = test.get('type', '') if isinstance(test, dict) else ''
@@ -4718,6 +6301,275 @@ class RuleCodeGenerator:
         if_false_code = self._convert_rule(if_false)
 
         return f'Conditional(test={test_code}, if_true={if_true_code}, if_false={if_false_code})'
+
+    def _convert_dict_lambda_lookup(self, rule: Dict[str, Any]) -> str:
+        """Convert dict_lambda_lookup rule to Python code.
+
+        This handles patterns like: rule_map.get(key, default)(state)
+        where rule_map contains lambda values that have been analyzed.
+
+        When we can resolve the key expression (e.g., for vanilla entrance shuffle),
+        we return just the matching case's rule. Otherwise, we fall back to OR'ing
+        all cases together (permissive approach).
+
+        Args:
+            rule: Dict with 'cases' (analyzed rules for each key), 'key', 'default'
+
+        Returns:
+            Python Rule Builder expression
+        """
+        cases = rule.get('cases', {})
+        default = rule.get('default', {'rule': 'False_'})
+        key_expr = rule.get('key', {})
+
+        if not cases:
+            # No cases - just use the default
+            return self._convert_rule(default)
+
+        # Try to resolve the key expression if it's a world.get_entrance(X).connected_region.name pattern
+        resolved_key = self._try_resolve_entrance_connected_region(key_expr)
+        if resolved_key is not None:
+            # We resolved the key - return just the matching case or default
+            if resolved_key in cases:
+                return self._convert_rule(cases[resolved_key])
+            else:
+                return self._convert_rule(default)
+
+        # If there's only one case, we can simplify
+        if len(cases) == 1:
+            key_name, case_rule = list(cases.items())[0]
+            # Return just the case rule - if the key matches, this is what would execute
+            return self._convert_rule(case_rule)
+
+        # Multiple cases - create an Or of all case rules
+        # This is permissive but correct: at runtime only one key matches,
+        # but we don't know which at export time, so we allow any matching rule
+        self.required_imports.add('Or')
+
+        case_rules = []
+        for key_name, case_rule in cases.items():
+            # Convert each case's rule
+            case_code = self._convert_rule(case_rule)
+            # Skip False_ rules - they don't contribute anything
+            if case_code in ('False_()', 'False_'):
+                continue
+            case_rules.append(case_code)
+
+        # Also include the default if it's not False_
+        default_code = self._convert_rule(default)
+        if default_code not in ('False_()', 'False_'):
+            case_rules.append(default_code)
+
+        if not case_rules:
+            # All cases were False_ - return False_
+            self.required_imports.add('False_')
+            return 'False_()'
+
+        if len(case_rules) == 1:
+            # Only one non-False_ rule
+            return case_rules[0]
+
+        # Multiple rules - Or them together
+        return f'Or({", ".join(case_rules)})'
+
+    def _try_resolve_entrance_connected_region(self, key_expr: Dict[str, Any]) -> Optional[str]:
+        """Try to resolve a key expression that accesses entrance.connected_region.name.
+
+        Handles patterns like:
+            world.get_entrance('Tower of Hera').connected_region.name
+
+        If we have the entrance connections data (set via set_entrance_connections),
+        we can resolve this to the actual connected region name.
+
+        Args:
+            key_expr: The key expression from dict_lambda_lookup
+
+        Returns:
+            The resolved region name, or None if we can't resolve it
+        """
+        if not self.entrance_connections:
+            return None
+
+        if not isinstance(key_expr, dict):
+            return None
+
+        # Pattern: {type: 'attribute', attr: 'name', object: {type: 'attribute', attr: 'connected_region', object: ...}}
+        if key_expr.get('type') != 'attribute' or key_expr.get('attr') != 'name':
+            return None
+
+        inner = key_expr.get('object', {})
+        if inner.get('type') != 'attribute' or inner.get('attr') != 'connected_region':
+            return None
+
+        # Now look for world.get_entrance('X') pattern
+        func_call = inner.get('object', {})
+        if func_call.get('type') != 'function_call':
+            return None
+
+        func = func_call.get('function', {})
+        if func.get('type') != 'attribute' or func.get('attr') != 'get_entrance':
+            return None
+
+        # Get the entrance name from the first argument
+        args = func_call.get('args', [])
+        if not args:
+            return None
+
+        first_arg = args[0]
+        entrance_name = None
+        if isinstance(first_arg, dict):
+            if first_arg.get('type') == 'constant':
+                entrance_name = first_arg.get('value')
+        elif isinstance(first_arg, str):
+            entrance_name = first_arg
+
+        if not entrance_name:
+            return None
+
+        # Look up the connected region
+        return self.entrance_connections.get(entrance_name)
+
+    def _try_evaluate_conditional_test(self, test: Dict[str, Any]) -> Optional[bool]:
+        """Try to evaluate a conditional test to a constant boolean.
+
+        Returns True, False, or None if the test can't be evaluated.
+        """
+        if not isinstance(test, dict):
+            return None
+
+        test_type = test.get('type', '')
+        test_rb_rule = test.get('rule', '')
+
+        # Handle option_value - look up in settings
+        if test_type == 'option_value' or test_rb_rule == 'OptionValue':
+            option_name = test.get('option', '') or test.get('args', {}).get('option', '')
+            if option_name in self.settings:
+                value = self.settings[option_name]
+                return bool(value)
+            return None
+
+        # Handle not - negate inner result
+        if test_type == 'not':
+            inner = test.get('condition') or test.get('operand', {})
+            inner_result = self._try_evaluate_conditional_test(inner)
+            if inner_result is not None:
+                return not inner_result
+            return None
+
+        # Handle constant
+        if test_type == 'constant':
+            return bool(test.get('value'))
+
+        # Handle compare with option_value operands
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            op = test.get('op', '')
+
+            left_val = self._try_evaluate_conditional_operand(left)
+            right_val = self._try_evaluate_conditional_operand(right)
+
+            if left_val is not None and right_val is not None:
+                try:
+                    if op == '==':
+                        return left_val == right_val
+                    elif op == '!=':
+                        return left_val != right_val
+                    elif op == '<':
+                        return left_val < right_val
+                    elif op == '<=':
+                        return left_val <= right_val
+                    elif op == '>':
+                        return left_val > right_val
+                    elif op == '>=':
+                        return left_val >= right_val
+                except:
+                    pass
+            return None
+
+        return None
+
+    def _try_evaluate_conditional_test_expr(self, test: Dict[str, Any], var_expressions: Dict[str, str]) -> Optional[bool]:
+        """Try to evaluate a conditional test expression to a constant boolean.
+
+        This is similar to _try_evaluate_conditional_test but works in the context
+        of _expr_to_rule_builder where we also have var_expressions.
+
+        Returns True, False, or None if the test can't be evaluated.
+        """
+        if not isinstance(test, dict):
+            return None
+
+        test_type = test.get('type', '')
+
+        # Handle option_value - look up in settings
+        if test_type == 'option_value':
+            option_name = test.get('option', '')
+            if option_name in self.settings:
+                value = self.settings[option_name]
+                return bool(value)
+            return None
+
+        # Handle not - negate inner result
+        if test_type == 'not':
+            inner = test.get('condition') or test.get('operand', {})
+            inner_result = self._try_evaluate_conditional_test_expr(inner, var_expressions)
+            if inner_result is not None:
+                return not inner_result
+            return None
+
+        # Handle constant
+        if test_type == 'constant':
+            value = test.get('value')
+            return bool(value) if value is not None else None
+
+        # Handle compare
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            op = test.get('op', '')
+
+            left_val = self._try_evaluate_conditional_operand(left)
+            right_val = self._try_evaluate_conditional_operand(right)
+
+            if left_val is not None and right_val is not None:
+                try:
+                    if op == '==':
+                        return left_val == right_val
+                    elif op == '!=':
+                        return left_val != right_val
+                    elif op == '<':
+                        return left_val < right_val
+                    elif op == '<=':
+                        return left_val <= right_val
+                    elif op == '>':
+                        return left_val > right_val
+                    elif op == '>=':
+                        return left_val >= right_val
+                except:
+                    pass
+            return None
+
+        return None
+
+    def _try_evaluate_conditional_operand(self, operand: Dict[str, Any]) -> Optional[Any]:
+        """Try to evaluate a conditional operand to a constant value."""
+        if not isinstance(operand, dict):
+            return operand
+
+        operand_type = operand.get('type', '')
+        operand_rb_rule = operand.get('rule', '')
+
+        if operand_type == 'constant':
+            return operand.get('value')
+
+        if operand_type == 'option_value' or operand_rb_rule == 'OptionValue':
+            option_name = operand.get('option', '') or operand.get('args', {}).get('option', '')
+            if option_name in self.settings:
+                return self.settings[option_name]
+            return None
+
+        return None
 
 
 def ast_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:
@@ -4787,6 +6639,7 @@ class HelperCodeGenerator:
         self.helper_data: Dict[str, Any] = {}  # Full helper data including param_mappings
         self.uses_math: bool = False  # Track if math functions are used
         self.uses_placement_lookup: bool = False  # Track if placement_lookup is used
+        self.uses_logging: bool = False  # Track if logging module is used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
         # Track NamedTuple types encountered during code generation
         # Maps tuple of field names to a generated class name
@@ -4797,6 +6650,9 @@ class HelperCodeGenerator:
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
         self._current_entrance: Optional[str] = None
+        # Track current helper's parameters during code generation
+        # Used to recognize when a "helper" call is actually a call to a parameter (lambda)
+        self._current_helper_params: Set[str] = set()
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -4827,6 +6683,10 @@ class HelperCodeGenerator:
         """
         self._current_location = location
         self._current_entrance = entrance
+
+    def _escape_string(self, s: str, quote_char: str = '"') -> str:
+        """Escape a string for use in generated Python code."""
+        return escape_string(s, quote_char)
 
     def _get_namedtuple_class_name(self, fields: tuple) -> str:
         """
@@ -4899,14 +6759,8 @@ class HelperCodeGenerator:
                         self.prescan_for_namedtuples(item)
 
     def get_function_name(self, helper_name: str) -> str:
-        """
-        Get the Python function name for a helper.
-
-        Returns the helper name as-is, without any prefix. The helpers are
-        defined in the world's Rules.py module, so they're already namespaced
-        and don't need a game-specific prefix.
-        """
-        return helper_name
+        """Get the Python function name for a helper."""
+        return get_helper_function_name(helper_name)
 
     def generate_helper_function(
         self,
@@ -4961,8 +6815,16 @@ class HelperCodeGenerator:
 
         signature = f"def {func_name}({', '.join(sig_params)}) -> {return_type}:"
 
-        # Generate function body
-        body_code = self._generate_body(body)
+        # Set current helper parameters for proper lambda call generation
+        # This allows _expr_helper to recognize when a "helper" is actually a parameter
+        self._current_helper_params = set(params)
+
+        try:
+            # Generate function body
+            body_code = self._generate_body(body)
+        finally:
+            # Clear the context after generation
+            self._current_helper_params = set()
 
         # Combine signature and body
         return f"{signature}\n{self._indent(body_code)}"
@@ -5101,10 +6963,30 @@ class HelperCodeGenerator:
         return f"return {self._generate_expression(value)}"
 
     def _generate_for_range(self, stmt: Dict[str, Any]) -> str:
-        """Generate Python for loop over range."""
+        """Generate Python for loop over range.
+
+        Supports:
+        - range(count) - old format with 'count' key
+        - range(start, stop) - new format with 'start' and 'stop' keys
+        - range(start, stop, step) - new format with 'start', 'stop', and 'step' keys
+        """
         var = stmt.get('var', '_')
-        count = self._generate_expression(stmt.get('count', {'type': 'constant', 'value': 0}))
         body = stmt.get('body', [])
+
+        # Determine range() arguments
+        if 'start' in stmt and 'stop' in stmt:
+            # New format: range(start, stop) or range(start, stop, step)
+            start = self._generate_expression(stmt['start'])
+            stop = self._generate_expression(stmt['stop'])
+            if 'step' in stmt:
+                step = self._generate_expression(stmt['step'])
+                range_code = f"range({start}, {stop}, {step})"
+            else:
+                range_code = f"range({start}, {stop})"
+        else:
+            # Old format: range(count)
+            count = self._generate_expression(stmt.get('count', {'type': 'constant', 'value': 0}))
+            range_code = f"range({count})"
 
         body_lines = []
         for s in body:
@@ -5112,7 +6994,7 @@ class HelperCodeGenerator:
 
         body_code = '\n'.join(body_lines) if body_lines else 'pass'
 
-        return f"for {var} in range({count}):\n{self._indent(body_code)}"
+        return f"for {var} in {range_code}:\n{self._indent(body_code)}"
 
     def _generate_for_iter(self, stmt: Dict[str, Any]) -> str:
         """Generate Python for loop over iterable."""
@@ -5254,6 +7136,7 @@ class HelperCodeGenerator:
             'region_attribute': self._expr_region_attribute,
             'map': self._expr_map,
             'lambda': self._expr_lambda,
+            'dict_lambda_lookup': self._expr_dict_lambda_lookup,
         }
 
         handler = handlers.get(expr_type)
@@ -5362,6 +7245,28 @@ class HelperCodeGenerator:
                 # Use list literal to match original ALTTP style
                 return f"state.has_any({items!r}, player)"
 
+            # Handle HasFromList rules (Rule Builder format)
+            if rule_type == 'HasFromList':
+                args = expr.get('args', {})
+                items_raw = args.get('items', [])
+                count = args.get('count', 1)
+                # Resolve items if they're a complex expression (e.g., list(dict.values()))
+                items = self._resolve_items_for_has_from_list(items_raw)
+                # Generate count expression
+                count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+                return f"state.has_from_list({items!r}, player, {count_expr})"
+
+            # Handle HasFromListUnique rules (Rule Builder format)
+            if rule_type == 'HasFromListUnique':
+                args = expr.get('args', {})
+                items_raw = args.get('items', [])
+                count = args.get('count', 1)
+                # Resolve items if they're a complex expression
+                items = self._resolve_items_for_has_from_list(items_raw)
+                # Generate count expression
+                count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+                return f"state.has_from_list_unique({items!r}, player, {count_expr})"
+
             # Handle Not rules (Rule Builder format)
             if rule_type == 'Not':
                 args = expr.get('args', {})
@@ -5444,13 +7349,26 @@ class HelperCodeGenerator:
             # Handle helper calls with _original_ast_type marker
             if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
                 helper_name = rule_type
-                func_name = self.get_function_name(helper_name)
-                # Check for args - this can be a list of arguments to pass to the helper
-                args = expr.get('args', [])
-                if args and isinstance(args, list):
-                    arg_exprs = [self._generate_expression(a) for a in args]
-                    return f'{func_name}(state, player, {", ".join(arg_exprs)})'
-                return f'{func_name}(state, player)'
+                # Only generate function call if helper is known (has a definition)
+                # Unknown helpers should return True as a placeholder to avoid NameError
+                if helper_name in self.known_helpers:
+                    func_name = self.get_function_name(helper_name)
+                    # Check for args - this can be a list of arguments to pass to the helper
+                    args = expr.get('args', [])
+                    if args and isinstance(args, list):
+                        arg_exprs = [self._generate_expression(a) for a in args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+                    return f'{func_name}(state, player)'
+                else:
+                    # Unknown helper - return True as placeholder
+                    # This makes locations more accessible, which is appropriate for worldgen
+                    # since unknown helpers are typically progression checks
+                    print(
+                        f"LOSSY FALLBACK: Unknown helper '{helper_name}' in lambda expression, "
+                        f"using True (always accessible) as fallback",
+                        file=sys.stderr
+                    )
+                    return 'True'
 
             # Handle AST_placement_search (check if item is at any of listed locations)
             if rule_type == 'AST_placement_search':
@@ -5530,12 +7448,41 @@ class HelperCodeGenerator:
                 function = args.get('function', {})
                 # Try to generate the function call expression
                 if isinstance(function, dict):
-                    # Check if this is a math module function call (e.g., math.ceil)
-                    # and set uses_math flag if so
+                    # Special case: if the function is a helper, it already includes
+                    # state and player in its signature and returns a bool directly.
+                    # Original code like wizpig_1(world)(state) becomes wizpig_1(state, player)
+                    # so we don't need to add extra () call.
+                    if function.get('type') == 'helper':
+                        helper_name = function.get('name', '')
+                        if helper_name in self.known_helpers:
+                            # The helper function already returns bool, not a callable
+                            # Just generate the helper call directly
+                            return self._generate_expression(function)
+
+                    # Special case: if the function is a Rule Builder type that already
+                    # produces a complete boolean expression (like CanReachEntrance,
+                    # CanReachRegion, Has, And, Or, etc.), generate it directly without adding ().
+                    # This happens when the analyzer wraps path_to_access_rule results.
+                    func_rule = function.get('rule', '')
+                    func_type = function.get('type', '')
+                    # Also handle analyzer types (lowercase) - these are AST analyzer output types
+                    analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
+                                          'can_reach', 'region_check', 'location_check')
+                    # Check for Rule Builder types, 'helper' AST marker, or analyzer types
+                    if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper' or func_type in analyzer_bool_types:
+                        # These types already produce complete boolean expressions
+                        return self._generate_expression(function)
+
+                    # Check if this is a math or logging module function call
+                    # and set the appropriate flags for imports
                     if function.get('type') == 'attribute':
                         obj = function.get('object', {})
-                        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
-                            self.uses_math = True
+                        if isinstance(obj, dict) and obj.get('type') == 'name':
+                            obj_name = obj.get('name')
+                            if obj_name == 'math':
+                                self.uses_math = True
+                            elif obj_name == 'logging':
+                                self.uses_logging = True
 
                     func_expr = self._generate_expression(function)
                     # Function call arguments may be in 'call_args' or 'args' (nested)
@@ -5573,32 +7520,33 @@ class HelperCodeGenerator:
                     helper_name = f'can_{capability}'
                     func_name = self.get_function_name(helper_name)
 
-                    # Get helper data including param_mappings
+                    # Check if helper_args were preserved from the original helper call
+                    # This is critical for helpers like can_use_hat(state, player, hat_id)
+                    # where the specific argument value matters
+                    helper_args = args.get('helper_args', [])
+                    if helper_args:
+                        # Use the preserved helper arguments
+                        arg_exprs = [self._generate_expression(arg) for arg in helper_args]
+                        return f'{func_name}(state, player, {", ".join(arg_exprs)})'
+
+                    # Fall back to param_mappings for helpers that use world attributes
                     helper_info = self.helper_data.get(helper_name, {})
                     params = helper_info.get('params', [])
                     param_mappings = helper_info.get('param_mappings', {})
 
                     # Build argument list based on param_mappings
+                    # All param_mapping values are accessed as world attributes (not inlined)
+                    # to enable proper param_mapping discovery during re-export.
+                    # Option values referenced in param_mappings are stored as world
+                    # attributes during extraction (see extract_all in extractors.py).
                     arg_exprs = []
                     for param in params:
                         if param in param_mappings:
                             setting_name = param_mappings[param]
-                            # Check if it's an option or a world attribute
-                            if setting_name in self.option_definitions:
-                                # Option: prefer inlined value from export, fallback to runtime lookup
-                                # Using resolved values ensures worldgen worlds use the same option
-                                # values as the original export, even if their defaults differ.
-                                if setting_name in self.settings:
-                                    # Inline the actual value from the export
-                                    arg_exprs.append(repr(self.settings[setting_name]))
-                                else:
-                                    # Fallback to runtime lookup (for dynamic options)
-                                    arg_exprs.append(f'state.multiworld.worlds[player].options.{setting_name}.value')
-                            else:
-                                # World attribute: access via state.multiworld.worlds[player].<name>
-                                arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
+                            # Access as world attribute for all param_mapping values
+                            arg_exprs.append(f'state.multiworld.worlds[player].{setting_name}')
                         else:
-                            # No mapping, use None as default
+                            # No mapping and no preserved args - use None as default
                             arg_exprs.append('None')
 
                     if arg_exprs:
@@ -5634,6 +7582,25 @@ class HelperCodeGenerator:
                     entrance_expr = self._generate_expression(entrance)
                     return f'state.can_reach({entrance_expr}, "Entrance", player)'
                 return f'state.can_reach({repr(entrance)}, "Entrance", player)'
+
+            # Handle AST_group_count rules (Rule Builder format for count_group)
+            # These come from state.count_group() calls in access rules
+            if rule_type == 'AST_group_count':
+                args = expr.get('args', {})
+                group = args.get('group', '')
+                if isinstance(group, dict):
+                    group_expr = self._generate_expression(group)
+                    return f'state.count_group({group_expr}, player)'
+                return f'state.count_group({repr(group)}, player)'
+
+            # Handle CountGroup rules (Rule Builder format)
+            if rule_type == 'CountGroup':
+                args = expr.get('args', {})
+                group = args.get('group', '')
+                if isinstance(group, dict):
+                    group_expr = self._generate_expression(group)
+                    return f'state.count_group({group_expr}, player)'
+                return f'state.count_group({repr(group)}, player)'
 
         # Unknown type - return True as placeholder
         # Returning True makes locations more accessible, which is appropriate for worldgen
@@ -5690,9 +7657,13 @@ class HelperCodeGenerator:
         """
         option = expr.get('option', '')
 
-        # Check if this is actually a known option or a world attribute
+        # Extract base option name for checking (handles paths like "goal.option_vanilla")
+        # The base name is the first part before any '.' (e.g., "goal" from "goal.option_vanilla")
+        base_option = option.split('.')[0] if '.' in option else option
+
+        # Check if the base option is a known option or a world attribute
         # Some games export world attributes with option_value type incorrectly
-        if option in self.option_definitions:
+        if base_option in self.option_definitions:
             base_path = f'state.multiworld.worlds[player].options.{option}'
         else:
             # Not a known option - treat as world attribute
@@ -5709,23 +7680,8 @@ class HelperCodeGenerator:
         return base_path
 
     def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access a world attribute at runtime.
-
-        Always generates: state.multiworld.worlds[player].<name>
-        This pattern is recognized by the exporter's pattern detection.
-        """
-        attribute = expr.get('attribute', '')
-        base_path = f'state.multiworld.worlds[player].{attribute}'
-
-        # Handle indexed access (e.g., required_medallions[0])
-        if 'index' in expr:
-            index = expr['index']
-            if isinstance(index, int):
-                return f'{base_path}[{index}]'
-            elif isinstance(index, str):
-                return f'{base_path}[{repr(index)}]'
-
-        return base_path
+        """Generate code to access a world attribute at runtime."""
+        return generate_world_attribute_expr(expr)
 
     def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
         """Generate code to look up what item is placed at a location.
@@ -5756,6 +7712,177 @@ class HelperCodeGenerator:
         # Generate call to location_item_name(state, location, player)
         # This is the standard Archipelago function from worlds.generic.Rules
         return f'location_item_name(state, {location_expr}, player)'
+
+    def _resolve_items_for_has_from_list(self, items: Any) -> List[str]:
+        """
+        Resolve an items expression to a list of item names for has_from_list.
+
+        Handles patterns like:
+        - list(dict.values()) where dict is a constant
+        - Direct list of strings
+        - Helper expressions wrapping dict.values()
+
+        Args:
+            items: The items expression (can be a list, dict, or complex expression)
+
+        Returns:
+            List of item names
+        """
+        # Already a list of strings
+        if isinstance(items, list):
+            result = []
+            for item in items:
+                if isinstance(item, str):
+                    result.append(item)
+                elif isinstance(item, dict) and item.get('type') == 'constant':
+                    value = item.get('value')
+                    if value is not None and isinstance(value, str):
+                        result.append(value)
+            return result
+
+        if not isinstance(items, dict):
+            return []
+
+        # Handle helper pattern: {"type": "helper", "name": "list", "args": [...]}
+        if items.get('type') == 'helper' and items.get('name') == 'list':
+            helper_args = items.get('args', [])
+            if len(helper_args) == 1:
+                inner_arg = helper_args[0]
+                # Check for function_call pattern (dict.values())
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'function_call':
+                    return self._extract_dict_values_for_has_from_list(inner_arg)
+                # Check for generator_expression pattern (list comprehension)
+                if isinstance(inner_arg, dict) and inner_arg.get('type') == 'generator_expression':
+                    return self._extract_from_generator_expression_for_has_from_list(inner_arg)
+            return []
+
+        # Handle direct function_call pattern
+        if items.get('type') == 'function_call':
+            return self._extract_dict_values_for_has_from_list(items)
+
+        # Handle direct generator_expression pattern
+        if items.get('type') == 'generator_expression':
+            return self._extract_from_generator_expression_for_has_from_list(items)
+
+        return []
+
+    def _extract_from_generator_expression_for_has_from_list(self, gen_expr: dict) -> List[str]:
+        """
+        Extract items from a generator expression pattern.
+
+        Expected patterns:
+        - list(key for key, _ in dict.items()) -> returns dict keys
+        - list(value for _, value in dict.items()) -> returns dict values
+
+        Returns:
+            List of extracted items, or empty list if pattern not supported
+        """
+        element = gen_expr.get('element', {})
+        comprehension = gen_expr.get('comprehension', {})
+
+        # Get the iterator (should be dict.items() or dict.keys() or dict.values())
+        iterator = comprehension.get('iterator', {})
+        if not isinstance(iterator, dict) or iterator.get('type') != 'function_call':
+            return []
+
+        function = iterator.get('function', {})
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return []
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .items(), .keys(), or .values() on a constant dict
+        if not isinstance(obj, dict) or obj.get('type') != 'constant':
+            return []
+
+        const_value = obj.get('value', {})
+        if not isinstance(const_value, dict):
+            return []
+
+        # Get the target variable(s) from the comprehension
+        target = comprehension.get('target', {})
+
+        # Determine which part of dict we need based on the element
+        if attr == 'items':
+            # For dict.items(), target is usually a tuple (key, value) or (key, _)
+            # We need to determine if element references the key or value
+            if isinstance(element, dict) and element.get('type') == 'name':
+                elem_name = element.get('name', '')
+                # Check if the target is a tuple and match the element name
+                if isinstance(target, dict) and target.get('type') == 'tuple':
+                    target_elements = target.get('elements', [])
+                    if len(target_elements) == 2:
+                        first_elem = target_elements[0]
+                        second_elem = target_elements[1]
+                        first_name = first_elem.get('name', '') if isinstance(first_elem, dict) else ''
+                        second_name = second_elem.get('name', '') if isinstance(second_elem, dict) else ''
+
+                        if elem_name == first_name:
+                            # Element is the key
+                            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                        elif elem_name == second_name:
+                            # Element is the value - but values might be NamedTuples, extract first element
+                            result = []
+                            for v in const_value.values():
+                                if isinstance(v, str):
+                                    result.append(v)
+                            # If values are complex (NamedTuples), return keys instead
+                            if not result:
+                                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+                            return result
+
+            # Fallback: return dict keys
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'keys':
+            return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        elif attr == 'values':
+            return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        return []
+
+    def _extract_dict_values_for_has_from_list(self, func_call: dict) -> List[str]:
+        """
+        Extract values from a dict.values() function call pattern.
+
+        Expected pattern:
+        {
+            "type": "function_call",
+            "function": {
+                "type": "attribute",
+                "object": {"type": "constant", "value": {"key": "ItemName", ...}},
+                "attr": "values"
+            }
+        }
+
+        Returns:
+            List of item names (dict values) if pattern matches, empty list otherwise
+        """
+        function = func_call.get('function', {})
+
+        # Check for attribute access pattern
+        if not isinstance(function, dict) or function.get('type') != 'attribute':
+            return []
+
+        attr = function.get('attr', '')
+        obj = function.get('object', {})
+
+        # Check for .values() or .keys() call on a constant dict
+        if attr == 'values' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict values as a list, filtering out None values
+                return [v for v in const_value.values() if v is not None and isinstance(v, str)]
+
+        if attr == 'keys' and isinstance(obj, dict) and obj.get('type') == 'constant':
+            const_value = obj.get('value', {})
+            if isinstance(const_value, dict):
+                # Return the dict keys as a list, filtering out None values
+                return [k for k in const_value.keys() if k is not None and isinstance(k, str)]
+
+        return []
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
@@ -6148,125 +8275,21 @@ class HelperCodeGenerator:
         return f"({left} {op} {right})"
 
     def _is_placement_lookup(self, expr: Any) -> bool:
-        """Check if an expression is a placement_lookup type.
-
-        Placement lookups depend on actual item placements which are not available
-        during tracking. These should be treated as False in comparisons.
-        """
-        if not isinstance(expr, dict):
-            return False
-
-        # Check for placement_lookup type
-        if expr.get('type') == 'placement_lookup':
-            return True
-
-        # Check for Rule Builder format AST_placement_lookup
-        if expr.get('rule') == 'AST_placement_lookup':
-            return True
-
-        return False
+        """Check if an expression is a placement_lookup type."""
+        return is_placement_lookup(expr)
 
     def _extract_placement_location(self, operand: Any) -> Optional[str]:
-        """
-        Extract the location name from a placement_lookup expression.
-        Returns the location name as a string, or None if it cannot be extracted.
-        """
-        if not isinstance(operand, dict):
-            return None
-
-        # Handle placement_lookup type
-        if operand.get('type') == 'placement_lookup':
-            location_rule = operand.get('location', {})
-            if isinstance(location_rule, dict):
-                if location_rule.get('type') == 'constant':
-                    return location_rule.get('value', '')
-            elif isinstance(location_rule, str):
-                return location_rule
-            return None
-
-        # Handle Rule Builder format AST_placement_lookup
-        if operand.get('rule') == 'AST_placement_lookup':
-            args = operand.get('args', {})
-            return args.get('location', None)
-
-        return None
+        """Extract the location name from a placement_lookup expression."""
+        return extract_placement_location(operand)
 
     def _check_placement_comparison(self, left: Any, right: Any, op: str) -> Optional[bool]:
-        """
-        Check if a placement comparison can be resolved to a boolean using actual placements.
+        """Check if a placement comparison can be resolved using actual placements."""
+        placements = self.placements if hasattr(self, 'placements') else {}
+        return check_placement_comparison(left, right, op, placements)
 
-        For self-locking rules like:
-            location_item_name(state, "Location A", player) == ("Left Tower Key", 1)
-
-        We check if the actual item placed at "Location A" matches the expected item.
-        Returns True/False if the comparison can be resolved, None otherwise.
-        """
-        # Determine which side is the placement_lookup
-        placement_operand = None
-        expected_operand = None
-
-        if self._is_placement_lookup(left):
-            placement_operand = left
-            expected_operand = right
-        elif self._is_placement_lookup(right):
-            placement_operand = right
-            expected_operand = left
-        else:
-            return None
-
-        # Extract the location name from the placement_lookup
-        location_name = self._extract_placement_location(placement_operand)
-        if not location_name:
-            return None
-
-        # Get the actual item placed at this location
-        actual_item = self.placements.get(location_name) if hasattr(self, 'placements') else None
-
-        # Extract the expected item from the comparison value
-        # Expected format is typically [item_name, player] or (item_name, player)
-        expected_item = None
-        if isinstance(expected_operand, list) and len(expected_operand) >= 1:
-            expected_item = expected_operand[0]
-        elif isinstance(expected_operand, dict):
-            # Could be a Tuple or list type in AST format
-            if expected_operand.get('type') == 'list':
-                values = expected_operand.get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('rule') == 'Tuple':
-                values = expected_operand.get('args', {}).get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('type') == 'tuple':
-                # Handle tuple type with 'elements' key: {"type": "tuple", "elements": [...]}
-                elements = expected_operand.get('elements', [])
-                if elements and len(elements) >= 1:
-                    first_val = elements[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-
-        if expected_item is None:
-            return None
-
-        # Now compare actual vs expected
-        if op in ('==', 'eq'):
-            if actual_item is None:
-                return False  # No item placed means comparison fails
-            return actual_item == expected_item
-        elif op in ('!=', 'ne'):
-            if actual_item is None:
-                return True  # No item placed means inequality succeeds
-            return actual_item != expected_item
-
-        return None
+    def _extract_items_from_list(self, operand: Any) -> Optional[set]:
+        """Extract item names from a list of tuples for 'in' operator comparisons."""
+        return extract_items_from_list(operand)
 
     def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
         """Generate binary operation expression."""
@@ -6361,8 +8384,16 @@ class HelperCodeGenerator:
         if name in self.known_helpers:
             return self.get_helper_call(name, args)
 
+        # Check if this is a call to a parameter (lambda) of the current helper
+        # This handles patterns like: glitched_rule(state) where glitched_rule is a parameter
+        # that was passed as a lambda like: lambda s: s.has("Item", player)
+        if name in self._current_helper_params:
+            # This is a lambda parameter - call it with state as the argument
+            # The lambdas are defined as: lambda s: <rule> where s is the state
+            return f'{name}(state)'
+
         # Built-in Python functions
-        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float'):
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float', 'getattr', 'hasattr', 'isinstance', 'type'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
@@ -6405,6 +8436,11 @@ class HelperCodeGenerator:
         # Returning True makes locations more accessible, which is appropriate for worldgen
         # since unknown helpers are typically progression checks that evaluate to true
         # under default/normal game settings
+        print(
+            f"LOSSY FALLBACK: Unknown helper '{name}' in _expr_helper, "
+            f"using True (always accessible) as fallback",
+            file=sys.stderr
+        )
         return 'True'
 
     def _get_arg_expr(self, arg: Any, default: Any = None) -> str:
@@ -6498,6 +8534,30 @@ class HelperCodeGenerator:
                     return f'state.has_group_unique({group_expr}, player)'
                 return f'state.has_group_unique({group_expr}, player, {count})'
 
+        elif method == 'has_from_list':
+            # has_from_list(items, player, count) - player in middle position
+            if len(args) >= 1:
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    items_repr = repr(list(items)) if items else '[]'
+                else:
+                    items_repr = self._generate_expression(args[0])
+                # Count is the second arg in exported JSON (after items list)
+                count_expr = self._generate_expression(args[1]) if len(args) > 1 else '1'
+                return f'state.has_from_list({items_repr}, player, {count_expr})'
+
+        elif method == 'has_from_list_unique':
+            # has_from_list_unique(items, player, count) - player in middle position
+            if len(args) >= 1:
+                items = self._extract_constant(args[0], None)
+                if items is not None:
+                    items_repr = repr(list(items)) if items else '[]'
+                else:
+                    items_repr = self._generate_expression(args[0])
+                # Count is the second arg in exported JSON (after items list)
+                count_expr = self._generate_expression(args[1]) if len(args) > 1 else '1'
+                return f'state.has_from_list_unique({items_repr}, player, {count_expr})'
+
         elif method == 'can_reach':
             if len(args) >= 1:
                 # First try to get a constant value
@@ -6564,6 +8624,15 @@ class HelperCodeGenerator:
         # setting as setting_value and now just need the numeric/boolean value.
         if isinstance(obj_expr, dict) and obj_expr.get('type') == 'setting_value' and attr == 'value':
             return self._generate_expression(obj_expr)
+
+        # Special case: when accessing param.value where param is a helper function parameter
+        # (e.g., card_region.value), return just the parameter name since enum values are
+        # passed as integers to helpers. This handles cases like CardRegion.DESTINY_BASIC
+        # being passed as integer 4 - the .value access is no longer needed.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and attr == 'value':
+            param_name = obj_expr.get('name', '')
+            if param_name in self._current_helper_params:
+                return param_name
 
         # Special case: when accessing self.multiworld, convert to state.multiworld
         # In original world code, 'self' refers to the World instance which has a multiworld attribute.
@@ -6656,12 +8725,16 @@ class HelperCodeGenerator:
         func = expr.get('function', {})
         args = expr.get('args', [])
 
-        # Check if this is a math module function call (e.g., math.sqrt)
-        # and set uses_math flag if so
+        # Check if this is a math or logging module function call
+        # and set the appropriate flags for imports
         if isinstance(func, dict) and func.get('type') == 'attribute':
             obj = func.get('object', {})
-            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
-                self.uses_math = True
+            if isinstance(obj, dict) and obj.get('type') == 'name':
+                obj_name = obj.get('name')
+                if obj_name == 'math':
+                    self.uses_math = True
+                elif obj_name == 'logging':
+                    self.uses_logging = True
 
             # Special handling for calling .count() on a generator expression
             # Generator objects don't have .count(), need to wrap in tuple()
@@ -6683,6 +8756,34 @@ class HelperCodeGenerator:
         # The exported helper body may be missing the player argument
         if func_code == 'state.multiworld.get_entrance' and len(arg_exprs) == 1:
             arg_exprs.append('player')
+
+        # Special handling for state method calls that need player argument
+        # This handles lambdas like: lambda s: s.has('Item') which need player
+        # These are common in helpers that take callback functions
+        if isinstance(func, dict) and func.get('type') == 'attribute':
+            attr = func.get('attr', '')
+            obj = func.get('object', {})
+            # Check if this is a state method that needs player
+            state_methods_needing_player = {'has', 'has_all', 'has_any', 'has_group', 'count', 'count_group'}
+            if attr in state_methods_needing_player:
+                # Check if the object is a state-like variable (like 'state' or 's' from a lambda)
+                # and we have at least one argument (the item name) but no player
+                # NOTE: Only add player for known state variables, not arbitrary objects
+                # like 'shop' which has a .has() method but doesn't take player.
+                if isinstance(obj, dict) and obj.get('type') == 'name':
+                    obj_name = obj.get('name', '')
+                    # Only state-like variable names should get player appended
+                    # 'state' is the standard name, 's' is commonly used in lambdas
+                    state_like_names = {'state', 's'}
+                    if obj_name in state_like_names:
+                        # These methods need player as the second argument
+                        # has(item, player), has_all(items, player), etc.
+                        if attr in ('has', 'count') and len(arg_exprs) == 1:
+                            # has(item) -> has(item, player)
+                            arg_exprs.append('player')
+                        elif attr in ('has_all', 'has_any', 'has_group', 'count_group') and len(arg_exprs) == 1:
+                            # has_all(items) -> has_all(items, player)
+                            arg_exprs.append('player')
 
         # Special handling for .can_reach() method calls - needs state argument
         # Location and Region objects have can_reach(state) but exported code may call it without args
@@ -6762,22 +8863,29 @@ class HelperCodeGenerator:
         1. A region name (string) - needs to be looked up
         2. A Region object - can be used directly
 
-        We generate code that handles both cases at runtime.
+        We generate code that handles both cases at runtime using getattr with a default.
+        For is_light_world/is_dark_world, we default to True if region is None (allows access).
         """
         region_expr = expr.get('region', {})
         attr = expr.get('attr', '')
 
+        # Determine default value for None region (True allows access, which is safer)
+        # For light/dark world checks, if we can't determine the region, allow access
+        default_value = "True"
+
         # Check if region expression is a parameter reference (variable name)
         # The variable could contain either a region name (string) or a Region object
-        # We generate code that handles both cases at runtime
+        # We generate code that handles both cases at runtime using getattr
         if isinstance(region_expr, dict) and region_expr.get('type') in ('name', 'param_ref', 'variable'):
             region_var = region_expr.get('name', 'region')
             # Generate code that handles both string and Region object cases
-            return f"(state.multiworld.get_region({region_var}, player) if isinstance({region_var}, str) else {region_var}).{attr}"
+            # Use getattr with default to handle None region gracefully
+            region_lookup = f"(state.multiworld.get_region({region_var}, player) if isinstance({region_var}, str) else {region_var})"
+            return f"getattr({region_lookup}, {repr(attr)}, {default_value})"
 
         # Otherwise, generate the region expression directly
         region_code = self._generate_expression(region_expr)
-        return f"{region_code}.{attr}"
+        return f"getattr({region_code}, {repr(attr)}, {default_value})"
 
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""
@@ -6920,67 +9028,8 @@ class HelperCodeGenerator:
         return f"sum({iterable_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
-        """Extract constant value from a potential constant wrapper.
-
-        Also handles self.<setting> attribute access and subscript operations
-        on settings (e.g., self.boss_order[0]).
-        """
-        if isinstance(value, dict):
-            if value.get('type') == 'constant':
-                return value.get('value', default)
-            if value.get('type') == 'value':
-                return value.get('value', default)
-            if value.get('type') == 'set':
-                # Extract all elements from the set
-                elements = value.get('elements', [])
-                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
-
-            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
-            if value.get('type') in ('binary_op', 'binop'):
-                left = self._extract_constant(value.get('left', {}), None)
-                right = self._extract_constant(value.get('right', {}), None)
-                op = value.get('op', '+')
-                # Map operator names to actual operators
-                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
-                op = op_map.get(op, op)
-                if left is not None and right is not None:
-                    try:
-                        if op == '+':
-                            return left + right
-                        elif op == '-':
-                            return left - right
-                        elif op == '*':
-                            return left * right
-                        elif op == '/':
-                            return left / right
-                        elif op == '//':
-                            return left // right
-                    except TypeError:
-                        pass
-                return default
-
-            # Handle subscript on settings (e.g., self.boss_order[0])
-            if value.get('type') == 'subscript':
-                base_value = self._extract_constant(value.get('value', {}), None)
-                index = self._extract_constant(value.get('index', {}), None)
-                if base_value is not None and index is not None:
-                    try:
-                        return base_value[index]
-                    except (IndexError, KeyError, TypeError):
-                        pass
-                return default
-
-            # Handle attribute access on self (e.g., self.boss_order)
-            if value.get('type') == 'attribute':
-                obj = value.get('object', {})
-                attr = value.get('attr', '')
-                if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
-                    if attr in self.settings:
-                        return self.settings[attr]
-                return default
-
-            return default
-        return value if value is not None else default
+        """Extract constant value from a potential constant wrapper."""
+        return extract_constant(value, default, self.settings)  # With settings for attribute lookups
 
     def _expr_f_string(self, expr: Dict[str, Any]) -> str:
         """Generate Python f-string expression.
@@ -7108,3 +9157,58 @@ class HelperCodeGenerator:
         body_expr = self._generate_expression(body)
 
         return f"lambda {params_str}: {body_expr}"
+
+    def _expr_dict_lambda_lookup(self, expr: Dict[str, Any]) -> str:
+        """Generate Python code for a dict_lambda_lookup rule.
+
+        This handles patterns like: rule_map.get(key, default)(state)
+        where rule_map contains lambda values that have been analyzed.
+
+        The generated code OR's together all possible case results since at export time
+        we don't know which key will match (depends on entrance shuffle).
+
+        Structure: {
+            "type": "dict_lambda_lookup",
+            "dict_name": "rule_map",
+            "key": <key_expr>,
+            "cases": {"key1": <rule1>, "key2": <rule2>, ...},
+            "default": <default_rule>
+        }
+        """
+        cases = expr.get('cases', {})
+        default = expr.get('default', {'type': 'constant', 'value': False})
+
+        if not cases:
+            # No cases - just use the default
+            return self._generate_expression(default)
+
+        # If there's only one case, just return that case's expression
+        if len(cases) == 1:
+            key_name, case_rule = list(cases.items())[0]
+            return self._generate_expression(case_rule)
+
+        # Multiple cases - OR them together
+        # This is permissive: at runtime only one key matches, but we allow any
+        case_exprs = []
+        for key_name, case_rule in cases.items():
+            case_expr = self._generate_expression(case_rule)
+            # Skip False expressions - they don't contribute anything
+            if case_expr in ('False', 'false'):
+                continue
+            case_exprs.append(f'({case_expr})')
+
+        # Also include the default if it's not False
+        default_expr = self._generate_expression(default)
+        if default_expr not in ('False', 'false'):
+            case_exprs.append(f'({default_expr})')
+
+        if not case_exprs:
+            # All cases were False - return False
+            return 'False'
+
+        if len(case_exprs) == 1:
+            # Only one non-False expression
+            return case_exprs[0].strip('()')
+
+        # Multiple expressions - OR them together
+        return '(' + ' or '.join(case_exprs) + ')'

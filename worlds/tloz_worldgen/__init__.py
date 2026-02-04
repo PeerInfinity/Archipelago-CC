@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -24,8 +24,9 @@ from .Rules import set_rules
 
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Arrow": 1,
     "Blue Ring": 1,
-    "Bomb": 25,
+    "Bomb": 26,
     "Book of Magic": 1,
     "Boomerang": 1,
     "Bow": 1,
@@ -48,38 +49,27 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Red Candle": 1,
     "Red Ring": 1,
     "Silver Arrow": 1,
-    "Small Key": 48,
+    "Small Key": 49,
     "Stepladder": 1,
     "Sword": 2,
+    "Triforce Fragment": 8,
     "Water of Life (Blue)": 3,
-    "Water of Life (Red)": 1,
+    "Water of Life (Red)": 2,
+    "White Sword": 1,
 }
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Level 1 Triforce": "Triforce Fragment",
     "Level 1 Boss Status": "Boss 1 Defeated",
-    "Level 2 Triforce": "Triforce Fragment",
     "Level 2 Boss Status": "Boss 2 Defeated",
-    "Level 3 Triforce": "Triforce Fragment",
     "Level 3 Boss Status": "Boss 3 Defeated",
-    "Level 4 Triforce": "Triforce Fragment",
     "Level 4 Boss Status": "Boss 4 Defeated",
-    "Level 5 Triforce": "Triforce Fragment",
     "Level 5 Boss Status": "Boss 5 Defeated",
-    "Level 6 Triforce": "Triforce Fragment",
     "Level 6 Boss Status": "Boss 6 Defeated",
-    "Level 7 Triforce": "Triforce Fragment",
     "Level 7 Boss Status": "Boss 7 Defeated",
-    "Level 8 Triforce": "Triforce Fragment",
     "Level 8 Boss Status": "Boss 8 Defeated",
     "Ganon": "Triforce of Power",
     "Zelda": "Rescued Zelda!",
-    "Starting Sword Cave": "White Sword",
-    "Arrow Shop Item Left": "Small Key",
-    "Arrow Shop Item Middle": "Bomb",
-    "Arrow Shop Item Right": "Arrow",
-    "Candle Shop Item Middle": "Water of Life (Red)",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -146,171 +136,341 @@ class TLoZWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
+        "Armos Knights": "Small Key",
+        "Arrow Shop Item Left": "Small Key",
+        "Blue Ring Shop Item Left": "Small Key",
         "Level 1 Item (Bow)": "Small Key",
+        "Level 1 Key Drop (Keese Entrance)": "Small Key",
+        "Level 1 Key Drop (Moblins)": "Small Key",
+        "Level 1 Key Drop (Stalfos Water)": "Small Key",
+        "Level 1 Key Drop (Wallmasters)": "Small Key",
+        "Level 2 Item (Magical Boomerang)": "Small Key",
+        "Level 2 Key Drop (Moldorms)": "Small Key",
+        "Level 2 Map": "Small Key",
+        "Level 3 Bomb Drop (Darknuts Central)": "Small Key",
+        "Level 3 Boss": "Small Key",
+        "Level 3 Compass": "Small Key",
+        "Level 3 Key Drop (Zols Central)": "Small Key",
+        "Level 3 Key Drop (Zols South)": "Small Key",
+        "Level 3 Map": "Small Key",
+        "Level 4 Boss": "Small Key",
+        "Level 4 Item (Stepladder)": "Small Key",
+        "Level 4 Key Drop (Keese North)": "Small Key",
+        "Level 5 Bomb Drop (Gibdos)": "Small Key",
+        "Level 5 Compass": "Small Key",
+        "Level 5 Item (Recorder)": "Small Key",
+        "Level 5 Rupee Drop (Zols)": "Small Key",
+        "Level 6 Item (Magical Rod)": "Small Key",
+        "Level 6 Key Drop (Wizzrobes North Island)": "Small Key",
+        "Level 7 Bomb Drop (Moldorms North)": "Small Key",
+        "Level 7 Boss": "Small Key",
+        "Level 7 Key Drop (Ropes)": "Small Key",
+        "Level 7 Rupee Drop (Goriyas Central)": "Small Key",
+        "Level 7 Rupee Drop (Goriyas North)": "Small Key",
+        "Level 8 Bomb Drop (Darknuts North)": "Small Key",
+        "Level 8 Compass": "Small Key",
+        "Level 8 Item (Magical Key)": "Small Key",
+        "Level 8 Key Drop (Darknuts West)": "Small Key",
+        "Level 8 Key Drop (Pols Voice South)": "Small Key",
+        "Level 8 Rupee Drop (Manhandla Entrance North)": "Small Key",
+        "Level 9 Bomb Drop (Blue Lanmolas)": "Small Key",
+        "Level 9 Item (Silver Arrow)": "Small Key",
+        "Level 9 Key Drop (Patra Southwest)": "Small Key",
+        "Level 9 Rupee Drop (Keese Southwest)": "Small Key",
+        "Level 9 Rupee Drop (Red Lanmolas)": "Small Key",
+        "Level 9 Rupee Drop (Wizzrobes Central)": "Small Key",
+        "Level 9 Rupee Drop (Wizzrobes West Island)": "Small Key",
+        "Potion Shop Item Left": "Small Key",
+        "Potion Shop Item Right": "Small Key",
+        "Shield Shop Item Left": "Small Key",
+        "Shield Shop Item Right": "Small Key",
+        "Take Any Item Middle": "Small Key",
         "Level 1 Item (Boomerang)": "Stepladder",
         "Level 1 Map": "Candle",
         "Level 1 Compass": "Magical Rod",
+        "Arrow Shop Item Middle": "Bomb",
         "Level 1 Boss": "Bomb",
-        "Level 1 Triforce": "Triforce Fragment",
-        "Level 1 Key Drop (Keese Entrance)": "Small Key",
-        "Level 1 Key Drop (Stalfos Middle)": "Magical Boomerang",
-        "Level 1 Key Drop (Moblins)": "Small Key",
-        "Level 1 Key Drop (Stalfos Water)": "Small Key",
         "Level 1 Key Drop (Stalfos Entrance)": "Bomb",
-        "Level 1 Key Drop (Wallmasters)": "Small Key",
-        "Level 1 Boss Status": "Boss 1 Defeated",
-        "Level 2 Item (Magical Boomerang)": "Small Key",
-        "Level 2 Map": "Small Key",
-        "Level 2 Compass": "Sword",
-        "Level 2 Boss": "Heart Container",
-        "Level 2 Triforce": "Triforce Fragment",
-        "Level 2 Key Drop (Ropes West)": "Heart Container",
-        "Level 2 Key Drop (Moldorms)": "Small Key",
-        "Level 2 Key Drop (Ropes Middle)": "Five Rupees",
-        "Level 2 Key Drop (Ropes Entrance)": "Bomb",
-        "Level 2 Bomb Drop (Keese)": "Heart Container",
         "Level 2 Bomb Drop (Moblins)": "Bomb",
-        "Level 2 Rupee Drop (Gels)": "Fairy",
-        "Level 2 Boss Status": "Boss 2 Defeated",
-        "Level 3 Item (Raft)": "Five Rupees",
-        "Level 3 Map": "Small Key",
-        "Level 3 Compass": "Small Key",
-        "Level 3 Boss": "Small Key",
-        "Level 3 Triforce": "Triforce Fragment",
-        "Level 3 Key Drop (Zols and Keese West)": "Bomb",
-        "Level 3 Key Drop (Keese North)": "Heart Container",
-        "Level 3 Key Drop (Zols Central)": "Small Key",
-        "Level 3 Key Drop (Zols South)": "Small Key",
+        "Level 2 Key Drop (Ropes Entrance)": "Bomb",
         "Level 3 Key Drop (Zols Entrance)": "Bomb",
+        "Level 3 Key Drop (Zols and Keese West)": "Bomb",
+        "Level 3 Rupee Drop (Zols and Keese East)": "Bomb",
+        "Level 4 Key Drop (Keese Central)": "Bomb",
+        "Level 4 Map": "Bomb",
+        "Level 5 Key Drop (Gibdos, Keese, and Pols Voice)": "Bomb",
+        "Level 6 Key Drop (Vires)": "Bomb",
+        "Level 6 Key Drop (Wizzrobes Entrance)": "Bomb",
+        "Level 7 Bomb Drop (Digdogger)": "Bomb",
+        "Level 7 Compass": "Bomb",
+        "Level 7 Key Drop (Goriyas)": "Bomb",
+        "Level 7 Map": "Bomb",
+        "Level 8 Boss": "Bomb",
+        "Level 8 Key Drop (Darknuts Central)": "Bomb",
+        "Level 8 Rupee Drop (Darknuts and Gibdos)": "Bomb",
+        "Level 9 Bomb Drop (Like Likes and Zols Corridor)": "Bomb",
+        "Level 9 Bomb Drop (Vires)": "Bomb",
+        "Level 9 Compass": "Bomb",
+        "Level 9 Map": "Bomb",
+        "Level 9 Rupee Drop (Keese Central Island)": "Bomb",
+        "Magical Sword Grave": "Bomb",
+        "Level 1 Triforce": "Triforce Fragment",
+        "Level 2 Triforce": "Triforce Fragment",
+        "Level 3 Triforce": "Triforce Fragment",
+        "Level 4 Triforce": "Triforce Fragment",
+        "Level 5 Triforce": "Triforce Fragment",
+        "Level 6 Triforce": "Triforce Fragment",
+        "Level 7 Triforce": "Triforce Fragment",
+        "Level 8 Triforce": "Triforce Fragment",
+        "Level 1 Key Drop (Stalfos Middle)": "Magical Boomerang",
+        "Level 1 Boss Status": "Boss 1 Defeated",
+        "Level 2 Compass": "Sword",
+        "Level 5 Key Drop (Keese North)": "Sword",
+        "Level 2 Bomb Drop (Keese)": "Heart Container",
+        "Level 2 Boss": "Heart Container",
+        "Level 2 Key Drop (Ropes West)": "Heart Container",
+        "Level 3 Key Drop (Keese North)": "Heart Container",
+        "Level 5 Key Drop (Pols Voice Entrance)": "Heart Container",
+        "Level 7 Bomb Drop (Goriyas North)": "Heart Container",
+        "Level 7 Bomb Drop (Keese and Spikes)": "Heart Container",
+        "Level 8 Key Drop (Keese and Zols Entrance)": "Heart Container",
+        "Level 9 Bomb Drop (Patra Northeast)": "Heart Container",
+        "Level 9 Key Drop (Like Likes and Zols East)": "Heart Container",
+        "Level 9 Key Drop (Wizzrobes and Bubbles East)": "Heart Container",
+        "Take Any Item Left": "Heart Container",
+        "White Sword Pond": "Heart Container",
+        "Candle Shop Item Left": "Five Rupees",
+        "Level 2 Key Drop (Ropes Middle)": "Five Rupees",
         "Level 3 Bomb Drop (Darknuts West)": "Five Rupees",
         "Level 3 Bomb Drop (Keese Corridor)": "Five Rupees",
-        "Level 3 Bomb Drop (Darknuts Central)": "Small Key",
-        "Level 3 Rupee Drop (Zols and Keese East)": "Bomb",
-        "Level 3 Boss Status": "Boss 3 Defeated",
-        "Level 4 Item (Stepladder)": "Small Key",
-        "Level 4 Map": "Bomb",
-        "Level 4 Compass": "Boomerang",
-        "Level 4 Boss": "Small Key",
-        "Level 4 Triforce": "Triforce Fragment",
+        "Level 3 Item (Raft)": "Five Rupees",
         "Level 4 Key Drop (Keese Entrance)": "Five Rupees",
-        "Level 4 Key Drop (Keese Central)": "Bomb",
         "Level 4 Key Drop (Zols)": "Five Rupees",
-        "Level 4 Key Drop (Keese North)": "Small Key",
-        "Level 4 Boss Status": "Boss 4 Defeated",
-        "Level 5 Item (Recorder)": "Small Key",
-        "Level 5 Map": "Magical Key",
-        "Level 5 Compass": "Small Key",
-        "Level 5 Boss": "Water of Life (Blue)",
-        "Level 5 Triforce": "Triforce Fragment",
-        "Level 5 Key Drop (Keese North)": "Sword",
-        "Level 5 Key Drop (Gibdos North)": "Book of Magic",
-        "Level 5 Key Drop (Gibdos Central)": "Five Rupees",
-        "Level 5 Key Drop (Pols Voice Entrance)": "Heart Container",
-        "Level 5 Key Drop (Gibdos Entrance)": "Fairy",
-        "Level 5 Key Drop (Gibdos, Keese, and Pols Voice)": "Bomb",
-        "Level 5 Key Drop (Zols)": "Five Rupees",
-        "Level 5 Bomb Drop (Gibdos)": "Small Key",
         "Level 5 Bomb Drop (Dodongos)": "Five Rupees",
-        "Level 5 Rupee Drop (Zols)": "Small Key",
-        "Level 5 Boss Status": "Boss 5 Defeated",
-        "Level 6 Item (Magical Rod)": "Small Key",
-        "Level 6 Map": "Magical Shield",
-        "Level 6 Compass": "Fairy",
-        "Level 6 Boss": "Five Rupees",
-        "Level 6 Triforce": "Triforce Fragment",
-        "Level 6 Key Drop (Wizzrobes Entrance)": "Bomb",
-        "Level 6 Key Drop (Keese)": "Fairy",
-        "Level 6 Key Drop (Wizzrobes North Island)": "Small Key",
-        "Level 6 Key Drop (Wizzrobes North Stream)": "Red Ring",
-        "Level 6 Key Drop (Vires)": "Bomb",
+        "Level 5 Key Drop (Gibdos Central)": "Five Rupees",
+        "Level 5 Key Drop (Zols)": "Five Rupees",
         "Level 6 Bomb Drop (Wizzrobes)": "Five Rupees",
+        "Level 6 Boss": "Five Rupees",
+        "Level 8 Bomb Drop (Darknuts East)": "Five Rupees",
+        "Level 9 Key Drop (Wizzrobes East Island)": "Five Rupees",
+        "Level 9 Rupee Drop (Gels East)": "Five Rupees",
+        "Potion Shop Item Middle": "Five Rupees",
+        "Shield Shop Item Middle": "Five Rupees",
+        "Take Any Item Right": "Five Rupees",
+        "Level 2 Rupee Drop (Gels)": "Fairy",
+        "Level 5 Key Drop (Gibdos Entrance)": "Fairy",
+        "Level 6 Compass": "Fairy",
+        "Level 6 Key Drop (Keese)": "Fairy",
+        "Level 8 Key Drop (Darknuts Far West)": "Fairy",
+        "Level 9 Item (Red Ring)": "Fairy",
+        "Level 2 Boss Status": "Boss 2 Defeated",
+        "Level 3 Boss Status": "Boss 3 Defeated",
+        "Level 4 Compass": "Boomerang",
+        "Level 4 Boss Status": "Boss 4 Defeated",
+        "Level 5 Map": "Magical Key",
+        "Level 5 Boss": "Water of Life (Blue)",
+        "Level 7 Rupee Drop (Dodongos)": "Water of Life (Blue)",
+        "Level 8 Rupee Drop (Manhandla Entrance West)": "Water of Life (Blue)",
+        "Level 5 Key Drop (Gibdos North)": "Book of Magic",
+        "Level 5 Boss Status": "Boss 5 Defeated",
+        "Level 6 Map": "Magical Shield",
+        "Level 7 Bomb Drop (Goriyas South)": "Magical Shield",
+        "Level 7 Key Drop (Stalfos)": "Magical Shield",
+        "Level 6 Key Drop (Wizzrobes North Stream)": "Red Ring",
         "Level 6 Rupee Drop (Wizzrobes)": "Letter",
         "Level 6 Boss Status": "Boss 6 Defeated",
         "Level 7 Item (Red Candle)": "Magical Sword",
-        "Level 7 Map": "Bomb",
-        "Level 7 Compass": "Bomb",
-        "Level 7 Boss": "Small Key",
-        "Level 7 Triforce": "Triforce Fragment",
-        "Level 7 Key Drop (Ropes)": "Small Key",
-        "Level 7 Key Drop (Goriyas)": "Bomb",
-        "Level 7 Key Drop (Stalfos)": "Magical Shield",
         "Level 7 Key Drop (Moldorms)": "Recovery Heart",
-        "Level 7 Bomb Drop (Goriyas South)": "Magical Shield",
-        "Level 7 Bomb Drop (Keese and Spikes)": "Heart Container",
         "Level 7 Bomb Drop (Moldorms South)": "Red Candle",
-        "Level 7 Bomb Drop (Moldorms North)": "Small Key",
-        "Level 7 Bomb Drop (Goriyas North)": "Heart Container",
         "Level 7 Bomb Drop (Dodongos)": "Raft",
-        "Level 7 Bomb Drop (Digdogger)": "Bomb",
-        "Level 7 Rupee Drop (Goriyas Central)": "Small Key",
-        "Level 7 Rupee Drop (Dodongos)": "Water of Life (Blue)",
-        "Level 7 Rupee Drop (Goriyas North)": "Small Key",
         "Level 7 Boss Status": "Boss 7 Defeated",
-        "Level 8 Item (Magical Key)": "Small Key",
         "Level 8 Map": "Recorder",
-        "Level 8 Compass": "Small Key",
         "Level 8 Item (Book of Magic)": "Blue Ring",
-        "Level 8 Boss": "Bomb",
-        "Level 8 Triforce": "Triforce Fragment",
-        "Level 8 Key Drop (Darknuts West)": "Small Key",
-        "Level 8 Key Drop (Darknuts Far West)": "Fairy",
-        "Level 8 Key Drop (Pols Voice South)": "Small Key",
+        "Candle Shop Item Middle": "Water of Life (Red)",
         "Level 8 Key Drop (Pols Voice and Keese)": "Water of Life (Red)",
-        "Level 8 Key Drop (Darknuts Central)": "Bomb",
-        "Level 8 Key Drop (Keese and Zols Entrance)": "Heart Container",
-        "Level 8 Bomb Drop (Darknuts North)": "Small Key",
-        "Level 8 Bomb Drop (Darknuts East)": "Five Rupees",
         "Level 8 Bomb Drop (Pols Voice North)": "Food",
-        "Level 8 Rupee Drop (Manhandla Entrance West)": "Water of Life (Blue)",
-        "Level 8 Rupee Drop (Manhandla Entrance North)": "Small Key",
-        "Level 8 Rupee Drop (Darknuts and Gibdos)": "Bomb",
+        "Ocean Heart Container": "Food",
         "Level 8 Boss Status": "Boss 8 Defeated",
-        "Level 9 Item (Silver Arrow)": "Small Key",
-        "Level 9 Item (Red Ring)": "Fairy",
-        "Level 9 Map": "Bomb",
-        "Level 9 Compass": "Bomb",
-        "Level 9 Key Drop (Patra Southwest)": "Small Key",
-        "Level 9 Key Drop (Like Likes and Zols East)": "Heart Container",
-        "Level 9 Key Drop (Wizzrobes and Bubbles East)": "Heart Container",
-        "Level 9 Key Drop (Wizzrobes East Island)": "Five Rupees",
-        "Level 9 Bomb Drop (Blue Lanmolas)": "Small Key",
         "Level 9 Bomb Drop (Gels Lake)": "Silver Arrow",
-        "Level 9 Bomb Drop (Like Likes and Zols Corridor)": "Bomb",
-        "Level 9 Bomb Drop (Patra Northeast)": "Heart Container",
-        "Level 9 Bomb Drop (Vires)": "Bomb",
-        "Level 9 Rupee Drop (Wizzrobes West Island)": "Small Key",
-        "Level 9 Rupee Drop (Red Lanmolas)": "Small Key",
-        "Level 9 Rupee Drop (Keese Southwest)": "Small Key",
-        "Level 9 Rupee Drop (Keese Central Island)": "Bomb",
-        "Level 9 Rupee Drop (Wizzrobes Central)": "Small Key",
         "Level 9 Rupee Drop (Wizzrobes North Island)": "Power Bracelet",
-        "Level 9 Rupee Drop (Gels East)": "Five Rupees",
         "Ganon": "Triforce of Power",
         "Zelda": "Rescued Zelda!",
         "Starting Sword Cave": "White Sword",
-        "White Sword Pond": "Heart Container",
-        "Magical Sword Grave": "Bomb",
-        "Take Any Item Left": "Heart Container",
-        "Take Any Item Middle": "Small Key",
-        "Take Any Item Right": "Five Rupees",
-        "Armos Knights": "Small Key",
-        "Ocean Heart Container": "Food",
-        "Letter Cave": "Clock",
-        "Arrow Shop Item Left": "Small Key",
-        "Arrow Shop Item Middle": "Bomb",
-        "Arrow Shop Item Right": "Arrow",
-        "Candle Shop Item Left": "Five Rupees",
-        "Candle Shop Item Middle": "Water of Life (Red)",
-        "Candle Shop Item Right": "Bow",
-        "Blue Ring Shop Item Left": "Small Key",
         "Blue Ring Shop Item Middle": "Clock",
         "Blue Ring Shop Item Right": "Clock",
-        "Shield Shop Item Left": "Small Key",
-        "Shield Shop Item Middle": "Five Rupees",
-        "Shield Shop Item Right": "Small Key",
-        "Potion Shop Item Left": "Small Key",
-        "Potion Shop Item Middle": "Five Rupees",
-        "Potion Shop Item Right": "Small Key",
+        "Letter Cave": "Clock",
+        "Arrow Shop Item Right": "Arrow",
+        "Candle Shop Item Right": "Bow",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Level 1 Item (Bow)": False,
+        "Level 1 Item (Boomerang)": True,
+        "Level 1 Map": True,
+        "Level 1 Compass": True,
+        "Level 1 Boss": False,
+        "Level 1 Triforce": True,
+        "Level 1 Key Drop (Keese Entrance)": False,
+        "Level 1 Key Drop (Stalfos Middle)": False,
+        "Level 1 Key Drop (Moblins)": False,
+        "Level 1 Key Drop (Stalfos Water)": False,
+        "Level 1 Key Drop (Stalfos Entrance)": False,
+        "Level 1 Key Drop (Wallmasters)": False,
+        "Level 1 Boss Status": True,
+        "Level 2 Item (Magical Boomerang)": False,
+        "Level 2 Map": False,
+        "Level 2 Compass": True,
+        "Level 2 Boss": True,
+        "Level 2 Triforce": True,
+        "Level 2 Key Drop (Ropes West)": True,
+        "Level 2 Key Drop (Moldorms)": False,
+        "Level 2 Key Drop (Ropes Middle)": False,
+        "Level 2 Key Drop (Ropes Entrance)": False,
+        "Level 2 Bomb Drop (Keese)": True,
+        "Level 2 Bomb Drop (Moblins)": False,
+        "Level 2 Rupee Drop (Gels)": False,
+        "Level 2 Boss Status": True,
+        "Level 3 Item (Raft)": False,
+        "Level 3 Map": False,
+        "Level 3 Compass": False,
+        "Level 3 Boss": False,
+        "Level 3 Triforce": True,
+        "Level 3 Key Drop (Zols and Keese West)": False,
+        "Level 3 Key Drop (Keese North)": True,
+        "Level 3 Key Drop (Zols Central)": False,
+        "Level 3 Key Drop (Zols South)": False,
+        "Level 3 Key Drop (Zols Entrance)": False,
+        "Level 3 Bomb Drop (Darknuts West)": False,
+        "Level 3 Bomb Drop (Keese Corridor)": False,
+        "Level 3 Bomb Drop (Darknuts Central)": False,
+        "Level 3 Rupee Drop (Zols and Keese East)": False,
+        "Level 3 Boss Status": True,
+        "Level 4 Item (Stepladder)": False,
+        "Level 4 Map": False,
+        "Level 4 Compass": False,
+        "Level 4 Boss": False,
+        "Level 4 Triforce": True,
+        "Level 4 Key Drop (Keese Entrance)": False,
+        "Level 4 Key Drop (Keese Central)": False,
+        "Level 4 Key Drop (Zols)": False,
+        "Level 4 Key Drop (Keese North)": False,
+        "Level 4 Boss Status": True,
+        "Level 5 Item (Recorder)": False,
+        "Level 5 Map": False,
+        "Level 5 Compass": False,
+        "Level 5 Boss": False,
+        "Level 5 Triforce": True,
+        "Level 5 Key Drop (Keese North)": True,
+        "Level 5 Key Drop (Gibdos North)": True,
+        "Level 5 Key Drop (Gibdos Central)": False,
+        "Level 5 Key Drop (Pols Voice Entrance)": True,
+        "Level 5 Key Drop (Gibdos Entrance)": False,
+        "Level 5 Key Drop (Gibdos, Keese, and Pols Voice)": False,
+        "Level 5 Key Drop (Zols)": False,
+        "Level 5 Bomb Drop (Gibdos)": False,
+        "Level 5 Bomb Drop (Dodongos)": False,
+        "Level 5 Rupee Drop (Zols)": False,
+        "Level 5 Boss Status": True,
+        "Level 6 Item (Magical Rod)": False,
+        "Level 6 Map": False,
+        "Level 6 Compass": False,
+        "Level 6 Boss": False,
+        "Level 6 Triforce": True,
+        "Level 6 Key Drop (Wizzrobes Entrance)": False,
+        "Level 6 Key Drop (Keese)": False,
+        "Level 6 Key Drop (Wizzrobes North Island)": False,
+        "Level 6 Key Drop (Wizzrobes North Stream)": True,
+        "Level 6 Key Drop (Vires)": False,
+        "Level 6 Bomb Drop (Wizzrobes)": False,
+        "Level 6 Rupee Drop (Wizzrobes)": True,
+        "Level 6 Boss Status": True,
+        "Level 7 Item (Red Candle)": True,
+        "Level 7 Map": False,
+        "Level 7 Compass": False,
+        "Level 7 Boss": False,
+        "Level 7 Triforce": True,
+        "Level 7 Key Drop (Ropes)": False,
+        "Level 7 Key Drop (Goriyas)": False,
+        "Level 7 Key Drop (Stalfos)": False,
+        "Level 7 Key Drop (Moldorms)": False,
+        "Level 7 Bomb Drop (Goriyas South)": False,
+        "Level 7 Bomb Drop (Keese and Spikes)": True,
+        "Level 7 Bomb Drop (Moldorms South)": True,
+        "Level 7 Bomb Drop (Moldorms North)": False,
+        "Level 7 Bomb Drop (Goriyas North)": True,
+        "Level 7 Bomb Drop (Dodongos)": True,
+        "Level 7 Bomb Drop (Digdogger)": False,
+        "Level 7 Rupee Drop (Goriyas Central)": False,
+        "Level 7 Rupee Drop (Dodongos)": False,
+        "Level 7 Rupee Drop (Goriyas North)": False,
+        "Level 7 Boss Status": True,
+        "Level 8 Item (Magical Key)": False,
+        "Level 8 Map": True,
+        "Level 8 Compass": False,
+        "Level 8 Item (Book of Magic)": True,
+        "Level 8 Boss": False,
+        "Level 8 Triforce": True,
+        "Level 8 Key Drop (Darknuts West)": False,
+        "Level 8 Key Drop (Darknuts Far West)": False,
+        "Level 8 Key Drop (Pols Voice South)": False,
+        "Level 8 Key Drop (Pols Voice and Keese)": False,
+        "Level 8 Key Drop (Darknuts Central)": False,
+        "Level 8 Key Drop (Keese and Zols Entrance)": True,
+        "Level 8 Bomb Drop (Darknuts North)": False,
+        "Level 8 Bomb Drop (Darknuts East)": False,
+        "Level 8 Bomb Drop (Pols Voice North)": True,
+        "Level 8 Rupee Drop (Manhandla Entrance West)": False,
+        "Level 8 Rupee Drop (Manhandla Entrance North)": False,
+        "Level 8 Rupee Drop (Darknuts and Gibdos)": False,
+        "Level 8 Boss Status": True,
+        "Level 9 Item (Silver Arrow)": False,
+        "Level 9 Item (Red Ring)": False,
+        "Level 9 Map": False,
+        "Level 9 Compass": False,
+        "Level 9 Key Drop (Patra Southwest)": False,
+        "Level 9 Key Drop (Like Likes and Zols East)": True,
+        "Level 9 Key Drop (Wizzrobes and Bubbles East)": True,
+        "Level 9 Key Drop (Wizzrobes East Island)": False,
+        "Level 9 Bomb Drop (Blue Lanmolas)": False,
+        "Level 9 Bomb Drop (Gels Lake)": True,
+        "Level 9 Bomb Drop (Like Likes and Zols Corridor)": False,
+        "Level 9 Bomb Drop (Patra Northeast)": True,
+        "Level 9 Bomb Drop (Vires)": False,
+        "Level 9 Rupee Drop (Wizzrobes West Island)": False,
+        "Level 9 Rupee Drop (Red Lanmolas)": False,
+        "Level 9 Rupee Drop (Keese Southwest)": False,
+        "Level 9 Rupee Drop (Keese Central Island)": False,
+        "Level 9 Rupee Drop (Wizzrobes Central)": False,
+        "Level 9 Rupee Drop (Wizzrobes North Island)": False,
+        "Level 9 Rupee Drop (Gels East)": False,
+        "Ganon": True,
+        "Zelda": True,
+        "Starting Sword Cave": True,
+        "White Sword Pond": True,
+        "Magical Sword Grave": False,
+        "Take Any Item Left": True,
+        "Take Any Item Middle": False,
+        "Take Any Item Right": False,
+        "Armos Knights": False,
+        "Ocean Heart Container": True,
+        "Letter Cave": False,
+        "Arrow Shop Item Left": False,
+        "Arrow Shop Item Middle": True,
+        "Arrow Shop Item Right": True,
+        "Candle Shop Item Left": False,
+        "Candle Shop Item Middle": False,
+        "Candle Shop Item Right": True,
+        "Blue Ring Shop Item Left": False,
+        "Blue Ring Shop Item Middle": False,
+        "Blue Ring Shop Item Right": False,
+        "Shield Shop Item Left": False,
+        "Shield Shop Item Middle": False,
+        "Shield Shop Item Right": False,
+        "Potion Shop Item Left": False,
+        "Potion Shop Item Middle": False,
+        "Potion Shop Item Right": False,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -406,14 +566,38 @@ class TLoZWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = TheLegendofZeldaWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = TheLegendofZeldaWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = TheLegendofZeldaWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -440,32 +624,114 @@ class TLoZWorld(RuleWorldMixin, World):
                     self.multiworld.push_precollected(item)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        item = TheLegendofZeldaWorldGenItem(name, data.classification, data.id, self.player)
+        # Handle items with mixed classifications (e.g., some progression, some filler)
+        classification_counts = getattr(data, 'classification_counts', None)
+        if classification_counts:
+            # Get or initialize the tracker for this item
+            if not hasattr(self, '_classification_trackers'):
+                self._classification_trackers = {}
+            if name not in self._classification_trackers:
+                self._classification_trackers[name] = {}
+            tracker = self._classification_trackers[name]
+
+            # Find the classification to use based on counts and what's been created
+            classification = data.classification  # Default
+            classification_map = {
+                'progression': ItemClassification.progression,
+                'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                'useful': ItemClassification.useful,
+                'trap': ItemClassification.trap,
+                'filler': ItemClassification.filler,
+            }
+            for class_name_str, quota in classification_counts.items():
+                created_count = tracker.get(class_name_str, 0)
+                if created_count < quota:
+                    classification = classification_map.get(class_name_str, ItemClassification.filler)
+                    tracker[class_name_str] = created_count + 1
+                    break
+
+            item = TheLegendofZeldaWorldGenItem(name, classification, data.id, self.player)
+        else:
+            item = TheLegendofZeldaWorldGenItem(name, data.classification, data.id, self.player)
         return item
 
 

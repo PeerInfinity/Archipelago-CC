@@ -5,19 +5,19 @@ These functions extract structured data from the JSON rules file format
 and prepare it for code generation.
 """
 
+import logging
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass, field
 
+logger = logging.getLogger(__name__)
+
 from .constants import INTERNAL_SETTINGS
+from ._sanitization import sanitize_for_class_name
 
 
-def sanitize_identifier(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
+# Backwards-compatible alias
+sanitize_identifier = sanitize_for_class_name
 
 
 @dataclass
@@ -186,6 +186,7 @@ class ExtractedData:
     accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
+    canonical_placement_advancements: Dict[str, bool] = field(default_factory=dict)  # location -> is_advancement (for mixed-class items)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
@@ -399,7 +400,7 @@ def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict
     return items, item_groups, item_name_groups
 
 
-def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
+def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str], Dict[str, bool]]:
     """
     Extract locations from JSON regions.
 
@@ -408,11 +409,12 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
         player_id: Player ID to extract data for (default: '1')
 
     Returns:
-        Tuple of (locations dict, original_placements dict, locked_placements dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict, canonical_placement_advancements dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
+    canonical_placement_advancements: Dict[str, bool] = {}  # location -> is_advancement
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
 
@@ -455,11 +457,14 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
             if item_info:
                 item_name = item_info.get('name', '')
                 original_placements[loc_name] = item_name
+                # Track the item's classification (advancement = progression)
+                is_advancement = item_info.get('advancement', False)
+                canonical_placement_advancements[loc_name] = is_advancement
                 # If the location is locked, also track it as a locked placement
                 if is_locked and item_name:
                     locked_placements[loc_name] = item_name
 
-    return locations, original_placements, locked_placements
+    return locations, original_placements, locked_placements, canonical_placement_advancements
 
 
 def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -1024,6 +1029,11 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     if 'shops' in world_data and world_data['shops']:
         world_attributes['shops'] = world_data['shops']
 
+    # Also check game_info for shops (new ALttP format with unlimited_items)
+    game_info = json_data.get('game_info', {}).get(player_id, {})
+    if 'shops' in game_info and game_info['shops'] and 'shops' not in world_attributes:
+        world_attributes['shops'] = game_info['shops']
+
     if not new_world_attrs:
         # Extract game-specific computed settings that need to be world attributes
         # These are settings that are accessed by helpers as world.X
@@ -1108,7 +1118,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     """
     metadata = extract_game_metadata(json_data, player_id=player_id)
     items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
-    locations, original_placements, locked_placements = extract_locations(json_data, player_id=player_id)
+    locations, original_placements, locked_placements, canonical_placement_advancements = extract_locations(json_data, player_id=player_id)
     regions, exits = extract_regions(json_data, player_id=player_id)
     start_region = extract_start_region(json_data, player_id=player_id)
     itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
@@ -1127,6 +1137,17 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(
         items, original_placements, settings=metadata.resolved_values
     )
+
+    # If no accumulator rules were auto-detected, check game_info for explicitly provided rules.
+    # This is needed for games like Jigsaw that use non-standard patterns (e.g., "17 Puzzle Pieces" -> "pcs")
+    # that can't be auto-detected but are explicitly defined in the game's export handler.
+    game_info = json_data.get('game_info', {}).get(player_id, {})
+    if not accumulator_rules and 'accumulator_rules' in game_info:
+        accumulator_rules = game_info['accumulator_rules']
+        logger.info(f"Using accumulator_rules from game_info: {accumulator_rules}")
+    if not prog_items_init and 'prog_items_init' in game_info:
+        prog_items_init = game_info['prog_items_init']
+        logger.info(f"Using prog_items_init from game_info: {prog_items_init}")
 
     # For games with state counters, we need to precollect the counter items
     # for generation to work (rules check Has(" coins", X) which needs items in inventory).
@@ -1158,6 +1179,29 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Extract game-specific world attributes
     world_attributes = extract_world_attributes(json_data, player_id=player_id)
 
+    # Add option values from helper param_mappings to world_attributes.
+    # This ensures that options referenced via param_mappings are accessible as
+    # world attributes at runtime, which enables proper param_mapping discovery
+    # when the worldgen world is re-exported.
+    # Get the option values and definitions from metadata extraction above
+    world_data = json_data.get('world', {}).get(player_id, {})
+    game_options = world_data.get('options', {})
+    option_definitions = world_data.get('option_definitions', {})
+    for helper_data in helpers.values():
+        for param, setting_name in helper_data.param_mappings.items():
+            # Check if this setting_name refers to an option (not already a world attribute)
+            if setting_name in option_definitions or setting_name in game_options:
+                if setting_name not in world_attributes:
+                    # Get the option value and add it as a world attribute
+                    if setting_name in game_options:
+                        value = game_options[setting_name]
+                        # Convert string booleans
+                        if value == 'true':
+                            value = True
+                        elif value == 'false':
+                            value = False
+                        world_attributes[setting_name] = value
+
     # Extract dungeon data (including bosses and defeat rules)
     dungeons = extract_dungeons(json_data, player_id=player_id)
 
@@ -1178,6 +1222,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         accumulator_rules=accumulator_rules,
         prog_items_init=prog_items_init,
         canonical_placements=canonical_placements,
+        canonical_placement_advancements=canonical_placement_advancements,
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
         dungeons=dungeons,

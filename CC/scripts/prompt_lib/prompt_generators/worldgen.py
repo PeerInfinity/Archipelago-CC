@@ -847,12 +847,8 @@ grep -n "options\\|self\\.multiworld" worlds/{world_dir}/Rules.py | head -30
 
 ### Option-dependent rules not exported
 
-If a rule behaves differently based on options, ensure the exporter handles all cases:
-
-```python
-# In exporter/games/{world_dir}.py (if it exists)
-# Check if option-specific logic is being exported
-```
+If a rule behaves differently based on options, ensure the exporter handles all cases.
+Check `exporter/games/official/` or `exporter/games/unofficial/` for game-specific exporters.
 
 ### Helper function with unhandled options
 
@@ -894,6 +890,828 @@ The rules must produce the **same accessibility determinations** regardless of w
 - `worlds/{world_dir}/Rules.py` - Original rule definitions
 - `worlds/{world_dir}/Options.py` - Game options that affect rules
 - `exporter/exporter.py` - Rules export logic
+- `exporter/games/official/` or `exporter/games/unofficial/` - Game-specific exporters (check for {world_dir}.py)
+- `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
+"""
+
+
+def generate_ut_fuzz_apworld_failure_prompt(
+    game_name,
+    template_file,
+    world_dir,
+    ut_fuzz_info,
+    download_url=None,
+    error_category='unknown',
+    error_details=None,
+):
+    """Generate a prompt for debugging UT fuzz failures on community apworlds.
+
+    These failures occur when community-built .apworld files fail the Universal
+    Tracker fuzz test. Unlike bundled worlds, apworlds require downloading and
+    installation before investigation.
+
+    Args:
+        game_name: Display name of the game
+        template_file: Template YAML filename
+        world_dir: World directory name
+        ut_fuzz_info: Dict with total, success, failure, timeout, error_types, error_runs
+        download_url: URL to download the .apworld file (optional)
+        error_category: Categorized error type (logic_mismatch, exceptions, etc.)
+        error_details: Additional error details dict
+    """
+    setup_doc = "CC/cloud-setup.md"
+    fuzz_doc = "CC/docs/fuzzer-testing.md"
+
+    # Extract stats
+    total = ut_fuzz_info.get('total', 0)
+    success = ut_fuzz_info.get('success', 0)
+    failure = ut_fuzz_info.get('failure', 0)
+    timeout = ut_fuzz_info.get('timeout', 0)
+    ignored = ut_fuzz_info.get('ignored', 0)
+    success_rate = ut_fuzz_info.get('success_rate', 0)
+    error_types = ut_fuzz_info.get('error_types', [])
+    error_runs = ut_fuzz_info.get('error_runs', {})
+
+    # Format error runs for display
+    error_runs_text = ""
+    for error_type, runs in error_runs.items():
+        run_list = ', '.join(str(r) for r in runs[:10])
+        if len(runs) > 10:
+            run_list += f', ... ({len(runs)} total)'
+        error_runs_text += f"  - {error_type or 'Logic mismatch'}: runs [{run_list}]\n"
+
+    # Build download instructions
+    if download_url:
+        download_instructions = f"""### 1. Download and install the apworld
+
+```bash
+# Download the apworld file
+curl -L -o custom_worlds/{world_dir}.apworld "{download_url}"
+
+# Verify the download
+ls -la custom_worlds/{world_dir}.apworld
+```
+
+If curl fails or the URL is outdated, you can manually download from silasary's APWorld index:
+- Visit: https://archipelago-apworlds.github.io/
+- Search for: {game_name}
+- Download the .apworld file to `custom_worlds/`
+"""
+    else:
+        download_instructions = f"""### 1. Download and install the apworld
+
+The download URL is not available in the test results. Download manually from silasary's APWorld index:
+
+```bash
+# 1. Visit: https://archipelago-apworlds.github.io/
+# 2. Search for: {game_name}
+# 3. Download the .apworld file
+
+# 4. Move/copy to custom_worlds directory:
+mv ~/Downloads/{world_dir}.apworld custom_worlds/
+
+# 5. Verify the download
+ls -la custom_worlds/{world_dir}.apworld
+```
+"""
+
+    # Build error type guidance
+    error_guidance = ""
+    if error_category == 'logic_mismatch':
+        error_guidance = """
+## Error Analysis: Logic Mismatch
+
+The most common UT fuzz failure type is **logic mismatch** (error type: `None`).
+This means the Universal Tracker and the server disagree about which locations are accessible.
+
+**For apworlds, common causes include:**
+1. **Incompatible Archipelago version**: The apworld was built for a different AP version
+2. **Option-dependent rules**: Rules that behave differently based on game options
+3. **Helper function logic**: Helper functions with unhandled edge cases
+4. **Item group definitions**: Item groups not properly recognized
+5. **Progressive item handling**: Progressive items evaluated differently
+
+**Investigation approach:**
+1. First verify the apworld loads without errors
+2. Find which options combination causes the failure
+3. Compare rule evaluation in UT vs server for a specific location
+"""
+    elif error_category == 'logic_mismatch_with_errors':
+        exception_types = error_details.get('exception_types', []) if error_details else []
+        error_guidance = f"""
+## Error Analysis: Logic Mismatch with Exceptions
+
+This apworld has both **logic mismatches** AND **Python exceptions**: {', '.join(exception_types)}
+
+The exceptions may be causing or masking the logic mismatches. Prioritize fixing the exceptions first.
+
+**Investigation approach:**
+1. Reproduce the exception to get the full traceback
+2. Check if the apworld's Rules.py has errors
+3. Look for missing helper functions or type errors
+"""
+    elif error_category == 'exceptions':
+        exception_types = error_details.get('types', []) if error_details else error_types
+        error_guidance = f"""
+## Error Analysis: Python Exceptions
+
+The UT fuzz test encountered Python exceptions: {', '.join(exception_types)}
+
+**For apworlds, this typically means:**
+1. **Import errors**: Missing dependencies or incompatible modules
+2. **Missing helper functions**: Helpers not exported or not defined
+3. **Type errors**: Unexpected data types in rule evaluation
+4. **Key errors**: Missing entries in lookup tables
+
+**Investigation approach:**
+1. First check if the apworld loads at all
+2. Run a simple seed generation to verify basic functionality
+3. Then reproduce the failing configuration
+"""
+    else:
+        error_guidance = """
+## Error Analysis: Unknown Error Type
+
+The failure type could not be categorized. Review the failing runs carefully.
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {fuzz_doc} for background on UT fuzzer testing.
+
+## APWorld Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `{world_dir}/` (from custom_worlds/{world_dir}.apworld)
+- **Download URL**: {download_url or 'Not available - see manual download instructions'}
+
+## The Problem
+
+This is a **community apworld** (not a bundled world) that fails the Universal Tracker fuzz test.
+APWorlds are community-built game integrations that may have compatibility issues or logic errors.
+
+### UT Fuzz Test Results
+
+- **Total runs**: {total}
+- **Success**: {success} ({success_rate:.1f}%)
+- **Failures**: {failure}
+- **Timeouts**: {timeout}
+- **Ignored**: {ignored}
+
+**Failing runs by error type:**
+{error_runs_text}
+
+## Setup Instructions
+
+{download_instructions}
+
+### 2. Regenerate templates to include the apworld
+
+```bash
+source .venv/bin/activate
+
+# Generate template for this apworld
+python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+# Verify the template was created
+ls -la Players/Templates/*{game_name}* 2>/dev/null || ls Players/Templates/ | grep -i "{world_dir}"
+```
+
+### 3. Verify the apworld loads correctly
+
+```bash
+# Check if the world loads
+python -c "from worlds import AutoWorldRegister; print('{game_name}' in [w.game for w in AutoWorldRegister.world_types.values()])"
+
+# Try a basic seed generation
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed 1
+```
+{error_guidance}
+
+## Investigation Steps
+
+### 4. Reproduce a failing configuration
+
+Pick a specific failing run number from the error list above and reproduce it:
+
+```bash
+source .venv/bin/activate
+
+# Run the fuzzer with a specific seed to reproduce a failure
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+```
+
+### 5. Check the failure log
+
+```bash
+cat fuzz_output/error/{world_dir}/0/0.log
+```
+
+The log shows:
+- The YAML options used for this run
+- Which locations disagree between UT and server
+- Full tracebacks for any exceptions
+
+### 6. Check the YAML configuration
+
+```bash
+cat fuzz_output/error/{world_dir}/0/0.yaml
+```
+
+This shows the exact option values that caused the failure.
+
+## APWorld-Specific Considerations
+
+Unlike bundled worlds, apworlds:
+1. **May target a different AP version** - Check the apworld's metadata for version requirements
+2. **May have unreviewed code** - The Rules.py and other files haven't been vetted for UT compatibility
+3. **May lack exporter support** - Check `exporter/games/unofficial/` for a {world_dir}.py exporter
+4. **May use custom logic patterns** - Not all world patterns are supported by the tracker
+
+### Check apworld metadata
+
+```bash
+# Extract and view apworld info
+python -c "
+import zipfile
+import json
+apworld = 'custom_worlds/{world_dir}.apworld'
+with zipfile.ZipFile(apworld, 'r') as z:
+    # List contents
+    print('Files:', z.namelist()[:20])
+    # Try to read __init__.py for metadata
+    for name in z.namelist():
+        if name.endswith('__init__.py'):
+            print(f'\\n=== {{name}} (first 50 lines) ===')
+            content = z.read(name).decode('utf-8')
+            for i, line in enumerate(content.split('\\n')[:50]):
+                print(line)
+            break
+"
+```
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Single fuzzer run (specific seed to reproduce)
+python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook --seed <RUN_NUMBER>
+
+# Multiple runs to check success rate
+python fuzz.py -r 10 -j 4 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+
+# Full test via the test runner
+python scripts/test/test-all-ut-fuzz.py --runs 10 --include-list "{template_file}" --custom-worlds-only
+```
+
+## Goal
+
+Investigate the apworld failure and determine:
+1. Is this a fundamental compatibility issue with the apworld?
+2. Can it be fixed by modifying the exporter/tracker?
+3. Does the apworld need updates from its maintainer?
+
+Document your findings so we can either:
+- Fix the issue in our codebase
+- Report the issue to the apworld maintainer
+- Add the apworld to a known-incompatible list
+
+## Reference Files
+
+- `custom_worlds/{world_dir}.apworld` - The apworld package (ZIP file)
+- `exporter/exporter.py` - Rules export logic
+- `exporter/games/unofficial/` - Unofficial game exporters (check for {world_dir}.py)
+- `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
+- `scripts/data/apworld-combined-data.json` - APWorld metadata
+"""
+
+
+def generate_spoiler_fuzz_failure_prompt(game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, seed=1, base_seed=None):
+    """Generate a prompt for debugging spoiler fuzz failures on games that pass UT fuzz.
+
+    These failures occur when:
+    - The game passes UT fuzz testing (the Python backend rules match the tracker)
+    - But fails spoiler fuzz testing (the JavaScript frontend can't evaluate rules correctly)
+
+    This indicates that there's likely a rule type that the world generator exports
+    but the JavaScript frontend doesn't support. The problem is specifically in the
+    frontend ruleEngine, not in the Python exporter or tracker.
+
+    Args:
+        game_name: Display name of the game
+        template_file: Template YAML filename
+        world_dir: World directory name
+        ut_fuzz_info: Dict with UT fuzz test stats
+        spoiler_fuzz_info: Dict with spoiler fuzz test stats including failing_seeds
+        world_mapping: World mapping dict (unused but kept for API consistency)
+        seed: Default seed for single-seed test commands
+        base_seed: The base seed used for the fuzz test (None if random mode)
+    """
+    setup_doc = "CC/cloud-setup.md"
+    fuzz_doc = "CC/docs/fuzzer-testing.md"
+
+    # Extract UT fuzz stats
+    ut_total = ut_fuzz_info.get('total', 0)
+    ut_success = ut_fuzz_info.get('success', 0)
+    ut_success_rate = ut_fuzz_info.get('success_rate', 0)
+
+    # Extract spoiler fuzz stats
+    spoiler_total = spoiler_fuzz_info.get('total', 0)
+    spoiler_success = spoiler_fuzz_info.get('success', 0)
+    spoiler_failure = spoiler_fuzz_info.get('test_failure', 0)
+    spoiler_gen_failure = spoiler_fuzz_info.get('generation_failure', 0)
+    spoiler_timeout = spoiler_fuzz_info.get('timeout', 0)
+    spoiler_success_rate = spoiler_fuzz_info.get('success_rate', 0)
+    spoiler_errors = spoiler_fuzz_info.get('errors', [])
+    failing_seeds = spoiler_fuzz_info.get('failing_seeds', {})
+
+    # Format error list
+    error_list_text = ""
+    if spoiler_errors:
+        unique_errors = {}
+        for err in spoiler_errors:
+            unique_errors[err] = unique_errors.get(err, 0) + 1
+        for err, count in sorted(unique_errors.items(), key=lambda x: -x[1]):
+            error_list_text += f"  - {err}: {count} occurrence(s)\n"
+
+    # Format failing seeds by failure type
+    failing_seeds_text = ""
+    for failure_type in ['test_failure', 'generation_failure', 'timeout']:
+        seeds = failing_seeds.get(failure_type, [])
+        if seeds:
+            seeds_preview = ', '.join(str(s) for s in seeds[:10])
+            if len(seeds) > 10:
+                seeds_preview += f', ... ({len(seeds)} total)'
+            failing_seeds_text += f"  - {failure_type}: seeds [{seeds_preview}]\n"
+
+    # Build reproduction instructions
+    if base_seed is not None:
+        # Find the first failing seed for reproduction example
+        first_failing = None
+        for failure_type in ['test_failure', 'generation_failure', 'timeout']:
+            seeds = failing_seeds.get(failure_type, [])
+            if seeds:
+                first_failing = min(seeds)
+                break
+
+        if first_failing is not None:
+            repro_example = f"""
+## Reproducing a Specific Failure
+
+The test used `--seed {base_seed}` with multiple runs. Each run `i` (0-indexed) uses `seed + i` as its random seed.
+
+**Failing seeds by failure type:**
+{failing_seeds_text}
+To reproduce a specific failing seed (e.g., seed {first_failing}):
+
+```bash
+source .venv/bin/activate
+
+# Reproduce the exact failure
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --seed {first_failing} --runs 1
+```
+
+This will:
+1. Generate a random YAML using `random.seed({first_failing})`
+2. Run seed generation with seed {first_failing}
+3. Run the spoiler test against the generated rules
+
+After running the fuzz test, you can repeat just the spoiler test against the generated rules:
+
+```bash
+npm test -- --mode=test-spoilers --game={world_dir} --seed={first_failing}
+```
+
+**Important**: Do NOT use these commands to reproduce the failure - they use the original
+template file, not the randomly-generated one from the fuzz test:
+
+```bash
+# WRONG - uses original template, not the fuzzed one
+python scripts/test/test-all-templates.py --include-list "{template_file}" --seed {first_failing}
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed {first_failing}
+```
+
+The fuzz test generates a temporary YAML file with randomized options. To manually run
+Generate.py with the same options, you would need to save the generated YAML before
+the fuzz test deletes it.
+"""
+        else:
+            repro_example = """
+## Reproducing Failures
+
+No specific failing seeds were recorded. Run the test again to identify failures:
+
+```bash
+source .venv/bin/activate
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --seed 1
+```
+""".format(template_file=template_file)
+    else:
+        repro_example = f"""
+## Reproducing Failures
+
+**Note**: The original test used random seeds, so exact reproduction is not possible.
+Run the test again with a fixed seed to get reproducible failures:
+
+```bash
+source .venv/bin/activate
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10 --seed 1
+```
+
+Once you have failing seeds with a fixed base seed, you can reproduce specific failures.
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {fuzz_doc} for background on fuzzer testing.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+
+## The Problem
+
+This game **passes UT fuzz testing** but **fails spoiler fuzz testing**.
+
+### What This Means
+
+**UT Fuzz Test** (Python-based Universal Tracker):
+- Uses the Python rule_builder module to evaluate rules
+- Tests that the exported rules.json matches the original Python world logic
+- **Result**: {ut_success}/{ut_total} passed ({ut_success_rate:.1f}%) ✅
+
+**Spoiler Fuzz Test** (JavaScript frontend):
+- Uses the JavaScript ruleEngine to evaluate rules
+- Tests that the frontend can correctly process the rules.json
+- **Result**: {spoiler_success}/{spoiler_total} passed ({spoiler_success_rate:.1f}%) ❌
+
+### Why This Matters
+
+Since UT fuzz testing passes, the rules.json is **correctly exported** and **correctly interpreted by Python**.
+The failure is specifically in the **JavaScript frontend ruleEngine** - it doesn't support some rule type
+that the world generator produces.
+
+### Spoiler Fuzz Test Details
+
+- **Total runs**: {spoiler_total}
+- **Success**: {spoiler_success} ({spoiler_success_rate:.1f}%)
+- **Test failures**: {spoiler_failure}
+- **Generation failures**: {spoiler_gen_failure}
+- **Timeouts**: {spoiler_timeout}
+
+**Error messages:**
+{error_list_text or "  (No specific error messages recorded)"}
+{repro_example}
+## Investigation Steps
+
+### 1. After reproducing a failing configuration
+
+### 2. Identify the failing rule type
+
+Once you have a failing seed, examine the generated rules.json:
+
+```bash
+# Find rule types used in the rules.json
+python -c "
+import json
+from collections import Counter
+
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+
+def find_rule_types(obj, types=None):
+    if types is None:
+        types = Counter()
+    if isinstance(obj, dict):
+        if 'type' in obj:
+            types[obj['type']] += 1
+        for v in obj.values():
+            find_rule_types(v, types)
+    elif isinstance(obj, list):
+        for v in obj:
+            find_rule_types(v, types)
+    return types
+
+types = find_rule_types(data)
+print('Rule types used:')
+for rule_type, count in types.most_common():
+    print(f'  {{rule_type}}: {{count}}')
+"
+```
+
+### 3. Check if the rule type is supported in JavaScript
+
+Compare the rule types with what's supported in the frontend:
+
+```bash
+# List rule types handled by the JavaScript ruleEngine
+grep -E "case ['\"]\\w+['\"]:" frontend/modules/shared/ruleEngine.js | head -30
+
+# Search for any unimplemented rule type handlers
+grep -n "TODO\\|FIXME\\|not implemented" frontend/modules/shared/ruleEngine.js
+```
+
+### 4. Find the specific unsupported rule
+
+Look for rules that use types not in the ruleEngine:
+
+```bash
+# Check for rule types in the helpers
+python -c "
+import json
+
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+
+helpers = data.get('helpers', {{}})
+print(f'Helper count: {{len(helpers)}}')
+for name, helper in list(helpers.items())[:10]:
+    print(f'  {{name}}: {{helper.get(\"definition\", {{}}).get(\"type\", \"?\")}}')
+"
+```
+
+## Common Causes
+
+### 1. Unsupported helper definition types
+
+The world generator may export helpers with definition types that the JavaScript
+ruleEngine doesn't handle. Check:
+- `frontend/modules/shared/ruleEngine.js` - `evaluateRule()` function
+- Compare with `rule_builder/evaluator.py` - which supports more rule types
+
+### 2. Complex comparison operators
+
+Some rule types involving comparisons (`>=`, `<=`, etc.) may not be fully
+implemented in JavaScript.
+
+### 3. Missing helper parameter resolution
+
+If helpers use parameters that aren't being resolved correctly in JavaScript.
+
+## Fix Approach
+
+Add support for the missing rule type in the JavaScript ruleEngine:
+- `frontend/modules/shared/ruleEngine.js`
+
+Follow the pattern of existing rule type handlers.
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Run spoiler fuzz test
+python scripts/test/test-all-spoiler-fuzz.py --include-list "{template_file}" --runs 10
+
+# Run a single spoiler test with a specific seed
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed <FAILING_SEED>
+npm test -- --mode=test-spoilers --game={world_dir} --seed=<FAILING_SEED>
+
+# Analyze the test failure
+npm run test:analyze
+cat playwright-analysis.txt
+
+# Compare with UT fuzz (should pass)
+python fuzz.py -r 10 -j 4 -g {world_dir} -n 1 --hook worlds.tracker.fuzzer_hook:Hook
+```
+
+## Goal
+
+Fix the JavaScript frontend ruleEngine so that it can correctly evaluate the
+rules produced by the world generator. Since UT fuzz testing passes, the rules
+themselves are correct - only the JavaScript evaluation needs to be fixed.
+
+## Reference Files
+
+- `frontend/modules/shared/ruleEngine.js` - JavaScript rule evaluation
+- `rule_builder/evaluator.py` - Python rule evaluation (reference for correct behavior)
+- `worlds/{world_dir}/Rules.py` - Original rule definitions
+- `exporter/games/official/` or `exporter/games/unofficial/` - Game-specific exporters
+- `frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json` - Exported rules
+"""
+
+
+def generate_ut_fuzz_single_failure_prompt(failure_info):
+    """Generate a prompt for debugging a single UT fuzz failure with exact reproduction steps.
+
+    This is used for detailed investigation of a specific failing seed from the
+    single-game UT fuzz workflow. Unlike the multi-game prompt, this provides
+    exact reproduction commands for a specific failing seed.
+
+    Args:
+        failure_info: Dict from get_ut_fuzz_single_failure() containing:
+            - game_name, template, world_directory
+            - base_seed, failing_seed, reproduction_seed
+            - error_type
+            - ut_fuzz stats
+            - default_options, disallow_options (fuzzer options used)
+    """
+    setup_doc = "CC/cloud-setup.md"
+    fuzz_doc = "CC/docs/fuzzer-testing.md"
+
+    game_name = failure_info['game_name']
+    template = failure_info['template']
+    world_dir = failure_info['world_directory']
+    base_seed = failure_info['base_seed']
+    failing_seed = failure_info['failing_seed']
+    reproduction_seed = failure_info['reproduction_seed']
+    error_type = failure_info['error_type']
+    ut_fuzz = failure_info['ut_fuzz']
+    default_options = failure_info.get('default_options')
+    disallow_options = failure_info.get('disallow_options')
+
+    # Format stats
+    total = ut_fuzz.get('total', 0)
+    success = ut_fuzz.get('success', 0)
+    failure = ut_fuzz.get('failure', 0)
+    ignored = ut_fuzz.get('ignored', 0)
+    success_rate = (success / max(total, 1)) * 100
+
+    # Build fuzzer options string for reproduction command
+    fuzzer_opts = ""
+    if default_options:
+        fuzzer_opts += f" --default-options {default_options}"
+    if disallow_options:
+        fuzzer_opts += f' --disallow-options "{disallow_options}"'
+
+    # Build reproduction command
+    # Detect if seeds are already actual seeds (failing_seed == reproduction_seed) or iteration indices
+    seeds_are_actual = reproduction_seed is not None and failing_seed == reproduction_seed
+
+    if reproduction_seed is not None:
+        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1 --seed {reproduction_seed}{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
+        if seeds_are_actual:
+            # New behavior: --number-by-seed was used, failing_seed IS the actual seed
+            repro_explanation = f"""
+The failure occurred at seed {failing_seed}. The test used `--number-by-seed` so the failing seed is the actual seed value.
+
+To reproduce this exact failure:
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```"""
+        else:
+            # Old behavior: failing_seed is an iteration index
+            repro_explanation = f"""
+The original test used `--seed {base_seed}` with {total} runs.
+Each run `i` is seeded with `base_seed + i`, so run {failing_seed} used `random.seed({base_seed} + {failing_seed}) = random.seed({reproduction_seed})`.
+
+To reproduce this exact failure:
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```"""
+        if default_options or disallow_options:
+            repro_explanation += f"""
+**Fuzzer options used:**
+"""
+            if default_options:
+                repro_explanation += f"- Default options: `{default_options}`\n"
+            if disallow_options:
+                repro_explanation += f"- Disallow options: `{disallow_options}`\n"
+    else:
+        repro_cmd = f"python fuzz.py -r 1 -j 1 -g {world_dir} -n 1{fuzzer_opts} --hook worlds.tracker.fuzzer_hook:Hook"
+        repro_explanation = f"""
+**Note**: The original test used a random seed, so exact reproduction is not possible.
+Running the fuzzer again may produce different failures.
+
+To run a new test:
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```"""
+        if default_options or disallow_options:
+            repro_explanation += f"""
+**Fuzzer options used:**
+"""
+            if default_options:
+                repro_explanation += f"- Default options: `{default_options}`\n"
+            if disallow_options:
+                repro_explanation += f"- Disallow options: `{disallow_options}`\n"
+
+    # Error type analysis
+    if error_type == 'None' or error_type is None:
+        error_analysis = """
+## Error Analysis: Logic Mismatch
+
+The error type `None` indicates a **logic mismatch** - the Universal Tracker and the
+server disagree about which locations should be accessible.
+
+The failure log will show a message like:
+```
+Locations [LOCATION_NAME] were expected to be in logic but weren't
+```
+
+**Common causes:**
+1. **Entrance shuffle**: Shuffled entrances change region connectivity in ways the tracker doesn't handle
+2. **Option-dependent rules**: Rules behave differently based on game options (mode, glitches, etc.)
+3. **Dynamic state**: Rules involving item counts or progressive items evaluated incorrectly
+4. **Helper function logic**: Helper functions with edge cases not covered
+
+**Investigation approach:**
+1. Read the failure log to identify which location(s) failed
+2. Check the YAML to see which options were randomized
+3. Look for the failing location in the Rules.py or exported rules
+4. Compare rule evaluation between UT and server
+"""
+    else:
+        error_analysis = f"""
+## Error Analysis: {error_type}
+
+The test encountered a Python exception: `{error_type}`
+
+This typically indicates:
+1. Missing helper functions for certain option configurations
+2. Type errors in rule evaluation
+3. Key errors when looking up option-dependent data
+
+**Investigation approach:**
+1. Run the reproduction command to see the full traceback
+2. Identify which function or rule caused the error
+3. Check if the error is in the tracker, exporter, or world code
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {fuzz_doc} for background on UT fuzzer testing.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template}`
+- **World directory**: `worlds/{world_dir}/`
+
+## Test Results Summary
+
+- **Total runs**: {total}
+- **Success**: {success} ({success_rate:.1f}%)
+- **Failures**: {failure}
+- **Ignored**: {ignored}
+
+## The Failing Seed
+
+- **Failing run number**: {failing_seed}
+- **Base seed**: {base_seed if base_seed is not None else 'random'}
+- **Reproduction seed**: {reproduction_seed if reproduction_seed is not None else 'N/A (random base seed)'}
+- **Error type**: {error_type or 'None (logic mismatch)'}
+
+## Exact Reproduction
+{repro_explanation}
+{error_analysis}
+## Investigation Steps
+
+### 1. Reproduce the failure
+
+```bash
+source .venv/bin/activate
+{repro_cmd}
+```
+
+### 2. Examine the failure details
+
+After running the reproduction command, examine the generated error files:
+
+```bash
+# View the failure log
+cat fuzz_output/error/{world_dir}/{reproduction_seed}/{reproduction_seed}.log
+
+# View the YAML configuration that caused the failure
+cat fuzz_output/error/{world_dir}/{reproduction_seed}/{reproduction_seed}-0.yaml
+```
+
+The log shows:
+- Which locations were expected in logic but weren't accessible
+- The server's logic spheres at the point of failure
+- Inventory state at the time of failure
+
+The YAML file contains the exact options that caused the failure.
+
+### 3. Identify the root cause
+
+Based on the error analysis above, focus on:
+- The specific location(s) that fail the logic check
+- The option settings that trigger the failure
+- The rule or entrance that evaluates differently
+
+## Goal
+
+Fix the logic mismatch so that this specific seed passes. After fixing:
+
+1. Re-run the reproduction command to verify the fix
+2. Run a broader test to ensure no regressions:
+   ```bash
+   python scripts/test/test-all-ut-fuzz.py --include-list "{template}" --runs 100 --seed {base_seed if base_seed else 1}
+   ```
+
+## Reference Files
+
+- `worlds/{world_dir}/Rules.py` - Location access rules
+- `worlds/{world_dir}/Regions.py` - Region and entrance definitions
 - `exporter/games/{world_dir}.py` - Game-specific exporter (if exists)
 - `worlds/tracker/fuzzer_hook.py` - UT fuzzer hook implementation
+- `rule_builder/` - Rule Builder implementation
 """

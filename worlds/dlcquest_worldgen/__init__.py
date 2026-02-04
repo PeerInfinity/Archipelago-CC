@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -32,6 +32,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Gun Pack": 1,
     "Loading Screen": 7,
     "Map Pack": 1,
+    "Movement Pack": 1,
     "Name Change Pack": 4,
     "Night Map Pack": 1,
     "Pause Menu Pack": 1,
@@ -47,7 +48,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Movement Pack": "Movement Pack",
     "Move Right coins": "4 coins",
     "Movement Pack coins": "46 coins",
     "Behind Tree coins": "60 coins",
@@ -121,8 +121,8 @@ class DLCqworld(RuleWorldMixin, World):
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["Movement Pack", "Animation Pack", "Audio Pack", "Pause Menu Pack", "Time is Money Pack", "Double Jump Pack", "Pet Pack", "Sexy Outfits Pack", "Top Hat Pack", "Map Pack", "Gun Pack", "The Zombie Pack", "Night Map Pack", "Psychological Warfare Pack", "Armor for your Horse Pack", "Finish the Fight Pack", "Particles Pack", "Day One Patch Pack", "Checkpoint Pack", "Incredibly Important Pack", "Wall Jump Pack", "Health Bar Pack", "Parallax Pack", "Harmless Plants Pack", "Death of Comedy Pack", "Canadian Dialog Pack", "DLC NPC Pack", "Cut Content Pack", "Name Change Pack", "Pickaxe", "Season Pass", "High Definition Next Gen Pack", "Increased HP Pack", "Removed Ads Pack", "Big Sword Pack", "Really Big Sword Pack", "Unfathomable Sword Pack", "Gun", "Sword", "Wooden Sword", "Box of Various Supplies", "Humble Indie Bindle", "DLC Quest: Coin Bundle", "Live Freemium or Die: Coin Bundle", "Zombie Sheep", "Temporary Spike", "Loading Screen", "DLC Quest: Progressive Weapon", "Live Freemium or Die: Progressive Weapon", "DLC Quest: Coin Piece", "Live Freemium or Die: Coin Piece"]),
-        "coins": frozenset(["4 coins", "46 coins", "60 coins", "100 coins", "50 coins", "9 coins", "10 coins", "89 coins", "7 coins", "171 coins", "76 coins", "203 coins", " coins", " coins freemium"]),
-        "Event": frozenset(["Victory Basic"]),
+        "Event": frozenset(["4 coins", "46 coins", "60 coins", "100 coins", "50 coins", "9 coins", "10 coins", "89 coins", "7 coins", "171 coins", "76 coins", "203 coins", "Victory Basic"]),
+        "coins": frozenset([" coins", " coins freemium"]),
     }
 
     # Accumulator rules for state counters (e.g., coins)
@@ -142,37 +142,37 @@ class DLCqworld(RuleWorldMixin, World):
         "Movement Pack": "Movement Pack",
         "Animation Pack": "Psychological Warfare Pack",
         "Audio Pack": "Name Change Pack",
+        "Between Trees Sheep": "Name Change Pack",
+        "Hole in the Wall Sheep": "Name Change Pack",
+        "Sexy Outfits Pack": "Name Change Pack",
         "Pause Menu Pack": "Time is Money Pack",
         "Move Right coins": "4 coins",
         "Time is Money Pack": "Zombie Sheep",
         "Psychological Warfare Pack": "Animation Pack",
         "Armor for your Horse Pack": "Loading Screen",
-        "Shepherd Sheep": "Loading Screen",
-        "Movement Pack coins": "46 coins",
+        "Cutscene Sheep": "Loading Screen",
         "Double Jump Pack": "Loading Screen",
+        "Night Map Pack": "Loading Screen",
+        "Sexy Outfits Sheep": "Loading Screen",
+        "Shepherd Sheep": "Loading Screen",
+        "Top Hat Pack": "Loading Screen",
+        "Movement Pack coins": "46 coins",
         "Map Pack": "Armor for your Horse Pack",
-        "Between Trees Sheep": "Name Change Pack",
-        "Hole in the Wall Sheep": "Name Change Pack",
         "Behind Tree coins": "60 coins",
         "West Cave Sheep": "Double Jump Pack",
         "Psychological Warfare coins": "100 coins",
         "Pet Pack": "Map Pack",
-        "Top Hat Pack": "Loading Screen",
         "North West Alcove Sheep": "Audio Pack",
         "Double Jump Total Left coins": "50 coins",
         "Top Hat Sheep": "Pause Menu Pack",
         "Double Jump Total Left Cave coins": "9 coins",
         "North West Ceiling Sheep": "Pet Pack",
         "Double Jump Total Left Roof coins": "10 coins",
-        "Sexy Outfits Pack": "Name Change Pack",
         "Double Jump Alcove Sheep": "Night Map Pack",
-        "Sexy Outfits Sheep": "Loading Screen",
         "Double Jump Behind Tree coins": "89 coins",
         "Double Jump Floating Sheep": "Sexy Outfits Pack",
-        "Cutscene Sheep": "Loading Screen",
         "True Double Jump Behind Tree coins": "7 coins",
         "Gun Pack": "Temporary Spike",
-        "Night Map Pack": "Loading Screen",
         "The Forest coins": "171 coins",
         "The Zombie Pack": "Top Hat Pack",
         "Forest Low Sheep": "The Zombie Pack",
@@ -183,12 +183,59 @@ class DLCqworld(RuleWorldMixin, World):
         "Winning Basic": "Victory Basic",
     }
 
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Movement Pack": True,
+        "Animation Pack": True,
+        "Audio Pack": False,
+        "Pause Menu Pack": True,
+        "Move Right coins": True,
+        "Time is Money Pack": False,
+        "Psychological Warfare Pack": False,
+        "Armor for your Horse Pack": False,
+        "Shepherd Sheep": False,
+        "Movement Pack coins": True,
+        "Double Jump Pack": False,
+        "Map Pack": True,
+        "Between Trees Sheep": False,
+        "Hole in the Wall Sheep": False,
+        "Behind Tree coins": True,
+        "West Cave Sheep": True,
+        "Psychological Warfare coins": True,
+        "Pet Pack": True,
+        "Top Hat Pack": False,
+        "North West Alcove Sheep": False,
+        "Double Jump Total Left coins": True,
+        "Top Hat Sheep": False,
+        "Double Jump Total Left Cave coins": True,
+        "North West Ceiling Sheep": False,
+        "Double Jump Total Left Roof coins": True,
+        "Sexy Outfits Pack": False,
+        "Double Jump Alcove Sheep": False,
+        "Sexy Outfits Sheep": False,
+        "Double Jump Behind Tree coins": True,
+        "Double Jump Floating Sheep": False,
+        "Cutscene Sheep": False,
+        "True Double Jump Behind Tree coins": True,
+        "Gun Pack": False,
+        "Night Map Pack": False,
+        "The Forest coins": True,
+        "The Zombie Pack": False,
+        "Forest Low Sheep": False,
+        "The Forest with double Jump coins": True,
+        "Forest High Sheep": True,
+        "The Forest with double Jump Part 2 coins": True,
+        "Finish the Fight Pack": True,
+        "Winning Basic": True,
+    }
+
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.world_class_name = 'DLCqworld'
         self.world_description = 'DLCQuest is a metroid ish game where everything is an in-game dlc.'
-        self.slot_data = types.SimpleNamespace(death_link=0, ending_choice=1, campaign=0, coinsanity=0, item_shuffle=0, permanent_coins=0, coinbundlerange=20, seed=71185160)
+        self.slot_data = types.SimpleNamespace(death_link=0, ending_choice=1, campaign=0, coinsanity=0, item_shuffle=0, permanent_coins=0, coinbundlerange=20, seed=3835831)
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -306,14 +353,38 @@ class DLCqworld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = DLCQuestWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = DLCQuestWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = DLCQuestWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -358,27 +429,81 @@ class DLCqworld(RuleWorldMixin, World):
             lambda state: state.has("Victory Basic", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
@@ -397,5 +522,5 @@ class DLCqworld(RuleWorldMixin, World):
             "item_shuffle": 0,
             "permanent_coins": 0,
             "coinbundlerange": 20,
-            "seed": 71185160,
+            "seed": 3835831,
         }

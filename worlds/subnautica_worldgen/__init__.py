@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -64,6 +64,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Neptune Cockpit": 1,
     "Neptune Fuel Reserve": 1,
     "Neptune Gantry": 1,
+    "Neptune Launch Platform": 1,
     "Nuclear Reactor Fragment": 3,
     "Observatory": 1,
     "Power Cell Charger Fragment": 2,
@@ -80,7 +81,7 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
     "Resources Bundle": 2,
     "Salt Deposit": 1,
     "Scanner Room Fragment": 3,
-    "Seaglide Fragment": 2,
+    "Seaglide Fragment": 4,
     "Seamoth Fragment": 6,
     "Silver Ore": 2,
     "Spotlight": 1,
@@ -97,9 +98,6 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Grassy Plateaus South Wreck - Databox": "Seaglide Fragment",
-    "Kelp Forest Wreck - Databox": "Seaglide Fragment",
-    "Aurora - Captain Data Terminal": "Neptune Launch Platform",
     "Neptune Launch": "Victory",
     "Disable Quarantine": "Disable Quarantine",
     "Full Infection": "Full Infection",
@@ -166,140 +164,280 @@ class SubnauticaWorld(RuleWorldMixin, World):
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Blood Kelp Trench Wreck - Outside Databox": "Cyclops Engine Fragment",
+        "Degasi Seabase - Deep Grand Reef - Lab PDA": "Cyclops Engine Fragment",
+        "Dunes North Wreck - PDA": "Cyclops Engine Fragment",
+        "Lifepod 2 - PDA": "Cyclops Engine Fragment",
+        "Quarantine Enforcement Platform's - Upper Alien Data Terminal": "Cyclops Engine Fragment",
         "Blood Kelp Trench Wreck - Inside Databox": "Spotlight",
         "Blood Kelp Trench Wreck - PDA": "Large Room",
         "Bulb Zone West Wreck - Outside Databox": "Cyclops Fire Suppression System",
+        "Aurora - Lab PDA": "Laser Cutter Fragment",
         "Bulb Zone West Wreck - Under Databox": "Laser Cutter Fragment",
+        "Degasi Seabase - Deep Grand Reef - Outside PDA": "Laser Cutter Fragment",
+        "Underwater Islands Wreck - Hangar Databox": "Laser Cutter Fragment",
         "Bulb Zone West Wreck - Inside Databox": "Cyclops Shield Generator",
         "Bulb Zone West Wreck - PDA": "Crystalline Sulfur",
+        "Jellyshroom Cave - PDA": "Crystalline Sulfur",
         "Bulb Zone East Wreck - Databox": "Beacon Fragment",
+        "Degasi Seabase - Floating Island - Room PDA": "Beacon Fragment",
         "Dunes North Wreck - Outside Databox": "Creature Decoy",
+        "Aurora - Locker PDA": "Cyclops Bridge Fragment",
+        "Aurora - Seamoth Bay PDA": "Cyclops Bridge Fragment",
         "Dunes North Wreck - Office Databox": "Cyclops Bridge Fragment",
-        "Dunes North Wreck - PDA": "Cyclops Engine Fragment",
-        "Dunes North Wreck - Cargo Databox": "Bioreactor Fragment",
-        "Dunes West Wreck - Databox": "Cyclops Hull Fragment",
-        "Dunes East Wreck - Outside Databox": "Power Cell Charger Fragment",
-        "Dunes East Wreck - Inside Databox": "Cyclops Thermal Reactor Module",
-        "Grand Reef North Wreck - Outside Databox": "Seaglide Fragment",
-        "Grand Reef North Wreck - Elevator Databox": "Seamoth Fragment",
-        "Grand Reef North Wreck - Bottom Databox": "Alien Containment",
-        "Grand Reef North Wreck - Hangar PDA": "Thermal Plant Fragment",
-        "Grand Reef South Wreck - Trench Databox": "Grav Trap Fragment",
-        "Grand Reef South Wreck - Comms Databox": "Cyclops Hull Fragment",
-        "Grand Reef South Wreck - Outside Databox": "Modification Station Fragment",
-        "Grand Reef South Wreck - PDA": "Resources Bundle",
-        "Grassy Plateaus South Wreck - Databox": "Seaglide Fragment",
-        "Grassy Plateaus South Wreck - PDA": "Cyclops Decoy Tube Upgrade",
-        "Grassy Plateaus East Wreck - Breach Databox": "Prawn Suit Fragment",
-        "Grassy Plateaus East Wreck - Hangar Databox": "Exterior Growbed",
-        "Grassy Plateaus West Wreck - Locker PDA": "Lightweight High Capacity Tank",
-        "Grassy Plateaus West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
-        "Grassy Plateaus Southwest Wreck - Databox": "Moonpool Fragment",
-        "Safe Shallows Wreck - PDA": "Cyclops Bridge Fragment",
-        "Kelp Forest Wreck - Databox": "Seaglide Fragment",
-        "Kelp Forest Wreck - PDA": "Seamoth Fragment",
-        "Mountains West Wreck - Outside Databox": "Propulsion Cannon Fragment",
-        "Mountains West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
-        "Mountains West Wreck - Hangar Databox": "Moonpool Fragment",
-        "Mountains West Wreck - Office Databox": "Nuclear Reactor Fragment",
-        "Mountains East Wreck - Comms Databox": "Cyclops Hull Fragment",
         "Mountains East Wreck - Outside Databox": "Cyclops Bridge Fragment",
-        "Northwestern Mushroom Forest Wreck - Cargo Databox": "Stasis Rifle Fragment",
+        "Safe Shallows Wreck - PDA": "Cyclops Bridge Fragment",
+        "Dunes North Wreck - Cargo Databox": "Bioreactor Fragment",
+        "Lifepod 3 - Databox": "Bioreactor Fragment",
+        "Aurora - Cabin 7 PDA": "Cyclops Hull Fragment",
+        "Deep Sparse Reef Sanctuary - Alien Data Terminal": "Cyclops Hull Fragment",
+        "Dunes West Wreck - Databox": "Cyclops Hull Fragment",
+        "Grand Reef South Wreck - Comms Databox": "Cyclops Hull Fragment",
+        "Mountains East Wreck - Comms Databox": "Cyclops Hull Fragment",
+        "Dunes East Wreck - Outside Databox": "Power Cell Charger Fragment",
+        "Underwater Islands Wreck - Pipes Databox 1": "Power Cell Charger Fragment",
+        "Dunes East Wreck - Inside Databox": "Cyclops Thermal Reactor Module",
+        "Aurora - Medkit Locker PDA": "Seaglide Fragment",
+        "Grand Reef North Wreck - Outside Databox": "Seaglide Fragment",
+        "Grassy Plateaus South Wreck - Databox": "Seaglide Fragment",
+        "Kelp Forest Wreck - Databox": "Seaglide Fragment",
+        "Degasi Seabase - Jellyshroom Cave - Locker PDA": "Seamoth Fragment",
+        "Grand Reef North Wreck - Elevator Databox": "Seamoth Fragment",
+        "Kelp Forest Wreck - PDA": "Seamoth Fragment",
+        "Lifepod 13 - Databox": "Seamoth Fragment",
+        "Lifepod 19 - Databox": "Seamoth Fragment",
+        "Lifepod 3 - PDA": "Seamoth Fragment",
+        "Grand Reef North Wreck - Bottom Databox": "Alien Containment",
+        "Aurora - Cabin 1 PDA": "Thermal Plant Fragment",
+        "Grand Reef North Wreck - Hangar PDA": "Thermal Plant Fragment",
+        "Aurora - Canteen PDA": "Grav Trap Fragment",
+        "Grand Reef South Wreck - Trench Databox": "Grav Trap Fragment",
+        "Degasi Seabase - Deep Grand Reef - Observatory PDA": "Modification Station Fragment",
+        "Degasi Seabase - Floating Island - Databox": "Modification Station Fragment",
+        "Grand Reef South Wreck - Outside Databox": "Modification Station Fragment",
+        "Sparse Reef Wreck - Lab Databox": "Modification Station Fragment",
+        "Grand Reef South Wreck - PDA": "Resources Bundle",
+        "Lifepod 12 - Databox": "Resources Bundle",
+        "Grassy Plateaus South Wreck - PDA": "Cyclops Decoy Tube Upgrade",
+        "Alien Thermal Plant - Entrance Alien Data Terminal": "Prawn Suit Fragment",
+        "Aurora - Ring PDA": "Prawn Suit Fragment",
+        "Aurora Seamoth Bay - Upgrade Console": "Prawn Suit Fragment",
+        "Disease Research Facility - Upper Alien Data Terminal": "Prawn Suit Fragment",
+        "Grassy Plateaus East Wreck - Breach Databox": "Prawn Suit Fragment",
+        "Lifepod 17 - PDA": "Prawn Suit Fragment",
+        "Lifepod 19 - Inside PDA": "Prawn Suit Fragment",
+        "Grassy Plateaus East Wreck - Hangar Databox": "Exterior Growbed",
         "Northwestern Mushroom Forest Wreck - Office Databox": "Exterior Growbed",
-        "Northwestern Mushroom Forest Wreck - PDA": "Ultra High Capacity Tank",
-        "Sea Treader's Path Wreck - Outside Databox": "Scanner Room Fragment",
+        "Grassy Plateaus West Wreck - Locker PDA": "Lightweight High Capacity Tank",
+        "Degasi Seabase - Jellyshroom Cave - Bedroom Databox": "Mobile Vehicle Bay Fragment",
+        "Degasi Seabase - Jellyshroom Cave - Detached PDA": "Mobile Vehicle Bay Fragment",
+        "Floating Island - Lake PDA": "Mobile Vehicle Bay Fragment",
+        "Grassy Plateaus West Wreck - Beam PDA": "Mobile Vehicle Bay Fragment",
+        "Grassy Plateaus West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
+        "Mountains West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
+        "Grassy Plateaus Southwest Wreck - Databox": "Moonpool Fragment",
+        "Mountains West Wreck - Hangar Databox": "Moonpool Fragment",
         "Sea Treader's Path Wreck - Hangar Databox": "Moonpool Fragment",
+        "Mountains West Wreck - Outside Databox": "Propulsion Cannon Fragment",
         "Sea Treader's Path Wreck - Lobby Databox": "Propulsion Cannon Fragment",
+        "Aurora Prawn Suit Bay - Upgrade Console": "Nuclear Reactor Fragment",
+        "Lifepod 6 - Outside PDA": "Nuclear Reactor Fragment",
+        "Mountains West Wreck - Office Databox": "Nuclear Reactor Fragment",
+        "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal": "Stasis Rifle Fragment",
+        "Northwestern Mushroom Forest Wreck - Cargo Databox": "Stasis Rifle Fragment",
+        "Northwestern Mushroom Forest Wreck - PDA": "Ultra High Capacity Tank",
+        "Degasi Seabase - Deep Grand Reef - Observatory Databox": "Scanner Room Fragment",
+        "Sea Treader's Path Wreck - Outside Databox": "Scanner Room Fragment",
+        "Underwater Islands Wreck - Outside Databox": "Scanner Room Fragment",
         "Sea Treader's Path Wreck - PDA": "Cyclops Depth Module MK1",
         "Sparse Reef Wreck - Locker Databox": "Swim Charge Fins",
-        "Sparse Reef Wreck - Outside Databox": "Prawn Suit Propulsion Cannon Fragment",
-        "Sparse Reef Wreck - Lab Databox": "Modification Station Fragment",
-        "Underwater Islands Wreck - Outside Databox": "Scanner Room Fragment",
-        "Underwater Islands Wreck - Hangar Databox": "Laser Cutter Fragment",
-        "Underwater Islands Wreck - Data Terminal": "Power Transmitter Fragment",
-        "Underwater Islands Wreck - Cable Databox": "Battery Charger fragment",
-        "Underwater Islands Wreck - Pipes Databox 1": "Power Cell Charger Fragment",
-        "Underwater Islands Wreck - Pipes Databox 2": "Ultra Glide Fins",
         "Degasi Seabase - Deep Grand Reef - Bedroom Databox": "Prawn Suit Propulsion Cannon Fragment",
-        "Degasi Seabase - Deep Grand Reef - Observatory Databox": "Scanner Room Fragment",
+        "Sparse Reef Wreck - Outside Databox": "Prawn Suit Propulsion Cannon Fragment",
+        "Underwater Islands Wreck - Data Terminal": "Power Transmitter Fragment",
+        "Aurora - Lab Data Terminal": "Battery Charger fragment",
+        "Underwater Islands Wreck - Cable Databox": "Battery Charger fragment",
+        "Underwater Islands Wreck - Pipes Databox 2": "Ultra Glide Fins",
         "Degasi Seabase - Deep Grand Reef - Bedroom PDA": "Neptune Cockpit",
-        "Degasi Seabase - Deep Grand Reef - Outside PDA": "Laser Cutter Fragment",
-        "Degasi Seabase - Deep Grand Reef - Observatory PDA": "Modification Station Fragment",
-        "Degasi Seabase - Deep Grand Reef - Lab PDA": "Cyclops Engine Fragment",
-        "Floating Island - Lake PDA": "Mobile Vehicle Bay Fragment",
-        "Degasi Seabase - Floating Island - Databox": "Modification Station Fragment",
-        "Degasi Seabase - Floating Island - Room PDA": "Beacon Fragment",
         "Degasi Seabase - Floating Island - Green Wall PDA": "Ion Power Cell",
         "Degasi Seabase - Floating Island - Corridor PDA": "Prawn Suit Torpedo Arm Fragment",
         "Degasi Seabase - Floating Island - North Observatory PDA": "Prawn Suit Torpedo Arm Fragment",
+        "Alien Thermal Plant - Yellow Alien Data Terminal": "Prawn Suit Grappling Arm Fragment",
         "Degasi Seabase - Floating Island - South Observatory PDA": "Prawn Suit Grappling Arm Fragment",
-        "Jellyshroom Cave - PDA": "Crystalline Sulfur",
-        "Degasi Seabase - Jellyshroom Cave - Bedroom Databox": "Mobile Vehicle Bay Fragment",
-        "Degasi Seabase - Jellyshroom Cave - Detached PDA": "Mobile Vehicle Bay Fragment",
         "Degasi Seabase - Jellyshroom Cave - Office PDA": "Gold",
-        "Degasi Seabase - Jellyshroom Cave - Locker PDA": "Seamoth Fragment",
         "Degasi Seabase - Jellyshroom Cave - Bedroom PDA": "Silver Ore",
+        "Dunes Sanctuary - Alien Data Terminal": "Silver Ore",
         "Degasi Seabase - Jellyshroom Cave - Observatory PDA": "Neptune Gantry",
         "Lifepod 2 - Databox": "Observatory",
-        "Lifepod 2 - PDA": "Cyclops Engine Fragment",
-        "Lifepod 3 - Databox": "Bioreactor Fragment",
-        "Lifepod 3 - PDA": "Seamoth Fragment",
+        "Degasi Seabase - Jellyshroom Cave - Outside PDA": "Prawn Suit Drill Arm Fragment",
         "Lifepod 4 - Databox": "Prawn Suit Drill Arm Fragment",
         "Lifepod 4 - PDA": "Repulsion Cannon",
         "Lifepod 6 - Databox": "Neptune Fuel Reserve",
+        "Aurora - Cabin 4 PDA": "Furniture",
         "Lifepod 6 - Inside PDA": "Furniture",
-        "Lifepod 6 - Outside PDA": "Nuclear Reactor Fragment",
         "Lifepod 7 - PDA": "Multipurpose Room",
-        "Lifepod 12 - Databox": "Resources Bundle",
         "Lifepod 12 - PDA": "Salt Deposit",
-        "Lifepod 13 - Databox": "Seamoth Fragment",
         "Lifepod 13 - PDA": "Kyanite",
-        "Lifepod 17 - PDA": "Prawn Suit Fragment",
-        "Lifepod 19 - Databox": "Seamoth Fragment",
         "Lifepod 19 - Outside PDA": "Compass",
-        "Lifepod 19 - Inside PDA": "Prawn Suit Fragment",
-        "Aurora Seamoth Bay - Upgrade Console": "Prawn Suit Fragment",
         "Aurora Drive Room - Upgrade Console": "Titanium",
-        "Aurora Prawn Suit Bay - Upgrade Console": "Nuclear Reactor Fragment",
         "Aurora - Office PDA": "Water Filtration Machine",
         "Aurora - Corridor PDA": "Bulkhead",
         "Aurora - Cargo Bay PDA": "Cyclops Docking Bay Repair Module",
-        "Aurora - Seamoth Bay PDA": "Cyclops Bridge Fragment",
-        "Aurora - Medkit Locker PDA": "Seaglide Fragment",
-        "Aurora - Locker PDA": "Cyclops Bridge Fragment",
-        "Aurora - Canteen PDA": "Grav Trap Fragment",
-        "Aurora - Cabin 4 PDA": "Furniture",
-        "Aurora - Cabin 7 PDA": "Cyclops Hull Fragment",
-        "Aurora - Cabin 1 PDA": "Thermal Plant Fragment",
         "Aurora - Captain PDA": "Water Filtration Suit",
-        "Aurora - Ring PDA": "Prawn Suit Fragment",
-        "Aurora - Lab PDA": "Laser Cutter Fragment",
         "Aurora - Office Data Terminal": "Lithium",
         "Aurora - Captain Data Terminal": "Neptune Launch Platform",
         "Aurora - Battery Room Data Terminal": "Ion Battery",
-        "Aurora - Lab Data Terminal": "Battery Charger fragment",
-        "Quarantine Enforcement Platform's - Upper Alien Data Terminal": "Cyclops Engine Fragment",
         "Quarantine Enforcement Platform's - Mid Alien Data Terminal": "Vehicle Upgrade Console",
-        "Dunes Sanctuary - Alien Data Terminal": "Silver Ore",
-        "Deep Sparse Reef Sanctuary - Alien Data Terminal": "Cyclops Hull Fragment",
-        "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal": "Stasis Rifle Fragment",
         "Lost River Laboratory Cache - Alien Data Terminal": "Neptune Boosters",
-        "Disease Research Facility - Upper Alien Data Terminal": "Prawn Suit Fragment",
         "Disease Research Facility - Mid Alien Data Terminal": "Radiation Suit",
         "Disease Research Facility - Lower Alien Data Terminal": "Cyclops Sonar Upgrade",
-        "Alien Thermal Plant - Entrance Alien Data Terminal": "Prawn Suit Fragment",
         "Alien Thermal Plant - Green Alien Data Terminal": "Floodlight",
-        "Alien Thermal Plant - Yellow Alien Data Terminal": "Prawn Suit Grappling Arm Fragment",
         "Primary Containment Facility's Antechamber - Alien Data Terminal": "Farming",
-        "Primary Containment Facility's Egg Laboratory - Alien Data Terminal": "Diamond",
         "Primary Containment Facility's Pipe Room - Alien Data Terminal": "Farming",
-        "Grassy Plateaus West Wreck - Beam PDA": "Mobile Vehicle Bay Fragment",
+        "Primary Containment Facility's Egg Laboratory - Alien Data Terminal": "Diamond",
         "Floating Island - Cave Entrance PDA": "Reinforced Dive Suit",
-        "Degasi Seabase - Jellyshroom Cave - Outside PDA": "Prawn Suit Drill Arm Fragment",
         "Neptune Launch": "Victory",
         "Disable Quarantine": "Disable Quarantine",
         "Full Infection": "Full Infection",
         "Repair Aurora Drive": "Repair Aurora Drive",
+    }
+
+    # Canonical placement advancement status - for items with mixed classifications
+    # True = progression, False = useful/filler. Used to select correct item copy during placement.
+    canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Blood Kelp Trench Wreck - Outside Databox": True,
+        "Blood Kelp Trench Wreck - Inside Databox": False,
+        "Blood Kelp Trench Wreck - PDA": True,
+        "Bulb Zone West Wreck - Outside Databox": False,
+        "Bulb Zone West Wreck - Under Databox": True,
+        "Bulb Zone West Wreck - Inside Databox": True,
+        "Bulb Zone West Wreck - PDA": False,
+        "Bulb Zone East Wreck - Databox": False,
+        "Dunes North Wreck - Outside Databox": False,
+        "Dunes North Wreck - Office Databox": True,
+        "Dunes North Wreck - PDA": True,
+        "Dunes North Wreck - Cargo Databox": False,
+        "Dunes West Wreck - Databox": True,
+        "Dunes East Wreck - Outside Databox": False,
+        "Dunes East Wreck - Inside Databox": False,
+        "Grand Reef North Wreck - Outside Databox": True,
+        "Grand Reef North Wreck - Elevator Databox": True,
+        "Grand Reef North Wreck - Bottom Databox": True,
+        "Grand Reef North Wreck - Hangar PDA": False,
+        "Grand Reef South Wreck - Trench Databox": False,
+        "Grand Reef South Wreck - Comms Databox": True,
+        "Grand Reef South Wreck - Outside Databox": True,
+        "Grand Reef South Wreck - PDA": False,
+        "Grassy Plateaus South Wreck - Databox": True,
+        "Grassy Plateaus South Wreck - PDA": False,
+        "Grassy Plateaus East Wreck - Breach Databox": True,
+        "Grassy Plateaus East Wreck - Hangar Databox": False,
+        "Grassy Plateaus West Wreck - Locker PDA": True,
+        "Grassy Plateaus West Wreck - Data Terminal": True,
+        "Grassy Plateaus Southwest Wreck - Databox": True,
+        "Safe Shallows Wreck - PDA": True,
+        "Kelp Forest Wreck - Databox": True,
+        "Kelp Forest Wreck - PDA": True,
+        "Mountains West Wreck - Outside Databox": True,
+        "Mountains West Wreck - Data Terminal": True,
+        "Mountains West Wreck - Hangar Databox": True,
+        "Mountains West Wreck - Office Databox": False,
+        "Mountains East Wreck - Comms Databox": True,
+        "Mountains East Wreck - Outside Databox": True,
+        "Northwestern Mushroom Forest Wreck - Cargo Databox": True,
+        "Northwestern Mushroom Forest Wreck - Office Databox": False,
+        "Northwestern Mushroom Forest Wreck - PDA": True,
+        "Sea Treader's Path Wreck - Outside Databox": False,
+        "Sea Treader's Path Wreck - Hangar Databox": True,
+        "Sea Treader's Path Wreck - Lobby Databox": True,
+        "Sea Treader's Path Wreck - PDA": True,
+        "Sparse Reef Wreck - Locker Databox": False,
+        "Sparse Reef Wreck - Outside Databox": False,
+        "Sparse Reef Wreck - Lab Databox": True,
+        "Underwater Islands Wreck - Outside Databox": False,
+        "Underwater Islands Wreck - Hangar Databox": True,
+        "Underwater Islands Wreck - Data Terminal": False,
+        "Underwater Islands Wreck - Cable Databox": False,
+        "Underwater Islands Wreck - Pipes Databox 1": False,
+        "Underwater Islands Wreck - Pipes Databox 2": True,
+        "Degasi Seabase - Deep Grand Reef - Bedroom Databox": False,
+        "Degasi Seabase - Deep Grand Reef - Observatory Databox": False,
+        "Degasi Seabase - Deep Grand Reef - Bedroom PDA": True,
+        "Degasi Seabase - Deep Grand Reef - Outside PDA": True,
+        "Degasi Seabase - Deep Grand Reef - Observatory PDA": True,
+        "Degasi Seabase - Deep Grand Reef - Lab PDA": True,
+        "Floating Island - Lake PDA": True,
+        "Degasi Seabase - Floating Island - Databox": True,
+        "Degasi Seabase - Floating Island - Room PDA": False,
+        "Degasi Seabase - Floating Island - Green Wall PDA": True,
+        "Degasi Seabase - Floating Island - Corridor PDA": False,
+        "Degasi Seabase - Floating Island - North Observatory PDA": False,
+        "Degasi Seabase - Floating Island - South Observatory PDA": False,
+        "Jellyshroom Cave - PDA": False,
+        "Degasi Seabase - Jellyshroom Cave - Bedroom Databox": True,
+        "Degasi Seabase - Jellyshroom Cave - Detached PDA": True,
+        "Degasi Seabase - Jellyshroom Cave - Office PDA": False,
+        "Degasi Seabase - Jellyshroom Cave - Locker PDA": True,
+        "Degasi Seabase - Jellyshroom Cave - Bedroom PDA": False,
+        "Degasi Seabase - Jellyshroom Cave - Observatory PDA": True,
+        "Lifepod 2 - Databox": False,
+        "Lifepod 2 - PDA": True,
+        "Lifepod 3 - Databox": False,
+        "Lifepod 3 - PDA": True,
+        "Lifepod 4 - Databox": False,
+        "Lifepod 4 - PDA": False,
+        "Lifepod 6 - Databox": True,
+        "Lifepod 6 - Inside PDA": False,
+        "Lifepod 6 - Outside PDA": False,
+        "Lifepod 7 - PDA": True,
+        "Lifepod 12 - Databox": False,
+        "Lifepod 12 - PDA": False,
+        "Lifepod 13 - Databox": True,
+        "Lifepod 13 - PDA": False,
+        "Lifepod 17 - PDA": True,
+        "Lifepod 19 - Databox": True,
+        "Lifepod 19 - Outside PDA": False,
+        "Lifepod 19 - Inside PDA": True,
+        "Aurora Seamoth Bay - Upgrade Console": True,
+        "Aurora Drive Room - Upgrade Console": False,
+        "Aurora Prawn Suit Bay - Upgrade Console": False,
+        "Aurora - Office PDA": False,
+        "Aurora - Corridor PDA": False,
+        "Aurora - Cargo Bay PDA": False,
+        "Aurora - Seamoth Bay PDA": True,
+        "Aurora - Medkit Locker PDA": True,
+        "Aurora - Locker PDA": True,
+        "Aurora - Canteen PDA": False,
+        "Aurora - Cabin 4 PDA": False,
+        "Aurora - Cabin 7 PDA": True,
+        "Aurora - Cabin 1 PDA": False,
+        "Aurora - Captain PDA": False,
+        "Aurora - Ring PDA": True,
+        "Aurora - Lab PDA": True,
+        "Aurora - Office Data Terminal": False,
+        "Aurora - Captain Data Terminal": True,
+        "Aurora - Battery Room Data Terminal": True,
+        "Aurora - Lab Data Terminal": False,
+        "Quarantine Enforcement Platform's - Upper Alien Data Terminal": True,
+        "Quarantine Enforcement Platform's - Mid Alien Data Terminal": True,
+        "Dunes Sanctuary - Alien Data Terminal": False,
+        "Deep Sparse Reef Sanctuary - Alien Data Terminal": True,
+        "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal": True,
+        "Lost River Laboratory Cache - Alien Data Terminal": True,
+        "Disease Research Facility - Upper Alien Data Terminal": True,
+        "Disease Research Facility - Mid Alien Data Terminal": True,
+        "Disease Research Facility - Lower Alien Data Terminal": False,
+        "Alien Thermal Plant - Entrance Alien Data Terminal": True,
+        "Alien Thermal Plant - Green Alien Data Terminal": False,
+        "Alien Thermal Plant - Yellow Alien Data Terminal": False,
+        "Primary Containment Facility's Antechamber - Alien Data Terminal": False,
+        "Primary Containment Facility's Egg Laboratory - Alien Data Terminal": False,
+        "Primary Containment Facility's Pipe Room - Alien Data Terminal": False,
+        "Grassy Plateaus West Wreck - Beam PDA": True,
+        "Floating Island - Cave Entrance PDA": False,
+        "Degasi Seabase - Jellyshroom Cave - Outside PDA": False,
+        "Neptune Launch": True,
+        "Disable Quarantine": True,
+        "Full Infection": True,
+        "Repair Aurora Drive": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -394,14 +532,38 @@ class SubnauticaWorld(RuleWorldMixin, World):
                 continue
 
             item_data = item_table[item_name]
-            for _ in range(count):
-                item = SubnauticaWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                item_pool.append(item)
+
+            # Check for mixed classification items (e.g., some progression, some filler)
+            classification_counts = getattr(item_data, 'classification_counts', None)
+            if classification_counts:
+                # Create items with per-classification counts
+                classification_map = {
+                    'progression': ItemClassification.progression,
+                    'progression_skip_balancing': ItemClassification.progression_skip_balancing,
+                    'useful': ItemClassification.useful,
+                    'trap': ItemClassification.trap,
+                    'filler': ItemClassification.filler,
+                }
+                for classification_name, class_count in classification_counts.items():
+                    classification = classification_map.get(classification_name, ItemClassification.filler)
+                    for _ in range(class_count):
+                        item = SubnauticaWorldGenItem(
+                            item_name,
+                            classification,
+                            item_data.id,
+                            self.player
+                        )
+                        item_pool.append(item)
+            else:
+                # Standard case: all items have the same classification
+                for _ in range(count):
+                    item = SubnauticaWorldGenItem(
+                        item_name,
+                        item_data.classification,
+                        item_data.id,
+                        self.player
+                    )
+                    item_pool.append(item)
 
         self.multiworld.itempool += item_pool
 
@@ -446,27 +608,81 @@ class SubnauticaWorld(RuleWorldMixin, World):
             lambda state: state.has("Victory", self.player)
 
     def pre_fill(self) -> None:
-        """Pre-fill items if not randomizing."""
-        if not self.options.randomize_items.value:
+        """Pre-fill items if not randomizing or when tracking.
+
+        During tracking (generation_is_fake=True), we always place canonical items
+        so that location_item_name() checks work correctly for self-locking rules.
+        """
+        if not self.options.randomize_items.value or getattr(self.multiworld, 'generation_is_fake', False):
             self._place_original_items()
 
     def _place_original_items(self) -> None:
-        """Place items in their canonical locations when not randomized."""
-        for location_name, item_name in self.canonical_placements.items():
+        """Place items in their canonical locations when not randomized.
+
+        Process advancement locations first to ensure they get advancement items.
+        This is critical for cross-validation in spoiler tests, where item
+        advancement flags determine whether items are counted.
+        """
+        # Two-pass placement: first advancement locations, then the rest
+        advancement_locs = getattr(self, 'advancement_locations', set())
+
+        # Sort locations to process advancement locations first
+        sorted_placements = sorted(
+            self.canonical_placements.items(),
+            key=lambda x: 0 if x[0] in advancement_locs else 1
+        )
+
+        for location_name, item_name in sorted_placements:
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
             if location.item is not None:
                 continue
 
-            item = self.create_item(item_name)
-            location.place_locked_item(item)
+            # Check if we have expected advancement status for this location (for mixed-class items)
+            # This ensures we match the original's progression distribution
+            expected_advancement = None
+            if hasattr(self, 'canonical_placement_advancements'):
+                expected_advancement = self.canonical_placement_advancements.get(location_name)
 
-            # Remove the item from the pool if it exists
-            for pool_item in self.multiworld.itempool[:]:
+            # Try to find and use an item from the pool (preserves correct classification)
+            # Note: Must use index-based removal because Item.__eq__ only compares name/player,
+            # not classification, so list.remove() would remove the wrong item
+            item = None
+            progression_idx = None
+            filler_idx = None
+
+            for idx, pool_item in enumerate(self.multiworld.itempool):
                 if pool_item.name == item_name and pool_item.player == self.player:
-                    self.multiworld.itempool.remove(pool_item)
-                    break
+                    if pool_item.advancement:
+                        if progression_idx is None:
+                            progression_idx = idx
+                    else:
+                        if filler_idx is None:
+                            filler_idx = idx
+
+                    # If we found both types, stop searching
+                    if progression_idx is not None and filler_idx is not None:
+                        break
+
+            # Select item based on expected advancement status or fall back to progression-first
+            if expected_advancement is True and progression_idx is not None:
+                chosen_idx = progression_idx
+            elif expected_advancement is False and filler_idx is not None:
+                chosen_idx = filler_idx
+            elif progression_idx is not None:
+                # Default: prefer progression
+                chosen_idx = progression_idx
+            else:
+                chosen_idx = filler_idx
+
+            if chosen_idx is not None:
+                item = self.multiworld.itempool.pop(chosen_idx)
+            else:
+                # Fall back to creating a new item if not found in pool
+                item = self.create_item(item_name)
+
+            location.place_locked_item(item)
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

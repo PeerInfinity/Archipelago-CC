@@ -388,18 +388,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           }
         ],
@@ -494,18 +487,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 2",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -644,18 +630,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 3",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -783,18 +762,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 4",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           }
         ],
@@ -1052,18 +1024,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 5",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           }
         ],
@@ -1155,18 +1120,11 @@
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 6",
             "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Burger"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Burger",
+                "count": 2
+              }
             }
           },
           {
@@ -1288,18 +1246,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Train"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -1416,18 +1367,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Barrel Battle)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dead Bird Studio"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1576,18 +1527,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1748,18 +1699,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1841,18 +1792,11 @@
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 2",
             "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Train"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Train",
+                "count": 2
+              }
             }
           },
           {
@@ -2483,18 +2427,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2650,18 +2587,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 2",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2811,18 +2741,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 3",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -2995,18 +2918,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 4",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -3157,18 +3073,11 @@
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 5",
             "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "UFO"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "UFO",
+                "count": 4
+              }
             }
           },
           {
@@ -3345,28 +3254,26 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "_converted_from_ast": true,
+                  "kwargs": {
+                    "umbrella_only": {
+                      "rule": "True_"
+                    }
+                  }
                 },
                 {
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_relic_combo",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Crayon"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
                 }
               ]
             }
@@ -3692,11 +3599,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hookshot",
@@ -4213,18 +4115,11 @@
             "name": "Time Rift - Alpine Skyline Portal - Entrance 2",
             "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
-              "rule": "has_relic_combo",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Crayon"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasGroup",
+              "args": {
+                "group": "Crayon",
+                "count": 4
+              }
             }
           },
           {
@@ -6573,7 +6468,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 50,
+        "classification_counts": {
+          "progression_skip_balancing": 40,
+          "progression": 10
+        }
       },
       "Time Piece": {
         "name": "Time Piece",
@@ -6584,7 +6483,11 @@
         "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 40
+        "max_count": 40,
+        "classification_counts": {
+          "progression_skip_balancing": 26,
+          "progression": 14
+        }
       },
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",
@@ -8541,7 +8444,14 @@
                 "type": "constant",
                 "value": true
               },
-              "if_false": null
+              "if_false": {
+                "type": "item_check",
+                "item": "Progressive Painting Unlock",
+                "count": {
+                  "type": "name",
+                  "name": "count"
+                }
+              }
             },
             "if_false": {
               "type": "item_check",
@@ -8555,39 +8465,6 @@
         },
         "defaults": {
           "allow_skip": true
-        }
-      },
-      "has_relic_combo": {
-        "params": [
-          "relic"
-        ],
-        "body": {
-          "type": "group_check",
-          "group": {
-            "type": "name",
-            "name": "relic"
-          },
-          "count": {
-            "type": "helper",
-            "name": "len",
-            "args": [
-              {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "item_name_groups"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "relic"
-                }
-              }
-            ]
-          }
         }
       },
       "painting_logic": {

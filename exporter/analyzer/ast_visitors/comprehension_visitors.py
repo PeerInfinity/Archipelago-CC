@@ -257,7 +257,7 @@ class ComprehensionVisitorMixin:
                     result['condition'] = {'type': 'and', 'conditions': conditions}
             return result
         except Exception as e:
-            logging.error("Error in visit_comprehension", e)
+            logging.error(f"Error in visit_comprehension: {e}")
             return None
 
     def _convert_generator_exp_to_all_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
@@ -359,6 +359,36 @@ class ComprehensionVisitorMixin:
                 return node
 
             node_type = node.get('type')
+
+            # Handle 'attribute' type - resolve attribute access on substituted variable
+            # This handles patterns like technology.name where technology is our variable
+            if node_type == 'attribute':
+                obj = node.get('object', {})
+                attr_name = node.get('attr')
+                # Check if the object is our variable being substituted
+                if obj.get('type') == 'name' and obj.get('name') == var_name and attr_name:
+                    # Try to resolve the attribute on the value
+                    try:
+                        attr_value = getattr(value, attr_name, None)
+                        if attr_value is not None:
+                            # Successfully resolved - return as constant
+                            if isinstance(attr_value, (str, int, float, bool)):
+                                return {'type': 'constant', 'value': attr_value}
+                            elif hasattr(attr_value, 'name'):
+                                # Object with name attribute (like Technology)
+                                return {'type': 'constant', 'value': attr_value.name}
+                            else:
+                                return {'type': 'constant', 'value': str(attr_value)}
+                    except (AttributeError, TypeError):
+                        pass
+                    # If attribute not found but value has a 'name' attribute and we're accessing 'name',
+                    # this is the common pattern for Technology objects
+                    if attr_name == 'name' and hasattr(value, 'name'):
+                        return {'type': 'constant', 'value': value.name}
+                    # Fallback: if value is a string and we're accessing 'name', just use the string
+                    # (handles cases where Technology was already serialized to string)
+                    if attr_name == 'name' and isinstance(value, str):
+                        return {'type': 'constant', 'value': value}
 
             # Handle 'name' type - this is where we substitute
             if node_type == 'name' and node.get('name') == var_name:

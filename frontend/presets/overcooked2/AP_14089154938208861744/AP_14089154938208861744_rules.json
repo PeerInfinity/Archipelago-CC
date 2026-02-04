@@ -1223,8 +1223,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-3 Level Complete",
                       "5-1 Level Complete",
+                      "5-3 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1273,8 +1273,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-4 Level Complete",
                       "5-1 Level Complete",
+                      "5-4 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1323,8 +1323,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "5-5 Level Complete",
                       "5-1 Level Complete",
+                      "5-5 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1419,8 +1419,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "6-1 Level Complete",
                       "5-1 Level Complete",
+                      "6-1 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1469,8 +1469,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "6-2 Level Complete",
                       "5-1 Level Complete",
+                      "6-2 Level Complete",
                       "Purple Ramp"
                     ]
                   }
@@ -1585,10 +1585,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "6-4 Level Complete",
                       "5-1 Level Complete",
-                      "Purple Ramp",
                       "6-1 Level Complete",
+                      "6-4 Level Complete",
+                      "Purple Ramp",
                       "Red Ramp"
                     ]
                   }
@@ -1637,10 +1637,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "6-5 Level Complete",
                       "5-1 Level Complete",
-                      "Purple Ramp",
                       "6-1 Level Complete",
+                      "6-5 Level Complete",
+                      "Purple Ramp",
                       "Red Ramp"
                     ]
                   }
@@ -1655,8 +1655,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Kevin-1",
-                  "Dark Green Ramp"
+                  "Dark Green Ramp",
+                  "Kevin-1"
                 ]
               }
             }
@@ -1718,8 +1718,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Kevin-7",
                   "5-1 Level Complete",
+                  "Kevin-7",
                   "Purple Ramp"
                 ]
               }
@@ -1732,10 +1732,10 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Kevin-8",
                   "5-1 Level Complete",
-                  "Purple Ramp",
                   "6-1 Level Complete",
+                  "Kevin-8",
+                  "Purple Ramp",
                   "Red Ramp"
                 ]
               }
@@ -2791,11 +2791,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Wok Wheels",
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
-                      "Spare Plate"
+                      "Spare Plate",
+                      "Wok Wheels"
                     ]
                   }
                 }
@@ -3331,9 +3331,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Throw/Catch",
                       "Larger Tip Jar",
                       "Progressive Dash",
+                      "Progressive Throw/Catch",
                       "Spare Plate"
                     ]
                   }
@@ -5202,9 +5202,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Throw/Catch",
                       "Larger Tip Jar",
                       "Progressive Dash",
+                      "Progressive Throw/Catch",
                       "Spare Plate"
                     ]
                   }
@@ -5486,9 +5486,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Throw/Catch",
                       "Larger Tip Jar",
                       "Progressive Dash",
+                      "Progressive Throw/Catch",
                       "Spare Plate"
                     ]
                   }
@@ -5770,9 +5770,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Throw/Catch",
                       "Larger Tip Jar",
                       "Progressive Dash",
+                      "Progressive Throw/Catch",
                       "Spare Plate"
                     ]
                   }
@@ -7125,12 +7125,12 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Faster Condiment/Drink Switch",
+                      "Fire Extinguisher",
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
-                      "Spare Plate",
-                      "Faster Condiment/Drink Switch",
-                      "Fire Extinguisher"
+                      "Spare Plate"
                     ]
                   }
                 }
@@ -7687,11 +7687,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Wok Wheels",
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
-                      "Spare Plate"
+                      "Spare Plate",
+                      "Wok Wheels"
                     ]
                   }
                 }
@@ -9832,11 +9832,11 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Wok Wheels",
                       "Larger Tip Jar",
                       "Progressive Dash",
                       "Progressive Throw/Catch",
-                      "Spare Plate"
+                      "Spare Plate",
+                      "Wok Wheels"
                     ]
                   }
                 }
@@ -13536,9 +13536,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Throw/Catch",
                       "Larger Tip Jar",
                       "Progressive Dash",
+                      "Progressive Throw/Catch",
                       "Spare Plate"
                     ]
                   }
@@ -13643,7 +13643,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Progressive Dash": {
         "name": "Progressive Dash",
@@ -13654,7 +13658,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Progressive Throw/Catch": {
         "name": "Progressive Throw/Catch",
@@ -13665,7 +13673,11 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification_counts": {
+          "progression": 1,
+          "useful": 1
+        }
       },
       "Coin Purse": {
         "name": "Coin Purse",

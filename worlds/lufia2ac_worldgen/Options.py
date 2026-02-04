@@ -75,9 +75,9 @@ class Boss(Choice):
     option_egg_dragon = 37
     option_master = 38
     option_random_sinistral = 39
-    option_random_middle = 40
-    option_random_low = 41
-    option_random_high = 42
+    option_random_low = 40
+    option_random_high = 41
+    option_random_middle = 42
     default = 38
 
 class CapsuleCravingsJpStyle(Toggle):
@@ -351,9 +351,9 @@ Boss.name_lookup = {
     37: 'egg_dragon',
     38: 'master',
     39: 'random-sinistral',
-    40: 'random-middle',
-    41: 'random-low',
-    42: 'random-high'
+    40: 'random-low',
+    41: 'random-high',
+    42: 'random-middle'
 }
 
 

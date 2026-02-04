@@ -33,6 +33,7 @@ class ExpressionVisitorMixin:
             # Special handling for self.world.options.<setting>.value pattern
             # This resolves option values to constants at export time instead of runtime lookup
             # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            # Controlled by the resolve_options_to_constants setting
             if attr_name == 'value' and 'self' in self.closure_vars:
                 self_obj = self.closure_vars['self']
                 try:
@@ -44,6 +45,28 @@ class ExpressionVisitorMixin:
                         current = current.value
                     if isinstance(current, ast.Name) and current.id == 'self':
                         # We have self.X.Y.Z.value pattern
+                        # Check if this is a world.options pattern (chain includes 'options')
+                        is_options_pattern = 'options' in chain and len(chain) >= 3
+
+                        # Check if we should resolve options to constants
+                        should_resolve = True
+                        if is_options_pattern and hasattr(self, 'game_handler') and self.game_handler is not None:
+                            if hasattr(self.game_handler, 'should_resolve_options_to_constants'):
+                                should_resolve = self.game_handler.should_resolve_options_to_constants()
+
+                        if is_options_pattern and not should_resolve:
+                            # Return option_value reference instead of resolving to constant
+                            # Chain is like ['world', 'options', 'SettingName', 'value']
+                            # Find the setting name (element after 'options')
+                            try:
+                                options_idx = chain.index('options')
+                                if options_idx + 1 < len(chain) - 1:  # -1 to skip 'value' at the end
+                                    setting_name = chain[options_idx + 1]
+                                    logging.debug(f"visit_Attribute: Keeping self.world.options.{setting_name}.value as option_value (resolve_options_to_constants=False)")
+                                    return {'type': 'option_value', 'option': setting_name}
+                            except (ValueError, IndexError):
+                                pass  # Fall through to normal resolution
+
                         # Try to resolve the full chain via closure_vars
                         resolved = self_obj
                         for attr in chain:
@@ -143,6 +166,13 @@ class ExpressionVisitorMixin:
                             list_value = list(resolved_attr)
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
+                        elif callable(resolved_attr) and hasattr(obj_value, '_fields'):
+                            # Handle callable attributes on NamedTuples (e.g., LocationData.access_rule)
+                            # When used in boolean context (if loc.access_rule:), this should be True
+                            # This enables the conditional optimization to inline the callable
+                            # The actual call will be handled by call_visitor's early NamedTuple callable detection
+                            logging.debug(f"visit_Attribute: {var_name}.{attr_name} is a callable on NamedTuple, returning True for boolean context")
+                            return {'type': 'constant', 'value': True}
                     except AttributeError:
                         # If attribute doesn't exist, fall through to normal processing
                         logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")
@@ -734,9 +764,55 @@ class ExpressionVisitorMixin:
                 logging.debug(f"Unknown boolean operator: {type(node.op).__name__}")
                 return None
 
+            # Simplify boolean expressions with constant values
+            # This is critical for properly handling options like open_pyramid.to_bool()
+            # which evaluate to True/False at analysis time
+            simplified_conditions = []
+            for cond in conditions:
+                if cond.get('type') == 'constant':
+                    const_val = cond.get('value')
+                    if op_type == 'or' and const_val is True:
+                        # OR with True -> True (short-circuit)
+                        logging.debug(f"Boolean simplification: OR with True -> True")
+                        return {'type': 'constant', 'value': True}
+                    elif op_type == 'and' and const_val is False:
+                        # AND with False -> False (short-circuit)
+                        logging.debug(f"Boolean simplification: AND with False -> False")
+                        return {'type': 'constant', 'value': False}
+                    elif op_type == 'or' and const_val is False:
+                        # OR with False -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: OR skipping False condition")
+                        continue
+                    elif op_type == 'and' and const_val is True:
+                        # AND with True -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: AND skipping True condition")
+                        continue
+                    else:
+                        # Non-boolean constant (shouldn't happen in boolean context)
+                        simplified_conditions.append(cond)
+                else:
+                    simplified_conditions.append(cond)
+
+            # Handle cases where all conditions were filtered out
+            if len(simplified_conditions) == 0:
+                # All conditions were identity elements
+                if op_type == 'or':
+                    # All False conditions -> False
+                    logging.debug(f"Boolean simplification: All OR conditions were False -> False")
+                    return {'type': 'constant', 'value': False}
+                else:
+                    # All True conditions -> True
+                    logging.debug(f"Boolean simplification: All AND conditions were True -> True")
+                    return {'type': 'constant', 'value': True}
+
+            # If only one condition remains, return it directly
+            if len(simplified_conditions) == 1:
+                logging.debug(f"Boolean simplification: Single condition remaining -> {simplified_conditions[0]}")
+                return simplified_conditions[0]
+
             result = {
                 'type': op_type,
-                'conditions': conditions
+                'conditions': simplified_conditions
             }
             logging.debug(f"Boolean operation result: {result}")
             return result # Return the result
@@ -744,3 +820,94 @@ class ExpressionVisitorMixin:
         except Exception as e:
             logging.error(f"Error in visit_BoolOp: {e}")
             return None
+
+    def visit_Starred(self, node):
+        """
+        Handle starred expressions (*args unpacking) in function calls.
+
+        This handles patterns like:
+            needed_for_words(state, player, *(rules_for_difficulty["pointShop"]))
+
+        When the starred value resolves to a list/tuple, we return a special
+        'starred' type that the call visitor will unpack into individual arguments.
+        """
+        logging.debug(f"\nvisit_Starred called:")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+
+        # Visit the value inside the starred expression
+        value_result = self.visit(node.value)
+
+        if value_result is None:
+            logging.error(f"Failed to analyze starred expression value: {ast.dump(node.value)}")
+            return None
+
+        logging.debug(f"Starred value result: {value_result}")
+
+        # Try to resolve the value to an actual list/tuple
+        resolved_value = None
+
+        if value_result.get('type') == 'constant':
+            resolved_value = value_result.get('value')
+        elif value_result.get('type') == 'name':
+            resolved_value = self.expression_resolver.resolve_variable(value_result['name'])
+        elif value_result.get('type') == 'subscript':
+            resolved_value = self.expression_resolver.resolve_expression(value_result)
+        elif value_result.get('type') == 'attribute':
+            resolved_value = self.expression_resolver.resolve_expression(value_result)
+
+        # If we resolved to a list/tuple, return each element as an unpacked argument
+        if resolved_value is not None and isinstance(resolved_value, (list, tuple)):
+            logging.debug(f"Resolved starred expression to list/tuple with {len(resolved_value)} items: {resolved_value}")
+            # Convert each element to a constant
+            unpacked_args = []
+            for item in resolved_value:
+                if isinstance(item, (int, float, str, bool, type(None))):
+                    unpacked_args.append({'type': 'constant', 'value': item})
+                elif hasattr(item, 'value') and isinstance(item.value, (int, float, str, bool)):
+                    # Handle enum values
+                    unpacked_args.append({'type': 'constant', 'value': item.value})
+                else:
+                    logging.warning(f"Starred item is not a simple value: {type(item).__name__}")
+                    unpacked_args.append({'type': 'constant', 'value': item})
+
+            return {
+                'type': 'starred',
+                'unpacked_args': unpacked_args
+            }
+
+        # If we couldn't resolve, return a starred marker with the unresolved value
+        # The call visitor may still be able to handle this at a later stage
+        logging.debug(f"Could not resolve starred expression to list/tuple, returning unresolved starred")
+        return {
+            'type': 'starred',
+            'value': value_result
+        }
+
+    def visit_NamedExpr(self, node: ast.NamedExpr):
+        """
+        Handle named expressions (walrus operator := ).
+
+        The walrus operator `x := expr` evaluates `expr`, assigns it to `x`,
+        and returns the value of `expr`. For rule analysis purposes, we only
+        care about the value, not the assignment.
+
+        Example patterns:
+            - lambda state: (total := self.cyb_mod_count(state)) >= 6
+            - lambda state: func(x, y, result := helper(state))
+
+        We simply evaluate and return the value expression.
+        """
+        logging.debug(f"\nvisit_NamedExpr called:")
+        logging.debug(f"Target: {node.target.id if hasattr(node.target, 'id') else node.target}")
+        logging.debug(f"Value: {ast.dump(node.value)}")
+
+        # Visit the value expression - this is what the walrus operator returns
+        value_result = self.visit(node.value)
+
+        if value_result is None:
+            logging.warning(f"Failed to analyze walrus operator value: {ast.dump(node.value)}")
+            # Return None to signal that analysis failed
+            return None
+
+        logging.debug(f"NamedExpr value result: {value_result}")
+        return value_result

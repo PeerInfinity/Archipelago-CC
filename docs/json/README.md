@@ -33,6 +33,7 @@ This section is for developers who want to understand, modify, or contribute to 
 - **[Developer Guides](./developer/guides/README.md)**: In-depth guides on specific architectural components like the State Manager, Module System, and Event System.
 - **[Reference](./developer/reference/README.md)**: Detailed reference material, such as the Logging System guide.
 - **[Diffs from Upstream](./developer/diffs/README.md)**: Line-by-line changes from the upstream Archipelago repository.
+- **[Upstream Bugs](./upstream-bugs/README.md)**: Bugs discovered in the upstream Archipelago codebase during testing.
 - **[Project Roadmap](./project-roadmap.md)**: Development priorities and future plans for the project.
 - **[Test Results](./developer/test-results/)**: Automated test results for all game templates:
   - [Test Results Summary](./developer/test-results/test-results-summary.md): Combined overview of all test types
@@ -45,3 +46,14 @@ This section is for developers who want to understand, modify, or contribute to 
 This section provides detailed, auto-generated, or manually written documentation for each individual frontend module. It is an essential technical reference for understanding the specific responsibilities and interactions of each component in the application.
 
 - **[Module Index](./modules/README.md)**: An overview and index of all documented frontend modules.
+
+### 4. Source-Level Documentation
+
+READMEs in the source directories provide quick-start guides for each major component:
+
+| Component | README | Description |
+|-----------|--------|-------------|
+| Frontend | [frontend/README.md](../../frontend/README.md) | Web client overview, directory structure, development setup |
+| Exporter | [exporter/README.md](../../exporter/README.md) | Python rule export pipeline, game handlers, analyzer |
+| World Generator | [world_generator/README.md](../../world_generator/README.md) | JSON to Python world conversion |
+| Rule Builder | [rule_builder/README.md](../../rule_builder/README.md) | Declarative rule definition system |

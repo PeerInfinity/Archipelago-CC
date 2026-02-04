@@ -914,8 +914,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Thief",
-                      "Rifleman"
+                      "Rifleman",
+                      "Thief"
                     ]
                   }
                 }
@@ -951,8 +951,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Mage",
-                      "Knight"
+                      "Knight",
+                      "Mage"
                     ]
                   }
                 }
@@ -982,8 +982,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Mage",
-                      "Knight"
+                      "Knight",
+                      "Mage"
                     ]
                   }
                 }
@@ -1811,7 +1811,7 @@
       },
       "world_description": "Command an army, in this retro style turn based strategy game!",
       "slot_data": {
-        "seed": "jpYxoraZuFulnbuu",
+        "seed": "bHgGslEfAlsYkXhU",
         "income_boost": 25,
         "commander_defense_boost": 2,
         "can_choose_commander": false,

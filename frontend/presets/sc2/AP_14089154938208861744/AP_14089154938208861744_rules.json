@@ -455,12 +455,12 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_early_tech",
+                  "rule": "terran_competent_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_competent_anti_air",
+                  "rule": "terran_early_tech",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -593,12 +593,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_early_tech",
+                  "rule": "terran_competent_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_competent_anti_air",
+                  "rule": "terran_early_tech",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -681,12 +681,12 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "terran_early_tech",
+                  "rule": "terran_competent_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_competent_anti_air",
+                  "rule": "terran_early_tech",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4729,17 +4729,17 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4782,12 +4782,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "marine_medic_upgrade",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4830,12 +4830,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "marine_medic_upgrade",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4878,12 +4878,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "marine_medic_upgrade",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4942,12 +4942,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "marine_medic_upgrade",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4990,17 +4990,17 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -5043,17 +5043,17 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -5096,17 +5096,17 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -5149,6 +5149,11 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_base_trasher",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
@@ -5160,11 +5165,6 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -5207,6 +5207,11 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_base_trasher",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
@@ -5218,11 +5223,6 @@
                 },
                 {
                   "rule": "terran_common_unit",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -5318,17 +5318,17 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "marine_medic_upgrade",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "terran_competent_anti_air",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "marine_medic_upgrade",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -5513,12 +5513,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_great_train_robbery_train_stopper",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "terran_great_train_robbery_train_stopper",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -9275,12 +9275,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_basic_anti_air",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -9568,12 +9568,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_common_unit",
+                  "rule": "terran_basic_anti_air",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "terran_basic_anti_air",
+                  "rule": "terran_common_unit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -40521,17 +40521,12 @@
             }
           },
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Nano Projectors (Firebat)"
-              },
-              {
-                "type": "item_check",
-                "item": "Juggernaut Plating (Firebat)"
-              }
-            ]
+            "type": "item_check",
+            "item": "Nano Projectors (Firebat)"
+          },
+          {
+            "type": "item_check",
+            "item": "Juggernaut Plating (Firebat)"
           }
         ]
       },
@@ -40539,21 +40534,16 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Combat Shield (Marine)"
-              },
-              {
-                "type": "item_check",
-                "item": "Magrail Munitions (Marine)"
-              },
-              {
-                "type": "item_check",
-                "item": "Stabilizer Medpacks (Medic)"
-              }
-            ]
+            "type": "item_check",
+            "item": "Combat Shield (Marine)"
+          },
+          {
+            "type": "item_check",
+            "item": "Magrail Munitions (Marine)"
+          },
+          {
+            "type": "item_check",
+            "item": "Stabilizer Medpacks (Medic)"
           },
           {
             "type": "and",
@@ -40583,19 +40573,6 @@
                   "type": "constant",
                   "value": 1
                 }
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "item_check",
-                "item": "Laser Targeting System (Marine)"
               }
             ]
           }
@@ -40709,19 +40686,21 @@
           {
             "type": "for_iter",
             "iterable": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": {
-                    "Time Stop (Spear of Adun)": 4,
-                    "Purifier Beam (Spear of Adun)": 3,
-                    "Solar Bombardment (Spear of Adun)": 3
-                  }
-                },
-                "attr": "items"
-              }
+              "type": "constant",
+              "value": [
+                [
+                  "Purifier Beam (Spear of Adun)",
+                  3
+                ],
+                [
+                  "Solar Bombardment (Spear of Adun)",
+                  3
+                ],
+                [
+                  "Time Stop (Spear of Adun)",
+                  4
+                ]
+              ]
             },
             "body": [
               {
@@ -40765,22 +40744,33 @@
           {
             "type": "for_iter",
             "iterable": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": {
-                    "Solar Lance (Spear of Adun)": 8,
-                    "Deploy Fenix (Spear of Adun)": 7,
-                    "Temporal Field (Spear of Adun)": 6,
-                    "Progressive Proxy Pylon (Spear of Adun)": 5,
-                    "Shield Overcharge (Spear of Adun)": 5,
-                    "Orbital Strike (Spear of Adun)": 4
-                  }
-                },
-                "attr": "items"
-              }
+              "type": "constant",
+              "value": [
+                [
+                  "Deploy Fenix (Spear of Adun)",
+                  7
+                ],
+                [
+                  "Orbital Strike (Spear of Adun)",
+                  4
+                ],
+                [
+                  "Progressive Proxy Pylon (Spear of Adun)",
+                  5
+                ],
+                [
+                  "Shield Overcharge (Spear of Adun)",
+                  5
+                ],
+                [
+                  "Solar Lance (Spear of Adun)",
+                  8
+                ],
+                [
+                  "Temporal Field (Spear of Adun)",
+                  6
+                ]
+              ]
             },
             "body": [
               {
@@ -40922,25 +40912,20 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Banshee"
-              },
-              {
-                "type": "item_check",
-                "item": "Battlecruiser"
-              },
-              {
-                "type": "item_check",
-                "item": "Viking"
-              },
-              {
-                "type": "item_check",
-                "item": "Wraith"
-              }
-            ]
+            "type": "item_check",
+            "item": "Banshee"
+          },
+          {
+            "type": "item_check",
+            "item": "Battlecruiser"
+          },
+          {
+            "type": "item_check",
+            "item": "Viking"
+          },
+          {
+            "type": "item_check",
+            "item": "Wraith"
           },
           {
             "type": "and",
@@ -40965,55 +40950,6 @@
               {
                 "type": "item_check",
                 "item": "Raid Artillery (Liberator)"
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "or",
-                        "conditions": [
-                          {
-                            "type": "item_check",
-                            "item": "Hercules"
-                          },
-                          {
-                            "type": "item_check",
-                            "item": "Medivac"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Raven"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Hunter-Seeker Weapon (Raven)"
-                      }
-                    ]
-                  }
-                ]
               }
             ]
           }
@@ -41051,50 +40987,6 @@
                 "item": "Battlecruiser"
               }
             ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Battlecruiser"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Valkyrie"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Wraith"
-                  }
-                ]
-              },
-              {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "weapon_armor_upgrade_count",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Progressive Terran Ship Weapon"
-                    }
-                  ]
-                },
-                "op": ">=",
-                "right": {
-                  "type": "constant",
-                  "value": 2
-                }
-              }
-            ]
           }
         ]
       },
@@ -41102,87 +40994,44 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Missile Turret"
-              },
-              {
-                "type": "item_check",
-                "item": "War Pigs"
-              },
-              {
-                "type": "item_check",
-                "item": "Spartan Company"
-              },
-              {
-                "type": "item_check",
-                "item": "Hel's Angels"
-              },
-              {
-                "type": "item_check",
-                "item": "Winged Nightmares"
-              },
-              {
-                "type": "item_check",
-                "item": "Brynhilds"
-              },
-              {
-                "type": "item_check",
-                "item": "Sky Fury"
-              },
-              {
-                "type": "item_check",
-                "item": "Son of Korhal"
-              },
-              {
-                "type": "item_check",
-                "item": "Bulwark Company"
-              }
-            ]
+            "type": "item_check",
+            "item": "Missile Turret"
+          },
+          {
+            "type": "item_check",
+            "item": "War Pigs"
+          },
+          {
+            "type": "item_check",
+            "item": "Spartan Company"
+          },
+          {
+            "type": "item_check",
+            "item": "Hel's Angels"
+          },
+          {
+            "type": "item_check",
+            "item": "Winged Nightmares"
+          },
+          {
+            "type": "item_check",
+            "item": "Brynhilds"
+          },
+          {
+            "type": "item_check",
+            "item": "Sky Fury"
+          },
+          {
+            "type": "item_check",
+            "item": "Son of Korhal"
+          },
+          {
+            "type": "item_check",
+            "item": "Bulwark Company"
           },
           {
             "type": "helper",
             "name": "terran_moderate_anti_air"
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Widow Mine"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Pride of Augustgrad"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Blackhammer"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Emperor's Shadow"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Emperor's Guardian"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Night Hawk"
-                  }
-                ]
-              }
-            ]
           }
         ]
       },
@@ -41190,43 +41039,16 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Field Response Theta"
-              },
-              {
-                "type": "item_check",
-                "item": "Medic"
-              },
-              {
-                "type": "item_check",
-                "item": "Medivac"
-              }
-            ]
+            "type": "item_check",
+            "item": "Field Response Theta"
           },
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Bio Mechanical Repair Drone (Raven)"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Raven"
-                  }
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Medic"
+          },
+          {
+            "type": "item_check",
+            "item": "Medivac"
           }
         ]
       },
@@ -41718,63 +41540,28 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Dominion Trooper"
-              },
-              {
-                "type": "item_check",
-                "item": "Firebat"
-              },
-              {
-                "type": "item_check",
-                "item": "Hellion"
-              },
-              {
-                "type": "item_check",
-                "item": "Marauder"
-              },
-              {
-                "type": "item_check",
-                "item": "Marine"
-              },
-              {
-                "type": "item_check",
-                "item": "Reaper"
-              }
-            ]
+            "type": "item_check",
+            "item": "Dominion Trooper"
           },
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Banshee"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Diamondback"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Goliath"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Viking"
-                  }
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Firebat"
+          },
+          {
+            "type": "item_check",
+            "item": "Hellion"
+          },
+          {
+            "type": "item_check",
+            "item": "Marauder"
+          },
+          {
+            "type": "item_check",
+            "item": "Marine"
+          },
+          {
+            "type": "item_check",
+            "item": "Reaper"
           }
         ]
       },
@@ -41828,37 +41615,32 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Goliath"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Thor"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Warhound"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Viking"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Banshee"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Wraith"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Battlecruiser"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Goliath"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Thor"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Warhound"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Viking"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Banshee"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Wraith"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Battlecruiser"
                   },
                   {
                     "type": "and",
@@ -41905,21 +41687,16 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Goliath"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Cyclone"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Viking"
-                      }
-                    ]
+                    "type": "item_check",
+                    "item": "Goliath"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Cyclone"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Viking"
                   },
                   {
                     "type": "and",
@@ -42000,102 +41777,61 @@
             "name": "terran_competent_anti_air"
           },
           {
-            "type": "or",
+            "type": "item_check",
+            "item": "Marine"
+          },
+          {
+            "type": "item_check",
+            "item": "Dominion Trooper"
+          },
+          {
+            "type": "item_check",
+            "item": "Thor"
+          },
+          {
+            "type": "item_check",
+            "item": "Cyclone"
+          },
+          {
+            "type": "item_check",
+            "item": "Battlecruiser"
+          },
+          {
+            "type": "item_check",
+            "item": "Wraith"
+          },
+          {
+            "type": "item_check",
+            "item": "Valkyrie"
+          },
+          {
+            "type": "and",
             "conditions": [
               {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Marine"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Dominion Trooper"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Thor"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Cyclone"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Battlecruiser"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Wraith"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Valkyrie"
-                  }
-                ]
+                "type": "item_check",
+                "item": "Medivac"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Medivac"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Siege Tank"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "state_method",
-                      "method": "count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Transport Hook (Siege Tank)"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": {
+                "type": "item_check",
+                "item": "Siege Tank"
+              },
+              {
+                "type": "compare",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
                       "type": "constant",
-                      "value": 2
+                      "value": "Progressive Transport Hook (Siege Tank)"
                     }
-                  }
-                ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Ghost"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Spectre"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Liberator"
-                      }
-                    ]
-                  }
-                ]
+                  ]
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 2
+                }
               }
             ]
           }
@@ -42138,23 +41874,37 @@
                   ]
                 },
                 "iterator": {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": {
-                        "Automated Refinery (Terran)": 4,
-                        "MULE (Command Center)": 4,
-                        "Orbital Depots (Terran)": 2,
-                        "Command Center Reactor (Command Center)": 2,
-                        "Extra Supplies (Command Center)": 2,
-                        "Micro-Filtering (Terran)": 2,
-                        "Tech Reactor (Terran)": 2
-                      }
-                    },
-                    "attr": "items"
-                  }
+                  "type": "constant",
+                  "value": [
+                    [
+                      "Automated Refinery (Terran)",
+                      4
+                    ],
+                    [
+                      "Command Center Reactor (Command Center)",
+                      2
+                    ],
+                    [
+                      "Extra Supplies (Command Center)",
+                      2
+                    ],
+                    [
+                      "MULE (Command Center)",
+                      4
+                    ],
+                    [
+                      "Micro-Filtering (Terran)",
+                      2
+                    ],
+                    [
+                      "Orbital Depots (Terran)",
+                      2
+                    ],
+                    [
+                      "Tech Reactor (Terran)",
+                      2
+                    ]
+                  ]
                 },
                 "condition": {
                   "type": "item_check",
@@ -42233,18 +41983,17 @@
                       ]
                     },
                     "iterator": {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": {
-                            "Guardian Shell (Spear of Adun)": 4,
-                            "Overwatch (Spear of Adun)": 2
-                          }
-                        },
-                        "attr": "items"
-                      }
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Guardian Shell (Spear of Adun)",
+                          4
+                        ],
+                        [
+                          "Overwatch (Spear of Adun)",
+                          2
+                        ]
+                      ]
                     },
                     "condition": {
                       "type": "item_check",
@@ -42313,51 +42062,6 @@
               "type": "constant",
               "value": 3
             }
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Bio Mechanical Repair Drone (Raven)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Raven"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "state_method",
-                      "method": "count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Regenerative Bio-Steel (Terran)"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  }
-                ]
-              }
-            ]
           }
         ]
       },

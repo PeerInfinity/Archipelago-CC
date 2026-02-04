@@ -5092,40 +5092,21 @@
             "name": "Automate chemical-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "AST_all_of",
+              "rule": "HasAll",
               "args": {
-                "element_rule": {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "technology"
-                  }
-                },
-                "iterator_info": {
-                  "type": "comprehension_details",
-                  "target": {
-                    "type": "name",
-                    "name": "technology"
-                  },
-                  "iterator": {
-                    "type": "constant",
-                    "value": [
-                      "advanced-circuit",
-                      "advanced-oil-processing",
-                      "automation",
-                      "chemical-science-pack",
-                      "engine",
-                      "oil-gathering",
-                      "oil-processing",
-                      "plastics",
-                      "steel-processing",
-                      "sulfur-processing"
-                    ]
-                  }
-                },
-                "_original_ast_type": "all_of"
-              },
-              "_converted_from_ast": true
+                "items": [
+                  "advanced-circuit",
+                  "advanced-oil-processing",
+                  "automation",
+                  "chemical-science-pack",
+                  "engine",
+                  "oil-gathering",
+                  "oil-processing",
+                  "plastics",
+                  "steel-processing",
+                  "sulfur-processing"
+                ]
+              }
             },
             "item": {
               "name": "Automated chemical-science-pack",
@@ -5140,31 +5121,10 @@
             "name": "Automate logistic-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "AST_all_of",
+              "rule": "Has",
               "args": {
-                "element_rule": {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "technology"
-                  }
-                },
-                "iterator_info": {
-                  "type": "comprehension_details",
-                  "target": {
-                    "type": "name",
-                    "name": "technology"
-                  },
-                  "iterator": {
-                    "type": "constant",
-                    "value": [
-                      "logistic-science-pack"
-                    ]
-                  }
-                },
-                "_original_ast_type": "all_of"
-              },
-              "_converted_from_ast": true
+                "item_name": "logistic-science-pack"
+              }
             },
             "item": {
               "name": "Automated logistic-science-pack",
@@ -5179,34 +5139,15 @@
             "name": "Automate military-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "AST_all_of",
+              "rule": "HasAll",
               "args": {
-                "element_rule": {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "technology"
-                  }
-                },
-                "iterator_info": {
-                  "type": "comprehension_details",
-                  "target": {
-                    "type": "name",
-                    "name": "technology"
-                  },
-                  "iterator": {
-                    "type": "constant",
-                    "value": [
-                      "military-2",
-                      "military-science-pack",
-                      "steel-processing",
-                      "stone-wall"
-                    ]
-                  }
-                },
-                "_original_ast_type": "all_of"
-              },
-              "_converted_from_ast": true
+                "items": [
+                  "military-2",
+                  "military-science-pack",
+                  "steel-processing",
+                  "stone-wall"
+                ]
+              }
             },
             "item": {
               "name": "Automated military-science-pack",
@@ -5221,43 +5162,24 @@
             "name": "Automate production-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "AST_all_of",
+              "rule": "HasAll",
               "args": {
-                "element_rule": {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "technology"
-                  }
-                },
-                "iterator_info": {
-                  "type": "comprehension_details",
-                  "target": {
-                    "type": "name",
-                    "name": "technology"
-                  },
-                  "iterator": {
-                    "type": "constant",
-                    "value": [
-                      "advanced-circuit",
-                      "advanced-material-processing-2",
-                      "advanced-oil-processing",
-                      "circuit-network",
-                      "concrete",
-                      "electric-energy-distribution-1",
-                      "oil-gathering",
-                      "oil-processing",
-                      "plastics",
-                      "production-science-pack",
-                      "productivity-module",
-                      "railway",
-                      "steel-processing"
-                    ]
-                  }
-                },
-                "_original_ast_type": "all_of"
-              },
-              "_converted_from_ast": true
+                "items": [
+                  "advanced-circuit",
+                  "advanced-material-processing-2",
+                  "advanced-oil-processing",
+                  "circuit-network",
+                  "concrete",
+                  "electric-energy-distribution-1",
+                  "oil-gathering",
+                  "oil-processing",
+                  "plastics",
+                  "production-science-pack",
+                  "productivity-module",
+                  "railway",
+                  "steel-processing"
+                ]
+              }
             },
             "item": {
               "name": "Automated production-science-pack",
@@ -5272,46 +5194,27 @@
             "name": "Automate utility-science-pack",
             "id": null,
             "access_rule": {
-              "rule": "AST_all_of",
+              "rule": "HasAll",
               "args": {
-                "element_rule": {
-                  "type": "item_check",
-                  "item": {
-                    "type": "name",
-                    "name": "technology"
-                  }
-                },
-                "iterator_info": {
-                  "type": "comprehension_details",
-                  "target": {
-                    "type": "name",
-                    "name": "technology"
-                  },
-                  "iterator": {
-                    "type": "constant",
-                    "value": [
-                      "advanced-circuit",
-                      "advanced-oil-processing",
-                      "automation",
-                      "battery",
-                      "electric-engine",
-                      "engine",
-                      "low-density-structure",
-                      "lubricant",
-                      "oil-gathering",
-                      "oil-processing",
-                      "plastics",
-                      "processing-unit",
-                      "robotics",
-                      "steel-processing",
-                      "sulfur-processing",
-                      "utility-science-pack"
-                    ]
-                  }
-                },
-                "_original_ast_type": "all_of"
-              },
-              "_converted_from_ast": true
+                "items": [
+                  "advanced-circuit",
+                  "advanced-oil-processing",
+                  "automation",
+                  "battery",
+                  "electric-engine",
+                  "engine",
+                  "low-density-structure",
+                  "lubricant",
+                  "oil-gathering",
+                  "oil-processing",
+                  "plastics",
+                  "processing-unit",
+                  "robotics",
+                  "steel-processing",
+                  "sulfur-processing",
+                  "utility-science-pack"
+                ]
+              }
             },
             "item": {
               "name": "Automated utility-science-pack",

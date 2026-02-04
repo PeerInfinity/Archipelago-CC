@@ -1,26 +1,41 @@
 # Reproducing the Landstalker Memory Leak
 
-> **Note:** This bug has been fixed in upstream Archipelago (as of Jan 2026). These reproduction steps now only work in this fork (Archipelago-CC) or older versions of upstream.
+> **Note:** This bug has been fixed in this fork. These reproduction steps document the historical issue.
+
+## Background
+
+This was a **fork-specific bug**, not an upstream bug. The issue was caused by the fork's exporter calling `fill_slot_data()` after `stage_modify_multidata` had already cleared the cache.
+
+Upstream has always properly called `stage_modify_multidata` via `call_stage` (since d743d10b, Oct 2023).
 
 ## Prerequisites
 
 - Python 3.12+
-- Git
+- Archipelago-CC fork (before the fix)
 
-## Steps (Archipelago-CC fork)
-
-The simplest way to reproduce the bug in this fork:
+## Steps (before fix)
 
 ```bash
 source .venv/bin/activate
 python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of King Nole.yaml" --multi 1
 ```
 
-### Expected output
+### Expected output (before fix)
 
 ```
 AssertionError: MultiWorld object was not de-allocated, it's referenced 67 times. This would be a memory leak.
 ```
+
+## Root Cause
+
+The old call order in the fork's Main.py caused the issue:
+1. `fill_slot_data()` called → populates `cached_spheres`
+2. `modify_multidata` called → triggers `stage_modify_multidata` → clears cache
+3. `export_game_rules()` called → called `fill_slot_data()` again → **repopulated cache**
+
+The second call to `fill_slot_data` (from the exporter) repopulated the cache after it was cleared.
+
+Additionally, the sphere logger (`create_playthrough_with_logging`) created export handlers that held world references, which weren't cleared.
 
 ## Manual reproduction test
 
@@ -53,16 +68,8 @@ else:
 "
 ```
 
-### Expected output
-
-```
-cached_spheres length: 3
-MEMORY LEAK: MultiWorld still referenced 67 times
-```
-
 ## Notes
 
 - The memory leak assertion in `Generate.py` only triggers when `__debug__` is True (default)
-- In this fork, the leak occurs because `stage_modify_multidata` is never called
-- Upstream fixed this by calling `stage_modify_multidata` via `call_stage` during `generate_output`
-- Clearing `LandstalkerWorld.cached_spheres = []` resolves the leak
+- Upstream never had this issue - only the fork's exporter caused it
+- Fix: Move exporter before `modify_multidata`, use cached slot data, clear handler cache after `create_playthrough`

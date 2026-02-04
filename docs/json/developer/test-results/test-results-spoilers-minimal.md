@@ -4,34 +4,38 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
+[📖 Learn about this test](../tests/test-spoilers.md)
+
+[View APWorld Template Results](./test-results-spoilers-minimal-apworld.md)
+
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-01-11 11:23:20
+**Generated:** 2026-02-01 10:31:05
 
-**Source Data Created:** 2026-01-08T20:15:27.175780
+**Source Data Created:** 2026-01-31T04:08:42.835914
 
-**Source Data Last Updated:** 2026-01-08T20:15:27.175788
+**Source Data Last Updated:** 2026-01-31T04:08:42.835919
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 43/72 (59.7% of passed)
-- **Passing with Generic Logic:** 66/72 (91.7% of passed)
-- **Passing with Both Generic:** 43/72 (59.7% of passed)
+- **Passing with Generic Exporter:** 38/73 (52.1% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 38/73 (52.1% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 7.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 11.8KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 18.0KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.6KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -52,16 +56,16 @@
 | DOOM II | ✅ Passed | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.1KB | ✅ |
+| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 13.4KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | ✅ |
-| Landstalker - The Treasures of King Nole | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | 3.6KB | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 3.6KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 38.0KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
@@ -74,19 +78,19 @@
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 1.0KB | ✅ |
-| Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 25.9KB | ✅ |
+| Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 28.5KB | ✅ |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 2.7KB | ✅ |
-| Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 5.4KB | ✅ |
+| Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 87.5KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.5KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
@@ -94,14 +98,14 @@
 | TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.1KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 14.7KB | ✅ |
+| The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 14.8KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 7.0KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 9.3KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 9.2KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes

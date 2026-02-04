@@ -1828,6 +1828,84 @@
         "type": null,
         "max_count": 1
       },
+      "Tree Coin": {
+        "name": "Tree Coin",
+        "id": 19,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Space Coin": {
+        "name": "Space Coin",
+        "id": 20,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Macro Coin": {
+        "name": "Macro Coin",
+        "id": 21,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pumpkin Coin": {
+        "name": "Pumpkin Coin",
+        "id": 22,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mario Coin": {
+        "name": "Mario Coin",
+        "id": 23,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Turtle Coin": {
+        "name": "Turtle Coin",
+        "id": 24,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "classification": "progression_skip_balancing",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Mario Coin Fragment": {
         "name": "Mario Coin Fragment",
         "id": 25,
@@ -31801,78 +31879,6 @@
         "type": null,
         "max_count": 1
       },
-      "Tree Coin": {
-        "name": "Tree Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Golden Coins"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Space Coin": {
-        "name": "Space Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Golden Coins"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Macro Coin": {
-        "name": "Macro Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Golden Coins"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pumpkin Coin": {
-        "name": "Pumpkin Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Golden Coins"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Mario Coin": {
-        "name": "Mario Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Golden Coins"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Turtle Coin": {
-        "name": "Turtle Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Golden Coins"
-        ],
-        "classification": "progression_skip_balancing",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Wario Defeated": {
         "name": "Wario Defeated",
         "id": null,
@@ -31935,63 +31941,63 @@
   "canonical_placements": {
     "1": {
       "Mushroom Zone - Normal Exit": "Pumpkin Zone Secret 2",
+      "Hippo Zone - Normal or Secret Exit": "Super Star Duration Increase",
+      "Macro Zone 1 - Midway Bell": "Super Star Duration Increase",
+      "Macro Zone 2 - Midway Bell": "Super Star Duration Increase",
+      "Macro Zone 3 - Midway Bell": "Super Star Duration Increase",
+      "Macro Zone 3 - Normal Exit": "Super Star Duration Increase",
+      "Mario Zone 2 - Normal Exit": "Super Star Duration Increase",
+      "Mario Zone 3 - Midway Bell": "Super Star Duration Increase",
+      "Mario Zone 4 - Midway Bell": "Super Star Duration Increase",
       "Mushroom Zone - Midway Bell": "Super Star Duration Increase",
+      "Pumpkin Zone 1 - Normal Exit": "Super Star Duration Increase",
+      "Pumpkin Zone 3 - Midway Bell": "Super Star Duration Increase",
+      "Pumpkin Zone 4 - Midway Bell": "Super Star Duration Increase",
+      "Pumpkin Zone Secret Course 1 - Normal Exit": "Super Star Duration Increase",
+      "Pumpkin Zone Secret Course 2 - Normal Exit": "Super Star Duration Increase",
       "Scenic Course - Normal Exit": "Super Star Duration Increase",
-      "Tree Zone 1 - Normal Exit": "Tree Zone Secret",
+      "Space Zone 1 - Midway Bell": "Super Star Duration Increase",
       "Tree Zone 1 - Midway Bell": "Super Star Duration Increase",
-      "Tree Zone 2 - Normal Exit": "Tree Zone Progression",
       "Tree Zone 2 - Secret Exit": "Super Star Duration Increase",
-      "Tree Zone 2 - Midway Bell": "Space Zone Secret",
       "Tree Zone 3 - Normal Exit": "Super Star Duration Increase",
       "Tree Zone 4 - Normal Exit": "Super Star Duration Increase",
+      "Tree Zone 5 - Midway Bell": "Super Star Duration Increase",
+      "Turtle Zone 1 - Midway Bell": "Super Star Duration Increase",
+      "Turtle Zone 1 - Normal Exit": "Super Star Duration Increase",
+      "Turtle Zone 2 - Midway Bell": "Super Star Duration Increase",
+      "Turtle Zone 3 - Midway Bell": "Super Star Duration Increase",
+      "Tree Zone 1 - Normal Exit": "Tree Zone Secret",
+      "Macro Zone 1 - Normal Exit": "Tree Zone Progression",
+      "Mario Zone 1 - Normal Exit": "Tree Zone Progression",
+      "Tree Zone 2 - Normal Exit": "Tree Zone Progression",
+      "Tree Zone 2 - Midway Bell": "Space Zone Secret",
       "Tree Zone 4 - Midway Bell": "Macro Zone Secret 1",
       "Tree Zone 5 - Boss": "Tree Coin",
-      "Tree Zone 5 - Midway Bell": "Super Star Duration Increase",
+      "Macro Zone 2 - Normal Exit": "Pumpkin Zone Progression",
+      "Macro Zone Secret Course - Normal Exit": "Pumpkin Zone Progression",
       "Tree Zone Secret Course - Normal Exit": "Pumpkin Zone Progression",
-      "Hippo Zone - Normal or Secret Exit": "Super Star Duration Increase",
+      "Macro Zone 1 - Secret Exit": "Turtle Zone Progression",
       "Space Zone 1 - Normal Exit": "Turtle Zone Progression",
+      "Mario Zone 3 - Normal Exit": "Macro Zone Progression",
       "Space Zone 1 - Secret Exit": "Macro Zone Progression",
-      "Space Zone 1 - Midway Bell": "Super Star Duration Increase",
+      "Turtle Zone 2 - Normal Exit": "Macro Zone Progression",
+      "Mario Zone 2 - Midway Bell": "Mario Zone Progression",
+      "Space Zone 2 - Midway Bell": "Mario Zone Progression",
       "Space Zone Secret Course - Normal Exit": "Mario Zone Progression",
       "Space Zone 2 - Boss": "Space Coin",
-      "Space Zone 2 - Midway Bell": "Mario Zone Progression",
-      "Macro Zone 1 - Normal Exit": "Tree Zone Progression",
-      "Macro Zone 1 - Secret Exit": "Turtle Zone Progression",
-      "Macro Zone 1 - Midway Bell": "Super Star Duration Increase",
-      "Macro Zone 2 - Normal Exit": "Pumpkin Zone Progression",
-      "Macro Zone 2 - Midway Bell": "Super Star Duration Increase",
-      "Macro Zone 3 - Normal Exit": "Super Star Duration Increase",
-      "Macro Zone 3 - Midway Bell": "Super Star Duration Increase",
       "Macro Zone 4 - Boss": "Macro Coin",
       "Macro Zone 4 - Midway Bell": "Turtle Zone Secret",
-      "Macro Zone Secret Course - Normal Exit": "Pumpkin Zone Progression",
-      "Pumpkin Zone 1 - Normal Exit": "Super Star Duration Increase",
       "Pumpkin Zone 1 - Midway Bell": "Pumpkin Zone Secret 1",
       "Pumpkin Zone 2 - Normal Exit": "Space Zone Progression",
       "Pumpkin Zone 2 - Secret Exit": "Mushroom",
       "Pumpkin Zone 2 - Midway Bell": "Fire Flower",
       "Pumpkin Zone 3 - Normal Exit": "Carrot",
       "Pumpkin Zone 3 - Secret Exit": "Macro Zone Secret 2",
-      "Pumpkin Zone 3 - Midway Bell": "Super Star Duration Increase",
       "Pumpkin Zone 4 - Boss": "Pumpkin Coin",
-      "Pumpkin Zone 4 - Midway Bell": "Super Star Duration Increase",
-      "Pumpkin Zone Secret Course 1 - Normal Exit": "Super Star Duration Increase",
-      "Pumpkin Zone Secret Course 2 - Normal Exit": "Super Star Duration Increase",
-      "Mario Zone 1 - Normal Exit": "Tree Zone Progression",
       "Mario Zone 1 - Midway Bell": "Space Physics",
-      "Mario Zone 2 - Normal Exit": "Super Star Duration Increase",
-      "Mario Zone 2 - Midway Bell": "Mario Zone Progression",
-      "Mario Zone 3 - Normal Exit": "Macro Zone Progression",
-      "Mario Zone 3 - Midway Bell": "Super Star Duration Increase",
       "Mario Zone 4 - Boss": "Mario Coin",
-      "Mario Zone 4 - Midway Bell": "Super Star Duration Increase",
-      "Turtle Zone 1 - Normal Exit": "Super Star Duration Increase",
-      "Turtle Zone 1 - Midway Bell": "Super Star Duration Increase",
-      "Turtle Zone 2 - Normal Exit": "Macro Zone Progression",
       "Turtle Zone 2 - Secret Exit": "Hippo Bubble",
-      "Turtle Zone 2 - Midway Bell": "Super Star Duration Increase",
       "Turtle Zone 3 - Boss": "Turtle Coin",
-      "Turtle Zone 3 - Midway Bell": "Super Star Duration Increase",
       "Turtle Zone Secret Course - Normal Exit": "Water Physics",
       "Mario's Castle - Wario": "Wario Defeated"
     }
@@ -32008,6 +32014,7 @@
     "1": {
       "game": "Super Mario Land 2 WorldGen",
       "world_class_name": "MarioLand2World",
+      "count_non_advancement_items": true,
       "options": {
         "accessibility": 1,
         "auto_scroll_chances": -1,
@@ -38928,6 +38935,10 @@
       },
       "coin_fragments_required": 1,
       "world_description": "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival.",
+      "sprite_computations": {
+        "mario_zone_3_claw_set_len": 1,
+        "turtle_zone_1_sharks": 0
+      },
       "slot_data": {
         "energy_link": 1
       },
@@ -39076,6 +39087,220 @@
           }
         ]
       },
+      "hippo_zone_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Hippo Zone"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 4
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "name",
+                "name": "auto_scroll"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Hippo Bubble"
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "reachable_coins",
+                      "value": {
+                        "type": "constant",
+                        "value": 160
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "item_check",
+                        "item": "Carrot"
+                      },
+                      "body": [
+                        {
+                          "type": "assign",
+                          "name": "reachable_coins",
+                          "value": {
+                            "type": "constant",
+                            "value": 90
+                          }
+                        }
+                      ],
+                      "orelse": [
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "item_check",
+                            "item": "Water Physics"
+                          },
+                          "body": [
+                            {
+                              "type": "assign",
+                              "name": "reachable_coins",
+                              "value": {
+                                "type": "constant",
+                                "value": 28
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Water Physics",
+                          "Hippo Bubble",
+                          "Carrot"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 108
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Mushroom",
+                              "Fire Flower",
+                              "Hippo Bubble"
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 6
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Fire Flower",
+                          "Water Physics"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Hippo Bubble"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 52
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
       "hippo_zone_normal_or_secret_exit": {
         "type": "or",
         "conditions": [
@@ -39121,54 +39346,37 @@
           "level"
         ],
         "body": {
+          "type": "constant",
+          "value": false
+        }
+      },
+      "macro_zone_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
           "type": "block",
           "statements": [
             {
               "type": "assign",
-              "name": "level_id",
+              "name": "auto_scroll",
               "value": {
-                "type": "subscript",
-                "value": {
-                  "type": "constant",
-                  "value": {
-                    "Mushroom Zone": 0,
-                    "Scenic Course": 25,
-                    "Tree Zone 1": 1,
-                    "Tree Zone 2": 2,
-                    "Tree Zone 3": 4,
-                    "Tree Zone 4": 3,
-                    "Tree Zone 5": 5,
-                    "Tree Zone Secret Course": 29,
-                    "Hippo Zone": 17,
-                    "Space Zone 1": 18,
-                    "Space Zone Secret Course": 28,
-                    "Space Zone 2": 19,
-                    "Macro Zone 1": 20,
-                    "Macro Zone 2": 21,
-                    "Macro Zone 3": 22,
-                    "Macro Zone 4": 23,
-                    "Macro Zone Secret Course": 30,
-                    "Pumpkin Zone 1": 6,
-                    "Pumpkin Zone 2": 7,
-                    "Pumpkin Zone 3": 8,
-                    "Pumpkin Zone 4": 9,
-                    "Pumpkin Zone Secret Course 1": 27,
-                    "Pumpkin Zone Secret Course 2": 31,
-                    "Mario Zone 1": 10,
-                    "Mario Zone 2": 11,
-                    "Mario Zone 3": 12,
-                    "Mario Zone 4": 13,
-                    "Turtle Zone 1": 14,
-                    "Turtle Zone 2": 15,
-                    "Turtle Zone 3": 16,
-                    "Turtle Zone Secret Course": 26,
-                    "Mario's Castle": 24
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Macro Zone 1"
                   }
-                },
-                "index": {
-                  "type": "name",
-                  "name": "level"
-                }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 0
               }
             },
             {
@@ -39178,41 +39386,155 @@
                 "method": "has_any",
                 "args": [
                   {
-                    "type": "tuple",
-                    "elements": [
-                      {
-                        "type": "constant",
-                        "value": "Cancel Auto Scroll"
-                      },
-                      {
-                        "type": "f_string",
-                        "parts": [
-                          {
-                            "type": "constant",
-                            "value": "Cancel Auto Scroll - "
-                          },
-                          {
-                            "type": "formatted_value",
-                            "value": {
-                              "type": "name",
-                              "name": "level"
-                            }
-                          }
-                        ],
-                        "all_simple": true,
-                        "value": "Cancel Auto Scroll - {level}"
-                      }
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal - Down",
+                      "Pipe Traversal"
                     ]
                   }
                 ]
               },
               "body": [
                 {
-                  "type": "return",
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
                   "value": {
                     "type": "constant",
-                    "value": false
+                    "value": 69
                   }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Mushroom",
+                              "Fire Flower"
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 5
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "item_check",
+                        "item": "Fire Flower"
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 19
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Macro Zone 1 Midway Bell"
+                  },
+                  "body": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "name",
+                        "name": "auto_scroll"
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 16
+                          }
+                        },
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Mushroom",
+                                  "Fire Flower"
+                                ]
+                              }
+                            ]
+                          },
+                          "body": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 5
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "orelse": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 67
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -39221,20 +39543,13 @@
               "value": {
                 "type": "compare",
                 "left": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "world_attribute",
-                    "attribute": "auto_scroll_levels"
-                  },
-                  "index": {
-                    "type": "name",
-                    "name": "level_id"
-                  }
+                  "type": "name",
+                  "name": "coins"
                 },
-                "op": ">",
+                "op": "<=",
                 "right": {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "reachable_coins"
                 }
               }
             }
@@ -39283,6 +39598,144 @@
             "name": "macro_zone_1_midway_bell"
           }
         ]
+      },
+      "macro_zone_2_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Macro Zone 2"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "constant",
+                  "value": 27
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Water Physics"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "auto_scroll"
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Down",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Macro Zone 2 Midway Bell"
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "coins"
+                        },
+                        "op": "<=",
+                        "right": {
+                          "type": "constant",
+                          "value": 42
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "constant",
+                "value": false
+              }
+            }
+          ]
+        }
       },
       "macro_zone_2_midway_bell": {
         "type": "or",
@@ -39345,6 +39798,249 @@
           }
         ]
       },
+      "macro_zone_3_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Macro Zone 3"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 7
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "name",
+                  "name": "auto_scroll"
+                }
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 17
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Down",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 56
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    }
+                  ]
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "name",
+                        "name": "auto_scroll"
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 12
+                          }
+                        }
+                      ],
+                      "orelse": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 36
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Down",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 18
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Macro Zone 3 - Midway Bell"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": 30
+                    },
+                    "op": ">",
+                    "right": {
+                      "type": "name",
+                      "name": "reachable_coins"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "reachable_coins",
+                      "value": {
+                        "type": "constant",
+                        "value": 30
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
       "macro_zone_3_midway_bell": {
         "type": "helper",
         "name": "macro_zone_3_normal_exit"
@@ -39374,6 +40070,332 @@
       "macro_zone_4_boss": {
         "type": "helper",
         "name": "has_pipe_right"
+      },
+      "macro_zone_4_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Macro Zone 4"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 61
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "name",
+                "name": "auto_scroll"
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "-",
+                  "value": {
+                    "type": "constant",
+                    "value": 8
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Carrot"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "macro_zone_secret_course_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "has_any",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Mushroom",
+                "Fire Flower"
+              ]
+            }
+          ]
+        }
+      },
+      "mario_zone_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Mario Zone 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Right",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Left",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Mario Zone 1 Midway Bell"
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 32
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Right",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Mushroom",
+                              "Fire Flower",
+                              "Carrot"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 8
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Carrot"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 28
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 12
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Fire Flower"
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 46
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
       },
       "mario_zone_1_midway_bell": {
         "type": "or",
@@ -39449,9 +40471,238 @@
           }
         ]
       },
+      "mario_zone_3_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Mario Zone 3"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 10
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Carrot"
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "reachable_spike_coins",
+                  "value": {
+                    "type": "constant",
+                    "value": 15
+                  }
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "assign",
+                  "name": "reachable_spike_coins",
+                  "value": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "call",
+                      "func": "min",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "constant",
+                              "value": 1
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "state_method",
+                              "method": "has",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Mushroom"
+                                }
+                              ]
+                            }
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "state_method",
+                            "method": "has",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Fire Flower"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 5
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "aug_assign",
+              "target": "reachable_coins",
+              "op": "+",
+              "value": {
+                "type": "name",
+                "name": "reachable_spike_coins"
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "name",
+                  "name": "auto_scroll"
+                }
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 10
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Fire Flower"
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 22
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "-",
+                      "value": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "name",
+                          "name": "reachable_spike_coins"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
       "mario_zone_4_boss": {
         "type": "helper",
         "name": "has_pipe_right"
+      },
+      "mario_zone_4_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "coins"
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 60
+              }
+            },
+            {
+              "type": "not",
+              "condition": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Mario Zone 4"
+                  }
+                ]
+              }
+            }
+          ]
+        }
       },
       "marios_castle_wario": {
         "type": "or",
@@ -39475,176 +40726,352 @@
           }
         ]
       },
-      "not_blocked_by_sharks": {
-        "type": "block",
-        "statements": [
-          {
-            "type": "assign",
-            "name": "sharks",
-            "value": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "helper",
-                  "name": "tuple",
-                  "args": [
-                    {
-                      "type": "generator_expression",
-                      "element": {
-                        "type": "subscript",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "world_attribute",
-                            "attribute": "sprite_data",
-                            "index": "Turtle Zone 1"
-                          },
-                          "index": {
-                            "type": "name",
-                            "name": "i"
-                          }
-                        },
-                        "index": {
-                          "type": "constant",
-                          "value": "sprite"
-                        }
-                      },
-                      "comprehension": {
-                        "type": "comprehension_details",
-                        "target": {
-                          "type": "name",
-                          "name": "i"
-                        },
-                        "iterator": {
-                          "type": "tuple",
-                          "elements": [
-                            {
-                              "type": "constant",
-                              "value": 27
-                            },
-                            {
-                              "type": "constant",
-                              "value": 28
-                            }
-                          ]
-                        }
+      "mushroom_zone_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Mushroom Zone"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 38
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Mushroom",
+                          "Fire Flower"
+                        ]
                       }
+                    ]
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "auto_scroll"
                     }
-                  ]
-                },
-                "attr": "count"
+                  }
+                ]
               },
-              "args": [
+              "body": [
                 {
-                  "type": "constant",
-                  "value": "Shark"
-                }
-              ]
-            }
-          },
-          {
-            "type": "if_statement",
-            "test": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Carrot"
-                },
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "name",
-                    "name": "sharks"
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
             },
-            "body": [
-              {
-                "type": "return",
-                "value": {
-                  "type": "constant",
-                  "value": true
-                }
-              }
-            ]
-          },
-          {
-            "type": "if_statement",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "name",
-                "name": "sharks"
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal - Down",
+                      "Pipe Traversal"
+                    ]
+                  }
+                ]
               },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            "body": [
-              {
-                "type": "return",
-                "value": {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 19
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Up",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      }
+                    ]
+                  },
+                  "body": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Fire Flower",
-                        "Mushroom"
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 20
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 4
+                          }
+                        }
                       ]
                     }
                   ]
                 }
-              }
-            ]
-          },
-          {
-            "type": "if_statement",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "name",
-                "name": "sharks"
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": 1
-              }
+              ]
             },
-            "body": [
-              {
-                "type": "return",
-                "value": {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Fire Flower",
-                        "Mushroom"
-                      ]
-                    }
-                  ]
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
                 }
               }
-            ]
-          },
-          {
-            "type": "return",
-            "value": {
-              "type": "constant",
-              "value": false
             }
-          }
-        ]
+          ]
+        }
+      },
+      "not_blocked_by_sharks": {
+        "type": "constant",
+        "value": true
+      },
+      "pumpkin_zone_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Pumpkin Zone 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "name",
+                "name": "auto_scroll"
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "coins"
+                        },
+                        "op": "<=",
+                        "right": {
+                          "type": "constant",
+                          "value": 12
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Pumpkin Zone 1 Midway Bell"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Pumpkin Zone 1 Midway Bell"
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Down",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 38
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
       },
       "pumpkin_zone_1_midway_bell": {
         "type": "or",
@@ -39680,6 +41107,203 @@
       "pumpkin_zone_1_normal_exit": {
         "type": "helper",
         "name": "pumpkin_zone_1_midway_bell"
+      },
+      "pumpkin_zone_2_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Pumpkin Zone 2"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 17
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal - Down",
+                      "Pipe Traversal"
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "auto_scroll"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 7
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Up",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "name",
+                            "name": "auto_scroll"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Water Physics"
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Right",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "not",
+                            "condition": {
+                              "type": "name",
+                              "name": "auto_scroll"
+                            }
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 1
+                          }
+                        },
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Mushroom",
+                                  "Fire Flower"
+                                ]
+                              }
+                            ]
+                          },
+                          "body": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 5
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
       },
       "pumpkin_zone_2_normal_exit": {
         "type": "and",
@@ -39737,6 +41361,149 @@
           }
         ]
       },
+      "pumpkin_zone_3_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Pumpkin Zone 3"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 38
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      },
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Down",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 12
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Down",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "auto_scroll"
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 11
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
       "pumpkin_zone_3_secret_exit": {
         "type": "item_check",
         "item": "Carrot"
@@ -39744,6 +41511,417 @@
       "pumpkin_zone_4_boss": {
         "type": "helper",
         "name": "has_pipe_right"
+      },
+      "pumpkin_zone_4_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Pumpkin Zone 4"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 29
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal - Down",
+                      "Pipe Traversal"
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Up",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 16
+                          }
+                        }
+                      ],
+                      "orelse": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 4
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 28
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Up",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 16
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "pumpkin_zone_secret_course_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Pumpkin Zone Secret Course 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "constant",
+                  "value": 40
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Carrot"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "coins"
+                        },
+                        "op": "<=",
+                        "right": {
+                          "type": "constant",
+                          "value": 172
+                        }
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "constant",
+                "value": false
+              }
+            }
+          ]
+        }
+      },
+      "space_zone_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Space Zone 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "name",
+                "name": "auto_scroll"
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "reachable_coins",
+                  "value": {
+                    "type": "constant",
+                    "value": 12
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Carrot",
+                          "Space Physics"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 20
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Space Physics"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 40
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "coins"
+                    },
+                    "op": "<=",
+                    "right": {
+                      "type": "name",
+                      "name": "reachable_coins"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "coins"
+                    },
+                    "op": "<=",
+                    "right": {
+                      "type": "constant",
+                      "value": 21
+                    }
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "coins"
+                        },
+                        "op": "<=",
+                        "right": {
+                          "type": "constant",
+                          "value": 50
+                        }
+                      },
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Mushroom",
+                              "Fire Flower"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Carrot",
+                          "Space Physics"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
       },
       "space_zone_1_normal_exit": {
         "type": "state_method",
@@ -39790,100 +41968,234 @@
         ]
       },
       "space_zone_2_boss": {
-        "type": "conditional",
-        "test": {
-          "type": "helper",
-          "name": "has_pipe_right"
-        },
-        "if_true": {
-          "type": "or",
-          "conditions": [
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Pipe Traversal - Right",
+                  "Pipe Traversal"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Space Physics"
+              },
+              {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Mushroom",
+                      "Fire Flower",
+                      "Carrot"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "space_zone_2_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
             {
-              "type": "item_check",
-              "item": "Space Physics"
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Space Zone 2"
+                  }
+                ]
+              }
             },
             {
-              "type": "conditional",
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 12
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Mushroom",
+                      "Fire Flower",
+                      "Carrot",
+                      "Space Physics"
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 15
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Space Physics"
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
               "test": {
                 "type": "or",
                 "conditions": [
                   {
                     "type": "item_check",
-                    "item": "Space Zone 2 Midway Bell"
+                    "item": "Space Physics"
                   },
                   {
-                    "type": "not",
-                    "condition": {
-                      "type": "option_value",
-                      "option": "shuffle_midway_bells"
-                    }
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Mushroom"
+                      },
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Fire Flower",
+                              "Carrot"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
-              "if_true": {
-                "type": "conditional",
-                "test": {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Carrot",
-                        "Fire Flower",
-                        "Mushroom"
-                      ]
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "constant",
-                  "value": null
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Space Physics"
               },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 79
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "auto_scroll"
+                    }
+                  },
+                  "body": [
                     {
-                      "type": "item_check",
-                      "item": "Mushroom"
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Carrot",
-                            "Fire Flower"
-                          ]
-                        }
-                      ]
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 21
+                      }
                     }
                   ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
                 },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": {
-                  "type": "constant",
-                  "value": null
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
                 }
               }
             }
           ]
-        },
-        "if_false": {
-          "type": "constant",
-          "value": false
         }
       },
       "space_zone_2_midway_bell": {
@@ -39901,6 +42213,229 @@
             ]
           }
         ]
+      },
+      "space_zone_secret_course_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "coins"
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 96
+              }
+            },
+            {
+              "type": "not",
+              "condition": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Space Zone Secret Course"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "tree_zone_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "coins"
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 87
+              }
+            },
+            {
+              "type": "not",
+              "condition": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Tree Zone 1"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "tree_zone_2_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Tree Zone 2"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 18
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal - Right",
+                      "Pipe Traversal"
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 38
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Carrot"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 12
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 30
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Tree Zone 2 Midway Bell"
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "reachable_coins",
+                      "value": {
+                        "type": "constant",
+                        "value": 30
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 8
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
       },
       "tree_zone_2_midway_bell": {
         "type": "or",
@@ -39941,6 +42476,119 @@
           }
         ]
       },
+      "tree_zone_3_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Tree Zone 3"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "coins"
+                    },
+                    "op": "<=",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "constant",
+                  "value": 19
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Mushroom",
+                          "Fire Flower"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "coins"
+                    },
+                    "op": "<=",
+                    "right": {
+                      "type": "constant",
+                      "value": 21
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "item_check",
+                "item": "Carrot"
+              }
+            }
+          ]
+        }
+      },
       "tree_zone_3_normal_exit": {
         "type": "not",
         "condition": {
@@ -39950,6 +42598,362 @@
             {
               "type": "constant",
               "value": "Tree Zone 3"
+            }
+          ]
+        }
+      },
+      "tree_zone_4_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Tree Zone 4"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins_from_start",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins_from_bell",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal - Up",
+                      "Pipe Traversal"
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins_from_start",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 14
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Right",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins_from_start",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Down",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "name",
+                            "name": "auto_scroll"
+                          },
+                          "body": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins_from_start",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 12
+                              }
+                            }
+                          ],
+                          "orelse": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins_from_start",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 56
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Tree Zone 4 Midway Bell"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Down",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "name",
+                            "name": "auto_scroll"
+                          },
+                          {
+                            "type": "not",
+                            "condition": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": [
+                                    "Pipe Traversal - Left",
+                                    "Pipe Traversal"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins_from_bell",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 10
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Left",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "not",
+                            "condition": {
+                              "type": "name",
+                              "name": "auto_scroll"
+                            }
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Down",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          "body": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins_from_bell",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 31
+                              }
+                            },
+                            {
+                              "type": "if_statement",
+                              "test": {
+                                "type": "state_method",
+                                "method": "has_any",
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": [
+                                      "Pipe Traversal - Right",
+                                      "Pipe Traversal"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "body": [
+                                {
+                                  "type": "aug_assign",
+                                  "target": "reachable_coins_from_bell",
+                                  "op": "+",
+                                  "value": {
+                                    "type": "constant",
+                                    "value": 18
+                                  }
+                                },
+                                {
+                                  "type": "if_statement",
+                                  "test": {
+                                    "type": "state_method",
+                                    "method": "has_any",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": [
+                                          "Pipe Traversal - Up",
+                                          "Pipe Traversal"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "body": [
+                                    {
+                                      "type": "aug_assign",
+                                      "target": "reachable_coins_from_bell",
+                                      "op": "+",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": 25
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "orelse": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins_from_bell",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 18
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "call",
+                  "func": "max",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "reachable_coins_from_start"
+                    },
+                    {
+                      "type": "name",
+                      "name": "reachable_coins_from_bell"
+                    }
+                  ]
+                }
+              }
             }
           ]
         }
@@ -40011,9 +43015,559 @@
           }
         ]
       },
+      "tree_zone_5_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Tree Zone 5"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Mushroom",
+                      "Fire Flower"
+                    ]
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Carrot"
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 18
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Up",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "auto_scroll"
+                        }
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 13
+                      }
+                    }
+                  ]
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "state_method",
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Pipe Traversal - Up",
+                          "Pipe Traversal"
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 13
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "turtle_zone_1_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Turtle Zone 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 30
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "helper",
+                "name": "not_blocked_by_sharks"
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 13
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "-",
+                      "value": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Water Physics"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Carrot"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 10
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Carrot"
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 24
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "name",
+                    "name": "auto_scroll"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "-",
+                      "value": {
+                        "type": "constant",
+                        "value": 10
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
+      },
       "turtle_zone_1_normal_exit": {
         "type": "helper",
         "name": "not_blocked_by_sharks"
+      },
+      "turtle_zone_2_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "auto_scroll",
+              "value": {
+                "type": "helper",
+                "name": "is_auto_scroll",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Turtle Zone 2"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "name",
+                "name": "auto_scroll"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Water Physics"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    }
+                  ]
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Water Physics"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 20
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "item_check",
+                        "item": "Turtle Zone 2 Midway Bell"
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 4
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Right",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Down",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Water Physics",
+                              "Turtle Zone 2 Midway Bell"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    },
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Left",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Up",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "aug_assign",
+                          "target": "reachable_coins",
+                          "op": "+",
+                          "value": {
+                            "type": "constant",
+                            "value": 1
+                          }
+                        },
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "item_check",
+                            "item": "Water Physics"
+                          },
+                          "body": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
       },
       "turtle_zone_2_midway_bell": {
         "type": "or",
@@ -40113,6 +43667,114 @@
       "turtle_zone_3_boss": {
         "type": "helper",
         "name": "has_pipe_right"
+      },
+      "turtle_zone_3_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Water Physics",
+                    "Mushroom",
+                    "Fire Flower",
+                    "Carrot"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "coins"
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 51
+              }
+            }
+          ]
+        }
+      },
+      "turtle_zone_secret_course_coins": {
+        "params": [
+          "coins"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "reachable_coins",
+              "value": {
+                "type": "constant",
+                "value": 53
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "item_check",
+                "item": "Carrot"
+              },
+              "body": [
+                {
+                  "type": "aug_assign",
+                  "target": "reachable_coins",
+                  "op": "+",
+                  "value": {
+                    "type": "constant",
+                    "value": 44
+                  }
+                }
+              ],
+              "orelse": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Fire Flower"
+                  },
+                  "body": [
+                    {
+                      "type": "aug_assign",
+                      "target": "reachable_coins",
+                      "op": "+",
+                      "value": {
+                        "type": "constant",
+                        "value": 36
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "coins"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "name",
+                  "name": "reachable_coins"
+                }
+              }
+            }
+          ]
+        }
       },
       "turtle_zone_secret_course_normal_exit": {
         "type": "state_method",

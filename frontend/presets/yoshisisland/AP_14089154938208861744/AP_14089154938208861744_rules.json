@@ -3347,8 +3347,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Tulip",
-                      "! Switch"
+                      "! Switch",
+                      "Tulip"
                     ]
                   }
                 }
@@ -4126,11 +4126,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "cansee_clouds",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -4145,6 +4140,11 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "cansee_clouds",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8099,6 +8099,56 @@
   },
   "helpers": {
     "1": {
+      "_13Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Key"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Key"
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
+          }
+        }
+      },
       "_14Boss": {
         "type": "conditional",
         "test": {
@@ -8163,37 +8213,18 @@
         }
       },
       "_14CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 0
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Burt The Bashful's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_14Clear": {
         "type": "conditional",
@@ -8391,37 +8422,18 @@
         }
       },
       "_18CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 1
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Salvo The Slime's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_18Clear": {
         "type": "conditional",
@@ -8518,6 +8530,208 @@
           }
         }
       },
+      "_21Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                },
+                {
+                  "type": "constant",
+                  "value": "Poochy"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Poochy"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Poochy"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_23Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Mole Tank Morph"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Mole Tank Morph"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Mole Tank Morph"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
       "_24Boss": {
         "type": "conditional",
         "test": {
@@ -8569,37 +8783,18 @@
         }
       },
       "_24CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 2
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Bigger Boo's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_24Clear": {
         "type": "conditional",
@@ -8881,37 +9076,18 @@
         }
       },
       "_28CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 3
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Roger The Ghost's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_28Clear": {
         "type": "conditional",
@@ -9021,6 +9197,105 @@
           }
         }
       },
+      "_32Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Dashed Stairs"
+                },
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Spring Ball"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
       "_34Boss": {
         "type": "conditional",
         "test": {
@@ -9072,37 +9347,18 @@
         }
       },
       "_34CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 4
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Prince Froggy's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_34Clear": {
         "type": "conditional",
@@ -9163,6 +9419,71 @@
           }
         }
       },
+      "_37Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Key"
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
+          }
+        }
+      },
       "_38Boss": {
         "type": "conditional",
         "test": {
@@ -9214,37 +9535,18 @@
         }
       },
       "_38CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 5
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Naval Piranha's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_38Clear": {
         "type": "conditional",
@@ -9322,6 +9624,86 @@
           }
         }
       },
+      "_42Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
+          }
+        }
+      },
       "_44Boss": {
         "type": "conditional",
         "test": {
@@ -9373,37 +9755,18 @@
         }
       },
       "_44CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 6
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Marching Milde's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_44Clear": {
         "type": "conditional",
@@ -9551,6 +9914,101 @@
                   {
                     "type": "constant",
                     "value": "Vanishing Arrow Wheel"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_46Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
                   }
                 ]
               }
@@ -9716,37 +10174,18 @@
         }
       },
       "_48CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 7
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Hookbill The Koopa's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_48Clear": {
         "type": "conditional",
@@ -9856,6 +10295,56 @@
                 ]
               }
             ]
+          }
+        }
+      },
+      "_51Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Key"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Key"
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
           }
         }
       },
@@ -9980,37 +10469,18 @@
         }
       },
       "_54CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 8
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Sluggy The Unshaven's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_54Clear": {
         "type": "conditional",
@@ -10166,37 +10636,18 @@
         }
       },
       "_58CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 9
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Raphael The Raven's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_58Clear": {
         "type": "conditional",
@@ -10293,6 +10744,94 @@
           }
         }
       },
+      "_61Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Beanstalk"
+                },
+                {
+                  "type": "constant",
+                  "value": "Dashed Platform"
+                },
+                {
+                  "type": "constant",
+                  "value": "Key"
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Beanstalk"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Dashed Platform"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
+          }
+        }
+      },
       "_64Boss": {
         "type": "conditional",
         "test": {
@@ -10344,37 +10883,18 @@
         }
       },
       "_64CanFightBoss": {
-        "type": "conditional",
-        "test": {
-          "type": "state_method",
-          "method": "can_reach",
-          "args": [
-            {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "boss_order"
-              },
-              "index": {
-                "type": "constant",
-                "value": 10
-              }
-            },
-            {
-              "type": "constant",
-              "value": "Location"
-            }
-          ]
-        },
-        "if_true": {
-          "type": "constant",
-          "value": true
-        },
-        "if_false": null
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Tap-Tap The Red Nose's Boss Room"
+          },
+          {
+            "type": "constant",
+            "value": "Location"
+          }
+        ]
       },
       "_64Clear": {
         "type": "conditional",
@@ -10546,6 +11066,56 @@
                 ]
               }
             ]
+          }
+        }
+      },
+      "_67Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Key"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Key"
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
           }
         }
       },

@@ -1039,8 +1039,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Second Wind",
-                      "Rope Dart"
+                      "Rope Dart",
+                      "Second Wind"
                     ]
                   }
                 }
@@ -1076,8 +1076,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Second Wind",
-                      "Rope Dart"
+                      "Rope Dart",
+                      "Second Wind"
                     ]
                   }
                 }
@@ -4797,10 +4797,10 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Rope Dart",
-                  "Wingsuit",
                   "Lightfoot Tabi",
-                  "Strike of the Ninja"
+                  "Rope Dart",
+                  "Strike of the Ninja",
+                  "Wingsuit"
                 ]
               }
             }
@@ -5262,8 +5262,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Second Wind",
-                      "Rope Dart"
+                      "Rope Dart",
+                      "Second Wind"
                     ]
                   }
                 }
@@ -5634,9 +5634,9 @@
               "args": {
                 "items": [
                   "Aerobatics Warrior",
-                  "Wingsuit",
                   "Rope Dart",
-                  "Strike of the Ninja"
+                  "Strike of the Ninja",
+                  "Wingsuit"
                 ]
               }
             },

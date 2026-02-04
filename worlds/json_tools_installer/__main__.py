@@ -31,7 +31,9 @@ def main():
     install_parser.add_argument("--tracker", action="store_true", help="Include tracker")
     install_parser.add_argument("--testing", action="store_true", help="Include testing infrastructure")
     install_parser.add_argument("--romless-patches", action="store_true", help="Include romless patches")
+    install_parser.add_argument("--monkey-patch", action="store_true", help="Use runtime patching")
     install_parser.add_argument("--uninstall", action="store_true", help="Uninstall")
+    install_parser.add_argument("--yes", "-y", action="store_true", help="Skip confirmation prompts")
     install_parser.add_argument("--dry-run", "-n", action="store_true")
 
     # Status command
@@ -73,8 +75,12 @@ def main():
             install_args.append("--testing")
         if args.romless_patches:
             install_args.append("--romless-patches")
+        if args.monkey_patch:
+            install_args.append("--monkey-patch")
         if args.uninstall:
             install_args.append("--uninstall")
+        if args.yes:
+            install_args.append("--yes")
         if args.dry_run:
             install_args.append("--dry-run")
         return install_main(install_args)
