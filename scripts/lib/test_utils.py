@@ -57,6 +57,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                   - 'all': Combine all exclude lists (permanent + main + worldgen) - default
                   - 'main': Permanent exclusions + main test exclusions
                   - 'worldgen': Permanent exclusions + worldgen test exclusions
+                  - 'ut_fuzz': Permanent exclusions + UT fuzz exclusions (games that hang/timeout)
                   - 'permanent': Only permanent exclusions (exclude_list)
                   - 'ut_fuzz_apworld': Only UT fuzz apworld exclusions (no WorldGen variants added)
         skip_worldgen_variants: If True, don't add WorldGen variants (useful for display purposes)
@@ -115,6 +116,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
             # Load the test-type specific lists (may not exist in old format files)
             main_list = normalize_list(data.get('main_test_exclude_list', []))
             worldgen_list = normalize_list(data.get('worldgen_test_exclude_list', []))
+            ut_fuzz_list = normalize_list(data.get('ut_fuzz_exclude_list', []))
             ut_fuzz_apworld_list = normalize_list(data.get('ut_fuzz_apworld_exclude_list', []))
 
             # Combine lists based on test_type
@@ -124,6 +126,8 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                 combined_list = permanent_list + main_list
             elif test_type == 'worldgen':
                 combined_list = permanent_list + worldgen_list
+            elif test_type == 'ut_fuzz':
+                combined_list = permanent_list + ut_fuzz_list
             elif test_type == 'ut_fuzz_apworld':
                 # Return UT fuzz apworld list without adding WorldGen variants
                 # (apworlds don't have WorldGen variants like templates do)
