@@ -129,6 +129,23 @@ class PickleMixin:
                 temp_precollect[player_id] = temp_items
             self.multiworld.precollected_items = temp_precollect
 
+            # Convert list-address locations to events.
+            # Some games (e.g., ALttP) use list addresses for locations like dungeon prizes
+            # that have multiple ROM addresses. The JSON exporter converts these to events
+            # (address=None, event=True) so they're collected via sweep_for_advancements().
+            # We do the same here to match worldgen mode behavior.
+            list_address_count = 0
+            for location in self.multiworld.get_locations(self.player_id):
+                if isinstance(location.address, list):
+                    location.address = None
+                    location.event = True
+                    list_address_count += 1
+
+            if list_address_count > 0:
+                self.logger.debug(
+                    f"Converted {list_address_count} list-address locations to events"
+                )
+
             self.logger.info(
                 f"Initialized tracking from pickle multiworld"
             )
