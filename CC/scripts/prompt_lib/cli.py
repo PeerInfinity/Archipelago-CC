@@ -73,8 +73,8 @@ def create_argument_parser():
                        help='Generate prompts for games that pass UT fuzz but fail spoiler fuzz (frontend rule evaluation issues)')
     parser.add_argument('--spoiler-seed-mode', type=str, choices=['fixed', 'random'], default='fixed',
                        help='Which seed mode results to use for --spoiler-fuzz-failures (default: fixed)')
-    parser.add_argument('--ut-version', type=str, choices=['original', 'modified', 'hybrid'], default='modified',
-                       help='Which UT version results to use for --ut-fuzz-* modes (default: modified)')
+    parser.add_argument('--ut-version', type=str, choices=['original', 'worldgen', 'hybrid'], default='worldgen',
+                       help='Which UT version results to use for --ut-fuzz-* modes (default: worldgen)')
     parser.add_argument('--ut-seed-mode', type=str, choices=['fixed', 'random'], default='fixed',
                        help='Which seed mode results to use for --ut-fuzz-apworld-failures (default: fixed)')
     parser.add_argument('--ut-seed', type=int, default=None,

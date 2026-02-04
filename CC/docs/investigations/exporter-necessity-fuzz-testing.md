@@ -22,7 +22,7 @@ The `exporter/games/` directory contains custom Python modules that handle game-
 
 ## Results
 
-### UT Fuzz Results (Modified Tracker)
+### UT Fuzz Results (Worldgen Tracker)
 
 With exporter files deleted, 43/85 games passed 10/10.
 

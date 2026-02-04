@@ -1,10 +1,10 @@
-# Universal Tracker Fuzz Test Comparison: Original vs Modified (APWorlds)
+# Universal Tracker Fuzz Test Comparison: Original vs Worldgen (APWorlds)
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 14:05:32
 
 **Source Data Last Updated:** 2026-01-24T05:05:20
 
-This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
+This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Worldgen Universal Tracker (regenerates world from rules.json).
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
@@ -13,20 +13,20 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ### Individual Test Results
 
 - [Original UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-original.md)
-- [Modified UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-modified.md)
+- [Worldgen UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-worldgen.md)
 
 ## Summary
 
 - **Total Games Tested:** 124
 - **Passing Both:** 24 (19.4%)
 - **Passing Original Only:** 11 (8.9%)
-- **Passing Modified Only:** 26 (21.0%)
-- **Passing Modified Only with Generic Exporter:** 19 (15.3%)
+- **Passing Worldgen Only:** 26 (21.0%)
+- **Passing Worldgen Only with Generic Exporter:** 19 (15.3%)
 - **Passing Neither:** 63 (50.8%)
 
 ## Full Comparison
 
-| Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
+| Game Name | Original Success Rate | Worldgen Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Dance of Fire and Ice | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ⚠️ 67.0% | ✅ 90.0% | ✅ | ✅ | N/A |
@@ -186,7 +186,7 @@ These games have 100% success rate in both Universal Tracker versions.
 
 ## Games Passing Original Only (11)
 
-These games pass in the Original UT but fail in the Modified UT.
+These games pass in the Original UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -202,9 +202,9 @@ These games pass in the Original UT but fail in the Modified UT.
 | Soul Blazer | 10.6KB | ✅ | N/A |
 | XCOM 2 War of the Chosen | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (26)
+## Games Passing Worldgen Only (26)
 
-These games pass in the Modified UT but fail in the Original UT.
+These games pass in the Worldgen UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -308,7 +308,7 @@ These games fail in both Universal Tracker versions.
 ## Notes
 
 - **Original Success Rate:** Percentage of fuzz runs that passed in the Original Universal Tracker
-- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker
+- **Worldgen Success Rate:** Percentage of fuzz runs that passed in the Worldgen Universal Tracker
 - **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
 - **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files
 - **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)

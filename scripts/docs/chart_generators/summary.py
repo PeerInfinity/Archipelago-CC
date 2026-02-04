@@ -421,7 +421,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         md_content += "- **[Fuzz Test Summary](./test-results-fuzz-summary.md)** - Combined view of all fuzz test results\n\n"
         md_content += "Individual fuzz test results:\n"
         md_content += "- [UT Fuzz Results - Original](./test-results-ut-fuzz-original.md)\n"
-        md_content += "- [UT Fuzz Results - Modified](./test-results-ut-fuzz-modified.md)\n"
+        md_content += "- [UT Fuzz Results - Worldgen](./test-results-ut-fuzz-worldgen.md)\n"
         md_content += "- [UT Fuzz Results - Hybrid](./test-results-ut-fuzz-hybrid.md)\n"
         md_content += "- [Spoiler Fuzz Results](./test-results-spoiler-fuzz.md)\n"
 

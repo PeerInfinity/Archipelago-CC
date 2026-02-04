@@ -38,11 +38,11 @@ on:
         required: true
         type: choice
         options:
-          - modified
+          - worldgen
           - hybrid
           - original
           - pickle
-        default: modified
+        default: worldgen
 
       default_options:
         description: 'Options to leave at defaults (comma-separated, e.g., "mode,entrance_shuffle")'
@@ -174,11 +174,11 @@ jobs:
           if [ "${{ inputs.ut_version }}" = "original" ]; then
             UT_FLAGS="--ut-version original"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
-            UT_FLAGS="--ut-version modified --prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --prefer-native-ut"
           elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
             UT_FLAGS="--ut-version pickle --no-prefer-native-ut"
           else
-            UT_FLAGS="--ut-version modified --no-prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut"
           fi
 
           # Determine output filename based on seed
@@ -310,7 +310,7 @@ jobs:
           elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
             UT_LABEL="pickle"
           else
-            UT_LABEL="modified"
+            UT_LABEL="worldgen"
           fi
 
           # Determine seed mode for the output filename
@@ -352,7 +352,7 @@ jobs:
           import os
           from datetime import datetime
 
-          ut_label = os.environ.get('UT_LABEL', 'modified')
+          ut_label = os.environ.get('UT_LABEL', 'worldgen')
           seed_mode = os.environ.get('SEED_MODE', 'fixed')
           main_file = os.environ.get('MAIN_RESULTS_FILE')
           single_file = os.environ.get('SINGLE_GAME_FILE')
@@ -436,9 +436,9 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}
+          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}
           SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
           SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 'random' }}.json
           RUNS: ${{ inputs.runs }}
 
@@ -563,11 +563,11 @@ jobs:
           if [ "${{ inputs.ut_version }}" = "original" ]; then
             UT_FLAGS="--ut-version original"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
-            UT_FLAGS="--ut-version modified --prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --prefer-native-ut"
           elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
             UT_FLAGS="--ut-version pickle --no-prefer-native-ut"
           else
-            UT_FLAGS="--ut-version modified --no-prefer-native-ut"
+            UT_FLAGS="--ut-version worldgen --no-prefer-native-ut"
           fi
 
           # Output file includes split number
@@ -857,7 +857,7 @@ jobs:
           elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
             UT_LABEL="pickle"
           else
-            UT_LABEL="modified"
+            UT_LABEL="worldgen"
           fi
 
           # Determine seed mode for the output filename
@@ -897,7 +897,7 @@ jobs:
           import os
           from datetime import datetime
 
-          ut_label = os.environ.get('UT_LABEL', 'modified')
+          ut_label = os.environ.get('UT_LABEL', 'worldgen')
           seed_mode = os.environ.get('SEED_MODE', 'fixed')
           main_file = os.environ.get('MAIN_RESULTS_FILE')
           single_file = os.environ.get('SINGLE_GAME_FILE')
@@ -982,8 +982,8 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}
+          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}
           SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'worldgen')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
           SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json
           RUNS: ${{ inputs.runs }}

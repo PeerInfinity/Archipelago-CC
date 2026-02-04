@@ -46,10 +46,10 @@ on:
         description: 'Universal Tracker mode to test'
         required: true
         type: choice
-        default: 'modified'
+        default: 'worldgen'
         options:
           - 'original'
-          - 'modified'
+          - 'worldgen'
           - 'pickle'
           - 'hybrid'
 
@@ -343,7 +343,7 @@ jobs:
           UT_VERSION="${{ inputs.ut_mode }}"
           TRACKING_CONFIG=""
           if [ "$UT_VERSION" = "hybrid" ]; then
-            UT_VERSION="modified"
+            UT_VERSION="worldgen"
             TRACKING_CONFIG="--use-tracking-config"
           else
             TRACKING_CONFIG="--no-use-tracking-config"
@@ -437,10 +437,10 @@ jobs:
           import os
           from datetime import datetime
 
-          ut_version = os.environ.get('UT_VERSION', 'modified')
+          ut_version = os.environ.get('UT_VERSION', 'worldgen')
           world_source = os.environ.get('WORLD_SOURCE', 'bundled')
 
-          # Find all split result files (pattern matches both original and modified artifacts)
+          # Find all split result files (pattern matches both original and worldgen artifacts)
           files = glob.glob("artifacts/test-results-*-ut-fuzz-split-*/test-results-*-split-*.json")
           print(f"Found {len(files)} result files to combine")
 

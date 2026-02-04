@@ -161,7 +161,7 @@ The second option should reference a different entrance, but due to late binding
 
 ## Testing Methodology
 
-These bugs were discovered using the **UT Fuzz test** with the **modified Universal Tracker** (which uses worldgen-based tracking rather than native game integration).
+These bugs were discovered using the **UT Fuzz test** with the **Worldgen Universal Tracker** (which uses worldgen-based tracking rather than native game integration).
 
 ### What is the UT Fuzz Test?
 
@@ -180,9 +180,9 @@ python fuzz.py -r 1000 -j 4 -g alttp -n 1 --hook worlds.tracker.fuzzer_hook:Hook
 
 This runs 1000 seeds with 4 parallel workers, testing ALttP with a single player and the UT fuzzer hook enabled.
 
-### Why Modified UT?
+### Why Worldgen UT?
 
-The modified Universal Tracker uses worldgen-based tracking, which:
+The Worldgen Universal Tracker uses worldgen-based tracking, which:
 - Generates a temporary world from the exported `rules.json`
 - Uses the Rule Builder to evaluate accessibility
 - Is independent of any game's native UT integration

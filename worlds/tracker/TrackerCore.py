@@ -118,7 +118,7 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
             config: The loaded tracking mode config
 
         Returns:
-            List of passing mode names (e.g., ['modified', 'pickle']) or empty list
+            List of passing mode names (e.g., ['worldgen', 'pickle']) or empty list
         """
         if not config:
             return []
@@ -222,7 +222,7 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
 
         if config:
             # Config-based fallback order
-            fallback_order = config.get('fallback_order', ['modified', 'pickle', 'original'])
+            fallback_order = config.get('fallback_order', ['worldgen', 'pickle', 'original'])
             passing_modes = self._get_passing_modes_for_game(self.game, config)
 
             self._log_debug("config_based_tracking", {
@@ -240,7 +240,7 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
                 if mode == 'pickle' and self.pickle_path:
                     if self._try_pickle_tracking():
                         return
-                elif mode == 'modified' and self.rules_json_path:
+                elif mode == 'worldgen' and self.rules_json_path:
                     if self._try_worldgen_tracking():
                         return
                 elif mode == 'original':

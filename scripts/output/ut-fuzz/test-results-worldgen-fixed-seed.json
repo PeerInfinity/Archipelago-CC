@@ -4,7 +4,7 @@
     "last_updated": "2026-02-04T05:43:50.051254",
     "script_version": "1.0.0",
     "combined_from": 10,
-    "ut_version": "modified",
+    "ut_version": "worldgen",
     "prefer_native_ut": false,
     "world_source": "bundled",
     "seed_mode": "fixed",

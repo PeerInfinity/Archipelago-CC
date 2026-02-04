@@ -1,10 +1,10 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 14:05:32
 
 **Source Data Last Updated:** 2026-01-25T06:50:41
 
-This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (modified with native UT preference).
+This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 

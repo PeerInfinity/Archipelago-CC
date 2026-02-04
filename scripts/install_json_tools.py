@@ -67,7 +67,7 @@ DEV_REPO = "PeerInfinity/Archipelago-CC"
 DEV_BRANCH = "main"
 
 # Expected failures file path (relative to project root)
-EXPECTED_FAILURES_DOC = "docs/json/developer/test-results/test-results-ut-fuzz-modified.md"
+EXPECTED_FAILURES_DOC = "docs/json/developer/test-results/test-results-ut-fuzz-worldgen.md"
 
 # Default target directory
 DEFAULT_TARGET_DIR = "archipelago-json-tools"

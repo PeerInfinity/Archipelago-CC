@@ -154,23 +154,23 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     # Determine seed info and UT version
     seed = metadata.get('seed', 'random')
     seed_display = f"Fixed (seed={seed})" if seed != 'random' else "Random"
-    ut_version = metadata.get('ut_version', 'modified')
+    ut_version = metadata.get('ut_version', 'worldgen')
 
     # Map ut_version to display strings
     if ut_version == 'original':
         ut_version_display = "Original (FarisTheAncient)"
         title_suffix = " (Original UT)"
     elif ut_version == 'hybrid':
-        ut_version_display = "Hybrid (modified with native UT preference)"
+        ut_version_display = "Hybrid (worldgen with native UT preference)"
         title_suffix = " (Hybrid)"
     elif ut_version == 'pickle':
         ut_version_display = "Pickle (loads serialized multiworld)"
         title_suffix = " (Pickle)"
     else:
-        ut_version_display = "Modified (worldgen-based tracking)"
+        ut_version_display = "Worldgen (regenerates world from rules.json)"
         title_suffix = ""
 
-    # Title includes UT version if it's not the default modified
+    # Title includes UT version if it's not the default worldgen
     md_content = f"# Universal Tracker Fuzz Test Results{title_suffix}\n\n"
 
     # Add navigation links
@@ -182,17 +182,17 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
 
     # Add link to comparison docs
     if world_source == "apworlds":
-        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | "
+        md_content += "[View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-apworlds-comparison-original-worldgen.md) | "
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | "
         md_content += "[View Comparison (Original vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | "
-        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md) | "
-        md_content += "[View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-modified-pickle.md)\n\n"
+        md_content += "[View Comparison (Worldgen vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md) | "
+        md_content += "[View Comparison (Worldgen vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md)\n\n"
     else:
-        md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | "
+        md_content += "[View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-comparison-original-worldgen.md) | "
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | "
         md_content += "[View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | "
-        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md) | "
-        md_content += "[View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-comparison-modified-pickle.md)\n\n"
+        md_content += "[View Comparison (Worldgen vs Hybrid)](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | "
+        md_content += "[View Comparison (Worldgen vs Pickle)](./test-results-ut-fuzz-comparison-worldgen-pickle.md)\n\n"
 
     md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
 
@@ -234,8 +234,8 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **Timed Out Runs:** {total_timeout}\n"
         md_content += f"- **Ignored Runs:** {total_ignored}\n\n"
 
-        # Add expected/unexpected pass/fail categorization (only for modified UT)
-        if excluded_games and ut_version == 'modified':
+        # Add expected/unexpected pass/fail categorization (only for worldgen UT)
+        if excluded_games and ut_version == 'worldgen':
             # Build set of excluded template names for matching
             excluded_templates = set(excluded_games.keys())
 
@@ -477,8 +477,8 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "Failures indicate that for certain option combinations, UT's logic "
     md_content += "differs from Python's logic. This helps identify edge cases that need fixing.\n"
 
-    # Add Excluded Templates section (only for modified UT)
-    if excluded_games and ut_version == 'modified':
+    # Add Excluded Templates section (only for worldgen UT)
+    if excluded_games and ut_version == 'worldgen':
         if world_source == "apworlds":
             md_content += "\n## Excluded APWorlds\n\n"
             md_content += "These community APWorlds are excluded from UT fuzz testing due to incompatible rule patterns or APWorld bugs:\n\n"
@@ -519,7 +519,7 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
                                   project_root: str = None,
                                   world_source: str = "bundled",
                                   version1: str = "original",
-                                  version2: str = "modified",
+                                  version2: str = "worldgen",
                                   metadata1: Dict[str, Any] = None,
                                   metadata2: Dict[str, Any] = None) -> str:
     """
@@ -531,8 +531,8 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
         world_mapping: Full world mapping dict with game info
         project_root: Project root path for looking up rules.json sizes
         world_source: Source of worlds being tested (bundled or apworlds)
-        version1: First version being compared ('original', 'modified', or 'hybrid')
-        version2: Second version being compared ('original', 'modified', or 'hybrid')
+        version1: First version being compared ('original', 'worldgen', or 'hybrid')
+        version2: Second version being compared ('original', 'worldgen', or 'hybrid')
         metadata1: Metadata from the first test results
         metadata2: Metadata from the second test results
     """
@@ -546,13 +546,13 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
             'display': 'Original',
             'description': 'Original Universal Tracker (FarisTheAncient)'
         },
-        'modified': {
-            'display': 'Modified',
-            'description': 'Modified Universal Tracker (worldgen-based tracking)'
+        'worldgen': {
+            'display': 'Worldgen',
+            'description': 'Worldgen Universal Tracker (regenerates world from rules.json)'
         },
         'hybrid': {
             'display': 'Hybrid',
-            'description': 'Hybrid Universal Tracker (modified with native UT preference)'
+            'description': 'Hybrid Universal Tracker (worldgen with native UT preference)'
         },
         'pickle': {
             'display': 'Pickle',
@@ -821,8 +821,8 @@ def get_output_filename(results_path: str) -> str:
     Generate output markdown filename based on results file.
 
     Examples:
-    - test-results-apworlds-modified-fixed-seed.json -> test-results-ut-fuzz-apworlds-modified.md
-    - test-results-modified-fixed-seed.json -> test-results-ut-fuzz-modified.md
+    - test-results-apworlds-worldgen-fixed-seed.json -> test-results-ut-fuzz-apworlds-worldgen.md
+    - test-results-worldgen-fixed-seed.json -> test-results-ut-fuzz-worldgen.md
     - test-results-original-fixed-seed.json -> test-results-ut-fuzz-original.md
     - test-results-fixed-seed.json -> test-results-ut-fuzz.md (old format)
     """
@@ -830,12 +830,12 @@ def get_output_filename(results_path: str) -> str:
     parts = basename.replace('.json', '').split('-')
 
     # Format with world_source: test-results-{world_source}-{ut_version}-{seed_type}-seed
-    if len(parts) == 6:  # ['test', 'results', 'apworlds', 'modified', 'fixed', 'seed']
+    if len(parts) == 6:  # ['test', 'results', 'apworlds', 'worldgen', 'fixed', 'seed']
         world_source = parts[2]
         ut_version = parts[3]
         return f'test-results-ut-fuzz-{world_source}-{ut_version}.md'
     # Bundled format: test-results-{ut_version}-{seed_type}-seed
-    elif len(parts) == 5:  # ['test', 'results', 'modified', 'fixed', 'seed']
+    elif len(parts) == 5:  # ['test', 'results', 'worldgen', 'fixed', 'seed']
         ut_version = parts[2]
         return f'test-results-ut-fuzz-{ut_version}.md'
     else:
@@ -886,8 +886,8 @@ def main():
         return 1
 
     # Track chart data and metadata for comparisons
-    # Keys: 'bundled-original', 'bundled-modified', 'bundled-hybrid',
-    #       'apworlds-original', 'apworlds-modified', 'apworlds-hybrid'
+    # Keys: 'bundled-original', 'bundled-worldgen', 'bundled-hybrid',
+    #       'apworlds-original', 'apworlds-worldgen', 'apworlds-hybrid'
     chart_data_by_type = {}
     metadata_by_type = {}
 
@@ -917,7 +917,7 @@ def main():
             ut_version = parts[2]
         else:
             world_source = metadata.get('world_source', 'bundled')
-            ut_version = metadata.get('ut_version', 'modified')
+            ut_version = metadata.get('ut_version', 'worldgen')
 
         # Store chart data and metadata for comparison generation
         key = f"{world_source}-{ut_version}"
@@ -944,12 +944,12 @@ def main():
     # Generate comparison files if we have both versions for a world source
     for world_source in ['bundled', 'apworlds']:
         original_key = f"{world_source}-original"
-        modified_key = f"{world_source}-modified"
+        worldgen_key = f"{world_source}-worldgen"
         hybrid_key = f"{world_source}-hybrid"
         pickle_key = f"{world_source}-pickle"
 
-        # Generate comparisons: original vs modified, original vs hybrid, original vs pickle
-        for version2 in ['modified', 'hybrid', 'pickle']:
+        # Generate comparisons: original vs worldgen, original vs hybrid, original vs pickle
+        for version2 in ['worldgen', 'hybrid', 'pickle']:
             version2_key = f"{world_source}-{version2}"
 
             if original_key in chart_data_by_type and version2_key in chart_data_by_type:
@@ -977,25 +977,25 @@ def main():
 
                 print(f"Comparison saved to: {comparison_path}")
 
-        # Generate comparison: modified vs hybrid
-        if modified_key in chart_data_by_type and hybrid_key in chart_data_by_type:
+        # Generate comparison: worldgen vs hybrid
+        if worldgen_key in chart_data_by_type and hybrid_key in chart_data_by_type:
             comparison_md = generate_comparison_markdown(
-                chart_data_by_type[modified_key],
+                chart_data_by_type[worldgen_key],
                 chart_data_by_type[hybrid_key],
                 world_mapping,
                 project_root,
                 world_source,
-                version1='modified',
+                version1='worldgen',
                 version2='hybrid',
-                metadata1=metadata_by_type.get(modified_key),
+                metadata1=metadata_by_type.get(worldgen_key),
                 metadata2=metadata_by_type.get(hybrid_key)
             )
 
             # Determine output filename
             if world_source == 'bundled':
-                comparison_filename = 'test-results-ut-fuzz-comparison-modified-hybrid.md'
+                comparison_filename = 'test-results-ut-fuzz-comparison-worldgen-hybrid.md'
             else:
-                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-modified-hybrid.md'
+                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-worldgen-hybrid.md'
 
             comparison_path = os.path.join(output_dir, comparison_filename)
             with open(comparison_path, 'w') as f:
@@ -1003,25 +1003,25 @@ def main():
 
             print(f"Comparison saved to: {comparison_path}")
 
-        # Generate comparison: modified vs pickle
-        if modified_key in chart_data_by_type and pickle_key in chart_data_by_type:
+        # Generate comparison: worldgen vs pickle
+        if worldgen_key in chart_data_by_type and pickle_key in chart_data_by_type:
             comparison_md = generate_comparison_markdown(
-                chart_data_by_type[modified_key],
+                chart_data_by_type[worldgen_key],
                 chart_data_by_type[pickle_key],
                 world_mapping,
                 project_root,
                 world_source,
-                version1='modified',
+                version1='worldgen',
                 version2='pickle',
-                metadata1=metadata_by_type.get(modified_key),
+                metadata1=metadata_by_type.get(worldgen_key),
                 metadata2=metadata_by_type.get(pickle_key)
             )
 
             # Determine output filename
             if world_source == 'bundled':
-                comparison_filename = 'test-results-ut-fuzz-comparison-modified-pickle.md'
+                comparison_filename = 'test-results-ut-fuzz-comparison-worldgen-pickle.md'
             else:
-                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-modified-pickle.md'
+                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-worldgen-pickle.md'
 
             comparison_path = os.path.join(output_dir, comparison_filename)
             with open(comparison_path, 'w') as f:

@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-04 11:50:39
+**Generated:** 2026-02-04 14:05:33
 
 **Source Data Created:** 2026-02-04T05:43:50.051248
 
@@ -16,7 +16,7 @@ This summary combines results from fuzz tests that validate game configurations 
 
 - **Javascript:** Frontend spoiler playthrough fuzz tests - [View Details](./test-results-spoiler-fuzz.md)
 - **UT Fuzz Original:** Universal Tracker (original) fuzz tests - [View Details](./test-results-ut-fuzz-original.md)
-- **UT Fuzz Modified:** Universal Tracker (modified/worldgen) fuzz tests - [View Details](./test-results-ut-fuzz-modified.md)
+- **UT Fuzz Worldgen:** Universal Tracker (worldgen-based) fuzz tests - [View Details](./test-results-ut-fuzz-worldgen.md)
 - **UT Fuzz Pickle:** Universal Tracker (pickle) fuzz tests - [View Details](./test-results-ut-fuzz-pickle.md)
 - **UT Fuzz Hybrid:** Universal Tracker (hybrid) fuzz tests - [View Details](./test-results-ut-fuzz-hybrid.md)
 
@@ -26,7 +26,7 @@ This summary combines results from fuzz tests that validate game configurations 
 
 - **Javascript:** 61/73 passed (83.6%)
 - **UT Fuzz Original:** 38/85 passed (44.7%)
-- **UT Fuzz Modified:** 61/85 passed (71.8%)
+- **UT Fuzz Worldgen:** 61/85 passed (71.8%)
 - **UT Fuzz Pickle:** 75/85 passed (88.2%)
 - **UT Fuzz Hybrid:** 79/85 passed (92.9%)
 
@@ -41,7 +41,7 @@ This summary combines results from fuzz tests that validate game configurations 
 
 ### Combined Results (Excluding UT Original)
 
-This view excludes UT Original, showing results for Javascript, UT Modified, UT Pickle, and UT Hybrid.
+This view excludes UT Original, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.
 
 - **Games passing all 4 fuzz tests:** 56/85 (65.9%)
 - **Games passing 3 fuzz tests:** 7/85 (8.2%)
@@ -51,7 +51,7 @@ This view excludes UT Original, showing results for Javascript, UT Modified, UT 
 
 ## Test Results
 
-| Game Name | [Javascript](./test-results-spoiler-fuzz.md) | [UT Original](./test-results-ut-fuzz-original.md) | [UT Modified](./test-results-ut-fuzz-modified.md) | [UT Pickle](./test-results-ut-fuzz-pickle.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | Rules Size |
+| Game Name | [Javascript](./test-results-spoiler-fuzz.md) | [UT Original](./test-results-ut-fuzz-original.md) | [UT Worldgen](./test-results-ut-fuzz-worldgen.md) | [UT Pickle](./test-results-ut-fuzz-pickle.md) | [UT Hybrid](./test-results-ut-fuzz-hybrid.md) | Rules Size |
 |-----------|:----------:|:------------:|:------------:|:----------:|:----------:|:----------:|
 | A Hat in Time | ✅ | ❌ 17% | ✅ | ✅ | ✅ | 231.1KB |
 | A Link to the Past | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 667.7KB |
@@ -155,6 +155,6 @@ Fuzz tests validate game configurations by generating random YAML option combina
 - **Javascript:** Tests frontend spoiler playthrough with randomized configurations
 - **UT Fuzz:** Tests Universal Tracker's accessibility calculations against Python's sphere log
   - **Original:** Uses native game integration
-  - **Modified:** Uses worldgen-based tracking (regenerates from JSON rules)
+  - **Worldgen:** Uses worldgen-based tracking (regenerates from JSON rules)
   - **Pickle:** Uses pickle-based tracking (loads serialized multiworld)
   - **Hybrid:** Prefers native integration, falls back to worldgen

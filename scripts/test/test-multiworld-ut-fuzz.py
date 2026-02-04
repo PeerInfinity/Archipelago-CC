@@ -24,7 +24,7 @@ Usage:
     python scripts/test/test-multiworld-ut-fuzz.py --runs 5 --include-list "Adventure.yaml" "TUNIC.yaml"
 
     # Use custom results file
-    python scripts/test/test-multiworld-ut-fuzz.py --runs 5 --ut-results scripts/output/ut-fuzz/test-results-modified-fixed-seed.json
+    python scripts/test/test-multiworld-ut-fuzz.py --runs 5 --ut-results scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
 """
 
 import argparse
@@ -808,7 +808,7 @@ def main():
     parser.add_argument(
         '--ut-results',
         type=str,
-        default='scripts/output/ut-fuzz/test-results-modified-fixed-seed.json',
+        default='scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json',
         help='Path to UT fuzz results file for filtering passing games'
     )
     parser.add_argument(

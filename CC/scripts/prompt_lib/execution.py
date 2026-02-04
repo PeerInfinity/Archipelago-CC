@@ -98,9 +98,9 @@ def run_all_promptfiles(project_root, script_path=None):
         (['--worldgen-spoiler-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-spoiler-failures.txt'),
         (['--worldgen-crossval-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-crossval-failures.txt'),
         (['--worldgen-rules-comp-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-rules-comp-failures.txt'),
-        (['--ut-fuzz-failures', '--ut-version', 'modified'], 'ut-fuzz-failures.txt'),
-        (['--ut-fuzz-apworld-failures', '--ut-version', 'modified'], 'ut-fuzz-apworld-failures.txt'),
-        (['--ut-fuzz-single-failure', '--ut-version', 'modified'], 'ut-fuzz-single-failure.txt'),
+        (['--ut-fuzz-failures', '--ut-version', 'worldgen'], 'ut-fuzz-failures.txt'),
+        (['--ut-fuzz-apworld-failures', '--ut-version', 'worldgen'], 'ut-fuzz-apworld-failures.txt'),
+        (['--ut-fuzz-single-failure', '--ut-version', 'worldgen'], 'ut-fuzz-single-failure.txt'),
         (['--spoiler-fuzz-failures', '--spoiler-seed-mode', 'fixed'], 'spoiler-fuzz-failures.txt'),
     ]
 
