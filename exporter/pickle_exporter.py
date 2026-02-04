@@ -110,13 +110,25 @@ def _export_pickle(multiworld: "MultiWorld", path: str) -> None:
         multiworld: MultiWorld instance to export
         path: Path to write the pickle file
     """
+    import sys
+
     # Prepare multiworld for pickling by replacing unpicklable objects
     _prepare_multiworld_for_pickle(multiworld)
 
-    # Use dill to handle lambdas and closures in access rules
-    # Use gzip for compression (multiworlds can be large)
-    with gzip.open(path, 'wb', compresslevel=6) as f:
-        dill.dump(multiworld, f, protocol=dill.HIGHEST_PROTOCOL)
+    # Increase recursion limit for complex worlds (e.g., ALttP has deep nested structures)
+    # Save original limit and restore after pickling
+    original_limit = sys.getrecursionlimit()
+    try:
+        # Set a higher limit for pickling - 10000 should handle most complex worlds
+        sys.setrecursionlimit(max(original_limit, 10000))
+
+        # Use dill to handle lambdas and closures in access rules
+        # Use gzip for compression (multiworlds can be large)
+        with gzip.open(path, 'wb', compresslevel=6) as f:
+            dill.dump(multiworld, f, protocol=dill.HIGHEST_PROTOCOL)
+    finally:
+        # Always restore the original recursion limit
+        sys.setrecursionlimit(original_limit)
 
 
 def _prepare_multiworld_for_pickle(multiworld: "MultiWorld") -> None:
