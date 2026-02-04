@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 05:43:50
+**Generated:** 2026-02-04 17:47:13
 
 **Source Data Created:** 2026-02-04T05:43:50.051248
 
@@ -55,26 +55,26 @@
 
 Of the 61 games with 100% pass rate:
 
-- **Passing with Generic Exporter:** 39/61 (63.9%)
+- **Passing with Generic Exporter:** 40/61 (65.6%)
 - **Passing with Generic Logic:** 61/61 (100.0%)
-- **Passing with Both Generic:** 39/61 (63.9%)
+- **Passing with Both Generic:** 40/61 (65.6%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 593.7KB
+- **Total Exporter Code:** 576.8KB
 - **Total Game Logic Code:** 655.3KB
-- **Combined Total:** 1249.0KB
+- **Combined Total:** 1232.0KB
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | 18.0KB | ✅ | 231.3KB |
-| A Link to the Past | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | 12.6KB | ✅ | 665.3KB |
+| A Hat in Time | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | 18.2KB | ✅ | 231.1KB |
+| A Link to the Past | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | 12.6KB | ✅ | 667.7KB |
 | A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 11.0KB |
 | Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 26.0KB |
-| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.4KB |
+| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 1.8KB | ✅ | 275.1KB |
 | Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 18.2KB |
 | Blasphemous | ❌ | 100 | 0 | 56 | 0 | 44 | ❌ 0.0% | ✅ | ✅ | N/A |
 | Bomb Rush Cyberfunk | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 1.4KB | 40.3KB | 329.0KB |
@@ -92,17 +92,17 @@ Of the 61 games with 100% pass rate:
 | DOOM II | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 122.5KB |
-| Factorio | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.8KB | ✅ | 497.8KB |
+| Factorio | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.8KB | ✅ | 295.0KB |
 | Faxanadu | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ | 100 | 80 | 0 | 3 | 17 | ⚠️ 80.0% | 13.4KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ❌ | 100 | 80 | 0 | 3 | 17 | ⚠️ 80.0% | 13.4KB | ✅ | 549.5KB |
 | Heretic | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.2KB |
+| Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 101.9KB |
 | Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 8.0KB | ✅ | 84.2KB |
 | Jak and Daxter: The Precursor Legacy | ❌ | 100 | 1 | 99 | 0 | 0 | ❌ 1.0% | 21.6KB | 4.6KB | 298.6KB |
-| Kingdom Hearts | ❌ | 100 | 15 | 85 | 0 | 0 | ❌ 15.0% | ✅ | ✅ | 757.5KB |
-| Kingdom Hearts 2 | ❌ | 100 | 0 | 97 | 0 | 3 | ❌ 0.0% | 19.5KB | ✅ | 1675.2KB |
+| Kingdom Hearts | ❌ | 100 | 15 | 85 | 0 | 0 | ❌ 15.0% | ✅ | ✅ | 753.6KB |
+| Kingdom Hearts 2 | ❌ | 100 | 0 | 97 | 0 | 3 | ❌ 0.0% | 19.5KB | ✅ | 1641.1KB |
 | Kirby's Dream Land 3 | ❌ | 100 | 87 | 10 | 0 | 3 | ⚠️ 87.0% | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 3.6KB | ✅ | 210.5KB |
 | Lingo | ❌ | 100 | 2 | 43 | 0 | 55 | ❌ 2.0% | 38.0KB | 10.7KB | 946.3KB |
@@ -110,42 +110,42 @@ Of the 61 games with 100% pass rate:
 | Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 398.5KB |
 | Math Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 12.6KB |
-| Mega Man 2 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 52.9KB |
+| Mega Man 2 | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | ✅ | ✅ | 51.5KB |
 | MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 57.2KB |
 | Metamath | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 48.1KB |
 | Muse Dash | ✅ | 100 | 97 | 0 | 0 | 3 | 97.0% | ✅ | ✅ | 233.5KB |
 | Noita | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | ❌ | 100 | 0 | 99 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | N/A |
-| Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% | 1.0KB | ✅ | 308.9KB |
+| Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% | 1.0KB | ✅ | 307.1KB |
 | Overcooked! 2 | ✅ | 100 | 67 | 0 | 0 | 33 | ⚠️ 67.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 2.7KB | ✅ | 123.7KB |
 | Pokemon Emerald | ❌ | 100 | 29 | 49 | 0 | 22 | ❌ 29.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ | 100 | 0 | 93 | 0 | 7 | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
-| Raft | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 6.5KB | ✅ | 485.4KB |
+| Raft | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 61.4KB | 51.3KB | 1044.7KB |
 | Saving Princess | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 266.2KB |
-| Starcraft 2 | ❌ | 100 | 0 | 97 | 1 | 2 | ❌ 0.0% | 28.7KB | 90.1KB | 1126.6KB |
+| Starcraft 2 | ❌ | 100 | 0 | 97 | 1 | 2 | ❌ 0.0% | 28.7KB | 90.1KB | 1126.8KB |
 | Stardew Valley | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
-| Super Mario 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 21.4KB | ✅ | 92.9KB |
-| Super Mario Land 2 | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 92.5KB | ✅ | 976.7KB |
+| Super Mario 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 93.2KB |
+| Super Mario Land 2 | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 96.3KB | ✅ | 982.7KB |
 | Super Mario World | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ | 100 | 0 | 57 | 0 | 43 | ❌ 0.0% | 60.9KB | 114.5KB | 625.4KB |
 | TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 102.8KB |
-| TUNIC | ❌ | 100 | 56 | 44 | 0 | 0 | ⚠️ 56.0% | 3.1KB | ✅ | 705.5KB |
+| TUNIC | ❌ | 100 | 56 | 44 | 0 | 0 | ⚠️ 56.0% | 3.1KB | ✅ | 653.3KB |
 | Terraria | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% | 16.8KB | ✅ | 283.0KB |
-| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.6KB |
-| The Messenger | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 14.8KB | ✅ | 211.8KB |
+| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 555.3KB |
+| The Messenger | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 15.2KB | ✅ | 211.8KB |
 | The Wind Waker | ✅ | 100 | 54 | 0 | 0 | 46 | ⚠️ 54.0% | 7.0KB | ✅ | 253.9KB |
-| The Witness | ❌ | 100 | 11 | 89 | 0 | 0 | ❌ 11.0% | 14.1KB | ✅ | 401.1KB |
-| Timespinner | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | 2.2KB | ✅ | 260.8KB |
+| The Witness | ❌ | 100 | 11 | 89 | 0 | 0 | ❌ 11.0% | 14.1KB | ✅ | 398.4KB |
+| Timespinner | ✅ | 100 | 99 | 0 | 0 | 1 | 99.0% | 2.2KB | ✅ | 267.3KB |
 | Undertale | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 3.8KB | ✅ | 22.8KB |
 | Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 44.7KB |
@@ -153,7 +153,7 @@ Of the 61 games with 100% pass rate:
 | Yoshi's Island | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 9.2KB | ✅ | 296.7KB |
 | Yu-Gi-Oh! 2006 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ | 100 | 0 | 74 | 18 | 8 | ❌ 0.0% | ✅ | ✅ | N/A |
-| shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 155.5KB |
+| shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 155.3KB |
 
 ## Explain Support Details
 
