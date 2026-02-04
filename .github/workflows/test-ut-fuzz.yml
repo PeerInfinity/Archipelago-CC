@@ -21,6 +21,11 @@ on:
         type: number
         default: 60
 
+      process_timeout:
+        description: 'Total timeout per game in seconds (default: auto-calculated)'
+        required: false
+        type: number
+
       seed:
         description: 'Random seed for reproducibility (leave empty for random)'
         required: false
@@ -348,6 +353,7 @@ jobs:
             --runs ${{ inputs.runs_per_game }} \
             ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }} \
             --timeout ${{ inputs.timeout }} \
+            ${{ inputs.process_timeout && format('--process-timeout {0}', inputs.process_timeout) || '' }} \
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \

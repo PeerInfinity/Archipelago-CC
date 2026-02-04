@@ -27,6 +27,8 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -285,7 +287,8 @@ def run_fuzzer_test(
     disallow_options: Optional[str] = None,
     fractional_spheres: bool = False,
     stop_on_first_failure: bool = False,
-    number_by_seed: bool = False
+    number_by_seed: bool = False,
+    process_timeout: Optional[int] = None
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -301,6 +304,8 @@ def run_fuzzer_test(
         fractional_spheres: Enable fractional sphere logic for UT comparison
         stop_on_first_failure: Stop fuzzing after the first failure
         number_by_seed: Number output files by actual seed instead of iteration index
+        process_timeout: Total timeout for the entire fuzz.py subprocess in seconds.
+                        If None, calculated as (runs * timeout) + 300.
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -322,8 +327,17 @@ def run_fuzzer_test(
         "ignored": 0,
         "error": None,
         "errors": {},
-        "explain_stats": None
+        "explain_stats": None,
+        "elapsed_seconds": 0.0
     }
+
+    # Track elapsed time
+    start_time = time.perf_counter()
+
+    # Calculate process timeout if not specified
+    # Default: per-generation timeout * runs + 5 min buffer for UT verification
+    if process_timeout is None:
+        process_timeout = (runs * timeout) + 300
 
     # Clean up any previous fuzz output
     if FUZZ_OUTPUT_DIR.exists():
@@ -359,6 +373,7 @@ def run_fuzzer_test(
         cmd.append("--number-by-seed")
 
     print(f"  Running: {' '.join(cmd[:10])}...")
+    print(f"  Process timeout: {process_timeout}s")
 
     try:
         # Stream output in real-time for progress visibility
@@ -371,24 +386,44 @@ def run_fuzzer_test(
             cwd=str(PROJECT_ROOT)
         )
 
-        # Read and print stdout in real-time
-        stdout_lines = []
-        while True:
-            line = proc.stdout.readline()
-            if line:
-                print(f"    {line.rstrip()}")
-                stdout_lines.append(line)
-                sys.stdout.flush()
-            elif proc.poll() is not None:
-                # Process finished, read any remaining output
-                for remaining_line in proc.stdout:
-                    print(f"    {remaining_line.rstrip()}")
-                    stdout_lines.append(remaining_line)
-                break
+        # Set up a timer to kill the process if it exceeds the timeout
+        process_timed_out = [False]  # Use list to allow modification in nested function
 
-        # Get stderr after process completes
-        stderr_output = proc.stderr.read()
-        returncode = proc.returncode
+        def kill_on_timeout():
+            process_timed_out[0] = True
+            print(f"    Process timeout ({process_timeout}s) exceeded, killing...")
+            proc.kill()
+
+        timer = threading.Timer(process_timeout, kill_on_timeout)
+        timer.start()
+
+        try:
+            # Read and print stdout in real-time
+            stdout_lines = []
+            while True:
+                line = proc.stdout.readline()
+                if line:
+                    print(f"    {line.rstrip()}")
+                    stdout_lines.append(line)
+                    sys.stdout.flush()
+                elif proc.poll() is not None:
+                    # Process finished, read any remaining output
+                    for remaining_line in proc.stdout:
+                        print(f"    {remaining_line.rstrip()}")
+                        stdout_lines.append(remaining_line)
+                    break
+
+            # Get stderr after process completes
+            stderr_output = proc.stderr.read()
+            returncode = proc.returncode
+        finally:
+            timer.cancel()
+
+        # Check if we timed out
+        if process_timed_out[0]:
+            result["error"] = f"Process timed out after {process_timeout} seconds"
+            result["elapsed_seconds"] = time.perf_counter() - start_time
+            return result
 
         # Check for report.json
         report_file = FUZZ_OUTPUT_DIR / "report.json"
@@ -436,6 +471,8 @@ def run_fuzzer_test(
     except Exception as e:
         result["error"] = str(e)
 
+    # Record elapsed time
+    result["elapsed_seconds"] = time.perf_counter() - start_time
     return result
 
 
@@ -486,6 +523,13 @@ def main():
         type=int,
         default=60,
         help='Timeout per generation in seconds (default: 60)'
+    )
+    parser.add_argument(
+        '--process-timeout',
+        type=int,
+        default=None,
+        help='Total timeout for the entire fuzz subprocess in seconds. '
+             'If not specified, calculated as (runs * timeout) + 300'
     )
     parser.add_argument(
         '--seed',
@@ -810,7 +854,8 @@ def main():
             disallow_options=effective_disallow_options,
             fractional_spheres=args.fractional_spheres,
             stop_on_first_failure=args.stop_on_first_failure,
-            number_by_seed=args.number_by_seed
+            number_by_seed=args.number_by_seed,
+            process_timeout=args.process_timeout
         )
 
         # Store result
@@ -822,7 +867,8 @@ def main():
                 "failure": test_result["failure"],
                 "timeout": test_result["timeout"],
                 "ignored": test_result["ignored"],
-                "errors": test_result["errors"]
+                "errors": test_result["errors"],
+                "elapsed_seconds": round(test_result["elapsed_seconds"], 2)
             },
             "world_info": {
                 "game_name": game_name,
@@ -858,8 +904,10 @@ def main():
             status = "FAIL"
 
         # Print summary
+        elapsed = test_result['elapsed_seconds']
         print(f"  {status}: {test_result['success']}/{test_result['total']} success, "
-              f"{test_result['failure']} failures, {test_result['timeout']} timeouts")
+              f"{test_result['failure']} failures, {test_result['timeout']} timeouts "
+              f"({elapsed:.1f}s)")
 
         if test_result["error"]:
             error_msg = test_result["error"]

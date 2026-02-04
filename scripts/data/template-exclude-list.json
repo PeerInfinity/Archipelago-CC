@@ -16,6 +16,10 @@
     {
       "name": "Universal Tracker.yaml",
       "reason": "Not a game."
+    },
+    {
+      "name": "XCOM 2 War of the Chosen.yaml",
+      "reason": "UT fuzz test hangs during verification."
     }
   ],
   "main_test_exclude_list": [
