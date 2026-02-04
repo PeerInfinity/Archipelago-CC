@@ -2,11 +2,11 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)
+[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md) | [View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-comparison-modified-pickle.md)
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 17:47:13
+**Generated:** 2026-02-04 09:57:16
 
 **Source Data Created:** 2026-02-04T05:43:50.051248
 

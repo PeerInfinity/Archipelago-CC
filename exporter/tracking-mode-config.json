@@ -1,0 +1,552 @@
+{
+  "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
+  "generated": "2026-02-04T10:53:06.649510",
+  "fallback_order": [
+    "modified",
+    "pickle",
+    "original"
+  ],
+  "game_results": {
+    "bundled": {
+      "A Hat in Time": [
+        "modified",
+        "pickle"
+      ],
+      "A Link to the Past": [
+        "modified",
+        "pickle"
+      ],
+      "A Short Hike": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "APQuest": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Adventure": [
+        "modified",
+        "pickle"
+      ],
+      "Aquaria": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Baking Adventure": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Blasphemous": [
+        "pickle",
+        "original"
+      ],
+      "Bomb Rush Cyberfunk": [
+        "pickle",
+        "original"
+      ],
+      "Bumper Stickers": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Castlevania - Circle of the Moon": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Castlevania 64": [
+        "modified",
+        "pickle"
+      ],
+      "Celeste (Open World)": [
+        "pickle"
+      ],
+      "Celeste 64": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "ChecksFinder": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Choo-Choo Charles": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Civilization VI": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Coding Adventure": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "DLCQuest": [
+        "modified",
+        "pickle"
+      ],
+      "DOOM 1993": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "DOOM II": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Dark Souls III": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Donkey Kong Country 3": [
+        "modified",
+        "pickle"
+      ],
+      "Factorio": [
+        "modified",
+        "pickle"
+      ],
+      "Faxanadu": [
+        "modified",
+        "pickle"
+      ],
+      "Final Fantasy": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Heretic": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Hollow Knight": [
+        "pickle"
+      ],
+      "Hylics 2": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Inscryption": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Jak and Daxter: The Precursor Legacy": [
+        "pickle"
+      ],
+      "Kingdom Hearts": [
+        "pickle"
+      ],
+      "Kirby's Dream Land 3": [
+        "pickle"
+      ],
+      "Landstalker - The Treasures of King Nole": [
+        "modified",
+        "pickle"
+      ],
+      "Lingo": [
+        "pickle"
+      ],
+      "Links Awakening DX": [
+        "modified",
+        "pickle"
+      ],
+      "Lufia II Ancient Cave": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Mario & Luigi Superstar Saga": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Math Adventure": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Mega Man 2": [
+        "modified",
+        "pickle"
+      ],
+      "MegaMan Battle Network 3": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Meritous": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Metamath": [
+        "modified",
+        "pickle"
+      ],
+      "Muse Dash": [
+        "modified",
+        "pickle"
+      ],
+      "Noita": [
+        "modified",
+        "pickle"
+      ],
+      "Old School Runescape": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Overcooked! 2": [
+        "modified",
+        "pickle"
+      ],
+      "Paint": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Pokemon Emerald": [
+        "pickle"
+      ],
+      "Pokemon Red and Blue": [
+        "pickle"
+      ],
+      "Raft": [
+        "pickle",
+        "original"
+      ],
+      "Risk of Rain 2": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "SMZ3": [
+        "pickle"
+      ],
+      "Saving Princess": [
+        "modified",
+        "pickle"
+      ],
+      "Secret of Evermore": [
+        "original"
+      ],
+      "Shivers": [
+        "modified"
+      ],
+      "Sonic Adventure 2 Battle": [
+        "modified",
+        "pickle"
+      ],
+      "Subnautica": [
+        "modified",
+        "pickle"
+      ],
+      "Sudoku": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Super Mario 64": [
+        "modified",
+        "pickle"
+      ],
+      "Super Mario Land 2": [
+        "modified",
+        "pickle"
+      ],
+      "Super Mario World": [
+        "modified",
+        "pickle"
+      ],
+      "TOEM original": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "TOEM rule builder": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "TUNIC": [
+        "pickle",
+        "original"
+      ],
+      "Terraria": [
+        "modified",
+        "pickle"
+      ],
+      "The Legend of Zelda": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "The Messenger": [
+        "modified"
+      ],
+      "The Wind Waker": [
+        "modified",
+        "pickle"
+      ],
+      "The Witness": [
+        "pickle",
+        "original"
+      ],
+      "Timespinner": [
+        "modified",
+        "pickle"
+      ],
+      "Undertale": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "VVVVVV": [
+        "modified",
+        "pickle"
+      ],
+      "Wargroove": [
+        "modified",
+        "pickle",
+        "original"
+      ],
+      "Yacht Dice": [
+        "pickle"
+      ],
+      "Yoshi's Island": [
+        "modified",
+        "pickle"
+      ],
+      "Yu-Gi-Oh! 2006": [
+        "pickle"
+      ],
+      "shapez": [
+        "modified",
+        "pickle"
+      ]
+    },
+    "apworlds": {
+      "A Dance of Fire and Ice": [
+        "modified"
+      ],
+      "A Difficult Game About Climbing": [
+        "modified"
+      ],
+      "Actraiser": [
+        "modified"
+      ],
+      "Air Delivery": [
+        "original"
+      ],
+      "An Untitled Story": [
+        "modified",
+        "original"
+      ],
+      "Anodyne": [
+        "original"
+      ],
+      "Another Crabs Treasure": [
+        "modified"
+      ],
+      "Astalon": [
+        "original"
+      ],
+      "Autopelago": [
+        "modified",
+        "original"
+      ],
+      "Brotato": [
+        "modified"
+      ],
+      "Castlevania: Dawn of Sorrow": [
+        "modified",
+        "original"
+      ],
+      "Cuphead": [
+        "modified",
+        "original"
+      ],
+      "DORONKO WANKO": [
+        "modified",
+        "original"
+      ],
+      "Diddy Kong Racing": [
+        "modified"
+      ],
+      "Dome Keeper": [
+        "modified"
+      ],
+      "Final Fantasy Tactics Advance": [
+        "original"
+      ],
+      "Frogmonster": [
+        "original"
+      ],
+      "Golden Sun The Lost Age": [
+        "modified"
+      ],
+      "Hatsune Miku Project Diva Mega Mix+": [
+        "modified"
+      ],
+      "Here Comes Niko!": [
+        "modified"
+      ],
+      "Isles Of Sea And Sky": [
+        "modified",
+        "original"
+      ],
+      "Ittle Dew 2": [
+        "modified"
+      ],
+      "Jigsaw": [
+        "modified"
+      ],
+      "K-On! After School Live!!": [
+        "modified",
+        "original"
+      ],
+      "Kingdom Hearts Birth by Sleep": [
+        "modified",
+        "original"
+      ],
+      "Kingdom Hearts Chain of Memories": [
+        "modified",
+        "original"
+      ],
+      "Kingdom Hearts RE Chain of Memories": [
+        "modified"
+      ],
+      "Kirby Super Star": [
+        "modified",
+        "original"
+      ],
+      "League of Legends": [
+        "modified"
+      ],
+      "Lego Star Wars: The Complete Saga": [
+        "original"
+      ],
+      "Lil Gator Game": [
+        "modified",
+        "original"
+      ],
+      "Little Witch Nobeta": [
+        "modified",
+        "original"
+      ],
+      "Luigi's Mansion": [
+        "modified"
+      ],
+      "MetroCUBEvania": [
+        "modified",
+        "original"
+      ],
+      "Metroid Fusion": [
+        "modified"
+      ],
+      "Pseudoregalia": [
+        "original"
+      ],
+      "Rain World": [
+        "modified"
+      ],
+      "Ratchet & Clank 2": [
+        "modified",
+        "original"
+      ],
+      "Reventure": [
+        "original"
+      ],
+      "Rift Wizard": [
+        "modified",
+        "original"
+      ],
+      "Simon Tatham's Portable Puzzle Collection": [
+        "modified"
+      ],
+      "Sonic Heroes": [
+        "modified"
+      ],
+      "Sonic Rush": [
+        "original"
+      ],
+      "Sonic the Hedgehog 1": [
+        "modified",
+        "original"
+      ],
+      "Soul Blazer": [
+        "original"
+      ],
+      "Spinball": [
+        "modified",
+        "original"
+      ],
+      "Star Fox 64": [
+        "modified",
+        "original"
+      ],
+      "Star Wars Episode I Racer": [
+        "modified"
+      ],
+      "Super Cat Planet": [
+        "modified",
+        "original"
+      ],
+      "Symphony of the Night": [
+        "modified",
+        "original"
+      ],
+      "TOEM: A Photo Adventure": [
+        "modified",
+        "original"
+      ],
+      "Tevi": [
+        "modified"
+      ],
+      "The Sims 4": [
+        "modified"
+      ],
+      "TurnipBoy": [
+        "modified",
+        "original"
+      ],
+      "Vampire Survivors": [
+        "modified",
+        "original"
+      ],
+      "Watery Words": [
+        "modified"
+      ],
+      "Wordipelago": [
+        "modified",
+        "original"
+      ],
+      "XCOM 2 War of the Chosen": [
+        "original"
+      ],
+      "Yu-Gi-Oh! Dungeon Dice Monsters": [
+        "modified"
+      ],
+      "Zelda II: The Adventure of Link": [
+        "modified"
+      ],
+      "osu!": [
+        "modified"
+      ]
+    }
+  }
+}
