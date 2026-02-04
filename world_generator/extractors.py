@@ -13,14 +13,11 @@ from dataclasses import dataclass, field
 logger = logging.getLogger(__name__)
 
 from .constants import INTERNAL_SETTINGS
+from ._sanitization import sanitize_for_class_name
 
 
-def sanitize_identifier(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
+# Backwards-compatible alias
+sanitize_identifier = sanitize_for_class_name
 
 
 @dataclass
