@@ -40614,7 +40614,15 @@
             },
             {
               "type": "assign",
-              "name": "reachable_coins",
+              "name": "reachable_coins_from_start",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "assign",
+              "name": "reachable_coins_from_bell",
               "value": {
                 "type": "constant",
                 "value": 0
@@ -40638,7 +40646,7 @@
               "body": [
                 {
                   "type": "aug_assign",
-                  "target": "reachable_coins",
+                  "target": "reachable_coins_from_start",
                   "op": "+",
                   "value": {
                     "type": "constant",
@@ -40663,7 +40671,7 @@
                   "body": [
                     {
                       "type": "aug_assign",
-                      "target": "reachable_coins",
+                      "target": "reachable_coins_from_start",
                       "op": "+",
                       "value": {
                         "type": "constant",
@@ -40695,7 +40703,7 @@
                           "body": [
                             {
                               "type": "aug_assign",
-                              "target": "reachable_coins",
+                              "target": "reachable_coins_from_start",
                               "op": "+",
                               "value": {
                                 "type": "constant",
@@ -40706,7 +40714,7 @@
                           "orelse": [
                             {
                               "type": "aug_assign",
-                              "target": "reachable_coins",
+                              "target": "reachable_coins_from_start",
                               "op": "+",
                               "value": {
                                 "type": "constant",
@@ -40729,56 +40737,183 @@
               },
               "body": [
                 {
-                  "type": "assign",
-                  "name": "bell_coins",
-                  "value": {
-                    "type": "constant",
-                    "value": 10
-                  }
-                },
-                {
                   "type": "if_statement",
                   "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "name",
-                      "name": "auto_scroll"
-                    }
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Pipe Traversal - Down",
+                              "Pipe Traversal"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "name",
+                            "name": "auto_scroll"
+                          },
+                          {
+                            "type": "not",
+                            "condition": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": [
+                                    "Pipe Traversal - Left",
+                                    "Pipe Traversal"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   },
                   "body": [
                     {
                       "type": "aug_assign",
-                      "target": "bell_coins",
+                      "target": "reachable_coins_from_bell",
                       "op": "+",
                       "value": {
                         "type": "constant",
-                        "value": 46
+                        "value": 10
                       }
                     }
-                  ]
-                },
-                {
-                  "type": "if_statement",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "bell_coins"
-                    },
-                    "op": ">",
-                    "right": {
-                      "type": "name",
-                      "name": "reachable_coins"
-                    }
-                  },
-                  "body": [
+                  ],
+                  "orelse": [
                     {
-                      "type": "assign",
-                      "name": "reachable_coins",
-                      "value": {
-                        "type": "name",
-                        "name": "bell_coins"
-                      }
+                      "type": "if_statement",
+                      "test": {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Left",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "not",
+                            "condition": {
+                              "type": "name",
+                              "name": "auto_scroll"
+                            }
+                          }
+                        ]
+                      },
+                      "body": [
+                        {
+                          "type": "if_statement",
+                          "test": {
+                            "type": "state_method",
+                            "method": "has_any",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Pipe Traversal - Down",
+                                  "Pipe Traversal"
+                                ]
+                              }
+                            ]
+                          },
+                          "body": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins_from_bell",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 31
+                              }
+                            },
+                            {
+                              "type": "if_statement",
+                              "test": {
+                                "type": "state_method",
+                                "method": "has_any",
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": [
+                                      "Pipe Traversal - Right",
+                                      "Pipe Traversal"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "body": [
+                                {
+                                  "type": "aug_assign",
+                                  "target": "reachable_coins_from_bell",
+                                  "op": "+",
+                                  "value": {
+                                    "type": "constant",
+                                    "value": 18
+                                  }
+                                },
+                                {
+                                  "type": "if_statement",
+                                  "test": {
+                                    "type": "state_method",
+                                    "method": "has_any",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": [
+                                          "Pipe Traversal - Up",
+                                          "Pipe Traversal"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "body": [
+                                    {
+                                      "type": "aug_assign",
+                                      "target": "reachable_coins_from_bell",
+                                      "op": "+",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": 25
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "orelse": [
+                            {
+                              "type": "aug_assign",
+                              "target": "reachable_coins_from_bell",
+                              "op": "+",
+                              "value": {
+                                "type": "constant",
+                                "value": 18
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
@@ -40794,8 +40929,18 @@
                 },
                 "op": "<=",
                 "right": {
-                  "type": "name",
-                  "name": "reachable_coins"
+                  "type": "call",
+                  "func": "max",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "reachable_coins_from_start"
+                    },
+                    {
+                      "type": "name",
+                      "name": "reachable_coins_from_bell"
+                    }
+                  ]
                 }
               }
             }

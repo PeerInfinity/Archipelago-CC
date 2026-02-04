@@ -1,8 +1,9 @@
 """
-Extended TrackerCore with Worldgen and Testing Support
+Extended TrackerCore with Worldgen, Pickle, and Testing Support
 
 This module provides TrackerCore, an extended version of TrackerCoreBase that adds:
 - Worldgen world integration for rule explain support
+- Pickle-based multiworld loading for fast tracking
 - Direct AST rule explanation from JSON rules files
 - Testing mode with lenient error handling
 - Debug logging support
@@ -25,6 +26,7 @@ from BaseClasses import CollectionState, LocationProgressType, ItemClassificatio
 from . import CurrentTrackerState, UT_VERSION, DeferredEntranceMode
 from .TrackerCoreBase import TrackerCoreBase
 from .worldgen_mixin import WorldgenMixin
+from .pickle_mixin import PickleMixin
 from .tracker_extensions import TrackerTestingMixin
 from Utils import __version__
 
@@ -32,17 +34,23 @@ if TYPE_CHECKING:
     from BaseClasses import MultiWorld
 
 
-class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
+class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
     """
-    Extended TrackerCore with worldgen and testing support.
+    Extended TrackerCore with pickle, worldgen, and testing support.
 
     This class combines:
     - TrackerCoreBase: Original UT functionality (matches upstream)
+    - PickleMixin: Pickle-based multiworld loading (fastest)
     - WorldgenMixin: Worldgen world integration and AST explain
     - TrackerTestingMixin: Testing mode and debug logging
 
     The mixins add new methods and override behavior where needed,
     while keeping TrackerCoreBase close to upstream for easier merging.
+
+    Tracking mode priority (configurable):
+    1. Pickle mode - fastest, preserves exact lambdas
+    2. Worldgen mode - generates world from JSON rules
+    3. YAML mode - original UT behavior
     """
 
     def __init__(self, logger: logging.Logger, print_list: bool, print_count: bool) -> None:
@@ -51,12 +59,14 @@ class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
         super().__init__(logger, print_list, print_count)
 
         # Initialize mixins
+        self._init_pickle_mixin()
         self._init_worldgen_mixin()
         self._init_testing_mixin()
 
     def disconnect(self):
         """Disconnect and clear all state including extensions."""
         # Clear mixin state
+        self._disconnect_pickle_mixin()
         self._disconnect_worldgen_mixin()
 
         # Call base disconnect
@@ -64,17 +74,44 @@ class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
 
     def initalize_tracker_core(self, connected_cls, raw_slot_data):
         """
-        Initialize tracker core with worldgen support.
+        Initialize tracker core with pickle and worldgen support.
 
-        This overrides the base initalize_tracker_core to try worldgen-based
-        tracking first when rules.json is available, falling back to standard
-        YAML-based tracking if worldgen fails.
+        This overrides the base initalize_tracker_core to try different tracking
+        modes in order of preference:
+        1. Pickle mode - fastest, preserves exact lambdas
+        2. Worldgen mode - generates world from JSON rules
+        3. YAML mode - original UT behavior
+
+        Falls back to the next mode if the current one fails.
         """
         if getattr(connected_cls, "disable_ut", False):
             self.log_to_tab("World Author has requested UT be disabled on this world, please respect their decision")
             return
 
-        self._log_debug("initalize_tracker_core", {"rules_json_path": self.rules_json_path})
+        self._log_debug("initalize_tracker_core", {
+            "pickle_path": self.pickle_path,
+            "rules_json_path": self.rules_json_path
+        })
+
+        # Try pickle-based tracking first (fastest mode).
+        # If a pickle path is set (via auto-discovery or manual setting), use it.
+        if self.pickle_path:
+            self.logger.info(f"Attempting pickle-based tracking from {self.pickle_path}")
+            self._log_debug("attempting_pickle_tracking", {"pickle_path": self.pickle_path})
+            # Load the pickled multiworld
+            pickle_result = self.load_multiworld_from_pickle(self.pickle_path)
+            self._log_debug("load_pickle_result", {"success": pickle_result})
+            if pickle_result:
+                tracking_result = self.initialize_tracking_from_pickle()
+                self._log_debug("initialize_pickle_tracking_result", {"success": tracking_result})
+                if tracking_result:
+                    self.logger.info("Using pickle-based tracking")
+                    self._log_debug("using_pickle_tracking", {"success": True})
+                    return
+                else:
+                    self.logger.warning("Failed to initialize tracking from pickle, falling back")
+            else:
+                self.logger.warning("Failed to load pickle, falling back to worldgen tracking")
 
         # Try worldgen-based tracking if rules.json is available.
         # The presence of rules.json indicates the exporter ran and produced rules.

@@ -1142,7 +1142,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Veil top left area, bulb under the rock in the top right path", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")))
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
     )
 
     world.set_rule(

@@ -1502,15 +1502,15 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "canDig",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "thunder",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "ultra",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "canDig",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -4232,10 +4232,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "thunder",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "birdo_shop",
                   "_original_ast_type": "helper"
                 },
@@ -4245,6 +4241,10 @@
                 },
                 {
                   "rule": "star_shop",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "thunder",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -4257,11 +4257,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "fungitown",
+                  "rule": "birdo_shop",
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "birdo_shop",
+                  "rule": "fungitown",
                   "_original_ast_type": "helper"
                 },
                 {

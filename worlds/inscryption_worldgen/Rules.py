@@ -70,7 +70,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Epilogue", player),
-        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Pile Of Meat', 'Film Roll', 'Monocle', 'Gems Module', 'Inspectometer Battery', 'Quill'))
+        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Pile Of Meat', 'Gems Module', 'Inspectometer Battery', 'Quill', 'Film Roll', 'Monocle'))
     )
     # Location rules
     world.set_rule(

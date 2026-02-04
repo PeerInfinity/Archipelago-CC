@@ -9095,10 +9095,26 @@
             "name": "Dullahan",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "args": {
-                "items": [
-                  "Dragon Claw"
+                "rules": [
+                  {
+                    "rule": "HasAll",
+                    "args": {
+                      "items": [
+                        "Dragon Claw"
+                      ]
+                    }
+                  },
+                  {
+                    "rule": "HasAll",
+                    "args": {
+                      "items": [
+                        "River Coin",
+                        "Sand Coin"
+                      ]
+                    }
+                  }
                 ]
               }
             },

@@ -880,7 +880,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Stars", player),
-        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Tulip', '! Switch'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('! Switch', 'Tulip'))
     )
 
     world.set_rule(
@@ -1005,7 +1005,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Stars", player),
-        Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), Has('Tulip'))
+        Or(And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), Has('Tulip'))
     )
 
     world.set_rule(

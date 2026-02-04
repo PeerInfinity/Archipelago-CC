@@ -283,11 +283,6 @@
                 "capability": "build_mam",
                 "inferred": true,
                 "description": "Requires ability to build mam",
-                "helper_args": [
-                  {
-                    "rule": "False_"
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -411,11 +406,6 @@
                 "capability": "make_stitched_shape",
                 "inferred": true,
                 "description": "Requires ability to make stitched shape",
-                "helper_args": [
-                  {
-                    "rule": "False_"
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5307,33 +5297,28 @@
               "name": "has_tunnel"
             },
             {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Belt Reader"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Storage"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Item Filter"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Wires"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Logic Gates"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Virtual Processing"
-                }
-              ]
+              "type": "item_check",
+              "item": "Belt Reader"
+            },
+            {
+              "type": "item_check",
+              "item": "Storage"
+            },
+            {
+              "type": "item_check",
+              "item": "Item Filter"
+            },
+            {
+              "type": "item_check",
+              "item": "Wires"
+            },
+            {
+              "type": "item_check",
+              "item": "Logic Gates"
+            },
+            {
+              "type": "item_check",
+              "item": "Virtual Processing"
             }
           ]
         }
