@@ -336,12 +336,12 @@ jobs:
 
           # Map ut_mode to command line arguments
           UT_VERSION="${{ inputs.ut_mode }}"
-          PREFER_NATIVE=""
+          TRACKING_CONFIG=""
           if [ "$UT_VERSION" = "hybrid" ]; then
             UT_VERSION="modified"
-            PREFER_NATIVE="--prefer-native-ut"
+            TRACKING_CONFIG="--use-tracking-config"
           else
-            PREFER_NATIVE="--no-prefer-native-ut"
+            TRACKING_CONFIG="--no-use-tracking-config"
           fi
 
           python scripts/test/test-all-ut-fuzz.py \
@@ -352,7 +352,7 @@ jobs:
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --ut-version $UT_VERSION \
-            $PREFER_NATIVE \
+            $TRACKING_CONFIG \
             ${{ inputs.test_apworlds && '--custom-worlds-only --world-source apworlds' || '' }} \
             $DEBUG_INCLUDE
 

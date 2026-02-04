@@ -526,20 +526,20 @@ def main():
         help='World source for output filename: bundled (default) or apworlds'
     )
 
-    # Add mutually exclusive group for native UT preference
-    native_ut_group = parser.add_mutually_exclusive_group()
-    native_ut_group.add_argument(
-        '--prefer-native-ut',
-        dest='prefer_native_ut',
+    # Add mutually exclusive group for tracking config
+    tracking_config_group = parser.add_mutually_exclusive_group()
+    tracking_config_group.add_argument(
+        '--use-tracking-config',
+        dest='use_tracking_config',
         action='store_true',
         default=True,
-        help='Prefer native UT support for compatible worlds (default: enabled)'
+        help='Use tracking-mode-config.json for per-game mode selection (default: enabled)'
     )
-    native_ut_group.add_argument(
-        '--no-prefer-native-ut',
-        dest='prefer_native_ut',
+    tracking_config_group.add_argument(
+        '--no-use-tracking-config',
+        dest='use_tracking_config',
         action='store_false',
-        help='Disable native UT preference, use worldgen-based tracking for all worlds'
+        help='Disable config-based mode selection, use same mode for all worlds'
     )
 
     # Fuzzer options passed through to fuzz.py
@@ -581,16 +581,16 @@ def main():
     args = parser.parse_args()
 
     # Configure host settings for UT fuzz testing
-    # When prefer_native_ut is True (hybrid mode), use the new tracking-mode-config.json system
+    # When use_tracking_config is True (hybrid mode), use the tracking-mode-config.json system
     # which determines the best export format (rules.json vs pickle) per-game based on test results.
     # Otherwise, use the legacy flag-based system.
     print("Configuring host settings for UT fuzz testing...")
     print(f"  ut_version: {args.ut_version}")
-    print(f"  prefer_native_ut: {args.prefer_native_ut}")
+    print(f"  use_tracking_config: {args.use_tracking_config}")
 
     use_pickle_mode = args.ut_version == "pickle"
 
-    if args.prefer_native_ut and args.ut_version not in ("original", "pickle"):
+    if args.use_tracking_config and args.ut_version not in ("original", "pickle"):
         # Hybrid mode: use tracking-mode-config.json for per-game export decisions
         print(f"  use_tracking_mode_config: True")
         print(f"  (Config determines export format per-game based on test results)")
@@ -628,7 +628,7 @@ def main():
         ut_version = "original"
     elif args.ut_version == "pickle":
         ut_version = "pickle"
-    elif args.prefer_native_ut:
+    elif args.use_tracking_config:
         ut_version = "hybrid"
     else:
         ut_version = "modified"
@@ -744,7 +744,7 @@ def main():
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
             "ut_version": ut_version,
-            "prefer_native_ut": args.prefer_native_ut if args.ut_version != "original" else None,
+            "use_tracking_config": args.use_tracking_config if args.ut_version != "original" else None,
             "world_source": world_source,
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
