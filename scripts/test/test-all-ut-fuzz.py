@@ -508,9 +508,10 @@ def main():
     parser.add_argument(
         '--ut-version',
         type=str,
-        choices=['modified', 'original'],
+        choices=['modified', 'original', 'pickle'],
         default='modified',
-        help='Which version of Universal Tracker to test (default: modified)'
+        help='Which version of Universal Tracker to test: modified (worldgen-based), '
+             'original (YAML-based), or pickle (pickle-based, fastest) (default: modified)'
     )
     parser.add_argument(
         '--custom-worlds-only',
@@ -583,13 +584,18 @@ def main():
     # Set skip_export_for_native_ut and skip_export_from_list based on --prefer-native-ut flag
     # When prefer_native_ut is True, we use the skip-export-games.json list to determine
     # which games should skip rule export (games that pass Original UT but fail Modified UT)
+    # For pickle mode, enable pickle export instead of (or in addition to) JSON export
+    use_pickle_mode = args.ut_version == "pickle"
     print("Configuring host settings for UT fuzz testing...")
+    print(f"  ut_version: {args.ut_version}")
     print(f"  prefer_native_ut: {args.prefer_native_ut}")
     print(f"  skip_export_for_native_ut: {args.prefer_native_ut}")
     print(f"  skip_export_from_list: {args.prefer_native_ut}")
+    print(f"  save_tracker_pickle: {use_pickle_mode}")
     update_host_yaml({
         'skip_export_for_native_ut': args.prefer_native_ut,
-        'skip_export_from_list': args.prefer_native_ut
+        'skip_export_from_list': args.prefer_native_ut,
+        'save_tracker_pickle': use_pickle_mode,
     })
 
     # Clean up empty worldgen directories before loading worlds
@@ -603,8 +609,11 @@ def main():
     # - "original" = original UT from FarisTheAncient
     # - "modified" = modified UT using worldgen-based tracking for all worlds
     # - "hybrid" = modified UT with native support (prefers native UT for compatible worlds)
+    # - "pickle" = modified UT using pickle-based tracking (fastest, preserves exact lambdas)
     if args.ut_version == "original":
         ut_version = "original"
+    elif args.ut_version == "pickle":
+        ut_version = "pickle"
     elif args.prefer_native_ut:
         ut_version = "hybrid"
     else:

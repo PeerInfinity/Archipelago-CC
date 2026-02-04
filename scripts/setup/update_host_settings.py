@@ -10,6 +10,7 @@ import os
 BOOLEAN_SETTINGS = [
     'skip_required_files',
     'save_rules_json',
+    'save_tracker_pickle',
     'skip_preset_copy_if_rules_identical',
     'save_sphere_log',
     'verbose_sphere_log',
@@ -35,6 +36,7 @@ PRESETS = {
     'normal': {
         'skip_required_files': False,
         'save_rules_json': False,
+        'save_tracker_pickle': False,
         'rules_json_format': 'rule_builder',
         'skip_preset_copy_if_rules_identical': False,
         'save_sphere_log': False,
@@ -54,6 +56,7 @@ PRESETS = {
     'minimal-spoilers': {
         'skip_required_files': True,
         'save_rules_json': True,
+        'save_tracker_pickle': False,
         'rules_json_format': 'rule_builder',
         'skip_preset_copy_if_rules_identical': False,
         'save_sphere_log': True,
@@ -73,6 +76,7 @@ PRESETS = {
     'full-spoilers': {
         'skip_required_files': True,
         'save_rules_json': True,
+        'save_tracker_pickle': False,
         'rules_json_format': 'rule_builder',
         'skip_preset_copy_if_rules_identical': False,
         'save_sphere_log': True,
@@ -92,6 +96,7 @@ PRESETS = {
     'ut-fuzz': {
         'skip_required_files': True,
         'save_rules_json': True,
+        'save_tracker_pickle': False,
         'rules_json_format': 'rule_builder',
         'skip_preset_copy_if_rules_identical': False,
         'save_sphere_log': True,
@@ -106,6 +111,26 @@ PRESETS = {
         'clear_all_presets': False,
         'skip_export_for_native_ut': True,  # Skip rule export for games in the skip list
         'skip_export_from_list': True,  # Use skip-export-games.json instead of checking ut_can_gen_without_yaml
+        'resolve_options_to_constants': True,
+    },
+    'pickle-mode': {
+        'skip_required_files': True,
+        'save_rules_json': False,  # Disable JSON export
+        'save_tracker_pickle': True,  # Enable pickle export
+        'rules_json_format': 'rule_builder',
+        'skip_preset_copy_if_rules_identical': False,
+        'save_sphere_log': True,
+        'verbose_sphere_log': False,
+        'extend_sphere_log_to_all_locations': False,
+        'log_fractional_sphere_details': True,
+        'log_integer_sphere_details': False,
+        'auto_collect_events': False,
+        'filter_event_items': False,
+        'update_frontend_presets': True,
+        'clear_game_presets': False,
+        'clear_all_presets': False,
+        'skip_export_for_native_ut': False,
+        'skip_export_from_list': False,
         'resolve_options_to_constants': True,
     },
 }

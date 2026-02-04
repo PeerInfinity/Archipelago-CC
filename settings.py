@@ -528,6 +528,7 @@ class GeneralOptions(Group):
     skip_required_files: bool = False
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # Options: "rule_builder", "ast", "both"
+    save_tracker_pickle: bool = False  # Export multiworld as pickle for tracker (alternative to rules_json)
     skip_preset_copy_if_rules_identical: bool = False
     save_sphere_log: bool = False
     verbose_sphere_log: bool = False
