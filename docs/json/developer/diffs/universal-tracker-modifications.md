@@ -2,10 +2,11 @@
 
 This document describes the modifications made to the Universal Tracker compared to the original from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago) (tracker branch).
 
-- **Original version:** v0.2.24.1
-- **Modified version:** v0.2.23 (based on earlier version with extensive additions)
+- **Original version:** v0.2.26
+- **Modified version:** v0.2.23-modified (based on earlier version with extensive additions)
 - **Location in this repository:** `worlds/tracker/`
-- **Last compared:** 2026-02-02
+- **Original copy for comparison:** `scripts/test/fixtures/tracker_original/`
+- **Last compared:** 2026-02-03
 
 ## Summary of Changes
 
@@ -19,6 +20,14 @@ The modifications extend Universal Tracker with:
 7. **Fractional sphere logic** option for finer-grained sphere comparison
 
 These changes integrate UT with the JSON Export system, allowing it to explain rules for any world that has exported rules, not just worlds with native Rule Builder support.
+
+### Backported from v0.2.26
+
+The following bug fixes and features were backported from upstream v0.2.26:
+
+1. **`glitches_state` field** - Added to `CurrentTrackerState` for separate glitch logic tracking (prevents contaminating main state)
+2. **Nothing items fix** - Added `and location.item is not None` check to prevent crashes when events have no item
+3. **Glitches state copy** - Create a copy of state before applying glitch items (`glitches_state = state.copy()`)
 
 ---
 

@@ -892,23 +892,23 @@ class TrackerCore():
             except Exception:
                 self.log_to_tab("ERROR: location " + temp_loc.name + " broke something, report this to discord")
                 pass
-        events = [location.item.name for location in state.advancements if location.player == self.player_id]
+        events = [location.item.name for location in state.advancements if location.player == self.player_id and location.item is not None]
         event_locations = [location.name for location in state.advancements if location.player == self.player_id]
         unconnected_entrances = [entrance for region in state.reachable_regions[self.player_id] for entrance in region.exits if entrance.can_reach(state) and entrance.connected_region is None]
 
         self.locations_available = locations
         glitches_item_name = getattr(self.multiworld.worlds[self.player_id],"glitches_item_name","")
+        glitches_state = state.copy()
         if glitches_item_name:
             try:
                 world_item = self.multiworld.create_item(glitches_item_name, self.player_id)
-                state.collect(world_item, True)
+                glitches_state.collect(world_item, True)
             except Exception:
                 self.log_to_tab("Item id " + str(glitches_item_name) + " not able to be created", False)
             else:
-                if self.auto_collect_events:
-                    state.sweep_for_advancements(
-                        locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
-                for temp_loc in self.multiworld.get_reachable_locations(state, self.player_id):
+                glitches_state.sweep_for_advancements(
+                    locations=[location for location in self.multiworld.get_locations(self.player_id) if (not location.address)])
+                for temp_loc in self.multiworld.get_reachable_locations(glitches_state, self.player_id):
                     # Filter event locations (address is None) if filter_event_items is enabled
                     if self.filter_event_items and (temp_loc.address is None or isinstance(temp_loc.address, list)):
                         continue
@@ -957,7 +957,7 @@ class TrackerCore():
                         pass
         self.glitched_locations = glitches_locations
 
-        return CurrentTrackerState(all_items, prog_items, glitches_callback_list, events, event_locations, callback_list, regions, unconnected_entrances, readable_locations, hinted_locations, state)
+        return CurrentTrackerState(all_items, prog_items, glitches_callback_list, events, event_locations, callback_list, regions, unconnected_entrances, readable_locations, hinted_locations, state, glitches_state)
 
     def write_empty_yaml(self, game, player_name, tempdir):
         import json

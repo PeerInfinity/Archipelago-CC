@@ -1,4 +1,4 @@
-__version__ = "0.5.1-modified"
+__version__ = "0.5.1"
 
 import sys
 import os
@@ -333,16 +333,7 @@ def _handle_ensure_any(option_value, constraint):
 
 # Adapted from archipelago'd generate_yaml_templates
 # https://github.com/ArchipelagoMW/Archipelago/blob/f75a1ae1174fb467e5c5bd5568d7de3c806d5b1c/Options.py#L1504
-def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None, max_item_dict_value=None):
-    """Generate a random YAML for the given world.
-
-    Args:
-        world_name: The apworld name to generate for
-        meta: Dictionary of option overrides
-        default_options: Set of option names to leave at their defaults instead of randomizing
-        disallow_options: Dict mapping option names to sets of values to disallow
-        max_item_dict_value: Max value for OptionCounter items (e.g., start_inventory). Default 1000.
-    """
+def generate_random_yaml(world_name, meta):
     def dictify_range(option):
         data = {option.default: 50}
         for sub_option in ["random", "random-low", "random-high"]:
@@ -363,31 +354,7 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     def sanitize(value):
         if isinstance(value, frozenset):
             return list(value)
-        # Handle custom option default objects that aren't YAML-serializable
-        # (e.g., autopelago's RatChatMessagesHack which has an 'items' attribute)
-        if hasattr(value, 'items') and callable(getattr(value.__class__, 'items', None)) is False:
-            # Object has an 'items' attribute (not a dict's items method)
-            items = value.items
-            if isinstance(items, list):
-                # Convert list of tuples to YAML-safe format
-                # e.g., [("message", 1), ("other", 2)] -> ["message", {"other": 2}]
-                result = []
-                for item in items:
-                    if isinstance(item, tuple) and len(item) == 2:
-                        text, weight = item
-                        if weight == 1:
-                            result.append(text)
-                        else:
-                            result.append({text: weight})
-                    else:
-                        result.append(item)
-                return result
         return value
-
-    if default_options is None:
-        default_options = set()
-    if disallow_options is None:
-        disallow_options = {}
 
     game_name, world = world_from_apworld_name(world_name)
     if world is None:
@@ -402,11 +369,6 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     for group, options in option_groups.items():
         option_defs.update(options)
         for option_name, option_value in options.items():
-            # Check if this option should be left at default
-            if option_name in default_options:
-                game_options[option_name] = sanitize(option_value.default)
-                continue
-
             override = global_meta.get(option_name)
             if not override:
                 override = game_meta.get(option_name)
@@ -415,16 +377,13 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
                 game_options[option_name] = override
                 continue
 
-            # Get disallowed values for this option (if any)
-            disallowed = disallow_options.get(option_name, set())
             game_options[option_name] = sanitize(
-                get_random_value(option_name, option_value, disallowed, max_item_dict_value)
+                get_random_value(option_name, option_value)
             )
 
     if "triggers" in game_meta:
         game_options["triggers"] = game_meta["triggers"]
 
-    # Apply fuzz_constraints from meta file if present
     fuzz_constraints = game_meta.get("fuzz_constraints", [])
     if fuzz_constraints:
         apply_constraints(game_options, fuzz_constraints, option_defs)
@@ -446,20 +405,7 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     return res
 
 
-def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
-    """Get a random value for the given option.
-
-    Args:
-        name: The option name
-        option: The option class
-        disallowed: Set of values to exclude from randomization
-        max_item_dict_value: Max value for OptionCounter items. Default 1000.
-    """
-    if disallowed is None:
-        disallowed = set()
-    if max_item_dict_value is None:
-        max_item_dict_value = 1000
-
+def get_random_value(name, option):
     if name == "item_links":
         # Let's not fuck with item links right now, I'm scared
         return option.default
@@ -467,12 +413,6 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
     if name == "megamix_mod_data":
         # Megamix is a special child and requires this to be valid JSON. Since we can't provide that, just ignore it
         return option.default
-
-    if name == "entrance_shuffle_seed":
-        # ALttP's entrance_shuffle_seed expects a numeric string for consistent entrance shuffle
-        # Always use numeric to ensure the same seed is used in both original and worldgen worlds
-        # (using 'random' would cause the worldgen world to regenerate a different er_seed)
-        return str(random.randint(0, 2 ** 64))
 
     if issubclass(option, (PlandoConnections, PlandoTexts)):
         # See, I was already afraid with item_links but now it's plain terror. Let's not ever touch this ever.
@@ -494,7 +434,7 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
             k=random.randint(0, len(option.valid_keys))
         )
         min_val = option.min if option.min is not None else 0
-        max_val = option.max if option.max is not None else max_item_dict_value
+        max_val = option.max if option.max is not None else 1000
         return {key: random.randint(min_val, max_val) for key in selected_keys}
 
     if issubclass(option, OptionDict):
@@ -506,15 +446,6 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
         valid_choices = [key for key in option.options.keys() if key not in option.aliases]
         if not valid_choices:
             valid_choices = list(option.options.keys())
-
-        # Filter out disallowed values
-        if disallowed:
-            valid_choices = [c for c in valid_choices if c not in disallowed]
-
-        # Handle TextChoice and other Choice subclasses with no predefined options
-        # or when all choices have been disallowed
-        if not valid_choices:
-            return option.default
 
         return random.choice(valid_choices)
 
@@ -533,10 +464,6 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
         )
 
     if issubclass(option, OptionList):
-        # If valid_keys is empty (common for custom format options like RGB colors),
-        # use the default value to avoid generating invalid empty lists
-        if not option.valid_keys:
-            return option.default
         return random.sample(
             list(option.valid_keys), k=random.randint(0, len(option.valid_keys))
         )
@@ -595,11 +522,6 @@ def call_generate(yaml_path, args, output_path):
 
 def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
     global MP_HOOKS
-
-    # Seed random for reproducibility if seed is provided
-    # Use seed + iteration to ensure each worker gets a unique but deterministic seed
-    if args.seed is not None:
-        random.seed(args.seed + i)
 
     out_buf = StringIO()
 
@@ -678,8 +600,7 @@ def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
                 else:
                     extra = "".join(traceback.format_exception(raised))
 
-                run_id = get_run_id(i, args)
-                dump_generation_output(outcome, apworld_name, run_id, yaml_path, out_buf, extra)
+                dump_generation_output(outcome, apworld_name, i, yaml_path, out_buf, extra)
 
                 return outcome, raised
     except Exception as e:
@@ -717,24 +638,12 @@ class GenOutcome:
     OptionError = 3
 
 
-def get_run_id(i, args):
-    """Get the run identifier for output files and error reporting.
-
-    When --number-by-seed is set, returns the actual seed (base_seed + iteration).
-    Otherwise returns the iteration index (default behavior).
-    """
-    if getattr(args, 'number_by_seed', False) and args.seed is not None:
-        return args.seed + i
-    return i
-
-
 IS_TTY = sys.stdout.isatty()
 SUCCESS = 0
 FAILURE = 0
 TIMEOUTS = 0
 OPTION_ERRORS = 0
 SUBMITTED = 0
-STOP_REQUESTED = False
 REPORT = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [])))
 
 
@@ -745,29 +654,23 @@ def gen_callback(yamls_dir, apworld_name, i, args, outcome):
         else:
             exc = None
 
-        global SUCCESS, FAILURE, SUBMITTED, OPTION_ERRORS, TIMEOUTS, STOP_REQUESTED
+        global SUCCESS, FAILURE, SUBMITTED, OPTION_ERRORS, TIMEOUTS
         SUBMITTED -= 1
-
-        run_id = get_run_id(i, args)
 
         if outcome == GenOutcome.Success:
             SUCCESS += 1
             if IS_TTY:
                 print(".", end="")
         elif outcome == GenOutcome.Failure:
-            REPORT[apworld_name][type(exc)][str(exc)].append(run_id)
+            REPORT[apworld_name][type(exc)][str(exc)].append(i)
             FAILURE += 1
             if IS_TTY:
                 print("F", end="")
-            if getattr(args, 'stop_on_first_failure', False):
-                STOP_REQUESTED = True
         elif outcome == GenOutcome.Timeout:
-            REPORT[apworld_name][TimeoutError][""].append(run_id)
+            REPORT[apworld_name][TimeoutError][""].append(i)
             TIMEOUTS += 1
             if IS_TTY:
                 print("T", end="")
-            if getattr(args, 'stop_on_first_failure', False):
-                STOP_REQUESTED = True
         elif outcome == GenOutcome.OptionError:
             OPTION_ERRORS += 1
             if IS_TTY:
@@ -800,8 +703,7 @@ def error(yamls_dir, apworld_name, i, args, raised):
             msg.write(raised.out_buf)
         msg.write("\n".join(traceback.format_exception(raised)))
 
-        run_id = get_run_id(i, args)
-        dump_generation_output(GenOutcome.Failure, apworld_name, run_id, yamls_dir, msg)
+        dump_generation_output(GenOutcome.Failure, apworld_name, i, yamls_dir, msg)
         return gen_callback(yamls_dir, apworld_name, i, args, GenOutcome.Failure)
     except Exception as e:
         print("Error while handling fuzzing result:")
@@ -909,30 +811,6 @@ if __name__ == "__main__":
         else:
             meta = {}
 
-        # Parse default_options into a set
-        if args.default_options:
-            default_options = set(opt.strip() for opt in args.default_options.split(","))
-        else:
-            default_options = set()
-
-        # Parse disallow_options into a dict mapping option names to sets of disallowed values
-        # Format: option=value1,value2;option2=value
-        disallow_options = {}
-        if args.disallow_options:
-            for option_spec in args.disallow_options.split(";"):
-                option_spec = option_spec.strip()
-                if not option_spec:
-                    continue
-                if "=" not in option_spec:
-                    raise ValueError(f"Invalid disallow-options format: '{option_spec}'. Expected 'option=value1,value2'")
-                option_name, values_str = option_spec.split("=", 1)
-                option_name = option_name.strip()
-                values = set(v.strip() for v in values_str.split(",") if v.strip())
-                if option_name in disallow_options:
-                    disallow_options[option_name].update(values)
-                else:
-                    disallow_options[option_name] = values
-
         if apworld_name is not None:
             world = world_from_apworld_name(apworld_name)
             if world is None:
@@ -995,8 +873,7 @@ if __name__ == "__main__":
                     outcome = GenOutcome.Timeout
                     for hook in MAIN_HOOKS:
                         outcome, _ = hook.reclassify_outcome(outcome, TimeoutError())
-                    run_id = get_run_id(i, args)
-                    dump_generation_output(outcome, apworld_name, run_id, yamls_dir, out_buf, extra)
+                    dump_generation_output(outcome, apworld_name, i, yamls_dir, out_buf, extra)
                     gen_callback(yamls_dir, apworld_name, i, args, outcome)
                 except KeyboardInterrupt:
                     break
@@ -1004,8 +881,7 @@ if __name__ == "__main__":
                     break
                 except Exception as exc:
                     extra = "[...] Exception while timing out:\n {}".format("\n".join(traceback.format_exception(exc)))
-                    run_id = get_run_id(i, args)
-                    dump_generation_output(GenOutcome.Timeout, apworld_name, run_id, yamls_dir, out_buf, extra)
+                    dump_generation_output(GenOutcome.Timeout, apworld_name, i, yamls_dir, out_buf, extra)
                     gen_callback(yamls_dir, apworld_name, i, args, outcome)
                     continue
 
@@ -1013,12 +889,7 @@ if __name__ == "__main__":
         timeout_handler.daemon = True
         timeout_handler.start()
 
-        while i < args.runs and not STOP_REQUESTED:
-            # Seed random for this iteration if seed is provided
-            # This ensures YAML generation in main process is deterministic
-            if args.seed is not None:
-                random.seed(args.seed + i)
-
+        while i < args.runs:
             if apworld_name is None:
                 actual_apworld = random.choice(valid_worlds)
             else:
@@ -1033,7 +904,7 @@ if __name__ == "__main__":
                 )
 
             random_yamls = [
-                generate_random_yaml(actual_apworld, meta, default_options, disallow_options) for _ in range(yamls_this_run)
+                generate_random_yaml(actual_apworld, meta) for _ in range(yamls_this_run)
             ]
 
             if i % 100 == 0:
@@ -1041,14 +912,13 @@ if __name__ == "__main__":
 
             SUBMITTED += 1
 
-            run_id = get_run_id(i, args)
             yamls_dir = tempfile.mkdtemp(prefix="apfuzz", dir=tmp)
             for nb, yaml_content in enumerate(random_yamls):
-                yaml_path = os.path.join(yamls_dir, f"{run_id}-{nb}.yaml")
+                yaml_path = os.path.join(yamls_dir, f"{i}-{nb}.yaml")
                 open(yaml_path, "wb").write(yaml_content.encode("utf-8"))
 
             for nb, yaml_content in enumerate(static_yamls):
-                yaml_path = os.path.join(yamls_dir, f"static-{run_id}-{nb}.yaml")
+                yaml_path = os.path.join(yamls_dir, f"static-{i}-{nb}.yaml")
                 open(yaml_path, "wb").write(yaml_content.encode("utf-8"))
 
             last_job = p.apply_async(
@@ -1065,14 +935,9 @@ if __name__ == "__main__":
 
             i += 1
 
-        while SUBMITTED > 0 and not STOP_REQUESTED:
+        while SUBMITTED > 0:
             last_job.ready()
             time.sleep(0.05)
-
-        if STOP_REQUESTED:
-            print("\nStopping after first failure...")
-            # Give a moment for any pending callbacks to complete
-            time.sleep(0.5)
 
     parser = ArgumentParser(prog="apfuzz")
     parser.add_argument("-g", "--game", default=None)
@@ -1085,28 +950,8 @@ if __name__ == "__main__":
     parser.add_argument("--with-static-worlds", default=None)
     parser.add_argument("--hook", action="append", default=[])
     parser.add_argument("--skip-output", default=False, action="store_true")
-    parser.add_argument("--seed", default=None, type=int, help="Random seed for reproducible fuzzing")
-    parser.add_argument("--default-options", default=None, type=str,
-                        help="Comma-separated list of option names to leave at their defaults instead of randomizing. "
-                             "Example: --default-options mode,entrance_shuffle,glitches_required")
-    parser.add_argument("--disallow-options", default=None, type=str,
-                        help="Disallow specific values for options. Format: option=value1,value2;option2=value. "
-                             "Example: --disallow-options glitches_required=minor_glitches,overworld_glitches;mode=inverted")
-    parser.add_argument("--fractional-spheres", default=False, action="store_true",
-                        help="Enable fractional sphere logic for UT comparison. "
-                             "This iterates within each integer sphere to handle cascading item dependencies, "
-                             "where collecting items from one location enables access to other locations in the same sphere.")
-    parser.add_argument("--number-by-seed", default=False, action="store_true",
-                        help="Number output files and errors by actual seed (base_seed + iteration) instead of iteration index. "
-                             "Requires --seed to be set. Makes it easier to reproduce specific failures.")
-    parser.add_argument("--stop-on-first-failure", default=False, action="store_true",
-                        help="Stop fuzzing after the first failure or timeout. Useful for debugging.")
 
     args = parser.parse_args()
-
-    # Validate --number-by-seed requires --seed
-    if args.number_by_seed and args.seed is None:
-        parser.error("--number-by-seed requires --seed to be set")
 
     # This is just to make sure that the host.yaml file exists by the time we fork
     # so that a first run on a new installation doesn't throw out failures until
