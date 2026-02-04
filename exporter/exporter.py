@@ -1438,12 +1438,6 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         # Get world object (needed for various operations below)
         world = multiworld.worlds[player] if player in multiworld.worlds else None
 
-        # Prioritize the start region (Menu or origin_region_name) to ensure it's exported
-        # before hitting size limits. This is critical because the world generator
-        # needs the start region to be present for the worldgen world to function.
-        start_region_name = getattr(world, 'origin_region_name', 'Menu') if world else 'Menu'
-        player_regions.sort(key=lambda r: (0 if r.name == start_region_name else 1, r.name))
-
         # Use provided location name to ID mapping, or create if not provided
         if location_name_to_id is None:
             location_name_to_id = {}
