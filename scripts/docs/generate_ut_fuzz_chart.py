@@ -163,6 +163,9 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     elif ut_version == 'hybrid':
         ut_version_display = "Hybrid (modified with native UT preference)"
         title_suffix = " (Hybrid)"
+    elif ut_version == 'pickle':
+        ut_version_display = "Pickle (loads serialized multiworld)"
+        title_suffix = " (Pickle)"
     else:
         ut_version_display = "Modified (worldgen-based tracking)"
         title_suffix = ""
@@ -181,11 +184,15 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     if world_source == "apworlds":
         md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-apworlds-comparison-original-modified.md) | "
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-original-hybrid.md) | "
-        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md)\n\n"
+        md_content += "[View Comparison (Original vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-original-pickle.md) | "
+        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-apworlds-comparison-modified-hybrid.md) | "
+        md_content += "[View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-apworlds-comparison-modified-pickle.md)\n\n"
     else:
         md_content += "[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | "
         md_content += "[View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | "
-        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)\n\n"
+        md_content += "[View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | "
+        md_content += "[View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md) | "
+        md_content += "[View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-comparison-modified-pickle.md)\n\n"
 
     md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
 
@@ -546,6 +553,10 @@ def generate_comparison_markdown(data1: List[Dict[str, Any]],
         'hybrid': {
             'display': 'Hybrid',
             'description': 'Hybrid Universal Tracker (modified with native UT preference)'
+        },
+        'pickle': {
+            'display': 'Pickle',
+            'description': 'Pickle-based Universal Tracker (loads serialized multiworld)'
         }
     }
 
@@ -935,9 +946,10 @@ def main():
         original_key = f"{world_source}-original"
         modified_key = f"{world_source}-modified"
         hybrid_key = f"{world_source}-hybrid"
+        pickle_key = f"{world_source}-pickle"
 
-        # Generate comparisons: original vs modified, original vs hybrid
-        for version2 in ['modified', 'hybrid']:
+        # Generate comparisons: original vs modified, original vs hybrid, original vs pickle
+        for version2 in ['modified', 'hybrid', 'pickle']:
             version2_key = f"{world_source}-{version2}"
 
             if original_key in chart_data_by_type and version2_key in chart_data_by_type:
@@ -984,6 +996,32 @@ def main():
                 comparison_filename = 'test-results-ut-fuzz-comparison-modified-hybrid.md'
             else:
                 comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-modified-hybrid.md'
+
+            comparison_path = os.path.join(output_dir, comparison_filename)
+            with open(comparison_path, 'w') as f:
+                f.write(comparison_md)
+
+            print(f"Comparison saved to: {comparison_path}")
+
+        # Generate comparison: modified vs pickle
+        if modified_key in chart_data_by_type and pickle_key in chart_data_by_type:
+            comparison_md = generate_comparison_markdown(
+                chart_data_by_type[modified_key],
+                chart_data_by_type[pickle_key],
+                world_mapping,
+                project_root,
+                world_source,
+                version1='modified',
+                version2='pickle',
+                metadata1=metadata_by_type.get(modified_key),
+                metadata2=metadata_by_type.get(pickle_key)
+            )
+
+            # Determine output filename
+            if world_source == 'bundled':
+                comparison_filename = 'test-results-ut-fuzz-comparison-modified-pickle.md'
+            else:
+                comparison_filename = f'test-results-ut-fuzz-{world_source}-comparison-modified-pickle.md'
 
             comparison_path = os.path.join(output_dir, comparison_filename)
             with open(comparison_path, 'w') as f:

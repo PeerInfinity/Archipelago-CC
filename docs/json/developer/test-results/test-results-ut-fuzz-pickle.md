@@ -1,18 +1,18 @@
-# Universal Tracker Fuzz Test Results
+# Universal Tracker Fuzz Test Results (Pickle)
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md)
+[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md) | [View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-comparison-modified-pickle.md)
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 17:47:13
+**Generated:** 2026-02-04 09:57:16
 
 **Source Data Created:** 2026-02-04T17:47:13.525849
 
 **Source Data Last Updated:** 2026-02-04T17:47:13.525855
 
-**Universal Tracker Version:** Modified (worldgen-based tracking)
+**Universal Tracker Version:** Pickle (loads serialized multiworld)
 
 **Seed Mode:** Fixed (seed=1)
 
