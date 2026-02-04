@@ -269,6 +269,9 @@ scripts/output/multiworld-apworld/test-results_*
 scripts/output/ut-fuzz/test-results-*
 scripts/output/ut-fuzz/test-results_*
 
+# Test artifacts from pickle export comparison
+*_from_pickle_rules.json
+
 !CC/scripts/prompts/gen-errors.txt
 
 coverage/
