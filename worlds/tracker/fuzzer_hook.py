@@ -9,6 +9,60 @@ from BaseClasses import MultiWorld, Location, Entrance, ItemClassification
 from NetUtils import NetworkItem
 logger = logging.getLogger("Fuzzer")
 
+
+# Error patterns that indicate option-related generation failures
+# These are expected failures from random option combinations, not logic bugs
+IGNORED_ERROR_PATTERNS = [
+    "Not enough filler/trap items",
+    "No more spots to place",
+    "Remaining locations are invalid",
+    "Unable to place dungeon prizes",
+    "Could not access required locations for accessibility check",
+    "insufficient locations to place progression items",
+    "Failed to fetch map shuffle data for FFMQ",
+    "Invalid OC2 settings",
+    "OC2 needs at least",
+]
+
+
+def should_ignore_generation_error(exc: Exception) -> bool:
+    """
+    Check if an exception should be treated as an "ignored" option error
+    rather than a real failure.
+
+    These are generation failures caused by random option combinations that
+    create impossible-to-fill seeds, external API failures, or game-specific
+    validation errors. They are expected when fuzzing and should not be
+    counted as test failures.
+
+    Args:
+        exc: The exception that was raised during generation
+
+    Returns:
+        True if the error should be ignored, False if it's a real failure
+    """
+    if exc is None:
+        return False
+
+    exc_str = str(exc)
+    exc_type = type(exc).__name__
+
+    # Check explicit patterns
+    for pattern in IGNORED_ERROR_PATTERNS:
+        if pattern in exc_str:
+            return True
+
+    # Check for filler-related errors (case-insensitive)
+    if "filler" in exc_str.lower():
+        return True
+
+    # Handle FFMQ's AttributeError when API fails with an exception
+    # The error handling code assumes HTTP response but may get an exception instead
+    if exc_type == "AttributeError" and "status_code" in exc_str:
+        return True
+
+    return False
+
 # Directory for explain stats output (relative to fuzz output directory)
 EXPLAIN_STATS_DIR = "fuzz_output/explain_stats"
 
@@ -451,36 +505,7 @@ class Hook(BaseHook):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
         # These are configuration issues, not logic mismatches
         if exc is not None and self.status is None:
-            exc_str = str(exc)
-            exc_type = type(exc).__name__
-            # Handle various fill-related errors that are caused by option configurations
-            if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
-                return GenOutcome.OptionError, exc
-            # Handle FillError when options create impossible-to-fill seeds
-            # (e.g., accessibility: minimal combined with level_shuffle in SMW)
-            # Note: "Unable to place dungeon prizes" wraps "No more spots to place" in ALttP
-            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str or "Unable to place dungeon prizes" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FillError for accessibility check failures - this happens when random
-            # option combinations create seeds where required locations are unreachable
-            # (e.g., Terraria with certain goal/calamity combinations)
-            if "Could not access required locations for accessibility check" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FillError when options create more progression items than locations
-            # (e.g., Wind Waker with certain progression_* option combinations)
-            if "insufficient locations to place progression items" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ API errors - the game requires external API for shuffle options
-            # but the API may not be available in test environments
-            if "Failed to fetch map shuffle data for FFMQ" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
-            # The error handling code assumes HTTP response but may get an exception instead
-            if exc_type == "AttributeError" and "status_code" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle Overcooked! 2 option validation errors
-            # These occur when the fuzzer generates invalid option combinations
-            if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
+            if should_ignore_generation_error(exc):
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
@@ -631,30 +656,7 @@ class MultiworldHook(BaseHook):
     def reclassify_outcome(self, outcome, exc):
         # If TrackerCore generation failed with a fill-related exception, treat as ignored
         if exc is not None and self.status is None:
-            exc_str = str(exc)
-            exc_type = type(exc).__name__
-            if "Not enough filler/trap items" in exc_str or "filler" in exc_str.lower():
-                return GenOutcome.OptionError, exc
-            # Note: "Unable to place dungeon prizes" wraps "No more spots to place" in ALttP
-            if "No more spots to place" in exc_str or "Remaining locations are invalid" in exc_str or "Unable to place dungeon prizes" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FillError for accessibility check failures
-            if "Could not access required locations for accessibility check" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FillError when options create more progression items than locations
-            # (e.g., Wind Waker with certain progression_* option combinations)
-            if "insufficient locations to place progression items" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ API errors - the game requires external API for shuffle options
-            # but the API may not be available in test environments
-            if "Failed to fetch map shuffle data for FFMQ" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle FFMQ's AttributeError when API fails with an exception (ProxyError, etc.)
-            if exc_type == "AttributeError" and "status_code" in exc_str:
-                return GenOutcome.OptionError, exc
-            # Handle Overcooked! 2 option validation errors
-            # These occur when the fuzzer generates invalid option combinations
-            if "Invalid OC2 settings" in exc_str or "OC2 needs at least" in exc_str:
+            if should_ignore_generation_error(exc):
                 return GenOutcome.OptionError, exc
         return (self.status if self.status is not None else outcome), exc
 
