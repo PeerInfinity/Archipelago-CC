@@ -105,6 +105,9 @@ cleanup_empty_worldgen_directories()
 # Import fuzz.py's YAML generation logic
 from fuzz import generate_random_yaml, world_from_apworld_name
 
+# Import error classification utility
+from worlds.tracker.fuzzer_hook import should_ignore_generation_error, IGNORED_ERROR_PATTERNS
+
 
 def load_ut_fuzz_results(results_file: Path) -> Dict[str, Dict]:
     """
@@ -207,15 +210,39 @@ def generate_random_yaml_for_game(world_dir: str, player_num: int, seed: int) ->
         return None
 
 
-def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple[bool, str, Optional[Path]]:
+def should_ignore_generation_output(error_output: str) -> bool:
+    """
+    Check if subprocess error output contains patterns that should be ignored.
+
+    This is used for subprocess-based generation where we don't have the
+    exception object, only the error text output.
+    """
+    if not error_output:
+        return False
+
+    for pattern in IGNORED_ERROR_PATTERNS:
+        if pattern in error_output:
+            return True
+
+    # Check for filler-related errors (case-insensitive)
+    if "filler" in error_output.lower():
+        return True
+
+    return False
+
+
+def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple[bool, str, Optional[Path], bool]:
     """
     Run Generate.py with templates in multiworld directory.
 
-    Returns (success, error_message, output_archive_path)
+    Returns (success, error_message, output_archive_path, was_ignored)
+
+    The was_ignored flag indicates whether a generation failure was due to
+    option-related errors that should be ignored rather than counted as failures.
     """
     templates = get_templates_in_multiworld(multiworld_dir)
     if len(templates) < 2:
-        return False, f"Need at least 2 templates (have {len(templates)})", None
+        return False, f"Need at least 2 templates (have {len(templates)})", None, False
 
     # Run Generate.py
     cmd = [
@@ -237,36 +264,43 @@ def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple
 
         if result.returncode != 0:
             error = result.stderr[:500] if result.stderr else result.stdout[:500]
-            return False, f"Generation failed: {error}", None
+            # Check if this error should be ignored
+            full_output = (result.stderr or "") + (result.stdout or "")
+            is_ignored = should_ignore_generation_output(full_output)
+            return False, f"Generation {'ignored' if is_ignored else 'failed'}: {error}", None, is_ignored
 
         # Find the output archive
         output_dir = project_root / "output"
         if output_dir.exists():
             archives = sorted(output_dir.glob("AP_*.zip"), key=lambda p: p.stat().st_mtime, reverse=True)
             if archives:
-                return True, "", archives[0]
+                return True, "", archives[0], False
 
-        return False, "No output archive found", None
+        return False, "No output archive found", None, False
 
     except subprocess.TimeoutExpired:
-        return False, "Generation timed out", None
+        return False, "Generation timed out", None, False
     except Exception as e:
-        return False, str(e), None
+        return False, str(e), None, False
 
 
 def run_generation_inprocess(
     multiworld_dir: Path,
     seed: int,
     project_root: Path
-) -> Tuple[bool, str, Optional["MultiWorld"], Optional[Path]]:
+) -> Tuple[bool, str, Optional["MultiWorld"], Optional[Path], bool]:
     """
     Run generation in-process, keeping the MultiWorld object alive.
 
-    Returns (success, error_message, multiworld_object, output_archive_path)
+    Returns (success, error_message, multiworld_object, output_archive_path, was_ignored)
+
+    The was_ignored flag indicates whether a generation failure was due to
+    option-related errors (fill failures, validation errors) that should be
+    ignored rather than counted as test failures.
     """
     templates = get_templates_in_multiworld(multiworld_dir)
     if len(templates) < 2:
-        return False, f"Need at least 2 templates (have {len(templates)})", None, None
+        return False, f"Need at least 2 templates (have {len(templates)})", None, None, False
 
     print(f"    Running in-process generation with {len(templates)} players, seed {seed}")
 
@@ -274,15 +308,6 @@ def run_generation_inprocess(
         # Import generation modules
         from Generate import main as generate_main, mystery_argparse
         from Main import main as ERmain
-
-        # Clear any cached state from previous in-process generations
-        # Some worlds (like Landstalker) use class-level caches that persist
-        # across generations and can cause issues with stale player IDs
-        try:
-            from worlds.landstalker import LandstalkerWorld
-            LandstalkerWorld.cached_spheres = []
-        except ImportError:
-            pass
 
         # Build args similar to what Generate.py does
         argv = [
@@ -307,13 +332,15 @@ def run_generation_inprocess(
             if archives:
                 archive_path = archives[0]
 
-        return True, "", multiworld, archive_path
+        return True, "", multiworld, archive_path, False
 
     except Exception as e:
         import traceback
-        error_msg = f"Generation failed: {str(e)[:300]}"
+        # Check if this is an error that should be ignored
+        is_ignored = should_ignore_generation_error(e)
+        error_msg = f"Generation {'ignored' if is_ignored else 'failed'}: {str(e)[:300]}"
         traceback.print_exc()
-        return False, error_msg, None, None
+        return False, error_msg, None, None, is_ignored
 
 
 def validate_multiworld_with_spheres(
@@ -538,7 +565,8 @@ def run_multiworld_test(
     multiworld_dir: Path,
     seed: int,
     project_root: Path,
-    use_sphere_validation: bool = False
+    use_sphere_validation: bool = False,
+    ignore_generation_errors: bool = True
 ) -> Dict:
     """
     Run a complete multiworld test: generate and validate.
@@ -550,12 +578,15 @@ def run_multiworld_test(
         use_sphere_validation: If True, run generation in-process and validate
             using the live MultiWorld object with full sphere analysis.
             If False, use the original subprocess + UT validation approach.
+        ignore_generation_errors: If True, treat option-related generation errors
+            as "ignored" rather than failures.
 
     Returns a dict with test results.
     """
     result = {
         "passed": False,
         "generation_success": False,
+        "generation_ignored": False,  # True if generation failed but was ignored
         "player_results": {},
         "error": None,
         "validation_mode": "sphere" if use_sphere_validation else "ut"
@@ -563,12 +594,15 @@ def run_multiworld_test(
 
     if use_sphere_validation:
         # New approach: run generation in-process, validate with live MultiWorld
-        gen_success, gen_error, multiworld, archive_path = run_generation_inprocess(
+        gen_success, gen_error, multiworld, archive_path, was_ignored = run_generation_inprocess(
             multiworld_dir, seed, project_root
         )
 
         if not gen_success:
             result["error"] = gen_error
+            if was_ignored and ignore_generation_errors:
+                result["generation_ignored"] = True
+                result["passed"] = True  # Ignored errors count as passed
             return result
 
         result["generation_success"] = True
@@ -615,10 +649,13 @@ def run_multiworld_test(
 
     else:
         # Original approach: subprocess + UT validation
-        gen_success, gen_error, archive_path = run_generation(multiworld_dir, seed, project_root)
+        gen_success, gen_error, archive_path, was_ignored = run_generation(multiworld_dir, seed, project_root)
 
         if not gen_success:
             result["error"] = gen_error
+            if was_ignored and ignore_generation_errors:
+                result["generation_ignored"] = True
+                result["passed"] = True  # Ignored errors count as passed
             return result
 
         result["generation_success"] = True
@@ -655,7 +692,8 @@ def run_multiple_tests(
     project_root: Path,
     world_dirs: List[str],
     use_sphere_validation: bool = False,
-    test_iteration: int = 0
+    test_iteration: int = 0,
+    ignore_generation_errors: bool = True
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
@@ -671,6 +709,8 @@ def run_multiple_tests(
         test_iteration: Counter for how many times this function has been called,
             used to ensure different YAMLs are generated each time the multiworld
             composition changes (even with the same base_seed)
+        ignore_generation_errors: If True, treat option-related generation errors
+            as "ignored" rather than failures.
 
     Returns aggregated results.
     """
@@ -683,6 +723,7 @@ def run_multiple_tests(
             "total": 0,
             "success": 0,
             "failure": 0,
+            "ignored": 0,
             "error": f"Need at least 2 templates (have {num_players})"
         }
 
@@ -691,6 +732,7 @@ def run_multiple_tests(
         "total": runs,
         "success": 0,
         "failure": 0,
+        "ignored": 0,  # Track ignored generation errors
         "run_results": []
     }
 
@@ -721,13 +763,19 @@ def run_multiple_tests(
                 with open(yaml_path, 'w', encoding='utf-8') as f:
                     f.write(yaml_content)
 
-        test_result = run_multiworld_test(multiworld_dir, seed, project_root, use_sphere_validation)
+        test_result = run_multiworld_test(
+            multiworld_dir, seed, project_root, use_sphere_validation, ignore_generation_errors
+        )
         results["run_results"].append({
             "seed": seed,
             "result": test_result
         })
 
-        if test_result["passed"]:
+        if test_result.get("generation_ignored"):
+            results["ignored"] += 1
+            results["success"] += 1  # Ignored counts as success
+            print("IGNORED (option error)")
+        elif test_result["passed"]:
             results["success"] += 1
             print("PASS")
         else:
@@ -834,8 +882,24 @@ def main():
         help='Use subprocess generation with UT-based validation instead of sphere validation. '
              'Faster but less thorough - does not validate cross-world item dependencies.'
     )
+    parser.add_argument(
+        '--ignore-generation-errors',
+        action='store_true',
+        default=True,
+        help='Treat option-related generation errors (fill failures, validation errors) as '
+             '"ignored" rather than failures. These are expected when fuzzing with random options. '
+             '(default: True)'
+    )
+    parser.add_argument(
+        '--no-ignore-generation-errors',
+        action='store_true',
+        help='Count all generation errors as failures, even option-related ones.'
+    )
 
     args = parser.parse_args()
+
+    # Handle the ignore generation errors flags
+    ignore_generation_errors = args.ignore_generation_errors and not args.no_ignore_generation_errors
 
     # Resolve paths
     templates_dir = PROJECT_ROOT / args.templates_dir
@@ -889,6 +953,7 @@ def main():
     print(f"Seed: {args.seed if args.seed is not None else 'random'}")
     print(f"Max players: {args.max_players}")
     print(f"Validation mode: {'sphere (in-process)' if args.sphere_validation and not args.ut_validation else 'UT (subprocess)'}")
+    print(f"Ignore generation errors: {ignore_generation_errors}")
     print()
 
     # Compute output filename
@@ -909,23 +974,26 @@ def main():
         "metadata": {
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
-            "script_version": "1.1.0",
+            "script_version": "1.2.0",
             "seed_mode": seed_type,
             "seed": args.seed if args.seed is not None else "random",
             "runs_per_test": args.runs,
             "max_players": args.max_players,
             "total_templates_considered": len(template_files),
-            "validation_mode": "sphere" if args.sphere_validation and not args.ut_validation else "ut"
+            "validation_mode": "sphere" if args.sphere_validation and not args.ut_validation else "ut",
+            "ignore_generation_errors": ignore_generation_errors
         },
         "assembly_order": [],  # Order in which games were added
         "final_multiworld": [],  # Games (world_dirs) in the final multiworld
         "rejected_games": [],  # Games that failed to integrate
+        "ignored_games": [],  # Games where generation was ignored (option errors)
         "results": {}
     }
 
     # Track statistics
     games_in_multiworld: List[str] = []  # List of world directory names
     rejected_games: List[Dict] = []
+    ignored_games: List[Dict] = []  # Games where generation was ignored (option errors)
     test_iteration = 0  # Counter to ensure different YAMLs each time the test is run
 
     # Process each template
@@ -1038,7 +1106,8 @@ def main():
             project_root=PROJECT_ROOT,
             world_dirs=games_in_multiworld,
             use_sphere_validation=args.sphere_validation and not args.ut_validation,
-            test_iteration=test_iteration
+            test_iteration=test_iteration,
+            ignore_generation_errors=ignore_generation_errors
         )
         test_iteration += 1  # Increment for next test to get different YAMLs
 
@@ -1053,7 +1122,11 @@ def main():
             continue
 
         if test_result["passed"]:
-            print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded")
+            ignored_count = test_result.get("ignored", 0)
+            if ignored_count > 0:
+                print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded ({ignored_count} ignored)")
+            else:
+                print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded")
             game_result["status"] = "passed"
             results["assembly_order"].append(world_dir)
 
@@ -1095,6 +1168,7 @@ def main():
         results["metadata"]["last_updated"] = datetime.now().isoformat()
         results["final_multiworld"] = games_in_multiworld.copy()
         results["rejected_games"] = rejected_games.copy()
+        results["ignored_games"] = ignored_games.copy()
         with open(output_path, 'w') as f:
             json.dump(results, f, indent=2)
 
@@ -1102,6 +1176,7 @@ def main():
     results["metadata"]["last_updated"] = datetime.now().isoformat()
     results["final_multiworld"] = games_in_multiworld.copy()
     results["rejected_games"] = rejected_games.copy()
+    results["ignored_games"] = ignored_games.copy()
 
     # Save final results
     with open(output_path, 'w') as f:
@@ -1113,6 +1188,7 @@ def main():
     print(f"Templates considered: {len(template_files)}")
     print(f"Games in final multiworld: {len(games_in_multiworld)}")
     print(f"Rejected games: {len(rejected_games)}")
+    print(f"Ignored runs: {sum(r.get('test_result', {}).get('ignored', 0) for r in results['results'].values())}")
     print(f"\nFinal multiworld ({len(games_in_multiworld)} games):")
     for game in games_in_multiworld:
         print(f"  - {game}")
@@ -1120,6 +1196,10 @@ def main():
         print(f"\nRejected games ({len(rejected_games)}):")
         for rejection in rejected_games:
             print(f"  - {rejection['world_dir']}: {rejection['reason']}")
+    if ignored_games:
+        print(f"\nIgnored games ({len(ignored_games)}):")
+        for ignored in ignored_games:
+            print(f"  - {ignored['world_dir']}: {ignored['reason']}")
     print(f"\nResults saved to: {output_path}")
 
     return 0

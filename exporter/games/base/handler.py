@@ -118,6 +118,16 @@ class BaseGameExportHandler(
     #   - Ordered comparisons will use JavaScript string ordering (alphabetical, not semantic)
     EXPORT_CHOICE_OPTIONS_AS_NUMERIC: bool = True
 
+    # Whether to resolve world.options.X.value patterns to constants at export time
+    # When True (default), option values are resolved to their current numeric/string value
+    #   - Results in smaller, faster rules with pre-computed option values
+    #   - Rules are baked for the specific option configuration used during export
+    # When False, option values are kept as option_value references
+    #   - Rules remain generic and can work with different option configurations
+    #   - Requires runtime option resolution in the frontend
+    # This can be overridden by the host.yaml setting: general_options.resolve_options_to_constants
+    RESOLVE_OPTIONS_TO_CONSTANTS: bool = True
+
     # Set of helper function names to export as definitions (manual whitelist)
     # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
@@ -165,6 +175,12 @@ class BaseGameExportHandler(
     # This is used by should_preserve_as_helper() - games can set this instead
     # of overriding the method
     HELPERS_TO_PRESERVE: Set[str] = set()
+
+    # Set of option names recognized during bytecode analysis
+    # Used by ClosureFunctionAnalyzer to detect option access patterns like:
+    #   world.worlds[player].options.open_pyramid
+    # Games should override this with their specific option names
+    KNOWN_OPTION_NAMES: Set[str] = set()
 
     # Whether exits should be assumed bidirectional for frontend logic
     # Set to True for games where going through an entrance implies being able to return
@@ -294,6 +310,42 @@ class BaseGameExportHandler(
     #       'index': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'swim_rule'}, ...}
     #   }}
     OPTION_PROPERTY_EXPANSIONS: Dict[tuple, Dict[str, Any]] = {}
+
+    # ==========================================================================
+    # Game-specific analyzer configuration
+    # These attributes allow game handlers to configure analyzer behavior
+    # without hardcoding game-specific logic in shared analyzer code.
+    # ==========================================================================
+
+    # Set of known item names for bytecode-based rule analysis fallback.
+    # When the analyzer falls back to bytecode analysis, it only recognizes
+    # items in this set. Games with complex rule patterns should populate this.
+    # Example: {'Moon Pearl', 'Magic Mirror', 'Hookshot', ...}
+    KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS: Set[str] = set()
+
+    # Mapping of helper names to item lists for bytecode-based expansion.
+    # When the analyzer sees a helper name (e.g., 'has_sword') in bytecode, it expands
+    # to HasAny(items=BYTECODE_HELPER_EXPANSIONS[helper_name]).
+    # Example: {'has_sword': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword']}
+    BYTECODE_HELPER_EXPANSIONS: Dict[str, List[str]] = {}
+
+    # Item name to use as fallback when rule analysis fails completely.
+    # If set, unanalyzable rules fall back to Has(item_name=FALLBACK_ITEM).
+    # If None, no game-specific fallback is applied.
+    # Example: 'Moon Pearl' for ALttP bunny rules
+    UNANALYZABLE_RULE_FALLBACK_ITEM: Optional[str] = None
+
+    # Option values that indicate permissive logic modes are enabled.
+    # When the logic option has one of these values, unanalyzable rules use a
+    # permissive fallback (True) instead of requiring a fallback item.
+    # Example: ['minor_glitches', 'overworld_glitches', 'no_logic', 'hard', 'expert']
+    PERMISSIVE_LOGIC_OPTION_VALUES: List[str] = []
+
+    # Option name for permissive logic detection.
+    # The analyzer checks world.options.<PERMISSIVE_LOGIC_OPTION_NAME> to determine
+    # if permissive logic is enabled. Leave as None to disable this detection.
+    # Example: 'glitches_required', 'logic_rules', 'difficulty'
+    PERMISSIVE_LOGIC_OPTION_NAME: Optional[str] = None
 
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
@@ -889,6 +941,156 @@ class BaseGameExportHandler(
         """
         return self.RECURSIVELY_ANALYZE_CLOSURES
 
+    def should_resolve_options_to_constants(self) -> bool:
+        """
+        Check if the analyzer should resolve world.options.X.value patterns to constants.
+
+        When True (default), option values like world.options.Difficulty.value are
+        resolved to their actual values (e.g., 2) at export time. This results in
+        smaller, faster rules but bakes in the specific option configuration.
+
+        When False, option values are kept as option_value references that are
+        resolved at runtime by the frontend. This allows rules to work with
+        different option configurations.
+
+        The host.yaml setting (general_options.resolve_options_to_constants) takes
+        precedence over the class variable RESOLVE_OPTIONS_TO_CONSTANTS.
+
+        Returns:
+            True if options should be resolved to constants, False otherwise
+        """
+        # Check host.yaml setting first (takes precedence)
+        try:
+            from settings import get_settings
+            settings = get_settings()
+            host_setting = getattr(settings.general_options, 'resolve_options_to_constants', None)
+            if host_setting is not None:
+                return host_setting
+        except Exception:
+            pass  # Fall back to class variable if settings unavailable
+
+        return self.RESOLVE_OPTIONS_TO_CONSTANTS
+
+    # ==========================================================================
+    # Unanalyzable rule handling hooks
+    # These methods allow game handlers to provide fallback rules when the
+    # analyzer cannot fully analyze complex rule patterns.
+    # ==========================================================================
+
+    def is_unanalyzable_rule_pattern(self, func: Callable) -> bool:
+        """Check if a function matches a known unanalyzable rule pattern.
+
+        This is called by the analyzer when it encounters a callable that
+        cannot be analyzed normally. Game handlers can override this to
+        identify game-specific patterns (e.g., ALttP bunny rules).
+
+        Args:
+            func: The function object to check
+
+        Returns:
+            True if this is a known unanalyzable pattern that should use fallback
+        """
+        return False  # Base implementation: no special patterns
+
+    def get_unanalyzable_rule_fallback(self, func: Optional[Callable] = None) -> Optional[Dict[str, Any]]:
+        """Get the fallback rule for an unanalyzable rule pattern.
+
+        This is called when is_unanalyzable_rule_pattern() returns True or
+        when rule analysis fails completely. Game handlers can override this
+        to provide game-specific fallback rules.
+
+        The base implementation uses class attributes:
+        - If PERMISSIVE_LOGIC_OPTION_NAME is set and permissive logic is enabled,
+          returns True (always accessible)
+        - Otherwise returns Has(UNANALYZABLE_RULE_FALLBACK_ITEM) if set
+        - Otherwise returns None (no fallback)
+
+        Args:
+            func: Optional function that failed analysis (for context)
+
+        Returns:
+            Fallback rule dict, or None if no fallback available
+        """
+        # Check if permissive logic mode is enabled
+        if self.PERMISSIVE_LOGIC_OPTION_NAME and self.PERMISSIVE_LOGIC_OPTION_VALUES:
+            if self.world and hasattr(self.world, 'options'):
+                option = getattr(self.world.options, self.PERMISSIVE_LOGIC_OPTION_NAME, None)
+                if option is not None:
+                    current_value = str(getattr(option, 'current_key', ''))
+                    if current_value in self.PERMISSIVE_LOGIC_OPTION_VALUES:
+                        # In permissive logic modes, return True as fallback
+                        return {'type': 'constant', 'value': True}
+
+        # Fall back to item requirement if configured
+        if self.UNANALYZABLE_RULE_FALLBACK_ITEM:
+            return {'type': 'item_check', 'item': self.UNANALYZABLE_RULE_FALLBACK_ITEM, 'count': 1}
+
+        return None
+
+    def get_known_items_for_bytecode(self) -> Set[str]:
+        """Get the set of known items for bytecode-based analysis.
+
+        The analyzer uses this when falling back to bytecode analysis to
+        identify item check patterns. Only items in this set are recognized.
+
+        Games can override this or set KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS.
+
+        Returns:
+            Set of known item names
+        """
+        return self.KNOWN_ITEMS_FOR_BYTECODE_ANALYSIS
+
+    def get_bytecode_helper_expansion(self, helper_name: str) -> List[str]:
+        """Get the item list expansion for a helper seen in bytecode.
+
+        When the analyzer encounters a helper name (e.g., 'has_sword') in
+        bytecode, it can expand to HasAny(items=expansion). Games can
+        configure this via BYTECODE_HELPER_EXPANSIONS.
+
+        Args:
+            helper_name: The helper function name seen in bytecode
+
+        Returns:
+            List of item names to expand to, or empty list if not configured
+        """
+        return self.BYTECODE_HELPER_EXPANSIONS.get(helper_name, [])
+
+    def get_known_option_names(self) -> Set[str]:
+        """Get the set of known option names for bytecode-based analysis.
+
+        The analyzer uses this when falling back to bytecode analysis to
+        identify option access patterns like:
+            world.worlds[player].options.open_pyramid
+
+        Games can override this or set KNOWN_OPTION_NAMES.
+
+        Returns:
+            Set of known option names
+        """
+        return self.KNOWN_OPTION_NAMES
+
+    def handle_game_specific_state_method(
+        self,
+        method_name: str,
+        args: List[Any],
+        world: Any
+    ) -> Optional[Dict[str, Any]]:
+        """Handle a game-specific state method call.
+
+        This is called by the analyzer when it encounters a state method
+        that might need game-specific handling. For example, ALttP's
+        _lttp_has_key method needs special handling for universal keys.
+
+        Args:
+            method_name: The name of the state method (e.g., '_lttp_has_key')
+            args: The processed arguments to the method
+            world: The world object for option access
+
+        Returns:
+            Rule dict if this method should be handled specially, None otherwise
+        """
+        return None  # Base implementation: no special handling
+
     def get_effective_item_type(self, item_name: str, original_type: str) -> str:
         """
         Get the effective type for an item, considering game-specific event item rules.
@@ -1161,9 +1363,9 @@ class BaseGameExportHandler(
         """Find progression mapping from module-level data structures.
 
         Different games store progression data in different formats:
-        - ALttP: progression_mapping dict in Items.py (concrete -> (progressive, level))
-        - Factorio: progressive_technology_table (progressive -> Technology with .progressive tuple)
-        - Raft: progressive_item_list (progressive -> [concrete_items])
+        - progression_mapping dict in Items.py (concrete -> (progressive, level))
+        - progressive_technology_table (progressive -> object with .progressive tuple)
+        - progressive_item_list (progressive -> [concrete_items])
 
         Returns:
             Dict with progression mapping in the standard format
@@ -1172,17 +1374,17 @@ class BaseGameExportHandler(
 
         # Get the world's module
         world_module = type(world).__module__
-        base_module = '.'.join(world_module.split('.')[:2])  # e.g., "worlds.alttp"
+        base_module = '.'.join(world_module.split('.')[:2])  # e.g., "worlds.mygame"
 
         # Try different known patterns
-        mapping_data.update(self._try_alttp_pattern(base_module))
-        mapping_data.update(self._try_factorio_pattern(base_module))
-        mapping_data.update(self._try_raft_pattern(base_module))
+        mapping_data.update(self._try_progression_mapping_pattern(base_module))
+        mapping_data.update(self._try_progressive_table_pattern(base_module))
+        mapping_data.update(self._try_progressive_list_pattern(base_module))
 
         return mapping_data
 
-    def _try_alttp_pattern(self, base_module: str) -> Dict[str, Any]:
-        """Try ALttP pattern: progression_mapping dict in Items.py.
+    def _try_progression_mapping_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try progression_mapping dict pattern from Items.py.
 
         Format: concrete_item -> (progressive_item, level)
         """
@@ -1213,20 +1415,20 @@ class BaseGameExportHandler(
                 prog_data['items'].sort(key=lambda x: x['level'])
 
             if mapping_data:
-                logger.debug(f"Found {len(mapping_data)} progressive items via ALttP pattern")
+                logger.debug(f"Found {len(mapping_data)} progressive items via progression_mapping pattern")
 
             return mapping_data
 
         except ImportError:
             return {}
         except Exception as e:
-            logger.debug(f"Error trying ALttP pattern: {e}")
+            logger.debug(f"Error trying progression_mapping pattern: {e}")
             return {}
 
-    def _try_factorio_pattern(self, base_module: str) -> Dict[str, Any]:
-        """Try Factorio pattern: progressive_technology_table.
+    def _try_progressive_table_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try progressive_technology_table pattern.
 
-        Format: progressive_item -> Technology object with .progressive tuple
+        Format: progressive_item -> object with .progressive tuple attribute
         """
         try:
             # Try importing from Technologies submodule first
@@ -1264,18 +1466,18 @@ class BaseGameExportHandler(
                 }
 
             if mapping_data:
-                logger.debug(f"Found {len(mapping_data)} progressive items via Factorio pattern")
+                logger.debug(f"Found {len(mapping_data)} progressive items via progressive_table pattern")
 
             return mapping_data
 
         except ImportError:
             return {}
         except Exception as e:
-            logger.debug(f"Error trying Factorio pattern: {e}")
+            logger.debug(f"Error trying progressive_table pattern: {e}")
             return {}
 
-    def _try_raft_pattern(self, base_module: str) -> Dict[str, Any]:
-        """Try Raft pattern: progressive_item_list dict.
+    def _try_progressive_list_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try progressive_item_list dict pattern.
 
         Format: progressive_item -> [concrete_items in order]
         """
@@ -1315,14 +1517,14 @@ class BaseGameExportHandler(
                 }
 
             if mapping_data:
-                logger.debug(f"Found {len(mapping_data)} progressive items via Raft pattern")
+                logger.debug(f"Found {len(mapping_data)} progressive items via progressive_list pattern")
 
             return mapping_data
 
         except ImportError:
             return {}
         except Exception as e:
-            logger.debug(f"Error trying Raft pattern: {e}")
+            logger.debug(f"Error trying progressive_list pattern: {e}")
             return {}
 
     def _probe_collect_item_for_progression(self, world) -> Dict[str, Any]:

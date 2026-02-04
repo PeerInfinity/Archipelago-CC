@@ -190,15 +190,6 @@ class TrackerCore():
                 args[option_name].update(player_mapping)
 
         try:
-            # Clear any cached state from previous generations
-            # Some worlds (like Landstalker) use class-level caches that persist
-            # across generations and can cause issues with stale player IDs
-            try:
-                from worlds.landstalker import LandstalkerWorld
-                LandstalkerWorld.cached_spheres = []
-            except ImportError:
-                pass
-
             yaml_path, self.output_format, self.hide_excluded, self.use_split, enforce_deferred_connections, self.enable_glitched_logic = self._set_host_settings()
             if self.enforce_deferred_connections is None: self.enforce_deferred_connections = enforce_deferred_connections
             # strip command line args, they won't be useful from the client anyway
@@ -315,14 +306,14 @@ class TrackerCore():
         item_id_to_name = self.multiworld.worlds[self.player_id].item_id_to_name
         location_id_to_name = self.multiworld.worlds[self.player_id].location_id_to_name
 
-        invalid_items = [str(item.item) for item in self.tracker_items_received if item.item not in item_id_to_name]
+        invalid_items = [str(item.item) for item in self.tracker_items_received if item.item not in item_id_to_name and item.item > 0]
         if invalid_items:
             print(invalid_items)
             self.logger.error("Your datapackage is incorrect, please correct the apworld for "+str(self.game))
             self.logger.error("The Following items are unknown [" + ",".join(invalid_items)+"]")
             raise Exception("Your datapackage is incorrect, please correct the apworld for "+str(self.game))
 
-        for item_name, item_flags, item_loc, item_player in [(item_id_to_name[item.item],item.flags,item.location, item.player) for item in self.tracker_items_received] + [(name,ItemClassification.progression,-1,-1) for name in self.manual_items]:
+        for item_name, item_flags, item_loc, item_player in [(item_id_to_name[item.item],item.flags,item.location, item.player) for item in self.tracker_items_received if item.item > 0] + [(name,ItemClassification.progression,-1,-1) for name in self.manual_items]:
             try:
                 world_item = self.multiworld.create_item(item_name, self.player_id)
                 if item_loc>0 and item_player == self.slot and item_loc in location_id_to_name:

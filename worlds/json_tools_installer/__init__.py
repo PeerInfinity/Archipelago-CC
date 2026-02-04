@@ -10,6 +10,8 @@ This APWorld provides:
 Components are available in the Archipelago Launcher after installation.
 """
 
+__version__ = "1.0.0"
+
 from worlds.AutoWorld import World
 
 # Import and register launcher components

@@ -35,7 +35,7 @@ class ControlFlowVisitorMixin:
             logging.warning(f"visit_Module: Empty module body, returning None")
             return None # Return None if no body
         except Exception as e:
-            logging.error("Error in visit_Module", e)
+            logging.error(f"Error in visit_Module: {e}")
             return None
 
     def visit_FunctionDef(self, node):
@@ -92,52 +92,31 @@ class ControlFlowVisitorMixin:
             # Visit the first meaningful body node if exists and return its result
             # Looks for control flow (If, Return, etc.) after skipping assignments
             if body_to_analyze:
-                # Special case: If/elif chain without else, and more statements follow
-                # This handles patterns like:
-                #   if A: return X
-                #   elif B: return Y
-                #   return Z  # implicit else
-                if isinstance(body_to_analyze[0], ast.If) and len(body_to_analyze) > 1:
-                    innermost_if = self._get_innermost_if_without_else(body_to_analyze[0])
-                    if innermost_if is not None:
-                        logging.debug(f"visit_FunctionDef: If/elif chain without else, analyzing remaining {len(body_to_analyze) - 1} statements as implicit else")
-                        # Attach the remaining statements as the else block of the innermost if
-                        remaining_stmts = body_to_analyze[1:]
-                        innermost_if.orelse = remaining_stmts
-                        # Visit the modified if-statement
-                        return self.visit_If(body_to_analyze[0])
+                # Special case: If statement without else, and more statements follow
+                if isinstance(body_to_analyze[0], ast.If) and not body_to_analyze[0].orelse and len(body_to_analyze) > 1:
+                    logging.debug(f"visit_FunctionDef: If statement without else, analyzing remaining {len(body_to_analyze) - 1} statements as implicit else")
+                    # Create a synthetic If node with the remaining statements as the else block
+                    if_node = body_to_analyze[0]
+                    remaining_stmts = body_to_analyze[1:]
 
-                return self.visit(body_to_analyze[0])
+                    # Create a synthetic if-node that includes the remaining statements as the else block
+                    synthetic_if = ast.If(
+                        test=if_node.test,
+                        body=if_node.body,
+                        orelse=remaining_stmts,
+                        lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
+                        col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
+                    )
+
+                    # Visit this synthetic if-statement, which will use visit_If and its multistatement handling
+                    return self.visit_If(synthetic_if)
+                else:
+                    return self.visit(body_to_analyze[0])
             logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
             return None # Return None if no body
         except Exception as e:
             logging.error(f"Error analyzing function {node.name}: {e}")
             return None
-
-    def _get_innermost_if_without_else(self, if_node: ast.If):
-        """
-        Traverse an if/elif chain and return the innermost If node if it has no else.
-
-        For example, in:
-            if A: return X
-            elif B: return Y
-            elif C: return Z
-
-        This returns the 'elif C' node (which has orelse=[]).
-
-        Returns None if the chain ends with an else block.
-        """
-        current = if_node
-        while True:
-            if not current.orelse:
-                # Found an if/elif without else
-                return current
-            elif len(current.orelse) == 1 and isinstance(current.orelse[0], ast.If):
-                # This is an elif - continue down the chain
-                current = current.orelse[0]
-            else:
-                # Has a real else block (not just another elif)
-                return None
 
     def _needs_block_mode(self, body_nodes):
         """
@@ -232,7 +211,7 @@ class ControlFlowVisitorMixin:
                     'body': body_result
                 }
         except Exception as e:
-            logging.error("Error in visit_Lambda", e)
+            logging.error(f"Error in visit_Lambda: {e}")
             return None
 
     def visit_Return(self, node):
@@ -247,7 +226,7 @@ class ControlFlowVisitorMixin:
             # Visit the return value and return its result
             return self.visit(node.value)
         except Exception as e:
-            logging.error("Error in visit_Return", e)
+            logging.error(f"Error in visit_Return: {e}")
             return None
 
     def visit_Break(self, node):
@@ -416,7 +395,7 @@ class ControlFlowVisitorMixin:
                 'if_false': orelse_result # This will be None if no else block
             }
         except Exception as e:
-            logging.error("Error in visit_If", e)
+            logging.error(f"Error in visit_If: {e}")
             return None
 
     def visit_IfExp(self, node: ast.IfExp):
@@ -451,7 +430,7 @@ class ControlFlowVisitorMixin:
                 'if_false': orelse_result
             }
         except Exception as e:
-            logging.error("Error in visit_IfExp", e)
+            logging.error(f"Error in visit_IfExp: {e}")
             return None
 
     def visit_For(self, node: ast.For):

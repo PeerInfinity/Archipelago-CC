@@ -150,13 +150,15 @@ def extract_processing_times_data(minimal_results: Dict, full_results: Dict, mul
 
 def generate_processing_times_markdown(processing_data: Dict[str, Any],
                                         variant_type: Optional[str] = None,
-                                        version_links: Optional[Dict[str, str]] = None) -> str:
+                                        version_links: Optional[Dict[str, str]] = None,
+                                        metadata: Optional[Dict[str, Any]] = None) -> str:
     """Generate markdown content for processing times chart.
 
     Args:
         processing_data: Dict with processing times data from extract_processing_times_data
         variant_type: None for original, "worldgen" for WorldGen, "apworld" for APWorld
         version_links: Dict mapping variant names to links, e.g. {"worldgen": "./file.md", "apworld": "./file.md"}
+        metadata: Optional metadata dict with 'created' and 'last_updated' timestamps
     """
     # Determine title suffix based on variant type
     if variant_type == "worldgen":
@@ -168,6 +170,13 @@ def generate_processing_times_markdown(processing_data: Dict[str, Any],
 
     md_content = f"# Processing Times Chart{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+    # Add source data metadata if available
+    if metadata and ('created' in metadata or 'last_updated' in metadata):
+        if 'created' in metadata:
+            md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
+        if 'last_updated' in metadata:
+            md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
 
     # Add link to summary document
     summary_suffix = f"-{variant_type}" if variant_type else ""

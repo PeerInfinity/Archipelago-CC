@@ -56,6 +56,58 @@ from lib.seed_utils import get_seed_id as compute_seed_id
 # Import fuzzer's YAML generation function
 from fuzz import generate_random_yaml, world_from_apworld_name
 
+# Per-game fuzzer options configuration file
+GAME_OPTIONS_FILE = PROJECT_ROOT / "scripts" / "data" / "ut-fuzz-game-options.json"
+
+# Cache for game-specific fuzzer options
+_game_fuzzer_options: Optional[Dict] = None
+
+
+def load_game_fuzzer_options() -> Dict:
+    """
+    Load per-game fuzzer options from configuration file.
+
+    Returns a dict mapping template names to their fuzzer option overrides.
+    """
+    global _game_fuzzer_options
+
+    if _game_fuzzer_options is not None:
+        return _game_fuzzer_options
+
+    _game_fuzzer_options = {}
+
+    if GAME_OPTIONS_FILE.exists():
+        try:
+            with open(GAME_OPTIONS_FILE, 'r') as f:
+                data = json.load(f)
+            _game_fuzzer_options = data.get('game_options', {})
+            if _game_fuzzer_options:
+                print(f"Loaded fuzzer options for {len(_game_fuzzer_options)} games from {GAME_OPTIONS_FILE.name}")
+        except Exception as e:
+            print(f"Warning: Error loading game fuzzer options: {e}")
+
+    return _game_fuzzer_options
+
+
+def get_game_fuzzer_options(template_name: str) -> Dict[str, Optional[str]]:
+    """
+    Get fuzzer options for a specific game.
+
+    Args:
+        template_name: The template filename (e.g., 'Subnautica.yaml')
+
+    Returns:
+        Dict with 'default_options', 'disallow_options', and 'max_item_dict_value' keys (values may be None)
+    """
+    game_options = load_game_fuzzer_options()
+    config = game_options.get(template_name, {})
+
+    return {
+        'default_options': config.get('default_options'),
+        'disallow_options': config.get('disallow_options'),
+        'max_item_dict_value': config.get('max_item_dict_value')
+    }
+
 
 def get_template_files(templates_dir: Path, skip_list: List[str], include_list: Optional[List[str]] = None) -> List[Path]:
     """Get list of template files to test."""
@@ -73,6 +125,43 @@ def get_template_files(templates_dir: Path, skip_list: List[str], include_list: 
     yaml_files = [f for f in yaml_files if 'WorldGen' not in f.name]
 
     return yaml_files
+
+
+def is_option_error(output: str) -> bool:
+    """
+    Check if the generation output indicates an OptionError or FillError.
+
+    These are expected failures when random option combinations are invalid
+    or result in impossible games, and should be counted as "ignored" rather
+    than "failure" (same as UT fuzzer).
+    """
+    # Check for explicit OptionError or FillError in traceback
+    if "OptionError" in output:
+        return True
+
+    # FillError occurs when the randomized options result in an impossible game
+    # (e.g., required locations can't be accessed due to boss ordering constraints)
+    if "FillError" in output:
+        return True
+
+    # Check for common option validation error patterns
+    # These are raised as Exception but are logically option errors
+    option_error_patterns = [
+        "Invalid .* settings",  # e.g., "Invalid OC2 settings"
+        "invalid option",
+        "incompatible option",
+        "requires .* to be",
+        "cannot be used with",
+        "must have .* enabled",
+        "needs at least .* levels",  # Overcooked! 2 level count error
+    ]
+
+    import re
+    for pattern in option_error_patterns:
+        if re.search(pattern, output, re.IGNORECASE):
+            return True
+
+    return False
 
 
 def run_generation(yaml_path: str, seed: int, project_root: Path, timeout: int = 300) -> Tuple[bool, str, Optional[str]]:
@@ -179,7 +268,9 @@ def run_fuzz_test(
     seed: Optional[int],
     headed: bool = False,
     default_options: Optional[set] = None,
-    disallow_options: Optional[Dict] = None
+    disallow_options: Optional[Dict] = None,
+    max_item_dict_value: Optional[int] = None,
+    verbose: bool = True
 ) -> Dict:
     """
     Run fuzz tests for a single game.
@@ -193,6 +284,7 @@ def run_fuzz_test(
         "total": runs,
         "success": 0,
         "generation_failure": 0,
+        "ignored": 0,  # OptionError or invalid option combinations (expected failures)
         "test_failure": 0,
         "timeout": 0,
         "errors": [],
@@ -219,19 +311,25 @@ def run_fuzz_test(
         else:
             run_seed = random.randint(1, 1000000)
 
+        if verbose:
+            print(f"    Run {i + 1}/{runs} (seed {run_seed}): ", end="", flush=True)
+
         # Generate random YAML
         try:
             yaml_content = generate_random_yaml(
                 world_dir,
                 meta={},
                 default_options=default_options,
-                disallow_options=disallow_options
+                disallow_options=disallow_options,
+                max_item_dict_value=max_item_dict_value
             )
         except Exception as e:
             run_result["error"] = f"YAML generation failed: {e}"
             result["errors"].append(run_result["error"])
             result["generation_failure"] += 1
             result["runs"].append(run_result)
+            if verbose:
+                print("YAML generation failed")
             continue
 
         # Write YAML to temp file
@@ -263,10 +361,26 @@ def run_fuzz_test(
 
             if not gen_success:
                 run_result["error"] = f"Generation failed: {gen_output[-500:] if len(gen_output) > 500 else gen_output}"
+
+                # Check if this is an OptionError (invalid option combination)
+                # These are expected failures and should be ignored, not counted as failures
+                if is_option_error(gen_output):
+                    result["ignored"] += 1
+                    run_result["ignored"] = True
+                    result["runs"].append(run_result)
+                    if verbose:
+                        print("ignored (invalid options)")
+                    continue
+
                 result["errors"].append(run_result["error"])
                 result["generation_failure"] += 1
                 result["runs"].append(run_result)
+                if verbose:
+                    print("generation failed")
                 continue
+
+            if verbose:
+                print("generated -> ", end="", flush=True)
 
             # Run spoiler test
             test_success, test_result = run_spoiler_test(
@@ -283,11 +397,17 @@ def run_fuzz_test(
 
             if test_success:
                 result["success"] += 1
+                if verbose:
+                    print("PASS")
             else:
                 if test_result.get("error") and "timeout" in test_result["error"].lower():
                     result["timeout"] += 1
+                    if verbose:
+                        print("TIMEOUT")
                 else:
                     result["test_failure"] += 1
+                    if verbose:
+                        print("FAIL")
                 run_result["error"] = test_result.get("error") or "Spoiler test failed"
                 result["errors"].append(run_result["error"])
 
@@ -301,6 +421,7 @@ def run_fuzz_test(
                 pass
 
     # Determine overall pass/fail
+    # Note: "ignored" counts are NOT failures - they are expected invalid option combinations
     result["passed"] = (result["generation_failure"] == 0 and
                         result["test_failure"] == 0 and
                         result["timeout"] == 0)
@@ -553,10 +674,11 @@ def main():
         "metadata": {
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
-            "script_version": "1.0.0",
+            "script_version": "1.1.0",
             "test_type": "spoiler_fuzz",
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
+            "base_seed": args.seed,  # Store the actual seed value (None if random)
             "runs_per_game": args.runs,
             "generation_timeout": args.generation_timeout,
             "test_timeout": args.test_timeout,
@@ -584,6 +706,34 @@ def main():
 
             print(f"[{i}/{len(template_files)}] Testing {game_name} (world: {world_dir})...")
 
+            # Get game-specific fuzzer options and merge with command-line options
+            game_opts = get_game_fuzzer_options(template_name)
+
+            # Merge default_options: command-line takes precedence, game-specific adds to it
+            effective_default_options = default_options.copy() if default_options else set()
+            if game_opts['default_options']:
+                game_specific_opts = set(game_opts['default_options'].split(','))
+                effective_default_options = effective_default_options | game_specific_opts
+
+            # Merge disallow_options: command-line takes precedence, game-specific adds to it
+            effective_disallow_options = disallow_options.copy() if disallow_options else {}
+            if game_opts['disallow_options']:
+                # Parse game-specific disallow_options
+                for option_spec in game_opts['disallow_options'].split(";"):
+                    option_spec = option_spec.strip()
+                    if not option_spec or "=" not in option_spec:
+                        continue
+                    option_name, values_str = option_spec.split("=", 1)
+                    option_name = option_name.strip()
+                    values = set(v.strip() for v in values_str.split(",") if v.strip())
+                    if option_name in effective_disallow_options:
+                        effective_disallow_options[option_name] = effective_disallow_options[option_name] | values
+                    else:
+                        effective_disallow_options[option_name] = values
+
+            # Get max_item_dict_value (caps start_inventory item counts to prevent huge rules.json)
+            effective_max_item_dict_value = game_opts['max_item_dict_value']
+
             # Run the fuzz tests
             test_result = run_fuzz_test(
                 world_dir=world_dir,
@@ -594,9 +744,32 @@ def main():
                 test_timeout=args.test_timeout,
                 seed=args.seed,
                 headed=args.headed,
-                default_options=default_options,
-                disallow_options=disallow_options
+                default_options=effective_default_options,
+                disallow_options=effective_disallow_options,
+                max_item_dict_value=effective_max_item_dict_value
             )
+
+            # Build failing_seeds dict mapping failure type to list of seeds
+            failing_seeds = {
+                "generation_failure": [],
+                "test_failure": [],
+                "timeout": [],
+            }
+            for run in test_result.get("runs", []):
+                seed = run.get("seed")
+                if seed is None:
+                    continue
+                if run.get("ignored"):
+                    continue  # Don't track ignored runs (invalid option combinations)
+                if not run.get("generation_success"):
+                    failing_seeds["generation_failure"].append(seed)
+                elif not run.get("test_success"):
+                    # Check if it was a timeout
+                    error = run.get("error", "")
+                    if error and "timeout" in error.lower():
+                        failing_seeds["timeout"].append(seed)
+                    else:
+                        failing_seeds["test_failure"].append(seed)
 
             # Store result
             result_entry = {
@@ -605,9 +778,11 @@ def main():
                     "total": test_result["total"],
                     "success": test_result["success"],
                     "generation_failure": test_result["generation_failure"],
+                    "ignored": test_result["ignored"],
                     "test_failure": test_result["test_failure"],
                     "timeout": test_result["timeout"],
-                    "errors": test_result["errors"][:10]  # Limit stored errors
+                    "errors": test_result["errors"][:10],  # Limit stored errors
+                    "failing_seeds": failing_seeds,  # Track which seeds failed
                 },
                 "world_info": {
                     "game_name": game_name,
@@ -619,6 +794,7 @@ def main():
             results["results"][template_name] = result_entry
 
             # Update statistics
+            # Note: "ignored" counts are NOT failures - they are expected invalid option combinations
             if test_result["passed"]:
                 passed_count += 1
                 status = "PASS"
@@ -632,6 +808,7 @@ def main():
             # Print summary
             print(f"  {status}: {test_result['success']}/{test_result['total']} success, "
                   f"{test_result['generation_failure']} gen failures, "
+                  f"{test_result['ignored']} ignored, "
                   f"{test_result['test_failure']} test failures, "
                   f"{test_result['timeout']} timeouts")
 

@@ -8,31 +8,16 @@ for that file.
 import json
 import re
 from typing import Any, Dict, List, Optional, Set
+from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
+from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
-def sanitize_class_name(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
-
-
-def sanitize_option_name(name: str) -> str:
-    """Sanitize an option name to be a valid Python identifier.
-
-    Replaces non-alphanumeric characters (except underscores) with underscores.
-    Collapses multiple consecutive underscores into one.
-    """
-    # Replace any non-alphanumeric character (except underscore) with underscore
-    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
-    # Collapse multiple underscores into one
-    sanitized = re.sub(r'_+', '_', sanitized)
-    # Remove leading/trailing underscores
-    return sanitized.strip('_')
+# Backwards-compatible aliases
+sanitize_class_name = sanitize_for_class_name
+sanitize_option_name = sanitize_for_identifier
 
 
 def is_valid_identifier(name: str) -> bool:
@@ -259,15 +244,28 @@ def _rule_needs_lambda(rule: dict) -> bool:
         return True
 
     # AST format dynamic references also need lambda
-    # AST_function_call is included because it may reference 'location' or 'entrance'
-    # variables that are substituted at generation time via set_context(), and
-    # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
     # WorldAttribute and OptionValue need lambda because they generate
     # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
     # to be defined (only available in lambda context).
     # AST_capability needs lambda because it calls helper functions with runtime arguments
     # from options/world attributes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+        return True
+
+    # AST_function_call may need lambda, but not if the function is a Rule Builder rule
+    # (e.g., And, Or, Has, CanReachEntrance) - those can be converted directly.
+    # This happens when bunny rules are analyzed and path_to_access_rule returns
+    # nested Rule Builder expressions wrapped in AST_function_call.
+    if rule_name == 'AST_function_call':
+        args = rule.get('args', {})
+        function = args.get('function', {})
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            if func_rule in BOOLEAN_RULE_TYPES:
+                # Function is a Rule Builder rule - check if IT needs lambda
+                # (it might have nested dynamic references)
+                return _rule_needs_lambda(function)
+        # Unknown function call structure - needs lambda
         return True
 
     # HasFromList/HasFromListUnique with dynamic count (dict instead of int) need lambda
@@ -845,6 +843,24 @@ def generate_rules_py(data: ExtractedData) -> str:
 
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values, data.metadata.option_definitions)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
+
+    # Build entrance-to-parent-region mapping for resolving Attribute rules
+    # like entrance.parent_region (used by ALttP glitch rules)
+    entrance_regions = {}
+    for exit_name, exit_data in data.exits.items():
+        # Normalize entrance name: lowercase, no spaces (matches how exporter creates variable names)
+        normalized_name = exit_name.lower().replace(' ', '')
+        entrance_regions[normalized_name] = exit_data.source_region
+    rule_builder_generator.set_entrance_regions(entrance_regions)
+
+    # Build entrance-to-connected-region mapping for resolving dict_lambda_lookup patterns
+    # like rule_map.get(world.get_entrance('X').connected_region.name, default)
+    # With vanilla entrance shuffle, we can resolve the key to return just the matching case
+    entrance_connections = {}
+    for exit_name, exit_data in data.exits.items():
+        if exit_data.target_region:
+            entrance_connections[exit_name] = exit_data.target_region
+    rule_builder_generator.set_entrance_connections(entrance_connections)
 
     helper_generator = HelperCodeGenerator(
         game_name,
@@ -2015,16 +2031,45 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
             shop_wrapper_section = '''
 
 class _RegionWrapper:
-    """Wrapper for region to provide can_reach interface for worldgen shops."""
+    """Wrapper for region to provide can_reach interface for worldgen shops.
+
+    This wrapper stores a region name and lazily resolves it to the actual
+    Region object. Once resolved, the Region object is cached to ensure
+    consistent behavior with the original ALttP world's shop.region.
+    """
     def __init__(self, region_name: str, world):
         self.name = region_name
         self._world = world
+        self._region = None  # Cache for the actual Region object
+        self.player = world.player if hasattr(world, 'player') else 1  # For compatibility
 
-    def can_reach(self, state) -> bool:
-        """Check if the region is reachable."""
+    def _get_region(self):
+        """Get the actual Region object, caching it for future use.
+
+        Only caches successful lookups to handle the case where this is called
+        before regions are created (during __init__).
+        """
+        if self._region is not None:
+            return self._region
         try:
             region = self._world.multiworld.get_region(self.name, self._world.player)
-            return state.can_reach_region(self.name, self._world.player)
+            self._region = region  # Cache only on success
+            return region
+        except KeyError:
+            return None
+
+    def can_reach(self, state) -> bool:
+        """Check if the region is reachable.
+
+        Delegates to the actual Region.can_reach() method to ensure proper
+        handling of state.stale checks and BFS updates. This is important
+        because Region.can_reach() will trigger a BFS update if the state
+        is stale, ensuring consistent behavior with the original world.
+        """
+        try:
+            # Look up the region from the STATE's multiworld and delegate to it
+            region = state.multiworld.get_region(self.name, self._world.player)
+            return region.can_reach(state)
         except KeyError:
             return False
 
@@ -2044,7 +2089,12 @@ class _ShopWrapper:
         self.sram_offset = shop_data.get('sram_offset', 0)
 
     def has_unlimited(self, item: str) -> bool:
-        """Check if the shop has unlimited supply of an item."""
+        """Check if the shop has unlimited supply of an item.
+
+        In ALttP's shop system:
+        - max: 0 (or not present) means unlimited stock of the base item
+        - max: N (N > 0) means limited stock, switches to replacement after N sales
+        """
         # Check simplified unlimited_items list first (new format from ALttP exporter)
         if item in self.unlimited_items:
             return True
@@ -2052,11 +2102,15 @@ class _ShopWrapper:
         for inv in self.inventory:
             if inv is None:
                 continue
-            if inv.get('max'):
+            max_stock = inv.get('max', 0)
+            if max_stock == 0:
+                # Unlimited stock of the base item
+                if inv.get('item') == item:
+                    return True
+            else:
+                # Limited stock, but the replacement is unlimited after stock runs out
                 if inv.get('replacement') == item:
                     return True
-            elif inv.get('item') == item:
-                return True
         return False
 
     def has(self, item: str) -> bool:

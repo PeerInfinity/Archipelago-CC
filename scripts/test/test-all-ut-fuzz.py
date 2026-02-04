@@ -57,6 +57,12 @@ FUZZ_OUTPUT_DIR = PROJECT_ROOT / "fuzz_output"
 # Explain stats file location (written by fuzzer_hook)
 EXPLAIN_STATS_FILE = FUZZ_OUTPUT_DIR / "explain_stats" / "explain_stats.json"
 
+# Per-game fuzzer options configuration file
+GAME_OPTIONS_FILE = PROJECT_ROOT / "scripts" / "data" / "ut-fuzz-game-options.json"
+
+# Cache for game-specific fuzzer options
+_game_fuzzer_options: Optional[Dict] = None
+
 
 def cleanup_empty_worldgen_dirs():
     """
@@ -89,6 +95,51 @@ def cleanup_empty_worldgen_dirs():
 
     if removed_count > 0:
         print(f"Cleaned up {removed_count} empty worldgen directories")
+
+
+def load_game_fuzzer_options() -> Dict:
+    """
+    Load per-game fuzzer options from configuration file.
+
+    Returns a dict mapping template names to their fuzzer option overrides.
+    """
+    global _game_fuzzer_options
+
+    if _game_fuzzer_options is not None:
+        return _game_fuzzer_options
+
+    _game_fuzzer_options = {}
+
+    if GAME_OPTIONS_FILE.exists():
+        try:
+            with open(GAME_OPTIONS_FILE, 'r') as f:
+                data = json.load(f)
+            _game_fuzzer_options = data.get('game_options', {})
+            if _game_fuzzer_options:
+                print(f"Loaded fuzzer options for {len(_game_fuzzer_options)} games from {GAME_OPTIONS_FILE.name}")
+        except Exception as e:
+            print(f"Warning: Error loading game fuzzer options: {e}")
+
+    return _game_fuzzer_options
+
+
+def get_game_fuzzer_options(template_name: str) -> Dict[str, Optional[str]]:
+    """
+    Get fuzzer options for a specific game.
+
+    Args:
+        template_name: The template filename (e.g., 'Subnautica.yaml')
+
+    Returns:
+        Dict with 'default_options' and 'disallow_options' keys (values may be None)
+    """
+    game_options = load_game_fuzzer_options()
+    config = game_options.get(template_name, {})
+
+    return {
+        'default_options': config.get('default_options'),
+        'disallow_options': config.get('disallow_options')
+    }
 
 
 def get_template_files(templates_dir: Path, skip_list: List[str], include_list: Optional[List[str]] = None) -> List[Path]:
@@ -232,7 +283,9 @@ def run_fuzzer_test(
     seed: Optional[int],
     default_options: Optional[str] = None,
     disallow_options: Optional[str] = None,
-    fractional_spheres: bool = False
+    fractional_spheres: bool = False,
+    stop_on_first_failure: bool = False,
+    number_by_seed: bool = False
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -246,6 +299,8 @@ def run_fuzzer_test(
         default_options: Comma-separated options to leave at defaults
         disallow_options: Options to disallow (format: option=value1,value2;option2=value)
         fractional_spheres: Enable fractional sphere logic for UT comparison
+        stop_on_first_failure: Stop fuzzing after the first failure
+        number_by_seed: Number output files by actual seed instead of iteration index
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -296,6 +351,12 @@ def run_fuzzer_test(
 
     if fractional_spheres:
         cmd.append("--fractional-spheres")
+
+    if stop_on_first_failure:
+        cmd.append("--stop-on-first-failure")
+
+    if number_by_seed:
+        cmd.append("--number-by-seed")
 
     print(f"  Running: {' '.join(cmd[:10])}...")
 
@@ -502,6 +563,19 @@ def main():
         help='Enable fractional sphere logic for UT comparison. Handles cascading item dependencies '
              'within spheres by iterating until no new locations become accessible.'
     )
+    parser.add_argument(
+        '--stop-on-first-failure',
+        action='store_true',
+        default=False,
+        help='Stop fuzzing after the first failure or timeout. Useful for debugging.'
+    )
+    parser.add_argument(
+        '--number-by-seed',
+        action='store_true',
+        default=False,
+        help='Number output files and errors by actual seed instead of iteration index. '
+             'Requires --seed to be set.'
+    )
 
     args = parser.parse_args()
 
@@ -654,6 +728,8 @@ def main():
             "runs_per_game": args.runs,
             "jobs": args.jobs,
             "timeout": args.timeout,
+            "default_options": args.default_options,
+            "disallow_options": args.disallow_options,
             "total_templates": len(template_files)
         },
         "results": {}
@@ -677,6 +753,29 @@ def main():
 
         print(f"[{i}/{len(template_files)}] Testing {game_name} (world: {world_dir})...")
 
+        # Get game-specific fuzzer options and merge with command-line options
+        game_opts = get_game_fuzzer_options(template_name)
+
+        # Merge default_options: command-line takes precedence, game-specific adds to it
+        effective_default_options = args.default_options
+        if game_opts['default_options']:
+            if effective_default_options:
+                # Combine both, avoiding duplicates
+                cli_opts = set(effective_default_options.split(','))
+                game_specific_opts = set(game_opts['default_options'].split(','))
+                effective_default_options = ','.join(cli_opts | game_specific_opts)
+            else:
+                effective_default_options = game_opts['default_options']
+
+        # Merge disallow_options: command-line takes precedence, game-specific adds to it
+        effective_disallow_options = args.disallow_options
+        if game_opts['disallow_options']:
+            if effective_disallow_options:
+                # Combine both with semicolon separator
+                effective_disallow_options = f"{effective_disallow_options};{game_opts['disallow_options']}"
+            else:
+                effective_disallow_options = game_opts['disallow_options']
+
         # Run the fuzzer
         test_result = run_fuzzer_test(
             world_dir=world_dir,
@@ -684,9 +783,11 @@ def main():
             jobs=args.jobs,
             timeout=args.timeout,
             seed=args.seed,
-            default_options=args.default_options,
-            disallow_options=args.disallow_options,
-            fractional_spheres=args.fractional_spheres
+            default_options=effective_default_options,
+            disallow_options=effective_disallow_options,
+            fractional_spheres=args.fractional_spheres,
+            stop_on_first_failure=args.stop_on_first_failure,
+            number_by_seed=args.number_by_seed
         )
 
         # Store result

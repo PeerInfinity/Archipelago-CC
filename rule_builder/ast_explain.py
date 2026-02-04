@@ -14,6 +14,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from ._ast_utils import extract_constant_value
+
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
 
@@ -95,11 +97,8 @@ def explain_ast_rule(
     return [{"type": "text", "text": f"[{rule_type or 'unknown'}]"}]
 
 
-def _extract_value(value: Any) -> Any:
-    """Extract value from potential constant wrapper."""
-    if isinstance(value, dict) and value.get('type') == 'constant':
-        return value.get('value')
-    return value
+# Alias for backwards compatibility within this module
+_extract_value = extract_constant_value
 
 
 def _explain_constant(

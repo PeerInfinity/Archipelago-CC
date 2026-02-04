@@ -33,6 +33,7 @@ class ExpressionVisitorMixin:
             # Special handling for self.world.options.<setting>.value pattern
             # This resolves option values to constants at export time instead of runtime lookup
             # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            # Controlled by the resolve_options_to_constants setting
             if attr_name == 'value' and 'self' in self.closure_vars:
                 self_obj = self.closure_vars['self']
                 try:
@@ -44,6 +45,28 @@ class ExpressionVisitorMixin:
                         current = current.value
                     if isinstance(current, ast.Name) and current.id == 'self':
                         # We have self.X.Y.Z.value pattern
+                        # Check if this is a world.options pattern (chain includes 'options')
+                        is_options_pattern = 'options' in chain and len(chain) >= 3
+
+                        # Check if we should resolve options to constants
+                        should_resolve = True
+                        if is_options_pattern and hasattr(self, 'game_handler') and self.game_handler is not None:
+                            if hasattr(self.game_handler, 'should_resolve_options_to_constants'):
+                                should_resolve = self.game_handler.should_resolve_options_to_constants()
+
+                        if is_options_pattern and not should_resolve:
+                            # Return option_value reference instead of resolving to constant
+                            # Chain is like ['world', 'options', 'SettingName', 'value']
+                            # Find the setting name (element after 'options')
+                            try:
+                                options_idx = chain.index('options')
+                                if options_idx + 1 < len(chain) - 1:  # -1 to skip 'value' at the end
+                                    setting_name = chain[options_idx + 1]
+                                    logging.debug(f"visit_Attribute: Keeping self.world.options.{setting_name}.value as option_value (resolve_options_to_constants=False)")
+                                    return {'type': 'option_value', 'option': setting_name}
+                            except (ValueError, IndexError):
+                                pass  # Fall through to normal resolution
+
                         # Try to resolve the full chain via closure_vars
                         resolved = self_obj
                         for attr in chain:
@@ -143,11 +166,6 @@ class ExpressionVisitorMixin:
                             list_value = list(resolved_attr)
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
-                        elif hasattr(resolved_attr, 'value') and isinstance(resolved_attr.value, (int, float, str, bool)):
-                            # Handle enum values by extracting their .value attribute
-                            # This enables constant folding for comparisons like location.shop_price_type == ShopPriceType.Hearts
-                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to enum constant: {resolved_attr.value}")
-                            return {'type': 'constant', 'value': resolved_attr.value}
                         elif callable(resolved_attr) and hasattr(obj_value, '_fields'):
                             # Handle callable attributes on NamedTuples (e.g., LocationData.access_rule)
                             # When used in boolean context (if loc.access_rule:), this should be True
@@ -241,54 +259,8 @@ class ExpressionVisitorMixin:
                     pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
-                    list_value = list(value) if isinstance(value, tuple) else value
-                    # Check if the list contains callables (like entrance access rules)
-                    # If so, analyze each callable to get proper rule structures
-                    if list_value and all(callable(item) for item in list_value):
-                        logging.debug(f"visit_Name: '{name}' is a list of {len(list_value)} callables, analyzing each")
-                        # Import analyze_rule to avoid circular dependency
-                        from ..analysis import analyze_rule
-                        from ..cache import callable_list_cache
-                        analyzed_items = []
-                        for idx, item_func in enumerate(list_value):
-                            try:
-                                # Check cache first using function ID
-                                func_id = id(item_func)
-                                if func_id in callable_list_cache:
-                                    logging.debug(f"visit_Name: Cache hit for callable {idx} in list '{name}'")
-                                    item_result = callable_list_cache[func_id]
-                                else:
-                                    item_result = analyze_rule(
-                                        rule_func=item_func,
-                                        closure_vars=self.closure_vars.copy(),
-                                        seen_funcs=self.seen_funcs,
-                                        game_handler=self.game_handler,
-                                        player_context=self.player_context,
-                                        rule_target_name=getattr(self, 'rule_target_name', None),
-                                        target_type=getattr(self, 'target_type', None)
-                                    )
-                                    # Cache successful results
-                                    if item_result and item_result.get('type') != 'error':
-                                        callable_list_cache[func_id] = item_result
-
-                                if item_result and item_result.get('type') != 'error':
-                                    analyzed_items.append(item_result)
-                                else:
-                                    logging.debug(f"visit_Name: Could not analyze callable item {idx} in list '{name}'")
-                                    analyzed_items = None
-                                    break
-                            except Exception as e:
-                                logging.debug(f"visit_Name: Error analyzing callable item {idx} in list '{name}': {e}")
-                                analyzed_items = None
-                                break
-
-                        if analyzed_items is not None:
-                            logging.debug(f"visit_Name: Successfully analyzed {len(analyzed_items)} callables from '{name}'")
-                            return {'type': 'constant', 'value': analyzed_items}
-                        else:
-                            logging.debug(f"visit_Name: Failed to analyze callable list '{name}', falling back to string representation")
-
                     # Convert to list for JSON serialization
+                    list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
                 # Handle set/frozenset values - resolve to constant for 'in' / 'not in' comparisons
@@ -792,9 +764,55 @@ class ExpressionVisitorMixin:
                 logging.debug(f"Unknown boolean operator: {type(node.op).__name__}")
                 return None
 
+            # Simplify boolean expressions with constant values
+            # This is critical for properly handling options like open_pyramid.to_bool()
+            # which evaluate to True/False at analysis time
+            simplified_conditions = []
+            for cond in conditions:
+                if cond.get('type') == 'constant':
+                    const_val = cond.get('value')
+                    if op_type == 'or' and const_val is True:
+                        # OR with True -> True (short-circuit)
+                        logging.debug(f"Boolean simplification: OR with True -> True")
+                        return {'type': 'constant', 'value': True}
+                    elif op_type == 'and' and const_val is False:
+                        # AND with False -> False (short-circuit)
+                        logging.debug(f"Boolean simplification: AND with False -> False")
+                        return {'type': 'constant', 'value': False}
+                    elif op_type == 'or' and const_val is False:
+                        # OR with False -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: OR skipping False condition")
+                        continue
+                    elif op_type == 'and' and const_val is True:
+                        # AND with True -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: AND skipping True condition")
+                        continue
+                    else:
+                        # Non-boolean constant (shouldn't happen in boolean context)
+                        simplified_conditions.append(cond)
+                else:
+                    simplified_conditions.append(cond)
+
+            # Handle cases where all conditions were filtered out
+            if len(simplified_conditions) == 0:
+                # All conditions were identity elements
+                if op_type == 'or':
+                    # All False conditions -> False
+                    logging.debug(f"Boolean simplification: All OR conditions were False -> False")
+                    return {'type': 'constant', 'value': False}
+                else:
+                    # All True conditions -> True
+                    logging.debug(f"Boolean simplification: All AND conditions were True -> True")
+                    return {'type': 'constant', 'value': True}
+
+            # If only one condition remains, return it directly
+            if len(simplified_conditions) == 1:
+                logging.debug(f"Boolean simplification: Single condition remaining -> {simplified_conditions[0]}")
+                return simplified_conditions[0]
+
             result = {
                 'type': op_type,
-                'conditions': conditions
+                'conditions': simplified_conditions
             }
             logging.debug(f"Boolean operation result: {result}")
             return result # Return the result

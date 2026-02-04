@@ -76,7 +76,10 @@ export class PresetUI {
     this.initialized = false;
 
     try {
-      fetch('./presets/preset_files.json')
+      // Use cache: 'reload' to validate with server (allows 304 Not Modified)
+      // Use cache: 'no-store' when ?nocache=1 is in URL (completely bypasses cache for testing)
+      const noCache = new URLSearchParams(window.location.search).has('nocache');
+      fetch('./presets/preset_files.json', { cache: noCache ? 'no-store' : 'reload' })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -157,6 +160,7 @@ export class PresetUI {
             <span class="test-header" title="Full Spoiler Test">FS</span>
             <span class="test-header" title="Multi-client Test">MC</span>
             <span class="test-header" title="Multi-world Test">MW</span>
+            <span class="test-header" title="Spoiler Fuzz Test">SF</span>
           </div>
         </div>
     `;
@@ -1037,12 +1041,13 @@ export class PresetUI {
   renderTestResultBadge(gameData) {
     const testResults = gameData.test_results;
 
-    // Define the four test types with their labels and full names for tooltips
+    // Define the five test types with their labels and full names for tooltips
     const testTypes = [
       { key: 'minimal_spoiler', fullName: 'Minimal Spoiler Test' },
       { key: 'full_spoiler', fullName: 'Full Spoiler Test' },
       { key: 'multiclient', fullName: 'Multi-client Test' },
       { key: 'multiworld', fullName: 'Multi-world Test' },
+      { key: 'spoiler_fuzz', fullName: 'Spoiler Fuzz Test' },
     ];
 
     // Build badges for each test type
@@ -1082,6 +1087,13 @@ export class PresetUI {
       }
       if (result.total_locations !== undefined) {
         tooltipContent += `\nLocations: ${result.locations_checked}/${result.total_locations} checked`;
+      }
+      // Add fuzz test run info to tooltip if available
+      if (result.total_runs !== undefined) {
+        tooltipContent += `\nRuns: ${result.runs_passed}/${result.total_runs} passed`;
+        if (result.runs_failed > 0 && result.failure_types) {
+          tooltipContent += `\nFailures: ${result.failure_types}`;
+        }
       }
     }
 

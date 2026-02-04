@@ -154,7 +154,7 @@ def heart_count(state: "CollectionState", player: int) -> bool:
 
 
 def is_not_bunny(state: "CollectionState", player: int, region = None) -> bool:
-    return (True if state.has('Moon Pearl', player) else ((True if ((state.multiworld.get_region(region) if isinstance(region, str) else region) is None) else _r.is_light_world) if (state.multiworld.worlds[player].options.mode != 2) else (True if ((state.multiworld.get_region(region) if isinstance(region, str) else region) is None) else _r.is_dark_world)))
+    return (True if state.has('Moon Pearl', player) else ((True if ((state.multiworld.get_region(region) if isinstance(region, str) else region) is None) else getattr((state.multiworld.get_region(region, player) if isinstance(region, str) else region), 'is_light_world', True)) if (state.multiworld.worlds[player].options.mode != 2) else (True if ((state.multiworld.get_region(region) if isinstance(region, str) else region) is None) else getattr((state.multiworld.get_region(region, player) if isinstance(region, str) else region), 'is_dark_world', True))))
 
 
 def tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:

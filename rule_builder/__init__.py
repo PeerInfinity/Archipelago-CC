@@ -60,6 +60,7 @@ from .rules import (
     CanReachLocation,
     CanReachRegion,
     CanReachEntrance,
+    EntranceAccessRuleCall,
     # AST format support
     ASTRule,
     Not,
@@ -73,7 +74,10 @@ from .rules import (
     Conditional,
     HelperCall,
     WeightedSum,
+    UniqueCount,
     OptionValue,
+    # Rule type collections
+    BOOLEAN_RULE_TYPES,
 )
 
 from .ast_format import (
@@ -128,6 +132,7 @@ __all__ = [
     'CanReachLocation',
     'CanReachRegion',
     'CanReachEntrance',
+    'EntranceAccessRuleCall',
     # AST format support classes
     'ASTRule',
     'Not',
@@ -141,7 +146,10 @@ __all__ = [
     'Conditional',
     'HelperCall',
     'WeightedSum',
+    'UniqueCount',
     'OptionValue',
+    # Rule type collections
+    'BOOLEAN_RULE_TYPES',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',

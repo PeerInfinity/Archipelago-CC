@@ -184,6 +184,19 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         if 'seed' in metadata:
             seeds_used.append(str(metadata['seed']))
 
+    # Collect preserved metadata fields from input files
+    # These fields should be consistent across all input files (from parallel splits)
+    preserved_fields = [
+        'test_type', 'seed_mode', 'base_seed', 'runs_per_game',
+        'generation_timeout', 'test_timeout', 'total_templates'
+    ]
+    preserved_metadata = {}
+    for result_data in all_results:
+        metadata = result_data.get('metadata', {})
+        for field in preserved_fields:
+            if field in metadata and field not in preserved_metadata:
+                preserved_metadata[field] = metadata[field]
+
     # Create combined output structure
     combined = {
         'metadata': {
@@ -191,7 +204,8 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
             'last_updated': datetime.now().isoformat(),
             'script_version': '1.0.0',
             'combined_from': len(all_results),
-            'combination_note': 'Results combined from parallel seed tests'
+            'combination_note': 'Results combined from parallel seed tests',
+            **preserved_metadata  # Include preserved fields from input files
         },
         'results': combined_results
     }

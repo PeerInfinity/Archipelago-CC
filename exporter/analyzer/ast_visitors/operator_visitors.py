@@ -80,17 +80,59 @@ class OperatorVisitorMixin:
                 return None # Or a generic representation
 
         except Exception as e:
-            logging.error("Error in visit_UnaryOp", e)
+            logging.error(f"Error in visit_UnaryOp: {e}")
             return None
 
     def visit_Compare(self, node: ast.Compare):
         """ Handle comparison operations (e.g., ==, !=, in, not in, is, is not). """
         try:
             logging.debug(f"\n--- visit_Compare ---")
-            if len(node.ops) != 1 or len(node.comparators) != 1:
-                # For now, only support simple comparisons like `a op b`
-                logging.error(f"Unsupported chained comparison: {ast.dump(node)}")
-                return None
+
+            # Handle chained comparisons like a < b < c => (a < b) and (b < c)
+            if len(node.ops) > 1:
+                logging.debug(f"Expanding chained comparison with {len(node.ops)} operators")
+                conditions = []
+                # Build list of all values: [left, comparator1, comparator2, ...]
+                all_values = [node.left] + list(node.comparators)
+
+                for i, op in enumerate(node.ops):
+                    left_val = all_values[i]
+                    right_val = all_values[i + 1]
+
+                    left_result = self.visit(left_val)
+                    right_result = self.visit(right_val)
+
+                    if left_result is None or right_result is None:
+                        logging.error(f"Failed to analyze part of chained comparison")
+                        return None
+
+                    op_name = type(op).__name__.lower()
+                    op_map = {
+                        'eq': '==', 'noteq': '!=',
+                        'lt': '<', 'lte': '<=',
+                        'gt': '>', 'gte': '>=',
+                        'is': 'is', 'isnot': 'is not',
+                        'in': 'in', 'notin': 'not in'
+                    }
+                    op_symbol = op_map.get(op_name, op_name)
+
+                    # Try constant folding for this part
+                    folded_result = self._try_fold_comparison(left_result, op_symbol, right_result)
+                    if folded_result is not None:
+                        conditions.append(folded_result)
+                    else:
+                        conditions.append({
+                            'type': 'compare',
+                            'left': left_result,
+                            'op': op_symbol,
+                            'right': right_result
+                        })
+
+                # Combine with 'and'
+                if len(conditions) == 1:
+                    return conditions[0]
+                else:
+                    return {'type': 'and', 'conditions': conditions}
 
             left_result = self.visit(node.left)
             op_name = type(node.ops[0]).__name__.lower() # e.g., 'eq', 'in', 'is'
@@ -130,7 +172,7 @@ class OperatorVisitorMixin:
             }
 
         except Exception as e:
-            logging.error("Error in visit_Compare", e)
+            logging.error(f"Error in visit_Compare: {e}")
             return None
 
     def _try_fold_comparison(self, left_result, op_symbol, right_result):
@@ -303,5 +345,5 @@ class OperatorVisitorMixin:
                 'right': right_result
             }
         except Exception as e:
-            logging.error("Error in visit_BinOp", e)
+            logging.error(f"Error in visit_BinOp: {e}")
             return None

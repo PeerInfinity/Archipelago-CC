@@ -1,4 +1,4 @@
-__version__ = "0.4.2"
+__version__ = "0.5.1-modified"
 
 import sys
 import os
@@ -174,9 +174,166 @@ def world_from_apworld_name(apworld_name):
 # See https://github.com/yaml/pyyaml/issues/103
 yaml.SafeDumper.ignore_aliases = lambda *args: True
 
+
+def _ensure_list(values):
+    return values if isinstance(values, list) else [values]
+
+
+def apply_constraints(game_options, constraints, option_defs):
+    # Collect mutually_exclusive info for requires_any filtering
+    mutual_exclusions = [
+        {"option": c.get("option"), "values": c["mutually_exclusive"]}
+        for c in constraints if "mutually_exclusive" in c
+    ]
+
+    other_constraints = [c for c in constraints if "mutually_exclusive" not in c]
+
+    # Run other constraints twice: once for initial processing, once for dependencies
+    for _ in range(2):
+        for constraint in other_constraints:
+            _apply_single_constraint(game_options, constraint, mutual_exclusions, option_defs)
+
+    # Run mutually_exclusive last to resolve any conflicts created by additions
+    for excl in mutual_exclusions:
+        _apply_single_constraint(game_options, {"option": excl["option"], "mutually_exclusive": excl["values"]}, mutual_exclusions, option_defs)
+
+    # Run other constraints once more to fix any requirements broken by mutually_exclusive
+    for constraint in other_constraints:
+        _apply_single_constraint(game_options, constraint, mutual_exclusions, option_defs)
+
+    return game_options
+
+
+def _apply_single_constraint(game_options, constraint, mutual_exclusions, option_defs):
+    option_name = constraint.get("option")
+    if option_name not in game_options:
+        return
+
+    option_value = game_options[option_name]
+
+    if "if_selected" in constraint:
+        _handle_if_selected(option_value, constraint)
+
+    elif "if_value" in constraint:
+        _handle_if_value(game_options, option_value, constraint)
+
+    elif "mutually_exclusive" in constraint:
+        _handle_mutually_exclusive(option_value, constraint)
+
+    elif "if_any_selected" in constraint and "requires_any" in constraint:
+        _handle_requires_any(option_name, option_value, constraint, mutual_exclusions)
+
+    elif "max_count_of" in constraint:
+        _handle_max_count_of(game_options, option_name, option_value, constraint, option_defs)
+
+    elif "max_remaining_from" in constraint:
+        _handle_max_remaining_from(game_options, option_name, option_value, constraint, option_defs)
+
+    elif "ensure_any" in constraint:
+        _handle_ensure_any(option_value, constraint)
+
+
+def _handle_if_selected(option_value, constraint):
+    if constraint["if_selected"] not in option_value:
+        return
+
+    for val in _ensure_list(constraint.get("must_include", [])):
+        if val not in option_value:
+            option_value.append(val)
+
+    for val in _ensure_list(constraint.get("must_exclude", [])):
+        if val in option_value:
+            option_value.remove(val)
+
+
+def _handle_if_value(game_options, option_value, constraint):
+    if option_value != constraint["if_value"]:
+        return
+
+    for target_option, target_value in constraint.get("then", {}).items():
+        game_options[target_option] = target_value
+
+    for target_option, excluded in constraint.get("then_exclude", {}).items():
+        target = game_options[target_option]
+        for val in _ensure_list(excluded):
+            if val in target:
+                target.remove(val)
+
+    for target_option, included in constraint.get("then_include", {}).items():
+        target = game_options[target_option]
+        for val in _ensure_list(included):
+            if val not in target:
+                target.append(val)
+
+
+def _handle_mutually_exclusive(option_value, constraint):
+    present = [val for val in constraint["mutually_exclusive"] if val in option_value]
+    if len(present) > 1:
+        keep = random.choice(present)
+        for val in present:
+            if val != keep:
+                option_value.remove(val)
+
+
+def _handle_requires_any(option_name, option_value, constraint, mutual_exclusions):
+    trigger_values = constraint["if_any_selected"]
+    required_values = constraint["requires_any"]
+
+    if not any(val in option_value for val in trigger_values):
+        return
+    if any(val in option_value for val in required_values):
+        return
+
+    # Filter candidates that would conflict with mutually_exclusive constraints
+    candidates = list(required_values)
+    for excl in mutual_exclusions:
+        if excl["option"] == option_name:
+            present_excl = [v for v in excl["values"] if v in option_value]
+            if present_excl:
+                candidates = [c for c in candidates if c not in excl["values"]]
+
+    if not candidates:
+        candidates = list(required_values)
+
+    choice = random.choice(candidates)
+    if choice not in option_value:
+        option_value.append(choice)
+
+
+def _handle_max_count_of(game_options, option_name, option_value, constraint, option_defs):
+    other_value = game_options[constraint["max_count_of"]]
+    cap = len(other_value)
+    if option_value > cap:
+        option_def = option_defs[option_name]
+        if cap < option_def.range_start:
+            game_options[option_name] = cap
+        else:
+            game_options[option_name] = random.randint(option_def.range_start, cap)
+
+
+def _handle_max_remaining_from(game_options, option_name, option_value, constraint, option_defs):
+    other_value = game_options[constraint["max_remaining_from"]]
+    max_capacity = int(constraint["max_capacity"])
+    cap = max_capacity - len(other_value)
+    if option_value > cap:
+        option_def = option_defs[option_name]
+        if cap < option_def.range_start:
+            game_options[option_name] = cap
+        else:
+            game_options[option_name] = random.randint(option_def.range_start, cap)
+
+
+def _handle_ensure_any(option_value, constraint):
+    required_values = constraint["ensure_any"]
+    if not any(val in option_value for val in required_values):
+        choice = random.choice(required_values)
+        if choice not in option_value:
+            option_value.append(choice)
+
+
 # Adapted from archipelago'd generate_yaml_templates
 # https://github.com/ArchipelagoMW/Archipelago/blob/f75a1ae1174fb467e5c5bd5568d7de3c806d5b1c/Options.py#L1504
-def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None):
+def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None, max_item_dict_value=None):
     """Generate a random YAML for the given world.
 
     Args:
@@ -184,6 +341,7 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
         meta: Dictionary of option overrides
         default_options: Set of option names to leave at their defaults instead of randomizing
         disallow_options: Dict mapping option names to sets of values to disallow
+        max_item_dict_value: Max value for OptionCounter items (e.g., start_inventory). Default 1000.
     """
     def dictify_range(option):
         data = {option.default: 50}
@@ -239,8 +397,10 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     game_meta = meta.get(game_name, {})
 
     game_options = {}
+    option_defs = {}
     option_groups = get_option_groups(world)
     for group, options in option_groups.items():
+        option_defs.update(options)
         for option_name, option_value in options.items():
             # Check if this option should be left at default
             if option_name in default_options:
@@ -258,11 +418,16 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
             # Get disallowed values for this option (if any)
             disallowed = disallow_options.get(option_name, set())
             game_options[option_name] = sanitize(
-                get_random_value(option_name, option_value, disallowed)
+                get_random_value(option_name, option_value, disallowed, max_item_dict_value)
             )
 
     if "triggers" in game_meta:
         game_options["triggers"] = game_meta["triggers"]
+
+    # Apply fuzz_constraints from meta file if present
+    fuzz_constraints = game_meta.get("fuzz_constraints", [])
+    if fuzz_constraints:
+        apply_constraints(game_options, fuzz_constraints, option_defs)
 
     yaml_content = {
         "description": f"{game_name} Template, generated with https://github.com/Eijebong/Archipelago-fuzzer/tree/{__version__}",
@@ -281,16 +446,19 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     return res
 
 
-def get_random_value(name, option, disallowed=None):
+def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
     """Get a random value for the given option.
 
     Args:
         name: The option name
         option: The option class
         disallowed: Set of values to exclude from randomization
+        max_item_dict_value: Max value for OptionCounter items. Default 1000.
     """
     if disallowed is None:
         disallowed = set()
+    if max_item_dict_value is None:
+        max_item_dict_value = 1000
 
     if name == "item_links":
         # Let's not fuck with item links right now, I'm scared
@@ -326,7 +494,7 @@ def get_random_value(name, option, disallowed=None):
             k=random.randint(0, len(option.valid_keys))
         )
         min_val = option.min if option.min is not None else 0
-        max_val = option.max if option.max is not None else 1000
+        max_val = option.max if option.max is not None else max_item_dict_value
         return {key: random.randint(min_val, max_val) for key in selected_keys}
 
     if issubclass(option, OptionDict):
@@ -394,15 +562,6 @@ def get_random_value(name, option, disallowed=None):
 
 def call_generate(yaml_path, args, output_path):
     from settings import get_settings
-
-    # Clear any cached state from previous generations
-    # Some worlds (like Landstalker) use class-level caches that persist
-    # across generations and can cause issues with stale player IDs
-    try:
-        from worlds.landstalker import LandstalkerWorld
-        LandstalkerWorld.cached_spheres = []
-    except ImportError:
-        pass
 
     settings = get_settings()
 
@@ -519,7 +678,8 @@ def gen_wrapper(yaml_path, apworld_name, i, args, queue, tmp):
                 else:
                     extra = "".join(traceback.format_exception(raised))
 
-                dump_generation_output(outcome, apworld_name, i, yaml_path, out_buf, extra)
+                run_id = get_run_id(i, args)
+                dump_generation_output(outcome, apworld_name, run_id, yaml_path, out_buf, extra)
 
                 return outcome, raised
     except Exception as e:
@@ -557,12 +717,24 @@ class GenOutcome:
     OptionError = 3
 
 
+def get_run_id(i, args):
+    """Get the run identifier for output files and error reporting.
+
+    When --number-by-seed is set, returns the actual seed (base_seed + iteration).
+    Otherwise returns the iteration index (default behavior).
+    """
+    if getattr(args, 'number_by_seed', False) and args.seed is not None:
+        return args.seed + i
+    return i
+
+
 IS_TTY = sys.stdout.isatty()
 SUCCESS = 0
 FAILURE = 0
 TIMEOUTS = 0
 OPTION_ERRORS = 0
 SUBMITTED = 0
+STOP_REQUESTED = False
 REPORT = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [])))
 
 
@@ -573,23 +745,29 @@ def gen_callback(yamls_dir, apworld_name, i, args, outcome):
         else:
             exc = None
 
-        global SUCCESS, FAILURE, SUBMITTED, OPTION_ERRORS, TIMEOUTS
+        global SUCCESS, FAILURE, SUBMITTED, OPTION_ERRORS, TIMEOUTS, STOP_REQUESTED
         SUBMITTED -= 1
+
+        run_id = get_run_id(i, args)
 
         if outcome == GenOutcome.Success:
             SUCCESS += 1
             if IS_TTY:
                 print(".", end="")
         elif outcome == GenOutcome.Failure:
-            REPORT[apworld_name][type(exc)][str(exc)].append(i)
+            REPORT[apworld_name][type(exc)][str(exc)].append(run_id)
             FAILURE += 1
             if IS_TTY:
                 print("F", end="")
+            if getattr(args, 'stop_on_first_failure', False):
+                STOP_REQUESTED = True
         elif outcome == GenOutcome.Timeout:
-            REPORT[apworld_name][TimeoutError][""].append(i)
+            REPORT[apworld_name][TimeoutError][""].append(run_id)
             TIMEOUTS += 1
             if IS_TTY:
                 print("T", end="")
+            if getattr(args, 'stop_on_first_failure', False):
+                STOP_REQUESTED = True
         elif outcome == GenOutcome.OptionError:
             OPTION_ERRORS += 1
             if IS_TTY:
@@ -622,7 +800,8 @@ def error(yamls_dir, apworld_name, i, args, raised):
             msg.write(raised.out_buf)
         msg.write("\n".join(traceback.format_exception(raised)))
 
-        dump_generation_output(GenOutcome.Failure, apworld_name, i, yamls_dir, msg)
+        run_id = get_run_id(i, args)
+        dump_generation_output(GenOutcome.Failure, apworld_name, run_id, yamls_dir, msg)
         return gen_callback(yamls_dir, apworld_name, i, args, GenOutcome.Failure)
     except Exception as e:
         print("Error while handling fuzzing result:")
@@ -816,7 +995,8 @@ if __name__ == "__main__":
                     outcome = GenOutcome.Timeout
                     for hook in MAIN_HOOKS:
                         outcome, _ = hook.reclassify_outcome(outcome, TimeoutError())
-                    dump_generation_output(outcome, apworld_name, i, yamls_dir, out_buf, extra)
+                    run_id = get_run_id(i, args)
+                    dump_generation_output(outcome, apworld_name, run_id, yamls_dir, out_buf, extra)
                     gen_callback(yamls_dir, apworld_name, i, args, outcome)
                 except KeyboardInterrupt:
                     break
@@ -824,7 +1004,8 @@ if __name__ == "__main__":
                     break
                 except Exception as exc:
                     extra = "[...] Exception while timing out:\n {}".format("\n".join(traceback.format_exception(exc)))
-                    dump_generation_output(GenOutcome.Timeout, apworld_name, i, yamls_dir, out_buf, extra)
+                    run_id = get_run_id(i, args)
+                    dump_generation_output(GenOutcome.Timeout, apworld_name, run_id, yamls_dir, out_buf, extra)
                     gen_callback(yamls_dir, apworld_name, i, args, outcome)
                     continue
 
@@ -832,7 +1013,7 @@ if __name__ == "__main__":
         timeout_handler.daemon = True
         timeout_handler.start()
 
-        while i < args.runs:
+        while i < args.runs and not STOP_REQUESTED:
             # Seed random for this iteration if seed is provided
             # This ensures YAML generation in main process is deterministic
             if args.seed is not None:
@@ -860,13 +1041,14 @@ if __name__ == "__main__":
 
             SUBMITTED += 1
 
+            run_id = get_run_id(i, args)
             yamls_dir = tempfile.mkdtemp(prefix="apfuzz", dir=tmp)
             for nb, yaml_content in enumerate(random_yamls):
-                yaml_path = os.path.join(yamls_dir, f"{i}-{nb}.yaml")
+                yaml_path = os.path.join(yamls_dir, f"{run_id}-{nb}.yaml")
                 open(yaml_path, "wb").write(yaml_content.encode("utf-8"))
 
             for nb, yaml_content in enumerate(static_yamls):
-                yaml_path = os.path.join(yamls_dir, f"static-{i}-{nb}.yaml")
+                yaml_path = os.path.join(yamls_dir, f"static-{run_id}-{nb}.yaml")
                 open(yaml_path, "wb").write(yaml_content.encode("utf-8"))
 
             last_job = p.apply_async(
@@ -883,9 +1065,14 @@ if __name__ == "__main__":
 
             i += 1
 
-        while SUBMITTED > 0:
+        while SUBMITTED > 0 and not STOP_REQUESTED:
             last_job.ready()
             time.sleep(0.05)
+
+        if STOP_REQUESTED:
+            print("\nStopping after first failure...")
+            # Give a moment for any pending callbacks to complete
+            time.sleep(0.5)
 
     parser = ArgumentParser(prog="apfuzz")
     parser.add_argument("-g", "--game", default=None)
@@ -909,8 +1096,17 @@ if __name__ == "__main__":
                         help="Enable fractional sphere logic for UT comparison. "
                              "This iterates within each integer sphere to handle cascading item dependencies, "
                              "where collecting items from one location enables access to other locations in the same sphere.")
+    parser.add_argument("--number-by-seed", default=False, action="store_true",
+                        help="Number output files and errors by actual seed (base_seed + iteration) instead of iteration index. "
+                             "Requires --seed to be set. Makes it easier to reproduce specific failures.")
+    parser.add_argument("--stop-on-first-failure", default=False, action="store_true",
+                        help="Stop fuzzing after the first failure or timeout. Useful for debugging.")
 
     args = parser.parse_args()
+
+    # Validate --number-by-seed requires --seed
+    if args.number_by_seed and args.seed is None:
+        parser.error("--number-by-seed requires --seed to be set")
 
     # This is just to make sure that the host.yaml file exists by the time we fork
     # so that a first run on a new installation doesn't throw out failures until

@@ -108,6 +108,13 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             if helper_name == 'can_dboost':
                 # Hard mode: just Second Wind (no Meditation/Resilience required)
                 return _item('Second Wind')
+            if helper_name == 'can_leash':
+                # Hard mode: can_leash = has_dart AND can_dboost (hard mode)
+                # = has('Rope Dart') AND has('Second Wind')
+                return {'type': 'and', 'conditions': [
+                    _item('Rope Dart'),
+                    _item('Second Wind')
+                ]}
 
         # Check declarative mappings
         if helper_name in self.HELPER_EXPANSIONS:
@@ -179,9 +186,13 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             portal_mapping_values = set(self.world.spoiler_portal_mapping.values())
             logger.debug(f"Messenger: Portal mapping values: {portal_mapping_values}")
 
-        # Process all regions to resolve portal mapping references
+        # Process ONLY this player's regions to resolve portal mapping references
+        # Previously this processed all players which corrupted other games' rules
+        player_id = str(self.world.player) if self.world else None
         regions = data.get('regions', {})
-        for player_id, player_regions in regions.items():
+
+        if player_id and player_id in regions:
+            player_regions = regions[player_id]
             for region_name, region_data in player_regions.items():
                 # Process exit rules
                 if 'exits' in region_data:

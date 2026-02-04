@@ -10,7 +10,11 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-01-25 11:02:12
+**Generated:** 2026-02-01 10:31:05
+
+**Source Data Created:** 2026-01-31T04:30:18.154342
+
+**Source Data Last Updated:** 2026-01-31T04:30:18.154347
 
 ## Summary
 
@@ -26,16 +30,16 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Exporter:** 38/73 (52.1% of passed)
 - **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 40/73 (54.8% of passed)
+- **Passing with Both Generic:** 38/73 (52.1% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 147.3KB | ✅ |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 12.6KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -56,9 +60,9 @@
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.1KB | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 13.4KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
@@ -80,13 +84,13 @@
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 28.5KB | ✅ |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
-| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 5.4KB | ✅ |
+| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 28.7KB | 87.4KB |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 21.4KB | ✅ |
@@ -98,7 +102,7 @@
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 14.7KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 14.8KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |

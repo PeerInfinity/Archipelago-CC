@@ -17,7 +17,12 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB_BASE, MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .constants import (
+    MAX_RULE_SIZE_KB,
+    MAX_INTERIM_EXPORT_SIZE_MB_BASE, MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME,
+    MAX_FINAL_EXPORT_SIZE_MB_BASE, MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME,
+    SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+)
 from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
 
@@ -891,8 +896,9 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         # Also extract dungeons to separate structure
         with profiler.section("process_regions"):
             regions_data, dungeons_data = process_regions(multiworld, player, game_handler, location_id_mappings.get(player, {}))
+
         export_data['regions'][player_str] = regions_data
-        
+
         # Only add dungeons if there's data
         if dungeons_data:
             if 'dungeons' not in export_data:
@@ -981,6 +987,9 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
             # Don't add error to export_data - exporter settings can fall back to defaults
 
         # Get helper definitions using handler
+        # Reset counter before helper analysis to prevent false "infinite loop" detection
+        # from accumulated counts during location/entrance rule analysis
+        reset_analyze_rule_counter()
         with profiler.section("get_helper_definitions"):
             try:
                 helper_definitions = game_handler.get_helper_definitions(world)
@@ -1173,6 +1182,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
         game_name = multiworld.game[player]
         world = multiworld.worlds[player]
         game_handler = get_game_export_handler(game_name, world)
+
         if game_handler and hasattr(game_handler, 'post_process_data'):
             try:
                 export_data = game_handler.post_process_data(export_data)
@@ -1428,6 +1438,12 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         # Get world object (needed for various operations below)
         world = multiworld.worlds[player] if player in multiworld.worlds else None
 
+        # Prioritize the start region (Menu or origin_region_name) to ensure it's exported
+        # before hitting size limits. This is critical because the world generator
+        # needs the start region to be present for the worldgen world to function.
+        start_region_name = getattr(world, 'origin_region_name', 'Menu') if world else 'Menu'
+        player_regions.sort(key=lambda r: (0 if r.name == start_region_name else 1, r.name))
+
         # Use provided location name to ID mapping, or create if not provided
         if location_name_to_id is None:
             location_name_to_id = {}
@@ -1628,8 +1644,6 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                             unwrapped = game_handler.get_unwrapped_exit_lambda(exit_name, exit.access_rule)
                                             if unwrapped:
                                                 rule_to_analyze = unwrapped
-                                        elif game_name == "Super Metroid":
-                                            logger.warning(f"SM: game_handler exists but doesn't have get_unwrapped_exit_lambda method! Handler type: {type(game_handler)}")
 
                                     # Try special handling first for complex exit rules
                                     if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
@@ -1816,7 +1830,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                 # Allow game handler to post-process location data before adding to region
                                 if game_handler and hasattr(game_handler, 'post_process_location_data'):
-                                    location_data = game_handler.post_process_location_data(location_data, location_name)
+                                    location_data = game_handler.post_process_location_data(
+                                        location_data, location_name,
+                                        region_name=region.name, world=world
+                                    )
 
                                 region_data['locations'].append(location_data)
                             except Exception as e:
@@ -1855,9 +1872,9 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         serializable_data = make_serializable(regions_data)
                         current_size = len(json.dumps(serializable_data))
                         current_size_mb = current_size / (1024 * 1024)
-                        # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
+                        # Dynamic interim limit (higher than final due to Python object overhead)
                         num_players = getattr(multiworld, 'players', 1)
-                        max_size_mb = MAX_EXPORT_SIZE_MB_BASE + (MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+                        max_size_mb = MAX_INTERIM_EXPORT_SIZE_MB_BASE + (MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
                         if current_size_mb > max_size_mb:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
                                         f"({max_size_mb} MB) after processing region '{region_name}'. "
@@ -2360,7 +2377,7 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 
 
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2374,6 +2391,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         rules_json_format: Output format - "rule_builder" (default), "ast", or "both"
         cleanup_multiworld: If True, clear multiworld references after export to help garbage
             collection. Disabled by default as it invalidates the multiworld object.
+        clear_game_presets: If True, delete all existing presets for the current game before generating
+        clear_all_presets: If True, delete all existing presets for ALL games before generating
 
     Returns:
         Dict containing paths to generated files
@@ -2552,18 +2571,18 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     def write_export_data(data, filepath):
         """
         Apply exclusions and write data to a JSON file.
-        
+
         Args:
             data: The data to write
             filepath: The output file path
-            
+
         Returns:
             Boolean indicating success
         """
         try:
             # Apply field exclusions
             filtered_data = remove_excluded_fields(data, EXCLUDED_FIELDS)
-            
+
             # Apply context-specific exclusions
             if CONTEXT_EXCLUDED_FIELDS:
                 filtered_data = process_field_exclusions(
@@ -2575,7 +2594,20 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Write to file
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(filtered_data, f, indent=2)
-            logger.info(f"Successfully wrote rules to {filepath}")
+
+            # Check final file size against limit
+            file_size_bytes = os.path.getsize(filepath)
+            file_size_mb = file_size_bytes / (1024 * 1024)
+            num_players = getattr(multiworld, 'players', 1)
+            max_final_size_mb = MAX_FINAL_EXPORT_SIZE_MB_BASE + (MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+
+            if file_size_mb > max_final_size_mb:
+                logger.error(f"Final export file size ({file_size_mb:.2f} MB) exceeds limit ({max_final_size_mb} MB): {filepath}")
+                # Don't delete the file - it may still be useful, but warn about it
+                logger.warning(f"Export file exceeds size limit but was written anyway. Consider reducing game complexity.")
+            else:
+                logger.info(f"Successfully wrote rules to {filepath} ({file_size_mb:.2f} MB)")
+
             return True
         except Exception as e:
             logger.error(f"Error writing rules export file {filepath}: {e}")
@@ -2680,9 +2712,66 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Determine preset directories
         presets_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'presets')
         os.makedirs(presets_dir, exist_ok=True)
-        
+
+        # Clear all presets if requested (must be done before creating game directory)
+        if clear_all_presets:
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            for item in os.listdir(presets_dir):
+                item_path = os.path.join(presets_dir, item)
+                # Only remove game directories, preserve preset_files.json (will be rebuilt)
+                if os.path.isdir(item_path):
+                    try:
+                        shutil.rmtree(item_path)
+                        logger.info(f"Cleared preset directory: {item_path}")
+                    except Exception as e:
+                        logger.error(f"Error removing preset directory {item_path}: {e}")
+            # Clear the preset index since all presets are gone
+            if os.path.exists(preset_index_path):
+                try:
+                    # Keep only metadata key if present
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                    metadata = preset_index.get('metadata', {})
+                    with open(preset_index_path, 'w', encoding='utf-8') as f:
+                        json.dump({'metadata': metadata} if metadata else {}, f, indent=2)
+                    logger.info("Cleared preset_files.json (preserving metadata)")
+                except Exception as e:
+                    logger.error(f"Error clearing preset_files.json: {e}")
+
         # Create game-specific directory
         game_dir = os.path.join(presets_dir, clean_game_name)
+
+        # Clear current game's presets if requested (and not already cleared by clear_all_presets)
+        if clear_game_presets and not clear_all_presets and os.path.exists(game_dir):
+            for item in os.listdir(game_dir):
+                item_path = os.path.join(game_dir, item)
+                try:
+                    if os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
+                    elif os.path.isfile(item_path):
+                        os.remove(item_path)
+                except Exception as e:
+                    logger.error(f"Error removing item {item_path}: {e}")
+            logger.info(f"Cleared existing presets for game: {clean_game_name}")
+
+            # Also clear the game entry from preset_files.json
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            if os.path.exists(preset_index_path):
+                try:
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                    if clean_game_name in preset_index:
+                        # Keep the game name but clear folders
+                        preset_index[clean_game_name] = {
+                            "name": game_name,
+                            "folders": {}
+                        }
+                        with open(preset_index_path, 'w', encoding='utf-8') as f:
+                            json.dump(preset_index, f, indent=2)
+                        logger.info(f"Cleared {clean_game_name} entry in preset_files.json")
+                except Exception as e:
+                    logger.error(f"Error updating preset_files.json after clearing game presets: {e}")
+
         os.makedirs(game_dir, exist_ok=True)
         
         # Create a folder for this specific preset
@@ -2887,7 +2976,7 @@ def _clear_multiworld_references(multiworld) -> None:
         # Clear world references and world-specific objects (like dungeons)
         if hasattr(multiworld, 'worlds'):
             for player, world in list(multiworld.worlds.items()):
-                # Clear dungeon references (ALttP has dungeons dict that hold multiworld refs)
+                # Clear dungeon references (some games have dungeons dict that hold multiworld refs)
                 if hasattr(world, 'dungeons') and isinstance(world.dungeons, dict):
                     dungeon_count = 0
                     for dungeon in list(world.dungeons.values()):

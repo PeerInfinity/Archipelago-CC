@@ -274,7 +274,9 @@ This creates a `Players/Templates/` directory with YAML files for each supported
 
 ### 4. Set Up Host Configuration
 
-For testing the generation pipeline, you need to create and configure a `host.yaml` file:
+For testing the generation pipeline, you need to create and configure a `host.yaml` file.
+
+> **Note:** If you installed JSON Tools using the **[JSON Tools Installer APWorld](../../../worlds/json_tools_installer/README.md)**, export settings are configured automatically during installation. You can skip this section unless you need to change the configuration.
 
 ```bash
 # Make sure your virtual environment is active

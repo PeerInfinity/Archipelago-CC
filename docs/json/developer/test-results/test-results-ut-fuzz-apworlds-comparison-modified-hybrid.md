@@ -1,6 +1,8 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
 
-**Generated:** 2026-01-27 03:02:51
+**Generated:** 2026-02-04 03:04:58
+
+**Source Data Last Updated:** 2026-01-23T07:07:32
 
 This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
 
