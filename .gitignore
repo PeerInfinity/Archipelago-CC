@@ -30,6 +30,8 @@
 *multisave
 *.archipelago
 *.apsave
+*.pkl.gz
+*_pickle_meta.json
 *.BIN
 *.puml
 
