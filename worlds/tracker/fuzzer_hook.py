@@ -125,10 +125,8 @@ class Hook(BaseHook):
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
         # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
         self.ut_core.seed_name = mw.seed_name
-        if self.ut_core.auto_discover_rules_json():
-            # Load the worldgen world to get Rule Builder rules with explain_json support
-            # This is used by _collect_explain_stats() to measure explain coverage
-            self.ut_core.load_worldgen_world(self.ut_core.rules_json_path)
+        self.ut_core.auto_discover_rules_json()
+        # initalize_tracker_core will use worldgen-based tracking if rules_json_path is set
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 
