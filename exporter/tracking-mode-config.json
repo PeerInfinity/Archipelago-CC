@@ -1,6 +1,6 @@
 {
   "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-  "generated": "2026-02-04T10:53:06.649510",
+  "generated": "2026-02-04T11:48:18.550312",
   "fallback_order": [
     "modified",
     "pickle",
@@ -341,13 +341,16 @@
     },
     "apworlds": {
       "A Dance of Fire and Ice": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "A Difficult Game About Climbing": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Actraiser": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Air Delivery": [
         "original"
@@ -357,12 +360,15 @@
         "original"
       ],
       "Anodyne": [
+        "pickle",
         "original"
       ],
       "Another Crabs Treasure": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Astalon": [
+        "pickle",
         "original"
       ],
       "Autopelago": [
@@ -370,7 +376,8 @@
         "original"
       ],
       "Brotato": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Castlevania: Dawn of Sorrow": [
         "modified",
@@ -378,39 +385,46 @@
       ],
       "Cuphead": [
         "modified",
+        "pickle",
         "original"
       ],
       "DORONKO WANKO": [
         "modified",
+        "pickle",
         "original"
       ],
       "Diddy Kong Racing": [
         "modified"
       ],
       "Dome Keeper": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Final Fantasy Tactics Advance": [
         "original"
       ],
       "Frogmonster": [
+        "pickle",
         "original"
       ],
       "Golden Sun The Lost Age": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Hatsune Miku Project Diva Mega Mix+": [
         "modified"
       ],
       "Here Comes Niko!": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Isles Of Sea And Sky": [
         "modified",
         "original"
       ],
       "Ittle Dew 2": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Jigsaw": [
         "modified"
@@ -432,6 +446,7 @@
       ],
       "Kirby Super Star": [
         "modified",
+        "pickle",
         "original"
       ],
       "League of Legends": [
@@ -442,10 +457,12 @@
       ],
       "Lil Gator Game": [
         "modified",
+        "pickle",
         "original"
       ],
       "Little Witch Nobeta": [
         "modified",
+        "pickle",
         "original"
       ],
       "Luigi's Mansion": [
@@ -453,22 +470,26 @@
       ],
       "MetroCUBEvania": [
         "modified",
+        "pickle",
         "original"
       ],
       "Metroid Fusion": [
         "modified"
       ],
       "Pseudoregalia": [
+        "pickle",
         "original"
       ],
       "Rain World": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Ratchet & Clank 2": [
         "modified",
         "original"
       ],
       "Reventure": [
+        "pickle",
         "original"
       ],
       "Rift Wizard": [
@@ -476,10 +497,12 @@
         "original"
       ],
       "Simon Tatham's Portable Puzzle Collection": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Sonic Heroes": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Sonic Rush": [
         "original"
@@ -493,6 +516,7 @@
       ],
       "Spinball": [
         "modified",
+        "pickle",
         "original"
       ],
       "Star Fox 64": [
@@ -500,7 +524,8 @@
         "original"
       ],
       "Star Wars Episode I Racer": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Super Cat Planet": [
         "modified",
@@ -512,6 +537,7 @@
       ],
       "TOEM: A Photo Adventure": [
         "modified",
+        "pickle",
         "original"
       ],
       "Tevi": [
@@ -522,17 +548,21 @@
       ],
       "TurnipBoy": [
         "modified",
+        "pickle",
         "original"
       ],
       "Vampire Survivors": [
         "modified",
+        "pickle",
         "original"
       ],
       "Watery Words": [
-        "modified"
+        "modified",
+        "pickle"
       ],
       "Wordipelago": [
         "modified",
+        "pickle",
         "original"
       ],
       "XCOM 2 War of the Chosen": [
