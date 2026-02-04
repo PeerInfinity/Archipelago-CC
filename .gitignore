@@ -266,6 +266,8 @@ scripts/output/multiworld-worldgen/test-results-*
 scripts/output/multiworld-worldgen/test-results_*
 scripts/output/multiworld-apworld/test-results-*
 scripts/output/multiworld-apworld/test-results_*
+scripts/output/ut-fuzz/test-results-*
+scripts/output/ut-fuzz/test-results_*
 
 !CC/scripts/prompts/gen-errors.txt
 
