@@ -3820,17 +3820,8 @@
             "name": "The Veil top left area, bulb under the rock in the top right path",
             "id": 698078,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "_has_bind_song",
-                  "_original_ast_type": "helper"
-                }
-              ]
+              "rule": "_has_bind_song",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Plant Leaf x 3",

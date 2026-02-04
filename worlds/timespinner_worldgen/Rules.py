@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, False_, Has, HasAll, HasAny, HelperCall, Or
+from rule_builder import True_, False_, And, CanReachRegion, False_, Has, HasAll, HasAny, HelperCall, Not, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -194,7 +194,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Main Lab -> The lab (upper)", player),
-        HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump")
+        And(HelperCall(helper_func=has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"), Or(Not(False_()), Has('Lab Access Genza')))
     )
 
     world.set_rule(
@@ -239,6 +239,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Forest -> Left Side forest Caves", player),
         Or(HelperCall(helper_func=has_timestop, helper_name="has_timestop", body_rule=(Has("Celestial Sash")) | (Has("Lightwall")) | (Has("Succubus Hairpin")) | (Has("Timespinner Wheel"))), Has('Talaria Attachment'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forest -> Castle Ramparts", player),
+        Or(HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash", body_rule=(Has("Celestial Sash")) | (Has("Lightwall"))), Not(False_()), Has('Drawbridge Key'))
     )
 
     world.set_rule(
@@ -290,7 +295,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Castle Keep -> Royal towers (lower)", player),
-        HelperCall(helper_func=has_doublejump, helper_name="has_doublejump", body_rule=(Has("Celestial Sash")) | (Has("Lightwall")) | (Has("Succubus Hairpin")))
+        And(HelperCall(helper_func=has_doublejump, helper_name="has_doublejump", body_rule=(Has("Celestial Sash")) | (Has("Lightwall")) | (Has("Succubus Hairpin"))), Or(HelperCall(helper_func=has_pink, helper_name="has_pink", body_rule=(Has("Plasma Geyser")) | (Has("Plasma Orb")) | (Has("Royal Ring"))), Not(False_())))
     )
 
     multiworld.get_entrance("Castle Keep -> Space time continuum", player).access_rule = \
@@ -420,7 +425,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Space time continuum -> Ancient Pyramid (entrance)", player),
-        Or(HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateGyre',)), HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateLeftPyramid',)))
+        Or(False_(), HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateGyre',)), HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateLeftPyramid',)))
     )
 
     world.set_rule(
@@ -607,8 +612,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Lab: Trash jump room", player),
+        Or(HelperCall(helper_func=has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), Not(False_()))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lab: Experiment #13", player),
+        Or(Not(False_()), Has('Lab Access Experiment'))
+    )
+
+    world.set_rule(
         multiworld.get_location("Lab: Sentry platform terminal (Origins)", player),
-        Has('Tablet', 1)
+        And(Or(HelperCall(helper_func=can_teleport_to, helper_name="can_teleport_to", args=('Time', 'GateDadsTower',)), Not(False_()), Has('Lab Access Genza')), Has('Tablet'))
     )
 
     world.set_rule(
@@ -619,6 +634,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Lab: Left terminal (Biotechnology)", player),
         Has('Tablet', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lab: Dynamo Works", player),
+        Or(And(HelperCall(helper_func=has_upwarddash, helper_name="has_upwarddash", body_rule=(Has("Celestial Sash")) | (Has("Lightwall"))), Has('Lab Access Dynamo')), Not(False_()))
     )
 
     world.set_rule(

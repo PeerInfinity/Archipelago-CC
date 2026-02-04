@@ -914,8 +914,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Thief",
-                      "Rifleman"
+                      "Rifleman",
+                      "Thief"
                     ]
                   }
                 }
@@ -951,8 +951,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Mage",
-                      "Knight"
+                      "Knight",
+                      "Mage"
                     ]
                   }
                 }
@@ -982,8 +982,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Mage",
-                      "Knight"
+                      "Knight",
+                      "Mage"
                     ]
                   }
                 }

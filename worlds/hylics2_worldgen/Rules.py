@@ -138,7 +138,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Hylemxylem", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"))
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")))
     )
 
     world.set_rule(
@@ -183,12 +183,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("World To Sage Airship", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=worm_room_key, helper_name="worm_room_key", body_rule=Has("WORM ROOM KEY")), HelperCall(helper_func=enter_sageship, helper_name="enter_sageship"))
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=enter_sageship, helper_name="enter_sageship"), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=worm_room_key, helper_name="worm_room_key", body_rule=Has("WORM ROOM KEY")))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Hylemxylem", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"))
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")))
     )
 
     world.set_rule(
@@ -273,7 +273,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Shielded Key", player),
-        And(HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE")), HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE")))
+        HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE"))
     )
 
     world.set_rule(

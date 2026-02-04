@@ -53188,19 +53188,6 @@
                 "group": "Missions"
               }
             ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "item_check",
-                "item": "Laser Targeting System (Marine)"
-              }
-            ]
           }
         ]
       },
@@ -53347,55 +53334,6 @@
                 "item": "Raid Artillery (Liberator)"
               }
             ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "or",
-                        "conditions": [
-                          {
-                            "type": "item_check",
-                            "item": "Hercules"
-                          },
-                          {
-                            "type": "item_check",
-                            "item": "Medivac"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "helper",
-                        "name": "terran_common_unit"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Hunter-Seeker Weapon (Raven)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Raven"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
           }
         ]
       },
@@ -53429,50 +53367,6 @@
               {
                 "type": "item_check",
                 "item": "Battlecruiser"
-              }
-            ]
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Battlecruiser"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Valkyrie"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Wraith"
-                  }
-                ]
-              },
-              {
-                "type": "compare",
-                "left": {
-                  "type": "state_method",
-                  "method": "count",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Progressive Terran Ship Weapon"
-                    }
-                  ]
-                },
-                "op": ">=",
-                "right": {
-                  "type": "constant",
-                  "value": 2
-                }
               }
             ]
           }
@@ -53525,44 +53419,6 @@
           {
             "type": "helper",
             "name": "terran_moderate_anti_air"
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Blackhammer"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Emperor's Guardian"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Emperor's Shadow"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Night Hawk"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Pride of Augustgrad"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Widow Mine"
-                  }
-                ]
-              }
-            ]
           }
         ]
       },
@@ -53570,43 +53426,16 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Field Response Theta"
-              },
-              {
-                "type": "item_check",
-                "item": "Medic"
-              },
-              {
-                "type": "item_check",
-                "item": "Medivac"
-              }
-            ]
+            "type": "item_check",
+            "item": "Field Response Theta"
           },
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Bio Mechanical Repair Drone (Raven)"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Raven"
-                  }
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Medic"
+          },
+          {
+            "type": "item_check",
+            "item": "Medivac"
           }
         ]
       },
@@ -53700,25 +53529,12 @@
                 ]
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Cyclone"
-                  }
-                ]
+                "type": "item_check",
+                "item": "Cyclone"
               },
               {
                 "type": "and",
                 "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
                   {
                     "type": "item_check",
                     "item": "Thor"
@@ -54194,63 +54010,28 @@
         "type": "or",
         "conditions": [
           {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Dominion Trooper"
-              },
-              {
-                "type": "item_check",
-                "item": "Firebat"
-              },
-              {
-                "type": "item_check",
-                "item": "Hellion"
-              },
-              {
-                "type": "item_check",
-                "item": "Marauder"
-              },
-              {
-                "type": "item_check",
-                "item": "Marine"
-              },
-              {
-                "type": "item_check",
-                "item": "Reaper"
-              }
-            ]
+            "type": "item_check",
+            "item": "Dominion Trooper"
           },
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Banshee"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Diamondback"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Goliath"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Viking"
-                  }
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Firebat"
+          },
+          {
+            "type": "item_check",
+            "item": "Hellion"
+          },
+          {
+            "type": "item_check",
+            "item": "Marauder"
+          },
+          {
+            "type": "item_check",
+            "item": "Marine"
+          },
+          {
+            "type": "item_check",
+            "item": "Reaper"
           }
         ]
       },
@@ -54865,32 +54646,6 @@
                     }
                   }
                 ]
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Ghost"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Liberator"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Spectre"
-                      }
-                    ]
-                  }
-                ]
               }
             ]
           }
@@ -54942,51 +54697,6 @@
               "type": "constant",
               "value": 3
             }
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "constant",
-                "value": false
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Bio Mechanical Repair Drone (Raven)"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Raven"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "compare",
-                    "left": {
-                      "type": "state_method",
-                      "method": "count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Progressive Regenerative Bio-Steel (Terran)"
-                        }
-                      ]
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  }
-                ]
-              }
-            ]
           }
         ]
       }

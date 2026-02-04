@@ -359,46 +359,54 @@ export function createStateSnapshotInterface(
           const gameInfo = staticData?.game_info?.[playerId] || {};
 
           // Build the world object with both options and game-specific properties
+          // Define helper functions that can be used both on world and multiworld
+          const getEntranceHelper = (entranceName) => {
+            // Find entrance in regions and return it with connected_region
+            if (staticData?.regions) {
+              for (const [regionName, regionData] of staticData.regions.entries()) {
+                const exits = regionData.exits || [];
+                const exit = exits.find(e => e.name === entranceName);
+                if (exit) {
+                  return {
+                    name: exit.name,
+                    connected_region: {
+                      name: exit.connected_region
+                    }
+                  };
+                }
+              }
+            }
+            return null;
+          };
+
+          const getLocationHelper = (locationName) => {
+            // Return location with access_rule method
+            if (staticData?.locations) {
+              const loc = staticData.locations.get(locationName);
+              if (loc) {
+                return {
+                  ...loc,
+                  access_rule: () => {
+                    // Evaluate access rule through evaluateRule
+                    if (!loc.access_rule) return true;
+                    return evaluateRule(loc.access_rule, rawInterfaceForHelpers);
+                  }
+                };
+              }
+            }
+            return null;
+          };
+
           const worldObj = {
             player: playerId,
             options: gameOptions,
-            // Include multiworld reference for helpers that need it
+            // Add get_entrance and get_location directly on world for rules like world.get_entrance(...)
+            get_entrance: getEntranceHelper,
+            get_location: getLocationHelper,
+            // Include multiworld reference for helpers that need it (backwards compatibility)
             multiworld: {
-              get_entrance: (entranceName) => {
-                // Find entrance in regions and return it with connected_region
-                if (staticData?.regions) {
-                  for (const [regionName, regionData] of staticData.regions.entries()) {
-                    const exits = regionData.exits || [];
-                    const exit = exits.find(e => e.name === entranceName);
-                    if (exit) {
-                      return {
-                        name: exit.name,
-                        connected_region: {
-                          name: exit.connected_region
-                        }
-                      };
-                    }
-                  }
-                }
-                return null;
-              },
-              get_location: (locationName) => {
-                // Return location with access_rule method
-                if (staticData?.locations) {
-                  const loc = staticData.locations.get(locationName);
-                  if (loc) {
-                    return {
-                      ...loc,
-                      access_rule: () => {
-                        // Evaluate access rule through evaluateRule
-                        if (!loc.access_rule) return true;
-                        return evaluateRule(loc.access_rule, rawInterfaceForHelpers);
-                      }
-                    };
-                  }
-                }
-                return null;
-              }
+              get_entrance: getEntranceHelper,
+              get_location: getLocationHelper
             },
             // Include item_name_groups for helpers like has_relic_combo
             // Combines standard item_groups with game-specific groups (e.g., AHIT relic_groups)
@@ -512,10 +520,14 @@ export function createStateSnapshotInterface(
 
           // Check if there's a helper function that computes this value
           // Some games use computed values (e.g., SC2's power_rating) from inventory state
+          // IMPORTANT: Only call helpers directly if they take no extra args (beyond snapshot, staticData)
+          // Helpers that require additional arguments (like graffiti_spots with movestyle, limit, etc.)
+          // must be called via executeHelper with their args properly evaluated
           const computedHelpers = getHelperFunctions(gameName);
           if (computedHelpers) {
             // Try exact match first (e.g., 'power_rating' -> power_rating helper)
-            if (typeof computedHelpers[name] === 'function') {
+            // Only call directly if the function takes at most 2 params (snapshot, staticData)
+            if (typeof computedHelpers[name] === 'function' && computedHelpers[name].length <= 2) {
               const result = computedHelpers[name](snapshot, staticData);
               return result;
             }
@@ -523,7 +535,7 @@ export function createStateSnapshotInterface(
             const prefixes = gameLogic.helperPrefixes || [];
             for (const prefix of prefixes) {
               const prefixedName = prefix + name;
-              if (typeof computedHelpers[prefixedName] === 'function') {
+              if (typeof computedHelpers[prefixedName] === 'function' && computedHelpers[prefixedName].length <= 2) {
                 const result = computedHelpers[prefixedName](snapshot, staticData);
                 return result;
               }

@@ -333,15 +333,15 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
-                  "Magic Rod",
-                  "Progressive Sword",
                   "Magic Powder",
-                  "Progressive Power Bracelet"
+                  "Magic Rod",
+                  "Progressive Power Bracelet",
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -674,15 +674,15 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
-                  "Magic Rod",
-                  "Progressive Sword",
                   "Magic Powder",
-                  "Progressive Power Bracelet"
+                  "Magic Rod",
+                  "Progressive Power Bracelet",
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -1574,10 +1574,10 @@
               "args": {
                 "items": [
                   "Ballad of the Wind Fish",
-                  "Ocarina",
                   "Conch Horn",
                   "Coral Triangle",
                   "Full Moon Cello",
+                  "Ocarina",
                   "Organ of Evening Calm",
                   "Sea Lily's Bell",
                   "Surf Harp",
@@ -2297,9 +2297,9 @@
                   "args": {
                     "items": [
                       "Bomb",
-                      "Progressive Sword",
                       "Bow",
-                      "Magic Rod"
+                      "Magic Rod",
+                      "Progressive Sword"
                     ]
                   }
                 },
@@ -2938,8 +2938,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Power Bracelet",
-                      "Nightmare Key (Bottle Grotto)"
+                      "Nightmare Key (Bottle Grotto)",
+                      "Progressive Power Bracelet"
                     ]
                   }
                 }
@@ -2972,8 +2972,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Power Bracelet",
-                      "Nightmare Key (Bottle Grotto)"
+                      "Nightmare Key (Bottle Grotto)",
+                      "Progressive Power Bracelet"
                     ]
                   }
                 }
@@ -3170,9 +3170,9 @@
                   "args": {
                     "items": [
                       "Bomb",
-                      "Progressive Sword",
                       "Bow",
-                      "Magic Rod"
+                      "Magic Rod",
+                      "Progressive Sword"
                     ]
                   }
                 },
@@ -5879,12 +5879,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -5897,12 +5897,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -5921,12 +5921,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -5980,12 +5980,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -7349,11 +7349,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
+                      "Bomb",
                       "Boomerang",
                       "Bow",
-                      "Magic Rod",
-                      "Bomb",
                       "Hookshot",
+                      "Magic Rod",
                       "Progressive Sword"
                     ]
                   }
@@ -7457,11 +7457,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
+                      "Bomb",
                       "Boomerang",
                       "Bow",
-                      "Magic Rod",
-                      "Bomb",
                       "Hookshot",
+                      "Magic Rod",
                       "Progressive Sword"
                     ]
                   }
@@ -7808,13 +7808,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 4
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
@@ -7826,6 +7819,13 @@
                       "Magic Rod",
                       "Progressive Sword"
                     ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 4
                   }
                 },
                 {
@@ -10038,10 +10038,10 @@
               "args": {
                 "items": [
                   "Ballad of the Wind Fish",
-                  "Ocarina",
                   "Conch Horn",
                   "Coral Triangle",
                   "Full Moon Cello",
+                  "Ocarina",
                   "Organ of Evening Calm",
                   "Sea Lily's Bell",
                   "Surf Harp",
@@ -10538,12 +10538,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -10690,12 +10690,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -10884,12 +10884,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -10976,12 +10976,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -11436,13 +11436,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Pegasus Boots",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Pegasus Boots",
                   "Progressive Sword"
                 ]
               }
@@ -11519,13 +11519,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Pegasus Boots",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Pegasus Boots",
                   "Progressive Sword"
                 ]
               }
@@ -14377,8 +14377,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Nightmare Key (Catfish's Maw)",
                   "Hookshot",
+                  "Nightmare Key (Catfish's Maw)",
                   "Progressive Sword"
                 ]
               }
@@ -14398,8 +14398,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Nightmare Key (Catfish's Maw)",
                   "Hookshot",
+                  "Nightmare Key (Catfish's Maw)",
                   "Progressive Sword"
                 ]
               }
@@ -15361,8 +15361,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Bow",
                   "Bomb",
+                  "Bow",
                   "Magic Rod"
                 ]
               }
@@ -15424,8 +15424,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Bow",
                   "Bomb",
+                  "Bow",
                   "Magic Rod"
                 ]
               }
@@ -16436,10 +16436,10 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Sword",
                   "Boomerang",
                   "Feather",
-                  "Hookshot"
+                  "Hookshot",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -16467,10 +16467,10 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Sword",
                   "Boomerang",
                   "Feather",
-                  "Hookshot"
+                  "Hookshot",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -17012,13 +17012,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -17048,11 +17048,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Shield",
                       "Bomb",
                       "Boomerang",
                       "Bow",
                       "Hookshot",
+                      "Progressive Shield",
                       "Progressive Sword"
                     ]
                   }
@@ -17245,13 +17245,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -17304,11 +17304,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Shield",
                       "Bomb",
                       "Boomerang",
                       "Bow",
                       "Hookshot",
+                      "Progressive Shield",
                       "Progressive Sword"
                     ]
                   }
@@ -17499,11 +17499,11 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -17573,11 +17573,11 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }

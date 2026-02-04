@@ -132,7 +132,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("JRB: Blast to the Stone Pillar", player),
-        Has('Cannon Unlock JRB', 1)
+        HasAll('Cannon Unlock JRB')
     )
 
     world.set_rule(
@@ -152,17 +152,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("HMC: Metal-Head Mario Can Move!", player),
-        Has('Metal Cap', 1)
+        HasAll('Metal Cap')
     )
 
     world.set_rule(
         multiworld.get_location("SSL: Free Flying for 8 Red Coins", player),
-        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), Has('Wing Cap'))
+        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
     )
 
     world.set_rule(
         multiworld.get_location("SSL: Stand Tall on the Four Pillars", player),
-        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), Has('Wing Cap'))
+        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
     )
 
     world.set_rule(
@@ -212,10 +212,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wing Mario Over the Rainbow Red Coins", player),
-        Has('Wing Cap', 1)
+        HasAll('Wing Cap')
     )
 
     world.set_rule(
         multiworld.get_location("Wing Mario Over the Rainbow 1Up Block", player),
-        Has('Wing Cap', 1)
+        HasAll('Wing Cap')
     )

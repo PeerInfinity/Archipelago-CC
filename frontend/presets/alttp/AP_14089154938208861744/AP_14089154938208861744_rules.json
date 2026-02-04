@@ -20479,6 +20479,490 @@
           "display_name": "Underworld Palette"
         }
       },
+      "shops": [
+        {
+          "region": "Cave Shop (Dark Death Mountain)",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 274,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 0
+        },
+        {
+          "region": "Red Shield Shop",
+          "unlimited_items": [
+            "Red Shield",
+            "Bee",
+            "Arrows (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Shield",
+              "price": 500,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bee",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Arrows (10)",
+              "price": 30,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 272,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 3
+        },
+        {
+          "region": "Dark Lake Hylia Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 6
+        },
+        {
+          "region": "Dark World Lumberjack Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 9
+        },
+        {
+          "region": "Village of Outcasts Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 12
+        },
+        {
+          "region": "Dark World Potion Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 15
+        },
+        {
+          "region": "Light World Death Mountain Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 255,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 18
+        },
+        {
+          "region": "Kakariko Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 287,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 21
+        },
+        {
+          "region": "Cave Shop (Lake Hylia)",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 274,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 24
+        },
+        {
+          "region": "Potion Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Green Potion",
+            "Blue Potion"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 120,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Green Potion",
+              "price": 60,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Potion",
+              "price": 160,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 265,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": true,
+          "sram_offset": 27
+        },
+        {
+          "region": "Capacity Upgrade",
+          "unlimited_items": [],
+          "inventory": [
+            {
+              "item": "Bomb Upgrade (+5)",
+              "price": 100,
+              "price_type": 0,
+              "max": 7,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Arrow Upgrade (+5)",
+              "price": 100,
+              "price_type": 0,
+              "max": 7,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            null
+          ],
+          "room_id": 277,
+          "shopkeeper_config": 4,
+          "custom": true,
+          "locked": true,
+          "sram_offset": 30
+        }
+      ],
       "has_progressive_bows": true,
       "dungeons": {
         "Hyrule Castle": "Hyrule Castle",
@@ -20506,407 +20990,6 @@
         "Ether"
       ],
       "escape_assist": [],
-      "shops": [
-        {
-          "region": "Cave Shop (Dark Death Mountain)",
-          "room_id": 274,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 0
-        },
-        {
-          "region": "Red Shield Shop",
-          "room_id": 272,
-          "inventory": [
-            {
-              "item": "Red Shield",
-              "price": 500,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bee",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Arrows (10)",
-              "price": 30,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 3
-        },
-        {
-          "region": "Dark Lake Hylia Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 6
-        },
-        {
-          "region": "Dark World Lumberjack Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 9
-        },
-        {
-          "region": "Village of Outcasts Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 12
-        },
-        {
-          "region": "Dark World Potion Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 15
-        },
-        {
-          "region": "Light World Death Mountain Shop",
-          "room_id": 255,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 18
-        },
-        {
-          "region": "Kakariko Shop",
-          "room_id": 287,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 21
-        },
-        {
-          "region": "Cave Shop (Lake Hylia)",
-          "room_id": 274,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 24
-        },
-        {
-          "region": "Potion Shop",
-          "room_id": 265,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 120,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Green Potion",
-              "price": 60,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Potion",
-              "price": 160,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": true,
-          "sram_offset": 27
-        },
-        {
-          "region": "Capacity Upgrade",
-          "room_id": 277,
-          "inventory": [
-            {
-              "item": "Bomb Upgrade (+5)",
-              "price": 100,
-              "price_type": 0,
-              "max": 7,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Arrow Upgrade (+5)",
-              "price": 100,
-              "price_type": 0,
-              "max": 7,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            null
-          ],
-          "shopkeeper_config": 4,
-          "custom": true,
-          "locked": true,
-          "sram_offset": 30
-        }
-      ],
       "logical_heart_containers": 10,
       "logical_heart_pieces": 24,
       "er_seed": "vanilla",
@@ -21389,7 +21472,11 @@
       "world_directory": "alttp"
     }
   },
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "use_auto_indirect_conditions": true
+    }
+  },
   "game_info": {
     "1": {}
   },

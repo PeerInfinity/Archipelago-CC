@@ -1557,17 +1557,17 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "canDig",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "ultra",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "canDig",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -4447,11 +4447,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "thunder",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "birdo_shop",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
@@ -4465,6 +4460,11 @@
                   "rule": "star_shop",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "thunder",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4476,12 +4476,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "fungitown",
+                  "rule": "birdo_shop",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "birdo_shop",
+                  "rule": "fungitown",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
