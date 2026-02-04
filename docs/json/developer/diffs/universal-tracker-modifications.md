@@ -2,10 +2,11 @@
 
 This document describes the modifications made to the Universal Tracker compared to the original from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago) (tracker branch).
 
-- **Original version:** v0.2.24.1
-- **Modified version:** v0.2.23 (based on earlier version with extensive additions)
+- **Original version:** v0.2.26
+- **Modified version:** v0.2.23-modified (based on earlier version with extensive additions)
 - **Location in this repository:** `worlds/tracker/`
-- **Last compared:** 2026-02-02
+- **Original copy for comparison:** `scripts/test/fixtures/tracker_original/`
+- **Last compared:** 2026-02-03
 
 ## Summary of Changes
 
@@ -20,15 +21,69 @@ The modifications extend Universal Tracker with:
 
 These changes integrate UT with the JSON Export system, allowing it to explain rules for any world that has exported rules, not just worlds with native Rule Builder support.
 
+### Backported from v0.2.26
+
+The following bug fixes and features were backported from upstream v0.2.26:
+
+1. **`glitches_state` field** - Added to `CurrentTrackerState` for separate glitch logic tracking (prevents contaminating main state)
+2. **Nothing items fix** - Added `and location.item is not None` check to prevent crashes when events have no item
+3. **Glitches state copy** - Create a copy of state before applying glitch items (`glitches_state = state.copy()`)
+
+---
+
+## Architecture
+
+The modified Universal Tracker uses a **mixin-based architecture** to separate our extensions from the upstream code, making it easier to merge upstream updates.
+
+```
+worlds/tracker/
+├── __init__.py              # Exports (matches upstream)
+├── TrackerCoreBase.py       # Original UT TrackerCore (close to upstream v0.2.26)
+├── TrackerCore.py           # Extended TrackerCore (combines base + mixins)
+├── worldgen_mixin.py        # Worldgen and AST explain methods
+├── tracker_extensions.py    # Testing mode extensions
+├── TrackerClient.py         # Client code (minor modifications)
+└── fuzzer_hook.py           # Fuzzer hook for UT comparison testing
+```
+
+### Class Hierarchy
+
+```python
+class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
+    """Extended TrackerCore with worldgen and testing support."""
+```
+
+### Benefits
+
+1. **Easy upstream merging**: Update `TrackerCoreBase.py` directly from upstream
+2. **Clear separation**: Extensions are in separate mixin files
+3. **Testability**: Can test base vs. extended separately
+4. **Documentation**: Extensions are obviously separate from upstream code
+
 ---
 
 ## File-by-File Changes
 
-### `TrackerCore.py`
+### `TrackerCoreBase.py` (formerly TrackerCore.py)
 
-**Lines:** 513 → 1055 (~542 lines added)
+**Lines:** 513 (matches upstream v0.2.26)
 
-This file received the most significant modifications, adding worldgen and AST explain integration.
+This file contains the original TrackerCore code from upstream, with minimal changes:
+- Class renamed to `TrackerCoreBase` for inheritance
+- Backported `glitches_state` fix from v0.2.26
+- Backported "Nothing items" fix from v0.2.26
+
+### `TrackerCore.py` (Extended Version)
+
+**Lines:** ~280
+
+This file extends TrackerCoreBase with our modifications via mixins.
+
+### `worldgen_mixin.py`
+
+**Lines:** ~400
+
+Contains worldgen world integration and AST explain support.
 
 #### New Instance Variables
 

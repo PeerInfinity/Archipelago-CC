@@ -22,7 +22,7 @@ from NetUtils import NetworkItem, HintStatus
     
 REGEN_WORLDS = {name for name, world in AutoWorld.AutoWorldRegister.world_types.items() if getattr(world, "ut_can_gen_without_yaml", False)}
 
-class TrackerCore():
+class TrackerCoreBase():
     cached_multiworlds: list[MultiWorld] = []
     cached_slot_data: list[dict[str, Any]] = []
 

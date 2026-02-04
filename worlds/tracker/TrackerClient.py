@@ -19,8 +19,6 @@ from collections import Counter, defaultdict
 from MultiServer import mark_raw
 from NetUtils import NetworkItem
 
-from . import TrackerCore
-
 from Generate import main as GMain, mystery_argparse
 
 if TYPE_CHECKING:
