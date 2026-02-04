@@ -59,26 +59,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Artificer's Portal", player),
-        Has('Demon King Crown', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Shrink Down", player),
-        HasAll('Rope Dart', 'Key of Chaos', 'Key of Courage', 'Key of Hope', 'Key of Love', 'Key of Strength', 'Key of Symbiosis')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Money Sink", player),
-        And(Has('Shards', 4566), Has('Money Wrench'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Autumn Hills - Portal -> Autumn Hills - Dimension Climb Shop", player),
-        HasAll('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Autumn Hills - Climbing Claws Shop -> Autumn Hills - Hope Path Shop", player),
         Has('Rope Dart', 1)
     )
@@ -86,21 +66,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Climbing Claws Shop -> Autumn Hills - Key of Hope Checkpoint", player),
         False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Climbing Claws Shop", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Rope Dart'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Hope Latch Checkpoint", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Lakeside Checkpoint", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Rope Dart'))
     )
 
     world.set_rule(
@@ -119,186 +84,38 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Outside Shop -> Forlorn Temple - Entrance Shop", player),
-        HasAll('Acro', 'Claustro', 'Necro', 'Pyro')
+        multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Climbing Claws Shop", player),
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Rope Dart', 'Second Wind'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Entrance Shop -> Forlorn Temple - Outside Shop", player),
-        HasAll('Acro', 'Claustro', 'Necro', 'Pyro')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Entrance Shop -> Forlorn Temple - Sunny Day Checkpoint", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAny('Rope Dart', 'Wingsuit'), Has('Second Wind'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Rocket Sunset Shop -> Forlorn Temple - Descent Shop", player),
-        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit')), Has('Rope Dart'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Saw Gauntlet Shop -> Forlorn Temple - Demon King Shop", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Demon King Shop -> Forlorn Temple - Saw Gauntlet Shop", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forlorn Temple - Sunny Day Checkpoint -> Forlorn Temple - Rocket Maze Checkpoint", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Portal -> Howling Grotto - Crushing Pits Shop", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Wingsuit Shop -> Howling Grotto - Left", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Wingsuit Shop -> Howling Grotto - Lost Woods Checkpoint", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Crushing Pits Shop -> Howling Grotto - Portal", player),
-        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Emerald Golem Shop -> Howling Grotto - Right", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Lost Woods Checkpoint -> Howling Grotto - Bottom", player),
-        Has('Seashell', 1)
-    )
-
-    multiworld.get_entrance("Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Crushing Pits Shop", player).access_rule = \
-        lambda state: ((state.multiworld.get_region('Howling Grotto - Emerald Golem Shop', player).can_reach(state)) and (((((state.has_any(['Meditation', 'Path of Resilience'], player)) and (state.has('Second Wind', player)))) or (state.has_any(['Strike of the Ninja', 'Wingsuit'], player)))))
-
-    world.set_rule(
-        multiworld.get_entrance("Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Emerald Golem Shop", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Bottom -> Searing Crags - Portal", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Right -> Searing Crags - Portal", player),
-        HasAll('Lightfoot Tabi', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Portal -> Searing Crags - Right", player),
-        Has('Lightfoot Tabi', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Portal -> Searing Crags - Before Final Climb Shop", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Portal -> Searing Crags - Colossuses Shop", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Rope Dart Shop -> Searing Crags - Triple Ball Spinner Checkpoint", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Falling Rocks Shop -> Searing Crags - Searing Mega Shard Shop", player),
+        multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Hope Latch Checkpoint", player),
         Has('Rope Dart', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Falling Rocks Shop", player),
-        Has('Rope Dart', 1)
+        multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Lakeside Checkpoint", player),
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Rope Dart', 'Second Wind'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Before Final Climb Shop", player),
-        HasAny('Rope Dart', 'Strike of the Ninja')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Shop", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Before Final Climb Shop -> Searing Crags - Colossuses Shop", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop", player),
-        And(Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart')), Has('Power Thistle'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Glacial Peak - Left -> Elemental Skylands - Air Shmup", player),
-        And(CanReachLocation('Quillshroom Marsh - Queen of Quills'), Has('Magic Firefly'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Glacial Peak - Portal -> Glacial Peak - Tower Entrance Shop", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Glacial Peak - Tower Entrance Shop -> Glacial Peak - Top", player),
-        Has("Ruxxtin's Amulet", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Glacial Peak - Projectile Spike Pit Checkpoint -> Glacial Peak - Left", player),
-        Or(And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Wingsuit')), Has('Rope Dart'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Time - Left -> Tower of Time - Final Chance Shop", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Time - Second Checkpoint -> Tower of Time - Third Checkpoint", player),
-        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Time - Third Checkpoint -> Tower of Time - Fourth Checkpoint", player),
-        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Time - Fourth Checkpoint -> Tower of Time - Fifth Checkpoint", player),
+        multiworld.get_entrance("Autumn Hills - Portal -> Autumn Hills - Dimension Climb Shop", player),
         HasAll('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tower of Time - Fifth Checkpoint -> Tower of Time - Sixth Checkpoint", player),
-        Has('Wingsuit', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Cloud Entrance Shop -> Cloud Ruins - Spike Float Checkpoint", player),
         Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cloud Ruins - Final Flight Shop -> Cloud Ruins - Manfred's Shop", player),
+        HasAll('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cloud Ruins - Manfred's Shop -> Cloud Ruins - Final Flight Shop", player),
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Wingsuit'))
     )
 
     world.set_rule(
@@ -332,16 +149,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Cloud Ruins - Final Flight Shop -> Cloud Ruins - Manfred's Shop", player),
-        HasAll('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cloud Ruins - Manfred's Shop -> Cloud Ruins - Final Flight Shop", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Wingsuit'))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Spike Float Checkpoint -> Cloud Ruins - Cloud Entrance Shop", player),
         Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), HasAny('Rope Dart', 'Wingsuit'))
     )
@@ -357,53 +164,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Underworld - Left -> Underworld - Left Shop", player),
-        Has('Lightfoot Tabi', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underworld - Left Shop -> Underworld - Left", player),
-        Has('Lightfoot Tabi', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underworld - Fireball Wave Shop -> Underworld - Long Climb Shop", player),
-        HasAny('Rope Dart', 'Wingsuit', 'Lightfoot Tabi', 'Strike of the Ninja')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underworld - Long Climb Shop -> Underworld - Hot Tub Checkpoint", player),
-        Or(And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), HasAny('Rope Dart', 'Strike of the Ninja')), Has('Wingsuit')), And(HasAny('Strike of the Ninja', 'Wingsuit'), Has('Lightfoot Tabi')))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underworld - Hot Dip Checkpoint -> Underworld - Lava Run Checkpoint", player),
-        Has('Lightfoot Tabi', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underworld - Hot Tub Checkpoint -> Underworld - Long Climb Shop", player),
-        Or(HasAll('Rope Dart', 'Wingsuit'), HasAny('Lightfoot Tabi', 'Strike of the Ninja'))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Dark Cave - Right -> Dark Cave - Left", player),
         HasAll('Candle', 'Rope Dart')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Riviere Turquoise - Waterfall Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
-        Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Riviere Turquoise - Launch of Faith Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Rope Dart'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Riviere Turquoise - Flower Flight Checkpoint -> Riviere Turquoise - Waterfall Shop", player),
-        False_()
     )
 
     world.set_rule(
@@ -414,6 +176,179 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Elemental Skylands - Air Intro Shop -> Elemental Skylands - Air Generator Shop", player),
         Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Demon King Shop -> Forlorn Temple - Saw Gauntlet Shop", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Entrance Shop -> Forlorn Temple - Outside Shop", player),
+        HasAll('Acro', 'Claustro', 'Necro', 'Pyro')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Entrance Shop -> Forlorn Temple - Sunny Day Checkpoint", player),
+        And(HasAny('Meditation', 'Path of Resilience'), HasAny('Rope Dart', 'Wingsuit'), Has('Second Wind'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Outside Shop -> Forlorn Temple - Entrance Shop", player),
+        HasAll('Acro', 'Claustro', 'Necro', 'Pyro')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Rocket Sunset Shop -> Forlorn Temple - Descent Shop", player),
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit')), Has('Rope Dart'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Saw Gauntlet Shop -> Forlorn Temple - Demon King Shop", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forlorn Temple - Sunny Day Checkpoint -> Forlorn Temple - Rocket Maze Checkpoint", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Glacial Peak - Left -> Elemental Skylands - Air Shmup", player),
+        And(CanReachLocation('Quillshroom Marsh - Queen of Quills'), Has('Magic Firefly'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Glacial Peak - Portal -> Glacial Peak - Tower Entrance Shop", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Glacial Peak - Projectile Spike Pit Checkpoint -> Glacial Peak - Left", player),
+        Or(And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Wingsuit')), Has('Rope Dart'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Glacial Peak - Tower Entrance Shop -> Glacial Peak - Top", player),
+        Has("Ruxxtin's Amulet", 1)
+    )
+
+    multiworld.get_entrance("Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Crushing Pits Shop", player).access_rule = \
+        lambda state: ((state.multiworld.get_region('Howling Grotto - Emerald Golem Shop', player).can_reach(state)) and (((((state.has_any(['Meditation', 'Path of Resilience'], player)) and (state.has('Second Wind', player)))) or (state.has_any(['Strike of the Ninja', 'Wingsuit'], player)))))
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Emerald Golem Shop", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Crushing Pits Shop -> Howling Grotto - Portal", player),
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Emerald Golem Shop -> Howling Grotto - Right", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Lost Woods Checkpoint -> Howling Grotto - Bottom", player),
+        Has('Seashell', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Portal -> Howling Grotto - Crushing Pits Shop", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Wingsuit Shop -> Howling Grotto - Left", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Howling Grotto - Wingsuit Shop -> Howling Grotto - Lost Woods Checkpoint", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Riviere Turquoise - Flower Flight Checkpoint -> Riviere Turquoise - Waterfall Shop", player),
+        False_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Riviere Turquoise - Launch of Faith Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Rope Dart', 'Second Wind'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Riviere Turquoise - Waterfall Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
+        Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Before Final Climb Shop -> Searing Crags - Colossuses Shop", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Bottom -> Searing Crags - Portal", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop", player),
+        And(Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart')), Has('Power Thistle'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Falling Rocks Shop -> Searing Crags - Searing Mega Shard Shop", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Portal -> Searing Crags - Right", player),
+        Has('Lightfoot Tabi', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Portal -> Searing Crags - Before Final Climb Shop", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Portal -> Searing Crags - Colossuses Shop", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Right -> Searing Crags - Portal", player),
+        HasAll('Lightfoot Tabi', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Rope Dart Shop -> Searing Crags - Triple Ball Spinner Checkpoint", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Falling Rocks Shop", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Before Final Climb Shop", player),
+        HasAny('Rope Dart', 'Strike of the Ninja')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Key of Strength Shop", player),
+        False_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sunken Shrine - Moon Path Shop -> Sunken Shrine - Waterfall Paradise Checkpoint", player),
+        Has('Lightfoot Tabi', 1)
     )
 
     world.set_rule(
@@ -432,18 +367,223 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Sunken Shrine - Moon Path Shop -> Sunken Shrine - Waterfall Paradise Checkpoint", player),
+        multiworld.get_entrance("Sunken Shrine - Waterfall Paradise Checkpoint -> Sunken Shrine - Moon Path Shop", player),
         Has('Lightfoot Tabi', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Sunken Shrine - Waterfall Paradise Checkpoint -> Sunken Shrine - Moon Path Shop", player),
+        multiworld.get_entrance("Money Sink", player),
+        And(Has('Shards', 4566), Has('Money Wrench'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Artificer's Portal", player),
+        Has('Demon King Crown', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Shrink Down", player),
+        HasAll('Rope Dart', 'Key of Chaos', 'Key of Courage', 'Key of Hope', 'Key of Love', 'Key of Strength', 'Key of Symbiosis')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Time - Fifth Checkpoint -> Tower of Time - Sixth Checkpoint", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Time - Fourth Checkpoint -> Tower of Time - Fifth Checkpoint", player),
+        HasAll('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Time - Left -> Tower of Time - Final Chance Shop", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Time - Second Checkpoint -> Tower of Time - Third Checkpoint", player),
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tower of Time - Third Checkpoint -> Tower of Time - Fourth Checkpoint", player),
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underworld - Fireball Wave Shop -> Underworld - Long Climb Shop", player),
+        HasAny('Lightfoot Tabi', 'Rope Dart', 'Strike of the Ninja', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underworld - Hot Dip Checkpoint -> Underworld - Lava Run Checkpoint", player),
         Has('Lightfoot Tabi', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underworld - Hot Tub Checkpoint -> Underworld - Long Climb Shop", player),
+        Or(HasAll('Rope Dart', 'Wingsuit'), HasAny('Lightfoot Tabi', 'Strike of the Ninja'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underworld - Left -> Underworld - Left Shop", player),
+        Has('Lightfoot Tabi', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underworld - Left Shop -> Underworld - Left", player),
+        Has('Lightfoot Tabi', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underworld - Long Climb Shop -> Underworld - Hot Tub Checkpoint", player),
+        Or(And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), HasAny('Rope Dart', 'Strike of the Ninja')), Has('Wingsuit')), And(HasAny('Strike of the Ninja', 'Wingsuit'), Has('Lightfoot Tabi')))
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Money Wrench", player),
-        Has('Shards', 4566)
+        multiworld.get_location("Autumn Hills Seal - Trip Saws", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Autumn Hills Seal - Double Swing Saws", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Autumn Hills Seal - Spike Ball Darts", player),
+        HasAll('Aerobatics Warrior', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bamboo Creek Seal - Spike Ball Pits", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bamboo Creek - Claustro", player),
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cloud Ruins Seal - Ghost Pit", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cloud Ruins Seal - Saw Pit", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cloud Ruins Seal - Toothbrush Alley", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Corrupted Future - Key of Courage", player),
+        Has('Magic Firefly', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Elemental Skylands Seal - Air", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Elemental Skylands Seal - Fire", player),
+        HasAll('Aerobatics Warrior', 'Rope Dart', 'Strike of the Ninja', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Elemental Skylands - Key of Symbiosis", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Elemental Skylands Seal - Water", player),
+        HasAll('Currents Master', 'Rope Dart')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forlorn Temple Seal - Rocket Maze", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Glacial Peak Seal - Ice Climbers", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Glacial Peak Seal - Projectile Spike Pit", player),
+        Has('Strike of the Ninja', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Howling Grotto Seal - Crushing Pits", player),
+        HasAll('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Howling Grotto - Emerald Golem", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Howling Grotto Seal - Windy Saws and Balls", player),
+        Has('Wingsuit', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ninja Village - Candle", player),
+        CanReachLocation('Searing Crags - Astral Tea Leaves')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ninja Village Seal - Tree House", player),
+        Has('Rope Dart', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Riviere Turquoise Seal - Launch of Faith", player),
+        HasAny('Rope Dart', 'Wingsuit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Riviere Turquoise Seal - Bounces and Balls", player),
+        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Searing Crags - Astral Tea Leaves", player),
+        CanReachLocation('Ninja Village - Astral Seed')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Searing Crags - Pyro", player),
+        Has('Lightfoot Tabi', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Searing Crags Seal - Triple Ball Spinner", player),
+        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sunken Shrine - Key of Love", player),
+        HasAll('Moon Crest', 'Sun Crest')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sunken Shrine Seal - Tabi Gauntlet", player),
+        Has('Lightfoot Tabi', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sunken Shrine Seal - Waterfall Paradise", player),
+        Has('Lightfoot Tabi', 1)
     )
 
     world.set_rule(
@@ -542,113 +682,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Corrupted Future - Key of Courage", player),
-        Has('Magic Firefly', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ninja Village - Candle", player),
-        CanReachLocation('Searing Crags - Astral Tea Leaves')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ninja Village Seal - Tree House", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Autumn Hills Seal - Trip Saws", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Autumn Hills Seal - Double Swing Saws", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Autumn Hills Seal - Spike Ball Darts", player),
-        HasAll('Aerobatics Warrior', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Forlorn Temple Seal - Rocket Maze", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bamboo Creek - Claustro", player),
-        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bamboo Creek Seal - Spike Ball Pits", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Howling Grotto Seal - Windy Saws and Balls", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Howling Grotto Seal - Crushing Pits", player),
-        HasAll('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Howling Grotto - Emerald Golem", player),
-        Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Searing Crags - Pyro", player),
-        Has('Lightfoot Tabi', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Searing Crags - Astral Tea Leaves", player),
-        CanReachLocation('Ninja Village - Astral Seed')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Searing Crags Seal - Triple Ball Spinner", player),
-        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Glacial Peak Seal - Ice Climbers", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Glacial Peak Seal - Projectile Spike Pit", player),
-        Has('Strike of the Ninja', 1)
+        multiworld.get_location("Money Wrench", player),
+        Has('Shards', 4566)
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Time Seal - Time Waster", player),
         Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cloud Ruins Seal - Ghost Pit", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cloud Ruins Seal - Toothbrush Alley", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cloud Ruins Seal - Saw Pit", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underworld Seal - Sharp and Windy Climb", player),
-        Has('Wingsuit', 1)
     )
 
     world.set_rule(
@@ -662,46 +702,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Riviere Turquoise Seal - Bounces and Balls", player),
-        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Riviere Turquoise Seal - Launch of Faith", player),
-        HasAny('Rope Dart', 'Wingsuit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Elemental Skylands Seal - Air", player),
+        multiworld.get_location("Underworld Seal - Sharp and Windy Climb", player),
         Has('Wingsuit', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Elemental Skylands Seal - Water", player),
-        HasAll('Currents Master', 'Rope Dart')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Elemental Skylands Seal - Fire", player),
-        HasAll('Aerobatics Warrior', 'Wingsuit', 'Rope Dart', 'Strike of the Ninja')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Elemental Skylands - Key of Symbiosis", player),
-        Has('Rope Dart', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sunken Shrine - Key of Love", player),
-        HasAll('Moon Crest', 'Sun Crest')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sunken Shrine Seal - Tabi Gauntlet", player),
-        Has('Lightfoot Tabi', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sunken Shrine Seal - Waterfall Paradise", player),
-        Has('Lightfoot Tabi', 1)
     )

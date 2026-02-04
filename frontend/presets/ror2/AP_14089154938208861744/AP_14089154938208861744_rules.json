@@ -51,6 +51,632 @@
         ],
         "locations": []
       },
+      "Abandoned Aqueduct": {
+        "name": "Abandoned Aqueduct",
+        "exits": [
+          {
+            "name": "Abandoned Aqueduct -> OrderedStage_2",
+            "connected_region": "OrderedStage_2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Abandoned Aqueduct: Chest 1",
+            "id": 38998,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 2",
+            "id": 38999,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 3",
+            "id": 39000,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 4",
+            "id": 39001,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 5",
+            "id": 39002,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 6",
+            "id": 39003,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 7",
+            "id": 39004,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 8",
+            "id": 39005,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 9",
+            "id": 39006,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Chest 10",
+            "id": 39007,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 1",
+            "id": 39018,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Sundered Grove",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 2",
+            "id": 39019,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Legendary Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 3",
+            "id": 39020,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Verdant Falls",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 4",
+            "id": 39021,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Shrine 5",
+            "id": 39022,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Radio Scanner 1",
+            "id": 39039,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abandoned Aqueduct: Newt Altar 1",
+            "id": 39040,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abandoned Aqueduct"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Abyssal Depths": {
+        "name": "Abyssal Depths",
+        "exits": [
+          {
+            "name": "Abyssal Depths -> OrderedStage_4",
+            "connected_region": "OrderedStage_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Abyssal Depths: Chest 1",
+            "id": 38690,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 2",
+            "id": 38691,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Legendary Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 3",
+            "id": 38692,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Legendary Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 4",
+            "id": 38693,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 5",
+            "id": 38694,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 6",
+            "id": 38695,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 7",
+            "id": 38696,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 8",
+            "id": 38697,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 9",
+            "id": 38698,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Chest 10",
+            "id": 38699,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Shrine 1",
+            "id": 38710,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Shrine 2",
+            "id": 38711,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Shrine 3",
+            "id": 38712,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Radar Scanner",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Shrine 4",
+            "id": 38713,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Shrine 5",
+            "id": 38714,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Radio Scanner 1",
+            "id": 38731,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Abyssal Depths: Newt Altar 1",
+            "id": 38732,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Abyssal Depths"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Commencement": {
+        "name": "Commencement",
+        "exits": [
+          {
+            "name": "Commencement -> Victory",
+            "connected_region": "Victory",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Commencement -> Petrichor V",
+            "connected_region": "Petrichor V",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "Distant Roost": {
         "name": "Distant Roost",
         "exits": [
@@ -649,6 +1275,2056 @@
             },
             "item": {
               "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Hidden Realm: A Moment, Fractured": {
+        "name": "Hidden Realm: A Moment, Fractured",
+        "exits": [
+          {
+            "name": "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole",
+            "connected_region": "Hidden Realm: A Moment, Whole",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Beads of Fealty",
+                  "Hidden Realm: A Moment, Whole"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Hidden Realm: A Moment, Whole": {
+        "name": "Hidden Realm: A Moment, Whole",
+        "exits": [
+          {
+            "name": "Hidden Realm: A Moment, Whole -> Victory",
+            "connected_region": "Victory",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Hidden Realm: A Moment, Whole -> Petrichor V",
+            "connected_region": "Petrichor V",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Hidden Realm: Bazaar Between Time": {
+        "name": "Hidden Realm: Bazaar Between Time",
+        "exits": [
+          {
+            "name": "Hidden Realm: Bazaar Between Time -> Void Fields",
+            "connected_region": "Void Fields",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hidden Realm: Bazaar Between Time",
+                  "Void Fields"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Hidden Realm: Bulwark's Ambry": {
+        "name": "Hidden Realm: Bulwark's Ambry",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Hidden Realm: Gilded Coast": {
+        "name": "Hidden Realm: Gilded Coast",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "OrderedStage_1": {
+        "name": "OrderedStage_1",
+        "exits": [
+          {
+            "name": "OrderedStage_1 -> Hidden Realm: Bazaar Between Time",
+            "connected_region": "Hidden Realm: Bazaar Between Time",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 1,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Hidden Realm: Bazaar Between Time"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_1 -> Hidden Realm: Gilded Coast",
+            "connected_region": "Hidden Realm: Gilded Coast",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "OrderedStage_1 -> Abandoned Aqueduct",
+            "connected_region": "Abandoned Aqueduct",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 1,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Abandoned Aqueduct"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_1 -> Wetland Aspect",
+            "connected_region": "Wetland Aspect",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 1,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wetland Aspect"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_2": {
+        "name": "OrderedStage_2",
+        "exits": [
+          {
+            "name": "OrderedStage_2 -> Rallypoint Delta",
+            "connected_region": "Rallypoint Delta",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 2,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Rallypoint Delta"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_2 -> Scorched Acres",
+            "connected_region": "Scorched Acres",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 2,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Scorched Acres"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_3": {
+        "name": "OrderedStage_3",
+        "exits": [
+          {
+            "name": "OrderedStage_3 -> Abyssal Depths",
+            "connected_region": "Abyssal Depths",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 3,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Abyssal Depths"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_3 -> Siren's Call",
+            "connected_region": "Siren's Call",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 3,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Siren's Call"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "OrderedStage_3 -> Sundered Grove",
+            "connected_region": "Sundered Grove",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 3,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sundered Grove"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_4": {
+        "name": "OrderedStage_4",
+        "exits": [
+          {
+            "name": "OrderedStage_4 -> Sky Meadow",
+            "connected_region": "Sky Meadow",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Progressive Stage"
+                          }
+                        },
+                        "op": ">=",
+                        "right": 4,
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Stage 4"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sky Meadow"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "OrderedStage_5": {
+        "name": "OrderedStage_5",
+        "exits": [
+          {
+            "name": "OrderedStage_5 -> Hidden Realm: A Moment, Fractured",
+            "connected_region": "Hidden Realm: A Moment, Fractured",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hidden Realm: A Moment, Fractured",
+                  "Stage 5"
+                ]
+              }
+            }
+          },
+          {
+            "name": "OrderedStage_5 -> Commencement",
+            "connected_region": "Commencement",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Commencement",
+                  "Stage 5"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Stage 5",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Stage 5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "show_in_spoiler": false
+          }
+        ]
+      },
+      "Petrichor V": {
+        "name": "Petrichor V",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Rallypoint Delta": {
+        "name": "Rallypoint Delta",
+        "exits": [
+          {
+            "name": "Rallypoint Delta -> OrderedStage_3",
+            "connected_region": "OrderedStage_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Rallypoint Delta: Chest 1",
+            "id": 38822,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 2",
+            "id": 38823,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Lunar Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 3",
+            "id": 38824,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 4",
+            "id": 38825,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Red",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 5",
+            "id": 38826,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 6",
+            "id": 38827,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 7",
+            "id": 38828,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 8",
+            "id": 38829,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Boss Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 9",
+            "id": 38830,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Chest 10",
+            "id": 38831,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 1",
+            "id": 38842,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Hidden Realm: Bulwark's Ambry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 2",
+            "id": 38843,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 3",
+            "id": 38844,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 4",
+            "id": 38845,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Siren's Call",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Shrine 5",
+            "id": 38846,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Radio Scanner 1",
+            "id": 38863,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Dio's Best Friend",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rallypoint Delta: Newt Altar 1",
+            "id": 38864,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rallypoint Delta"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Scorched Acres": {
+        "name": "Scorched Acres",
+        "exits": [
+          {
+            "name": "Scorched Acres -> OrderedStage_3",
+            "connected_region": "OrderedStage_3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Scorched Acres: Chest 1",
+            "id": 40318,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 2",
+            "id": 40319,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 3",
+            "id": 40320,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 4",
+            "id": 40321,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Dio's Best Friend",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 5",
+            "id": 40322,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 6",
+            "id": 40323,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 7",
+            "id": 40324,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 8",
+            "id": 40325,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 9",
+            "id": 40326,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Chest 10",
+            "id": 40327,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Shrine 1",
+            "id": 40338,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Shrine 2",
+            "id": 40339,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Shrine 3",
+            "id": 40340,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Shrine 4",
+            "id": 40341,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Shrine 5",
+            "id": 40342,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Commencement",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Radio Scanner 1",
+            "id": 40359,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Scorched Acres: Newt Altar 1",
+            "id": 40360,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Scorched Acres"
+              }
+            },
+            "item": {
+              "name": "Lunar Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Siren's Call": {
+        "name": "Siren's Call",
+        "exits": [
+          {
+            "name": "Siren's Call -> OrderedStage_4",
+            "connected_region": "OrderedStage_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Siren's Call: Chest 1",
+            "id": 39878,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 2",
+            "id": 39879,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Legendary Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 3",
+            "id": 39880,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 4",
+            "id": 39881,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 5",
+            "id": 39882,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 6",
+            "id": 39883,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 7",
+            "id": 39884,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 8",
+            "id": 39885,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 9",
+            "id": 39886,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Chest 10",
+            "id": 39887,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Lunar Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Shrine 1",
+            "id": 39898,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Shrine 2",
+            "id": 39899,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Shrine 3",
+            "id": 39900,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Shrine 4",
+            "id": 39901,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Shrine 5",
+            "id": 39902,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Radio Scanner 1",
+            "id": 39919,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Legendary Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Siren's Call: Newt Altar 1",
+            "id": 39920,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Siren's Call"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Sky Meadow": {
+        "name": "Sky Meadow",
+        "exits": [
+          {
+            "name": "Sky Meadow -> Hidden Realm: Bulwark's Ambry",
+            "connected_region": "Hidden Realm: Bulwark's Ambry",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Sky Meadow -> OrderedStage_5",
+            "connected_region": "OrderedStage_5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sky Meadow: Chest 1",
+            "id": 39922,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Abandoned Aqueduct",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 2",
+            "id": 39923,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 3",
+            "id": 39924,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 4",
+            "id": 39925,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Lunar Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 5",
+            "id": 39926,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 6",
+            "id": 39927,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 7",
+            "id": 39928,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 8",
+            "id": 39929,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 9",
+            "id": 39930,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Chest 10",
+            "id": 39931,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Shrine 1",
+            "id": 39942,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Shrine 2",
+            "id": 39943,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Hidden Realm: Bazaar Between Time",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Shrine 3",
+            "id": 39944,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Shrine 4",
+            "id": 39945,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Boss Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Shrine 5",
+            "id": 39946,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Radio Scanner 1",
+            "id": 39963,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Uncommon Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Meadow: Newt Altar 1",
+            "id": 39964,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Meadow"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Sundered Grove": {
+        "name": "Sundered Grove",
+        "exits": [
+          {
+            "name": "Sundered Grove -> OrderedStage_4",
+            "connected_region": "OrderedStage_4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sundered Grove: Chest 1",
+            "id": 39790,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Dio's Best Friend",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 2",
+            "id": 39791,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 3",
+            "id": 39792,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Hidden Realm: A Moment, Fractured",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 4",
+            "id": 39793,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 5",
+            "id": 39794,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 6",
+            "id": 39795,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 7",
+            "id": 39796,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Equipment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 8",
+            "id": 39797,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 9",
+            "id": 39798,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Lunar Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Chest 10",
+            "id": 39799,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Shrine 1",
+            "id": 39810,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Shrine 2",
+            "id": 39811,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Money",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Shrine 3",
+            "id": 39812,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, White",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Shrine 4",
+            "id": 39813,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Common Item",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Shrine 5",
+            "id": 39814,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Item Scrap, Green",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Radio Scanner 1",
+            "id": 39831,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "Abyssal Depths",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sundered Grove: Newt Altar 1",
+            "id": 39832,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sundered Grove"
+              }
+            },
+            "item": {
+              "name": "1000 Exp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1566,308 +4242,32 @@
           }
         ]
       },
-      "Abandoned Aqueduct": {
-        "name": "Abandoned Aqueduct",
-        "exits": [
-          {
-            "name": "Abandoned Aqueduct -> OrderedStage_2",
-            "connected_region": "OrderedStage_2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
+      "Victory": {
+        "name": "Victory",
+        "exits": [],
         "locations": [
           {
-            "name": "Abandoned Aqueduct: Chest 1",
-            "id": 38998,
+            "name": "Victory",
+            "id": null,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 2",
-            "id": 38999,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 3",
-            "id": 39000,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 4",
-            "id": 39001,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 5",
-            "id": 39002,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 6",
-            "id": 39003,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 7",
-            "id": 39004,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 8",
-            "id": 39005,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 9",
-            "id": 39006,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Chest 10",
-            "id": 39007,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Shrine 1",
-            "id": 39018,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Sundered Grove",
+              "name": "Victory",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Shrine 2",
-            "id": 39019,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Legendary Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Shrine 3",
-            "id": 39020,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Verdant Falls",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Shrine 4",
-            "id": 39021,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Shrine 5",
-            "id": 39022,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Radio Scanner 1",
-            "id": 39039,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abandoned Aqueduct: Newt Altar 1",
-            "id": 39040,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abandoned Aqueduct"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
+            "locked": true,
+            "event": true
           }
         ]
+      },
+      "Void Fields": {
+        "name": "Void Fields",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
       },
       "Wetland Aspect": {
         "name": "Wetland Aspect",
@@ -2171,2406 +4571,6 @@
             "locked": false
           }
         ]
-      },
-      "Rallypoint Delta": {
-        "name": "Rallypoint Delta",
-        "exits": [
-          {
-            "name": "Rallypoint Delta -> OrderedStage_3",
-            "connected_region": "OrderedStage_3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Rallypoint Delta: Chest 1",
-            "id": 38822,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 2",
-            "id": 38823,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Lunar Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 3",
-            "id": 38824,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 4",
-            "id": 38825,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Red",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 5",
-            "id": 38826,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 6",
-            "id": 38827,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 7",
-            "id": 38828,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 8",
-            "id": 38829,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Boss Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 9",
-            "id": 38830,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Chest 10",
-            "id": 38831,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Shrine 1",
-            "id": 38842,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Hidden Realm: Bulwark's Ambry",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Shrine 2",
-            "id": 38843,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Shrine 3",
-            "id": 38844,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Shrine 4",
-            "id": 38845,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Siren's Call",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Shrine 5",
-            "id": 38846,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Radio Scanner 1",
-            "id": 38863,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Dio's Best Friend",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rallypoint Delta: Newt Altar 1",
-            "id": 38864,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rallypoint Delta"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Scorched Acres": {
-        "name": "Scorched Acres",
-        "exits": [
-          {
-            "name": "Scorched Acres -> OrderedStage_3",
-            "connected_region": "OrderedStage_3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Scorched Acres: Chest 1",
-            "id": 40318,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 2",
-            "id": 40319,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 3",
-            "id": 40320,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 4",
-            "id": 40321,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Dio's Best Friend",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 5",
-            "id": 40322,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 6",
-            "id": 40323,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 7",
-            "id": 40324,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 8",
-            "id": 40325,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 9",
-            "id": 40326,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Chest 10",
-            "id": 40327,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Shrine 1",
-            "id": 40338,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Shrine 2",
-            "id": 40339,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Shrine 3",
-            "id": 40340,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Shrine 4",
-            "id": 40341,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Shrine 5",
-            "id": 40342,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Commencement",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Radio Scanner 1",
-            "id": 40359,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Scorched Acres: Newt Altar 1",
-            "id": 40360,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Scorched Acres"
-              }
-            },
-            "item": {
-              "name": "Lunar Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Abyssal Depths": {
-        "name": "Abyssal Depths",
-        "exits": [
-          {
-            "name": "Abyssal Depths -> OrderedStage_4",
-            "connected_region": "OrderedStage_4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Abyssal Depths: Chest 1",
-            "id": 38690,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 2",
-            "id": 38691,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Legendary Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 3",
-            "id": 38692,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Legendary Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 4",
-            "id": 38693,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 5",
-            "id": 38694,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 6",
-            "id": 38695,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 7",
-            "id": 38696,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 8",
-            "id": 38697,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 9",
-            "id": 38698,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Chest 10",
-            "id": 38699,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Shrine 1",
-            "id": 38710,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Shrine 2",
-            "id": 38711,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Shrine 3",
-            "id": 38712,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Radar Scanner",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Shrine 4",
-            "id": 38713,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Shrine 5",
-            "id": 38714,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Radio Scanner 1",
-            "id": 38731,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Abyssal Depths: Newt Altar 1",
-            "id": 38732,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Abyssal Depths"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Siren's Call": {
-        "name": "Siren's Call",
-        "exits": [
-          {
-            "name": "Siren's Call -> OrderedStage_4",
-            "connected_region": "OrderedStage_4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Siren's Call: Chest 1",
-            "id": 39878,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 2",
-            "id": 39879,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Legendary Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 3",
-            "id": 39880,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 4",
-            "id": 39881,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 5",
-            "id": 39882,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 6",
-            "id": 39883,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 7",
-            "id": 39884,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 8",
-            "id": 39885,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 9",
-            "id": 39886,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Chest 10",
-            "id": 39887,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Lunar Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Shrine 1",
-            "id": 39898,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Shrine 2",
-            "id": 39899,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Shrine 3",
-            "id": 39900,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Shrine 4",
-            "id": 39901,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Shrine 5",
-            "id": 39902,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Radio Scanner 1",
-            "id": 39919,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Legendary Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Siren's Call: Newt Altar 1",
-            "id": 39920,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Siren's Call"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Sundered Grove": {
-        "name": "Sundered Grove",
-        "exits": [
-          {
-            "name": "Sundered Grove -> OrderedStage_4",
-            "connected_region": "OrderedStage_4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Sundered Grove: Chest 1",
-            "id": 39790,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Dio's Best Friend",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 2",
-            "id": 39791,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 3",
-            "id": 39792,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Hidden Realm: A Moment, Fractured",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 4",
-            "id": 39793,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 5",
-            "id": 39794,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 6",
-            "id": 39795,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 7",
-            "id": 39796,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Equipment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 8",
-            "id": 39797,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 9",
-            "id": 39798,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Lunar Coin",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Chest 10",
-            "id": 39799,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Shrine 1",
-            "id": 39810,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Shrine 2",
-            "id": 39811,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Shrine 3",
-            "id": 39812,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, White",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Shrine 4",
-            "id": 39813,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Shrine 5",
-            "id": 39814,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Item Scrap, Green",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Radio Scanner 1",
-            "id": 39831,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "Abyssal Depths",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sundered Grove: Newt Altar 1",
-            "id": 39832,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sundered Grove"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Sky Meadow": {
-        "name": "Sky Meadow",
-        "exits": [
-          {
-            "name": "Sky Meadow -> Hidden Realm: Bulwark's Ambry",
-            "connected_region": "Hidden Realm: Bulwark's Ambry",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Sky Meadow -> OrderedStage_5",
-            "connected_region": "OrderedStage_5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Sky Meadow: Chest 1",
-            "id": 39922,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Abandoned Aqueduct",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 2",
-            "id": 39923,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 3",
-            "id": 39924,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 4",
-            "id": 39925,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Lunar Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 5",
-            "id": 39926,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 6",
-            "id": 39927,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 7",
-            "id": 39928,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 8",
-            "id": 39929,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 9",
-            "id": 39930,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "1000 Exp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Chest 10",
-            "id": 39931,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Shrine 1",
-            "id": 39942,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Shrine 2",
-            "id": 39943,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Hidden Realm: Bazaar Between Time",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Shrine 3",
-            "id": 39944,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Shrine 4",
-            "id": 39945,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Boss Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Shrine 5",
-            "id": 39946,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Common Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Radio Scanner 1",
-            "id": 39963,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Uncommon Item",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sky Meadow: Newt Altar 1",
-            "id": 39964,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Money",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Commencement": {
-        "name": "Commencement",
-        "exits": [
-          {
-            "name": "Commencement -> Victory",
-            "connected_region": "Victory",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Commencement -> Petrichor V",
-            "connected_region": "Petrichor V",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "OrderedStage_5": {
-        "name": "OrderedStage_5",
-        "exits": [
-          {
-            "name": "OrderedStage_5 -> Hidden Realm: A Moment, Fractured",
-            "connected_region": "Hidden Realm: A Moment, Fractured",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hidden Realm: A Moment, Fractured",
-                  "Stage 5"
-                ]
-              }
-            }
-          },
-          {
-            "name": "OrderedStage_5 -> Commencement",
-            "connected_region": "Commencement",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Commencement",
-                  "Stage 5"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Stage 5",
-            "id": null,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Meadow"
-              }
-            },
-            "item": {
-              "name": "Stage 5",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "show_in_spoiler": false
-          }
-        ]
-      },
-      "OrderedStage_1": {
-        "name": "OrderedStage_1",
-        "exits": [
-          {
-            "name": "OrderedStage_1 -> Hidden Realm: Bazaar Between Time",
-            "connected_region": "Hidden Realm: Bazaar Between Time",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 1,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 1"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hidden Realm: Bazaar Between Time"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "OrderedStage_1 -> Hidden Realm: Gilded Coast",
-            "connected_region": "Hidden Realm: Gilded Coast",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "OrderedStage_1 -> Abandoned Aqueduct",
-            "connected_region": "Abandoned Aqueduct",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 1,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 1"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Abandoned Aqueduct"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "OrderedStage_1 -> Wetland Aspect",
-            "connected_region": "Wetland Aspect",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 1,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 1"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wetland Aspect"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "OrderedStage_2": {
-        "name": "OrderedStage_2",
-        "exits": [
-          {
-            "name": "OrderedStage_2 -> Rallypoint Delta",
-            "connected_region": "Rallypoint Delta",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 2,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 2"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rallypoint Delta"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "OrderedStage_2 -> Scorched Acres",
-            "connected_region": "Scorched Acres",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 2,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 2"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Scorched Acres"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "OrderedStage_3": {
-        "name": "OrderedStage_3",
-        "exits": [
-          {
-            "name": "OrderedStage_3 -> Abyssal Depths",
-            "connected_region": "Abyssal Depths",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 3,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 3"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Abyssal Depths"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "OrderedStage_3 -> Siren's Call",
-            "connected_region": "Siren's Call",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 3,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 3"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Siren's Call"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "OrderedStage_3 -> Sundered Grove",
-            "connected_region": "Sundered Grove",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 3,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 3"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sundered Grove"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "OrderedStage_4": {
-        "name": "OrderedStage_4",
-        "exits": [
-          {
-            "name": "OrderedStage_4 -> Sky Meadow",
-            "connected_region": "Sky Meadow",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Progressive Stage"
-                          }
-                        },
-                        "op": ">=",
-                        "right": 4,
-                        "_original_ast_type": "compare"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Stage 4"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sky Meadow"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Hidden Realm: A Moment, Fractured": {
-        "name": "Hidden Realm: A Moment, Fractured",
-        "exits": [
-          {
-            "name": "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole",
-            "connected_region": "Hidden Realm: A Moment, Whole",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Beads of Fealty",
-                  "Hidden Realm: A Moment, Whole"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Hidden Realm: A Moment, Whole": {
-        "name": "Hidden Realm: A Moment, Whole",
-        "exits": [
-          {
-            "name": "Hidden Realm: A Moment, Whole -> Victory",
-            "connected_region": "Victory",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Hidden Realm: A Moment, Whole -> Petrichor V",
-            "connected_region": "Petrichor V",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Void Fields": {
-        "name": "Void Fields",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Victory": {
-        "name": "Victory",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Victory",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Victory",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Petrichor V": {
-        "name": "Petrichor V",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Hidden Realm: Bulwark's Ambry": {
-        "name": "Hidden Realm: Bulwark's Ambry",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Hidden Realm: Bazaar Between Time": {
-        "name": "Hidden Realm: Bazaar Between Time",
-        "exits": [
-          {
-            "name": "Hidden Realm: Bazaar Between Time -> Void Fields",
-            "connected_region": "Void Fields",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hidden Realm: Bazaar Between Time",
-                  "Void Fields"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Hidden Realm: Gilded Coast": {
-        "name": "Hidden Realm: Gilded Coast",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
       }
     }
   },

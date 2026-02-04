@@ -121,16 +121,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Corridor to Gallery", player),
-        Has('Maiden Detonator', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Escape the Gallery Pit", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Dip Into Waterway End", player),
         Has('Roc Wing', 1)
     )
@@ -146,12 +136,22 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Gallery Upper to Lower", player),
-        Has('Tackle', 1)
+        multiworld.get_entrance("Corridor to Gallery", player),
+        Has('Maiden Detonator', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Escape the Gallery Pit", player),
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Gallery Lower to Upper", player),
+        Has('Tackle', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Gallery Upper to Lower", player),
         Has('Tackle', 1)
     )
 
@@ -271,18 +271,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Machine Tower: Boneheaded argument wall kicks room", player),
+        multiworld.get_location("Chapel Tower: Outside Battle Arena - Upper", player),
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chapel Tower: Outside Battle Arena - Lower", player),
+        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ceremonial Room: Fake floor", player),
         Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
-        multiworld.get_location("Machine Tower: Skelly-rang wall kicks room", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Machine Tower: Stone fox hallway", player),
-        Has('Tackle', 1)
+        multiworld.get_location("Dracula", player),
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -311,13 +316,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Chapel Tower: Outside Battle Arena - Upper", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
+        multiworld.get_location("Machine Tower: Boneheaded argument wall kicks room", player),
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chapel Tower: Outside Battle Arena - Lower", player),
-        Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing")))
+        multiworld.get_location("Machine Tower: Skelly-rang wall kicks room", player),
+        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Machine Tower: Stone fox hallway", player),
+        Has('Tackle', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Underground Gallery: Harpy mantis tackle hallway", player),
+        Has('Tackle', 1)
     )
 
     world.set_rule(
@@ -341,11 +356,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Underground Gallery: Harpy mantis tackle hallway", player),
-        Has('Tackle', 1)
-    )
-
-    world.set_rule(
         multiworld.get_location("Underground Warehouse: Succubus shaft roc ledge", player),
         Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_4, helper_name="has_jump_level_4", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_5, helper_name="has_jump_level_5", body_rule=Has("Roc Wing")))
     )
@@ -358,16 +368,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Underground Warehouse: Holy fox hideout - Right roc ledge", player),
         Or(And(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing"))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Brain freeze room", player),
-        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Underground Waterway: Roc fake ceiling", player),
-        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -391,11 +391,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Ceremonial Room: Fake floor", player),
-        Or(HelperCall(helper_func=has_jump_level_2, helper_name="has_jump_level_2", body_rule=Has("Roc Wing")), HelperCall(helper_func=has_kick, helper_name="has_kick", body_rule=Has("Kick Boots")))
+        multiworld.get_location("Underground Waterway: Brain freeze room", player),
+        Or(HelperCall(helper_func=has_ice_or_stone, helper_name="has_ice_or_stone", body_rule=((Has("Serpent Card")) | (Has("Cockatrice Card"))) & ((Has("Mercury Card")) | (Has("Mars Card")))), HelperCall(helper_func=has_jump_level_3, helper_name="has_jump_level_3", body_rule=Has("Roc Wing")))
     )
 
     world.set_rule(
-        multiworld.get_location("Dracula", player),
+        multiworld.get_location("Underground Waterway: Roc fake ceiling", player),
         Has('Roc Wing', 1)
     )

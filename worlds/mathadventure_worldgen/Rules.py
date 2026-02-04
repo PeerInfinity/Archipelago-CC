@@ -21,13 +21,13 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("ToOperations", player),
-        HasAny('df-2', 'df-3')
+        multiworld.get_entrance("ToProofCompletion", player),
+        HasAll('addassi', 'oveq2i')
     )
 
     world.set_rule(
-        multiworld.get_entrance("ToProofCompletion", player),
-        HasAll('addassi', 'oveq2i')
+        multiworld.get_entrance("ToOperations", player),
+        HasAny('df-2', 'df-3')
     )
     # Location rules
     world.set_rule(

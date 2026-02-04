@@ -72,41 +72,6 @@
           }
         ]
       },
-      "Top Left Room": {
-        "name": "Top Left Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Top Left Room Chest",
-            "id": 1,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shield",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Top Left Room Button",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Top Left Room Button Pressed",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
       "Bottom Right Room": {
         "name": "Bottom Right Room",
         "exits": [],
@@ -138,6 +103,33 @@
               "type": "None"
             },
             "locked": false
+          }
+        ]
+      },
+      "Final Boss Room": {
+        "name": "Final Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Final Boss Defeated",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sword",
+                  "Shield"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -175,24 +167,32 @@
           }
         ]
       },
-      "Final Boss Room": {
-        "name": "Final Boss Room",
+      "Top Left Room": {
+        "name": "Top Left Room",
         "exits": [],
         "locations": [
           {
-            "name": "Final Boss Defeated",
-            "id": null,
+            "name": "Top Left Room Chest",
+            "id": 1,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Sword",
-                  "Shield"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Victory",
+              "name": "Shield",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Top Left Room Button",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Top Left Room Button Pressed",
               "player": 1,
               "advancement": true,
               "type": "None"

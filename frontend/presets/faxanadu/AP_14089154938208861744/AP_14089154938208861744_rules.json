@@ -23,6 +23,458 @@
         ],
         "locations": []
       },
+      "Apolune": {
+        "name": "Apolune",
+        "exits": [
+          {
+            "name": "Apolune -> Tower of Trunk",
+            "connected_region": "Tower of Trunk",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Key Jack"
+              }
+            }
+          },
+          {
+            "name": "Apolune -> Path to Forepaw",
+            "connected_region": "Path to Forepaw",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Mattock"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Apolune Small Shield",
+            "id": 400108,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Hourglass",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Apolune Hand Dagger",
+            "id": 400109,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Apolune Deluge",
+            "id": 400110,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Apolune Red Potion",
+            "id": 400111,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ointment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Apolune Key Jack",
+            "id": 400112,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Branches": {
+        "name": "Branches",
+        "exits": [
+          {
+            "name": "Branches -> Path to Daybreak",
+            "connected_region": "Path to Daybreak",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Branches Hidden Ointment",
+            "id": 400176,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Branches Poison",
+            "id": 400177,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Branches Hidden Mattock",
+            "id": 400178,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Progressive Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Branches Hidden Hourglass",
+            "id": 400179,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Deluge",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Conflate": {
+        "name": "Conflate",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Conflate Giant Blade",
+            "id": 400171,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Conflate Magic Shield",
+            "id": 400172,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Conflate Wingboots",
+            "id": 400173,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Hourglass",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Conflate Red Potion",
+            "id": 400174,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Conflate Guru",
+            "id": 400175,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Armor",
+                "count": 3
+              }
+            },
+            "item": {
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Dartmoor": {
+        "name": "Dartmoor",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Dartmoor Giant Blade",
+            "id": 400193,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ointment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Dartmoor Red Potion",
+            "id": 400194,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Fire",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Dartmoor Key King",
+            "id": 400195,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magical Rod",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Dartmoor Castle": {
+        "name": "Dartmoor Castle",
+        "exits": [
+          {
+            "name": "Dartmoor Castle -> Dartmoor",
+            "connected_region": "Dartmoor",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Dartmoor Castle -> Fraternal Castle",
+            "connected_region": "Fraternal Castle",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Dartmoor Castle -> Evil Fortress",
+            "connected_region": "Evil Fortress",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Demons Ring"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dartmoor Castle Hidden Hourglass",
+            "id": 400191,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Dartmoor Castle Hidden Red Potion",
+            "id": 400192,
+            "access_rule": {
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "Ring of Elf",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Daybreak": {
+        "name": "Daybreak",
+        "exits": [
+          {
+            "name": "Daybreak -> Dartmoor Castle",
+            "connected_region": "Dartmoor Castle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Ring of Dworf"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Daybreak Tilte",
+            "id": 400186,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Daybreak Giant Blade",
+            "id": 400187,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Daybreak Red Potion",
+            "id": 400188,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Daybreak Key King",
+            "id": 400189,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ointment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Daybreak Key Queen",
+            "id": 400190,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Demons Ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
       "Eolis": {
         "name": "Eolis",
         "exits": [
@@ -137,124 +589,13 @@
           }
         ]
       },
-      "Path to Apolune": {
-        "name": "Path to Apolune",
-        "exits": [
-          {
-            "name": "Path to Apolune -> Apolune",
-            "connected_region": "Apolune",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
+      "Evil Fortress": {
+        "name": "Evil Fortress",
+        "exits": [],
         "locations": [
           {
-            "name": "Path to Apolune Magic Shield",
-            "id": 400106,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Key King"
-              }
-            },
-            "item": {
-              "name": "Unlock Wingboots",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Path to Apolune Death",
-            "id": 400107,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Key Ace"
-              }
-            },
-            "item": {
-              "name": "Hourglass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Apolune": {
-        "name": "Apolune",
-        "exits": [
-          {
-            "name": "Apolune -> Tower of Trunk",
-            "connected_region": "Tower of Trunk",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Key Jack"
-              }
-            }
-          },
-          {
-            "name": "Apolune -> Path to Forepaw",
-            "connected_region": "Path to Forepaw",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mattock"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Apolune Small Shield",
-            "id": 400108,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Hourglass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Apolune Hand Dagger",
-            "id": 400109,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Apolune Deluge",
-            "id": 400110,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Apolune Red Potion",
-            "id": 400111,
+            "name": "Evil Fortress Ointment",
+            "id": 400205,
             "access_rule": {
               "rule": "True_"
             },
@@ -267,60 +608,8 @@
             "locked": false
           },
           {
-            "name": "Apolune Key Jack",
-            "id": 400112,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
-            },
-            "item": {
-              "name": "Wingboots",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tower of Trunk": {
-        "name": "Tower of Trunk",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tower of Trunk Hidden Mattock",
-            "id": 400113,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deluge"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Progressive Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Trunk Hidden Hourglass",
-            "id": 400114,
+            "name": "Evil Fortress Poison 1",
+            "id": 400206,
             "access_rule": {
               "rule": "True_"
             },
@@ -333,36 +622,50 @@
             "locked": false
           },
           {
-            "name": "Tower of Trunk Boss Mattock",
-            "id": 400115,
+            "name": "Evil Fortress Glove",
+            "id": 400207,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Mattock",
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Evil Fortress Poison 2",
+            "id": 400208,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Evil Fortress Poison 3",
+            "id": 400209,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Armor",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "Path to Forepaw": {
-        "name": "Path to Forepaw",
-        "exits": [
+          },
           {
-            "name": "Path to Forepaw -> Forepaw",
-            "connected_region": "Forepaw",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Path to Forepaw Hidden Red Potion",
-            "id": 400116,
+            "name": "Evil Fortress Hidden Glove",
+            "id": 400210,
             "access_rule": {
               "rule": "True_"
             },
@@ -375,24 +678,19 @@
             "locked": false
           },
           {
-            "name": "Path to Forepaw Glove",
-            "id": 400117,
+            "name": "Evil One",
+            "id": null,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Unlock Wingboots"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Poison",
+              "name": "Killed Evil One",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -508,62 +806,43 @@
           }
         ]
       },
-      "Trunk": {
-        "name": "Trunk",
-        "exits": [
-          {
-            "name": "Trunk -> Joker Spring",
-            "connected_region": "Joker Spring",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Key Joker"
-              }
-            }
-          },
-          {
-            "name": "Trunk -> Tower of Fortress",
-            "connected_region": "Tower of Fortress",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Key Jack"
-              }
-            }
-          },
-          {
-            "name": "Trunk -> Path to Mascon",
-            "connected_region": "Path to Mascon",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Joker Spring Flow",
-                      "Key Queen",
-                      "Ring of Ruby",
-                      "Sky Spring Flow",
-                      "Tower of Fortress Spring Flow"
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ],
+      "Fraternal Castle": {
+        "name": "Fraternal Castle",
+        "exits": [],
         "locations": [
           {
-            "name": "Trunk Hidden Ointment",
-            "id": 400125,
+            "name": "Fraternal Castle Hidden Ointment",
+            "id": 400196,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Elixir",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Fraternal Castle Shop Hidden Ointment",
+            "id": 400197,
+            "access_rule": {
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Fraternal Castle Poison 1",
+            "id": 400198,
             "access_rule": {
               "rule": "True_"
             },
@@ -576,13 +855,13 @@
             "locked": false
           },
           {
-            "name": "Trunk Hidden Red Potion",
-            "id": 400126,
+            "name": "Fraternal Castle Poison 2",
+            "id": 400199,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Red Potion",
+              "name": "Poison",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -590,12 +869,55 @@
             "locked": false
           },
           {
-            "name": "Trunk Red Potion",
-            "id": 400127,
+            "name": "Fraternal Castle Poison 3",
+            "id": 400200,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Fraternal Castle Hidden Hourglass",
+            "id": 400202,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Thunder",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Fraternal Castle Dragon Slayer",
+            "id": 400203,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Fraternal Castle Guru",
+            "id": 400204,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots"
+                "item_name": "Progressive Sword",
+                "count": 4
               }
             },
             "item": {
@@ -605,24 +927,40 @@
               "type": "None"
             },
             "locked": false
-          },
+          }
+        ]
+      },
+      "Helm Branch": {
+        "name": "Helm Branch",
+        "exits": [],
+        "locations": [
           {
-            "name": "Sky Spring",
-            "id": null,
+            "name": "Helm Branch Hidden Glove",
+            "id": 400169,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Sky Spring Flow",
+              "name": "Poison",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": false
+          },
+          {
+            "name": "Helm Branch Battle Helmet",
+            "id": 400170,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Glove",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           }
         ]
       },
@@ -658,201 +996,6 @@
             },
             "locked": true,
             "event": true
-          }
-        ]
-      },
-      "Tower of Fortress": {
-        "name": "Tower of Fortress",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tower of Fortress Poison 1",
-            "id": 400129,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Key Joker",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Poison 2",
-            "id": 400130,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Spring Elixir",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Hidden Wingboots",
-            "id": 400131,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Hourglass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Ointment",
-            "id": 400132,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ointment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Boss Wingboots",
-            "id": 400133,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Glove",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Elixir",
-            "id": 400134,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Guru",
-            "id": 400135,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sky Spring Flow"
-              }
-            },
-            "item": {
-              "name": "Progressive Sword",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Fortress Spring",
-            "id": null,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Spring Elixir"
-              }
-            },
-            "item": {
-              "name": "Tower of Fortress Spring Flow",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Path to Mascon": {
-        "name": "Path to Mascon",
-        "exits": [
-          {
-            "name": "Path to Mascon -> Tower of Red Potion",
-            "connected_region": "Tower of Red Potion",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Potion",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key Queen"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Path to Mascon -> Mascon",
-            "connected_region": "Mascon",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Path to Mascon Hidden Wingboots",
-            "id": 400136,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Tower of Red Potion": {
-        "name": "Tower of Red Potion",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tower of Red Potion",
-            "id": 400137,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ring of Dworf",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
           }
         ]
       },
@@ -948,258 +1091,6 @@
               "name": "Hourglass",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Path to Victim": {
-        "name": "Path to Victim",
-        "exits": [
-          {
-            "name": "Path to Victim -> Tower of Suffer",
-            "connected_region": "Tower of Suffer",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Key Queen"
-              }
-            }
-          },
-          {
-            "name": "Path to Victim -> Victim",
-            "connected_region": "Victim",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Misty Shop Death",
-            "id": 400144,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
-            },
-            "item": {
-              "name": "Wingboots",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Misty Shop Hourglass",
-            "id": 400145,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Death",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Misty Shop Elixir",
-            "id": 400146,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Misty Shop Red Potion",
-            "id": 400147,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Hourglass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Misty Doctor Office",
-            "id": 400148,
-            "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Tower of Suffer": {
-        "name": "Tower of Suffer",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tower of Suffer Hidden Wingboots",
-            "id": 400149,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deluge"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Progressive Armor",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Suffer Hidden Hourglass",
-            "id": 400150,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Suffer Pendant",
-            "id": 400151,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Victim": {
-        "name": "Victim",
-        "exits": [
-          {
-            "name": "Victim -> Mist",
-            "connected_region": "Mist",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Victim Full Plate",
-            "id": 400152,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Victim Mattock",
-            "id": 400153,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
-            },
-            "item": {
-              "name": "Wingboots",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Victim Red Potion",
-            "id": 400154,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Victim Key King",
-            "id": 400155,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Hourglass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Victim Key Queen",
-            "id": 400156,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Armor",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1333,38 +1224,29 @@
           }
         ]
       },
-      "Useless Tower": {
-        "name": "Useless Tower",
-        "exits": [],
-        "locations": [
+      "Path to Apolune": {
+        "name": "Path to Apolune",
+        "exits": [
           {
-            "name": "Useless Tower",
-            "id": 400163,
+            "name": "Path to Apolune -> Apolune",
+            "connected_region": "Apolune",
             "access_rule": {
               "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
+            }
           }
-        ]
-      },
-      "Tower of Mist": {
-        "name": "Tower of Mist",
-        "exits": [],
+        ],
         "locations": [
           {
-            "name": "Tower of Mist Hidden Ointment",
-            "id": 400164,
+            "name": "Path to Apolune Magic Shield",
+            "id": 400106,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Key King"
+              }
             },
             "item": {
-              "name": "Red Potion",
+              "name": "Unlock Wingboots",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1372,29 +1254,18 @@
             "locked": false
           },
           {
-            "name": "Tower of Mist Elixir",
-            "id": 400165,
+            "name": "Path to Apolune Death",
+            "id": 400107,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Key Ace"
+              }
             },
             "item": {
-              "name": "Red Potion",
+              "name": "Hourglass",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Tower of Mist Black Onyx",
-            "id": 400166,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1457,193 +1328,6 @@
               "name": "Poison",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Helm Branch": {
-        "name": "Helm Branch",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Helm Branch Hidden Glove",
-            "id": 400169,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Helm Branch Battle Helmet",
-            "id": 400170,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Glove",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Conflate": {
-        "name": "Conflate",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Conflate Giant Blade",
-            "id": 400171,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Conflate Magic Shield",
-            "id": 400172,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Sword",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Conflate Wingboots",
-            "id": 400173,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Hourglass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Conflate Red Potion",
-            "id": 400174,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Conflate Guru",
-            "id": 400175,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Armor",
-                "count": 3
-              }
-            },
-            "item": {
-              "name": "Progressive Sword",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Branches": {
-        "name": "Branches",
-        "exits": [
-          {
-            "name": "Branches -> Path to Daybreak",
-            "connected_region": "Path to Daybreak",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Branches Hidden Ointment",
-            "id": 400176,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Branches Poison",
-            "id": 400177,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Branches Hidden Mattock",
-            "id": 400178,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
-            },
-            "item": {
-              "name": "Progressive Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Branches Hidden Hourglass",
-            "id": 400179,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Deluge",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1751,24 +1435,163 @@
           }
         ]
       },
-      "Daybreak": {
-        "name": "Daybreak",
+      "Path to Forepaw": {
+        "name": "Path to Forepaw",
         "exits": [
           {
-            "name": "Daybreak -> Dartmoor Castle",
-            "connected_region": "Dartmoor Castle",
+            "name": "Path to Forepaw -> Forepaw",
+            "connected_region": "Forepaw",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Forepaw Hidden Red Potion",
+            "id": 400116,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Path to Forepaw Glove",
+            "id": 400117,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Unlock Wingboots"
+                ]
+              }
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Path to Mascon": {
+        "name": "Path to Mascon",
+        "exits": [
+          {
+            "name": "Path to Mascon -> Tower of Red Potion",
+            "connected_region": "Tower of Red Potion",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Red Potion",
+                    "count": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Key Queen"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Path to Mascon -> Mascon",
+            "connected_region": "Mascon",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Path to Mascon Hidden Wingboots",
+            "id": 400136,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Path to Victim": {
+        "name": "Path to Victim",
+        "exits": [
+          {
+            "name": "Path to Victim -> Tower of Suffer",
+            "connected_region": "Tower of Suffer",
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ring of Dworf"
+                "item_name": "Key Queen"
+              }
+            }
+          },
+          {
+            "name": "Path to Victim -> Victim",
+            "connected_region": "Victim",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
               }
             }
           }
         ],
         "locations": [
           {
-            "name": "Daybreak Tilte",
-            "id": 400186,
+            "name": "Misty Shop Death",
+            "id": 400144,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Misty Shop Hourglass",
+            "id": 400145,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Death",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Misty Shop Elixir",
+            "id": 400146,
             "access_rule": {
               "rule": "True_"
             },
@@ -1781,10 +1604,26 @@
             "locked": false
           },
           {
-            "name": "Daybreak Giant Blade",
-            "id": 400187,
+            "name": "Misty Shop Red Potion",
+            "id": 400147,
             "access_rule": {
               "rule": "True_"
+            },
+            "item": {
+              "name": "Hourglass",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Misty Doctor Office",
+            "id": 400148,
+            "access_rule": {
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Red Potion",
@@ -1793,15 +1632,49 @@
               "type": "None"
             },
             "locked": false
-          },
+          }
+        ]
+      },
+      "Tower of Fortress": {
+        "name": "Tower of Fortress",
+        "exits": [],
+        "locations": [
           {
-            "name": "Daybreak Red Potion",
-            "id": 400188,
+            "name": "Tower of Fortress Poison 1",
+            "id": 400129,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Red Potion",
+              "name": "Key Joker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Fortress Poison 2",
+            "id": 400130,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Spring Elixir",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Fortress Hidden Wingboots",
+            "id": 400131,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Hourglass",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1809,8 +1682,8 @@
             "locked": false
           },
           {
-            "name": "Daybreak Key King",
-            "id": 400189,
+            "name": "Tower of Fortress Ointment",
+            "id": 400132,
             "access_rule": {
               "rule": "True_"
             },
@@ -1823,13 +1696,110 @@
             "locked": false
           },
           {
-            "name": "Daybreak Key Queen",
-            "id": 400190,
+            "name": "Tower of Fortress Boss Wingboots",
+            "id": 400133,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Demons Ring",
+              "name": "Glove",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Fortress Elixir",
+            "id": 400134,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Fortress Guru",
+            "id": 400135,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sky Spring Flow"
+              }
+            },
+            "item": {
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Fortress Spring",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Spring Elixir"
+              }
+            },
+            "item": {
+              "name": "Tower of Fortress Spring Flow",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Tower of Mist": {
+        "name": "Tower of Mist",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Mist Hidden Ointment",
+            "id": 400164,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Mist Elixir",
+            "id": 400165,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Mist Black Onyx",
+            "id": 400166,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1838,307 +1808,50 @@
           }
         ]
       },
-      "Dartmoor Castle": {
-        "name": "Dartmoor Castle",
-        "exits": [
-          {
-            "name": "Dartmoor Castle -> Dartmoor",
-            "connected_region": "Dartmoor",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Dartmoor Castle -> Fraternal Castle",
-            "connected_region": "Fraternal Castle",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Dartmoor Castle -> Evil Fortress",
-            "connected_region": "Evil Fortress",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Demons Ring"
-              }
-            }
-          }
-        ],
+      "Tower of Red Potion": {
+        "name": "Tower of Red Potion",
+        "exits": [],
         "locations": [
           {
-            "name": "Dartmoor Castle Hidden Hourglass",
-            "id": 400191,
+            "name": "Tower of Red Potion",
+            "id": 400137,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Unlock Wingboots"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Poison",
+              "name": "Ring of Dworf",
               "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Dartmoor Castle Hidden Red Potion",
-            "id": 400192,
-            "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "Ring of Elf",
-              "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
           }
         ]
       },
-      "Dartmoor": {
-        "name": "Dartmoor",
+      "Tower of Suffer": {
+        "name": "Tower of Suffer",
         "exits": [],
         "locations": [
           {
-            "name": "Dartmoor Giant Blade",
-            "id": 400193,
+            "name": "Tower of Suffer Hidden Wingboots",
+            "id": 400149,
             "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ointment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Dartmoor Red Potion",
-            "id": 400194,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Fire",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Dartmoor Key King",
-            "id": 400195,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Magical Rod",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Fraternal Castle": {
-        "name": "Fraternal Castle",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Fraternal Castle Hidden Ointment",
-            "id": 400196,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Elixir",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Shop Hidden Ointment",
-            "id": 400197,
-            "access_rule": {
-              "rule": "has_any_magic",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Poison 1",
-            "id": 400198,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Poison 2",
-            "id": 400199,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Poison 3",
-            "id": 400200,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Hidden Hourglass",
-            "id": 400202,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Thunder",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Dragon Slayer",
-            "id": 400203,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Fraternal Castle Guru",
-            "id": 400204,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Sword",
-                "count": 4
-              }
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Evil Fortress": {
-        "name": "Evil Fortress",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Evil Fortress Ointment",
-            "id": 400205,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ointment",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Evil Fortress Poison 1",
-            "id": 400206,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Evil Fortress Glove",
-            "id": 400207,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Poison",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Evil Fortress Poison 2",
-            "id": 400208,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Evil Fortress Poison 3",
-            "id": 400209,
-            "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Deluge"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Progressive Armor",
@@ -2149,8 +1862,8 @@
             "locked": false
           },
           {
-            "name": "Evil Fortress Hidden Glove",
-            "id": 400210,
+            "name": "Tower of Suffer Hidden Hourglass",
+            "id": 400150,
             "access_rule": {
               "rule": "True_"
             },
@@ -2163,19 +1876,306 @@
             "locked": false
           },
           {
-            "name": "Evil One",
-            "id": null,
+            "name": "Tower of Suffer Pendant",
+            "id": 400151,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Killed Evil One",
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Tower of Trunk": {
+        "name": "Tower of Trunk",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Trunk Hidden Mattock",
+            "id": 400113,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Deluge"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Progressive Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Trunk Hidden Hourglass",
+            "id": 400114,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Poison",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Tower of Trunk Boss Mattock",
+            "id": 400115,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mattock",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Trunk": {
+        "name": "Trunk",
+        "exits": [
+          {
+            "name": "Trunk -> Joker Spring",
+            "connected_region": "Joker Spring",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Key Joker"
+              }
+            }
+          },
+          {
+            "name": "Trunk -> Tower of Fortress",
+            "connected_region": "Tower of Fortress",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Key Jack"
+              }
+            }
+          },
+          {
+            "name": "Trunk -> Path to Mascon",
+            "connected_region": "Path to Mascon",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Joker Spring Flow",
+                      "Key Queen",
+                      "Ring of Ruby",
+                      "Sky Spring Flow",
+                      "Tower of Fortress Spring Flow"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Trunk Hidden Ointment",
+            "id": 400125,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Trunk Hidden Red Potion",
+            "id": 400126,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Trunk Red Potion",
+            "id": 400127,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sky Spring",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Sky Spring Flow",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": true,
             "event": true
+          }
+        ]
+      },
+      "Useless Tower": {
+        "name": "Useless Tower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Useless Tower",
+            "id": 400163,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Victim": {
+        "name": "Victim",
+        "exits": [
+          {
+            "name": "Victim -> Mist",
+            "connected_region": "Mist",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Victim Full Plate",
+            "id": 400152,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Victim Mattock",
+            "id": 400153,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unlock Wingboots"
+              }
+            },
+            "item": {
+              "name": "Wingboots",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Victim Red Potion",
+            "id": 400154,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Victim Key King",
+            "id": 400155,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Hourglass",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Victim Key Queen",
+            "id": 400156,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Armor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
           }
         ]
       }

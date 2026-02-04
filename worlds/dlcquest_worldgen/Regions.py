@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Move Right", "Movement Pack", "Behind Tree", "Psychological Warfare", "Double Jump Total Left", "Double Jump Total Left Cave", "Double Jump Total Left Roof", "Double Jump Behind Tree", "True Double Jump Behind Tree", "The Forest", "The Forest with double Jump", "The Forest with double Jump Part 2", "The Final Boss Room"]
+    region_names = ["Menu", "Behind Tree", "Double Jump Behind Tree", "Double Jump Total Left", "Double Jump Total Left Cave", "Double Jump Total Left Roof", "Move Right", "Movement Pack", "Psychological Warfare", "The Final Boss Room", "The Forest", "The Forest with double Jump", "The Forest with double Jump Part 2", "True Double Jump Behind Tree"]
 
     regions = {}
     for region_name in region_names:
@@ -52,15 +52,15 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Move Right"], "DLC Quest Basic")
+    _create_entrance(regions["Behind Tree"], regions["Double Jump Behind Tree"], "Behind Tree Double Jump")
+    _create_entrance(regions["Behind Tree"], regions["The Forest"], "Forest Entrance")
+    _create_entrance(regions["Double Jump Behind Tree"], regions["True Double Jump Behind Tree"], "True Double Jump")
+    _create_entrance(regions["Double Jump Total Left"], regions["Double Jump Total Left Cave"], "Cave Tree")
+    _create_entrance(regions["Double Jump Total Left"], regions["Double Jump Total Left Roof"], "Cave Roof")
     _create_entrance(regions["Move Right"], regions["Movement Pack"], "Moving")
     _create_entrance(regions["Movement Pack"], regions["Behind Tree"], "Tree")
     _create_entrance(regions["Movement Pack"], regions["Psychological Warfare"], "Cloud")
-    _create_entrance(regions["Behind Tree"], regions["Double Jump Behind Tree"], "Behind Tree Double Jump")
-    _create_entrance(regions["Behind Tree"], regions["The Forest"], "Forest Entrance")
     _create_entrance(regions["Psychological Warfare"], regions["Double Jump Total Left"], "Cloud Double Jump")
-    _create_entrance(regions["Double Jump Total Left"], regions["Double Jump Total Left Cave"], "Cave Tree")
-    _create_entrance(regions["Double Jump Total Left"], regions["Double Jump Total Left Roof"], "Cave Roof")
-    _create_entrance(regions["Double Jump Behind Tree"], regions["True Double Jump Behind Tree"], "True Double Jump")
     _create_entrance(regions["The Forest"], regions["The Final Boss Room"], "Behind Ogre")
     _create_entrance(regions["The Forest"], regions["The Forest with double Jump"], "Forest Double Jump")
     _create_entrance(regions["The Forest with double Jump"], regions["The Forest with double Jump Part 2"], "Forest True Double Jump")

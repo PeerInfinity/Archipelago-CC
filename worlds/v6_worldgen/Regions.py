@@ -18,7 +18,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Laboratory", "The Tower", "Space Station 2", "Warp Zone"]
+    region_names = ["Menu", "Laboratory", "Space Station 2", "The Tower", "Warp Zone"]
 
     regions = {}
     for region_name in region_names:

@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Eolis", "Path to Apolune", "Apolune", "Tower of Trunk", "Path to Forepaw", "Forepaw", "Trunk", "Joker Spring", "Tower of Fortress", "Path to Mascon", "Tower of Red Potion", "Mascon", "Path to Victim", "Tower of Suffer", "Victim", "Mist", "Useless Tower", "Tower of Mist", "Path to Conflate", "Helm Branch", "Conflate", "Branches", "Path to Daybreak", "Daybreak", "Dartmoor Castle", "Dartmoor", "Fraternal Castle", "Evil Fortress"]
+    region_names = ["Menu", "Apolune", "Branches", "Conflate", "Dartmoor", "Dartmoor Castle", "Daybreak", "Eolis", "Evil Fortress", "Forepaw", "Fraternal Castle", "Helm Branch", "Joker Spring", "Mascon", "Mist", "Path to Apolune", "Path to Conflate", "Path to Daybreak", "Path to Forepaw", "Path to Mascon", "Path to Victim", "Tower of Fortress", "Tower of Mist", "Tower of Red Potion", "Tower of Suffer", "Tower of Trunk", "Trunk", "Useless Tower", "Victim"]
 
     regions = {}
     for region_name in region_names:
@@ -52,33 +52,33 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Eolis"], "Menu -> Eolis")
-    _create_entrance(regions["Eolis"], regions["Path to Apolune"], "Eolis -> Path to Apolune")
-    _create_entrance(regions["Path to Apolune"], regions["Apolune"], "Path to Apolune -> Apolune")
     _create_entrance(regions["Apolune"], regions["Tower of Trunk"], "Apolune -> Tower of Trunk")
     _create_entrance(regions["Apolune"], regions["Path to Forepaw"], "Apolune -> Path to Forepaw")
-    _create_entrance(regions["Path to Forepaw"], regions["Forepaw"], "Path to Forepaw -> Forepaw")
-    _create_entrance(regions["Forepaw"], regions["Trunk"], "Forepaw -> Trunk")
-    _create_entrance(regions["Trunk"], regions["Joker Spring"], "Trunk -> Joker Spring")
-    _create_entrance(regions["Trunk"], regions["Tower of Fortress"], "Trunk -> Tower of Fortress")
-    _create_entrance(regions["Trunk"], regions["Path to Mascon"], "Trunk -> Path to Mascon")
-    _create_entrance(regions["Path to Mascon"], regions["Tower of Red Potion"], "Path to Mascon -> Tower of Red Potion")
-    _create_entrance(regions["Path to Mascon"], regions["Mascon"], "Path to Mascon -> Mascon")
-    _create_entrance(regions["Mascon"], regions["Path to Victim"], "Mascon -> Path to Victim")
-    _create_entrance(regions["Path to Victim"], regions["Tower of Suffer"], "Path to Victim -> Tower of Suffer")
-    _create_entrance(regions["Path to Victim"], regions["Victim"], "Path to Victim -> Victim")
-    _create_entrance(regions["Victim"], regions["Mist"], "Victim -> Mist")
-    _create_entrance(regions["Mist"], regions["Useless Tower"], "Mist -> Useless Tower")
-    _create_entrance(regions["Mist"], regions["Tower of Mist"], "Mist -> Tower of Mist")
-    _create_entrance(regions["Mist"], regions["Path to Conflate"], "Mist -> Path to Conflate")
-    _create_entrance(regions["Path to Conflate"], regions["Helm Branch"], "Path to Conflate -> Helm Branch")
-    _create_entrance(regions["Path to Conflate"], regions["Conflate"], "Path to Conflate -> Conflate")
-    _create_entrance(regions["Path to Conflate"], regions["Branches"], "Path to Conflate -> Branches")
     _create_entrance(regions["Branches"], regions["Path to Daybreak"], "Branches -> Path to Daybreak")
-    _create_entrance(regions["Path to Daybreak"], regions["Daybreak"], "Path to Daybreak -> Daybreak")
-    _create_entrance(regions["Daybreak"], regions["Dartmoor Castle"], "Daybreak -> Dartmoor Castle")
     _create_entrance(regions["Dartmoor Castle"], regions["Dartmoor"], "Dartmoor Castle -> Dartmoor")
     _create_entrance(regions["Dartmoor Castle"], regions["Fraternal Castle"], "Dartmoor Castle -> Fraternal Castle")
     _create_entrance(regions["Dartmoor Castle"], regions["Evil Fortress"], "Dartmoor Castle -> Evil Fortress")
+    _create_entrance(regions["Daybreak"], regions["Dartmoor Castle"], "Daybreak -> Dartmoor Castle")
+    _create_entrance(regions["Eolis"], regions["Path to Apolune"], "Eolis -> Path to Apolune")
+    _create_entrance(regions["Forepaw"], regions["Trunk"], "Forepaw -> Trunk")
+    _create_entrance(regions["Mascon"], regions["Path to Victim"], "Mascon -> Path to Victim")
+    _create_entrance(regions["Mist"], regions["Useless Tower"], "Mist -> Useless Tower")
+    _create_entrance(regions["Mist"], regions["Tower of Mist"], "Mist -> Tower of Mist")
+    _create_entrance(regions["Mist"], regions["Path to Conflate"], "Mist -> Path to Conflate")
+    _create_entrance(regions["Path to Apolune"], regions["Apolune"], "Path to Apolune -> Apolune")
+    _create_entrance(regions["Path to Conflate"], regions["Helm Branch"], "Path to Conflate -> Helm Branch")
+    _create_entrance(regions["Path to Conflate"], regions["Conflate"], "Path to Conflate -> Conflate")
+    _create_entrance(regions["Path to Conflate"], regions["Branches"], "Path to Conflate -> Branches")
+    _create_entrance(regions["Path to Daybreak"], regions["Daybreak"], "Path to Daybreak -> Daybreak")
+    _create_entrance(regions["Path to Forepaw"], regions["Forepaw"], "Path to Forepaw -> Forepaw")
+    _create_entrance(regions["Path to Mascon"], regions["Tower of Red Potion"], "Path to Mascon -> Tower of Red Potion")
+    _create_entrance(regions["Path to Mascon"], regions["Mascon"], "Path to Mascon -> Mascon")
+    _create_entrance(regions["Path to Victim"], regions["Tower of Suffer"], "Path to Victim -> Tower of Suffer")
+    _create_entrance(regions["Path to Victim"], regions["Victim"], "Path to Victim -> Victim")
+    _create_entrance(regions["Trunk"], regions["Joker Spring"], "Trunk -> Joker Spring")
+    _create_entrance(regions["Trunk"], regions["Tower of Fortress"], "Trunk -> Tower of Fortress")
+    _create_entrance(regions["Trunk"], regions["Path to Mascon"], "Trunk -> Path to Mascon")
+    _create_entrance(regions["Victim"], regions["Mist"], "Victim -> Mist")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

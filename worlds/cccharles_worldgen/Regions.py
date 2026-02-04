@@ -18,7 +18,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Start Camp", "Tony Tiddle Mission", "Barn", "Candice Mission", "Tutorial House", "Swamp Edges", "Swamp Mission", "Junkyard Area", "South House", "Junkyard Shed", "Military Base", "South Mine Outside", "South Mine Inside", "Middle Station", "Canyon", "Watchtower", "Boulder Field", "Haunted House", "Santiago House", "Port", "Trench House", "Doll Woods", "Lost Stairs", "East House", "Rockets Testing Ground", "Rockets Testing Bunker", "Workshop", "East Tower", "Lighthouse", "North Mine Outside", "North Mine Inside", "Wood Bridge", "Museum", "Barbed Shelter", "West Beach", "Church", "West Cottage", "Caravan", "Trailer Cabin", "Towers", "North beach", "Mine Shaft", "Mob Camp", "Mob Camp Locked Room", "Mine Elevator Exit", "Mountain Ruin Outside", "Mountain Ruin Inside", "Prism Temple", "Pickle Val", "Shrine Near Temple", "Morse Bunker"]
+    region_names = ["Menu", "Barbed Shelter", "Barn", "Boulder Field", "Candice Mission", "Canyon", "Caravan", "Church", "Doll Woods", "East House", "East Tower", "Haunted House", "Junkyard Area", "Junkyard Shed", "Lighthouse", "Lost Stairs", "Middle Station", "Military Base", "Mine Elevator Exit", "Mine Shaft", "Mob Camp", "Mob Camp Locked Room", "Morse Bunker", "Mountain Ruin Inside", "Mountain Ruin Outside", "Museum", "North Mine Inside", "North Mine Outside", "North beach", "Pickle Val", "Port", "Prism Temple", "Rockets Testing Bunker", "Rockets Testing Ground", "Santiago House", "Shrine Near Temple", "South House", "South Mine Inside", "South Mine Outside", "Start Camp", "Swamp Edges", "Swamp Mission", "Tony Tiddle Mission", "Towers", "Trailer Cabin", "Trench House", "Tutorial House", "Watchtower", "West Beach", "West Cottage", "Wood Bridge", "Workshop"]
 
     regions = {}
     for region_name in region_names:
@@ -102,11 +102,11 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Menu"], regions["Pickle Val"], "Menu -> Pickle Val")
     _create_entrance(regions["Menu"], regions["Shrine Near Temple"], "Menu -> Shrine Near Temple")
     _create_entrance(regions["Menu"], regions["Morse Bunker"], "Menu -> Morse Bunker")
-    _create_entrance(regions["South Mine Outside"], regions["South Mine Inside"], "South Mine Gate")
-    _create_entrance(regions["Rockets Testing Ground"], regions["Rockets Testing Bunker"], "Stuck Bunker Door")
-    _create_entrance(regions["North Mine Outside"], regions["North Mine Inside"], "North Mine Gate")
     _create_entrance(regions["Mob Camp"], regions["Mob Camp Locked Room"], "Mob Camp Locked Door")
     _create_entrance(regions["Mountain Ruin Outside"], regions["Mountain Ruin Inside"], "Mountain Ruin Gate")
+    _create_entrance(regions["North Mine Outside"], regions["North Mine Inside"], "North Mine Gate")
+    _create_entrance(regions["Rockets Testing Ground"], regions["Rockets Testing Bunker"], "Stuck Bunker Door")
+    _create_entrance(regions["South Mine Outside"], regions["South Mine Inside"], "South Mine Gate")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

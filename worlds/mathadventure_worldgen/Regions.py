@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Definitions", "Axioms", "BasicProperties", "ArithmeticOperations", "ProofCompletion"]
+    region_names = ["Menu", "ArithmeticOperations", "Axioms", "BasicProperties", "Definitions", "ProofCompletion"]
 
     regions = {}
     for region_name in region_names:
@@ -52,12 +52,12 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Definitions"], "StartProof")
+    _create_entrance(regions["ArithmeticOperations"], regions["ProofCompletion"], "ToProofCompletion")
+    _create_entrance(regions["Axioms"], regions["Definitions"], "BackToDefinitions")
+    _create_entrance(regions["BasicProperties"], regions["Definitions"], "BackToDefinitionsFromProperties")
     _create_entrance(regions["Definitions"], regions["Axioms"], "ToAxioms")
     _create_entrance(regions["Definitions"], regions["BasicProperties"], "ToBasicProperties")
     _create_entrance(regions["Definitions"], regions["ArithmeticOperations"], "ToOperations")
-    _create_entrance(regions["Axioms"], regions["Definitions"], "BackToDefinitions")
-    _create_entrance(regions["BasicProperties"], regions["Definitions"], "BackToDefinitionsFromProperties")
-    _create_entrance(regions["ArithmeticOperations"], regions["ProofCompletion"], "ToProofCompletion")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

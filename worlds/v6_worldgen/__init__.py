@@ -117,13 +117,13 @@ class V6World(RuleWorldMixin, World):
         "Overworld (Outside Entanglement Generator)": "Trinket 16",
         "The Tantalizing Trinket": "Trinket 09",
         "Purest Unobtainium": "Trinket 10",
-        "The Tower 1": "Trinket 18",
-        "The Tower 2": "Trinket 15",
         "One Way Room": "Trinket 11",
         "You Just Keep Coming Back": "Trinket 12",
         "Clarion Call": "Trinket 06",
         "Prize for the Reckless": "Trinket 05",
         "Doing things the hard way": "Trinket 19",
+        "The Tower 1": "Trinket 18",
+        "The Tower 2": "Trinket 15",
         "Edge Games": "Trinket 13",
     }
 
@@ -142,13 +142,13 @@ class V6World(RuleWorldMixin, World):
         "Overworld (Outside Entanglement Generator)": False,
         "The Tantalizing Trinket": True,
         "Purest Unobtainium": True,
-        "The Tower 1": False,
-        "The Tower 2": False,
         "One Way Room": True,
         "You Just Keep Coming Back": True,
         "Clarion Call": True,
         "Prize for the Reckless": True,
         "Doing things the hard way": False,
+        "The Tower 1": False,
+        "The Tower 2": False,
         "Edge Games": False,
     }
 

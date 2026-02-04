@@ -128,68 +128,6 @@
         ],
         "locations": []
       },
-      "Heat Man Stage": {
-        "name": "Heat Man Stage",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Heat Man - Defeated",
-            "id": 8912897,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Weapon Energy (L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Atomic Fire - Received",
-            "id": 8913153,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Wood Man Access Codes",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Item 1 - Received",
-            "id": 8913169,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "1-Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Heat Man Stage - 1-Up",
-            "id": 8913409,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Flash Man Access Codes",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
       "Air Man Stage": {
         "name": "Air Man Stage",
         "exits": [],
@@ -238,40 +176,6 @@
           }
         ]
       },
-      "Wood Man Stage": {
-        "name": "Wood Man Stage",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Wood Man - Defeated",
-            "id": 8912899,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Atomic Fire",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Leaf Shield - Received",
-            "id": 8913155,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Weapon Energy (L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
       "Bubble Man Stage": {
         "name": "Bubble Man Stage",
         "exits": [],
@@ -306,27 +210,13 @@
           }
         ]
       },
-      "Quick Man Stage": {
-        "name": "Quick Man Stage",
+      "Crash Man Stage": {
+        "name": "Crash Man Stage",
         "exits": [],
         "locations": [
           {
-            "name": "Quick Man - Defeated",
-            "id": 8912901,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "1-Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quick Boomerang - Received",
-            "id": 8913157,
+            "name": "Crash Man - Defeated",
+            "id": 8912904,
             "access_rule": {
               "rule": "True_"
             },
@@ -339,8 +229,36 @@
             "locked": false
           },
           {
-            "name": "Quick Man Stage - 1-Up 1",
-            "id": 8913410,
+            "name": "Crash Bomber - Received",
+            "id": 8913160,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Weapon Energy (L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Crash Man Stage - E-Tank",
+            "id": 8913428,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Quick Boomerang",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Crash Man Stage - 1-Up",
+            "id": 8913429,
             "access_rule": {
               "rule": "HasAny",
               "args": {
@@ -353,48 +271,6 @@
             },
             "item": {
               "name": "Weapon Energy (L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quick Man Stage - E-Tank",
-            "id": 8913411,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Weapon Energy (L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quick Man Stage - 1-Up 2",
-            "id": 8913412,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Health Energy (L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Quick Man Stage - 1-Up 3",
-            "id": 8913416,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "1-Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -478,6 +354,68 @@
             },
             "item": {
               "name": "Crash Bomber",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Heat Man Stage": {
+        "name": "Heat Man Stage",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Heat Man - Defeated",
+            "id": 8912897,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Weapon Energy (L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Atomic Fire - Received",
+            "id": 8913153,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Wood Man Access Codes",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Item 1 - Received",
+            "id": 8913169,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "1-Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Heat Man Stage - 1-Up",
+            "id": 8913409,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Flash Man Access Codes",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -574,13 +512,27 @@
           }
         ]
       },
-      "Crash Man Stage": {
-        "name": "Crash Man Stage",
+      "Quick Man Stage": {
+        "name": "Quick Man Stage",
         "exits": [],
         "locations": [
           {
-            "name": "Crash Man - Defeated",
-            "id": 8912904,
+            "name": "Quick Man - Defeated",
+            "id": 8912901,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "1-Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quick Boomerang - Received",
+            "id": 8913157,
             "access_rule": {
               "rule": "True_"
             },
@@ -593,36 +545,8 @@
             "locked": false
           },
           {
-            "name": "Crash Bomber - Received",
-            "id": 8913160,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Weapon Energy (L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Crash Man Stage - E-Tank",
-            "id": 8913428,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Quick Boomerang",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Crash Man Stage - 1-Up",
-            "id": 8913429,
+            "name": "Quick Man Stage - 1-Up 1",
+            "id": 8913410,
             "access_rule": {
               "rule": "HasAny",
               "args": {
@@ -635,6 +559,48 @@
             },
             "item": {
               "name": "Weapon Energy (L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quick Man Stage - E-Tank",
+            "id": 8913411,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Weapon Energy (L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quick Man Stage - 1-Up 2",
+            "id": 8913412,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Health Energy (L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Quick Man Stage - 1-Up 3",
+            "id": 8913416,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "1-Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1014,30 +980,6 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
-                "helper_args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "option_value",
-                      "option": "wily_5_requirement"
-                    },
-                    "attr": "value"
-                  },
-                  {
-                    "type": "constant",
-                    "value": {
-                      "0": [],
-                      "1": [],
-                      "2": [],
-                      "3": [],
-                      "4": [],
-                      "5": [],
-                      "6": [],
-                      "7": [],
-                      "12": []
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1059,30 +1001,6 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
-                "helper_args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "option_value",
-                      "option": "wily_5_requirement"
-                    },
-                    "attr": "value"
-                  },
-                  {
-                    "type": "constant",
-                    "value": {
-                      "0": [],
-                      "1": [],
-                      "2": [],
-                      "3": [],
-                      "4": [],
-                      "5": [],
-                      "6": [],
-                      "7": [],
-                      "12": []
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1121,6 +1039,40 @@
             },
             "locked": true,
             "event": true
+          }
+        ]
+      },
+      "Wood Man Stage": {
+        "name": "Wood Man Stage",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Wood Man - Defeated",
+            "id": 8912899,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Atomic Fire",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Leaf Shield - Received",
+            "id": 8913155,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Weapon Energy (L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           }
         ]
       }

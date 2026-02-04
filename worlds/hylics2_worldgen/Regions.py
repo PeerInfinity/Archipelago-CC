@@ -18,7 +18,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Afterlife", "Waynehouse", "World", "New Muldul", "New Muldul Vault", "Viewax", "Airship", "Arcade Island", "TV Island", "Juice Ranch", "Shield Facility", "Worm Pod", "Foglast", "Drill Castle", "Sage Labyrinth", "Sage Airship", "Hylemxylem"]
+    region_names = ["Menu", "Afterlife", "Airship", "Arcade Island", "Drill Castle", "Foglast", "Hylemxylem", "Juice Ranch", "New Muldul", "New Muldul Vault", "Sage Airship", "Sage Labyrinth", "Shield Facility", "TV Island", "Viewax", "Waynehouse", "World", "Worm Pod"]
 
     regions = {}
     for region_name in region_names:
@@ -66,6 +66,29 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Afterlife"], regions["Foglast"], "Afterlife To Foglast")
     _create_entrance(regions["Afterlife"], regions["Sage Labyrinth"], "Afterlife To Sage Labyrinth")
     _create_entrance(regions["Afterlife"], regions["Hylemxylem"], "Afterlife To Hylemxylem")
+    _create_entrance(regions["Airship"], regions["World"], "Airship To World")
+    _create_entrance(regions["Arcade Island"], regions["World"], "Arcade Island To World")
+    _create_entrance(regions["Drill Castle"], regions["World"], "Drill Castle To World")
+    _create_entrance(regions["Drill Castle"], regions["Sage Labyrinth"], "Drill Castle To Sage Labyrinth")
+    _create_entrance(regions["Foglast"], regions["World"], "Foglast To World")
+    _create_entrance(regions["Foglast"], regions["Afterlife"], "Foglast To Afterlife")
+    _create_entrance(regions["Hylemxylem"], regions["World"], "Hylemxylem To World")
+    _create_entrance(regions["Hylemxylem"], regions["Afterlife"], "Hylemxylem To Afterlife")
+    _create_entrance(regions["Juice Ranch"], regions["World"], "Juice Ranch To World")
+    _create_entrance(regions["New Muldul"], regions["World"], "New Muldul To World")
+    _create_entrance(regions["New Muldul"], regions["Afterlife"], "New Muldul To Afterlife")
+    _create_entrance(regions["New Muldul"], regions["New Muldul Vault"], "New Muldul To New Muldul Vault")
+    _create_entrance(regions["New Muldul Vault"], regions["New Muldul"], "New Muldul Vault To New Muldul")
+    _create_entrance(regions["Sage Airship"], regions["World"], "Sage Airship To World")
+    _create_entrance(regions["Sage Labyrinth"], regions["Drill Castle"], "Sage Labyrinth To Drill Castle")
+    _create_entrance(regions["Sage Labyrinth"], regions["Afterlife"], "Sage Labyrinth To Afterlife")
+    _create_entrance(regions["Shield Facility"], regions["World"], "Shield Facility To World")
+    _create_entrance(regions["Shield Facility"], regions["Afterlife"], "Shield Facility To Afterlife")
+    _create_entrance(regions["Shield Facility"], regions["Worm Pod"], "Shield Facility To Worm Pod")
+    _create_entrance(regions["TV Island"], regions["World"], "TV Island To World")
+    _create_entrance(regions["TV Island"], regions["Afterlife"], "TV Island To Afterlife")
+    _create_entrance(regions["Viewax"], regions["World"], "Viewax To World")
+    _create_entrance(regions["Viewax"], regions["Afterlife"], "Viewax To Afterlife")
     _create_entrance(regions["Waynehouse"], regions["World"], "Waynehouse To World")
     _create_entrance(regions["Waynehouse"], regions["Afterlife"], "Waynehouse To Afterlife")
     _create_entrance(regions["World"], regions["Airship"], "World To Airship")
@@ -81,31 +104,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["World"], regions["Foglast"], "World To Foglast")
     _create_entrance(regions["World"], regions["Sage Airship"], "World To Sage Airship")
     _create_entrance(regions["World"], regions["Hylemxylem"], "World To Hylemxylem")
-    _create_entrance(regions["New Muldul"], regions["World"], "New Muldul To World")
-    _create_entrance(regions["New Muldul"], regions["Afterlife"], "New Muldul To Afterlife")
-    _create_entrance(regions["New Muldul"], regions["New Muldul Vault"], "New Muldul To New Muldul Vault")
-    _create_entrance(regions["New Muldul Vault"], regions["New Muldul"], "New Muldul Vault To New Muldul")
-    _create_entrance(regions["Viewax"], regions["World"], "Viewax To World")
-    _create_entrance(regions["Viewax"], regions["Afterlife"], "Viewax To Afterlife")
-    _create_entrance(regions["Airship"], regions["World"], "Airship To World")
-    _create_entrance(regions["Arcade Island"], regions["World"], "Arcade Island To World")
-    _create_entrance(regions["TV Island"], regions["World"], "TV Island To World")
-    _create_entrance(regions["TV Island"], regions["Afterlife"], "TV Island To Afterlife")
-    _create_entrance(regions["Juice Ranch"], regions["World"], "Juice Ranch To World")
-    _create_entrance(regions["Shield Facility"], regions["World"], "Shield Facility To World")
-    _create_entrance(regions["Shield Facility"], regions["Afterlife"], "Shield Facility To Afterlife")
-    _create_entrance(regions["Shield Facility"], regions["Worm Pod"], "Shield Facility To Worm Pod")
     _create_entrance(regions["Worm Pod"], regions["Shield Facility"], "Worm Pod To Shield Facility")
     _create_entrance(regions["Worm Pod"], regions["Afterlife"], "Worm Pod To Afterlife")
-    _create_entrance(regions["Foglast"], regions["World"], "Foglast To World")
-    _create_entrance(regions["Foglast"], regions["Afterlife"], "Foglast To Afterlife")
-    _create_entrance(regions["Drill Castle"], regions["World"], "Drill Castle To World")
-    _create_entrance(regions["Drill Castle"], regions["Sage Labyrinth"], "Drill Castle To Sage Labyrinth")
-    _create_entrance(regions["Sage Labyrinth"], regions["Drill Castle"], "Sage Labyrinth To Drill Castle")
-    _create_entrance(regions["Sage Labyrinth"], regions["Afterlife"], "Sage Labyrinth To Afterlife")
-    _create_entrance(regions["Sage Airship"], regions["World"], "Sage Airship To World")
-    _create_entrance(regions["Hylemxylem"], regions["World"], "Hylemxylem To World")
-    _create_entrance(regions["Hylemxylem"], regions["Afterlife"], "Hylemxylem To Afterlife")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

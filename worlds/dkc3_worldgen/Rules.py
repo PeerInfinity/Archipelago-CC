@@ -21,29 +21,6 @@ def set_rules(world: "World") -> None:
     multiworld = world.multiworld
 
     # Entrance rules
-    world.set_rule(
-        multiworld.get_entrance("Overworld 2", player),
-        Has('Progressive Boat Upgrade', 1)
-    )
-
-    multiworld.get_entrance("Overworld 4", player).access_rule = \
-        lambda state: ((state.has('DK Coin', player, state.multiworld.worlds[player].options.dk_coins_for_gyrocopter.value)) and (state.has('Progressive Boat Upgrade', player, 3)))
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld 3", player),
-        Has('Progressive Boat Upgrade', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arich's Hoard Region", player),
-        CanReachLocation('Riverside Race - Flag')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sky-High Secret Region", player),
-        CanReachLocation("Bleak's House")
-    )
-
     multiworld.get_entrance("Stampede Sprint", player).access_rule = \
         lambda state: state.has('Bonus Coin', player, (state.multiworld.worlds[player].options.krematoa_bonus_coin_cost * (0 + 1)))
 
@@ -62,4 +39,27 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Kastle KAOS Region", player),
         Has('Krematoa Cog', 5)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arich's Hoard Region", player),
+        CanReachLocation('Riverside Race - Flag')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sky-High Secret Region", player),
+        CanReachLocation("Bleak's House")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld 2", player),
+        Has('Progressive Boat Upgrade', 1)
+    )
+
+    multiworld.get_entrance("Overworld 4", player).access_rule = \
+        lambda state: ((state.has('DK Coin', player, state.multiworld.worlds[player].options.dk_coins_for_gyrocopter.value)) and (state.has('Progressive Boat Upgrade', player, 3)))
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld 3", player),
+        Has('Progressive Boat Upgrade', 3)
     )

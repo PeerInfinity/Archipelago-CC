@@ -21,26 +21,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("ToStaticWebsite", player),
-        And(HasAny('Git', 'JavaScript Basics', 'Server Basics'), HasAll('CSS', 'HTML'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ToInteractiveApp", player),
-        Or(HasAll('Database Basics', 'State Management'), HasAll('Frontend Framework', 'REST APIs'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ToReactRoute", player),
-        Has('DOM Manipulation', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ToVanillaRoute", player),
-        Has('Algorithms', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("ToExpressRoute", player),
         Has('JavaScript Basics', 1)
     )
@@ -56,103 +36,63 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("ToFullStackHub", player),
-        And(Or(HasAll('DevOps', 'Performance'), HasAll('DevOps', 'Testing'), HasAll('Performance', 'Testing')), Has('Authentication'))
+        multiworld.get_entrance("ToReactRoute", player),
+        Has('DOM Manipulation', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ToVanillaRoute", player),
+        Has('Algorithms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("ToProduction", player),
         HasAll('Deployment Complete', 'Scaling Complete', 'Security Complete')
     )
+
+    world.set_rule(
+        multiworld.get_entrance("ToFullStackHub", player),
+        And(Or(HasAll('DevOps', 'Performance'), HasAll('DevOps', 'Testing'), HasAll('Performance', 'Testing')), Has('Authentication'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ToStaticWebsite", player),
+        And(HasAny('Git', 'JavaScript Basics', 'Server Basics'), HasAll('CSS', 'HTML'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ToInteractiveApp", player),
+        Or(HasAll('Database Basics', 'State Management'), HasAll('Frontend Framework', 'REST APIs'))
+    )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Learn CSS", player),
-        Has('HTML', 1)
+        multiworld.get_location("Sessions", player),
+        Has('HTTP Basics', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Learn Design Systems", player),
-        Has('CSS', 1)
+        multiworld.get_location("JWT", player),
+        Has('Sessions', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Learn DOM Manipulation", player),
-        Has('JavaScript Basics', 1)
+        multiworld.get_location("OAuth", player),
+        Has('JWT', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Learn Algorithms", player),
-        Has('JavaScript Basics', 1)
+        multiworld.get_location("Cloud Provider", player),
+        Has('DevOps', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Learn File I/O", player),
-        Has('Server Basics', 1)
+        multiworld.get_location("Domain Setup", player),
+        Has('Cloud Provider', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Learn HTTP Basics", player),
-        Has('Server Basics', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Learn Package Managers", player),
-        Has('Command Line', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("React Components", player),
-        Has('React', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Redux", player),
-        Has('Frontend Framework', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Vue Components", player),
-        Has('Vue', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Vuex", player),
-        Has('Frontend Framework', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Custom State System", player),
-        Has('Frontend Framework', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Build REST APIs", player),
-        Has('Express', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("MongoDB Integration", player),
-        Has('REST APIs', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Django REST Framework", player),
-        Has('Django', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Django ORM", player),
-        Has('REST APIs', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Flask-RESTful", player),
-        Has('Flask', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("SQLAlchemy", player),
-        Has('REST APIs', 1)
+        multiworld.get_location("SSL Certificate", player),
+        HasAll('Domain', 'HTTPS')
     )
 
     world.set_rule(
@@ -171,13 +111,58 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("PostgreSQL", player),
-        Has('SQL', 1)
+        multiworld.get_location("Docker", player),
+        Has('Command Line', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Query Optimization", player),
-        Has('Database Basics', 1)
+        multiworld.get_location("CI/CD", player),
+        HasAll('Docker', 'Git')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Monitoring", player),
+        Has('CI/CD', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Django REST Framework", player),
+        Has('Django', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Django ORM", player),
+        Has('REST APIs', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Build REST APIs", player),
+        Has('Express', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("MongoDB Integration", player),
+        Has('REST APIs', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Flask-RESTful", player),
+        Has('Flask', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("SQLAlchemy", player),
+        Has('REST APIs', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Learn DOM Manipulation", player),
+        Has('JavaScript Basics', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Learn Algorithms", player),
+        Has('JavaScript Basics', 1)
     )
 
     world.set_rule(
@@ -188,21 +173,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Indexing Strategies", player),
         Has('Database Basics', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sessions", player),
-        Has('HTTP Basics', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("JWT", player),
-        Has('Sessions', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("OAuth", player),
-        Has('JWT', 1)
     )
 
     world.set_rule(
@@ -221,38 +191,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Integration Tests", player),
-        Has('Unit Tests', 1)
+        multiworld.get_location("React Components", player),
+        Has('React', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("E2E Tests", player),
-        Has('Integration Tests', 1)
+        multiworld.get_location("Redux", player),
+        Has('Frontend Framework', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Docker", player),
-        Has('Command Line', 1)
+        multiworld.get_location("PostgreSQL", player),
+        Has('SQL', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("CI/CD", player),
-        HasAll('Docker', 'Git')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Monitoring", player),
-        Has('CI/CD', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("CORS", player),
-        Has('HTTPS', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Input Validation", player),
-        Has('CORS', 1)
+        multiworld.get_location("Query Optimization", player),
+        Has('Database Basics', 1)
     )
 
     world.set_rule(
@@ -266,16 +221,61 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Cloud Provider", player),
-        Has('DevOps', 1)
+        multiworld.get_location("CORS", player),
+        Has('HTTPS', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Domain Setup", player),
-        Has('Cloud Provider', 1)
+        multiworld.get_location("Input Validation", player),
+        Has('CORS', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("SSL Certificate", player),
-        HasAll('Domain', 'HTTPS')
+        multiworld.get_location("Learn File I/O", player),
+        Has('Server Basics', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Learn HTTP Basics", player),
+        Has('Server Basics', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Integration Tests", player),
+        Has('Unit Tests', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("E2E Tests", player),
+        Has('Integration Tests', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Learn Package Managers", player),
+        Has('Command Line', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Custom State System", player),
+        Has('Frontend Framework', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Learn CSS", player),
+        Has('HTML', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Learn Design Systems", player),
+        Has('CSS', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Vue Components", player),
+        Has('Vue', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Vuex", player),
+        Has('Frontend Framework', 1)
     )

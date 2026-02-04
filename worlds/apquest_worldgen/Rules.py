@@ -36,11 +36,11 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Right Room Enemy Drop", player),
-        Has('Sword', 1)
+        multiworld.get_location("Final Boss Defeated", player),
+        HasAll('Sword', 'Shield')
     )
 
     world.set_rule(
-        multiworld.get_location("Final Boss Defeated", player),
-        HasAll('Sword', 'Shield')
+        multiworld.get_location("Right Room Enemy Drop", player),
+        Has('Sword', 1)
     )

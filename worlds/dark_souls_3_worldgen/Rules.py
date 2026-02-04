@@ -35,6 +35,21 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Go To Irithyll of the Boreal Valley", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CC: Soul of High Lord Wolnir',), body_rule=CanReachLocation("CC: Soul of High Lord Wolnir")), Has('Small Doll'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Go To Untended Graves", player),
+        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CKG: Soul of Consumed Oceiros',), body_rule=CanReachLocation("CKG: Soul of Consumed Oceiros"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Go To Catacombs of Carthus", player),
+        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Soul of the Blood of the Wolf',), body_rule=CanReachLocation("FK: Soul of the Blood of the Wolf"))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Go To Firelink Shrine Bell Tower", player),
         Has('Tower Key', 1)
     )
@@ -60,28 +75,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Go To Road of Sacrifices", player),
-        HasAll('US -> RS', 'Pyromancy Flame', 'Transposing Kiln')
+        multiworld.get_entrance("Go To Archdragon Peak", player),
+        Has('Path of the Dragon', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Go To Cathedral of the Deep", player),
-        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('RS: Soul of a Crystal Sage',), body_rule=CanReachLocation("RS: Soul of a Crystal Sage"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Go To Farron Keep", player),
-        Has('RS -> FK', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Go To Catacombs of Carthus", player),
-        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Soul of the Blood of the Wolf',), body_rule=CanReachLocation("FK: Soul of the Blood of the Wolf"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Go To Irithyll of the Boreal Valley", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CC: Soul of High Lord Wolnir',), body_rule=CanReachLocation("CC: Soul of High Lord Wolnir")), Has('Small Doll'))
+        multiworld.get_entrance("Go To Karla's Shop", player),
+        Has("Jailer's Key Ring", 1)
     )
 
     world.set_rule(
@@ -95,16 +95,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Go To Archdragon Peak", player),
-        Has('Path of the Dragon', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Go To Karla's Shop", player),
-        Has("Jailer's Key Ring", 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Go To Consumed King's Garden", player),
         HasAll('Pyromancy Flame', 'Transposing Kiln')
     )
@@ -115,10 +105,235 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Go To Untended Graves", player),
-        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CKG: Soul of Consumed Oceiros',), body_rule=CanReachLocation("CKG: Soul of Consumed Oceiros"))
+        multiworld.get_entrance("Go To Cathedral of the Deep", player),
+        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('RS: Soul of a Crystal Sage',), body_rule=CanReachLocation("RS: Soul of a Crystal Sage"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Go To Farron Keep", player),
+        Has('RS -> FK', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Go To Road of Sacrifices", player),
+        HasAll('Pyromancy Flame', 'Transposing Kiln', 'US -> RS')
     )
     # Location rules
+    world.set_rule(
+        multiworld.get_location("AL: Yorshka's Chime - kill Yorshka", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Budding Green Blossom - shop after killing Creighton and AL boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Sunset Shield - by grave after killing Hodrick w/Sirris", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("US: Sunset Helm - Pit of Hollows after killing Hodrick w/Sirris", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("US: Sunset Armor - pit of hollows after killing Hodrick w/Sirris", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("US: Sunset Leggings - pit of hollows after killing Hodrick w/Sirris", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("AL: Chameleon - tomb after marrying Anri", player),
+        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Soul of the Deacons of the Deep',), body_rule=CanReachLocation("CD: Soul of the Deacons of the Deep"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("AL: Anri's Straight Sword - Anri quest", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Leonhard's Garb - shop after killing Leonhard", player),
+        Has('Black Eye Orb', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Leonhard's Gauntlets - shop after killing Leonhard", player),
+        Has('Black Eye Orb', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Leonhard's Trousers - shop after killing Leonhard", player),
+        Has('Black Eye Orb', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("AL: Crescent Moon Sword - Leonhard drop", player),
+        Has('Black Eye Orb', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("AL: Silver Mask - Leonhard drop", player),
+        Has('Black Eye Orb', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("AL: Soul of Rosaria - Leonhard drop", player),
+        Has('Black Eye Orb', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Elite Knight Helm - shop after Anri quest", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Elite Knight Armor - shop after Anri quest", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Elite Knight Gauntlets - shop after Anri quest", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Elite Knight Leggings - shop after Anri quest", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Hawkwood's Swordgrass - Andre after gesture in AP summit", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Hawkwood's Shield - gravestone after Hawkwood leaves",), body_rule=CanReachLocation("FS: Hawkwood's Shield - gravestone after Hawkwood leaves")), Has('Twinkling Dragon Torso Stone'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Twinkling Dragon Head Stone - Hawkwood drop", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Hawkwood's Shield - gravestone after Hawkwood leaves",), body_rule=CanReachLocation("FS: Hawkwood's Shield - gravestone after Hawkwood leaves")), Has('Twinkling Dragon Torso Stone'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CD: Black Eye Orb - Rosaria from Leonhard's quest", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('HWL: Red Eye Orb - wall tower, miniboss',), body_rule=CanReachLocation("HWL: Red Eye Orb - wall tower, miniboss")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Profaned Capital',), body_rule=CanReachEntrance("Go To Profaned Capital")), Has('Pale Tongue'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CD: Winged Spear - kill Patches", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Rusted Gold Coin - don't forgive Patches",), body_rule=CanReachLocation("FS: Rusted Gold Coin - don't forgive Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Hidden Blessing - Patches after searching GA',), body_rule=CanReachLocation("FS: Hidden Blessing - Patches after searching GA")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Rusted Gold Coin - don't forgive Patches", player),
+        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Cathedral of the Deep',), body_rule=CanReachEntrance("Go To Cathedral of the Deep")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Firelink Shrine Bell Tower',), body_rule=CanReachEntrance("Go To Firelink Shrine Bell Tower")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CD: Shotel - Patches", player),
+        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Cathedral of the Deep',), body_rule=CanReachEntrance("Go To Cathedral of the Deep")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Firelink Shrine Bell Tower',), body_rule=CanReachEntrance("Go To Firelink Shrine Bell Tower")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CD: Ember - Patches", player),
+        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Cathedral of the Deep',), body_rule=CanReachEntrance("Go To Cathedral of the Deep")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Firelink Shrine Bell Tower',), body_rule=CanReachEntrance("Go To Firelink Shrine Bell Tower")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CD: Horsehoof Ring - Patches", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Rusted Gold Coin - don't forgive Patches",), body_rule=CanReachLocation("FS: Rusted Gold Coin - don't forgive Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Hidden Blessing - Patches after searching GA',), body_rule=CanReachLocation("FS: Hidden Blessing - Patches after searching GA")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Soul of the Blood of the Wolf", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Cinders of a Lord - Abyss Watcher", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Hawkwood's Shield - gravestone after Hawkwood leaves", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Farron Ring - Hawkwood", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Undead Legion Helm - shop after killing FK boss", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Undead Legion Armor - shop after killing FK boss", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Undead Legion Gauntlet - shop after killing FK boss", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Undead Legion Leggings - shop after killing FK boss", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Havel's Helm - upper keep, after killing AP belfry roof NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Havel's Armor - upper keep, after killing AP belfry roof NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC", player),
+        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
+    )
+
     world.set_rule(
         multiworld.get_location("FS: Lift Chamber Key - Leonhard", player),
         Has('Pale Tongue', 1)
@@ -480,6 +695,71 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("FS: Sunless Talisman - Sirris, kill GA boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Sunless Veil - shop, Sirris quest, kill GA boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Sunless Armor - shop, Sirris quest, kill GA boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Sunless Gauntlets - shop, Sirris quest, kill GA boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Sunless Leggings - shop, Sirris quest, kill GA boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Hidden Blessing - Patches after searching GA", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Ember - shop for Greirat's Ashes",), body_rule=CanReachLocation("FS: Ember - shop for Greirat's Ashes")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Divine Blessing - Greirat from US", player),
+        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Undead Settlement',), body_rule=CanReachEntrance("Go To Undead Settlement")), Has("Loretta's Bone"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Ember - Greirat from US", player),
+        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Undead Settlement',), body_rule=CanReachEntrance("Go To Undead Settlement")), Has("Loretta's Bone"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Divine Blessing - Greirat from IBV", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Hidden Blessing - Greirat from IBV", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Titanite Scale - Greirat from IBV", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Twinkling Titanite - Greirat from IBV", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Ember - shop for Greirat's Ashes", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from IBV',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from IBV")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Grand Archives',), body_rule=CanReachEntrance("Go To Grand Archives")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
+    )
+
+    world.set_rule(
         multiworld.get_location("HWL: Soul of Boreal Valley Vordt", player),
         Has('Storm Ruler', 1)
     )
@@ -497,6 +777,256 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("HWL: Red Eye Orb - wall tower, miniboss", player),
         Has('Lift Chamber Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("ID: Titanite Slab - Siegward", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), Has('Old Cell Key'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("ID: Bellowing Dragoncrest Ring - drop from B1 towards pit", player),
+        Has("Jailbreaker's Key", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("ID: Covetous Gold Serpent Ring - Siegward's cell", player),
+        Has('Old Cell Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("ID: Prisoner Chief's Ashes - B2 near, locked cell by stairs", player),
+        Has("Jailer's Key Ring", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Soul of Pontiff Sulyvahn", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Ring of the Evil Eye - Anri", player),
+        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Soul of the Deacons of the Deep',), body_rule=CanReachLocation("CD: Soul of the Deacons of the Deep"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Mail Breaker - Sirris for killing Creighton", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Silvercat Ring - Sirris for killing Creighton", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Dragonslayer's Axe - Creighton drop", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Creighton's Steel Mask - bridge after killing Creighton", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Mirrah Chain Mail - bridge after killing Creighton", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Mirrah Chain Gloves - bridge after killing Creighton", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("IBV: Mirrah Chain Leggings - bridge after killing Creighton", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Firestorm - Karla for Quelana Tome", player),
+        Has('Quelana Pyromancy Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Rapport - Karla for Quelana Tome", player),
+        Has('Quelana Pyromancy Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Fire Whip - Karla for Quelana Tome", player),
+        Has('Quelana Pyromancy Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Black Flame - Karla for Grave Warden Tome", player),
+        Has('Grave Warden Pyromancy Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Black Fire Orb - Karla for Grave Warden Tome", player),
+        Has('Grave Warden Pyromancy Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Gnaw - Karla for Deep Braille Tome", player),
+        Has('Deep Braille Divine Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Deep Protection - Karla for Deep Braille Tome", player),
+        Has('Deep Braille Divine Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Vow of Silence - Karla for Londor Tome", player),
+        Has('Londor Braille Divine Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Dark Blade - Karla for Londor Tome", player),
+        Has('Londor Braille Divine Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Dead Again - Karla for Londor Tome", player),
+        Has('Londor Braille Divine Tome', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Karla's Pointed Hat - kill Karla", player),
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Karla's Coat - kill Karla", player),
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Karla's Gloves - kill Karla", player),
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Karla's Trousers - kill Karla", player),
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
+    )
+
+    world.set_rule(
+        multiworld.get_location("LC: Gotthard Twinswords - by Grand Archives door, after PC and AL bosses", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Cinders of a Lord - Aldrich',), body_rule=CanReachLocation("AL: Cinders of a Lord - Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Cinders of a Lord - Yhorm the Giant',), body_rule=CanReachLocation("PC: Cinders of a Lord - Yhorm the Giant")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("LC: Grand Archives Key - by Grand Archives door, after PC and AL bosses", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Cinders of a Lord - Aldrich',), body_rule=CanReachLocation("AL: Cinders of a Lord - Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Cinders of a Lord - Yhorm the Giant',), body_rule=CanReachLocation("PC: Cinders of a Lord - Yhorm the Giant")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Morne's Great Hammer - Eygon", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Soul of the Blood of the Wolf',), body_rule=CanReachLocation("FK: Soul of the Blood of the Wolf")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',), body_rule=CanReachLocation("LC: Soul of Dragonslayer Armour")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Moaning Shield - Eygon", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Soul of the Blood of the Wolf',), body_rule=CanReachLocation("FK: Soul of the Blood of the Wolf")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',), body_rule=CanReachLocation("LC: Soul of Dragonslayer Armour")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("PC: Siegbräu - Siegward after killing boss", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('ID: Titanite Slab - Siegward',), body_rule=CanReachLocation("ID: Titanite Slab - Siegward")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Soul of Yhorm the Giant',), body_rule=CanReachLocation("PC: Soul of Yhorm the Giant")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("PC: Storm Ruler - Siegward", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('ID: Titanite Slab - Siegward',), body_rule=CanReachLocation("ID: Titanite Slab - Siegward")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Soul of Yhorm the Giant',), body_rule=CanReachLocation("PC: Soul of Yhorm the Giant")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("PC: Pierce Shield - Siegward", player),
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('ID: Titanite Slab - Siegward',), body_rule=CanReachLocation("ID: Titanite Slab - Siegward")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Soul of Yhorm the Giant',), body_rule=CanReachLocation("PC: Soul of Yhorm the Giant")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Pestilent Mist - Orbeck for any scroll", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Great Farron Dart - Orbeck for Sage's Scroll", player),
+        Has("Sage's Scroll", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Farron Hail - Orbeck for Sage's Scroll", player),
+        Has("Sage's Scroll", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Homing Soulmass - Orbeck for Logan's Scroll", player),
+        Has("Logan's Scroll", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Soul Spear - Orbeck for Logan's Scroll", player),
+        Has("Logan's Scroll", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll", player),
+        Has('Crystal Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Crystal Soul Spear - Orbeck for Crystal Scroll", player),
+        Has('Crystal Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Crystal Magic Weapon - Orbeck for Crystal Scroll", player),
+        Has('Crystal Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Cast Light - Orbeck for Golden Scroll", player),
+        Has('Golden Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Twisted Wall of Light - Orbeck for Golden Scroll", player),
+        Has('Golden Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Hidden Weapon - Orbeck for Golden Scroll", player),
+        Has('Golden Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Hidden Body - Orbeck for Golden Scroll", player),
+        Has('Golden Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Repair - Orbeck for Golden Scroll", player),
+        Has('Golden Scroll', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Clandestine Coat - shop with Orbeck's Ashes", player),
+        HasAll('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Young Dragon Ring - Orbeck for one scroll and buying three spells", player),
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
+    )
+
+    world.set_rule(
+        multiworld.get_location("FS: Morion Blade - Yuria for Orbeck's Ashes", player),
+        HasAll('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
@@ -600,421 +1130,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("FS: Pestilent Mist - Orbeck for any scroll", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Great Farron Dart - Orbeck for Sage's Scroll", player),
-        Has("Sage's Scroll", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Farron Hail - Orbeck for Sage's Scroll", player),
-        Has("Sage's Scroll", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Homing Soulmass - Orbeck for Logan's Scroll", player),
-        Has("Logan's Scroll", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Soul Spear - Orbeck for Logan's Scroll", player),
-        Has("Logan's Scroll", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll", player),
-        Has('Crystal Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Crystal Soul Spear - Orbeck for Crystal Scroll", player),
-        Has('Crystal Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Crystal Magic Weapon - Orbeck for Crystal Scroll", player),
-        Has('Crystal Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Cast Light - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Twisted Wall of Light - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Hidden Weapon - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Hidden Body - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Repair - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Clandestine Coat - shop with Orbeck's Ashes", player),
-        HasAll('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Young Dragon Ring - Orbeck for one scroll and buying three spells", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Morion Blade - Yuria for Orbeck's Ashes", player),
-        HasAll('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("CD: Black Eye Orb - Rosaria from Leonhard's quest", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('HWL: Red Eye Orb - wall tower, miniboss',), body_rule=CanReachLocation("HWL: Red Eye Orb - wall tower, miniboss")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Profaned Capital',), body_rule=CanReachEntrance("Go To Profaned Capital")), Has('Pale Tongue'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CD: Winged Spear - kill Patches", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Rusted Gold Coin - don't forgive Patches",), body_rule=CanReachLocation("FS: Rusted Gold Coin - don't forgive Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Hidden Blessing - Patches after searching GA',), body_rule=CanReachLocation("FS: Hidden Blessing - Patches after searching GA")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Rusted Gold Coin - don't forgive Patches", player),
-        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Cathedral of the Deep',), body_rule=CanReachEntrance("Go To Cathedral of the Deep")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Firelink Shrine Bell Tower',), body_rule=CanReachEntrance("Go To Firelink Shrine Bell Tower")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CD: Shotel - Patches", player),
-        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Cathedral of the Deep',), body_rule=CanReachEntrance("Go To Cathedral of the Deep")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Firelink Shrine Bell Tower',), body_rule=CanReachEntrance("Go To Firelink Shrine Bell Tower")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CD: Ember - Patches", player),
-        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Cathedral of the Deep',), body_rule=CanReachEntrance("Go To Cathedral of the Deep")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Firelink Shrine Bell Tower',), body_rule=CanReachEntrance("Go To Firelink Shrine Bell Tower")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CD: Horsehoof Ring - Patches", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Rusted Gold Coin - don't forgive Patches",), body_rule=CanReachLocation("FS: Rusted Gold Coin - don't forgive Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Hidden Blessing - Patches after searching GA',), body_rule=CanReachLocation("FS: Hidden Blessing - Patches after searching GA")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Soul of the Blood of the Wolf", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Cinders of a Lord - Abyss Watcher", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Hawkwood's Shield - gravestone after Hawkwood leaves", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Farron Ring - Hawkwood", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Undead Legion Helm - shop after killing FK boss", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Undead Legion Armor - shop after killing FK boss", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Undead Legion Gauntlet - shop after killing FK boss", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Undead Legion Leggings - shop after killing FK boss", player),
-        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Havel's Helm - upper keep, after killing AP belfry roof NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Havel's Armor - upper keep, after killing AP belfry roof NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Soul of Pontiff Sulyvahn", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Ring of the Evil Eye - Anri", player),
-        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Soul of the Deacons of the Deep',), body_rule=CanReachLocation("CD: Soul of the Deacons of the Deep"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Mail Breaker - Sirris for killing Creighton", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Silvercat Ring - Sirris for killing Creighton", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Dragonslayer's Axe - Creighton drop", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Creighton's Steel Mask - bridge after killing Creighton", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Mirrah Chain Mail - bridge after killing Creighton", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Mirrah Chain Gloves - bridge after killing Creighton", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("IBV: Mirrah Chain Leggings - bridge after killing Creighton", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("ID: Titanite Slab - Siegward", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), Has('Old Cell Key'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("ID: Bellowing Dragoncrest Ring - drop from B1 towards pit", player),
-        Has("Jailbreaker's Key", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("ID: Covetous Gold Serpent Ring - Siegward's cell", player),
-        Has('Old Cell Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("ID: Prisoner Chief's Ashes - B2 near, locked cell by stairs", player),
-        Has("Jailer's Key Ring", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("PC: Siegbräu - Siegward after killing boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('ID: Titanite Slab - Siegward',), body_rule=CanReachLocation("ID: Titanite Slab - Siegward")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Soul of Yhorm the Giant',), body_rule=CanReachLocation("PC: Soul of Yhorm the Giant")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("PC: Storm Ruler - Siegward", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('ID: Titanite Slab - Siegward',), body_rule=CanReachLocation("ID: Titanite Slab - Siegward")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Soul of Yhorm the Giant',), body_rule=CanReachLocation("PC: Soul of Yhorm the Giant")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("PC: Pierce Shield - Siegward", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('ID: Titanite Slab - Siegward',), body_rule=CanReachLocation("ID: Titanite Slab - Siegward")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Soul of Yhorm the Giant',), body_rule=CanReachLocation("PC: Soul of Yhorm the Giant")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("AL: Yorshka's Chime - kill Yorshka", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Budding Green Blossom - shop after killing Creighton and AL boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Sunset Shield - by grave after killing Hodrick w/Sirris", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("US: Sunset Helm - Pit of Hollows after killing Hodrick w/Sirris", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("US: Sunset Armor - pit of hollows after killing Hodrick w/Sirris", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("US: Sunset Gauntlets - pit of hollows after killing Hodrick w/Sirris", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("US: Sunset Leggings - pit of hollows after killing Hodrick w/Sirris", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Mail Breaker - Sirris for killing Creighton',), body_rule=CanReachLocation("FS: Mail Breaker - Sirris for killing Creighton")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("AL: Chameleon - tomb after marrying Anri", player),
-        HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Soul of the Deacons of the Deep',), body_rule=CanReachLocation("CD: Soul of the Deacons of the Deep"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("AL: Anri's Straight Sword - Anri quest", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Leonhard's Garb - shop after killing Leonhard", player),
-        Has('Black Eye Orb', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Leonhard's Gauntlets - shop after killing Leonhard", player),
-        Has('Black Eye Orb', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Leonhard's Trousers - shop after killing Leonhard", player),
-        Has('Black Eye Orb', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("AL: Crescent Moon Sword - Leonhard drop", player),
-        Has('Black Eye Orb', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("AL: Silver Mask - Leonhard drop", player),
-        Has('Black Eye Orb', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("AL: Soul of Rosaria - Leonhard drop", player),
-        Has('Black Eye Orb', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Elite Knight Helm - shop after Anri quest", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Elite Knight Armor - shop after Anri quest", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Elite Knight Gauntlets - shop after Anri quest", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Elite Knight Leggings - shop after Anri quest", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Soul of Aldrich',), body_rule=CanReachLocation("AL: Soul of Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('IBV: Ring of the Evil Eye - Anri',), body_rule=CanReachLocation("IBV: Ring of the Evil Eye - Anri")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("LC: Gotthard Twinswords - by Grand Archives door, after PC and AL bosses", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Cinders of a Lord - Aldrich',), body_rule=CanReachLocation("AL: Cinders of a Lord - Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Cinders of a Lord - Yhorm the Giant',), body_rule=CanReachLocation("PC: Cinders of a Lord - Yhorm the Giant")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("LC: Grand Archives Key - by Grand Archives door, after PC and AL bosses", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('AL: Cinders of a Lord - Aldrich',), body_rule=CanReachLocation("AL: Cinders of a Lord - Aldrich")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('PC: Cinders of a Lord - Yhorm the Giant',), body_rule=CanReachLocation("PC: Cinders of a Lord - Yhorm the Giant")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Morne's Great Hammer - Eygon", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Soul of the Blood of the Wolf',), body_rule=CanReachLocation("FK: Soul of the Blood of the Wolf")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',), body_rule=CanReachLocation("LC: Soul of Dragonslayer Armour")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Moaning Shield - Eygon", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Soul of the Blood of the Wolf',), body_rule=CanReachLocation("FK: Soul of the Blood of the Wolf")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',), body_rule=CanReachLocation("LC: Soul of Dragonslayer Armour")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC", player),
-        HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Archdragon Peak',), body_rule=CanReachEntrance("Go To Archdragon Peak"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Sunless Talisman - Sirris, kill GA boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Sunless Veil - shop, Sirris quest, kill GA boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Sunless Armor - shop, Sirris quest, kill GA boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Sunless Gauntlets - shop, Sirris quest, kill GA boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Sunless Leggings - shop, Sirris quest, kill GA boss", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('US: Soul of the Rotted Greatwood',), body_rule=CanReachLocation("US: Soul of the Rotted Greatwood")), Has("Dreamchaser's Ashes"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Hidden Blessing - Patches after searching GA", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Ember - shop for Greirat's Ashes",), body_rule=CanReachLocation("FS: Ember - shop for Greirat's Ashes")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")))
-    )
-
-    world.set_rule(
         multiworld.get_location("UG: Hornet Ring - environs, right of main path after killing FK boss", player),
         And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Cinders of a Lord - Abyss Watcher',), body_rule=CanReachLocation("FK: Cinders of a Lord - Abyss Watcher")), HelperCall(helper_func=_has_any_scroll, helper_name="_has_any_scroll", body_rule=(Has("Sage's Scroll")) | (Has("Golden Scroll")) | (Has("Logan's Scroll")) | (Has("Crystal Scroll"))))
     )
@@ -1037,119 +1152,4 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("UG: Wolf Knight Leggings - shop after killing FK boss", player),
         And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FK: Cinders of a Lord - Abyss Watcher',), body_rule=CanReachLocation("FK: Cinders of a Lord - Abyss Watcher")), HelperCall(helper_func=_has_any_scroll, helper_name="_has_any_scroll", body_rule=(Has("Sage's Scroll")) | (Has("Golden Scroll")) | (Has("Logan's Scroll")) | (Has("Crystal Scroll"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Hawkwood's Swordgrass - Andre after gesture in AP summit", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Hawkwood's Shield - gravestone after Hawkwood leaves",), body_rule=CanReachLocation("FS: Hawkwood's Shield - gravestone after Hawkwood leaves")), Has('Twinkling Dragon Torso Stone'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FK: Twinkling Dragon Head Stone - Hawkwood drop", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=("FS: Hawkwood's Shield - gravestone after Hawkwood leaves",), body_rule=CanReachLocation("FS: Hawkwood's Shield - gravestone after Hawkwood leaves")), Has('Twinkling Dragon Torso Stone'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Divine Blessing - Greirat from US", player),
-        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Undead Settlement',), body_rule=CanReachEntrance("Go To Undead Settlement")), Has("Loretta's Bone"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Ember - Greirat from US", player),
-        And(HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Undead Settlement',), body_rule=CanReachEntrance("Go To Undead Settlement")), Has("Loretta's Bone"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Divine Blessing - Greirat from IBV", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Hidden Blessing - Greirat from IBV", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Titanite Scale - Greirat from IBV", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Twinkling Titanite - Greirat from IBV", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Ember - shop for Greirat's Ashes", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from IBV',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from IBV")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Grand Archives',), body_rule=CanReachEntrance("Go To Grand Archives")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Firestorm - Karla for Quelana Tome", player),
-        Has('Quelana Pyromancy Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Rapport - Karla for Quelana Tome", player),
-        Has('Quelana Pyromancy Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Fire Whip - Karla for Quelana Tome", player),
-        Has('Quelana Pyromancy Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Black Flame - Karla for Grave Warden Tome", player),
-        Has('Grave Warden Pyromancy Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Black Fire Orb - Karla for Grave Warden Tome", player),
-        Has('Grave Warden Pyromancy Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Gnaw - Karla for Deep Braille Tome", player),
-        Has('Deep Braille Divine Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Deep Protection - Karla for Deep Braille Tome", player),
-        Has('Deep Braille Divine Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Vow of Silence - Karla for Londor Tome", player),
-        Has('Londor Braille Divine Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Dark Blade - Karla for Londor Tome", player),
-        Has('Londor Braille Divine Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Dead Again - Karla for Londor Tome", player),
-        Has('Londor Braille Divine Tome', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Karla's Pointed Hat - kill Karla", player),
-        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Karla's Coat - kill Karla", player),
-        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Karla's Gloves - kill Karla", player),
-        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
-    )
-
-    world.set_rule(
-        multiworld.get_location("FS: Karla's Trousers - kill Karla", player),
-        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
     )

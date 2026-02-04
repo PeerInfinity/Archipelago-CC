@@ -1037,168 +1037,40 @@
           }
         ]
       },
-      "Machine Tower Bottom": {
-        "name": "Machine Tower Bottom",
-        "exits": [
-          {
-            "name": "Machine Bottom to Top",
-            "connected_region": "Machine Tower Top",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Machine Tower: Foxy platforms ledge",
-            "id": 3579576417,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Knight fox meeting room",
-            "id": 3579576418,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Boneheaded argument wall kicks room",
-            "id": 3579576411,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_kick",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "Thunderbird Card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Foxy fake wall",
-            "id": 3579576410,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mars Card",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Skelly-rang wall kicks room",
-            "id": 3579576415,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_kick",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Fake Lilim wall",
-            "id": 3579576414,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Thunderous zone fake wall",
-            "id": 3579576419,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Thunderous zone lone Stone Armor room",
-            "id": 3579576413,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roc Wing",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Machine Tower Top": {
-        "name": "Machine Tower Top",
+      "Battle Arena": {
+        "name": "Battle Arena",
         "exits": [],
         "locations": [
           {
-            "name": "Machine Tower: Top lone Stone Armor room",
-            "id": 3579576412,
+            "name": "Chapel Tower: Outside Battle Arena - Upper",
+            "id": 3579576476,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "has_jump_level_3",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
-              "name": "MP Max Up",
+              "name": "Jupiter Card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1206,13 +1078,32 @@
             "locked": false
           },
           {
-            "name": "Machine Tower: Stone fox hallway",
-            "id": 3579576416,
+            "name": "Chapel Tower: Outside Battle Arena - Lower",
+            "id": 3579576475,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tackle"
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_ice_or_stone",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "has_jump_level_3",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_jump_level_4",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Heart Max Up",
@@ -1221,53 +1112,16 @@
               "type": "None"
             },
             "locked": false
-          },
-          {
-            "name": "Machine Tower: Pre-Iron Golem fake wall",
-            "id": 3579576420,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Machine Tower: Behind Iron Golem",
-            "id": 3579576491,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
           }
         ]
       },
-      "Eternal Corridor Pit": {
-        "name": "Eternal Corridor Pit",
-        "exits": [
+      "Ceremonial Room": {
+        "name": "Ceremonial Room",
+        "exits": [],
+        "locations": [
           {
-            "name": "Corridor to Gallery",
-            "connected_region": "Underground Gallery Upper",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Maiden Detonator"
-              }
-            }
-          },
-          {
-            "name": "Escape the Gallery Pit",
-            "connected_region": "Chapel Tower Bottom",
+            "name": "Ceremonial Room: Fake floor",
+            "id": 3579576487,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -1282,23 +1136,32 @@
                   "_converted_from_ast": true
                 }
               ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Eternal Corridor: Midway fake wall",
-            "id": 3579576422,
-            "access_rule": {
-              "rule": "True_"
             },
             "item": {
-              "name": "Heart Max Up",
+              "name": "Venus Card",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Dracula",
+            "id": null,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing"
+              }
+            },
+            "item": {
+              "name": "The Count Downed",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1614,40 +1477,76 @@
           }
         ]
       },
-      "Battle Arena": {
-        "name": "Battle Arena",
-        "exits": [],
-        "locations": [
+      "Eternal Corridor Pit": {
+        "name": "Eternal Corridor Pit",
+        "exits": [
           {
-            "name": "Chapel Tower: Outside Battle Arena - Upper",
-            "id": 3579576476,
+            "name": "Corridor to Gallery",
+            "connected_region": "Underground Gallery Upper",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Maiden Detonator"
+              }
+            }
+          },
+          {
+            "name": "Escape the Gallery Pit",
+            "connected_region": "Chapel Tower Bottom",
             "access_rule": {
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "has_jump_level_3",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_jump_level_4",
+                  "rule": "has_kick",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
               ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Eternal Corridor: Midway fake wall",
+            "id": 3579576422,
+            "access_rule": {
+              "rule": "True_"
             },
             "item": {
-              "name": "Jupiter Card",
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Machine Tower Bottom": {
+        "name": "Machine Tower Bottom",
+        "exits": [
+          {
+            "name": "Machine Bottom to Top",
+            "connected_region": "Machine Tower Top",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Machine Tower: Foxy platforms ledge",
+            "id": 3579576417,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1655,35 +1554,422 @@
             "locked": false
           },
           {
-            "name": "Chapel Tower: Outside Battle Arena - Lower",
-            "id": 3579576475,
+            "name": "Machine Tower: Knight fox meeting room",
+            "id": 3579576418,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Boneheaded argument wall kicks room",
+            "id": 3579576411,
             "access_rule": {
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_ice_or_stone",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "has_jump_level_3",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_jump_level_4",
+                  "rule": "has_kick",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
               ]
             },
             "item": {
+              "name": "Thunderbird Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Foxy fake wall",
+            "id": 3579576410,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mars Card",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Skelly-rang wall kicks room",
+            "id": 3579576415,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_jump_level_2",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_kick",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Fake Lilim wall",
+            "id": 3579576414,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
               "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Thunderous zone fake wall",
+            "id": 3579576419,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Thunderous zone lone Stone Armor room",
+            "id": 3579576413,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roc Wing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Machine Tower Top": {
+        "name": "Machine Tower Top",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Machine Tower: Top lone Stone Armor room",
+            "id": 3579576412,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Stone fox hallway",
+            "id": 3579576416,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle"
+              }
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Pre-Iron Golem fake wall",
+            "id": 3579576420,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Machine Tower: Behind Iron Golem",
+            "id": 3579576491,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Observation Tower": {
+        "name": "Observation Tower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Observation Tower: Wind Armor rampart",
+            "id": 3579576477,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Legion plaza fake wall",
+            "id": 3579576484,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Legion plaza Minotaur hallway",
+            "id": 3579576479,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Siren balcony fake wall",
+            "id": 3579576485,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Diana Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Evil Pillar pit fake wall",
+            "id": 3579576480,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Alraune garden",
+            "id": 3579576482,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Dark Armor's domain fake wall",
+            "id": 3579576486,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Catoblepeas hallway",
+            "id": 3579576483,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Near warp room fake wall",
+            "id": 3579576481,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Observation Tower: Behind Hugh",
+            "id": 3579576496,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Underground Gallery Lower": {
+        "name": "Underground Gallery Lower",
+        "exits": [
+          {
+            "name": "Gallery Lower to Upper",
+            "connected_region": "Underground Gallery Upper",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Underground Gallery: Harpy mantis tackle hallway",
+            "id": 3579576454,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle"
+              }
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Underground Gallery: Handy bee hallway",
+            "id": 3579576455,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Underground Gallery: Myconid fake wall",
+            "id": 3579576456,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Underground Gallery: Crumble bridge fake wall",
+            "id": 3579576457,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Underground Gallery: Behind Dragon Zombies",
+            "id": 3579576492,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP Max Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1805,127 +2091,6 @@
                   "_converted_from_ast": true
                 }
               ]
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Underground Gallery Lower": {
-        "name": "Underground Gallery Lower",
-        "exits": [
-          {
-            "name": "Gallery Lower to Upper",
-            "connected_region": "Underground Gallery Upper",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tackle"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Underground Gallery: Harpy mantis tackle hallway",
-            "id": 3579576454,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tackle"
-              }
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Gallery: Handy bee hallway",
-            "id": 3579576455,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Gallery: Myconid fake wall",
-            "id": 3579576456,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Gallery: Crumble bridge fake wall",
-            "id": 3579576457,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Gallery: Behind Dragon Zombies",
-            "id": 3579576492,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Underground Warehouse Start": {
-        "name": "Underground Warehouse Start",
-        "exits": [
-          {
-            "name": "Into Warehouse Main",
-            "connected_region": "Underground Warehouse Main",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tackle"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Underground Warehouse: Entrance push crate room",
-            "id": 3579576437,
-            "access_rule": {
-              "rule": "True_"
             },
             "item": {
               "name": "Heart Max Up",
@@ -2167,12 +2332,44 @@
           }
         ]
       },
-      "Underground Waterway Start": {
-        "name": "Underground Waterway Start",
+      "Underground Warehouse Start": {
+        "name": "Underground Warehouse Start",
         "exits": [
           {
-            "name": "Into Waterway Main",
-            "connected_region": "Underground Waterway Main",
+            "name": "Into Warehouse Main",
+            "connected_region": "Underground Warehouse Main",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tackle"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Underground Warehouse: Entrance push crate room",
+            "id": 3579576437,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Underground Waterway End": {
+        "name": "Underground Waterway End",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Underground Waterway: Lizard-man turf - Top",
+            "id": 3579576465,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -2190,15 +2387,69 @@
                   }
                 }
               ]
-            }
-          }
-        ],
-        "locations": [
+            },
+            "item": {
+              "name": "Heart Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
           {
-            "name": "Underground Waterway: Entrance fake wall",
-            "id": 3579576467,
+            "name": "Underground Waterway: Roc exit shaft",
+            "id": 3579576466,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing"
+              }
+            },
+            "item": {
+              "name": "Apollo Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Underground Waterway: Behind Camilla",
+            "id": 3579576495,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Cleansing"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "MP Max Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Underground Waterway: Roc exit shaft fake wall",
+            "id": 3579576470,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Roc Wing"
+              }
             },
             "item": {
               "name": "Heart Max Up",
@@ -2365,13 +2616,12 @@
           }
         ]
       },
-      "Underground Waterway End": {
-        "name": "Underground Waterway End",
-        "exits": [],
-        "locations": [
+      "Underground Waterway Start": {
+        "name": "Underground Waterway Start",
+        "exits": [
           {
-            "name": "Underground Waterway: Lizard-man turf - Top",
-            "id": 3579576465,
+            "name": "Into Waterway Main",
+            "connected_region": "Underground Waterway Main",
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -2389,115 +2639,13 @@
                   }
                 }
               ]
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Waterway: Roc exit shaft",
-            "id": 3579576466,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Roc Wing"
-              }
-            },
-            "item": {
-              "name": "Apollo Card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Waterway: Behind Camilla",
-            "id": 3579576495,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cleansing"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Underground Waterway: Roc exit shaft fake wall",
-            "id": 3579576470,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Roc Wing"
-              }
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
+            }
           }
-        ]
-      },
-      "Observation Tower": {
-        "name": "Observation Tower",
-        "exits": [],
+        ],
         "locations": [
           {
-            "name": "Observation Tower: Wind Armor rampart",
-            "id": 3579576477,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Legion plaza fake wall",
-            "id": 3579576484,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Legion plaza Minotaur hallway",
-            "id": 3579576479,
+            "name": "Underground Waterway: Entrance fake wall",
+            "id": 3579576467,
             "access_rule": {
               "rule": "True_"
             },
@@ -2508,154 +2656,6 @@
               "type": "None"
             },
             "locked": false
-          },
-          {
-            "name": "Observation Tower: Siren balcony fake wall",
-            "id": 3579576485,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Diana Card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Evil Pillar pit fake wall",
-            "id": 3579576480,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Alraune garden",
-            "id": 3579576482,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Dark Armor's domain fake wall",
-            "id": 3579576486,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Catoblepeas hallway",
-            "id": 3579576483,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Near warp room fake wall",
-            "id": 3579576481,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Observation Tower: Behind Hugh",
-            "id": 3579576496,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heart Max Up",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Ceremonial Room": {
-        "name": "Ceremonial Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Ceremonial Room: Fake floor",
-            "id": 3579576487,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_jump_level_2",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_kick",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "Venus Card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Dracula",
-            "id": null,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Roc Wing"
-              }
-            },
-            "item": {
-              "name": "The Count Downed",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
           }
         ]
       }

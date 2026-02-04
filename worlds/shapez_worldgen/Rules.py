@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def can_build_mam(state: "CollectionState", player: int, floating = None) -> bool:
-    return (can_make_stitched_shape(state, player, floating)) and (can_paint(state, player)) and (can_mix_colors(state, player)) and (has_balancer(state, player)) and (has_tunnel(state, player)) and ((state.has('Belt Reader', player)) and (state.has('Storage', player)) and (state.has('Item Filter', player)) and (state.has('Wires', player)) and (state.has('Logic Gates', player)) and (state.has('Virtual Processing', player)))
+    return (can_make_stitched_shape(state, player, floating)) and (can_paint(state, player)) and (can_mix_colors(state, player)) and (has_balancer(state, player)) and (has_tunnel(state, player)) and (state.has('Belt Reader', player)) and (state.has('Storage', player)) and (state.has('Item Filter', player)) and (state.has('Wires', player)) and (state.has('Logic Gates', player)) and (state.has('Virtual Processing', player))
 
 
 def can_cut_half(state: "CollectionState", player: int) -> bool:
@@ -113,33 +113,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Transporting shapes over the canvas", player),
-        HasAny('Belt', 'Compact Merger', 'Compact Splitter')
+        multiworld.get_entrance("Delivering per second with 1.6x belt speed", player),
+        HelperCall(helper_func=has_x_belt_multiplier, helper_name="has_x_belt_multiplier", args=(1.6,))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Cutting with half cutter", player),
-        HelperCall(helper_func=can_cut_half, helper_name="can_cut_half", body_rule=Has("Cutter"))
+        multiworld.get_entrance("Using second level building", player),
+        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 1, False, False,))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Rotating clockwise", player),
-        Has('Rotator', 1)
+        multiworld.get_entrance("Using third level building", player),
+        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 2, True, False,))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Stacking shapes", player),
-        HelperCall(helper_func=can_stack, helper_name="can_stack", body_rule=Has("Stacker"))
+        multiworld.get_entrance("Using fourth level building", player),
+        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 3, False, False,))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Storing shapes", player),
-        Has('Storage', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Trashing shapes", player),
-        Has('Trash', 1)
+        multiworld.get_entrance("Using fifth level building", player),
+        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 4, False, False,))
     )
 
     world.set_rule(
@@ -218,23 +213,133 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Using second level building", player),
-        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 1, False, False,))
+        multiworld.get_entrance("Transporting shapes over the canvas", player),
+        HasAny('Belt', 'Compact Merger', 'Compact Splitter')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Using third level building", player),
-        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 2, True, False,))
+        multiworld.get_entrance("Cutting with half cutter", player),
+        HelperCall(helper_func=can_cut_half, helper_name="can_cut_half", body_rule=Has("Cutter"))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Using fourth level building", player),
-        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 3, False, False,))
+        multiworld.get_entrance("Rotating clockwise", player),
+        Has('Rotator', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Using fifth level building", player),
-        HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Cutter', 'Rotator', 'Painter', 'Color Mixer', 'Stacker'], 4, False, False,))
+        multiworld.get_entrance("Stacking shapes", player),
+        HelperCall(helper_func=can_stack, helper_name="can_stack", body_rule=Has("Stacker"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Storing shapes", player),
+        Has('Storage', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Trashing shapes", player),
+        Has('Trash', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a colorful east windmill shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a colorful east windmill shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a colorful full shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a colorful full shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a colorful half shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a colorful half shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a colorful half-half shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a colorful half-half shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a east windmill shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a east windmill shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a full shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a full shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a half shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a half shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a half-half shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a half-half shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a piece shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a piece shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mixing colors for a stitched shape", player),
+        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Painting a stitched shape", player),
+        HelperCall(helper_func=can_paint, helper_name="can_paint")
     )
 
     world.set_rule(
@@ -255,109 +360,4 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Using fifth upgrade building", player),
         HelperCall(helper_func=has_logic_list_building, helper_name="has_logic_list_building", args=(['Stacker', 'Cutter', 'Rotator', 'Painter', 'Color Mixer'], 4, False, False,))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Delivering per second with 1.6x belt speed", player),
-        HelperCall(helper_func=has_x_belt_multiplier, helper_name="has_x_belt_multiplier", args=(1.6,))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a full shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a full shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a half shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a half shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a piece shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a piece shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a stitched shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a stitched shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a east windmill shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a east windmill shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a half-half shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a half-half shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a colorful east windmill shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a colorful east windmill shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a colorful half-half shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a colorful half-half shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a colorful full shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a colorful full shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Painting a colorful half shape", player),
-        HelperCall(helper_func=can_paint, helper_name="can_paint")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mixing colors for a colorful half shape", player),
-        HelperCall(helper_func=can_mix_colors, helper_name="can_mix_colors", body_rule=Has("Color Mixer"))
     )

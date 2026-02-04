@@ -91,661 +91,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Home Waters to Home Waters, behind rock", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters to Home Waters, turtle room", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters to Open Waters top left area", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, Nautilus nest to Home Waters, behind rock", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to The Veil top left area", player),
-        Has('Transturtle Veil top left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Home Waters, turtle room to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple first area to Energy Temple second area", player),
-        HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_rule=Has("Energy Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple first area to Energy Temple Idol room", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple first area to Energy Temple after boss path", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple second area to Energy Temple first area", player),
-        HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_rule=Has("Energy Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple third area to Energy Temple fallen God room", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple fallen God room to Energy Temple Idol room", player),
-        And(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple fallen God room to Energy Temple after boss path", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Energy Temple bottom entrance to Home Waters, behind rock", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area to Open Waters top right area, turtle room", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area to Open Waters top right area, Mithalas entrance", player),
-        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", args=(['Energy Form', 'Beast Form', 'Li and Li Song', 'Baby Nautilus', 'Baby Piranha', 'Baby Blaster'],), body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form"))))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area to The Veil bottom right area", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to The Veil top left area", player),
-        Has('Transturtle Veil top left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters top right area, turtle room to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters bottom left area to Abyss left area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters bottom right area to Abyss right area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters bottom right area to Arnassi Ruins", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters skeleton path to Open Waters skeleton path spirit crystal", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Open Waters skeleton path spirit crystal to Open Waters skeleton path", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave to Arnassi Ruins cave, transturtle area", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave to Arnassi Ruins, Crabbius Maximus lair", player),
-        And(HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor"), Or(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Arnassi Ruins cave", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Veil top left area", player),
-        Has('Transturtle Veil top left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to The Veil top left area", player),
-        Has('Transturtle Veil top left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simon Says area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas City to Mithalas City urns", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas City to Mithalas City top path", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas City to Mithalas City fish pass", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas City top path to Mithalas castle, plant tube entrance", player),
-        And(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas City fish pass to Mithalas City", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle to Mithalas castle urns", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle to Mithalas castle spirit crystal", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle to Mithalas Cathedral, before Mithalan God", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle to Mithalas Cathedral underground", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle to Mithalas Cathedral start", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle, plant tube entrance to Mithalas City top path", player),
-        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle, plant tube entrance to Mithalas castle spirit crystal", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle, plant tube entrance to Mithalas castle", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas castle spirit crystal to Mithalas castle", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral start to Mithalas Cathedral start urns", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral start to Mithalas Cathedral end", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral end to Mithalas Cathedral start", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral end to Mithalas Cathedral underground", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral underground to Mithalas castle", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral underground to Mithalas Cathedral end", player),
-        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form"))))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral, after Mithalan God to Mithalas castle", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral, before Mithalan God to Mithalas Cathedral underground", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mithalas Cathedral, before Mithalan God to Mithalas Cathedral, after Mithalan God", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest top left area to Kelp Forest top left area fish pass", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest top left area fish pass to Kelp Forest top left area", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest top right area to Kelp Forest top right area fish pass", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest top right area fish pass to Kelp Forest top right area", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Kelp Forest bottom left area, spirit crystals", player),
-        Or(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Kelp Forest Drunian God room entrance", player),
-        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to The Veil top left area", player),
-        Has('Transturtle Veil top left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest bottom left area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest Drunian God room entrance to Kelp Forest bottom left area", player),
-        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Kelp Forest Drunian God room entrance to Kelp Forest Drunian God room", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sprite cave to Sprite cave after the plant tube", player),
-        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sprite cave after the plant tube to Sprite cave", player),
-        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mermog cave to Mermog cave boss", player),
-        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Mermog cave boss to Mermog cave", player),
-        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to The Veil top left area fish pass", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top left area fish pass to The Veil top left area", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to The Veil top right area, fish pass left of temple", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to The Veil top left area", player),
-        Has('Transturtle Veil top left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Simon Says area", player),
-        Has('Transturtle Simon Says', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, left of temple to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, fish pass left of temple to The Veil top right area, left of temple", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil top right area, fish pass left of temple to Octopus Cave top entrance", player),
-        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_rule=Has("Sun Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil bottom left area to The Veil bottom left area, in the sunken ship", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil bottom left area to The Veil bottom spirit crystal area", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil bottom spirit crystal area to The Veil bottom left area", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil bottom spirit crystal area to The Veil bottom right area", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil bottom left area, in the sunken ship to The Veil bottom left area", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Veil bottom right area to The Veil bottom spirit crystal area", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sun Temple left area entrance to Sun Temple right area", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sun Temple left area entrance to Sun Temple left area", player),
-        Or(HelperCall(helper_func=_has_light, helper_name="_has_light"), HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sun Temple right area to Sun Temple left area entrance", player),
-        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_light, helper_name="_has_light"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sun Temple before boss area to Sun Temple left area", player),
-        Or(HelperCall(helper_func=_has_light, helper_name="_has_light"), HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sun Temple before boss area to Sun Temple boss area", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Sun Temple boss area to Sun Temple before boss area", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Abyss left area to Abyss left bottom area", player),
         HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
     )
@@ -836,13 +181,583 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Ice Cavern to Abyss right area", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+        multiworld.get_entrance("Arnassi Ruins cave to Arnassi Ruins cave, transturtle area", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave to Arnassi Ruins, Crabbius Maximus lair", player),
+        And(HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor"), Or(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Arnassi Ruins cave", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Veil top left area", player),
+        Has('Transturtle Veil top left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Veil top right area, left of temple", player),
+        Has('Transturtle Veil top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Open Waters top right area, turtle room", player),
+        Has('Transturtle Open Waters top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Kelp Forest bottom left area", player),
+        Has('Transturtle Kelp Forest bottom left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Home Waters, turtle room", player),
+        Has('Transturtle Home Waters', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Bubble Cave to Bubble Cave boss area", player),
         And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple Idol room to Energy Temple first area", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple Idol room to Energy Temple fallen God room", player),
+        And(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple after boss path to Energy Temple fallen God room", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple after boss path to Energy Temple blaster room", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple bottom entrance to Home Waters, behind rock", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple fallen God room to Energy Temple Idol room", player),
+        And(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple fallen God room to Energy Temple after boss path", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple first area to Energy Temple second area", player),
+        HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_rule=Has("Energy Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple first area to Energy Temple Idol room", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple first area to Energy Temple after boss path", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple second area to Energy Temple first area", player),
+        HelperCall(helper_func=_has_energy_form, helper_name="_has_energy_form", body_rule=Has("Energy Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Energy Temple third area to Energy Temple fallen God room", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("First Secret area to Abyss right area", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form")), HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_rule=Has("Sun Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Frozen Veil to Bubble Cave", player),
+        Or(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_hot_soup, helper_name="_has_hot_soup", body_rule=HasAny('Hot Soup', 'Hot Soup x 2')))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters to Home Waters, behind rock", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters to Home Waters, turtle room", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters to Open Waters top left area", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, Nautilus nest to Home Waters, behind rock", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, behind rock to Home Waters", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, behind rock to Home Waters, Nautilus nest", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, behind rock to Energy Temple bottom entrance", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to The Veil top left area", player),
+        Has('Transturtle Veil top left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to The Veil top right area, left of temple", player),
+        Has('Transturtle Veil top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to Open Waters top right area, turtle room", player),
+        Has('Transturtle Open Waters top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to Kelp Forest bottom left area", player),
+        Has('Transturtle Kelp Forest bottom left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Home Waters, turtle room to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Ice Cavern to Abyss right area", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest Drunian God room entrance to Kelp Forest bottom left area", player),
+        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest Drunian God room entrance to Kelp Forest Drunian God room", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Kelp Forest bottom left area, spirit crystals", player),
+        Or(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Kelp Forest Drunian God room entrance", player),
+        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to The Veil top left area", player),
+        Has('Transturtle Veil top left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to The Veil top right area, left of temple", player),
+        Has('Transturtle Veil top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Open Waters top right area, turtle room", player),
+        Has('Transturtle Open Waters top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Home Waters, turtle room", player),
+        Has('Transturtle Home Waters', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest bottom left area to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest top left area to Kelp Forest top left area fish pass", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest top left area fish pass to Kelp Forest top left area", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest top right area to Kelp Forest top right area fish pass", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Kelp Forest top right area fish pass to Kelp Forest top right area", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mermog cave to Mermog cave boss", player),
+        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mermog cave boss to Mermog cave", player),
+        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral end to Mithalas Cathedral start", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral end to Mithalas Cathedral underground", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral start to Mithalas Cathedral start urns", player),
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral start to Mithalas Cathedral end", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral underground to Mithalas castle", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral underground to Mithalas Cathedral end", player),
+        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form"))))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral, after Mithalan God to Mithalas castle", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral, before Mithalan God to Mithalas Cathedral underground", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas Cathedral, before Mithalan God to Mithalas Cathedral, after Mithalan God", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas City to Mithalas City urns", player),
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas City to Mithalas City top path", player),
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas City to Mithalas City fish pass", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas City fish pass to Mithalas City", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas City top path to Mithalas castle, plant tube entrance", player),
+        And(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle to Mithalas castle urns", player),
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle to Mithalas castle spirit crystal", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle to Mithalas Cathedral, before Mithalan God", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle to Mithalas Cathedral underground", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle to Mithalas Cathedral start", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle spirit crystal to Mithalas castle", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle, plant tube entrance to Mithalas City top path", player),
+        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle, plant tube entrance to Mithalas castle spirit crystal", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mithalas castle, plant tube entrance to Mithalas castle", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters bottom left area to Abyss left area", player),
+        HelperCall(helper_func=_has_light, helper_name="_has_light")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters bottom right area to Abyss right area", player),
+        HelperCall(helper_func=_has_light, helper_name="_has_light")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters bottom right area to Arnassi Ruins", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters skeleton path to Open Waters skeleton path spirit crystal", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters skeleton path spirit crystal to Open Waters skeleton path", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area to Open Waters top right area, turtle room", player),
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area to Open Waters top right area, Mithalas entrance", player),
+        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", args=(['Energy Form', 'Beast Form', 'Li and Li Song', 'Baby Nautilus', 'Baby Piranha', 'Baby Blaster'],), body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form"))))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area to The Veil bottom right area", player),
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to The Veil top left area", player),
+        Has('Transturtle Veil top left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to The Veil top right area, left of temple", player),
+        Has('Transturtle Veil top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to Kelp Forest bottom left area", player),
+        Has('Transturtle Kelp Forest bottom left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to Home Waters, turtle room", player),
+        Has('Transturtle Home Waters', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Open Waters top right area, turtle room to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to The Veil top left area", player),
+        Has('Transturtle Veil top left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to The Veil top right area, left of temple", player),
+        Has('Transturtle Veil top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to Open Waters top right area, turtle room", player),
+        Has('Transturtle Open Waters top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to Kelp Forest bottom left area", player),
+        Has('Transturtle Kelp Forest bottom left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to Home Waters, turtle room", player),
+        Has('Transturtle Home Waters', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Simon Says area to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sprite cave to Sprite cave after the plant tube", player),
+        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sprite cave after the plant tube to Sprite cave", player),
+        HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sun Temple before boss area to Sun Temple left area", player),
+        Or(HelperCall(helper_func=_has_light, helper_name="_has_light"), HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sun Temple before boss area to Sun Temple boss area", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sun Temple boss area to Sun Temple before boss area", player),
+        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sun Temple left area entrance to Sun Temple right area", player),
+        HelperCall(helper_func=_has_light, helper_name="_has_light")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sun Temple left area entrance to Sun Temple left area", player),
+        Or(HelperCall(helper_func=_has_light, helper_name="_has_light"), HelperCall(helper_func=_has_sun_crystal, helper_name="_has_sun_crystal"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sun Temple right area to Sun Temple left area entrance", player),
+        Or(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_light, helper_name="_has_light"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Sunken City boss area to Sunken City left area", player),
+        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_rule=Has("Sun Form")))
     )
 
     world.set_rule(
@@ -861,6 +776,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Sunken City left area, bedroom to Sunken City left area", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Sunken City right area to Abyss left bottom area", player),
         HelperCall(helper_func=_has_li, helper_name="_has_li", body_rule=Has("Li and Li Song"))
     )
@@ -871,13 +791,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Sunken City boss area to Sunken City left area", player),
-        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_rule=Has("Sun Form")))
+        multiworld.get_entrance("The Body bottom area to The Body center area", player),
+        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form")
     )
 
     world.set_rule(
-        multiworld.get_entrance("Sunken City left area, bedroom to Sunken City left area", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+        multiworld.get_entrance("The Body bottom area to The Body, before final boss", player),
+        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form")
     )
 
     world.set_rule(
@@ -897,16 +817,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Body center area to The Body bottom area", player),
-        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Body bottom area to The Body center area", player),
-        HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Body bottom area to The Body, before final boss", player),
         HelperCall(helper_func=_has_dual_form, helper_name="_has_dual_form")
     )
 
@@ -971,57 +881,172 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("First Secret area to Abyss right area", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form")), HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_rule=Has("Sun Form")))
+        multiworld.get_entrance("The Veil bottom left area to The Veil bottom left area, in the sunken ship", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Energy Temple Idol room to Energy Temple first area", player),
+        multiworld.get_entrance("The Veil bottom left area to The Veil bottom spirit crystal area", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil bottom left area, in the sunken ship to The Veil bottom left area", player),
+        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil bottom right area to The Veil bottom spirit crystal area", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil bottom spirit crystal area to The Veil bottom left area", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil bottom spirit crystal area to The Veil bottom right area", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top left area to The Veil top left area fish pass", player),
         HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Energy Temple Idol room to Energy Temple fallen God room", player),
-        And(HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
+        multiworld.get_entrance("The Veil top left area to The Veil top right area, left of temple", player),
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Energy Temple after boss path to Energy Temple fallen God room", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+        multiworld.get_entrance("The Veil top left area to Open Waters top right area, turtle room", player),
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Energy Temple after boss path to Energy Temple blaster room", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_nature_form, helper_name="_has_nature_form", body_rule=Has("Nature Form")))
+        multiworld.get_entrance("The Veil top left area to Kelp Forest bottom left area", player),
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Frozen Veil to Bubble Cave", player),
-        Or(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_hot_soup, helper_name="_has_hot_soup", body_rule=HasAny('Hot Soup', 'Hot Soup x 2')))
+        multiworld.get_entrance("The Veil top left area to Home Waters, turtle room", player),
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Home Waters, behind rock to Home Waters", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+        multiworld.get_entrance("The Veil top left area to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Home Waters, behind rock to Home Waters, Nautilus nest", player),
-        HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
+        multiworld.get_entrance("The Veil top left area to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Home Waters, behind rock to Energy Temple bottom entrance", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"))
+        multiworld.get_entrance("The Veil top left area to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top left area to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top left area fish pass to The Veil top left area", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, fish pass left of temple to The Veil top right area, left of temple", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, fish pass left of temple to Octopus Cave top entrance", player),
+        And(HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form")), HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item"), HelperCall(helper_func=_has_sun_form, helper_name="_has_sun_form", body_rule=Has("Sun Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to The Veil top right area, fish pass left of temple", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to The Veil top left area", player),
+        Has('Transturtle Veil top left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Open Waters top right area, turtle room", player),
+        Has('Transturtle Open Waters top right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Kelp Forest bottom left area", player),
+        Has('Transturtle Kelp Forest bottom left', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Home Waters, turtle room", player),
+        Has('Transturtle Home Waters', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Abyss right area, transturtle", player),
+        Has('Transturtle Abyss right', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to The Body, final boss area turtle room", player),
+        Has('Transturtle Final Boss', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Simon Says area", player),
+        Has('Transturtle Simon Says', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Veil top right area, left of temple to Arnassi Ruins cave, transturtle area", player),
+        Has('Transturtle Arnassi Ruins', 1)
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Verse Cave right area, Big Seed", player),
+        multiworld.get_location("Abyss left area, bulb in the bottom fish pass", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyss right area, bulb in the middle path", player),
         HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
     )
 
     world.set_rule(
-        multiworld.get_location("Verse Cave left area, bulb under the rock at the end of the path", player),
+        multiworld.get_location("Abyss right area, bulb behind the rock in the whale room", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Arnassi Ruins, Song Plant Spore", player),
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Arnassi Ruins, Arnassi Armor", player),
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Energy Temple first area, bulb in the bottom room blocked by a rock", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Energy Temple second area, bulb under the rock", player),
         HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
     )
 
@@ -1031,12 +1056,72 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Kelp Forest bottom left area, Walker Baby", player),
+        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kelp Forest bottom right area, Odd Container", player),
+        HelperCall(helper_func=_has_light, helper_name="_has_light")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kelp Forest top left area, Jelly Egg", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kelp Forest top right area, bulb under the rock in the right path", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Kelp Forest top right area, Black Pearl", player),
+        HelperCall(helper_func=_has_light, helper_name="_has_light")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mithalas Cathedral, Mithalan Dress", player),
+        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mithalas City, urn inside a home fish pass", player),
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mithalas City, urn in the Castle flower tube entrance", player),
+        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
+    )
+
+    world.set_rule(
         multiworld.get_location("Naija's Home, bulb after the energy door", player),
         HelperCall(helper_func=_has_energy_attack_item, helper_name="_has_energy_attack_item")
     )
 
     world.set_rule(
         multiworld.get_location("Naija's Home, bulb under the rock at the right of the main path", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Open Waters bottom left area, bulb inside the lowest fish pass", player),
+        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Open Waters top left area, bulb under the rock in the right path", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Open Waters top left area, bulb under the rock in the left path", player),
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Open Waters top right area, bulb in the small path before Mithalas", player),
         HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
     )
 
@@ -1061,103 +1146,28 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Energy Temple first area, bulb in the bottom room blocked by a rock", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+        multiworld.get_location("Sun Temple boss path, first cliff bulb", player),
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
     )
 
     world.set_rule(
-        multiworld.get_location("Energy Temple second area, bulb under the rock", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
+        multiworld.get_location("Sun Temple boss path, second cliff bulb", player),
+        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
     )
 
     world.set_rule(
-        multiworld.get_location("Open Waters top left area, bulb under the rock in the right path", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Open Waters top left area, bulb under the rock in the left path", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Open Waters top right area, bulb in the small path before Mithalas", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Open Waters bottom left area, bulb inside the lowest fish pass", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arnassi Ruins, Song Plant Spore", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Arnassi Ruins, Arnassi Armor", player),
-        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mithalas City, urn in the Castle flower tube entrance", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mithalas City, urn inside a home fish pass", player),
-        HelperCall(helper_func=_has_damaging_item, helper_name="_has_damaging_item", body_rule=(Has("Baby Blaster")) | (Has("Baby Nautilus")) | (Has("Baby Piranha")) | (Has("Beast Form")) | (Has("Energy Form")) | (Has("Li and Li Song")) | (Has("Nature Form")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mithalas Cathedral, Mithalan Dress", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kelp Forest top left area, Jelly Egg", player),
-        HelperCall(helper_func=_has_beast_form, helper_name="_has_beast_form", body_rule=Has("Beast Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kelp Forest top right area, bulb under the rock in the right path", player),
-        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kelp Forest top right area, Black Pearl", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kelp Forest bottom left area, Walker Baby", player),
-        HelperCall(helper_func=_has_spirit_form, helper_name="_has_spirit_form", body_rule=Has("Spirit Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Kelp Forest bottom right area, Odd Container", player),
-        HelperCall(helper_func=_has_light, helper_name="_has_light")
+        multiworld.get_location("The Body center area, breaking Li's cage", player),
+        HelperCall(helper_func=_has_tongue_cleared, helper_name="_has_tongue_cleared", body_rule=Has("Body Tongue cleared"))
     )
 
     world.set_rule(
         multiworld.get_location("The Veil top left area, bulb under the rock in the top right path", player),
-        And(HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")), HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song")))
+        HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
     )
 
     world.set_rule(
         multiworld.get_location("The Veil top left area, bulb hidden behind the blocking rock", player),
         HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Veil top right area, bulb at the top of the waterfall", player),
-        HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form")
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Veil top right area, bulb in the middle of the wall jump cliff", player),
-        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
     )
 
     world.set_rule(
@@ -1171,31 +1181,21 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Sun Temple boss path, first cliff bulb", player),
-        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
+        multiworld.get_location("The Veil top right area, bulb at the top of the waterfall", player),
+        HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form")
     )
 
     world.set_rule(
-        multiworld.get_location("Sun Temple boss path, second cliff bulb", player),
-        Or(HelperCall(helper_func=_has_beast_and_soup_form, helper_name="_has_beast_and_soup_form"), HasAny('Lumerean God beated', 'Sun God beated'))
+        multiworld.get_location("The Veil top right area, bulb in the middle of the wall jump cliff", player),
+        HelperCall(helper_func=_has_beast_form_or_arnassi_armor, helper_name="_has_beast_form_or_arnassi_armor")
     )
 
     world.set_rule(
-        multiworld.get_location("Abyss left area, bulb in the bottom fish pass", player),
-        HelperCall(helper_func=_has_fish_form, helper_name="_has_fish_form", body_rule=Has("Fish Form"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyss right area, bulb in the middle path", player),
+        multiworld.get_location("Verse Cave left area, bulb under the rock at the end of the path", player),
         HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
     )
 
     world.set_rule(
-        multiworld.get_location("Abyss right area, bulb behind the rock in the whale room", player),
+        multiworld.get_location("Verse Cave right area, Big Seed", player),
         HelperCall(helper_func=_has_bind_song, helper_name="_has_bind_song", body_rule=Has("Bind Song"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("The Body center area, breaking Li's cage", player),
-        HelperCall(helper_func=_has_tongue_cleared, helper_name="_has_tongue_cleared", body_rule=Has("Body Tongue cleared"))
     )

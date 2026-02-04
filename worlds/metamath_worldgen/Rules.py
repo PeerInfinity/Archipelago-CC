@@ -66,6 +66,11 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
+        multiworld.get_location("Prove Statement 10", player),
+        HasAll('Statement 8', 'Statement 9')
+    )
+
+    world.set_rule(
         multiworld.get_location("Prove Statement 3", player),
         HasAll('Statement 1', 'Statement 2')
     )
@@ -83,9 +88,4 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Prove Statement 9", player),
         HasAll('Statement 4')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prove Statement 10", player),
-        HasAll('Statement 8', 'Statement 9')
     )

@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Humble Beginnings", "Best Friendssss", "A Knight's Folly", "Denrunaway", "Dragon Freeway", "Deep Thicket", "Corrupted Inlet", "Mage Mayhem", "Endless Knight", "Ambushed in the Middle", "The Churning Sea", "Frigid Archery", "Archery Lessons", "Surrounded", "Darkest Knight", "Robbed", "Open Season", "Doggo Mountain", "Tenri's Fall", "Foolish Canal", "Master of the Lake", "A Ballista's Revenge", "Rebel Village", "Wargroove Finale"]
+    region_names = ["Menu", "A Ballista's Revenge", "A Knight's Folly", "Ambushed in the Middle", "Archery Lessons", "Best Friendssss", "Corrupted Inlet", "Darkest Knight", "Deep Thicket", "Denrunaway", "Doggo Mountain", "Dragon Freeway", "Endless Knight", "Foolish Canal", "Frigid Archery", "Humble Beginnings", "Mage Mayhem", "Master of the Lake", "Open Season", "Rebel Village", "Robbed", "Surrounded", "Tenri's Fall", "The Churning Sea", "Wargroove Finale"]
 
     regions = {}
     for region_name in region_names:
@@ -52,30 +52,30 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Humble Beginnings"], "Humble Beginnings")
-    _create_entrance(regions["Humble Beginnings"], regions["Best Friendssss"], "Best Friendssss")
-    _create_entrance(regions["Humble Beginnings"], regions["A Knight's Folly"], "A Knight's Folly")
-    _create_entrance(regions["Humble Beginnings"], regions["Denrunaway"], "Denrunaway")
-    _create_entrance(regions["Humble Beginnings"], regions["Wargroove Finale"], "Wargroove Finale")
-    _create_entrance(regions["Best Friendssss"], regions["Dragon Freeway"], "Dragon Freeway")
-    _create_entrance(regions["Best Friendssss"], regions["Deep Thicket"], "Deep Thicket")
-    _create_entrance(regions["Best Friendssss"], regions["Corrupted Inlet"], "Corrupted Inlet")
     _create_entrance(regions["A Knight's Folly"], regions["Mage Mayhem"], "Mage Mayhem")
     _create_entrance(regions["A Knight's Folly"], regions["Endless Knight"], "Endless Knight")
     _create_entrance(regions["A Knight's Folly"], regions["Ambushed in the Middle"], "Ambushed in the Middle")
+    _create_entrance(regions["Ambushed in the Middle"], regions["Tenri's Fall"], "Tenri's Fall")
+    _create_entrance(regions["Archery Lessons"], regions["Master of the Lake"], "Master of the Lake")
+    _create_entrance(regions["Best Friendssss"], regions["Dragon Freeway"], "Dragon Freeway")
+    _create_entrance(regions["Best Friendssss"], regions["Deep Thicket"], "Deep Thicket")
+    _create_entrance(regions["Best Friendssss"], regions["Corrupted Inlet"], "Corrupted Inlet")
+    _create_entrance(regions["Corrupted Inlet"], regions["Robbed"], "Robbed")
+    _create_entrance(regions["Deep Thicket"], regions["Darkest Knight"], "Darkest Knight")
     _create_entrance(regions["Denrunaway"], regions["The Churning Sea"], "The Churning Sea")
     _create_entrance(regions["Denrunaway"], regions["Frigid Archery"], "Frigid Archery")
     _create_entrance(regions["Denrunaway"], regions["Archery Lessons"], "Archery Lessons")
     _create_entrance(regions["Dragon Freeway"], regions["Surrounded"], "Surrounded")
-    _create_entrance(regions["Deep Thicket"], regions["Darkest Knight"], "Darkest Knight")
-    _create_entrance(regions["Corrupted Inlet"], regions["Robbed"], "Robbed")
-    _create_entrance(regions["Mage Mayhem"], regions["Open Season"], "Open Season")
-    _create_entrance(regions["Mage Mayhem"], regions["Foolish Canal"], "Foolish Canal: Mage Mayhem Entrance")
     _create_entrance(regions["Endless Knight"], regions["Doggo Mountain"], "Doggo Mountain")
     _create_entrance(regions["Endless Knight"], regions["Foolish Canal"], "Foolish Canal: Endless Knight Entrance")
-    _create_entrance(regions["Ambushed in the Middle"], regions["Tenri's Fall"], "Tenri's Fall")
-    _create_entrance(regions["The Churning Sea"], regions["Rebel Village"], "Rebel Village")
     _create_entrance(regions["Frigid Archery"], regions["A Ballista's Revenge"], "A Ballista's Revenge")
-    _create_entrance(regions["Archery Lessons"], regions["Master of the Lake"], "Master of the Lake")
+    _create_entrance(regions["Humble Beginnings"], regions["Best Friendssss"], "Best Friendssss")
+    _create_entrance(regions["Humble Beginnings"], regions["A Knight's Folly"], "A Knight's Folly")
+    _create_entrance(regions["Humble Beginnings"], regions["Denrunaway"], "Denrunaway")
+    _create_entrance(regions["Humble Beginnings"], regions["Wargroove Finale"], "Wargroove Finale")
+    _create_entrance(regions["Mage Mayhem"], regions["Open Season"], "Open Season")
+    _create_entrance(regions["Mage Mayhem"], regions["Foolish Canal"], "Foolish Canal: Mage Mayhem Entrance")
+    _create_entrance(regions["The Churning Sea"], regions["Rebel Village"], "Rebel Village")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

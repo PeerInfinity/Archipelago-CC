@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "ERA_ANCIENT", "ERA_CLASSICAL", "ERA_MEDIEVAL", "ERA_RENAISSANCE", "ERA_INDUSTRIAL", "ERA_MODERN", "ERA_ATOMIC", "ERA_INFORMATION", "ERA_FUTURE"]
+    region_names = ["Menu", "ERA_ANCIENT", "ERA_ATOMIC", "ERA_CLASSICAL", "ERA_FUTURE", "ERA_INDUSTRIAL", "ERA_INFORMATION", "ERA_MEDIEVAL", "ERA_MODERN", "ERA_RENAISSANCE"]
 
     regions = {}
     for region_name in region_names:
@@ -53,13 +53,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create entrances
     _create_entrance(regions["Menu"], regions["ERA_ANCIENT"], "Menu -> ERA_ANCIENT")
     _create_entrance(regions["ERA_ANCIENT"], regions["ERA_CLASSICAL"], "ERA_ANCIENT -> ERA_CLASSICAL")
-    _create_entrance(regions["ERA_CLASSICAL"], regions["ERA_MEDIEVAL"], "ERA_CLASSICAL -> ERA_MEDIEVAL")
-    _create_entrance(regions["ERA_MEDIEVAL"], regions["ERA_RENAISSANCE"], "ERA_MEDIEVAL -> ERA_RENAISSANCE")
-    _create_entrance(regions["ERA_RENAISSANCE"], regions["ERA_INDUSTRIAL"], "ERA_RENAISSANCE -> ERA_INDUSTRIAL")
-    _create_entrance(regions["ERA_INDUSTRIAL"], regions["ERA_MODERN"], "ERA_INDUSTRIAL -> ERA_MODERN")
-    _create_entrance(regions["ERA_MODERN"], regions["ERA_ATOMIC"], "ERA_MODERN -> ERA_ATOMIC")
     _create_entrance(regions["ERA_ATOMIC"], regions["ERA_INFORMATION"], "ERA_ATOMIC -> ERA_INFORMATION")
+    _create_entrance(regions["ERA_CLASSICAL"], regions["ERA_MEDIEVAL"], "ERA_CLASSICAL -> ERA_MEDIEVAL")
+    _create_entrance(regions["ERA_INDUSTRIAL"], regions["ERA_MODERN"], "ERA_INDUSTRIAL -> ERA_MODERN")
     _create_entrance(regions["ERA_INFORMATION"], regions["ERA_FUTURE"], "ERA_INFORMATION -> ERA_FUTURE")
+    _create_entrance(regions["ERA_MEDIEVAL"], regions["ERA_RENAISSANCE"], "ERA_MEDIEVAL -> ERA_RENAISSANCE")
+    _create_entrance(regions["ERA_MODERN"], regions["ERA_ATOMIC"], "ERA_MODERN -> ERA_ATOMIC")
+    _create_entrance(regions["ERA_RENAISSANCE"], regions["ERA_INDUSTRIAL"], "ERA_RENAISSANCE -> ERA_INDUSTRIAL")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Second Quarter", "Third Quarter", "Last Quarter", "Meridian", "Ataraxia", "Merodach", "Final Boss", "True Final Boss"]
+    region_names = ["Menu", "Ataraxia", "Final Boss", "Last Quarter", "Meridian", "Merodach", "Second Quarter", "Third Quarter", "True Final Boss"]
 
     regions = {}
     for region_name in region_names:
@@ -52,13 +52,13 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Meridian"], "To Meridian")
-    _create_entrance(regions["Second Quarter"], regions["Ataraxia"], "To Ataraxia")
-    _create_entrance(regions["Third Quarter"], regions["Merodach"], "To Merodach")
+    _create_entrance(regions["Ataraxia"], regions["Third Quarter"], "To Third Quarter")
     _create_entrance(regions["Last Quarter"], regions["Final Boss"], "Back to the entrance")
     _create_entrance(regions["Last Quarter"], regions["True Final Boss"], "Back to the entrance with the Knife")
     _create_entrance(regions["Meridian"], regions["Second Quarter"], "To Second Quarter")
-    _create_entrance(regions["Ataraxia"], regions["Third Quarter"], "To Third Quarter")
     _create_entrance(regions["Merodach"], regions["Last Quarter"], "To Last Quarter")
+    _create_entrance(regions["Second Quarter"], regions["Ataraxia"], "To Ataraxia")
+    _create_entrance(regions["Third Quarter"], regions["Merodach"], "To Merodach")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

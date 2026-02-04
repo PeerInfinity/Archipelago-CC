@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Kitchen", "Preparation", "WetIngredients", "DryIngredients", "Combining", "Finishing", "Baking"]
+    region_names = ["Menu", "Baking", "Combining", "DryIngredients", "Finishing", "Kitchen", "Preparation", "WetIngredients"]
 
     regions = {}
     for region_name in region_names:
@@ -52,6 +52,12 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Kitchen"], "StartBaking")
+    _create_entrance(regions["Baking"], regions["Finishing"], "BackToFinishing")
+    _create_entrance(regions["Combining"], regions["WetIngredients"], "BackToWetIngredients")
+    _create_entrance(regions["Combining"], regions["Finishing"], "ToFinishing")
+    _create_entrance(regions["DryIngredients"], regions["Kitchen"], "BackToKitchenFromDry")
+    _create_entrance(regions["Finishing"], regions["Combining"], "BackToCombining")
+    _create_entrance(regions["Finishing"], regions["Baking"], "ToBaking")
     _create_entrance(regions["Kitchen"], regions["Menu"], "BackToMenu")
     _create_entrance(regions["Kitchen"], regions["Preparation"], "ToPreparation")
     _create_entrance(regions["Kitchen"], regions["WetIngredients"], "ToWetIngredients")
@@ -59,12 +65,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Preparation"], regions["Kitchen"], "BackToKitchenFromPrep")
     _create_entrance(regions["WetIngredients"], regions["Kitchen"], "BackToKitchenFromWet")
     _create_entrance(regions["WetIngredients"], regions["Combining"], "ToCombining")
-    _create_entrance(regions["DryIngredients"], regions["Kitchen"], "BackToKitchenFromDry")
-    _create_entrance(regions["Combining"], regions["WetIngredients"], "BackToWetIngredients")
-    _create_entrance(regions["Combining"], regions["Finishing"], "ToFinishing")
-    _create_entrance(regions["Finishing"], regions["Combining"], "BackToCombining")
-    _create_entrance(regions["Finishing"], regions["Baking"], "ToBaking")
-    _create_entrance(regions["Baking"], regions["Finishing"], "BackToFinishing")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

@@ -10,6 +10,719 @@
   },
   "regions": {
     "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "MenuToRaft",
+            "connected_region": "Raft",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "BalboaIsland": {
+        "name": "BalboaIsland",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Machete blueprint",
+            "id": 48075,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 5 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correa twins picture",
+            "id": 48076,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 5 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Schedule of engineers",
+            "id": 48077,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Water tank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Biofuel refiner blueprint",
+            "id": 48078,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 1 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Note from Henry",
+            "id": 48079,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_can_access_balboa_island",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_craft_machete",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "progressive-salve",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correas diary 3",
+            "id": 48080,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_can_access_balboa_island",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_craft_machete",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "progressive-storage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Fuel tank blueprint",
+            "id": 48081,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_can_access_balboa_island",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_craft_machete",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "Resource Pack: 4 Raw_Potato",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correas diary 1",
+            "id": 48082,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correas diary 2",
+            "id": 48083,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Flippers",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Fuel pipe blueprint",
+            "id": 48084,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 4 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Bear map",
+            "id": 48085,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Shovel",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Johnny (Balboa Island)",
+            "id": 48086,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_can_access_balboa_island",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_craft_machete",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "progressive-bottle",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 4",
+            "id": 48087,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Leather greaves",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 1",
+            "id": 48088,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 3 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 3",
+            "id": 48089,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 5",
+            "id": 48090,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 2",
+            "id": 48091,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Cookingpot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Relay Station quest",
+            "id": 48155,
+            "access_rule": {
+              "rule": "raft_can_access_balboa_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Tangaroa Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "CaravanIsland": {
+        "name": "CaravanIsland",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Caravan Island Detto journal 1",
+            "id": 48092,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 5 ExplosiveGoo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 2",
+            "id": 48093,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-hook",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 3",
+            "id": 48094,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 5 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 4",
+            "id": 48095,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-zipline",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 5",
+            "id": 48096,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 6",
+            "id": 48097,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Leather body armor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Olaf speech",
+            "id": 48098,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Fuel pipe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Raft town article",
+            "id": 48099,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 5 SeaVine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Doctor's note",
+            "id": 48100,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 3 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Firework blueprint",
+            "id": 48101,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Battery Charger quest",
+            "id": 48102,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-bow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Zipline quest",
+            "id": 48103,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_big_islands_available",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_smelt_items",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_access_caravan_island",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "progressive-zipline",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Frequency to Tangaroa",
+            "id": 48104,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_can_access_caravan_island",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_craft_ziplineTool",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "Varuna Point Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Engine controls blueprint",
+            "id": 48105,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "raft_can_access_caravan_island",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "raft_can_craft_ziplineTool",
+                  "_original_ast_type": "helper"
+                }
+              ]
+            },
+            "item": {
+              "name": "progressive-scarecrow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal detector blueprint",
+            "id": 48106,
+            "access_rule": {
+              "rule": "raft_can_access_caravan_island",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-backpack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "RadioTower": {
+        "name": "RadioTower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tala (Radio Tower)",
+            "id": 48054,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-anchor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Head light blueprint",
+            "id": 48055,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-metals",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Recycler blueprint",
+            "id": 48056,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Metal fishing rod",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Briefcase",
+            "id": 48057,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Sprinkler",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Frequency to Vasagatan",
+            "id": 48058,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Vasagatan Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Notepad 1",
+            "id": 48059,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Notepad 2",
+            "id": 48060,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Signalboard Trace",
+            "id": 48061,
+            "access_rule": {
+              "rule": "raft_can_access_radio_tower",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Hammock",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "Raft": {
         "name": "Raft",
         "exits": [
@@ -1133,907 +1846,6 @@
           }
         ]
       },
-      "RadioTower": {
-        "name": "RadioTower",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tala (Radio Tower)",
-            "id": 48054,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-anchor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Head light blueprint",
-            "id": 48055,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-metals",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Recycler blueprint",
-            "id": 48056,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Metal fishing rod",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radio Tower Briefcase",
-            "id": 48057,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Sprinkler",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radio Tower Frequency to Vasagatan",
-            "id": 48058,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Vasagatan Frequency",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radio Tower Notepad 1",
-            "id": 48059,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 Sand",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radio Tower Notepad 2",
-            "id": 48060,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 Plank",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radio Tower Signalboard Trace",
-            "id": 48061,
-            "access_rule": {
-              "rule": "raft_can_access_radio_tower",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Hammock",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Vasagatan": {
-        "name": "Vasagatan",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Hannes Letter 1",
-            "id": 48062,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Net launcher",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hannes Letter 2",
-            "id": 48063,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 1 MetalOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hannes Letter 3",
-            "id": 48064,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 Thatch",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Olof Log 1",
-            "id": 48065,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-bow",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Olof Log 2",
-            "id": 48066,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-storage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Olof Log 3",
-            "id": 48067,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-hook",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vasagatan Recording 1",
-            "id": 48068,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 MetalOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vasagatan Recording 2",
-            "id": 48069,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-crop-plot",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vasagatan Recording 3",
-            "id": 48070,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Juicer",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vasagatan Magazine Clipping",
-            "id": 48071,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-salve",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vasagatan Frequency to Balboa",
-            "id": 48072,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Balboa Island Frequency",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Engine blueprint",
-            "id": 48073,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 SeaVine",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Steering Wheel blueprint",
-            "id": 48074,
-            "access_rule": {
-              "rule": "raft_can_access_vasagatan",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-crop-plot",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "BalboaIsland": {
-        "name": "BalboaIsland",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Machete blueprint",
-            "id": 48075,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 5 MetalOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Correa twins picture",
-            "id": 48076,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 5 Scrap",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Schedule of engineers",
-            "id": 48077,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Water tank",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Biofuel refiner blueprint",
-            "id": 48078,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 1 Plank",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Note from Henry",
-            "id": 48079,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_can_access_balboa_island",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_craft_machete",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "progressive-salve",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Correas diary 3",
-            "id": 48080,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_can_access_balboa_island",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_craft_machete",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "progressive-storage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Fuel tank blueprint",
-            "id": 48081,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_can_access_balboa_island",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_craft_machete",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "Resource Pack: 4 Raw_Potato",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Correas diary 1",
-            "id": 48082,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 Stone",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Correas diary 2",
-            "id": 48083,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Flippers",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Fuel pipe blueprint",
-            "id": 48084,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 4 Thatch",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Bear map",
-            "id": 48085,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Shovel",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Johnny (Balboa Island)",
-            "id": 48086,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_can_access_balboa_island",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_craft_machete",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "progressive-bottle",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Doll murderer 4",
-            "id": 48087,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Leather greaves",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Doll murderer 1",
-            "id": 48088,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 3 Scrap",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Doll murderer 3",
-            "id": 48089,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 MetalOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Doll murderer 5",
-            "id": 48090,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-battery",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Balboa Island Doll murderer 2",
-            "id": 48091,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Cookingpot",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Relay Station quest",
-            "id": 48155,
-            "access_rule": {
-              "rule": "raft_can_access_balboa_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Tangaroa Frequency",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "CaravanIsland": {
-        "name": "CaravanIsland",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Caravan Island Detto journal 1",
-            "id": 48092,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 5 ExplosiveGoo",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Detto journal 2",
-            "id": 48093,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-hook",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Detto journal 3",
-            "id": 48094,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 5 Stone",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Detto journal 4",
-            "id": 48095,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-zipline",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Detto journal 5",
-            "id": 48096,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 CopperOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Detto journal 6",
-            "id": 48097,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Leather body armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Olaf speech",
-            "id": 48098,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Fuel pipe",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Raft town article",
-            "id": 48099,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 5 SeaVine",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Doctor's note",
-            "id": 48100,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 3 Scrap",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Firework blueprint",
-            "id": 48101,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 2 TitaniumOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Battery Charger quest",
-            "id": 48102,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-bow",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Zipline quest",
-            "id": 48103,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_big_islands_available",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_smelt_items",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_access_caravan_island",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "progressive-zipline",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Caravan Island Frequency to Tangaroa",
-            "id": 48104,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_can_access_caravan_island",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_craft_ziplineTool",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "Varuna Point Frequency",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Engine controls blueprint",
-            "id": 48105,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "raft_can_access_caravan_island",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "raft_can_craft_ziplineTool",
-                  "_original_ast_type": "helper"
-                }
-              ]
-            },
-            "item": {
-              "name": "progressive-scarecrow",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal detector blueprint",
-            "id": 48106,
-            "access_rule": {
-              "rule": "raft_can_access_caravan_island",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-backpack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
       "Tangaroa": {
         "name": "Tangaroa",
         "exits": [],
@@ -2257,177 +2069,6 @@
             },
             "item": {
               "name": "Resource Pack: 4 Stone",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Varuna Point": {
-        "name": "Varuna Point",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Varuna Point Grabber diary 1",
-            "id": 48122,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 1 Plastic",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Varuna Point Grabber diary 2",
-            "id": 48123,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 4 Thatch",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Varuna Point Grabber diary 3",
-            "id": 48124,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 1 TitaniumOre",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Varuna Point Grabber diary 4",
-            "id": 48125,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-containers",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Varuna Point Grabber diary 5",
-            "id": 48126,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-zipline",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Varuna Point Grabber diary 6",
-            "id": 48127,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-headlight",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Varuna Point Frequency to Temperance",
-            "id": 48128,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Temperance Frequency",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wind Turbine blueprint",
-            "id": 48129,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 1 Clay",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Advanced Battery blueprint",
-            "id": 48130,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "progressive-axe",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Advanced Headlight blueprint",
-            "id": 48131,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Leather helmet",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Electric Grill blueprint",
-            "id": 48132,
-            "access_rule": {
-              "rule": "raft_can_access_varuna_point",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Resource Pack: 3 Clay",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2833,18 +2474,377 @@
           }
         ]
       },
-      "Menu": {
-        "name": "Menu",
-        "exits": [
+      "Varuna Point": {
+        "name": "Varuna Point",
+        "exits": [],
+        "locations": [
           {
-            "name": "MenuToRaft",
-            "connected_region": "Raft",
+            "name": "Varuna Point Grabber diary 1",
+            "id": 48122,
             "access_rule": {
-              "rule": "True_"
-            }
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 1 Plastic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 2",
+            "id": 48123,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 4 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 3",
+            "id": 48124,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 1 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 4",
+            "id": 48125,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-containers",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 5",
+            "id": 48126,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-zipline",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 6",
+            "id": 48127,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-headlight",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Frequency to Temperance",
+            "id": 48128,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Temperance Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wind Turbine blueprint",
+            "id": 48129,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 1 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Battery blueprint",
+            "id": 48130,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-axe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Headlight blueprint",
+            "id": 48131,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Leather helmet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Electric Grill blueprint",
+            "id": 48132,
+            "access_rule": {
+              "rule": "raft_can_access_varuna_point",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 3 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
           }
-        ],
-        "locations": []
+        ]
+      },
+      "Vasagatan": {
+        "name": "Vasagatan",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Hannes Letter 1",
+            "id": 48062,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Net launcher",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hannes Letter 2",
+            "id": 48063,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 1 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hannes Letter 3",
+            "id": 48064,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Olof Log 1",
+            "id": 48065,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-bow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Olof Log 2",
+            "id": 48066,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-storage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Olof Log 3",
+            "id": 48067,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-hook",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Recording 1",
+            "id": 48068,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Recording 2",
+            "id": 48069,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Recording 3",
+            "id": 48070,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Juicer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Magazine Clipping",
+            "id": 48071,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-salve",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Frequency to Balboa",
+            "id": 48072,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Balboa Island Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Engine blueprint",
+            "id": 48073,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Resource Pack: 2 SeaVine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Steering Wheel blueprint",
+            "id": 48074,
+            "access_rule": {
+              "rule": "raft_can_access_vasagatan",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
       }
     }
   },
@@ -6961,10 +6961,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -6978,10 +6974,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -6999,10 +6991,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7016,10 +7004,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7063,10 +7047,6 @@
             "name": "raft_can_access_temperance"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "helper",
             "name": "raft_can_craft_shovel"
           }
@@ -7082,25 +7062,12 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_access_vasagatan": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_navigate"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_navigate"
       },
       "raft_can_capture_animals": {
         "type": "and",
@@ -7133,55 +7100,24 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_battery": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_birdNest": {
         "type": "constant",
         "value": true
       },
       "raft_can_craft_bolt": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_circuitBoard": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_engine": {
         "type": "and",
@@ -7193,38 +7129,16 @@
           {
             "type": "helper",
             "name": "raft_can_craft_circuitBoard"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_grassPlot": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_get_dirt"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_get_dirt"
       },
       "raft_can_craft_hinge": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_machete": {
         "type": "and",
@@ -7236,25 +7150,12 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_netCanister": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_netLauncher": {
         "type": "and",
@@ -7266,25 +7167,12 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_plasticBottle": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_reciever": {
         "type": "and",
@@ -7296,10 +7184,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_hinge"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7313,10 +7197,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_hinge"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7326,10 +7206,6 @@
           {
             "type": "helper",
             "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "helper",
@@ -7351,10 +7227,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_hinge"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7368,10 +7240,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7400,10 +7268,6 @@
       "raft_can_find_titanium": {
         "type": "and",
         "conditions": [
-          {
-            "type": "constant",
-            "value": true
-          },
           {
             "type": "helper",
             "name": "raft_can_craft_battery"

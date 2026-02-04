@@ -27,6 +27,11 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Core Exit", player),
+        HelperCall(helper_func=_undertale_has_plot, helper_name="_undertale_has_plot", args=('Mettaton Plush',))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Ruins Hub", player),
         Has('Ruins Key', 1)
     )
@@ -51,14 +56,94 @@ def set_rules(world: "World") -> None:
         Has('Core Key', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("Core Exit", player),
-        HelperCall(helper_func=_undertale_has_plot, helper_name="_undertale_has_plot", args=('Mettaton Plush',))
-    )
-
     multiworld.get_entrance("New Home Exit", player).access_rule = \
         lambda state: ((state.has_all(['Left Home Key', 'Right Home Key'], player)) or (state.has('Key Piece', player, state.multiworld.worlds[player].options.key_pieces.value)))
     # Location rules
+    world.set_rule(
+        multiworld.get_location("Trash Burger", player),
+        CanReachRegion('Core')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mettaton Plot", player),
+        CanReachEntrance('Core Exit')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Noodles Fridge", player),
+        CanReachRegion('Hotland')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pan Hidden", player),
+        CanReachRegion('Hotland')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Apron Hidden", player),
+        CanReachRegion('Cooking Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bratty Catty 1", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bratty Catty 2", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bratty Catty 3", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bratty Catty 4", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Burgerpants 1", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Burgerpants 2", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Burgerpants 3", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Burgerpants 4", player),
+        CanReachRegion('News Show')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Present Knife", player),
+        CanReachRegion('New Home')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Present Locket", player),
+        CanReachRegion('New Home')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Left New Home Key", player),
+        CanReachRegion('New Home')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Right New Home Key", player),
+        CanReachRegion('New Home')
+    )
+
     world.set_rule(
         multiworld.get_location("Snowman", player),
         CanReachRegion('Snowdin Town')
@@ -167,89 +252,4 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("TemmieShop 4", player),
         And(CanReachRegion('Waterfall'), Has('1000G', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Noodles Fridge", player),
-        CanReachRegion('Hotland')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pan Hidden", player),
-        CanReachRegion('Hotland')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Apron Hidden", player),
-        CanReachRegion('Cooking Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bratty Catty 1", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bratty Catty 2", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bratty Catty 3", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bratty Catty 4", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Burgerpants 1", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Burgerpants 2", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Burgerpants 3", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Burgerpants 4", player),
-        CanReachRegion('News Show')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trash Burger", player),
-        CanReachRegion('Core')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mettaton Plot", player),
-        CanReachEntrance('Core Exit')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Present Knife", player),
-        CanReachRegion('New Home')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Present Locket", player),
-        CanReachRegion('New Home')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Left New Home Key", player),
-        CanReachRegion('New Home')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Right New Home Key", player),
-        CanReachRegion('New Home')
     )

@@ -23,33 +23,60 @@
         ],
         "locations": []
       },
-      "Humble Beginnings": {
-        "name": "Humble Beginnings",
+      "A Ballista's Revenge": {
+        "name": "A Ballista's Revenge",
+        "exits": [],
+        "locations": [
+          {
+            "name": "A Ballista's Revenge: Victory",
+            "id": 53035,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "A Ballista's Revenge"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ballista"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "A Knight's Folly": {
+        "name": "A Knight's Folly",
         "exits": [
           {
-            "name": "Best Friendssss",
-            "connected_region": "Best Friendssss",
+            "name": "Mage Mayhem",
+            "connected_region": "Mage Mayhem",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "A Knight's Folly",
-            "connected_region": "A Knight's Folly",
+            "name": "Endless Knight",
+            "connected_region": "Endless Knight",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "Denrunaway",
-            "connected_region": "Denrunaway",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Wargroove Finale",
-            "connected_region": "Wargroove Finale",
+            "name": "Ambushed in the Middle",
+            "connected_region": "Ambushed in the Middle",
             "access_rule": {
               "rule": "True_"
             }
@@ -57,13 +84,13 @@
         ],
         "locations": [
           {
-            "name": "Humble Beginnings: Caesar",
-            "id": 53001,
+            "name": "A Knight's Folly: Caesar",
+            "id": 53007,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Ballista",
+              "name": "Merfolk",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -71,24 +98,44 @@
             "locked": false
           },
           {
-            "name": "Humble Beginnings: Chest 1",
-            "id": 53002,
+            "name": "A Knight's Folly: Victory",
+            "id": 53008,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Final Bridges",
+              "name": "Warship",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
-          },
+          }
+        ]
+      },
+      "Ambushed in the Middle": {
+        "name": "Ambushed in the Middle",
+        "exits": [
           {
-            "name": "Humble Beginnings: Chest 2",
-            "id": 53003,
+            "name": "Tenri's Fall",
+            "connected_region": "Tenri's Fall",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Spearman"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ambushed in the Middle: Victory (Blue)",
+            "id": 53018,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Spearman"
+              }
             },
             "item": {
               "name": "Commander Defense Boost",
@@ -99,13 +146,76 @@
             "locked": false
           },
           {
-            "name": "Humble Beginnings: Victory",
-            "id": 53004,
+            "name": "Ambushed in the Middle: Victory (Green)",
+            "id": 53019,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Spearman"
+              }
             },
             "item": {
-              "name": "Commander Defense Boost",
+              "name": "Income Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Archery Lessons": {
+        "name": "Archery Lessons",
+        "exits": [
+          {
+            "name": "Master of the Lake",
+            "connected_region": "Master of the Lake",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knight",
+                  "Southern Walls"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Archery Lessons: Chest",
+            "id": 53023,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knight",
+                  "Southern Walls"
+                ]
+              }
+            },
+            "item": {
+              "name": "Harpoon Ship",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Archery Lessons: Victory",
+            "id": 53024,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knight",
+                  "Southern Walls"
+                ]
+              }
+            },
+            "item": {
+              "name": "Income Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -170,40 +280,108 @@
           }
         ]
       },
-      "A Knight's Folly": {
-        "name": "A Knight's Folly",
+      "Corrupted Inlet": {
+        "name": "Corrupted Inlet",
         "exits": [
           {
-            "name": "Mage Mayhem",
-            "connected_region": "Mage Mayhem",
+            "name": "Robbed",
+            "connected_region": "Robbed",
             "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Endless Knight",
-            "connected_region": "Endless Knight",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Ambushed in the Middle",
-            "connected_region": "Ambushed in the Middle",
-            "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Barge",
+                  "Merfolk",
+                  "Warship"
+                ]
+              }
             }
           }
         ],
         "locations": [
           {
-            "name": "A Knight's Folly: Caesar",
-            "id": 53007,
+            "name": "Corrupted Inlet: Victory",
+            "id": 53014,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Barge",
+                  "Merfolk",
+                  "Warship"
+                ]
+              }
             },
             "item": {
-              "name": "Merfolk",
+              "name": "Eastern Bridges",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Darkest Knight": {
+        "name": "Darkest Knight",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Darkest Knight: Victory",
+            "id": 53027,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Darkest Knight"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Spearman"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Harpy",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Deep Thicket": {
+        "name": "Deep Thicket",
+        "exits": [
+          {
+            "name": "Darkest Knight",
+            "connected_region": "Darkest Knight",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Mage"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Deep Thicket: Find Sedge",
+            "id": 53012,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Mage"
+              }
+            },
+            "item": {
+              "name": "Turtle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -211,15 +389,18 @@
             "locked": false
           },
           {
-            "name": "A Knight's Folly: Victory",
-            "id": 53008,
+            "name": "Deep Thicket: Victory",
+            "id": 53013,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Mage"
+              }
             },
             "item": {
-              "name": "Warship",
+              "name": "Income Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -282,6 +463,68 @@
           }
         ]
       },
+      "Doggo Mountain": {
+        "name": "Doggo Mountain",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Doggo Mountain: Find all the Dogs",
+            "id": 53031,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Doggo Mountain"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Knight"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Income Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Doggo Mountain: Victory",
+            "id": 53032,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Doggo Mountain"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Knight"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
       "Dragon Freeway": {
         "name": "Dragon Freeway",
         "exits": [
@@ -308,172 +551,6 @@
             },
             "item": {
               "name": "Barge",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Deep Thicket": {
-        "name": "Deep Thicket",
-        "exits": [
-          {
-            "name": "Darkest Knight",
-            "connected_region": "Darkest Knight",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mage"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Deep Thicket: Find Sedge",
-            "id": 53012,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mage"
-              }
-            },
-            "item": {
-              "name": "Turtle",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Deep Thicket: Victory",
-            "id": 53013,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mage"
-              }
-            },
-            "item": {
-              "name": "Income Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Corrupted Inlet": {
-        "name": "Corrupted Inlet",
-        "exits": [
-          {
-            "name": "Robbed",
-            "connected_region": "Robbed",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Barge",
-                  "Merfolk",
-                  "Warship"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Corrupted Inlet: Victory",
-            "id": 53014,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Barge",
-                  "Merfolk",
-                  "Warship"
-                ]
-              }
-            },
-            "item": {
-              "name": "Eastern Bridges",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Mage Mayhem": {
-        "name": "Mage Mayhem",
-        "exits": [
-          {
-            "name": "Open Season",
-            "connected_region": "Open Season",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Dragon",
-                  "Harpy"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Foolish Canal: Mage Mayhem Entrance",
-            "connected_region": "Foolish Canal",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Dragon",
-                  "Harpy"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Mage Mayhem: Caesar",
-            "id": 53015,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Dragon",
-                  "Harpy"
-                ]
-              }
-            },
-            "item": {
-              "name": "Balloon",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Mage Mayhem: Victory",
-            "id": 53016,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Dragon",
-                  "Harpy"
-                ]
-              }
-            },
-            "item": {
-              "name": "Southern Walls",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -571,113 +648,37 @@
           }
         ]
       },
-      "Ambushed in the Middle": {
-        "name": "Ambushed in the Middle",
-        "exits": [
-          {
-            "name": "Tenri's Fall",
-            "connected_region": "Tenri's Fall",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Spearman"
-              }
-            }
-          }
-        ],
+      "Foolish Canal": {
+        "name": "Foolish Canal",
+        "exits": [],
         "locations": [
           {
-            "name": "Ambushed in the Middle: Victory (Blue)",
-            "id": 53018,
+            "name": "Foolish Canal: Victory",
+            "id": 53038,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Spearman"
-              }
-            },
-            "item": {
-              "name": "Commander Defense Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Ambushed in the Middle: Victory (Green)",
-            "id": 53019,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Spearman"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Foolish Canal"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Mage",
+                      "Spearman"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Income Boost",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "The Churning Sea": {
-        "name": "The Churning Sea",
-        "exits": [
-          {
-            "name": "Rebel Village",
-            "connected_region": "Rebel Village",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Merfolk",
-                      "Turtle"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Harpoon Ship"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "The Churning Sea: Victory",
-            "id": 53020,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Merfolk",
-                      "Turtle"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Harpoon Ship"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Spearman",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -738,38 +739,47 @@
           }
         ]
       },
-      "Archery Lessons": {
-        "name": "Archery Lessons",
+      "Humble Beginnings": {
+        "name": "Humble Beginnings",
         "exits": [
           {
-            "name": "Master of the Lake",
-            "connected_region": "Master of the Lake",
+            "name": "Best Friendssss",
+            "connected_region": "Best Friendssss",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Knight",
-                  "Southern Walls"
-                ]
-              }
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "A Knight's Folly",
+            "connected_region": "A Knight's Folly",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Denrunaway",
+            "connected_region": "Denrunaway",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Wargroove Finale",
+            "connected_region": "Wargroove Finale",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],
         "locations": [
           {
-            "name": "Archery Lessons: Chest",
-            "id": 53023,
+            "name": "Humble Beginnings: Caesar",
+            "id": 53001,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Knight",
-                  "Southern Walls"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Harpoon Ship",
+              "name": "Ballista",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -777,19 +787,315 @@
             "locked": false
           },
           {
-            "name": "Archery Lessons: Victory",
-            "id": 53024,
+            "name": "Humble Beginnings: Chest 1",
+            "id": 53002,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Final Bridges",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Humble Beginnings: Chest 2",
+            "id": 53003,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Humble Beginnings: Victory",
+            "id": 53004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Mage Mayhem": {
+        "name": "Mage Mayhem",
+        "exits": [
+          {
+            "name": "Open Season",
+            "connected_region": "Open Season",
+            "access_rule": {
+              "rule": "HasAny",
               "args": {
                 "items": [
-                  "Knight",
-                  "Southern Walls"
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Foolish Canal: Mage Mayhem Entrance",
+            "connected_region": "Foolish Canal",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Mage Mayhem: Caesar",
+            "id": 53015,
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
                 ]
               }
             },
             "item": {
+              "name": "Balloon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Mage Mayhem: Victory",
+            "id": 53016,
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
+            },
+            "item": {
+              "name": "Southern Walls",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Master of the Lake": {
+        "name": "Master of the Lake",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Master of the Lake: Victory",
+            "id": 53034,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Master of the Lake"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Warship"
+                  }
+                }
+              ]
+            },
+            "item": {
               "name": "Income Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Open Season": {
+        "name": "Open Season",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Open Season: Caesar",
+            "id": 53029,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Open Season"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Knight",
+                      "Mage"
+                    ]
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Final Walls",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Open Season: Victory",
+            "id": 53030,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Open Season"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Knight",
+                      "Mage"
+                    ]
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Rebel Village": {
+        "name": "Rebel Village",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Rebel Village: Victory (Pink)",
+            "id": 53036,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Rebel Village"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Spearman"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Commander Defense Boost",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Rebel Village: Victory (Red)",
+            "id": 53037,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Rebel Village"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Spearman"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Archer",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Robbed": {
+        "name": "Robbed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Robbed: Victory",
+            "id": 53028,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Robbed"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Rifleman",
+                      "Thief"
+                    ]
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Wagon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -860,207 +1166,6 @@
           }
         ]
       },
-      "Darkest Knight": {
-        "name": "Darkest Knight",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Darkest Knight: Victory",
-            "id": 53027,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Darkest Knight"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spearman"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Harpy",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Robbed": {
-        "name": "Robbed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Robbed: Victory",
-            "id": 53028,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Robbed"
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Thief",
-                      "Rifleman"
-                    ]
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Wagon",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Open Season": {
-        "name": "Open Season",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Open Season: Caesar",
-            "id": 53029,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Open Season"
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Mage",
-                      "Knight"
-                    ]
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Final Walls",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Open Season: Victory",
-            "id": 53030,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Open Season"
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Mage",
-                      "Knight"
-                    ]
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Commander Defense Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Doggo Mountain": {
-        "name": "Doggo Mountain",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Doggo Mountain: Find all the Dogs",
-            "id": 53031,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Doggo Mountain"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knight"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Income Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Doggo Mountain: Victory",
-            "id": 53032,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Doggo Mountain"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knight"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Commander Defense Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
       "Tenri's Fall": {
         "name": "Tenri's Fall",
         "exits": [],
@@ -1098,165 +1203,60 @@
           }
         ]
       },
-      "Foolish Canal": {
-        "name": "Foolish Canal",
-        "exits": [],
-        "locations": [
+      "The Churning Sea": {
+        "name": "The Churning Sea",
+        "exits": [
           {
-            "name": "Foolish Canal: Victory",
-            "id": 53038,
+            "name": "Rebel Village",
+            "connected_region": "Rebel Village",
             "access_rule": {
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Foolish Canal"
-                  }
-                },
-                {
-                  "rule": "HasAll",
+                  "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Mage",
-                      "Spearman"
+                      "Merfolk",
+                      "Turtle"
                     ]
                   }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Harpoon Ship"
+                  }
                 }
               ]
-            },
-            "item": {
-              "name": "Income Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
+            }
           }
-        ]
-      },
-      "Master of the Lake": {
-        "name": "Master of the Lake",
-        "exits": [],
+        ],
         "locations": [
           {
-            "name": "Master of the Lake: Victory",
-            "id": 53034,
+            "name": "The Churning Sea: Victory",
+            "id": 53020,
             "access_rule": {
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
+                  "rule": "HasAny",
                   "args": {
-                    "region_name": "Master of the Lake"
+                    "items": [
+                      "Merfolk",
+                      "Turtle"
+                    ]
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Warship"
+                    "item_name": "Harpoon Ship"
                   }
                 }
               ]
             },
             "item": {
-              "name": "Income Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "A Ballista's Revenge": {
-        "name": "A Ballista's Revenge",
-        "exits": [],
-        "locations": [
-          {
-            "name": "A Ballista's Revenge: Victory",
-            "id": 53035,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "A Ballista's Revenge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ballista"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Commander Defense Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Rebel Village": {
-        "name": "Rebel Village",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Rebel Village: Victory (Pink)",
-            "id": 53036,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rebel Village"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spearman"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Commander Defense Boost",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Rebel Village: Victory (Red)",
-            "id": 53037,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Rebel Village"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spearman"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Archer",
+              "name": "Spearman",
               "player": 1,
               "advancement": true,
               "type": "None"

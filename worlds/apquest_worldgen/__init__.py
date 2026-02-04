@@ -33,8 +33,8 @@ ITEMPOOL_COUNTS: Dict[str, int] = {
 
 # Locked placements - items that must be placed via place_locked_item
 LOCKED_PLACEMENTS: Dict[str, str] = {
-    "Top Left Room Button": "Top Left Room Button Pressed",
     "Final Boss Defeated": "Victory",
+    "Top Left Room Button": "Top Left Room Button Pressed",
 }
 
 # Starting items - items the player begins with (precollected)
@@ -105,12 +105,12 @@ class APQuestWorld(RuleWorldMixin, World):
     canonical_placements: ClassVar[Dict[str, str]] = {
         "Bottom Left Chest": "Confetti Cannon",
         "Top Middle Chest": "Sword",
-        "Top Left Room Chest": "Shield",
-        "Top Left Room Button": "Top Left Room Button Pressed",
         "Bottom Right Room Left Chest": "Health Upgrade",
         "Bottom Right Room Right Chest": "Health Upgrade",
-        "Right Room Enemy Drop": "Key",
         "Final Boss Defeated": "Victory",
+        "Right Room Enemy Drop": "Key",
+        "Top Left Room Chest": "Shield",
+        "Top Left Room Button": "Top Left Room Button Pressed",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
@@ -118,12 +118,12 @@ class APQuestWorld(RuleWorldMixin, World):
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
         "Bottom Left Chest": False,
         "Top Middle Chest": True,
-        "Top Left Room Chest": True,
-        "Top Left Room Button": True,
         "Bottom Right Room Left Chest": False,
         "Bottom Right Room Right Chest": False,
-        "Right Room Enemy Drop": True,
         "Final Boss Defeated": True,
+        "Right Room Enemy Drop": True,
+        "Top Left Room Chest": True,
+        "Top Left Room Button": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):

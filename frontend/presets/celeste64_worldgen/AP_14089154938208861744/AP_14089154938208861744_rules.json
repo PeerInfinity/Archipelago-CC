@@ -23,6 +23,262 @@
         ],
         "locations": []
       },
+      "Badeline Island": {
+        "name": "Badeline Island",
+        "exits": [
+          {
+            "name": "Badeline Island -> Badeline Tower Upper",
+            "connected_region": "Badeline Tower Upper",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Ground Dash"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Badeline Island -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Badeline Island -> Freeway Island",
+            "connected_region": "Freeway Island",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Badeline Island Cassette Strawberry",
+            "id": 13238301,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Breakable Blocks",
+                  "Cassettes",
+                  "Climb",
+                  "Dash Refills",
+                  "Double Dash Refills",
+                  "Feathers",
+                  "Springs",
+                  "Traffic Blocks"
+                ]
+              }
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Badeline Island Checkpoint",
+            "id": 13239305,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Badeline Island Checkpoint",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Badeline Tower Lower": {
+        "name": "Badeline Tower Lower",
+        "exits": [
+          {
+            "name": "Badeline Tower Lower -> South-East House Island",
+            "connected_region": "South-East House Island",
+            "access_rule": {
+              "rule": "False_"
+            }
+          },
+          {
+            "name": "Badeline Tower Lower -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Breakable Blocks",
+                  "Feathers"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Badeline Tower Lower -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "rule": "False_"
+            }
+          },
+          {
+            "name": "Badeline Tower Lower -> Badeline Tower Upper",
+            "connected_region": "Badeline Tower Upper",
+            "access_rule": {
+              "rule": "False_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Badeline Tower Bottom Strawberry",
+            "id": 13238283,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Badeline Tower Breakable Bottom Strawberry",
+            "id": 13238291,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Breakable Blocks",
+                  "Feathers"
+                ]
+              }
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Badeline Tower Upper": {
+        "name": "Badeline Tower Upper",
+        "exits": [
+          {
+            "name": "Badeline Tower Upper -> Badeline Island",
+            "connected_region": "Badeline Island",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Breakable Blocks",
+                  "Climb",
+                  "Double Dash Refills",
+                  "Feathers",
+                  "Traffic Blocks"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> Badeline Tower Lower",
+            "connected_region": "Badeline Tower Lower",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> South-East House Island",
+            "connected_region": "South-East House Island",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Ground Dash"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Ground Dash"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Badeline Tower Upper -> Granny Island",
+            "connected_region": "Granny Island",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Dash Refills"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Badeline Tower Cassette Strawberry",
+            "id": 13238300,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Cassettes",
+                  "Coins",
+                  "Dash Refills",
+                  "Skid Jump"
+                ]
+              }
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Badeline Tower Checkpoint",
+            "id": 13239304,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Badeline Tower Checkpoint",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "Forsaken City": {
         "name": "Forsaken City",
         "exits": [
@@ -103,36 +359,89 @@
         ],
         "locations": []
       },
-      "Intro Islands": {
-        "name": "Intro Islands",
+      "Freeway Island": {
+        "name": "Freeway Island",
         "exits": [
           {
-            "name": "Intro Islands -> Granny Island",
+            "name": "Freeway Island -> Granny Island",
             "connected_region": "Granny Island",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Air Dash",
+                      "Dash Refills"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Traffic Blocks"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Freeway Island -> North-East Feathers Island",
+            "connected_region": "North-East Feathers Island",
+            "access_rule": {
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Air Dash",
-                  "Climb",
-                  "Ground Dash",
-                  "Skid Jump"
-                ]
+                "item_name": "Feathers"
               }
+            }
+          },
+          {
+            "name": "Freeway Island -> North-West Girders Island",
+            "connected_region": "North-West Girders Island",
+            "access_rule": {
+              "rule": "False_"
             }
           }
         ],
         "locations": [
           {
-            "name": "First Strawberry",
-            "id": 13238272,
+            "name": "Troll Strawberry",
+            "id": 13238277,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Falling Blocks Strawberry",
+            "id": 13238278,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Girders Strawberry",
+            "id": 13238282,
+            "access_rule": {
+              "rule": "HasAll",
               "args": {
                 "items": [
                   "Air Dash",
-                  "Climb",
-                  "Ground Dash"
+                  "Climb"
                 ]
               }
             },
@@ -145,13 +454,104 @@
             "locked": true
           },
           {
-            "name": "Intro Checkpoint",
-            "id": 13239296,
+            "name": "Breakable Blocks Strawberry",
+            "id": 13238284,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Air Dash",
+                      "Breakable Blocks"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Breakable Blocks",
+                      "Ground Dash"
+                    ]
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "South End of Bridge Cassette Strawberry",
+            "id": 13238294,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Cassettes",
+                  "Climb",
+                  "Coins"
+                ]
+              }
+            },
+            "item": {
+              "name": "Springs",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "North End of Bridge Cassette Strawberry",
+            "id": 13238297,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Cassettes",
+                  "Climb"
+                ]
+              }
+            },
+            "item": {
+              "name": "Feathers",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Freeway Checkpoint",
+            "id": 13239300,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Intro Checkpoint",
+              "name": "Freeway Checkpoint",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Freeway Feather Checkpoint",
+            "id": 13239301,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeway Feather Checkpoint",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -441,232 +841,57 @@
           }
         ]
       },
-      "Freeway Island": {
-        "name": "Freeway Island",
+      "Intro Islands": {
+        "name": "Intro Islands",
         "exits": [
           {
-            "name": "Freeway Island -> Granny Island",
+            "name": "Intro Islands -> Granny Island",
             "connected_region": "Granny Island",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Air Dash",
-                      "Dash Refills"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Freeway Island -> North-East Feathers Island",
-            "connected_region": "North-East Feathers Island",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Feathers"
-              }
-            }
-          },
-          {
-            "name": "Freeway Island -> North-West Girders Island",
-            "connected_region": "North-West Girders Island",
-            "access_rule": {
-              "rule": "False_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Troll Strawberry",
-            "id": 13238277,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Falling Blocks Strawberry",
-            "id": 13238278,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Girders Strawberry",
-            "id": 13238282,
-            "access_rule": {
-              "rule": "HasAll",
+              "rule": "HasAny",
               "args": {
                 "items": [
                   "Air Dash",
-                  "Climb"
-                ]
-              }
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Breakable Blocks Strawberry",
-            "id": 13238284,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Air Dash",
-                      "Breakable Blocks"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Breakable Blocks",
-                      "Ground Dash"
-                    ]
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "South End of Bridge Cassette Strawberry",
-            "id": 13238294,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Cassettes",
                   "Climb",
-                  "Coins"
+                  "Ground Dash",
+                  "Skid Jump"
                 ]
-              }
-            },
-            "item": {
-              "name": "Springs",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "North End of Bridge Cassette Strawberry",
-            "id": 13238297,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Cassettes",
-                  "Climb"
-                ]
-              }
-            },
-            "item": {
-              "name": "Feathers",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Freeway Checkpoint",
-            "id": 13239300,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeway Checkpoint",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Freeway Feather Checkpoint",
-            "id": 13239301,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeway Feather Checkpoint",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "North-West Girders Island": {
-        "name": "North-West Girders Island",
-        "exits": [
-          {
-            "name": "North-West Girders Island -> Freeway Island",
-            "connected_region": "Freeway Island",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Traffic Blocks"
               }
             }
           }
         ],
         "locations": [
           {
-            "name": "Traffic Block Strawberry",
-            "id": 13238279,
+            "name": "First Strawberry",
+            "id": 13238272,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Air Dash",
+                  "Climb",
+                  "Ground Dash"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Intro Checkpoint",
+            "id": 13239296,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Intro Checkpoint",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -839,6 +1064,37 @@
           }
         ]
       },
+      "North-West Girders Island": {
+        "name": "North-West Girders Island",
+        "exits": [
+          {
+            "name": "North-West Girders Island -> Freeway Island",
+            "connected_region": "Freeway Island",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Traffic Blocks"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Traffic Block Strawberry",
+            "id": 13238279,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Strawberry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "South-East House Island": {
         "name": "South-East House Island",
         "exits": [
@@ -972,262 +1228,6 @@
             },
             "item": {
               "name": "Double Dash House Checkpoint",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Badeline Tower Lower": {
-        "name": "Badeline Tower Lower",
-        "exits": [
-          {
-            "name": "Badeline Tower Lower -> South-East House Island",
-            "connected_region": "South-East House Island",
-            "access_rule": {
-              "rule": "False_"
-            }
-          },
-          {
-            "name": "Badeline Tower Lower -> North-East Feathers Island",
-            "connected_region": "North-East Feathers Island",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Breakable Blocks",
-                  "Feathers"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Badeline Tower Lower -> Granny Island",
-            "connected_region": "Granny Island",
-            "access_rule": {
-              "rule": "False_"
-            }
-          },
-          {
-            "name": "Badeline Tower Lower -> Badeline Tower Upper",
-            "connected_region": "Badeline Tower Upper",
-            "access_rule": {
-              "rule": "False_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Badeline Tower Bottom Strawberry",
-            "id": 13238283,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Badeline Tower Breakable Bottom Strawberry",
-            "id": 13238291,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Breakable Blocks",
-                  "Feathers"
-                ]
-              }
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Badeline Tower Upper": {
-        "name": "Badeline Tower Upper",
-        "exits": [
-          {
-            "name": "Badeline Tower Upper -> Badeline Island",
-            "connected_region": "Badeline Island",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Breakable Blocks",
-                  "Climb",
-                  "Double Dash Refills",
-                  "Feathers",
-                  "Traffic Blocks"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Badeline Tower Upper -> Badeline Tower Lower",
-            "connected_region": "Badeline Tower Lower",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Badeline Tower Upper -> South-East House Island",
-            "connected_region": "South-East House Island",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Ground Dash"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Badeline Tower Upper -> North-East Feathers Island",
-            "connected_region": "North-East Feathers Island",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Ground Dash"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Badeline Tower Upper -> Granny Island",
-            "connected_region": "Granny Island",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Dash Refills"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Badeline Tower Cassette Strawberry",
-            "id": 13238300,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Cassettes",
-                  "Coins",
-                  "Dash Refills",
-                  "Skid Jump"
-                ]
-              }
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Badeline Tower Checkpoint",
-            "id": 13239304,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Badeline Tower Checkpoint",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Badeline Island": {
-        "name": "Badeline Island",
-        "exits": [
-          {
-            "name": "Badeline Island -> Badeline Tower Upper",
-            "connected_region": "Badeline Tower Upper",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Ground Dash"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Badeline Island -> Granny Island",
-            "connected_region": "Granny Island",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Badeline Island -> Freeway Island",
-            "connected_region": "Freeway Island",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Badeline Island Cassette Strawberry",
-            "id": 13238301,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Air Dash",
-                  "Breakable Blocks",
-                  "Cassettes",
-                  "Climb",
-                  "Dash Refills",
-                  "Double Dash Refills",
-                  "Feathers",
-                  "Springs",
-                  "Traffic Blocks"
-                ]
-              }
-            },
-            "item": {
-              "name": "Strawberry",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Badeline Island Checkpoint",
-            "id": 13239305,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Badeline Island Checkpoint",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1574,7 +1574,12 @@
       "Badeline Tower Cassette Strawberry": "Strawberry",
       "Theo Tower Lower Cassette Strawberry": "Strawberry",
       "Traffic Block Strawberry": "Strawberry",
-      "Intro Checkpoint": "Intro Checkpoint",
+      "Badeline Island Checkpoint": "Badeline Island Checkpoint",
+      "Badeline Tower Checkpoint": "Badeline Tower Checkpoint",
+      "South End of Bridge Cassette Strawberry": "Springs",
+      "North End of Bridge Cassette Strawberry": "Feathers",
+      "Freeway Checkpoint": "Freeway Checkpoint",
+      "Freeway Feather Checkpoint": "Freeway Feather Checkpoint",
       "Floating Blocks Strawberry": "Breakable Blocks",
       "South-East Tower Top Strawberry": "Dash Refills",
       "Double Dash Spike Climb Strawberry": "Raspberry",
@@ -1585,15 +1590,10 @@
       "Granny Checkpoint": "Granny Checkpoint",
       "South-East Tower Checkpoint": "South-East Tower Checkpoint",
       "Climb Sign Checkpoint": "Climb Sign Checkpoint",
-      "South End of Bridge Cassette Strawberry": "Springs",
-      "North End of Bridge Cassette Strawberry": "Feathers",
-      "Freeway Checkpoint": "Freeway Checkpoint",
-      "Freeway Feather Checkpoint": "Freeway Feather Checkpoint",
+      "Intro Checkpoint": "Intro Checkpoint",
       "Feather Hidden Strawberry": "Coins",
       "Feather Maze Checkpoint": "Feather Maze Checkpoint",
-      "Double Dash House Checkpoint": "Double Dash House Checkpoint",
-      "Badeline Tower Checkpoint": "Badeline Tower Checkpoint",
-      "Badeline Island Checkpoint": "Badeline Island Checkpoint"
+      "Double Dash House Checkpoint": "Double Dash House Checkpoint"
     }
   },
   "progression_mapping": {

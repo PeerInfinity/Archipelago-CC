@@ -10,13 +10,13 @@ from .Locations import location_table, RiskofRain2WorldGenLocation
 
 
 # Regions that were added after sphere calculation (from original export)
-DYNAMICALLY_ADDED_REGIONS = {"Void Fields", "Petrichor V", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Gilded Coast"}
+DYNAMICALLY_ADDED_REGIONS = {"Hidden Realm: Bulwark's Ambry", "Hidden Realm: Gilded Coast", "Petrichor V", "Void Fields"}
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Distant Roost", "Distant Roost (2)", "Titanic Plains", "Titanic Plains (2)", "Verdant Falls", "Abandoned Aqueduct", "Wetland Aspect", "Rallypoint Delta", "Scorched Acres", "Abyssal Depths", "Siren's Call", "Sundered Grove", "Sky Meadow", "Commencement", "OrderedStage_5", "OrderedStage_1", "OrderedStage_2", "OrderedStage_3", "OrderedStage_4", "Hidden Realm: A Moment, Fractured", "Hidden Realm: A Moment, Whole", "Void Fields", "Victory", "Petrichor V", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Bazaar Between Time", "Hidden Realm: Gilded Coast"]
+    region_names = ["Menu", "Abandoned Aqueduct", "Abyssal Depths", "Commencement", "Distant Roost", "Distant Roost (2)", "Hidden Realm: A Moment, Fractured", "Hidden Realm: A Moment, Whole", "Hidden Realm: Bazaar Between Time", "Hidden Realm: Bulwark's Ambry", "Hidden Realm: Gilded Coast", "OrderedStage_1", "OrderedStage_2", "OrderedStage_3", "OrderedStage_4", "OrderedStage_5", "Petrichor V", "Rallypoint Delta", "Scorched Acres", "Siren's Call", "Sky Meadow", "Sundered Grove", "Titanic Plains", "Titanic Plains (2)", "Verdant Falls", "Victory", "Void Fields", "Wetland Aspect"]
 
     regions = {}
     for region_name in region_names:
@@ -59,24 +59,16 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Menu"], regions["Titanic Plains"], "Menu -> Titanic Plains")
     _create_entrance(regions["Menu"], regions["Titanic Plains (2)"], "Menu -> Titanic Plains (2)")
     _create_entrance(regions["Menu"], regions["Verdant Falls"], "Menu -> Verdant Falls")
-    _create_entrance(regions["Distant Roost"], regions["OrderedStage_1"], "Distant Roost -> OrderedStage_1")
-    _create_entrance(regions["Distant Roost (2)"], regions["OrderedStage_1"], "Distant Roost (2) -> OrderedStage_1")
-    _create_entrance(regions["Titanic Plains"], regions["OrderedStage_1"], "Titanic Plains -> OrderedStage_1")
-    _create_entrance(regions["Titanic Plains (2)"], regions["OrderedStage_1"], "Titanic Plains (2) -> OrderedStage_1")
-    _create_entrance(regions["Verdant Falls"], regions["OrderedStage_1"], "Verdant Falls -> OrderedStage_1")
     _create_entrance(regions["Abandoned Aqueduct"], regions["OrderedStage_2"], "Abandoned Aqueduct -> OrderedStage_2")
-    _create_entrance(regions["Wetland Aspect"], regions["OrderedStage_2"], "Wetland Aspect -> OrderedStage_2")
-    _create_entrance(regions["Rallypoint Delta"], regions["OrderedStage_3"], "Rallypoint Delta -> OrderedStage_3")
-    _create_entrance(regions["Scorched Acres"], regions["OrderedStage_3"], "Scorched Acres -> OrderedStage_3")
     _create_entrance(regions["Abyssal Depths"], regions["OrderedStage_4"], "Abyssal Depths -> OrderedStage_4")
-    _create_entrance(regions["Siren's Call"], regions["OrderedStage_4"], "Siren's Call -> OrderedStage_4")
-    _create_entrance(regions["Sundered Grove"], regions["OrderedStage_4"], "Sundered Grove -> OrderedStage_4")
-    _create_entrance(regions["Sky Meadow"], regions["Hidden Realm: Bulwark's Ambry"], "Sky Meadow -> Hidden Realm: Bulwark's Ambry")
-    _create_entrance(regions["Sky Meadow"], regions["OrderedStage_5"], "Sky Meadow -> OrderedStage_5")
     _create_entrance(regions["Commencement"], regions["Victory"], "Commencement -> Victory")
     _create_entrance(regions["Commencement"], regions["Petrichor V"], "Commencement -> Petrichor V")
-    _create_entrance(regions["OrderedStage_5"], regions["Hidden Realm: A Moment, Fractured"], "OrderedStage_5 -> Hidden Realm: A Moment, Fractured")
-    _create_entrance(regions["OrderedStage_5"], regions["Commencement"], "OrderedStage_5 -> Commencement")
+    _create_entrance(regions["Distant Roost"], regions["OrderedStage_1"], "Distant Roost -> OrderedStage_1")
+    _create_entrance(regions["Distant Roost (2)"], regions["OrderedStage_1"], "Distant Roost (2) -> OrderedStage_1")
+    _create_entrance(regions["Hidden Realm: A Moment, Fractured"], regions["Hidden Realm: A Moment, Whole"], "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole")
+    _create_entrance(regions["Hidden Realm: A Moment, Whole"], regions["Victory"], "Hidden Realm: A Moment, Whole -> Victory")
+    _create_entrance(regions["Hidden Realm: A Moment, Whole"], regions["Petrichor V"], "Hidden Realm: A Moment, Whole -> Petrichor V")
+    _create_entrance(regions["Hidden Realm: Bazaar Between Time"], regions["Void Fields"], "Hidden Realm: Bazaar Between Time -> Void Fields")
     _create_entrance(regions["OrderedStage_1"], regions["Hidden Realm: Bazaar Between Time"], "OrderedStage_1 -> Hidden Realm: Bazaar Between Time")
     _create_entrance(regions["OrderedStage_1"], regions["Hidden Realm: Gilded Coast"], "OrderedStage_1 -> Hidden Realm: Gilded Coast")
     _create_entrance(regions["OrderedStage_1"], regions["Abandoned Aqueduct"], "OrderedStage_1 -> Abandoned Aqueduct")
@@ -87,10 +79,18 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["OrderedStage_3"], regions["Siren's Call"], "OrderedStage_3 -> Siren's Call")
     _create_entrance(regions["OrderedStage_3"], regions["Sundered Grove"], "OrderedStage_3 -> Sundered Grove")
     _create_entrance(regions["OrderedStage_4"], regions["Sky Meadow"], "OrderedStage_4 -> Sky Meadow")
-    _create_entrance(regions["Hidden Realm: A Moment, Fractured"], regions["Hidden Realm: A Moment, Whole"], "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole")
-    _create_entrance(regions["Hidden Realm: A Moment, Whole"], regions["Victory"], "Hidden Realm: A Moment, Whole -> Victory")
-    _create_entrance(regions["Hidden Realm: A Moment, Whole"], regions["Petrichor V"], "Hidden Realm: A Moment, Whole -> Petrichor V")
-    _create_entrance(regions["Hidden Realm: Bazaar Between Time"], regions["Void Fields"], "Hidden Realm: Bazaar Between Time -> Void Fields")
+    _create_entrance(regions["OrderedStage_5"], regions["Hidden Realm: A Moment, Fractured"], "OrderedStage_5 -> Hidden Realm: A Moment, Fractured")
+    _create_entrance(regions["OrderedStage_5"], regions["Commencement"], "OrderedStage_5 -> Commencement")
+    _create_entrance(regions["Rallypoint Delta"], regions["OrderedStage_3"], "Rallypoint Delta -> OrderedStage_3")
+    _create_entrance(regions["Scorched Acres"], regions["OrderedStage_3"], "Scorched Acres -> OrderedStage_3")
+    _create_entrance(regions["Siren's Call"], regions["OrderedStage_4"], "Siren's Call -> OrderedStage_4")
+    _create_entrance(regions["Sky Meadow"], regions["Hidden Realm: Bulwark's Ambry"], "Sky Meadow -> Hidden Realm: Bulwark's Ambry")
+    _create_entrance(regions["Sky Meadow"], regions["OrderedStage_5"], "Sky Meadow -> OrderedStage_5")
+    _create_entrance(regions["Sundered Grove"], regions["OrderedStage_4"], "Sundered Grove -> OrderedStage_4")
+    _create_entrance(regions["Titanic Plains"], regions["OrderedStage_1"], "Titanic Plains -> OrderedStage_1")
+    _create_entrance(regions["Titanic Plains (2)"], regions["OrderedStage_1"], "Titanic Plains (2) -> OrderedStage_1")
+    _create_entrance(regions["Verdant Falls"], regions["OrderedStage_1"], "Verdant Falls -> OrderedStage_1")
+    _create_entrance(regions["Wetland Aspect"], regions["OrderedStage_2"], "Wetland Aspect -> OrderedStage_2")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

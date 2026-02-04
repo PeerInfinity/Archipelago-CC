@@ -36,18 +36,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("ERA_ATOMIC -> ERA_INFORMATION", player),
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_ATOMIC',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_ATOMIC',)))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("ERA_CLASSICAL -> ERA_MEDIEVAL", player),
         And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_CLASSICAL',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_CLASSICAL',)))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ERA_MEDIEVAL -> ERA_RENAISSANCE", player),
-        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MEDIEVAL',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_MEDIEVAL',)))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ERA_RENAISSANCE -> ERA_INDUSTRIAL", player),
-        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_RENAISSANCE',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_RENAISSANCE',)))
     )
 
     world.set_rule(
@@ -56,18 +51,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("ERA_INFORMATION -> ERA_FUTURE", player),
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_INFORMATION',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_INFORMATION',)))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ERA_MEDIEVAL -> ERA_RENAISSANCE", player),
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MEDIEVAL',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_MEDIEVAL',)))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("ERA_MODERN -> ERA_ATOMIC", player),
         And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_MODERN',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_MODERN',)))
     )
 
     world.set_rule(
-        multiworld.get_entrance("ERA_ATOMIC -> ERA_INFORMATION", player),
-        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_ATOMIC',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_ATOMIC',)))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ERA_INFORMATION -> ERA_FUTURE", player),
-        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_INFORMATION',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_INFORMATION',)))
+        multiworld.get_entrance("ERA_RENAISSANCE -> ERA_INDUSTRIAL", player),
+        And(HelperCall(helper_func=has_non_progressive_items, helper_name="has_non_progressive_items", args=('ERA_RENAISSANCE',)), HelperCall(helper_func=has_progressive_items, helper_name="has_progressive_items", args=('ERA_RENAISSANCE',)))
     )
     # Location rules
     world.set_rule(

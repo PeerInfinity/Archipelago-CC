@@ -23,97 +23,21 @@
         ],
         "locations": []
       },
-      "LearningHub": {
-        "name": "LearningHub",
-        "exits": [
-          {
-            "name": "ToVisualPath",
-            "connected_region": "VisualPath",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToLogicPath",
-            "connected_region": "LogicPath",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToServerPath",
-            "connected_region": "ServerPath",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToToolsPath",
-            "connected_region": "ToolsPath",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToStaticWebsite",
-            "connected_region": "StaticWebsiteHub",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Git",
-                      "JavaScript Basics",
-                      "Server Basics"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "CSS",
-                      "HTML"
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "VisualPath": {
-        "name": "VisualPath",
+      "AuthPath": {
+        "name": "AuthPath",
         "exits": [],
         "locations": [
           {
-            "name": "Learn HTML",
-            "id": 400000001,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HTML",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Learn CSS",
-            "id": 400000002,
+            "name": "Sessions",
+            "id": 400000041,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "HTML"
+                "item_name": "HTTP Basics"
               }
             },
             "item": {
-              "name": "CSS",
+              "name": "Sessions",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -121,36 +45,16 @@
             "locked": true
           },
           {
-            "name": "Learn Design Systems",
-            "id": 400000003,
+            "name": "JWT",
+            "id": 400000042,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CSS"
+                "item_name": "Sessions"
               }
             },
             "item": {
-              "name": "Design Systems",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "LogicPath": {
-        "name": "LogicPath",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Learn JavaScript",
-            "id": 400000004,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "JavaScript Basics",
+              "name": "JWT",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -158,392 +62,16 @@
             "locked": true
           },
           {
-            "name": "Learn DOM Manipulation",
-            "id": 400000005,
+            "name": "OAuth",
+            "id": 400000043,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "JavaScript Basics"
+                "item_name": "JWT"
               }
             },
             "item": {
-              "name": "DOM Manipulation",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Learn Algorithms",
-            "id": 400000006,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "JavaScript Basics"
-              }
-            },
-            "item": {
-              "name": "Algorithms",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "ServerPath": {
-        "name": "ServerPath",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Choose Server Language",
-            "id": 400000007,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Server Basics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Learn File I/O",
-            "id": 400000008,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Server Basics"
-              }
-            },
-            "item": {
-              "name": "File I/O",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Learn HTTP Basics",
-            "id": 400000009,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Server Basics"
-              }
-            },
-            "item": {
-              "name": "HTTP Basics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "ToolsPath": {
-        "name": "ToolsPath",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Learn Git",
-            "id": 400000010,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Git",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Learn Command Line",
-            "id": 400000011,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Command Line",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Learn Package Managers",
-            "id": 400000012,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Command Line"
-              }
-            },
-            "item": {
-              "name": "Package Managers",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "StaticWebsiteHub": {
-        "name": "StaticWebsiteHub",
-        "exits": [
-          {
-            "name": "ToFrontendTrack",
-            "connected_region": "FrontendTrack",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToBackendTrack",
-            "connected_region": "BackendTrack",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToDesignTrack",
-            "connected_region": "DesignTrack",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToDataTrack",
-            "connected_region": "DataTrack",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToInteractiveApp",
-            "connected_region": "InteractiveAppHub",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Database Basics",
-                      "State Management"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Frontend Framework",
-                      "REST APIs"
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Static Website Milestone",
-            "id": 400000013,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Static Website Complete",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "FrontendTrack": {
-        "name": "FrontendTrack",
-        "exits": [
-          {
-            "name": "ToReactRoute",
-            "connected_region": "ReactRoute",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "DOM Manipulation"
-              }
-            }
-          },
-          {
-            "name": "ToVueRoute",
-            "connected_region": "VueRoute",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToVanillaRoute",
-            "connected_region": "VanillaRoute",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Algorithms"
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "ReactRoute": {
-        "name": "ReactRoute",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Learn React",
-            "id": 400000014,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "React",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "React Components",
-            "id": 400000015,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "React"
-              }
-            },
-            "item": {
-              "name": "Frontend Framework",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Redux",
-            "id": 400000016,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Frontend Framework"
-              }
-            },
-            "item": {
-              "name": "State Management",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "VueRoute": {
-        "name": "VueRoute",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Learn Vue",
-            "id": 400000017,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Vue",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vue Components",
-            "id": 400000018,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Vue"
-              }
-            },
-            "item": {
-              "name": "Frontend Framework",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Vuex",
-            "id": 400000019,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Frontend Framework"
-              }
-            },
-            "item": {
-              "name": "State Management",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "VanillaRoute": {
-        "name": "VanillaRoute",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Advanced Vanilla JS",
-            "id": 400000020,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Frontend Framework",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Custom State System",
-            "id": 400000021,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Frontend Framework"
-              }
-            },
-            "item": {
-              "name": "State Management",
+              "name": "Authentication",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -588,18 +116,41 @@
         ],
         "locations": []
       },
-      "ExpressRoute": {
-        "name": "ExpressRoute",
+      "DataTrack": {
+        "name": "DataTrack",
+        "exits": [
+          {
+            "name": "ToSQLRoute",
+            "connected_region": "SQLRoute",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToNoSQLRoute",
+            "connected_region": "NoSQLRoute",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "DeploymentBranch": {
+        "name": "DeploymentBranch",
         "exits": [],
         "locations": [
           {
-            "name": "Learn Express",
-            "id": 400000022,
+            "name": "Cloud Provider",
+            "id": 400000059,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "DevOps"
+              }
             },
             "item": {
-              "name": "Express",
+              "name": "Cloud Provider",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -607,16 +158,16 @@
             "locked": true
           },
           {
-            "name": "Build REST APIs",
-            "id": 400000023,
+            "name": "Domain Setup",
+            "id": 400000060,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Express"
+                "item_name": "Cloud Provider"
               }
             },
             "item": {
-              "name": "REST APIs",
+              "name": "Domain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -624,16 +175,136 @@
             "locked": true
           },
           {
-            "name": "MongoDB Integration",
-            "id": 400000024,
+            "name": "SSL Certificate",
+            "id": 400000061,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "REST APIs"
+                "items": [
+                  "Domain",
+                  "HTTPS"
+                ]
               }
             },
             "item": {
-              "name": "Database Integration",
+              "name": "Deployment Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "DesignTrack": {
+        "name": "DesignTrack",
+        "exits": [],
+        "locations": [
+          {
+            "name": "UI/UX Principles",
+            "id": 400000031,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Design Systems"
+              }
+            },
+            "item": {
+              "name": "UI/UX",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Responsive Design",
+            "id": 400000032,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "UI/UX"
+              }
+            },
+            "item": {
+              "name": "Responsive Design",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Accessibility",
+            "id": 400000033,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Responsive Design"
+              }
+            },
+            "item": {
+              "name": "Accessibility",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "DevOpsPath": {
+        "name": "DevOpsPath",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Docker",
+            "id": 400000050,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Command Line"
+              }
+            },
+            "item": {
+              "name": "Docker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "CI/CD",
+            "id": 400000051,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Docker",
+                  "Git"
+                ]
+              }
+            },
+            "item": {
+              "name": "CI/CD",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Monitoring",
+            "id": 400000052,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "CI/CD"
+              }
+            },
+            "item": {
+              "name": "DevOps",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -680,6 +351,60 @@
           {
             "name": "Django ORM",
             "id": 400000027,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "REST APIs"
+              }
+            },
+            "item": {
+              "name": "Database Integration",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "ExpressRoute": {
+        "name": "ExpressRoute",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Learn Express",
+            "id": 400000022,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Express",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Build REST APIs",
+            "id": 400000023,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Express"
+              }
+            },
+            "item": {
+              "name": "REST APIs",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "MongoDB Integration",
+            "id": 400000024,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -750,183 +475,87 @@
           }
         ]
       },
-      "DesignTrack": {
-        "name": "DesignTrack",
-        "exits": [],
-        "locations": [
-          {
-            "name": "UI/UX Principles",
-            "id": 400000031,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Design Systems"
-              }
-            },
-            "item": {
-              "name": "UI/UX",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Responsive Design",
-            "id": 400000032,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "UI/UX"
-              }
-            },
-            "item": {
-              "name": "Responsive Design",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Accessibility",
-            "id": 400000033,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Responsive Design"
-              }
-            },
-            "item": {
-              "name": "Accessibility",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "DataTrack": {
-        "name": "DataTrack",
+      "FrontendTrack": {
+        "name": "FrontendTrack",
         "exits": [
           {
-            "name": "ToSQLRoute",
-            "connected_region": "SQLRoute",
+            "name": "ToReactRoute",
+            "connected_region": "ReactRoute",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "DOM Manipulation"
+              }
+            }
+          },
+          {
+            "name": "ToVueRoute",
+            "connected_region": "VueRoute",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "ToNoSQLRoute",
-            "connected_region": "NoSQLRoute",
+            "name": "ToVanillaRoute",
+            "connected_region": "VanillaRoute",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Algorithms"
+              }
             }
           }
         ],
         "locations": []
       },
-      "SQLRoute": {
-        "name": "SQLRoute",
-        "exits": [],
-        "locations": [
+      "FullStackHub": {
+        "name": "FullStackHub",
+        "exits": [
           {
-            "name": "Learn SQL",
-            "id": 400000034,
+            "name": "ToSecurityBranch",
+            "connected_region": "SecurityBranch",
             "access_rule": {
               "rule": "True_"
-            },
-            "item": {
-              "name": "SQL",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
+            }
           },
           {
-            "name": "PostgreSQL",
-            "id": 400000035,
+            "name": "ToScalingBranch",
+            "connected_region": "ScalingBranch",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "SQL"
-              }
-            },
-            "item": {
-              "name": "Database Basics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
+              "rule": "True_"
+            }
           },
           {
-            "name": "Query Optimization",
-            "id": 400000036,
+            "name": "ToDeploymentBranch",
+            "connected_region": "DeploymentBranch",
             "access_rule": {
-              "rule": "Has",
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToProduction",
+            "connected_region": "ProductionHub",
+            "access_rule": {
+              "rule": "HasAll",
               "args": {
-                "item_name": "Database Basics"
+                "items": [
+                  "Deployment Complete",
+                  "Scaling Complete",
+                  "Security Complete"
+                ]
               }
-            },
-            "item": {
-              "name": "Query Optimization",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
+            }
           }
-        ]
-      },
-      "NoSQLRoute": {
-        "name": "NoSQLRoute",
-        "exits": [],
+        ],
         "locations": [
           {
-            "name": "Learn NoSQL",
-            "id": 400000037,
+            "name": "Full-Stack Integration Milestone",
+            "id": 400000053,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "NoSQL",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "MongoDB",
-            "id": 400000038,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "NoSQL"
-              }
-            },
-            "item": {
-              "name": "Database Basics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Indexing Strategies",
-            "id": 400000039,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Database Basics"
-              }
-            },
-            "item": {
-              "name": "Query Optimization",
+              "name": "Full-Stack Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1031,21 +660,80 @@
           }
         ]
       },
-      "AuthPath": {
-        "name": "AuthPath",
+      "LearningHub": {
+        "name": "LearningHub",
+        "exits": [
+          {
+            "name": "ToVisualPath",
+            "connected_region": "VisualPath",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToLogicPath",
+            "connected_region": "LogicPath",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToServerPath",
+            "connected_region": "ServerPath",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToToolsPath",
+            "connected_region": "ToolsPath",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToStaticWebsite",
+            "connected_region": "StaticWebsiteHub",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Git",
+                      "JavaScript Basics",
+                      "Server Basics"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "CSS",
+                      "HTML"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "LogicPath": {
+        "name": "LogicPath",
         "exits": [],
         "locations": [
           {
-            "name": "Sessions",
-            "id": 400000041,
+            "name": "Learn JavaScript",
+            "id": 400000004,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "HTTP Basics"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Sessions",
+              "name": "JavaScript Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1053,16 +741,16 @@
             "locked": true
           },
           {
-            "name": "JWT",
-            "id": 400000042,
+            "name": "Learn DOM Manipulation",
+            "id": 400000005,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sessions"
+                "item_name": "JavaScript Basics"
               }
             },
             "item": {
-              "name": "JWT",
+              "name": "DOM Manipulation",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1070,16 +758,70 @@
             "locked": true
           },
           {
-            "name": "OAuth",
-            "id": 400000043,
+            "name": "Learn Algorithms",
+            "id": 400000006,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "JWT"
+                "item_name": "JavaScript Basics"
               }
             },
             "item": {
-              "name": "Authentication",
+              "name": "Algorithms",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "NoSQLRoute": {
+        "name": "NoSQLRoute",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Learn NoSQL",
+            "id": 400000037,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "NoSQL",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "MongoDB",
+            "id": 400000038,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "NoSQL"
+              }
+            },
+            "item": {
+              "name": "Database Basics",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Indexing Strategies",
+            "id": 400000039,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Database Basics"
+              }
+            },
+            "item": {
+              "name": "Query Optimization",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1148,18 +890,39 @@
           }
         ]
       },
-      "TestPath": {
-        "name": "TestPath",
+      "ProductionHub": {
+        "name": "ProductionHub",
         "exits": [],
         "locations": [
           {
-            "name": "Unit Tests",
-            "id": 400000047,
+            "name": "Production Deployment",
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Unit Tests",
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "ReactRoute": {
+        "name": "ReactRoute",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Learn React",
+            "id": 400000014,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "React",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1167,16 +930,16 @@
             "locked": true
           },
           {
-            "name": "Integration Tests",
-            "id": 400000048,
+            "name": "React Components",
+            "id": 400000015,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unit Tests"
+                "item_name": "React"
               }
             },
             "item": {
-              "name": "Integration Tests",
+              "name": "Frontend Framework",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1184,16 +947,16 @@
             "locked": true
           },
           {
-            "name": "E2E Tests",
-            "id": 400000049,
+            "name": "Redux",
+            "id": 400000016,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Integration Tests"
+                "item_name": "Frontend Framework"
               }
             },
             "item": {
-              "name": "Testing",
+              "name": "State Management",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1202,21 +965,18 @@
           }
         ]
       },
-      "DevOpsPath": {
-        "name": "DevOpsPath",
+      "SQLRoute": {
+        "name": "SQLRoute",
         "exits": [],
         "locations": [
           {
-            "name": "Docker",
-            "id": 400000050,
+            "name": "Learn SQL",
+            "id": 400000034,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Command Line"
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Docker",
+              "name": "SQL",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1224,19 +984,16 @@
             "locked": true
           },
           {
-            "name": "CI/CD",
-            "id": 400000051,
+            "name": "PostgreSQL",
+            "id": 400000035,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Docker",
-                  "Git"
-                ]
+                "item_name": "SQL"
               }
             },
             "item": {
-              "name": "CI/CD",
+              "name": "Database Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1244,16 +1001,16 @@
             "locked": true
           },
           {
-            "name": "Monitoring",
-            "id": 400000052,
+            "name": "Query Optimization",
+            "id": 400000036,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CI/CD"
+                "item_name": "Database Basics"
               }
             },
             "item": {
-              "name": "DevOps",
+              "name": "Query Optimization",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1262,54 +1019,38 @@
           }
         ]
       },
-      "FullStackHub": {
-        "name": "FullStackHub",
-        "exits": [
-          {
-            "name": "ToSecurityBranch",
-            "connected_region": "SecurityBranch",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToScalingBranch",
-            "connected_region": "ScalingBranch",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToDeploymentBranch",
-            "connected_region": "DeploymentBranch",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "ToProduction",
-            "connected_region": "ProductionHub",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Deployment Complete",
-                  "Scaling Complete",
-                  "Security Complete"
-                ]
-              }
-            }
-          }
-        ],
+      "ScalingBranch": {
+        "name": "ScalingBranch",
+        "exits": [],
         "locations": [
           {
-            "name": "Full-Stack Integration Milestone",
-            "id": 400000053,
+            "name": "Horizontal Scaling",
+            "id": 400000057,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Performance"
+              }
             },
             "item": {
-              "name": "Full-Stack Complete",
+              "name": "Horizontal Scaling",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Microservices",
+            "id": 400000058,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Horizontal Scaling"
+              }
+            },
+            "item": {
+              "name": "Scaling Complete",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1372,124 +1113,383 @@
           }
         ]
       },
-      "ScalingBranch": {
-        "name": "ScalingBranch",
+      "ServerPath": {
+        "name": "ServerPath",
         "exits": [],
         "locations": [
           {
-            "name": "Horizontal Scaling",
-            "id": 400000057,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Performance"
-              }
-            },
-            "item": {
-              "name": "Horizontal Scaling",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Microservices",
-            "id": 400000058,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Horizontal Scaling"
-              }
-            },
-            "item": {
-              "name": "Scaling Complete",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "DeploymentBranch": {
-        "name": "DeploymentBranch",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Cloud Provider",
-            "id": 400000059,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "DevOps"
-              }
-            },
-            "item": {
-              "name": "Cloud Provider",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Domain Setup",
-            "id": 400000060,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Cloud Provider"
-              }
-            },
-            "item": {
-              "name": "Domain",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "SSL Certificate",
-            "id": 400000061,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Domain",
-                  "HTTPS"
-                ]
-              }
-            },
-            "item": {
-              "name": "Deployment Complete",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "ProductionHub": {
-        "name": "ProductionHub",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Production Deployment",
-            "id": null,
+            "name": "Choose Server Language",
+            "id": 400000007,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Victory",
+              "name": "Server Basics",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
+          },
+          {
+            "name": "Learn File I/O",
+            "id": 400000008,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Server Basics"
+              }
+            },
+            "item": {
+              "name": "File I/O",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Learn HTTP Basics",
+            "id": 400000009,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Server Basics"
+              }
+            },
+            "item": {
+              "name": "HTTP Basics",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "StaticWebsiteHub": {
+        "name": "StaticWebsiteHub",
+        "exits": [
+          {
+            "name": "ToFrontendTrack",
+            "connected_region": "FrontendTrack",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToBackendTrack",
+            "connected_region": "BackendTrack",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToDesignTrack",
+            "connected_region": "DesignTrack",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToDataTrack",
+            "connected_region": "DataTrack",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "ToInteractiveApp",
+            "connected_region": "InteractiveAppHub",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Database Basics",
+                      "State Management"
+                    ]
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Frontend Framework",
+                      "REST APIs"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Static Website Milestone",
+            "id": 400000013,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Static Website Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "TestPath": {
+        "name": "TestPath",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Unit Tests",
+            "id": 400000047,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Unit Tests",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Integration Tests",
+            "id": 400000048,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Unit Tests"
+              }
+            },
+            "item": {
+              "name": "Integration Tests",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "E2E Tests",
+            "id": 400000049,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Integration Tests"
+              }
+            },
+            "item": {
+              "name": "Testing",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "ToolsPath": {
+        "name": "ToolsPath",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Learn Git",
+            "id": 400000010,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Git",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Learn Command Line",
+            "id": 400000011,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Command Line",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Learn Package Managers",
+            "id": 400000012,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Command Line"
+              }
+            },
+            "item": {
+              "name": "Package Managers",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "VanillaRoute": {
+        "name": "VanillaRoute",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Advanced Vanilla JS",
+            "id": 400000020,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Frontend Framework",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Custom State System",
+            "id": 400000021,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Frontend Framework"
+              }
+            },
+            "item": {
+              "name": "State Management",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "VisualPath": {
+        "name": "VisualPath",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Learn HTML",
+            "id": 400000001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HTML",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Learn CSS",
+            "id": 400000002,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "HTML"
+              }
+            },
+            "item": {
+              "name": "CSS",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Learn Design Systems",
+            "id": 400000003,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "CSS"
+              }
+            },
+            "item": {
+              "name": "Design Systems",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "VueRoute": {
+        "name": "VueRoute",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Learn Vue",
+            "id": 400000017,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Vue",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vue Components",
+            "id": 400000018,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Vue"
+              }
+            },
+            "item": {
+              "name": "Frontend Framework",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vuex",
+            "id": 400000019,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Frontend Framework"
+              }
+            },
+            "item": {
+              "name": "State Management",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
           }
         ]
       }

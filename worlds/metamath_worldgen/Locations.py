@@ -30,6 +30,7 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
+    "Prove Statement 10": LocationData("Prove Statement 10", "Prove Statement 10", 234790010, False),
     "Prove Statement 2": LocationData("Prove Statement 2", "Prove Statement 2", 234790002, False),
     "Prove Statement 3": LocationData("Prove Statement 3", "Prove Statement 3", 234790003, False),
     "Prove Statement 4": LocationData("Prove Statement 4", "Prove Statement 4", 234790004, False),
@@ -38,5 +39,4 @@ location_table: Dict[str, LocationData] = {
     "Prove Statement 7": LocationData("Prove Statement 7", "Prove Statement 7", 234790007, False),
     "Prove Statement 8": LocationData("Prove Statement 8", "Prove Statement 8", 234790008, False),
     "Prove Statement 9": LocationData("Prove Statement 9", "Prove Statement 9", 234790009, False),
-    "Prove Statement 10": LocationData("Prove Statement 10", "Prove Statement 10", 234790010, False),
 }

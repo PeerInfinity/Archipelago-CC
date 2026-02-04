@@ -31,21 +31,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("South Mine Gate", player),
-        Has('South Mine Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Stuck Bunker Door", player),
-        Has('Timed Dynamite', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North Mine Gate", player),
-        Has('North Mine Key', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Mob Camp Locked Door", player),
         Has('Mob Camp Key', 1)
     )
@@ -54,104 +39,44 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Mountain Ruin Gate", player),
         Has('Mountain Ruin Key', 1)
     )
+
+    world.set_rule(
+        multiworld.get_entrance("North Mine Gate", player),
+        Has('North Mine Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Stuck Bunker Door", player),
+        Has('Timed Dynamite', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South Mine Gate", player),
+        Has('South Mine Key', 1)
+    )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Swamp Lizbeth Murkwater Mission End", player),
-        Has('Dead Fish', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Junkyard Area Chest Ancient Tablet", player),
+        multiworld.get_location("Caravan Chest Scraps 1", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Junkyard Area Daryl Mission End", player),
-        Has('Ancient Tablet', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("South House Chest Scraps 1", player),
+        multiworld.get_location("Caravan Chest Scraps 2", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("South House Chest Scraps 2", player),
+        multiworld.get_location("Caravan Chest Scraps 3", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("South House Chest Scraps 3", player),
+        multiworld.get_location("Caravan Chest Scraps 4", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("South House Chest Scraps 4", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("South House Chest Scraps 5", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("South House Chest Scraps 6", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("South Mine Inside Green Paint Can", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Middle Station Theodore Mission End", player),
-        Has('Blue Box', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Watchtower Pink Paint Can", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Haunted House Sasha Mission End", player),
-        Has('Page Drawing', 8)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Port Santiago Mission End", player),
-        Has('Journal', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench House Chest Scraps 1", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench House Chest Scraps 2", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench House Chest Scraps 3", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench House Chest Scraps 4", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench House Chest Scraps 5", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Trench House Chest Scraps 6", player),
+        multiworld.get_location("Caravan Chest Scraps 5", player),
         Has('Lockpicks', 1)
     )
 
@@ -181,8 +106,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Workshop John Smith Mission End", player),
-        Has('Box of Rockets', 1)
+        multiworld.get_location("Haunted House Sasha Mission End", player),
+        Has('Page Drawing', 8)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Junkyard Area Chest Ancient Tablet", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Junkyard Area Daryl Mission End", player),
+        Has('Ancient Tablet', 1)
     )
 
     world.set_rule(
@@ -191,93 +126,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("North Mine Inside Blue Paint Can", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Museum Paul Mission End", player),
-        Has('Remote Explosive x8', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("West Beach Chest Scraps 1", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("West Beach Chest Scraps 2", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("West Beach Chest Scraps 3", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("West Beach Chest Scraps 4", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("West Beach Chest Scraps 5", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("West Beach Chest Scraps 6", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caravan Chest Scraps 1", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caravan Chest Scraps 2", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caravan Chest Scraps 3", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caravan Chest Scraps 4", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Caravan Chest Scraps 5", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Towers Ronny Mission End", player),
-        Has('Employment Contracts', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("North Beach Chest Scraps 1", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("North Beach Chest Scraps 2", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("North Beach Chest Scraps 3", player),
-        Has('Lockpicks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("North Beach Chest Scraps 4", player),
-        Has('Lockpicks', 1)
+        multiworld.get_location("Middle Station Theodore Mission End", player),
+        Has('Blue Box', 1)
     )
 
     world.set_rule(
@@ -321,8 +171,78 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Morse Bunker Chest Scraps 1", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Morse Bunker Chest Scraps 2", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Morse Bunker Chest Scraps 3", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Morse Bunker Chest Scraps 4", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Morse Bunker Chest Scraps 5", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("Mountain Ruin Inside Red Paint Can", player),
         Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Museum Paul Mission End", player),
+        Has('Remote Explosive x8', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North Mine Inside Blue Paint Can", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North Beach Chest Scraps 1", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North Beach Chest Scraps 2", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North Beach Chest Scraps 3", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North Beach Chest Scraps 4", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pickle Val Jar of Pickles", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pickle Val Pickle Lady Mission End", player),
+        Has('Jar of Pickles', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Port Santiago Mission End", player),
+        Has('Journal', 1)
     )
 
     world.set_rule(
@@ -346,36 +266,116 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Pickle Val Jar of Pickles", player),
+        multiworld.get_location("South House Chest Scraps 1", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Pickle Val Pickle Lady Mission End", player),
-        Has('Jar of Pickles', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Morse Bunker Chest Scraps 1", player),
+        multiworld.get_location("South House Chest Scraps 2", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Morse Bunker Chest Scraps 2", player),
+        multiworld.get_location("South House Chest Scraps 3", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Morse Bunker Chest Scraps 3", player),
+        multiworld.get_location("South House Chest Scraps 4", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Morse Bunker Chest Scraps 4", player),
+        multiworld.get_location("South House Chest Scraps 5", player),
         Has('Lockpicks', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Morse Bunker Chest Scraps 5", player),
+        multiworld.get_location("South House Chest Scraps 6", player),
         Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("South Mine Inside Green Paint Can", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Swamp Lizbeth Murkwater Mission End", player),
+        Has('Dead Fish', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Towers Ronny Mission End", player),
+        Has('Employment Contracts', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench House Chest Scraps 1", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench House Chest Scraps 2", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench House Chest Scraps 3", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench House Chest Scraps 4", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench House Chest Scraps 5", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Trench House Chest Scraps 6", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Watchtower Pink Paint Can", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("West Beach Chest Scraps 1", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("West Beach Chest Scraps 2", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("West Beach Chest Scraps 3", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("West Beach Chest Scraps 4", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("West Beach Chest Scraps 5", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("West Beach Chest Scraps 6", player),
+        Has('Lockpicks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Workshop John Smith Mission End", player),
+        Has('Box of Rockets', 1)
     )

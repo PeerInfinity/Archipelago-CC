@@ -23,6 +23,136 @@
         ],
         "locations": []
       },
+      "ArithmeticOperations": {
+        "name": "ArithmeticOperations",
+        "exits": [
+          {
+            "name": "ToProofCompletion",
+            "connected_region": "ProofCompletion",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "addassi",
+                  "oveq2i"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Equality Substitution Right",
+            "id": 200000006,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "df-2"
+              }
+            },
+            "item": {
+              "name": "oveq2i",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Equality Substitution Left",
+            "id": 200000007,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "df-3"
+              }
+            },
+            "item": {
+              "name": "oveq1i",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Addition Associativity",
+            "id": 200000008,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "2cn",
+                  "ax-1cn"
+                ]
+              }
+            },
+            "item": {
+              "name": "addassi",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Axioms": {
+        "name": "Axioms",
+        "exits": [
+          {
+            "name": "BackToDefinitions",
+            "connected_region": "Definitions",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1 is Complex",
+            "id": 200000004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "ax-1cn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "BasicProperties": {
+        "name": "BasicProperties",
+        "exits": [
+          {
+            "name": "BackToDefinitionsFromProperties",
+            "connected_region": "Definitions",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2 is Complex",
+            "id": 200000005,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "2cn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "Definitions": {
         "name": "Definitions",
         "exits": [
@@ -91,136 +221,6 @@
             },
             "item": {
               "name": "df-4",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Axioms": {
-        "name": "Axioms",
-        "exits": [
-          {
-            "name": "BackToDefinitions",
-            "connected_region": "Definitions",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "1 is Complex",
-            "id": 200000004,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "ax-1cn",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "BasicProperties": {
-        "name": "BasicProperties",
-        "exits": [
-          {
-            "name": "BackToDefinitionsFromProperties",
-            "connected_region": "Definitions",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "2 is Complex",
-            "id": 200000005,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "2cn",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "ArithmeticOperations": {
-        "name": "ArithmeticOperations",
-        "exits": [
-          {
-            "name": "ToProofCompletion",
-            "connected_region": "ProofCompletion",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "addassi",
-                  "oveq2i"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Equality Substitution Right",
-            "id": 200000006,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "df-2"
-              }
-            },
-            "item": {
-              "name": "oveq2i",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Equality Substitution Left",
-            "id": 200000007,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "df-3"
-              }
-            },
-            "item": {
-              "name": "oveq1i",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Addition Associativity",
-            "id": 200000008,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "2cn",
-                  "ax-1cn"
-                ]
-              }
-            },
-            "item": {
-              "name": "addassi",
               "player": 1,
               "advancement": true,
               "type": "None"

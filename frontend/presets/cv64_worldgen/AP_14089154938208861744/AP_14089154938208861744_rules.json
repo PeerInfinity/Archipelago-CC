@@ -99,12 +99,12 @@
         ],
         "locations": []
       },
-      "Forest of Silence: first half": {
-        "name": "Forest of Silence: first half",
+      "Castle Center: big crystal": {
+        "name": "Castle Center: big crystal",
         "exits": [
           {
-            "name": "Descending bridge gate",
-            "connected_region": "Forest of Silence: second half",
+            "name": "Activate crystal and ride elevator",
+            "connected_region": "Castle Center: elevator top",
             "access_rule": {
               "rule": "True_"
             }
@@ -112,349 +112,35 @@
         ],
         "locations": [
           {
-            "name": "Forest of Silence: Grab practice pillars - Right",
-            "id": 12992540,
+            "name": "Castle Center: Behind the seal",
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "300 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Grab practice pillars - Top",
-            "id": 12992531,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Healing kit",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: King Skeleton's bridge",
-            "id": 12992524,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Moon gazebo inside",
-            "id": 12992538,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Moon gazebo roof",
-            "id": 12992537,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "300 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Sun gazebo inside",
-            "id": 12992523,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Sun gazebo roof",
-            "id": 12992515,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Healing kit",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Were-tiger switch",
-            "id": 12992522,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Dirge maiden gate",
-            "id": 12992519,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Dirge maiden crypt - Upper",
-            "id": 12992520,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Left Tower Key",
+              "name": "Crystal",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Dirge maiden pedestal plaque",
-            "id": 12992518,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Tri-corpse save junction",
-            "id": 12992527,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Descending bridge wall side",
-            "id": 12992536,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Descending bridge switch side",
-            "id": 12992521,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
-      "Forest of Silence: second half": {
-        "name": "Forest of Silence: second half",
+      "Castle Center: elevator top": {
+        "name": "Castle Center: elevator top",
         "exits": [
           {
-            "name": "Werewolf gate",
-            "connected_region": "Forest of Silence: end area",
+            "name": "Castle Center Reinhardt (Medusa Head) exit",
+            "connected_region": "Duel Tower",
             "access_rule": {
               "rule": "True_"
             }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Forest of Silence: Tri-corpse gate - Right",
-            "id": 12992526,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
           },
           {
-            "name": "Forest of Silence: Three-crypt plaza main path crypt - Upper-front",
-            "id": 12992539,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front",
-            "id": 12992528,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Upper",
-            "id": 12992542,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PowerUp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Invisible bridge platform",
-            "id": 12992514,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Werewolf crypt - Right",
-            "id": 12992516,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Werewolf statue plaque",
-            "id": 12992513,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Werewolf path near tree",
-            "id": 12992525,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Forest of Silence: Three-crypt plaza switch",
-            "id": 12992530,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Forest of Silence: end area": {
-        "name": "Forest of Silence: end area",
-        "exits": [
-          {
-            "name": "Dracula's drawbridge",
-            "connected_region": "Castle Wall: main area",
+            "name": "Castle Center Carrie (Ghost) exit",
+            "connected_region": "Tower of Science: turret lab",
             "access_rule": {
               "rule": "True_"
             }
@@ -462,233 +148,13 @@
         ],
         "locations": []
       },
-      "Castle Wall: main area": {
-        "name": "Castle Wall: main area",
-        "exits": [
-          {
-            "name": "Central portcullis",
-            "connected_region": "Castle Wall: exit room",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Left Tower door",
-            "connected_region": "Castle Wall: left tower",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Left Tower Key"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Castle Wall: Above bottom right tower door",
-            "id": 12992989,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: White Dragons switch door",
-            "id": 12992851,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: Central rampart near right tower",
-            "id": 12992854,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: Central rampart near left tower",
-            "id": 12992853,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: Sandbag shelf - Visible",
-            "id": 12992856,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: Sandbag shelf - Invisible",
-            "id": 12992846,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Castle Wall: exit room": {
-        "name": "Castle Wall: exit room",
+      "Castle Center: library": {
+        "name": "Castle Center: library",
         "exits": [],
         "locations": [
           {
-            "name": "Castle Wall: Ground gatehouse - Middle",
-            "id": 12992857,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Castle Wall: left tower": {
-        "name": "Castle Wall: left tower",
-        "exits": [
-          {
-            "name": "End portcullis",
-            "connected_region": "Villa: dog gates",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Castle Wall: Above bottom left tower door",
-            "id": 12992990,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: Left tower child ledge",
-            "id": 12992988,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mandragora",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Wall: Dracula cutscene switch door",
-            "id": 12992852,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Villa: dog gates": {
-        "name": "Villa: dog gates",
-        "exits": [
-          {
-            "name": "Front dog gates",
-            "connected_region": "Villa: main interior",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Villa: Outer front gate - Left",
-            "id": 12992819,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Outer front gate - Right",
-            "id": 12992818,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Outer front gate platform",
-            "id": 12992820,
+            "name": "Castle Center: Inside upper cracked wall",
+            "id": 12992630,
             "access_rule": {
               "rule": "True_"
             },
@@ -701,482 +167,8 @@
             "locked": true
           },
           {
-            "name": "Villa: Inner front gate dog food",
-            "id": 12992824,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Villa: main interior": {
-        "name": "Villa: main interior",
-        "exits": [
-          {
-            "name": "To Storeroom door",
-            "connected_region": "Villa: storeroom",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Storeroom Key"
-              }
-            }
-          },
-          {
-            "name": "To Archives door",
-            "connected_region": "Villa: archives",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Archives Key"
-              }
-            }
-          },
-          {
-            "name": "To maze gate",
-            "connected_region": "Villa: maze",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Garden Key"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Villa: Front yard cross grave near gates",
-            "id": 12992817,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Special1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Front yard cross grave near porch",
-            "id": 12992830,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Science Key1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Front yard visitor's tombstone",
-            "id": 12992815,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Healing kit",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Midnight fountain - Front-left",
-            "id": 12992825,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Midnight fountain - Front-right",
-            "id": 12992816,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Special1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Midnight fountain - Middle-left",
-            "id": 12992826,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Midnight fountain - Middle-right",
-            "id": 12992829,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Midnight fountain - Rear-left",
-            "id": 12992827,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Midnight fountain - Rear-right",
-            "id": 12992828,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PowerUp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer lower level - Front-right",
-            "id": 12992573,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "300 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer lower level - Front-left",
-            "id": 12992571,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer lower level - Middle-left",
-            "id": 12992572,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "100 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer lower level - Rear-right",
-            "id": 12992568,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer lower level - Rear-left",
-            "id": 12992569,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer upper-right pot",
-            "id": 12992558,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "100 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer upper-left pot",
-            "id": 12992559,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Foyer sofa",
-            "id": 12992557,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Special1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rose garden staircase bottom",
-            "id": 12992564,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Magical Nitro",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Bedroom near chairs",
-            "id": 12992563,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Bedroom near bed",
-            "id": 12992562,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Vincent",
-            "id": 12992547,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Mary's room table",
-            "id": 12992555,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Dining room rose vase",
-            "id": 12992554,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Special1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Living room - Right pot",
-            "id": 12992550,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure ampoule",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Living room - Left pot",
-            "id": 12992549,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Living room clawed painting",
-            "id": 12992556,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Living room ceiling light",
-            "id": 12992552,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Living room lion head",
-            "id": 12992560,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PowerUp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Maze garden exit knight",
-            "id": 12992551,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Villa: storeroom": {
-        "name": "Villa: storeroom",
-        "exits": [
-          {
-            "name": "From Storeroom door",
-            "connected_region": "Villa: main interior",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Storeroom Key"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Villa: Storeroom - Left",
-            "id": 12992566,
+            "name": "Castle Center: Library bookshelf",
+            "id": 12992870,
             "access_rule": {
               "rule": "True_"
             },
@@ -1187,894 +179,8 @@
               "type": "None"
             },
             "locked": true
-          },
-          {
-            "name": "Villa: Storeroom - Right",
-            "id": 12992567,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Storeroom statue",
-            "id": 12992561,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
           }
         ]
-      },
-      "Villa: archives": {
-        "name": "Villa: archives",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Villa: Archives table",
-            "id": 12992553,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sun card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Archives rear corner",
-            "id": 12992548,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Villa: maze": {
-        "name": "Villa: maze",
-        "exits": [
-          {
-            "name": "From maze gate",
-            "connected_region": "Villa: servants entrance",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Garden Key"
-              }
-            }
-          },
-          {
-            "name": "Copper door",
-            "connected_region": "Villa: crypt",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Copper Key"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Villa: Front maze garden - Malus start torch",
-            "id": 12992883,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Front maze garden - Malus's hiding bush",
-            "id": 12992876,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Science Key3",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Front maze garden - Frankie's left dead-end",
-            "id": 12992887,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Front maze garden - Frankie's right dead-end urn",
-            "id": 12992878,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Front",
-            "id": 12992882,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sun card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front",
-            "id": 12992881,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear",
-            "id": 12992884,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Rear",
-            "id": 12992880,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rear maze garden - Viewing platform dead-end",
-            "id": 12992886,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Rear maze garden - Past-exit dead-end",
-            "id": 12992885,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Servants' path small alcove",
-            "id": 12992890,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Villa: servants entrance": {
-        "name": "Villa: servants entrance",
-        "exits": [
-          {
-            "name": "Servants' door",
-            "connected_region": "Villa: main interior",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Villa: Servants' entrance",
-            "id": 12992574,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Villa: crypt": {
-        "name": "Villa: crypt",
-        "exits": [
-          {
-            "name": "From bridge door",
-            "connected_region": "Villa: maze",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Villa Reinhardt (daytime) exit",
-            "connected_region": "Tunnel: first half",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Villa Carrie (nighttime) exit",
-            "connected_region": "Underground Waterway: main area",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Villa: Crypt entrance",
-            "id": 12992888,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Crypt bridge upstream",
-            "id": 12992889,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Clocktower Key2",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Crypt - Left from entrance",
-            "id": 12992713,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Crypt - Right from entrance",
-            "id": 12992704,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Crypt - Left wall",
-            "id": 12992706,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Moon card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Crypt - Right wall",
-            "id": 12992705,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Clocktower Key1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Villa: Crypt - Right of coffin",
-            "id": 12992712,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "300 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tunnel: first half": {
-        "name": "Tunnel: first half",
-        "exits": [
-          {
-            "name": "Gondola ride",
-            "connected_region": "Tunnel: second half",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Tunnel: Landing point",
-            "id": 12992919,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Landing point rock crusher",
-            "id": 12992918,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sun card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Stepping stone alcove - Left",
-            "id": 12992903,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Twin arrow signs",
-            "id": 12992917,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Near lonesome bucket",
-            "id": 12992905,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure ampoule",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Lonesome bucket poison pit",
-            "id": 12992913,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Lonesome bucket-Albert junction",
-            "id": 12992912,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Albert's campsite",
-            "id": 12992914,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Albert's poison pit",
-            "id": 12992915,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "100 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Gondola rock crusher sun door - Middle",
-            "id": 12992926,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Archives Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Gondola rock crusher sun door - Right",
-            "id": 12992904,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Gondola rock crusher",
-            "id": 12992924,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Red gondola station",
-            "id": 12992916,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Gondola transfer point",
-            "id": 12992902,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Storeroom Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tunnel: second half": {
-        "name": "Tunnel: second half",
-        "exits": [
-          {
-            "name": "End Tunnel door",
-            "connected_region": "Castle Center: main area",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Tunnel: Corpse bucket poison pit",
-            "id": 12992910,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Corpse bucket moon door - Right",
-            "id": 12992901,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel poison pit start",
-            "id": 12992909,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Exit door poison pit start",
-            "id": 12992908,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel poison pit end",
-            "id": 12992907,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Exit door poison pit end",
-            "id": 12992900,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel",
-            "id": 12992911,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel zone save junction",
-            "id": 12992906,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Healing kit",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel zone moon door - Left",
-            "id": 12992899,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel zone sun door - Left",
-            "id": 12992898,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tunnel: Shovel zone sun door - Middle",
-            "id": 12992925,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast chicken",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Underground Waterway: main area": {
-        "name": "Underground Waterway: main area",
-        "exits": [
-          {
-            "name": "Final waterfall",
-            "connected_region": "Underground Waterway: end",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Underground Waterway: Near entrance corridor",
-            "id": 12992588,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Clocktower Key3",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Underground Waterway: Across from entrance",
-            "id": 12992590,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "300 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Underground Waterway: Across poison parkour ledges",
-            "id": 12992589,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "300 GOLD",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Underground Waterway: Waterfall alcove ledge",
-            "id": 12992599,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PowerUp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Underground Waterway: Brick platforms save corridor",
-            "id": 12992602,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Underground Waterway: Above skeleton crusher ledge",
-            "id": 12992598,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Underground Waterway: end": {
-        "name": "Underground Waterway: end",
-        "exits": [
-          {
-            "name": "End Waterway door",
-            "connected_region": "Castle Center: main area",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
       },
       "Castle Center: main area": {
         "name": "Castle Center: main area",
@@ -2849,13 +955,70 @@
           }
         ]
       },
-      "Castle Center: library": {
-        "name": "Castle Center: library",
+      "Castle Keep: Dracula's chamber": {
+        "name": "Castle Keep: Dracula's chamber",
         "exits": [],
         "locations": [
           {
-            "name": "Castle Center: Inside upper cracked wall",
-            "id": 12992630,
+            "name": "Dracula",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "The Count Downed",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Castle Keep: exterior": {
+        "name": "Castle Keep: exterior",
+        "exits": [
+          {
+            "name": "Dracula's door",
+            "connected_region": "Castle Keep: Dracula's chamber",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Castle Keep: Left Dracula door flame",
+            "id": 12992687,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Keep: Right Dracula door flame",
+            "id": 12992686,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PowerUp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Keep: Behind Dracula's chamber",
+            "id": 12992703,
             "access_rule": {
               "rule": "True_"
             },
@@ -2868,13 +1031,13 @@
             "locked": true
           },
           {
-            "name": "Castle Center: Library bookshelf",
-            "id": 12992870,
+            "name": "Castle Keep: Dracula's floating cube",
+            "id": 12992693,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2883,12 +1046,32 @@
           }
         ]
       },
-      "Castle Center: big crystal": {
-        "name": "Castle Center: big crystal",
+      "Castle Wall: exit room": {
+        "name": "Castle Wall: exit room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Castle Wall: Ground gatehouse - Middle",
+            "id": 12992857,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Castle Wall: left tower": {
+        "name": "Castle Wall: left tower",
         "exits": [
           {
-            "name": "Activate crystal and ride elevator",
-            "connected_region": "Castle Center: elevator top",
+            "name": "End portcullis",
+            "connected_region": "Villa: dog gates",
             "access_rule": {
               "rule": "True_"
             }
@@ -2896,41 +1079,311 @@
         ],
         "locations": [
           {
-            "name": "Castle Center: Behind the seal",
-            "id": null,
+            "name": "Castle Wall: Above bottom left tower door",
+            "id": 12992990,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Crystal",
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: Left tower child ledge",
+            "id": 12992988,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mandragora",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: Dracula cutscene switch door",
+            "id": 12992852,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
           }
         ]
       },
-      "Castle Center: elevator top": {
-        "name": "Castle Center: elevator top",
+      "Castle Wall: main area": {
+        "name": "Castle Wall: main area",
         "exits": [
           {
-            "name": "Castle Center Reinhardt (Medusa Head) exit",
-            "connected_region": "Duel Tower",
+            "name": "Central portcullis",
+            "connected_region": "Castle Wall: exit room",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "Castle Center Carrie (Ghost) exit",
-            "connected_region": "Tower of Science: turret lab",
+            "name": "Left Tower door",
+            "connected_region": "Castle Wall: left tower",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Left Tower Key"
+              }
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Castle Wall: Above bottom right tower door",
+            "id": 12992989,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: White Dragons switch door",
+            "id": 12992851,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: Central rampart near right tower",
+            "id": 12992854,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: Central rampart near left tower",
+            "id": 12992853,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: Sandbag shelf - Visible",
+            "id": 12992856,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Wall: Sandbag shelf - Invisible",
+            "id": 12992846,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Clock Tower: end": {
+        "name": "Clock Tower: end",
+        "exits": [
+          {
+            "name": "From Clocktower Door 2",
+            "connected_region": "Clock Tower: middle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clocktower Key2"
+              }
+            }
+          },
+          {
+            "name": "Clocktower Door 3",
+            "connected_region": "Castle Keep: exterior",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clocktower Key3"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Clock Tower: Final room key ledge",
+            "id": 12992683,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Clock Tower: middle": {
+        "name": "Clock Tower: middle",
+        "exits": [
+          {
+            "name": "From Clocktower Door 1",
+            "connected_region": "Clock Tower: start",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clocktower Key1"
+              }
+            }
+          },
+          {
+            "name": "To Clocktower Door 2",
+            "connected_region": "Clock Tower: end",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clocktower Key2"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Clock Tower: Bone Pillar chasm room - Front-left",
+            "id": 12992677,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Special1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Clock Tower: Bone Pillar chasm room - Front-right",
+            "id": 12992678,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Clock Tower: Bone Pillar chasm room key alcove",
+            "id": 12992684,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Clock Tower: start": {
+        "name": "Clock Tower: start",
+        "exits": [
+          {
+            "name": "To Clocktower Door 1",
+            "connected_region": "Clock Tower: middle",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Clocktower Key1"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Clock Tower: Gear climb room side",
+            "id": 12992685,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Clock Tower: Gear climb room corner",
+            "id": 12992679,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
       },
       "Duel Tower": {
         "name": "Duel Tower",
@@ -3001,6 +1454,445 @@
             },
             "item": {
               "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Forest of Silence: end area": {
+        "name": "Forest of Silence: end area",
+        "exits": [
+          {
+            "name": "Dracula's drawbridge",
+            "connected_region": "Castle Wall: main area",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Forest of Silence: first half": {
+        "name": "Forest of Silence: first half",
+        "exits": [
+          {
+            "name": "Descending bridge gate",
+            "connected_region": "Forest of Silence: second half",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Forest of Silence: Grab practice pillars - Right",
+            "id": 12992540,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Grab practice pillars - Top",
+            "id": 12992531,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Healing kit",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: King Skeleton's bridge",
+            "id": 12992524,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Moon gazebo inside",
+            "id": 12992538,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Moon gazebo roof",
+            "id": 12992537,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Sun gazebo inside",
+            "id": 12992523,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Sun gazebo roof",
+            "id": 12992515,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Healing kit",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Were-tiger switch",
+            "id": 12992522,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Dirge maiden gate",
+            "id": 12992519,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Dirge maiden crypt - Upper",
+            "id": 12992520,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Left Tower Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Dirge maiden pedestal plaque",
+            "id": 12992518,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Tri-corpse save junction",
+            "id": 12992527,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Descending bridge wall side",
+            "id": 12992536,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Descending bridge switch side",
+            "id": 12992521,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Forest of Silence: second half": {
+        "name": "Forest of Silence: second half",
+        "exits": [
+          {
+            "name": "Werewolf gate",
+            "connected_region": "Forest of Silence: end area",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Forest of Silence: Tri-corpse gate - Right",
+            "id": 12992526,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Three-crypt plaza main path crypt - Upper-front",
+            "id": 12992539,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front",
+            "id": 12992528,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Three-crypt plaza back-facing crypt - Upper",
+            "id": 12992542,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PowerUp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Invisible bridge platform",
+            "id": 12992514,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Werewolf crypt - Right",
+            "id": 12992516,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Werewolf statue plaque",
+            "id": 12992513,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Werewolf path near tree",
+            "id": 12992525,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest of Silence: Three-crypt plaza switch",
+            "id": 12992530,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Room of Clocks": {
+        "name": "Room of Clocks",
+        "exits": [
+          {
+            "name": "Defeat boss gate",
+            "connected_region": "Clock Tower: start",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Room of Clocks: Left from entrance hallway",
+            "id": 12992710,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Room of Clocks: Right from entrance hallway",
+            "id": 12992707,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magical Nitro",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Room of Clocks: Right of Contract",
+            "id": 12992709,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tower of Execution: gated ledge": {
+        "name": "Tower of Execution: gated ledge",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Execution: Key gate alcove - Left",
+            "id": 12992666,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3110,102 +2002,6 @@
           }
         ]
       },
-      "Tower of Execution: gated ledge": {
-        "name": "Tower of Execution: gated ledge",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tower of Execution: Key gate alcove - Left",
-            "id": 12992666,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Purifying",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tower of Science: turret lab": {
-        "name": "Tower of Science: turret lab",
-        "exits": [
-          {
-            "name": "Tower of Science start passage",
-            "connected_region": "Castle Center: elevator top",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Science Door 1",
-            "connected_region": "Tower of Science: locked key1 room",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Science Key1"
-              }
-            }
-          },
-          {
-            "name": "To Science Door 2",
-            "connected_region": "Tower of Science: spiky conveyors",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Science Key2"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Tower of Science: Elevator hallway",
-            "id": 12993020,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sun card",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tower of Science: Plain sight side room",
-            "id": 12993023,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tower of Science: Staircase side room",
-            "id": 12993019,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(L)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
       "Tower of Science: locked key1 room": {
         "name": "Tower of Science: locked key1 room",
         "exits": [],
@@ -3218,6 +2014,40 @@
             },
             "item": {
               "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tower of Science: locked key3 room": {
+        "name": "Tower of Science: locked key3 room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tower of Science: Locked Key3 room - Right",
+            "id": 12993018,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tower of Science: Locked Key3 room - Left",
+            "id": 12993017,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3302,18 +2132,46 @@
           }
         ]
       },
-      "Tower of Science: locked key3 room": {
-        "name": "Tower of Science: locked key3 room",
-        "exits": [],
+      "Tower of Science: turret lab": {
+        "name": "Tower of Science: turret lab",
+        "exits": [
+          {
+            "name": "Tower of Science start passage",
+            "connected_region": "Castle Center: elevator top",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Science Door 1",
+            "connected_region": "Tower of Science: locked key1 room",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Science Key1"
+              }
+            }
+          },
+          {
+            "name": "To Science Door 2",
+            "connected_region": "Tower of Science: spiky conveyors",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Science Key2"
+              }
+            }
+          }
+        ],
         "locations": [
           {
-            "name": "Tower of Science: Locked Key3 room - Right",
-            "id": 12993018,
+            "name": "Tower of Science: Elevator hallway",
+            "id": 12993020,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3321,13 +2179,27 @@
             "locked": true
           },
           {
-            "name": "Tower of Science: Locked Key3 room - Left",
-            "id": 12993017,
+            "name": "Tower of Science: Plain sight side room",
+            "id": 12993023,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tower of Science: Staircase side room",
+            "id": 12993019,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3455,12 +2327,12 @@
           }
         ]
       },
-      "Room of Clocks": {
-        "name": "Room of Clocks",
+      "Tunnel: first half": {
+        "name": "Tunnel: first half",
         "exits": [
           {
-            "name": "Defeat boss gate",
-            "connected_region": "Clock Tower: start",
+            "name": "Gondola ride",
+            "connected_region": "Tunnel: second half",
             "access_rule": {
               "rule": "True_"
             }
@@ -3468,8 +2340,78 @@
         ],
         "locations": [
           {
-            "name": "Room of Clocks: Left from entrance hallway",
-            "id": 12992710,
+            "name": "Tunnel: Landing point",
+            "id": 12992919,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Landing point rock crusher",
+            "id": 12992918,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sun card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Stepping stone alcove - Left",
+            "id": 12992903,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Twin arrow signs",
+            "id": 12992917,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Near lonesome bucket",
+            "id": 12992905,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cure ampoule",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Lonesome bucket poison pit",
+            "id": 12992913,
             "access_rule": {
               "rule": "True_"
             },
@@ -3482,53 +2424,22 @@
             "locked": true
           },
           {
-            "name": "Room of Clocks: Right from entrance hallway",
-            "id": 12992707,
+            "name": "Tunnel: Lonesome bucket-Albert junction",
+            "id": 12992912,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Magical Nitro",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Room of Clocks: Right of Contract",
-            "id": 12992709,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": true
-          }
-        ]
-      },
-      "Clock Tower: start": {
-        "name": "Clock Tower: start",
-        "exits": [
+          },
           {
-            "name": "To Clocktower Door 1",
-            "connected_region": "Clock Tower: middle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Clocktower Key1"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Clock Tower: Gear climb room side",
-            "id": 12992685,
+            "name": "Tunnel: Albert's campsite",
+            "id": 12992914,
             "access_rule": {
               "rule": "True_"
             },
@@ -3541,13 +2452,251 @@
             "locked": true
           },
           {
-            "name": "Clock Tower: Gear climb room corner",
-            "id": 12992679,
+            "name": "Tunnel: Albert's poison pit",
+            "id": 12992915,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "100 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Gondola rock crusher sun door - Middle",
+            "id": 12992926,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Archives Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Gondola rock crusher sun door - Right",
+            "id": 12992904,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
               "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Gondola rock crusher",
+            "id": 12992924,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Red gondola station",
+            "id": 12992916,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Gondola transfer point",
+            "id": 12992902,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Storeroom Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tunnel: second half": {
+        "name": "Tunnel: second half",
+        "exits": [
+          {
+            "name": "End Tunnel door",
+            "connected_region": "Castle Center: main area",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Tunnel: Corpse bucket poison pit",
+            "id": 12992910,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Corpse bucket moon door - Right",
+            "id": 12992901,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel poison pit start",
+            "id": 12992909,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Exit door poison pit start",
+            "id": 12992908,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel poison pit end",
+            "id": 12992907,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Exit door poison pit end",
+            "id": 12992900,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel",
+            "id": 12992911,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel zone save junction",
+            "id": 12992906,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Healing kit",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel zone moon door - Left",
+            "id": 12992899,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel zone sun door - Left",
+            "id": 12992898,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tunnel: Shovel zone sun door - Middle",
+            "id": 12992925,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3556,39 +2705,39 @@
           }
         ]
       },
-      "Clock Tower: middle": {
-        "name": "Clock Tower: middle",
+      "Underground Waterway: end": {
+        "name": "Underground Waterway: end",
         "exits": [
           {
-            "name": "From Clocktower Door 1",
-            "connected_region": "Clock Tower: start",
+            "name": "End Waterway door",
+            "connected_region": "Castle Center: main area",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Clocktower Key1"
-              }
+              "rule": "True_"
             }
-          },
+          }
+        ],
+        "locations": []
+      },
+      "Underground Waterway: main area": {
+        "name": "Underground Waterway: main area",
+        "exits": [
           {
-            "name": "To Clocktower Door 2",
-            "connected_region": "Clock Tower: end",
+            "name": "Final waterfall",
+            "connected_region": "Underground Waterway: end",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Clocktower Key2"
-              }
+              "rule": "True_"
             }
           }
         ],
         "locations": [
           {
-            "name": "Clock Tower: Bone Pillar chasm room - Front-left",
-            "id": 12992677,
+            "name": "Underground Waterway: Near entrance corridor",
+            "id": 12992588,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Special1",
+              "name": "Clocktower Key3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3596,13 +2745,13 @@
             "locked": true
           },
           {
-            "name": "Clock Tower: Bone Pillar chasm room - Front-right",
-            "id": 12992678,
+            "name": "Underground Waterway: Across from entrance",
+            "id": 12992590,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3610,8 +2759,50 @@
             "locked": true
           },
           {
-            "name": "Clock Tower: Bone Pillar chasm room key alcove",
-            "id": 12992684,
+            "name": "Underground Waterway: Across poison parkour ledges",
+            "id": 12992589,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Underground Waterway: Waterfall alcove ledge",
+            "id": 12992599,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PowerUp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Underground Waterway: Brick platforms save corridor",
+            "id": 12992602,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Underground Waterway: Above skeleton crusher ledge",
+            "id": 12992598,
             "access_rule": {
               "rule": "True_"
             },
@@ -3625,90 +2816,13 @@
           }
         ]
       },
-      "Clock Tower: end": {
-        "name": "Clock Tower: end",
-        "exits": [
-          {
-            "name": "From Clocktower Door 2",
-            "connected_region": "Clock Tower: middle",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Clocktower Key2"
-              }
-            }
-          },
-          {
-            "name": "Clocktower Door 3",
-            "connected_region": "Castle Keep: exterior",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Clocktower Key3"
-              }
-            }
-          }
-        ],
+      "Villa: archives": {
+        "name": "Villa: archives",
+        "exits": [],
         "locations": [
           {
-            "name": "Clock Tower: Final room key ledge",
-            "id": 12992683,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Castle Keep: exterior": {
-        "name": "Castle Keep: exterior",
-        "exits": [
-          {
-            "name": "Dracula's door",
-            "connected_region": "Castle Keep: Dracula's chamber",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Castle Keep: Left Dracula door flame",
-            "id": 12992687,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Red jewel(S)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Keep: Right Dracula door flame",
-            "id": 12992686,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PowerUp",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Castle Keep: Behind Dracula's chamber",
-            "id": 12992703,
+            "name": "Villa: Archives table",
+            "id": 12992553,
             "access_rule": {
               "rule": "True_"
             },
@@ -3721,8 +2835,423 @@
             "locked": true
           },
           {
-            "name": "Castle Keep: Dracula's floating cube",
-            "id": 12992693,
+            "name": "Villa: Archives rear corner",
+            "id": 12992548,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Villa: crypt": {
+        "name": "Villa: crypt",
+        "exits": [
+          {
+            "name": "From bridge door",
+            "connected_region": "Villa: maze",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Villa Reinhardt (daytime) exit",
+            "connected_region": "Tunnel: first half",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Villa Carrie (nighttime) exit",
+            "connected_region": "Underground Waterway: main area",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Villa: Crypt entrance",
+            "id": 12992888,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Crypt bridge upstream",
+            "id": 12992889,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Clocktower Key2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Crypt - Left from entrance",
+            "id": 12992713,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Crypt - Right from entrance",
+            "id": 12992704,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Crypt - Left wall",
+            "id": 12992706,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Crypt - Right wall",
+            "id": 12992705,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Clocktower Key1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Crypt - Right of coffin",
+            "id": 12992712,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Villa: dog gates": {
+        "name": "Villa: dog gates",
+        "exits": [
+          {
+            "name": "Front dog gates",
+            "connected_region": "Villa: main interior",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Villa: Outer front gate - Left",
+            "id": 12992819,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Outer front gate - Right",
+            "id": 12992818,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Outer front gate platform",
+            "id": 12992820,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sun card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Inner front gate dog food",
+            "id": 12992824,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Villa: main interior": {
+        "name": "Villa: main interior",
+        "exits": [
+          {
+            "name": "To Storeroom door",
+            "connected_region": "Villa: storeroom",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Storeroom Key"
+              }
+            }
+          },
+          {
+            "name": "To Archives door",
+            "connected_region": "Villa: archives",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Archives Key"
+              }
+            }
+          },
+          {
+            "name": "To maze gate",
+            "connected_region": "Villa: maze",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Garden Key"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Villa: Front yard cross grave near gates",
+            "id": 12992817,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Special1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Front yard cross grave near porch",
+            "id": 12992830,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Science Key1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Front yard visitor's tombstone",
+            "id": 12992815,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Healing kit",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Midnight fountain - Front-left",
+            "id": 12992825,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Midnight fountain - Front-right",
+            "id": 12992816,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Special1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Midnight fountain - Middle-left",
+            "id": 12992826,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Midnight fountain - Middle-right",
+            "id": 12992829,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Midnight fountain - Rear-left",
+            "id": 12992827,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Midnight fountain - Rear-right",
+            "id": 12992828,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PowerUp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer lower level - Front-right",
+            "id": 12992573,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "300 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer lower level - Front-left",
+            "id": 12992571,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer lower level - Middle-left",
+            "id": 12992572,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "100 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer lower level - Rear-right",
+            "id": 12992568,
             "access_rule": {
               "rule": "True_"
             },
@@ -3733,27 +3262,498 @@
               "type": "None"
             },
             "locked": true
-          }
-        ]
-      },
-      "Castle Keep: Dracula's chamber": {
-        "name": "Castle Keep: Dracula's chamber",
-        "exits": [],
-        "locations": [
+          },
           {
-            "name": "Dracula",
-            "id": null,
+            "name": "Villa: Foyer lower level - Rear-left",
+            "id": 12992569,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "The Count Downed",
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer upper-right pot",
+            "id": 12992558,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "100 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer upper-left pot",
+            "id": 12992559,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Foyer sofa",
+            "id": 12992557,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Special1",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": true
+          },
+          {
+            "name": "Villa: Rose garden staircase bottom",
+            "id": 12992564,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magical Nitro",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Bedroom near chairs",
+            "id": 12992563,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Bedroom near bed",
+            "id": 12992562,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Vincent",
+            "id": 12992547,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Mary's room table",
+            "id": 12992555,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Dining room rose vase",
+            "id": 12992554,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Special1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Living room - Right pot",
+            "id": 12992550,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cure ampoule",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Living room - Left pot",
+            "id": 12992549,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Living room clawed painting",
+            "id": 12992556,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Living room ceiling light",
+            "id": 12992552,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(S)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Living room lion head",
+            "id": 12992560,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PowerUp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Maze garden exit knight",
+            "id": 12992551,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Villa: maze": {
+        "name": "Villa: maze",
+        "exits": [
+          {
+            "name": "From maze gate",
+            "connected_region": "Villa: servants entrance",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Garden Key"
+              }
+            }
+          },
+          {
+            "name": "Copper door",
+            "connected_region": "Villa: crypt",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Copper Key"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Villa: Front maze garden - Malus start torch",
+            "id": 12992883,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Front maze garden - Malus's hiding bush",
+            "id": 12992876,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Science Key3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Front maze garden - Frankie's left dead-end",
+            "id": 12992887,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Red jewel(L)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Front maze garden - Frankie's right dead-end urn",
+            "id": 12992878,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Front",
+            "id": 12992882,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sun card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front",
+            "id": 12992881,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear",
+            "id": 12992884,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Moon card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Rear maze garden - Iron Thorn Fenced area - Rear",
+            "id": 12992880,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Rear maze garden - Viewing platform dead-end",
+            "id": 12992886,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Rear maze garden - Past-exit dead-end",
+            "id": 12992885,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Servants' path small alcove",
+            "id": 12992890,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast beef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Villa: servants entrance": {
+        "name": "Villa: servants entrance",
+        "exits": [
+          {
+            "name": "Servants' door",
+            "connected_region": "Villa: main interior",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Villa: Servants' entrance",
+            "id": 12992574,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roast chicken",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Villa: storeroom": {
+        "name": "Villa: storeroom",
+        "exits": [
+          {
+            "name": "From Storeroom door",
+            "connected_region": "Villa: main interior",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Storeroom Key"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Villa: Storeroom - Left",
+            "id": 12992566,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Storeroom - Right",
+            "id": 12992567,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500 GOLD",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Villa: Storeroom statue",
+            "id": 12992561,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Purifying",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
           }
         ]
       }
@@ -4238,51 +4238,89 @@
   },
   "canonical_placements": {
     "1": {
-      "Forest of Silence: Grab practice pillars - Right": "300 GOLD",
-      "Forest of Silence: Moon gazebo roof": "300 GOLD",
-      "Tower of Science: Exit hallway": "300 GOLD",
-      "Tower of Science: Locked Key3 room - Left": "300 GOLD",
-      "Tower of Science: Locked Key3 room - Right": "300 GOLD",
-      "Underground Waterway: Across from entrance": "300 GOLD",
-      "Underground Waterway: Across poison parkour ledges": "300 GOLD",
-      "Villa: Crypt - Right of coffin": "300 GOLD",
-      "Villa: Foyer lower level - Front-right": "300 GOLD",
-      "Forest of Silence: Grab practice pillars - Top": "Healing kit",
-      "Forest of Silence: Sun gazebo roof": "Healing kit",
-      "Tunnel: Shovel zone save junction": "Healing kit",
-      "Villa: Front yard visitor's tombstone": "Healing kit",
-      "Castle Center: Elevator pipe device": "Moon card",
-      "Castle Wall: White Dragons switch door": "Moon card",
-      "Forest of Silence: King Skeleton's bridge": "Moon card",
-      "Villa: Bedroom near bed": "Moon card",
-      "Villa: Crypt - Left wall": "Moon card",
-      "Villa: Mary's room table": "Moon card",
-      "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front": "Moon card",
-      "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear": "Moon card",
-      "Castle Center: Behemoth arena - Right far-front torch": "Roast beef",
-      "Castle Center: Invention room maid sisters door": "Roast beef",
-      "Castle Center: Lizard locker room near pit": "Roast beef",
-      "Castle Center: Stained Glass Knight room - Left": "Roast beef",
-      "Castle Center: Stained Glass Knight room - Right": "Roast beef",
-      "Castle Center: Torture chamber rafters": "Roast beef",
-      "Castle Wall: Central rampart near left tower": "Roast beef",
-      "Castle Wall: Central rampart near right tower": "Roast beef",
-      "Clock Tower: Bone Pillar chasm room key alcove": "Roast beef",
-      "Duel Tower: Invisible bridge balcony - Left": "Roast beef",
-      "Forest of Silence: Dirge maiden gate": "Roast beef",
-      "Forest of Silence: Moon gazebo inside": "Roast beef",
-      "Forest of Silence: Sun gazebo inside": "Roast beef",
-      "Forest of Silence: Werewolf crypt - Right": "Roast beef",
-      "Tower of Execution: Electric grate ledge": "Roast beef",
-      "Tunnel: Landing point": "Roast beef",
-      "Tunnel: Red gondola station": "Roast beef",
-      "Underground Waterway: Above skeleton crusher ledge": "Roast beef",
-      "Villa: Living room clawed painting": "Roast beef",
-      "Villa: Maze garden exit knight": "Roast beef",
-      "Villa: Midnight fountain - Middle-right": "Roast beef",
-      "Villa: Midnight fountain - Rear-left": "Roast beef",
-      "Villa: Rear maze garden - Past-exit dead-end": "Roast beef",
-      "Villa: Servants' path small alcove": "Roast beef",
+      "Castle Center: Behind the seal": "Crystal",
+      "Castle Center: Above broken staircase savepoint": "Sun card",
+      "Castle Center: Inside upper cracked wall": "Sun card",
+      "Castle Keep: Behind Dracula's chamber": "Sun card",
+      "Tower of Science: Elevator hallway": "Sun card",
+      "Tower of Sorcery: Invisible bridge platform": "Sun card",
+      "Tunnel: Landing point rock crusher": "Sun card",
+      "Villa: Archives table": "Sun card",
+      "Villa: Outer front gate platform": "Sun card",
+      "Villa: Rear maze garden - Iron Thorn Fenced area - Front": "Sun card",
+      "Castle Center: Elevator room staircase": "500 GOLD",
+      "Castle Center: Inside cracked wall hallway flamethrower": "500 GOLD",
+      "Castle Center: Invention room giant Famicart": "500 GOLD",
+      "Castle Center: Invention room spike crusher door": "500 GOLD",
+      "Castle Center: Library bookshelf": "500 GOLD",
+      "Castle Center: Lizard locker room corner": "500 GOLD",
+      "Castle Center: Mandragora shelf - Right": "500 GOLD",
+      "Castle Center: Torture chamber instrument rack": "500 GOLD",
+      "Forest of Silence: Three-crypt plaza main path crypt - Upper-front": "500 GOLD",
+      "Tunnel: Gondola rock crusher": "500 GOLD",
+      "Tunnel: Shovel poison pit end": "500 GOLD",
+      "Tunnel: Twin arrow signs": "500 GOLD",
+      "Villa: Crypt - Right from entrance": "500 GOLD",
+      "Villa: Front maze garden - Frankie's right dead-end urn": "500 GOLD",
+      "Villa: Front maze garden - Malus start torch": "500 GOLD",
+      "Villa: Rear maze garden - Viewing platform dead-end": "500 GOLD",
+      "Villa: Storeroom - Left": "500 GOLD",
+      "Villa: Storeroom - Right": "500 GOLD",
+      "Castle Center: Behemoth arena - Left far-front torch": "Red jewel(S)",
+      "Castle Center: Behemoth arena - Right mid-front torch": "Red jewel(S)",
+      "Castle Center: Broken staircase floor": "Red jewel(S)",
+      "Castle Center: Entrance hallway": "Red jewel(S)",
+      "Castle Center: Hell Knight landing corner knight": "Red jewel(S)",
+      "Castle Center: Maid sisters room vase": "Red jewel(S)",
+      "Castle Keep: Dracula's floating cube": "Red jewel(S)",
+      "Castle Keep: Left Dracula door flame": "Red jewel(S)",
+      "Castle Wall: Above bottom right tower door": "Red jewel(S)",
+      "Castle Wall: Dracula cutscene switch door": "Red jewel(S)",
+      "Clock Tower: Bone Pillar chasm room - Front-right": "Red jewel(S)",
+      "Clock Tower: Final room key ledge": "Red jewel(S)",
+      "Clock Tower: Gear climb room corner": "Red jewel(S)",
+      "Duel Tower: Above Were-bull arena": "Red jewel(S)",
+      "Forest of Silence: Dirge maiden pedestal plaque": "Red jewel(S)",
+      "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front": "Red jewel(S)",
+      "Forest of Silence: Three-crypt plaza switch": "Red jewel(S)",
+      "Room of Clocks: Right of Contract": "Red jewel(S)",
+      "Tower of Execution: Past mid-savepoint spikes - Left": "Red jewel(S)",
+      "Tower of Sorcery: Lone red platform side island": "Red jewel(S)",
+      "Tunnel: Exit door poison pit end": "Red jewel(S)",
+      "Tunnel: Exit door poison pit start": "Red jewel(S)",
+      "Tunnel: Gondola rock crusher sun door - Right": "Red jewel(S)",
+      "Tunnel: Shovel": "Red jewel(S)",
+      "Tunnel: Shovel zone moon door - Left": "Red jewel(S)",
+      "Tunnel: Stepping stone alcove - Left": "Red jewel(S)",
+      "Villa: Foyer lower level - Rear-left": "Red jewel(S)",
+      "Villa: Foyer lower level - Rear-right": "Red jewel(S)",
+      "Villa: Living room ceiling light": "Red jewel(S)",
+      "Castle Center: Basement hallway junction": "Cure ampoule",
+      "Castle Center: Behemoth arena - Left mid-front torch": "Cure ampoule",
+      "Castle Center: Torture chamber hallway": "Cure ampoule",
+      "Tunnel: Near lonesome bucket": "Cure ampoule",
+      "Villa: Living room - Right pot": "Cure ampoule",
+      "Castle Center: Behemoth arena - Left mid-rear torch": "Roast chicken",
+      "Castle Center: Behemoth arena - Right mid-rear torch": "Roast chicken",
+      "Castle Center: Butler bros. room inner": "Roast chicken",
+      "Castle Center: Gear room side": "Roast chicken",
+      "Castle Center: Inside nitro hallway flamethrower": "Roast chicken",
+      "Castle Center: Invention room round machine": "Roast chicken",
+      "Castle Center: Invention room zeppelin": "Roast chicken",
+      "Castle Center: Lizard locker knight": "Roast chicken",
+      "Clock Tower: Gear climb room side": "Roast chicken",
+      "Forest of Silence: Descending bridge wall side": "Roast chicken",
+      "Tower of Execution: Past mid-savepoint spikes - Right": "Roast chicken",
+      "Tower of Sorcery: Mid-savepoint platform": "Roast chicken",
+      "Tunnel: Albert's campsite": "Roast chicken",
+      "Tunnel: Shovel poison pit start": "Roast chicken",
+      "Tunnel: Shovel zone sun door - Middle": "Roast chicken",
+      "Villa: Crypt - Left from entrance": "Roast chicken",
+      "Villa: Crypt entrance": "Roast chicken",
+      "Villa: Midnight fountain - Middle-left": "Roast chicken",
+      "Villa: Outer front gate - Left": "Roast chicken",
+      "Villa: Rear maze garden - Iron Thorn Fenced area - Rear": "Roast chicken",
+      "Villa: Servants' entrance": "Roast chicken",
       "Castle Center: Behemoth arena - Left far-rear torch": "Red jewel(L)",
       "Castle Center: Gear room center": "Red jewel(L)",
       "Castle Center: Heinrich Meyer": "Red jewel(L)",
@@ -4316,57 +4354,53 @@
       "Villa: Inner front gate dog food": "Red jewel(L)",
       "Villa: Midnight fountain - Front-left": "Red jewel(L)",
       "Villa: Vincent": "Red jewel(L)",
-      "Forest of Silence: Dirge maiden crypt - Upper": "Left Tower Key",
-      "Castle Center: Behemoth arena - Left far-front torch": "Red jewel(S)",
-      "Castle Center: Behemoth arena - Right mid-front torch": "Red jewel(S)",
-      "Castle Center: Broken staircase floor": "Red jewel(S)",
-      "Castle Center: Entrance hallway": "Red jewel(S)",
-      "Castle Center: Hell Knight landing corner knight": "Red jewel(S)",
-      "Castle Center: Maid sisters room vase": "Red jewel(S)",
-      "Castle Keep: Dracula's floating cube": "Red jewel(S)",
-      "Castle Keep: Left Dracula door flame": "Red jewel(S)",
-      "Castle Wall: Above bottom right tower door": "Red jewel(S)",
-      "Castle Wall: Dracula cutscene switch door": "Red jewel(S)",
-      "Clock Tower: Bone Pillar chasm room - Front-right": "Red jewel(S)",
-      "Clock Tower: Final room key ledge": "Red jewel(S)",
-      "Clock Tower: Gear climb room corner": "Red jewel(S)",
-      "Duel Tower: Above Were-bull arena": "Red jewel(S)",
-      "Forest of Silence: Dirge maiden pedestal plaque": "Red jewel(S)",
-      "Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front": "Red jewel(S)",
-      "Forest of Silence: Three-crypt plaza switch": "Red jewel(S)",
-      "Room of Clocks: Right of Contract": "Red jewel(S)",
-      "Tower of Execution: Past mid-savepoint spikes - Left": "Red jewel(S)",
-      "Tower of Sorcery: Lone red platform side island": "Red jewel(S)",
-      "Tunnel: Exit door poison pit end": "Red jewel(S)",
-      "Tunnel: Exit door poison pit start": "Red jewel(S)",
-      "Tunnel: Gondola rock crusher sun door - Right": "Red jewel(S)",
-      "Tunnel: Shovel": "Red jewel(S)",
-      "Tunnel: Shovel zone moon door - Left": "Red jewel(S)",
-      "Tunnel: Stepping stone alcove - Left": "Red jewel(S)",
-      "Villa: Foyer lower level - Rear-left": "Red jewel(S)",
-      "Villa: Foyer lower level - Rear-right": "Red jewel(S)",
-      "Villa: Living room ceiling light": "Red jewel(S)",
-      "Castle Center: Behemoth arena - Left mid-rear torch": "Roast chicken",
-      "Castle Center: Behemoth arena - Right mid-rear torch": "Roast chicken",
-      "Castle Center: Butler bros. room inner": "Roast chicken",
-      "Castle Center: Gear room side": "Roast chicken",
-      "Castle Center: Inside nitro hallway flamethrower": "Roast chicken",
-      "Castle Center: Invention room round machine": "Roast chicken",
-      "Castle Center: Invention room zeppelin": "Roast chicken",
-      "Castle Center: Lizard locker knight": "Roast chicken",
-      "Clock Tower: Gear climb room side": "Roast chicken",
-      "Forest of Silence: Descending bridge wall side": "Roast chicken",
-      "Tower of Execution: Past mid-savepoint spikes - Right": "Roast chicken",
-      "Tower of Sorcery: Mid-savepoint platform": "Roast chicken",
-      "Tunnel: Albert's campsite": "Roast chicken",
-      "Tunnel: Shovel poison pit start": "Roast chicken",
-      "Tunnel: Shovel zone sun door - Middle": "Roast chicken",
-      "Villa: Crypt - Left from entrance": "Roast chicken",
-      "Villa: Crypt entrance": "Roast chicken",
-      "Villa: Midnight fountain - Middle-left": "Roast chicken",
-      "Villa: Outer front gate - Left": "Roast chicken",
-      "Villa: Rear maze garden - Iron Thorn Fenced area - Rear": "Roast chicken",
-      "Villa: Servants' entrance": "Roast chicken",
+      "Castle Center: Behemoth arena - Right far-front torch": "Roast beef",
+      "Castle Center: Invention room maid sisters door": "Roast beef",
+      "Castle Center: Lizard locker room near pit": "Roast beef",
+      "Castle Center: Stained Glass Knight room - Left": "Roast beef",
+      "Castle Center: Stained Glass Knight room - Right": "Roast beef",
+      "Castle Center: Torture chamber rafters": "Roast beef",
+      "Castle Wall: Central rampart near left tower": "Roast beef",
+      "Castle Wall: Central rampart near right tower": "Roast beef",
+      "Clock Tower: Bone Pillar chasm room key alcove": "Roast beef",
+      "Duel Tower: Invisible bridge balcony - Left": "Roast beef",
+      "Forest of Silence: Dirge maiden gate": "Roast beef",
+      "Forest of Silence: Moon gazebo inside": "Roast beef",
+      "Forest of Silence: Sun gazebo inside": "Roast beef",
+      "Forest of Silence: Werewolf crypt - Right": "Roast beef",
+      "Tower of Execution: Electric grate ledge": "Roast beef",
+      "Tunnel: Landing point": "Roast beef",
+      "Tunnel: Red gondola station": "Roast beef",
+      "Underground Waterway: Above skeleton crusher ledge": "Roast beef",
+      "Villa: Living room clawed painting": "Roast beef",
+      "Villa: Maze garden exit knight": "Roast beef",
+      "Villa: Midnight fountain - Middle-right": "Roast beef",
+      "Villa: Midnight fountain - Rear-left": "Roast beef",
+      "Villa: Rear maze garden - Past-exit dead-end": "Roast beef",
+      "Villa: Servants' path small alcove": "Roast beef",
+      "Castle Center: Behemoth arena - Right far-rear torch": "100 GOLD",
+      "Castle Center: Near elevator room machine": "100 GOLD",
+      "Tunnel: Albert's poison pit": "100 GOLD",
+      "Villa: Foyer lower level - Middle-left": "100 GOLD",
+      "Villa: Foyer upper-right pot": "100 GOLD",
+      "Castle Center: Atop elevator room machine": "PowerUp",
+      "Castle Center: Red carpet hall knight": "PowerUp",
+      "Castle Keep: Right Dracula door flame": "PowerUp",
+      "Duel Tower: Invisible bridge balcony - Right": "PowerUp",
+      "Forest of Silence: Three-crypt plaza back-facing crypt - Upper": "PowerUp",
+      "Tower of Sorcery: Above tiny blue platforms start": "PowerUp",
+      "Tower of Sorcery: Trick shot from mid-savepoint platform": "PowerUp",
+      "Underground Waterway: Waterfall alcove ledge": "PowerUp",
+      "Villa: Living room lion head": "PowerUp",
+      "Villa: Midnight fountain - Rear-right": "PowerUp",
+      "Castle Center: Elevator pipe device": "Moon card",
+      "Castle Wall: White Dragons switch door": "Moon card",
+      "Forest of Silence: King Skeleton's bridge": "Moon card",
+      "Villa: Bedroom near bed": "Moon card",
+      "Villa: Crypt - Left wall": "Moon card",
+      "Villa: Mary's room table": "Moon card",
+      "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front": "Moon card",
+      "Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear": "Moon card",
       "Castle Center: Gear room corner": "Purifying",
       "Castle Wall: Sandbag shelf - Invisible": "Purifying",
       "Duel Tower: Stepping stone path start": "Purifying",
@@ -4381,45 +4415,8 @@
       "Villa: Living room - Left pot": "Purifying",
       "Villa: Outer front gate - Right": "Purifying",
       "Villa: Storeroom statue": "Purifying",
-      "Castle Center: Elevator room staircase": "500 GOLD",
-      "Castle Center: Inside cracked wall hallway flamethrower": "500 GOLD",
-      "Castle Center: Invention room giant Famicart": "500 GOLD",
-      "Castle Center: Invention room spike crusher door": "500 GOLD",
-      "Castle Center: Library bookshelf": "500 GOLD",
-      "Castle Center: Lizard locker room corner": "500 GOLD",
-      "Castle Center: Mandragora shelf - Right": "500 GOLD",
-      "Castle Center: Torture chamber instrument rack": "500 GOLD",
-      "Forest of Silence: Three-crypt plaza main path crypt - Upper-front": "500 GOLD",
-      "Tunnel: Gondola rock crusher": "500 GOLD",
-      "Tunnel: Shovel poison pit end": "500 GOLD",
-      "Tunnel: Twin arrow signs": "500 GOLD",
-      "Villa: Crypt - Right from entrance": "500 GOLD",
-      "Villa: Front maze garden - Frankie's right dead-end urn": "500 GOLD",
-      "Villa: Front maze garden - Malus start torch": "500 GOLD",
-      "Villa: Rear maze garden - Viewing platform dead-end": "500 GOLD",
-      "Villa: Storeroom - Left": "500 GOLD",
-      "Villa: Storeroom - Right": "500 GOLD",
-      "Castle Center: Atop elevator room machine": "PowerUp",
-      "Castle Center: Red carpet hall knight": "PowerUp",
-      "Castle Keep: Right Dracula door flame": "PowerUp",
-      "Duel Tower: Invisible bridge balcony - Right": "PowerUp",
-      "Forest of Silence: Three-crypt plaza back-facing crypt - Upper": "PowerUp",
-      "Tower of Sorcery: Above tiny blue platforms start": "PowerUp",
-      "Tower of Sorcery: Trick shot from mid-savepoint platform": "PowerUp",
-      "Underground Waterway: Waterfall alcove ledge": "PowerUp",
-      "Villa: Living room lion head": "PowerUp",
-      "Villa: Midnight fountain - Rear-right": "PowerUp",
       "Castle Center: Broken staircase knight": "Mandragora",
       "Castle Wall: Left tower child ledge": "Mandragora",
-      "Castle Center: Above broken staircase savepoint": "Sun card",
-      "Castle Center: Inside upper cracked wall": "Sun card",
-      "Castle Keep: Behind Dracula's chamber": "Sun card",
-      "Tower of Science: Elevator hallway": "Sun card",
-      "Tower of Sorcery: Invisible bridge platform": "Sun card",
-      "Tunnel: Landing point rock crusher": "Sun card",
-      "Villa: Archives table": "Sun card",
-      "Villa: Outer front gate platform": "Sun card",
-      "Villa: Rear maze garden - Iron Thorn Fenced area - Front": "Sun card",
       "Castle Center: Butler bros. room near door": "Special1",
       "Castle Center: Magical Nitro shelf - Invention side": "Special1",
       "Clock Tower: Bone Pillar chasm room - Front-left": "Special1",
@@ -4427,32 +4424,35 @@
       "Villa: Foyer sofa": "Special1",
       "Villa: Front yard cross grave near gates": "Special1",
       "Villa: Midnight fountain - Front-right": "Special1",
-      "Villa: Front yard cross grave near porch": "Science Key1",
-      "Castle Center: Behemoth arena - Right far-rear torch": "100 GOLD",
-      "Castle Center: Near elevator room machine": "100 GOLD",
-      "Tunnel: Albert's poison pit": "100 GOLD",
-      "Villa: Foyer lower level - Middle-left": "100 GOLD",
-      "Villa: Foyer upper-right pot": "100 GOLD",
-      "Room of Clocks: Right from entrance hallway": "Magical Nitro",
-      "Villa: Rose garden staircase bottom": "Magical Nitro",
-      "Castle Center: Basement hallway junction": "Cure ampoule",
-      "Castle Center: Behemoth arena - Left mid-front torch": "Cure ampoule",
-      "Castle Center: Torture chamber hallway": "Cure ampoule",
-      "Tunnel: Near lonesome bucket": "Cure ampoule",
-      "Villa: Living room - Right pot": "Cure ampoule",
-      "Villa: Front maze garden - Malus's hiding bush": "Science Key3",
-      "Villa: Crypt bridge upstream": "Clocktower Key2",
-      "Villa: Crypt - Right wall": "Clocktower Key1",
-      "Tunnel: Gondola rock crusher sun door - Middle": "Archives Key",
-      "Tunnel: Gondola transfer point": "Storeroom Key",
-      "Underground Waterway: Near entrance corridor": "Clocktower Key3",
       "Castle Center: Nitro room crates": "Garden Key",
       "Castle Center: Magical Nitro shelf - Heinrich side": "Execution Key",
       "Castle Center: Maid sisters room outer table": "Science Key2",
       "Castle Center: Maid sisters room inner table": "Chamber Key",
       "Castle Center: Mandragora shelf - Left": "Copper Key",
-      "Castle Center: Behind the seal": "Crystal",
-      "Dracula": "The Count Downed"
+      "Dracula": "The Count Downed",
+      "Forest of Silence: Grab practice pillars - Right": "300 GOLD",
+      "Forest of Silence: Moon gazebo roof": "300 GOLD",
+      "Tower of Science: Exit hallway": "300 GOLD",
+      "Tower of Science: Locked Key3 room - Left": "300 GOLD",
+      "Tower of Science: Locked Key3 room - Right": "300 GOLD",
+      "Underground Waterway: Across from entrance": "300 GOLD",
+      "Underground Waterway: Across poison parkour ledges": "300 GOLD",
+      "Villa: Crypt - Right of coffin": "300 GOLD",
+      "Villa: Foyer lower level - Front-right": "300 GOLD",
+      "Forest of Silence: Grab practice pillars - Top": "Healing kit",
+      "Forest of Silence: Sun gazebo roof": "Healing kit",
+      "Tunnel: Shovel zone save junction": "Healing kit",
+      "Villa: Front yard visitor's tombstone": "Healing kit",
+      "Forest of Silence: Dirge maiden crypt - Upper": "Left Tower Key",
+      "Room of Clocks: Right from entrance hallway": "Magical Nitro",
+      "Villa: Rose garden staircase bottom": "Magical Nitro",
+      "Tunnel: Gondola rock crusher sun door - Middle": "Archives Key",
+      "Tunnel: Gondola transfer point": "Storeroom Key",
+      "Underground Waterway: Near entrance corridor": "Clocktower Key3",
+      "Villa: Crypt bridge upstream": "Clocktower Key2",
+      "Villa: Crypt - Right wall": "Clocktower Key1",
+      "Villa: Front yard cross grave near porch": "Science Key1",
+      "Villa: Front maze garden - Malus's hiding bush": "Science Key3"
     }
   },
   "progression_mapping": {

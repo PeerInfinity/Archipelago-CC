@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "ACDC Overworld", "ACDC Cyberworld", "SciLab Overworld", "SciLab Cyberworld", "Yoka Overworld", "Yoka Cyberworld", "Beach Overworld", "Beach Cyberworld", "Undernet", "Deep Undernet", "WWW Island", "Secret Area"]
+    region_names = ["Menu", "ACDC Cyberworld", "ACDC Overworld", "Beach Cyberworld", "Beach Overworld", "Deep Undernet", "SciLab Cyberworld", "SciLab Overworld", "Secret Area", "Undernet", "WWW Island", "Yoka Cyberworld", "Yoka Overworld"]
 
     regions = {}
     for region_name in region_names:
@@ -52,37 +52,37 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["ACDC Overworld"], "Menu -> ACDC Overworld")
+    _create_entrance(regions["ACDC Cyberworld"], regions["SciLab Cyberworld"], "ACDC Cyberworld -> SciLab Cyberworld")
+    _create_entrance(regions["ACDC Cyberworld"], regions["Yoka Cyberworld"], "ACDC Cyberworld -> Yoka Cyberworld")
+    _create_entrance(regions["ACDC Cyberworld"], regions["Beach Cyberworld"], "ACDC Cyberworld -> Beach Cyberworld")
     _create_entrance(regions["ACDC Overworld"], regions["ACDC Cyberworld"], "ACDC Overworld -> ACDC Cyberworld")
     _create_entrance(regions["ACDC Overworld"], regions["SciLab Overworld"], "ACDC Overworld -> SciLab Overworld")
     _create_entrance(regions["ACDC Overworld"], regions["Yoka Overworld"], "ACDC Overworld -> Yoka Overworld")
     _create_entrance(regions["ACDC Overworld"], regions["Beach Overworld"], "ACDC Overworld -> Beach Overworld")
-    _create_entrance(regions["ACDC Cyberworld"], regions["SciLab Cyberworld"], "ACDC Cyberworld -> SciLab Cyberworld")
-    _create_entrance(regions["ACDC Cyberworld"], regions["Yoka Cyberworld"], "ACDC Cyberworld -> Yoka Cyberworld")
-    _create_entrance(regions["ACDC Cyberworld"], regions["Beach Cyberworld"], "ACDC Cyberworld -> Beach Cyberworld")
-    _create_entrance(regions["SciLab Overworld"], regions["SciLab Cyberworld"], "SciLab Overworld -> SciLab Cyberworld")
-    _create_entrance(regions["SciLab Overworld"], regions["ACDC Overworld"], "SciLab Overworld -> ACDC Overworld")
-    _create_entrance(regions["SciLab Overworld"], regions["Yoka Overworld"], "SciLab Overworld -> Yoka Overworld")
-    _create_entrance(regions["SciLab Overworld"], regions["Beach Overworld"], "SciLab Overworld -> Beach Overworld")
+    _create_entrance(regions["Beach Cyberworld"], regions["ACDC Cyberworld"], "Beach Cyberworld -> ACDC Cyberworld")
+    _create_entrance(regions["Beach Cyberworld"], regions["SciLab Cyberworld"], "Beach Cyberworld -> SciLab Cyberworld")
+    _create_entrance(regions["Beach Cyberworld"], regions["Yoka Cyberworld"], "Beach Cyberworld -> Yoka Cyberworld")
+    _create_entrance(regions["Beach Cyberworld"], regions["Undernet"], "Beach Cyberworld -> Undernet")
+    _create_entrance(regions["Beach Overworld"], regions["ACDC Overworld"], "Beach Overworld -> ACDC Overworld")
+    _create_entrance(regions["Beach Overworld"], regions["SciLab Overworld"], "Beach Overworld -> SciLab Overworld")
+    _create_entrance(regions["Beach Overworld"], regions["Yoka Overworld"], "Beach Overworld -> Yoka Overworld")
+    _create_entrance(regions["Beach Overworld"], regions["WWW Island"], "Beach Overworld -> WWW Island")
     _create_entrance(regions["SciLab Cyberworld"], regions["ACDC Cyberworld"], "SciLab Cyberworld -> ACDC Cyberworld")
     _create_entrance(regions["SciLab Cyberworld"], regions["Yoka Cyberworld"], "SciLab Cyberworld -> Yoka Cyberworld")
     _create_entrance(regions["SciLab Cyberworld"], regions["Beach Cyberworld"], "SciLab Cyberworld -> Beach Cyberworld")
     _create_entrance(regions["SciLab Cyberworld"], regions["Deep Undernet"], "SciLab Cyberworld -> Deep Undernet")
+    _create_entrance(regions["SciLab Overworld"], regions["SciLab Cyberworld"], "SciLab Overworld -> SciLab Cyberworld")
+    _create_entrance(regions["SciLab Overworld"], regions["ACDC Overworld"], "SciLab Overworld -> ACDC Overworld")
+    _create_entrance(regions["SciLab Overworld"], regions["Yoka Overworld"], "SciLab Overworld -> Yoka Overworld")
+    _create_entrance(regions["SciLab Overworld"], regions["Beach Overworld"], "SciLab Overworld -> Beach Overworld")
+    _create_entrance(regions["Yoka Cyberworld"], regions["ACDC Cyberworld"], "Yoka Cyberworld -> ACDC Cyberworld")
+    _create_entrance(regions["Yoka Cyberworld"], regions["SciLab Cyberworld"], "Yoka Cyberworld -> SciLab Cyberworld")
+    _create_entrance(regions["Yoka Cyberworld"], regions["Beach Cyberworld"], "Yoka Cyberworld -> Beach Cyberworld")
     _create_entrance(regions["Yoka Overworld"], regions["Yoka Cyberworld"], "Yoka Overworld -> Yoka Cyberworld")
     _create_entrance(regions["Yoka Overworld"], regions["ACDC Overworld"], "Yoka Overworld -> ACDC Overworld")
     _create_entrance(regions["Yoka Overworld"], regions["SciLab Overworld"], "Yoka Overworld -> SciLab Overworld")
     _create_entrance(regions["Yoka Overworld"], regions["Beach Overworld"], "Yoka Overworld -> Beach Overworld")
     _create_entrance(regions["Yoka Overworld"], regions["Secret Area"], "Yoka Overworld -> Secret Area")
-    _create_entrance(regions["Yoka Cyberworld"], regions["ACDC Cyberworld"], "Yoka Cyberworld -> ACDC Cyberworld")
-    _create_entrance(regions["Yoka Cyberworld"], regions["SciLab Cyberworld"], "Yoka Cyberworld -> SciLab Cyberworld")
-    _create_entrance(regions["Yoka Cyberworld"], regions["Beach Cyberworld"], "Yoka Cyberworld -> Beach Cyberworld")
-    _create_entrance(regions["Beach Overworld"], regions["ACDC Overworld"], "Beach Overworld -> ACDC Overworld")
-    _create_entrance(regions["Beach Overworld"], regions["SciLab Overworld"], "Beach Overworld -> SciLab Overworld")
-    _create_entrance(regions["Beach Overworld"], regions["Yoka Overworld"], "Beach Overworld -> Yoka Overworld")
-    _create_entrance(regions["Beach Overworld"], regions["WWW Island"], "Beach Overworld -> WWW Island")
-    _create_entrance(regions["Beach Cyberworld"], regions["ACDC Cyberworld"], "Beach Cyberworld -> ACDC Cyberworld")
-    _create_entrance(regions["Beach Cyberworld"], regions["SciLab Cyberworld"], "Beach Cyberworld -> SciLab Cyberworld")
-    _create_entrance(regions["Beach Cyberworld"], regions["Yoka Cyberworld"], "Beach Cyberworld -> Yoka Cyberworld")
-    _create_entrance(regions["Beach Cyberworld"], regions["Undernet"], "Beach Cyberworld -> Undernet")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

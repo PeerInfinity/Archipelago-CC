@@ -32,10 +32,10 @@ class LocationData:
 location_table: Dict[str, LocationData] = {
     "Bottom Left Chest": LocationData("Overworld", "Bottom Left Chest", 3, False),
     "Top Middle Chest": LocationData("Overworld", "Top Middle Chest", 2, False),
-    "Top Left Room Chest": LocationData("Top Left Room", "Top Left Room Chest", 1, False),
-    "Top Left Room Button": LocationData("Top Left Room", "Top Left Room Button", None, True),
     "Bottom Right Room Left Chest": LocationData("Bottom Right Room", "Bottom Right Room Left Chest", 5, False),
     "Bottom Right Room Right Chest": LocationData("Bottom Right Room", "Bottom Right Room Right Chest", 6, False),
-    "Right Room Enemy Drop": LocationData("Right Room", "Right Room Enemy Drop", 10, False),
     "Final Boss Defeated": LocationData("Final Boss Room", "Final Boss Defeated", None, True),
+    "Right Room Enemy Drop": LocationData("Right Room", "Right Room Enemy Drop", 10, False),
+    "Top Left Room Chest": LocationData("Top Left Room", "Top Left Room Chest", 1, False),
+    "Top Left Room Button": LocationData("Top Left Room", "Top Left Room Button", None, True),
 }

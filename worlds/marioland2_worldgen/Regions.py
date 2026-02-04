@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Mushroom Zone", "Scenic Course", "Tree Zone 1", "Tree Zone 2", "Tree Zone 3", "Tree Zone 4", "Tree Zone 5", "Tree Zone Secret Course", "Hippo Zone", "Space Zone 1", "Space Zone Secret Course", "Space Zone 2", "Macro Zone 1", "Macro Zone 2", "Macro Zone 3", "Macro Zone 4", "Macro Zone Secret Course", "Pumpkin Zone 1", "Pumpkin Zone 2", "Pumpkin Zone 3", "Pumpkin Zone 4", "Pumpkin Zone Secret Course 1", "Pumpkin Zone Secret Course 2", "Mario Zone 1", "Mario Zone 2", "Mario Zone 3", "Mario Zone 4", "Turtle Zone 1", "Turtle Zone 2", "Turtle Zone 3", "Turtle Zone Secret Course", "Mario's Castle"]
+    region_names = ["Menu", "Hippo Zone", "Macro Zone 1", "Macro Zone 2", "Macro Zone 3", "Macro Zone 4", "Macro Zone Secret Course", "Mario Zone 1", "Mario Zone 2", "Mario Zone 3", "Mario Zone 4", "Mario's Castle", "Mushroom Zone", "Pumpkin Zone 1", "Pumpkin Zone 2", "Pumpkin Zone 3", "Pumpkin Zone 4", "Pumpkin Zone Secret Course 1", "Pumpkin Zone Secret Course 2", "Scenic Course", "Space Zone 1", "Space Zone 2", "Space Zone Secret Course", "Tree Zone 1", "Tree Zone 2", "Tree Zone 3", "Tree Zone 4", "Tree Zone 5", "Tree Zone Secret Course", "Turtle Zone 1", "Turtle Zone 2", "Turtle Zone 3", "Turtle Zone Secret Course"]
 
     regions = {}
     for region_name in region_names:
@@ -61,27 +61,27 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Menu"], regions["Mario Zone 1"], "Menu -> Mario Zone 1")
     _create_entrance(regions["Menu"], regions["Turtle Zone 1"], "Menu -> Turtle Zone 1")
     _create_entrance(regions["Menu"], regions["Mario's Castle"], "Menu -> Mario's Castle")
-    _create_entrance(regions["Tree Zone 1"], regions["Tree Zone 2"], "Tree Zone 1 -> Tree Zone 2")
-    _create_entrance(regions["Tree Zone 2"], regions["Tree Zone 3"], "Tree Zone 2 -> Tree Zone 3")
-    _create_entrance(regions["Tree Zone 2"], regions["Tree Zone Secret Course"], "Tree Zone 2 -> Tree Zone Secret Course")
-    _create_entrance(regions["Tree Zone 3"], regions["Tree Zone 4"], "Tree Zone 3 -> Tree Zone 4")
-    _create_entrance(regions["Tree Zone 4"], regions["Tree Zone 5"], "Tree Zone 4 -> Tree Zone 5")
-    _create_entrance(regions["Space Zone 1"], regions["Space Zone Secret Course"], "Space Zone 1 -> Space Zone Secret Course")
-    _create_entrance(regions["Space Zone 1"], regions["Space Zone 2"], "Space Zone 1 -> Space Zone 2")
     _create_entrance(regions["Macro Zone 1"], regions["Macro Zone 2"], "Macro Zone 1 -> Macro Zone 2")
     _create_entrance(regions["Macro Zone 1"], regions["Macro Zone Secret Course"], "Macro Zone 1 -> Macro Zone Secret Course")
     _create_entrance(regions["Macro Zone 2"], regions["Macro Zone 3"], "Macro Zone 2 -> Macro Zone 3")
     _create_entrance(regions["Macro Zone 3"], regions["Macro Zone 4"], "Macro Zone 3 -> Macro Zone 4")
     _create_entrance(regions["Macro Zone 4"], regions["Macro Zone Secret Course"], "Macro Zone 4 -> Macro Zone Secret Course")
     _create_entrance(regions["Macro Zone Secret Course"], regions["Macro Zone 4"], "Macro Zone Secret Course -> Macro Zone 4")
+    _create_entrance(regions["Mario Zone 1"], regions["Mario Zone 2"], "Mario Zone 1 -> Mario Zone 2")
+    _create_entrance(regions["Mario Zone 2"], regions["Mario Zone 3"], "Mario Zone 2 -> Mario Zone 3")
+    _create_entrance(regions["Mario Zone 3"], regions["Mario Zone 4"], "Mario Zone 3 -> Mario Zone 4")
     _create_entrance(regions["Pumpkin Zone 1"], regions["Pumpkin Zone 2"], "Pumpkin Zone 1 -> Pumpkin Zone 2")
     _create_entrance(regions["Pumpkin Zone 2"], regions["Pumpkin Zone 3"], "Pumpkin Zone 2 -> Pumpkin Zone 3")
     _create_entrance(regions["Pumpkin Zone 2"], regions["Pumpkin Zone Secret Course 1"], "Pumpkin Zone 2 -> Pumpkin Zone Secret Course 1")
     _create_entrance(regions["Pumpkin Zone 3"], regions["Pumpkin Zone 4"], "Pumpkin Zone 3 -> Pumpkin Zone 4")
     _create_entrance(regions["Pumpkin Zone 3"], regions["Pumpkin Zone Secret Course 2"], "Pumpkin Zone 3 -> Pumpkin Zone Secret Course 2")
-    _create_entrance(regions["Mario Zone 1"], regions["Mario Zone 2"], "Mario Zone 1 -> Mario Zone 2")
-    _create_entrance(regions["Mario Zone 2"], regions["Mario Zone 3"], "Mario Zone 2 -> Mario Zone 3")
-    _create_entrance(regions["Mario Zone 3"], regions["Mario Zone 4"], "Mario Zone 3 -> Mario Zone 4")
+    _create_entrance(regions["Space Zone 1"], regions["Space Zone Secret Course"], "Space Zone 1 -> Space Zone Secret Course")
+    _create_entrance(regions["Space Zone 1"], regions["Space Zone 2"], "Space Zone 1 -> Space Zone 2")
+    _create_entrance(regions["Tree Zone 1"], regions["Tree Zone 2"], "Tree Zone 1 -> Tree Zone 2")
+    _create_entrance(regions["Tree Zone 2"], regions["Tree Zone 3"], "Tree Zone 2 -> Tree Zone 3")
+    _create_entrance(regions["Tree Zone 2"], regions["Tree Zone Secret Course"], "Tree Zone 2 -> Tree Zone Secret Course")
+    _create_entrance(regions["Tree Zone 3"], regions["Tree Zone 4"], "Tree Zone 3 -> Tree Zone 4")
+    _create_entrance(regions["Tree Zone 4"], regions["Tree Zone 5"], "Tree Zone 4 -> Tree Zone 5")
     _create_entrance(regions["Turtle Zone 1"], regions["Turtle Zone 2"], "Turtle Zone 1 -> Turtle Zone 2")
     _create_entrance(regions["Turtle Zone 2"], regions["Turtle Zone 3"], "Turtle Zone 2 -> Turtle Zone 3")
     _create_entrance(regions["Turtle Zone 2"], regions["Turtle Zone Secret Course"], "Turtle Zone 2 -> Turtle Zone Secret Course")

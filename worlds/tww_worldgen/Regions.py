@@ -10,13 +10,13 @@ from .Locations import location_table, TheWindWakerWorldGenLocation
 
 
 # Regions that were added after sphere calculation (from original export)
-DYNAMICALLY_ADDED_REGIONS = {"Savage Labyrinth", "Dragon Roost Island Secret Cave", "Fire Mountain Secret Cave", "Boating Course Secret Cave", "Stone Watcher Island Secret Cave", "Overlook Island Secret Cave", "Pawprint Isle Wizzrobe Cave", "Rock Spire Isle Secret Cave", "Shark Island Secret Cave", "Horseshoe Island Secret Cave", "Star Island Secret Cave", "Ice Ring Isle Inner Cave", "Outset Fairy Fountain"}
+DYNAMICALLY_ADDED_REGIONS = {"Boating Course Secret Cave", "Dragon Roost Island Secret Cave", "Fire Mountain Secret Cave", "Horseshoe Island Secret Cave", "Ice Ring Isle Inner Cave", "Outset Fairy Fountain", "Overlook Island Secret Cave", "Pawprint Isle Wizzrobe Cave", "Rock Spire Isle Secret Cave", "Savage Labyrinth", "Shark Island Secret Cave", "Star Island Secret Cave", "Stone Watcher Island Secret Cave"}
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["The Great Sea", "Dragon Roost Cavern", "Forbidden Woods", "Tower of the Gods", "Earth Temple", "Wind Temple", "Forbidden Woods Miniboss Arena", "Tower of the Gods Miniboss Arena", "Earth Temple Miniboss Arena", "Wind Temple Miniboss Arena", "Master Sword Chamber", "Gohma Boss Arena", "Kalle Demos Boss Arena", "Gohdan Boss Arena", "Helmaroc King Boss Arena", "Jalhalla Boss Arena", "Molgera Boss Arena", "Savage Labyrinth", "Dragon Roost Island Secret Cave", "Fire Mountain Secret Cave", "Ice Ring Isle Secret Cave", "Cabana Labyrinth", "Needle Rock Isle Secret Cave", "Angular Isles Secret Cave", "Boating Course Secret Cave", "Stone Watcher Island Secret Cave", "Overlook Island Secret Cave", "Bird's Peak Rock Secret Cave", "Pawprint Isle Chuchu Cave", "Pawprint Isle Wizzrobe Cave", "Diamond Steppe Island Warp Maze Cave", "Bomb Island Secret Cave", "Rock Spire Isle Secret Cave", "Shark Island Secret Cave", "Cliff Plateau Isles Secret Cave", "Horseshoe Island Secret Cave", "Star Island Secret Cave", "Ice Ring Isle Inner Cave", "Cliff Plateau Isles Inner Cave", "Outset Fairy Fountain", "Thorned Fairy Fountain", "Eastern Fairy Fountain", "Western Fairy Fountain", "Southern Fairy Fountain", "Northern Fairy Fountain"]
+    region_names = ["The Great Sea", "Angular Isles Secret Cave", "Bird's Peak Rock Secret Cave", "Boating Course Secret Cave", "Bomb Island Secret Cave", "Cabana Labyrinth", "Cliff Plateau Isles Inner Cave", "Cliff Plateau Isles Secret Cave", "Diamond Steppe Island Warp Maze Cave", "Dragon Roost Cavern", "Dragon Roost Island Secret Cave", "Earth Temple", "Earth Temple Miniboss Arena", "Eastern Fairy Fountain", "Fire Mountain Secret Cave", "Forbidden Woods", "Forbidden Woods Miniboss Arena", "Gohdan Boss Arena", "Gohma Boss Arena", "Helmaroc King Boss Arena", "Horseshoe Island Secret Cave", "Ice Ring Isle Inner Cave", "Ice Ring Isle Secret Cave", "Jalhalla Boss Arena", "Kalle Demos Boss Arena", "Master Sword Chamber", "Molgera Boss Arena", "Needle Rock Isle Secret Cave", "Northern Fairy Fountain", "Outset Fairy Fountain", "Overlook Island Secret Cave", "Pawprint Isle Chuchu Cave", "Pawprint Isle Wizzrobe Cave", "Rock Spire Isle Secret Cave", "Savage Labyrinth", "Shark Island Secret Cave", "Southern Fairy Fountain", "Star Island Secret Cave", "Stone Watcher Island Secret Cave", "Thorned Fairy Fountain", "Tower of the Gods", "Tower of the Gods Miniboss Arena", "Western Fairy Fountain", "Wind Temple", "Wind Temple Miniboss Arena"]
 
     regions = {}
     for region_name in region_names:
@@ -91,17 +91,17 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["The Great Sea"], regions["Western Fairy Fountain"], "Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain")
     _create_entrance(regions["The Great Sea"], regions["Southern Fairy Fountain"], "Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain")
     _create_entrance(regions["The Great Sea"], regions["Northern Fairy Fountain"], "Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain")
+    _create_entrance(regions["Cliff Plateau Isles Secret Cave"], regions["Cliff Plateau Isles Inner Cave"], "Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave")
     _create_entrance(regions["Dragon Roost Cavern"], regions["Gohma Boss Arena"], "Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena")
-    _create_entrance(regions["Forbidden Woods"], regions["Forbidden Woods Miniboss Arena"], "Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena")
-    _create_entrance(regions["Forbidden Woods"], regions["Kalle Demos Boss Arena"], "Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena")
-    _create_entrance(regions["Tower of the Gods"], regions["Tower of the Gods Miniboss Arena"], "Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena")
-    _create_entrance(regions["Tower of the Gods"], regions["Gohdan Boss Arena"], "Boss Entrance in Tower of the Gods -> Gohdan Boss Arena")
     _create_entrance(regions["Earth Temple"], regions["Earth Temple Miniboss Arena"], "Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena")
     _create_entrance(regions["Earth Temple"], regions["Jalhalla Boss Arena"], "Boss Entrance in Earth Temple -> Jalhalla Boss Arena")
+    _create_entrance(regions["Forbidden Woods"], regions["Forbidden Woods Miniboss Arena"], "Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena")
+    _create_entrance(regions["Forbidden Woods"], regions["Kalle Demos Boss Arena"], "Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena")
+    _create_entrance(regions["Ice Ring Isle Secret Cave"], regions["Ice Ring Isle Inner Cave"], "Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave")
+    _create_entrance(regions["Tower of the Gods"], regions["Tower of the Gods Miniboss Arena"], "Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena")
+    _create_entrance(regions["Tower of the Gods"], regions["Gohdan Boss Arena"], "Boss Entrance in Tower of the Gods -> Gohdan Boss Arena")
     _create_entrance(regions["Wind Temple"], regions["Wind Temple Miniboss Arena"], "Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena")
     _create_entrance(regions["Wind Temple"], regions["Molgera Boss Arena"], "Boss Entrance in Wind Temple -> Molgera Boss Arena")
-    _create_entrance(regions["Ice Ring Isle Secret Cave"], regions["Ice Ring Isle Inner Cave"], "Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave")
-    _create_entrance(regions["Cliff Plateau Isles Secret Cave"], regions["Cliff Plateau Isles Inner Cave"], "Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

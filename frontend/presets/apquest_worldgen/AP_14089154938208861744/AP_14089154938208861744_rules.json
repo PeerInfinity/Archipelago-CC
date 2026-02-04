@@ -72,41 +72,6 @@
           }
         ]
       },
-      "Top Left Room": {
-        "name": "Top Left Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Top Left Room Chest",
-            "id": 1,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shield",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Top Left Room Button",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Top Left Room Button Pressed",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
       "Bottom Right Room": {
         "name": "Bottom Right Room",
         "exits": [],
@@ -138,6 +103,33 @@
               "type": "None"
             },
             "locked": true
+          }
+        ]
+      },
+      "Final Boss Room": {
+        "name": "Final Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Final Boss Defeated",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Shield",
+                  "Sword"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -175,24 +167,32 @@
           }
         ]
       },
-      "Final Boss Room": {
-        "name": "Final Boss Room",
+      "Top Left Room": {
+        "name": "Top Left Room",
         "exits": [],
         "locations": [
           {
-            "name": "Final Boss Defeated",
-            "id": null,
+            "name": "Top Left Room Chest",
+            "id": 1,
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Shield",
-                  "Sword"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
-              "name": "Victory",
+              "name": "Shield",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Top Left Room Button",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Top Left Room Button Pressed",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -291,8 +291,8 @@
         "type": null,
         "max_count": 1
       },
-      "Top Left Room Button Pressed": {
-        "name": "Top Left Room Button Pressed",
+      "Victory": {
+        "name": "Victory",
         "id": null,
         "groups": [
           "Event"
@@ -302,8 +302,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "Victory": {
-        "name": "Victory",
+      "Top Left Room Button Pressed": {
+        "name": "Top Left Room Button Pressed",
         "id": null,
         "groups": [
           "Event"
@@ -336,12 +336,12 @@
     "1": {
       "Bottom Left Chest": "Confetti Cannon",
       "Top Middle Chest": "Sword",
-      "Top Left Room Chest": "Shield",
-      "Top Left Room Button": "Top Left Room Button Pressed",
       "Bottom Right Room Left Chest": "Health Upgrade",
       "Bottom Right Room Right Chest": "Health Upgrade",
+      "Final Boss Defeated": "Victory",
       "Right Room Enemy Drop": "Key",
-      "Final Boss Defeated": "Victory"
+      "Top Left Room Chest": "Shield",
+      "Top Left Room Button": "Top Left Room Button Pressed"
     }
   },
   "progression_mapping": {

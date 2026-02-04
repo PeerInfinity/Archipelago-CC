@@ -23,6 +23,197 @@
         ],
         "locations": []
       },
+      "ACDC Cyberworld": {
+        "name": "ACDC Cyberworld",
+        "exits": [
+          {
+            "name": "ACDC Cyberworld -> SciLab Cyberworld",
+            "connected_region": "SciLab Cyberworld",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CSciPass"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "ACDC Cyberworld -> Yoka Cyberworld",
+            "connected_region": "Yoka Cyberworld",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "SciLab Overworld"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Press"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CYokaPas"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "ACDC Cyberworld -> Beach Cyberworld",
+            "connected_region": "Beach Cyberworld",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Overworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CBeacPas"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "ACDC 1 Southwest BMD",
+            "id": 11735040,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "WpnLV+1 (Pink)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "ACDC 1 Northeast BMD",
+            "id": 11735041,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Charge+1 (White)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "ACDC 1 PMD",
+            "id": 11735172,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_unlock",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_www_id",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "BeastMan V3 B",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "ACDC 2 Center BMD",
+            "id": 11735042,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Airshoes",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "ACDC 2 North BMD",
+            "id": 11735043,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Thndrblt *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "ACDC 3 Southwest BMD",
+            "id": 11735044,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "FlashMan V2 F",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "ACDC 3 Northeast BMD",
+            "id": 11735045,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Rockcube *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
       "ACDC Overworld": {
         "name": "ACDC Overworld",
         "exits": [
@@ -1238,11 +1429,18 @@
           }
         ]
       },
-      "ACDC Cyberworld": {
-        "name": "ACDC Cyberworld",
+      "Beach Cyberworld": {
+        "name": "Beach Cyberworld",
         "exits": [
           {
-            "name": "ACDC Cyberworld -> SciLab Cyberworld",
+            "name": "Beach Cyberworld -> ACDC Cyberworld",
+            "connected_region": "ACDC Cyberworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Beach Cyberworld -> SciLab Cyberworld",
             "connected_region": "SciLab Cyberworld",
             "access_rule": {
               "rule": "Or",
@@ -1263,7 +1461,7 @@
             }
           },
           {
-            "name": "ACDC Cyberworld -> Yoka Cyberworld",
+            "name": "Beach Cyberworld -> Yoka Cyberworld",
             "connected_region": "Yoka Cyberworld",
             "access_rule": {
               "rule": "Or",
@@ -1295,7 +1493,1063 @@
             }
           },
           {
-            "name": "ACDC Cyberworld -> Beach Cyberworld",
+            "name": "Beach Cyberworld -> Undernet",
+            "connected_region": "Undernet",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "explore_score",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    "op": ">",
+                    "right": 8,
+                    "_original_ast_type": "compare"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Press"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Beach 1 BMD",
+            "id": 11735054,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roll V3 R",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach 1 PMD",
+            "id": 11735174,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "GutStrgt Q",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach 2 East BMD",
+            "id": 11735056,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Press"
+              }
+            },
+            "item": {
+              "name": "SneakRun",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach 2 West BMD",
+            "id": 11735055,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "GrabRvng A",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Villain",
+            "id": 11735196,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "BlckMnd"
+              }
+            },
+            "item": {
+              "name": "GrabBack K",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Beach Overworld": {
+        "name": "Beach Overworld",
+        "exits": [
+          {
+            "name": "Beach Overworld -> ACDC Overworld",
+            "connected_region": "ACDC Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Beach Overworld -> SciLab Overworld",
+            "connected_region": "SciLab Overworld",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "SubPET"
+              }
+            }
+          },
+          {
+            "name": "Beach Overworld -> Yoka Overworld",
+            "connected_region": "Yoka Overworld",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Needle"
+              }
+            }
+          },
+          {
+            "name": "Beach Overworld -> WWW Island",
+            "connected_region": "WWW Island",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Undernet Rank",
+                "count": 8
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Hospital Quiz Queen",
+            "id": 11735183,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "FlashMan V3 F",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hades Quiz King",
+            "id": 11735184,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SpinDark",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital DynaWav V Trade",
+            "id": 11735190,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "DynaWave V"
+              }
+            },
+            "item": {
+              "name": "StepSwrd M",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN WideSwrd C Trade",
+            "id": 11735191,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "WideSwrd C"
+              }
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN HoleMetr H Trade",
+            "id": 11735192,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "HoleMetr H"
+              }
+            },
+            "item": {
+              "name": "SpinBlue",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN Shadow J Trade",
+            "id": 11735193,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Shadow J"
+              }
+            },
+            "item": {
+              "name": "HP+200 (Yellow)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hades GrabBack K Trade",
+            "id": 11735194,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "GrabBack K"
+              }
+            },
+            "item": {
+              "name": "Unlocker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Department Store",
+            "id": 11735202,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Aqua+30 *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Hospital Plaque",
+            "id": 11735203,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Bubbler C",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Hospital Pink Door",
+            "id": 11735204,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BowlMan V3 B",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Hospital Tree",
+            "id": 11735205,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP2",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Hospital Hidden Conversation",
+            "id": 11735206,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Geddon3 U",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Hospital Girl",
+            "id": 11735207,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "StepCross R",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN Kiosk",
+            "id": 11735208,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN Boxes",
+            "id": 11735209,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP3",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN Poster",
+            "id": 11735210,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "ExpMem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hades Boat Dock",
+            "id": 11735211,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BubblMan B",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hades South BMD",
+            "id": 11735102,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Press"
+              }
+            },
+            "item": {
+              "name": "SubMem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hades Gargoyle BMD",
+            "id": 11735152,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 1 North BMD",
+            "id": 11735103,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Unlocker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 1 West BMD",
+            "id": 11735105,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CopyDmg *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 1 Center BMD",
+            "id": 11735104,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "DarkAura A",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 2 Island BMD",
+            "id": 11735108,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "UnderSht",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 2 Central BMD",
+            "id": 11735107,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Unlocker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 2 Southwest BMD",
+            "id": 11735106,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "FstGauge *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 3 West BMD",
+            "id": 11735110,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "DeltaRay Z",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 3 Central BMD",
+            "id": 11735109,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Undernet Rank",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 3 Northwest BMD",
+            "id": 11735111,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 4 North BMD",
+            "id": 11735114,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "GaiaBlde *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 4 Central BMD",
+            "id": 11735112,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Salamndr *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 4 Southeast BMD",
+            "id": 11735113,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "GutsMan V2 G",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 5 Island BMD",
+            "id": 11735117,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 5 Northeast BMD",
+            "id": 11735116,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "2000z",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hospital 5 Southwest BMD",
+            "id": 11735115,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP2",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Hospital Bed BMD",
+            "id": 11735145,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Undernet Rank",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach TV BMD",
+            "id": 11735146,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP2",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Vending Machine BMD",
+            "id": 11735147,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Barr200 E",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach News Van BMD",
+            "id": 11735148,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Battle Console BMD",
+            "id": 11735149,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP1",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Security System BMD",
+            "id": 11735150,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Spreader N",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach Broadcast Computer BMD",
+            "id": 11735151,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Recov150 P",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN Security Panel PMD",
+            "id": 11735179,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "3000z",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Beach DNN Main Console PMD",
+            "id": 11735180,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "SubMem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 6 TV BMD",
+            "id": 11735070,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP3",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Deep Undernet": {
+        "name": "Deep Undernet",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Undernet 5 Lower BMD",
+            "id": 11735067,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "OrderSys",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 6 East BMD",
+            "id": 11735068,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BubblMan V3 B",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 6 Central BMD",
+            "id": 11735069,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CSciPass",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 7 PMD",
+            "id": 11735175,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Cyberworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Yoka Cyberworld"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Unlocker",
+                    "count": 8
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Hammer T",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 7 West BMD",
+            "id": 11735071,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SetSand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 7 Northeast BMD",
+            "id": 11735073,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CopyDmg *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 7 Northwest BMD",
+            "id": 11735072,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MetalMan V2 M",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 7 Upper BMD",
+            "id": 11735160,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Unlocker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "SciLab Cyberworld": {
+        "name": "SciLab Cyberworld",
+        "exits": [
+          {
+            "name": "SciLab Cyberworld -> ACDC Cyberworld",
+            "connected_region": "ACDC Cyberworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "SciLab Cyberworld -> Yoka Cyberworld",
+            "connected_region": "Yoka Cyberworld",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "SciLab Overworld"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Press"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "CYokaPas"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "SciLab Cyberworld -> Beach Cyberworld",
             "connected_region": "Beach Cyberworld",
             "access_rule": {
               "rule": "And",
@@ -1314,17 +2568,24 @@
                 }
               ]
             }
+          },
+          {
+            "name": "SciLab Cyberworld -> Deep Undernet",
+            "connected_region": "Deep Undernet",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": [
           {
-            "name": "ACDC 1 Southwest BMD",
-            "id": 11735040,
+            "name": "SciLab 1 East BMD",
+            "id": 11735047,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "WpnLV+1 (Pink)",
+              "name": "ProtoMan V2 B",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1332,13 +2593,16 @@
             "locked": false
           },
           {
-            "name": "ACDC 1 Northeast BMD",
-            "id": 11735041,
+            "name": "SciLab 1 WWW BMD",
+            "id": 11735046,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "WWW ID"
+              }
             },
             "item": {
-              "name": "Charge+1 (White)",
+              "name": "Muramasa M",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1346,25 +2610,13 @@
             "locked": false
           },
           {
-            "name": "ACDC 1 PMD",
-            "id": 11735172,
+            "name": "SciLab 2 South BMD",
+            "id": 11735049,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_unlock",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_www_id",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "True_"
             },
             "item": {
-              "name": "BeastMan V3 B",
+              "name": "10000z",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1372,55 +2624,13 @@
             "locked": false
           },
           {
-            "name": "ACDC 2 Center BMD",
-            "id": 11735042,
+            "name": "SciLab 2 West BMD",
+            "id": 11735048,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Airshoes",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "ACDC 2 North BMD",
-            "id": 11735043,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Thndrblt *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "ACDC 3 Southwest BMD",
-            "id": 11735044,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "FlashMan V2 F",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "ACDC 3 Northeast BMD",
-            "id": 11735045,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Rockcube *",
+              "name": "1 BugFrag",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2272,50 +3482,553 @@
           }
         ]
       },
-      "SciLab Cyberworld": {
-        "name": "SciLab Cyberworld",
+      "Secret Area": {
+        "name": "Secret Area",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Secret 1 South BMD",
+            "id": 11735074,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "GutsMan G",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 1 Northeast BMD",
+            "id": 11735075,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Untrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 1 Northwest BMD",
+            "id": 11735076,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HP+100 (Yellow)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 2 Island BMD",
+            "id": 11735079,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "10 BugFrags",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 2 Lower BMD",
+            "id": 11735078,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "FullEnrg",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 2 Upper BMD",
+            "id": 11735077,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Charge+1 (Pink)",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 3 Island BMD",
+            "id": 11735081,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Press"
+              }
+            },
+            "item": {
+              "name": "1 BugFrag",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 3 South BMD",
+            "id": 11735080,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "LongSwrd E",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Secret 3 BugFrag BMD",
+            "id": 11735082,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Press"
+              }
+            },
+            "item": {
+              "name": "Fire+30 *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          },
+          {
+            "name": "Serenade",
+            "id": 11735311,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SandStage C",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
+          }
+        ]
+      },
+      "Undernet": {
+        "name": "Undernet",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Undernet 1 South BMD",
+            "id": 11735057,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Shadow J",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 1 WWW BMD",
+            "id": 11735058,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "WWW ID"
+              }
+            },
+            "item": {
+              "name": "QuickGge",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 2 Lower BMD",
+            "id": 11735060,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "WideSwrd C",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 2 Upper BMD",
+            "id": 11735059,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Undernet Rank",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 3 South BMD",
+            "id": 11735061,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 3 Central BMD",
+            "id": 11735062,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "HPMemory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 4 Pillar Prog",
+            "id": 11735214,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Roll R",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 4 Top North BMD",
+            "id": 11735065,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Unlocker",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 4 Bottom West BMD",
+            "id": 11735063,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Undernet Rank",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 4 Top Pillar BMD",
+            "id": 11735064,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Slasher B",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Undernet 5 Upper BMD",
+            "id": 11735066,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "GtStrght S",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "WWW Island": {
+        "name": "WWW Island",
+        "exits": [],
+        "locations": [
+          {
+            "name": "WWW Control Room 1 Screen",
+            "id": 11735212,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "500z",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW Wily's Desk",
+            "id": 11735213,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "1 BugFrag",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW Wall BMD",
+            "id": 11735153,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "DrillMan V3 D",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 1 East BMD",
+            "id": 11735120,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SpinYllw",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 1 West BMD",
+            "id": 11735119,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BrkChrg",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 1 Central BMD",
+            "id": 11735118,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mr Famous' Wristband",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 2 East BMD",
+            "id": 11735121,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "DrillMan D",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 2 Northwest BMD",
+            "id": 11735122,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CustSwrd Z",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 3 East BMD",
+            "id": 11735123,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP3",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 3 North BMD",
+            "id": 11735124,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Jealousy J",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 4 Central BMD",
+            "id": 11735126,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "RegUP3",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "WWW 4 Northwest BMD",
+            "id": 11735125,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Invis *",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Alpha Defeated",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Yoka Cyberworld": {
+        "name": "Yoka Cyberworld",
         "exits": [
           {
-            "name": "SciLab Cyberworld -> ACDC Cyberworld",
+            "name": "Yoka Cyberworld -> ACDC Cyberworld",
             "connected_region": "ACDC Cyberworld",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "SciLab Cyberworld -> Yoka Cyberworld",
-            "connected_region": "Yoka Cyberworld",
+            "name": "Yoka Cyberworld -> SciLab Cyberworld",
+            "connected_region": "SciLab Cyberworld",
             "access_rule": {
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "SciLab Overworld"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Press"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "SciLab Overworld"
+                  }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CYokaPas"
+                    "item_name": "CSciPass"
                   }
                 }
               ]
             }
           },
           {
-            "name": "SciLab Cyberworld -> Beach Cyberworld",
+            "name": "Yoka Cyberworld -> Beach Cyberworld",
             "connected_region": "Beach Cyberworld",
             "access_rule": {
               "rule": "And",
@@ -2334,24 +4047,17 @@
                 }
               ]
             }
-          },
-          {
-            "name": "SciLab Cyberworld -> Deep Undernet",
-            "connected_region": "Deep Undernet",
-            "access_rule": {
-              "rule": "True_"
-            }
           }
         ],
         "locations": [
           {
-            "name": "SciLab 1 East BMD",
-            "id": 11735047,
+            "name": "Yoka 1 North BMD",
+            "id": 11735050,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "ProtoMan V2 B",
+              "name": "WideSwrd E",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2359,8 +4065,8 @@
             "locked": false
           },
           {
-            "name": "SciLab 1 WWW BMD",
-            "id": 11735046,
+            "name": "Yoka 1 WWW BMD",
+            "id": 11735051,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2368,7 +4074,7 @@
               }
             },
             "item": {
-              "name": "Muramasa M",
+              "name": "OilBody",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2376,13 +4082,25 @@
             "locked": false
           },
           {
-            "name": "SciLab 2 South BMD",
-            "id": 11735049,
+            "name": "Yoka 1 PMD",
+            "id": 11735173,
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_unlock",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_press",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
-              "name": "10000z",
+              "name": "DesertMan V3 D",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2390,13 +4108,30 @@
             "locked": false
           },
           {
-            "name": "SciLab 2 West BMD",
-            "id": 11735048,
+            "name": "Yoka 2 Lower BMD",
+            "id": 11735053,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "1 BugFrag",
+              "name": "StepSwrd N",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Yoka 2 Upper BMD",
+            "id": 11735052,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Press"
+              }
+            },
+            "item": {
+              "name": "ModTools",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3397,1741 +5132,6 @@
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "Yoka Cyberworld": {
-        "name": "Yoka Cyberworld",
-        "exits": [
-          {
-            "name": "Yoka Cyberworld -> ACDC Cyberworld",
-            "connected_region": "ACDC Cyberworld",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Yoka Cyberworld -> SciLab Cyberworld",
-            "connected_region": "SciLab Cyberworld",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Overworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "CSciPass"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Yoka Cyberworld -> Beach Cyberworld",
-            "connected_region": "Beach Cyberworld",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Yoka Overworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "CBeacPas"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Yoka 1 North BMD",
-            "id": 11735050,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "WideSwrd E",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Yoka 1 WWW BMD",
-            "id": 11735051,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "WWW ID"
-              }
-            },
-            "item": {
-              "name": "OilBody",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Yoka 1 PMD",
-            "id": 11735173,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_unlock",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_press",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "DesertMan V3 D",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Yoka 2 Lower BMD",
-            "id": 11735053,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "StepSwrd N",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Yoka 2 Upper BMD",
-            "id": 11735052,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Press"
-              }
-            },
-            "item": {
-              "name": "ModTools",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Beach Overworld": {
-        "name": "Beach Overworld",
-        "exits": [
-          {
-            "name": "Beach Overworld -> ACDC Overworld",
-            "connected_region": "ACDC Overworld",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Beach Overworld -> SciLab Overworld",
-            "connected_region": "SciLab Overworld",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "SubPET"
-              }
-            }
-          },
-          {
-            "name": "Beach Overworld -> Yoka Overworld",
-            "connected_region": "Yoka Overworld",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Needle"
-              }
-            }
-          },
-          {
-            "name": "Beach Overworld -> WWW Island",
-            "connected_region": "WWW Island",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Progressive Undernet Rank",
-                "count": 8
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Hospital Quiz Queen",
-            "id": 11735183,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "FlashMan V3 F",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hades Quiz King",
-            "id": 11735184,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SpinDark",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital DynaWav V Trade",
-            "id": 11735190,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "DynaWave V"
-              }
-            },
-            "item": {
-              "name": "StepSwrd M",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN WideSwrd C Trade",
-            "id": 11735191,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "WideSwrd C"
-              }
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN HoleMetr H Trade",
-            "id": 11735192,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "HoleMetr H"
-              }
-            },
-            "item": {
-              "name": "SpinBlue",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN Shadow J Trade",
-            "id": 11735193,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shadow J"
-              }
-            },
-            "item": {
-              "name": "HP+200 (Yellow)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hades GrabBack K Trade",
-            "id": 11735194,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "GrabBack K"
-              }
-            },
-            "item": {
-              "name": "Unlocker",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Department Store",
-            "id": 11735202,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Aqua+30 *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Hospital Plaque",
-            "id": 11735203,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bubbler C",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Hospital Pink Door",
-            "id": 11735204,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BowlMan V3 B",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Hospital Tree",
-            "id": 11735205,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP2",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Hospital Hidden Conversation",
-            "id": 11735206,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Geddon3 U",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Hospital Girl",
-            "id": 11735207,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "StepCross R",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN Kiosk",
-            "id": 11735208,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN Boxes",
-            "id": 11735209,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP3",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN Poster",
-            "id": 11735210,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "ExpMem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hades Boat Dock",
-            "id": 11735211,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BubblMan B",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hades South BMD",
-            "id": 11735102,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Press"
-              }
-            },
-            "item": {
-              "name": "SubMem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hades Gargoyle BMD",
-            "id": 11735152,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 1 North BMD",
-            "id": 11735103,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Unlocker",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 1 West BMD",
-            "id": 11735105,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "CopyDmg *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 1 Center BMD",
-            "id": 11735104,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "DarkAura A",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 2 Island BMD",
-            "id": 11735108,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "UnderSht",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 2 Central BMD",
-            "id": 11735107,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Unlocker",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 2 Southwest BMD",
-            "id": 11735106,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "FstGauge *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 3 West BMD",
-            "id": 11735110,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "DeltaRay Z",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 3 Central BMD",
-            "id": 11735109,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Undernet Rank",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 3 Northwest BMD",
-            "id": 11735111,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 4 North BMD",
-            "id": 11735114,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "GaiaBlde *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 4 Central BMD",
-            "id": 11735112,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Salamndr *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 4 Southeast BMD",
-            "id": 11735113,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "GutsMan V2 G",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 5 Island BMD",
-            "id": 11735117,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 5 Northeast BMD",
-            "id": 11735116,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "2000z",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hospital 5 Southwest BMD",
-            "id": 11735115,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP2",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Hospital Bed BMD",
-            "id": 11735145,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Undernet Rank",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach TV BMD",
-            "id": 11735146,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP2",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Vending Machine BMD",
-            "id": 11735147,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Barr200 E",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach News Van BMD",
-            "id": 11735148,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Battle Console BMD",
-            "id": 11735149,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP1",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Security System BMD",
-            "id": 11735150,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Spreader N",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach Broadcast Computer BMD",
-            "id": 11735151,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Recov150 P",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN Security Panel PMD",
-            "id": 11735179,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Cyberworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Overworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Yoka Cyberworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Unlocker",
-                    "count": 8
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "3000z",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach DNN Main Console PMD",
-            "id": 11735180,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Cyberworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Overworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Yoka Cyberworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Unlocker",
-                    "count": 8
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "SubMem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 6 TV BMD",
-            "id": 11735070,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP3",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Beach Cyberworld": {
-        "name": "Beach Cyberworld",
-        "exits": [
-          {
-            "name": "Beach Cyberworld -> ACDC Cyberworld",
-            "connected_region": "ACDC Cyberworld",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Beach Cyberworld -> SciLab Cyberworld",
-            "connected_region": "SciLab Cyberworld",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Overworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "CSciPass"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Beach Cyberworld -> Yoka Cyberworld",
-            "connected_region": "Yoka Cyberworld",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "SciLab Overworld"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Press"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "CYokaPas"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Beach Cyberworld -> Undernet",
-            "connected_region": "Undernet",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "explore_score",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    "op": ">",
-                    "right": 8,
-                    "_original_ast_type": "compare"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Press"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Beach 1 BMD",
-            "id": 11735054,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roll V3 R",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach 1 PMD",
-            "id": 11735174,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Cyberworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Overworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Yoka Cyberworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Unlocker",
-                    "count": 8
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "GutStrgt Q",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach 2 East BMD",
-            "id": 11735056,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Press"
-              }
-            },
-            "item": {
-              "name": "SneakRun",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Beach 2 West BMD",
-            "id": 11735055,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "GrabRvng A",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Villain",
-            "id": 11735196,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "BlckMnd"
-              }
-            },
-            "item": {
-              "name": "GrabBack K",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Undernet": {
-        "name": "Undernet",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Undernet 1 South BMD",
-            "id": 11735057,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shadow J",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 1 WWW BMD",
-            "id": 11735058,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "WWW ID"
-              }
-            },
-            "item": {
-              "name": "QuickGge",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 2 Lower BMD",
-            "id": 11735060,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "WideSwrd C",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 2 Upper BMD",
-            "id": 11735059,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Undernet Rank",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 3 South BMD",
-            "id": 11735061,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 3 Central BMD",
-            "id": 11735062,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HPMemory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 4 Pillar Prog",
-            "id": 11735214,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Roll R",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 4 Top North BMD",
-            "id": 11735065,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Unlocker",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 4 Bottom West BMD",
-            "id": 11735063,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Undernet Rank",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 4 Top Pillar BMD",
-            "id": 11735064,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Slasher B",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 5 Upper BMD",
-            "id": 11735066,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "GtStrght S",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Deep Undernet": {
-        "name": "Deep Undernet",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Undernet 5 Lower BMD",
-            "id": 11735067,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "OrderSys",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 6 East BMD",
-            "id": 11735068,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BubblMan V3 B",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 6 Central BMD",
-            "id": 11735069,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "CSciPass",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 7 PMD",
-            "id": 11735175,
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Cyberworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "SciLab Overworld"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Yoka Cyberworld"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Unlocker",
-                    "count": 8
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Hammer T",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 7 West BMD",
-            "id": 11735071,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SetSand",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 7 Northeast BMD",
-            "id": 11735073,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "CopyDmg *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 7 Northwest BMD",
-            "id": 11735072,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MetalMan V2 M",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Undernet 7 Upper BMD",
-            "id": 11735160,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Unlocker",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "WWW Island": {
-        "name": "WWW Island",
-        "exits": [],
-        "locations": [
-          {
-            "name": "WWW Control Room 1 Screen",
-            "id": 11735212,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "500z",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW Wily's Desk",
-            "id": 11735213,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "1 BugFrag",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW Wall BMD",
-            "id": 11735153,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "DrillMan V3 D",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 1 East BMD",
-            "id": 11735120,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SpinYllw",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 1 West BMD",
-            "id": 11735119,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BrkChrg",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 1 Central BMD",
-            "id": 11735118,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mr Famous' Wristband",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 2 East BMD",
-            "id": 11735121,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "DrillMan D",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 2 Northwest BMD",
-            "id": 11735122,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "CustSwrd Z",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 3 East BMD",
-            "id": 11735123,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP3",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 3 North BMD",
-            "id": 11735124,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Jealousy J",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 4 Central BMD",
-            "id": 11735126,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RegUP3",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "WWW 4 Northwest BMD",
-            "id": 11735125,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Invis *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Alpha Defeated",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Victory",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Secret Area": {
-        "name": "Secret Area",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Secret 1 South BMD",
-            "id": 11735074,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "GutsMan G",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 1 Northeast BMD",
-            "id": 11735075,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Untrap",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 1 Northwest BMD",
-            "id": 11735076,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "HP+100 (Yellow)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 2 Island BMD",
-            "id": 11735079,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "10 BugFrags",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 2 Lower BMD",
-            "id": 11735078,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "FullEnrg",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 2 Upper BMD",
-            "id": 11735077,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Charge+1 (Pink)",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 3 Island BMD",
-            "id": 11735081,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Press"
-              }
-            },
-            "item": {
-              "name": "1 BugFrag",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 3 South BMD",
-            "id": 11735080,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "LongSwrd E",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Secret 3 BugFrag BMD",
-            "id": 11735082,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Press"
-              }
-            },
-            "item": {
-              "name": "Fire+30 *",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
-          },
-          {
-            "name": "Serenade",
-            "id": 11735311,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SandStage C",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "progress_type": "EXCLUDED"
           }
         ]
       }

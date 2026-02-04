@@ -139,6 +139,42 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Bowser's Castle Mini", player),
+        And(HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Winkle", player),
+        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beanbean Castle Town", player),
+        And(HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand"))))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player),
+        Or(HelperCall(helper_func=fungitown_birdo_shop, helper_name="fungitown_birdo_shop"), HelperCall(helper_func=pieces, helper_name="pieces", body_rule=(Has("Beanstar Piece 1")) & (Has("Beanstar Piece 2")) & (Has("Beanstar Piece 3")) & (Has("Beanstar Piece 4"))))
+    )
+
+    multiworld.get_entrance("Fungitown Shop Birdo Flag", player).access_rule = \
+        lambda state: ((canCrash(state, player)) and (postJokes(state, player, state.multiworld.worlds[player].options.goal)))
+
+    world.set_rule(
+        multiworld.get_entrance("GwarharMain", player),
+        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand"))))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("JokesMain", player),
+        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    multiworld.get_entrance("PostJokes", player).access_rule = \
+        lambda state: postJokes(state, player, state.multiworld.worlds[player].options.goal)
+
+    world.set_rule(
         multiworld.get_entrance("BaseUltraRocks", player),
         HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3))
     )
@@ -184,28 +220,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Winkle", player),
-        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beanbean Castle Town", player),
-        And(HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand"))))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Shop Chuckolator Flag", player),
         Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=piranha_shop, helper_name="piranha_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Mom Piranha Flag", player),
-        Or(HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")), HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
+        Or(HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Enter Fungitown Flag", player),
-        Or(HelperCall(helper_func=fungitown, helper_name="fungitown"), HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
+        Or(HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown, helper_name="fungitown"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
     )
 
     world.set_rule(
@@ -222,11 +248,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("GwarharMain", player),
-        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand"))))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("GwarharEntrance", player),
         And(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=membership, helper_name="membership", body_rule=Has("Membership Card")))
     )
@@ -240,28 +261,11 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Fungitown", player),
         And(HelperCall(helper_func=castleTown, helper_name="castleTown"), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
     )
-
-    world.set_rule(
-        multiworld.get_entrance("JokesMain", player),
-        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    multiworld.get_entrance("PostJokes", player).access_rule = \
-        lambda state: postJokes(state, player, state.multiworld.worlds[player].options.goal)
-
-    world.set_rule(
-        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player),
-        Or(HelperCall(helper_func=fungitown_birdo_shop, helper_name="fungitown_birdo_shop"), HelperCall(helper_func=pieces, helper_name="pieces", body_rule=(Has("Beanstar Piece 1")) & (Has("Beanstar Piece 2")) & (Has("Beanstar Piece 3")) & (Has("Beanstar Piece 4"))))
-    )
-
-    multiworld.get_entrance("Fungitown Shop Birdo Flag", player).access_rule = \
-        lambda state: ((canCrash(state, player)) and (postJokes(state, player, state.multiworld.worlds[player].options.goal)))
-
-    world.set_rule(
-        multiworld.get_entrance("Bowser's Castle Mini", player),
-        And(HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
-    )
     # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Fungitown Shop Birdo Flag"),
+        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player)
+    )
     multiworld.register_indirect_condition(
         world.get_region("Shop Birdo Flag"),
         multiworld.get_entrance("Shop Chuckolator Flag", player)
@@ -302,11 +306,792 @@ def set_rules(world: "World") -> None:
         world.get_region("Shop Birdo Flag"),
         multiworld.get_entrance("Shop Beanstar Complete Flag", player)
     )
-    multiworld.register_indirect_condition(
-        world.get_region("Fungitown Shop Birdo Flag"),
-        multiworld.get_entrance("Fungitown Shop Beanstar Complete Flag", player)
-    )
     # Location rules
+    world.set_rule(
+        multiworld.get_location("Airport Entrance Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Lobby Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 4", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Westside Digspot 5", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 4", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Center Digspot 5", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 4", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airport Eastside Digspot 5", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Entrance To Hoohoo Mountain Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Guffawha Ruins Block", player),
+        HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Guffawha Ruins Entrance Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hoohoo Mountain Base Teehee Valley Entrance Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Peach's Extra Dress", player),
+        And(HelperCall(helper_func=pieces, helper_name="pieces", body_rule=(Has("Beanstar Piece 1")) & (Has("Beanstar Piece 2")) & (Has("Beanstar Piece 3")) & (Has("Beanstar Piece 4"))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Fake Beanstar", player),
+        And(HelperCall(helper_func=pieces, helper_name="pieces", body_rule=(Has("Beanstar Piece 1")) & (Has("Beanstar Piece 2")) & (Has("Beanstar Piece 3")) & (Has("Beanstar Piece 4"))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 4", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 5", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 6", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 7", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 8", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 9", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone 10", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Castle Town Beanstone Reward", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Boostatue Mole", player),
+        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Entrance Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Morton Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Lemmy Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bowser's Castle Wendy & Larry Hallway Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Popple Fight Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Barrel Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Goblet Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 2 Block", player),
+        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 1", player),
+        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 2", player),
+        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 2 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Block 1", player),
+        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Block 2", player),
+        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 4 Block 1", player),
+        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 4 Block 2", player),
+        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 4 Block 3", player),
+        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Block 1", player),
+        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Block 2", player),
+        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 7 Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 8 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods East of Chuckleroot Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 4", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 2", player),
+        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 3", player),
+        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 1", player),
+        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 2", player),
+        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 3", player),
+        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 4", player),
+        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 5", player),
+        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 6", player),
+        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Koopa Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Green Goblet", player),
+        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chateau Red Goblet", player),
+        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods Red Chuckola Fruit", player),
+        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Chucklehuck Woods White Chuckola Fruit", player),
+        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Trunkle Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Starting Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Starting Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Starting Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Starting Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Starting Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Starting Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Birdo Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Pants Shop Birdo Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Birdo Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fungitown Badge Shop Birdo Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Pipe Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Massage Parlor Entrance Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 1 Block", player),
+        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 1", player),
+        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 2", player),
+        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Red Pearl Bean", player),
+        And(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Green Pearl Bean", player),
+        And(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Oho Ocean South Room 2 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Past Hermie Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon North of Spangle Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon West of Spangle Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 4 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Entrance to West Underwater Area Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Spangle Room Block", player),
+        HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Spangle Reward", player),
+        HelperCall(helper_func=spangle, helper_name="spangle", body_rule=Has("Spangle"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Gwarhar Lagoon Spangle", player),
+        HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Basement Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Basement Room 2 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End First Boiler Room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End First Boiler Room Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Furnace Room 1 Block 1", player),
+        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Furnace Room 1 Block 2", player),
+        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Furnace Room 1 Block 3", player),
+        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 1 Block", player),
+        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 2 Block", player),
+        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 2 Digspot", player),
+        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Northeast of Boiler Room 3 Digspot", player),
+        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Second Floor East Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Final Split up Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Solo Luigi Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Solo Luigi Room 2 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Solo Mario Room 1 Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Second Boiler Room Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Second Boiler Room Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Before Jojora Room Digspot", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Joke's End Jojora Room Digspot", player),
+        And(HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+    )
+
     world.set_rule(
         multiworld.get_location("Hoohoo Village Hammer House Block", player),
         HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
@@ -479,7 +1264,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 2", player),
-        And(HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")), HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3)), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")), HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3)))
     )
 
     world.set_rule(
@@ -793,413 +1578,63 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Chateau Room 1 Digspot", player),
+        multiworld.get_location("Oho Oasis West Digspot", player),
         HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chateau Popple Fight Room Digspot", player),
+        multiworld.get_location("Oho Ocean Spike Room Digspot 1", player),
         HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chateau Barrel Room Digspot", player),
+        multiworld.get_location("Oho Ocean Spike Room Digspot 2", player),
         HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chateau Goblet Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 2 Block", player),
-        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 1", player),
-        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Solo Luigi Cave Room 3 Block 2", player),
-        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 2 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Pipe Room Block 1", player),
-        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Pipe Room Block 2", player),
-        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Pipe Room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 4 Block 1", player),
+        multiworld.get_location("Oho Oasis Firebrand", player),
         HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 4 Block 2", player),
-        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
+        multiworld.get_location("Oho Oasis Thunderhand", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 4 Block 3", player),
-        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
+        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 7 Block 1", player),
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 1", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 2", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 3", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Teehee Valley Before Birdo Digspot 4", player),
+        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sewers Room 5 Block 1", player),
         HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
     )
 
     world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 7 Block 2", player),
+        multiworld.get_location("Sewers Room 5 Block 2", player),
         HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 7 Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 7 Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 8 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods East of Chuckleroot Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Northeast of Chuckleroot Digspot 4", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 2", player),
-        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods White Fruit Room Digspot 3", player),
-        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Wiggler room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 1", player),
-        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 2", player),
-        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 3", player),
-        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 4", player),
-        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 5", player),
-        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Past Chuckleroot Block 6", player),
-        HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Koopa Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Room 1 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Brooch Guards Room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Chateau Entrance Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chateau Green Goblet", player),
-        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chateau Red Goblet", player),
-        And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods Red Chuckola Fruit", player),
-        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Chucklehuck Woods White Chuckola Fruit", player),
-        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Peach's Extra Dress", player),
-        And(HelperCall(helper_func=pieces, helper_name="pieces", body_rule=(Has("Beanstar Piece 1")) & (Has("Beanstar Piece 2")) & (Has("Beanstar Piece 3")) & (Has("Beanstar Piece 4"))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Fake Beanstar", player),
-        And(HelperCall(helper_func=pieces, helper_name="pieces", body_rule=(Has("Beanstar Piece 1")) & (Has("Beanstar Piece 2")) & (Has("Beanstar Piece 3")) & (Has("Beanstar Piece 4"))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 4", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 5", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 6", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 7", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 8", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 9", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone 10", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Castle Town Beanstone Reward", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Starting Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Starting Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Starting Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Starting Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Starting Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Chuckolator Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Chuckolator Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Chuckolator Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Chuckolator Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Chuckolator Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Chuckolator Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Mom Piranha Flag 1", player),
-        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Mom Piranha Flag 2", player),
-        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Mom Piranha Flag 3", player),
-        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Mom Piranha Flag 1", player),
-        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Mom Piranha Flag 2", player),
-        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Mom Piranha Flag 3", player),
-        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Trunkle Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Trunkle Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badge Shop Trunkle Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Trunkle Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Trunkle Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pants Shop Trunkle Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
     )
 
     world.set_rule(
@@ -1259,6 +1694,121 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pants Shop Birdo Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Chuckolator Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Chuckolator Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Chuckolator Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Chuckolator Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Chuckolator Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Chuckolator Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Trunkle Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Trunkle Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Trunkle Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Trunkle Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Trunkle Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Trunkle Flag 3", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Mom Piranha Flag 1", player),
+        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Mom Piranha Flag 2", player),
+        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Mom Piranha Flag 3", player),
+        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Mom Piranha Flag 1", player),
+        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Mom Piranha Flag 2", player),
+        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Mom Piranha Flag 3", player),
+        And(Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))), Or(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose"))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Starting Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badge Shop Starting Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Starting Flag 1", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Starting Flag 2", player),
+        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pants Shop Starting Flag 3", player),
         Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
     )
 
@@ -1338,156 +1888,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Past Cackletta Room 2 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Basement Room 1 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Basement Room 2 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Woohoo Hooniversity Popple Room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Pipe Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Massage Parlor Entrance Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 1 Block", player),
-        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 1", player),
-        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon First Underwater Area Room 2 Block 2", player),
-        HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Red Pearl Bean", player),
-        And(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Green Pearl Bean", player),
-        And(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean South Room 2 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Past Hermie Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon North of Spangle Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon West of Spangle Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 4 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Entrance to West Underwater Area Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Spangle Room Block", player),
-        HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Spangle Reward", player),
-        HelperCall(helper_func=spangle, helper_name="spangle", body_rule=Has("Spangle"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Gwarhar Lagoon Spangle", player),
-        HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3))
-    )
-
-    world.set_rule(
         multiworld.get_location("Teehee Valley Room 1 Digspot 1", player),
         HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
@@ -1543,236 +1943,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Winkle Area Beanstar Room Block", player),
-        HelperCall(helper_func=winkle, helper_name="winkle", body_rule=Has("Winkle Card"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Winkle Area Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Winkle Area Colloseum Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanstar Piece Winkle Area", player),
-        HelperCall(helper_func=winkle, helper_name="winkle", body_rule=Has("Winkle Card"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Room 5 Block 1", player),
-        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sewers Room 5 Block 2", player),
-        HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Entrance Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Lobby Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Westside Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Westside Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Westside Digspot 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Westside Digspot 4", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Westside Digspot 5", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Center Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Center Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Center Digspot 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Center Digspot 4", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Center Digspot 5", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Eastside Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Eastside Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Eastside Digspot 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Eastside Digspot 4", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airport Eastside Digspot 5", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End First Boiler Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End First Boiler Room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Furnace Room 1 Block 1", player),
-        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Furnace Room 1 Block 2", player),
-        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Furnace Room 1 Block 3", player),
-        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Northeast of Boiler Room 1 Block", player),
-        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Northeast of Boiler Room 2 Block", player),
-        HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Northeast of Boiler Room 2 Digspot", player),
-        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Northeast of Boiler Room 3 Digspot", player),
-        And(HelperCall(helper_func=canCrash, helper_name="canCrash", body_rule=(Has("Green Pearl Bean")) & (Has("Thunderhand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Floor East Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Final Split up Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Luigi Room 1 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Luigi Room 2 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Solo Mario Room 1 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Boiler Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Second Boiler Room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Before Jojora Room Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Joke's End Jojora Room Digspot", player),
-        And(HelperCall(helper_func=canDash, helper_name="canDash", body_rule=(Has("Red Pearl Bean")) & (Has("Firebrand"))), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Before Birdo Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Before Birdo Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Before Birdo Digspot 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Before Birdo Digspot 4", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
         multiworld.get_location("Yoshi Theater Blue Yoshi", player),
         HelperCall(helper_func=beanFruit, helper_name="beanFruit", body_rule=(Has("Bean Fruit 1")) & (Has("Bean Fruit 2")) & (Has("Bean Fruit 3")) & (Has("Bean Fruit 4")) & (Has("Bean Fruit 5")) & (Has("Bean Fruit 6")) & (Has("Bean Fruit 7")))
     )
@@ -1813,191 +1983,21 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Teehee Valley Trunkle Room Digspot", player),
+        multiworld.get_location("Winkle Area Beanstar Room Block", player),
+        HelperCall(helper_func=winkle, helper_name="winkle", body_rule=Has("Winkle Card"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Winkle Area Digspot", player),
         HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Starting Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Starting Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Starting Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Starting Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Starting Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Starting Flag 3", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Beanstar Complete Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Beanstar Complete Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Birdo Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Pants Shop Birdo Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Birdo Flag 1", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fungitown Badge Shop Birdo Flag 2", player),
-        Or(And(HelperCall(helper_func=brooch, helper_name="brooch", body_rule=Has("Beanbean Brooch")), HelperCall(helper_func=fruits, helper_name="fruits", body_rule=(Has("Red Chuckola Fruit")) & (Has("Purple Chuckola Fruit")) & (Has("White Chuckola Fruit"))), Or(HelperCall(helper_func=fire, helper_name="fire", body_rule=Has("Firebrand")), HelperCall(helper_func=hammers, helper_name="hammers", body_rule=Has("Hammers")), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))), HelperCall(helper_func=rose, helper_name="rose", body_rule=Has("Peasley's Rose")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 1", player),
+        multiworld.get_location("Winkle Area Colloseum Digspot", player),
         HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
     )
 
     world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Before Harhall Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts Boostatue Mole", player),
-        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers"))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beanbean Outskirts S Room 2 Digspot 3", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Oasis West Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean Spike Room Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Ocean Spike Room Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Oasis Firebrand", player),
-        HelperCall(helper_func=canMini, helper_name="canMini", body_rule=(Has("Red Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Oho Oasis Thunderhand", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Entrance To Hoohoo Mountain Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 1", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Teehee Valley Upper Maze Room 2 Digspot 2", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Guffawha Ruins Block", player),
-        HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Guffawha Ruins Entrance Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hoohoo Mountain Base Teehee Valley Entrance Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Entrance Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Iggy & Morton Hallway Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Morton Room 1 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Lemmy Room 1 Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bowser's Castle Wendy & Larry Hallway Digspot", player),
-        HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers")))
+        multiworld.get_location("Beanstar Piece Winkle Area", player),
+        HelperCall(helper_func=winkle, helper_name="winkle", body_rule=Has("Winkle Card"))
     )

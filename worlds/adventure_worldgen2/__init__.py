@@ -111,10 +111,6 @@ class AdventureWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Blue Labyrinth 0": "Left Difficulty Switch",
-        "Blue Labyrinth 1": "Slow Yorgle",
-        "Catacombs": "Sword",
-        "Adjacent to Catacombs": "Slow Grundle",
         "Credits Left Side": "Freeincarnate",
         "Dungeon0": "Freeincarnate",
         "Northeast of Catacombs": "Freeincarnate",
@@ -127,20 +123,31 @@ class AdventureWorld(RuleWorldMixin, World):
         "Southwest of Catacombs": "Freeincarnate",
         "White Castle Gate": "Freeincarnate",
         "Yellow Castle Gate": "Freeincarnate",
-        "Black Castle Gate": "Black Key",
-        "Inside Yellow Castle": "Magnet",
-        "Chalice Home": "Victory",
-        "Slay Grundle": "Yellow Key",
         "Dungeon1": "Right Difficulty Switch",
         "Black Castle Foyer": "Bridge",
         "Slay Rhindle": "Slow Rhindle",
         "Dungeon Vault": "White Key",
         "Credits Right Side": "Chalice",
+        "Blue Labyrinth 0": "Left Difficulty Switch",
+        "Blue Labyrinth 1": "Slow Yorgle",
+        "Catacombs": "Sword",
+        "Adjacent to Catacombs": "Slow Grundle",
+        "Black Castle Gate": "Black Key",
+        "Slay Grundle": "Yellow Key",
+        "Inside Yellow Castle": "Magnet",
+        "Chalice Home": "Victory",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Dungeon0": False,
+        "Dungeon1": True,
+        "Black Castle Foyer": True,
+        "Slay Rhindle": False,
+        "Dungeon Vault": True,
+        "Credits Left Side": False,
+        "Credits Right Side": True,
         "Blue Labyrinth 0": False,
         "Blue Labyrinth 1": False,
         "Catacombs": True,
@@ -152,20 +159,13 @@ class AdventureWorld(RuleWorldMixin, World):
         "Northeast of Catacombs": False,
         "Southeast of Catacombs": False,
         "Slay Yorgle": False,
-        "Inside Yellow Castle": True,
-        "Chalice Home": True,
         "RedMaze0": False,
         "RedMaze1": False,
         "Red Maze Vault Entrance": False,
         "Red Maze Vault": False,
         "Slay Grundle": True,
-        "Dungeon0": False,
-        "Dungeon1": True,
-        "Black Castle Foyer": True,
-        "Slay Rhindle": False,
-        "Dungeon Vault": True,
-        "Credits Left Side": False,
-        "Credits Right Side": True,
+        "Inside Yellow Castle": True,
+        "Chalice Home": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):

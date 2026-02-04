@@ -266,23 +266,31 @@ def tree_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bo
 
 def tree_zone_4_coins(state: "CollectionState", player: int, coins = None) -> bool:
     auto_scroll = is_auto_scroll(state, player, 'Tree Zone 4')
-    reachable_coins = 0
+    reachable_coins_from_start = 0
+    reachable_coins_from_bell = 0
     if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
-        reachable_coins += 14
+        reachable_coins_from_start += 14
         if state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player):
-            reachable_coins += 4
+            reachable_coins_from_start += 4
             if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
                 if auto_scroll:
-                    reachable_coins += 12
+                    reachable_coins_from_start += 12
                 else:
-                    reachable_coins += 56
+                    reachable_coins_from_start += 56
     if state.has('Tree Zone 4 Midway Bell', player):
-        bell_coins = 10
-        if not (auto_scroll):
-            bell_coins += 46
-        if (bell_coins > reachable_coins):
-            reachable_coins = bell_coins
-    return (coins <= reachable_coins)
+        if (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player)) and ((auto_scroll) or (not (state.has_any(['Pipe Traversal - Left', 'Pipe Traversal'], player)))):
+            reachable_coins_from_bell += 10
+        else:
+            if (state.has_any(['Pipe Traversal - Left', 'Pipe Traversal'], player)) and (not (auto_scroll)):
+                if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+                    reachable_coins_from_bell += 31
+                    if state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player):
+                        reachable_coins_from_bell += 18
+                        if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+                            reachable_coins_from_bell += 25
+                else:
+                    reachable_coins_from_bell += 18
+    return (coins <= max(reachable_coins_from_start, reachable_coins_from_bell))
 
 
 def tree_zone_5_coins(state: "CollectionState", player: int, coins = None) -> bool:
@@ -572,36 +580,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Tree Zone 1 -> Tree Zone 2", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression',))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tree Zone 2 -> Tree Zone 3", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 2,))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tree Zone 2 -> Tree Zone Secret Course", player),
-        Has('Tree Zone Secret', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tree Zone 4 -> Tree Zone 5", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 3,))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Space Zone 1 -> Space Zone Secret Course", player),
-        Has('Space Zone Secret', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Space Zone 1 -> Space Zone 2", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Space Zone Progression',))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Macro Zone 1 -> Macro Zone 2", player),
         HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Macro Zone Progression',))
     )
@@ -632,6 +610,21 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Mario Zone 1 -> Mario Zone 2", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression',))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mario Zone 2 -> Mario Zone 3", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 2,))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Mario Zone 3 -> Mario Zone 4", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 3,))
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 1 -> Pumpkin Zone 2", player),
         HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Pumpkin Zone Progression',))
     )
@@ -657,18 +650,33 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mario Zone 1 -> Mario Zone 2", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression',))
+        multiworld.get_entrance("Space Zone 1 -> Space Zone Secret Course", player),
+        Has('Space Zone Secret', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mario Zone 2 -> Mario Zone 3", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 2,))
+        multiworld.get_entrance("Space Zone 1 -> Space Zone 2", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Space Zone Progression',))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Mario Zone 3 -> Mario Zone 4", player),
-        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Mario Zone Progression', 3,))
+        multiworld.get_entrance("Tree Zone 1 -> Tree Zone 2", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression',))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tree Zone 2 -> Tree Zone 3", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 2,))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tree Zone 2 -> Tree Zone Secret Course", player),
+        Has('Tree Zone Secret', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tree Zone 4 -> Tree Zone 5", player),
+        HelperCall(helper_func=has_level_progression, helper_name="has_level_progression", args=('Tree Zone Progression', 3,))
     )
 
     world.set_rule(
@@ -687,63 +695,8 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Tree Zone 2 - Normal Exit", player),
-        HelperCall(helper_func=tree_zone_2_normal_exit, helper_name="tree_zone_2_normal_exit")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tree Zone 2 - Secret Exit", player),
-        HelperCall(helper_func=tree_zone_2_secret_exit, helper_name="tree_zone_2_secret_exit")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tree Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=tree_zone_2_midway_bell, helper_name="tree_zone_2_midway_bell")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tree Zone 3 - Normal Exit", player),
-        HelperCall(helper_func=tree_zone_3_normal_exit, helper_name="tree_zone_3_normal_exit")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tree Zone 4 - Normal Exit", player),
-        HelperCall(helper_func=tree_zone_4_normal_exit, helper_name="tree_zone_4_normal_exit")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tree Zone 4 - Midway Bell", player),
-        HelperCall(helper_func=tree_zone_4_midway_bell, helper_name="tree_zone_4_midway_bell")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tree Zone 5 - Boss", player),
-        HelperCall(helper_func=tree_zone_5_boss, helper_name="tree_zone_5_boss")
-    )
-
-    world.set_rule(
         multiworld.get_location("Hippo Zone - Normal or Secret Exit", player),
         HelperCall(helper_func=hippo_zone_normal_or_secret_exit, helper_name="hippo_zone_normal_or_secret_exit")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Space Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=space_zone_1_normal_exit, helper_name="space_zone_1_normal_exit", body_rule=HasAny('Carrot', 'Space Physics'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Space Zone 1 - Secret Exit", player),
-        HelperCall(helper_func=space_zone_1_secret_exit, helper_name="space_zone_1_secret_exit")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Space Zone 2 - Boss", player),
-        HelperCall(helper_func=space_zone_2_boss, helper_name="space_zone_2_boss", body_rule=(HasAny('Pipe Traversal - Right', 'Pipe Traversal')) & ((Has("Space Physics")) | (HasAny('Mushroom', 'Fire Flower', 'Carrot'))))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Space Zone 2 - Midway Bell", player),
-        HelperCall(helper_func=space_zone_2_midway_bell, helper_name="space_zone_2_midway_bell", body_rule=HasAny('Carrot', 'Fire Flower', 'Mushroom', 'Space Physics', 'Space Zone 2 Midway Bell'))
     )
 
     world.set_rule(
@@ -787,6 +740,26 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Mario Zone 1 - Normal Exit", player),
+        HelperCall(helper_func=mario_zone_1_normal_exit, helper_name="mario_zone_1_normal_exit")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mario Zone 1 - Midway Bell", player),
+        HelperCall(helper_func=mario_zone_1_midway_bell, helper_name="mario_zone_1_midway_bell")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mario Zone 4 - Boss", player),
+        HelperCall(helper_func=mario_zone_4_boss, helper_name="mario_zone_4_boss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mario's Castle - Wario", player),
+        HelperCall(helper_func=marios_castle_wario, helper_name="marios_castle_wario")
+    )
+
+    world.set_rule(
         multiworld.get_location("Pumpkin Zone 1 - Normal Exit", player),
         HelperCall(helper_func=pumpkin_zone_1_normal_exit, helper_name="pumpkin_zone_1_normal_exit")
     )
@@ -817,18 +790,58 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Mario Zone 1 - Normal Exit", player),
-        HelperCall(helper_func=mario_zone_1_normal_exit, helper_name="mario_zone_1_normal_exit")
+        multiworld.get_location("Space Zone 1 - Normal Exit", player),
+        HelperCall(helper_func=space_zone_1_normal_exit, helper_name="space_zone_1_normal_exit", body_rule=HasAny('Carrot', 'Space Physics'))
     )
 
     world.set_rule(
-        multiworld.get_location("Mario Zone 1 - Midway Bell", player),
-        HelperCall(helper_func=mario_zone_1_midway_bell, helper_name="mario_zone_1_midway_bell")
+        multiworld.get_location("Space Zone 1 - Secret Exit", player),
+        HelperCall(helper_func=space_zone_1_secret_exit, helper_name="space_zone_1_secret_exit")
     )
 
     world.set_rule(
-        multiworld.get_location("Mario Zone 4 - Boss", player),
-        HelperCall(helper_func=mario_zone_4_boss, helper_name="mario_zone_4_boss")
+        multiworld.get_location("Space Zone 2 - Boss", player),
+        HelperCall(helper_func=space_zone_2_boss, helper_name="space_zone_2_boss", body_rule=(HasAny('Pipe Traversal - Right', 'Pipe Traversal')) & ((Has("Space Physics")) | (HasAny('Mushroom', 'Fire Flower', 'Carrot'))))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Space Zone 2 - Midway Bell", player),
+        HelperCall(helper_func=space_zone_2_midway_bell, helper_name="space_zone_2_midway_bell", body_rule=HasAny('Carrot', 'Fire Flower', 'Mushroom', 'Space Physics', 'Space Zone 2 Midway Bell'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 2 - Normal Exit", player),
+        HelperCall(helper_func=tree_zone_2_normal_exit, helper_name="tree_zone_2_normal_exit")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 2 - Secret Exit", player),
+        HelperCall(helper_func=tree_zone_2_secret_exit, helper_name="tree_zone_2_secret_exit")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 2 - Midway Bell", player),
+        HelperCall(helper_func=tree_zone_2_midway_bell, helper_name="tree_zone_2_midway_bell")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 3 - Normal Exit", player),
+        HelperCall(helper_func=tree_zone_3_normal_exit, helper_name="tree_zone_3_normal_exit")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 4 - Normal Exit", player),
+        HelperCall(helper_func=tree_zone_4_normal_exit, helper_name="tree_zone_4_normal_exit")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 4 - Midway Bell", player),
+        HelperCall(helper_func=tree_zone_4_midway_bell, helper_name="tree_zone_4_midway_bell")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tree Zone 5 - Boss", player),
+        HelperCall(helper_func=tree_zone_5_boss, helper_name="tree_zone_5_boss")
     )
 
     world.set_rule(
@@ -859,9 +872,4 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Turtle Zone Secret Course - Normal Exit", player),
         HelperCall(helper_func=turtle_zone_secret_course_normal_exit, helper_name="turtle_zone_secret_course_normal_exit", body_rule=HasAny('Carrot', 'Fire Flower'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mario's Castle - Wario", player),
-        HelperCall(helper_func=marios_castle_wario, helper_name="marios_castle_wario")
     )

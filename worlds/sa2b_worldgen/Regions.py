@@ -10,13 +10,13 @@ from .Locations import location_table, SonicAdventure2BattleWorldGenLocation
 
 
 # Regions that were added after sphere calculation (from original export)
-DYNAMICALLY_ADDED_REGIONS = {"Chao Race - Beginner", "Chao Karate - Beginner", "Chao Race - Intermediate", "Chao Karate - Standard", "Chao Race - Expert", "Chao Karate - Expert", "Chao Karate - Super", "Kart Race - Beginner", "Kart Race - Intermediate", "Kart Race - Expert"}
+DYNAMICALLY_ADDED_REGIONS = {"Chao Karate - Beginner", "Chao Karate - Expert", "Chao Karate - Standard", "Chao Karate - Super", "Chao Race - Beginner", "Chao Race - Expert", "Chao Race - Intermediate", "Kart Race - Beginner", "Kart Race - Expert", "Kart Race - Intermediate"}
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "City Escape", "Metal Harbor", "Green Forest", "Pyramid Cave", "Crazy Gadget", "Final Rush", "Prison Lane", "Mission Street", "Route 101", "Hidden Base", "Eternal Engine", "Wild Canyon", "Pumpkin Hill", "Aquatic Mine", "Death Chamber", "Meteor Herd", "Radical Highway", "White Jungle", "Sky Rail", "Final Chase", "Iron Gate", "Sand Ocean", "Lost Colony", "Weapons Bed", "Cosmic Wall", "Dry Lagoon", "Egg Quarters", "Security Hall", "Route 280", "Mad Space", "Cannon's Core", "Chao Race - Beginner", "Chao Karate - Beginner", "Chao Race - Intermediate", "Chao Karate - Standard", "Chao Race - Expert", "Chao Karate - Expert", "Chao Karate - Super", "Kart Race - Beginner", "Kart Race - Intermediate", "Kart Race - Expert", "Gate 0", "Gate 1", "Gate 1 Boss", "Gate 2", "Gate 2 Boss", "Gate 3", "Gate 3 Boss", "Biolizard"]
+    region_names = ["Menu", "Aquatic Mine", "Biolizard", "Cannon's Core", "Chao Karate - Beginner", "Chao Karate - Expert", "Chao Karate - Standard", "Chao Karate - Super", "Chao Race - Beginner", "Chao Race - Expert", "Chao Race - Intermediate", "City Escape", "Cosmic Wall", "Crazy Gadget", "Death Chamber", "Dry Lagoon", "Egg Quarters", "Eternal Engine", "Final Chase", "Final Rush", "Gate 0", "Gate 1", "Gate 1 Boss", "Gate 2", "Gate 2 Boss", "Gate 3", "Gate 3 Boss", "Green Forest", "Hidden Base", "Iron Gate", "Kart Race - Beginner", "Kart Race - Expert", "Kart Race - Intermediate", "Lost Colony", "Mad Space", "Metal Harbor", "Meteor Herd", "Mission Street", "Prison Lane", "Pumpkin Hill", "Pyramid Cave", "Radical Highway", "Route 101", "Route 280", "Sand Ocean", "Security Hall", "Sky Rail", "Weapons Bed", "White Jungle", "Wild Canyon"]
 
     regions = {}
     for region_name in region_names:

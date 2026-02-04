@@ -138,7 +138,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Afterlife To Hylemxylem", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"))
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Drill Castle To Sage Labyrinth", player),
+        HelperCall(helper_func=skull_bomb, helper_name="skull_bomb", body_rule=Has("SKULL BOMB"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Shield Facility To Worm Pod", player),
+        HelperCall(helper_func=enter_wormpod, helper_name="enter_wormpod")
     )
 
     world.set_rule(
@@ -183,32 +193,182 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("World To Sage Airship", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=worm_room_key, helper_name="worm_room_key", body_rule=Has("WORM ROOM KEY")), HelperCall(helper_func=enter_sageship, helper_name="enter_sageship"))
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=enter_sageship, helper_name="enter_sageship"), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=worm_room_key, helper_name="worm_room_key", body_rule=Has("WORM ROOM KEY")))
     )
 
     world.set_rule(
         multiworld.get_entrance("World To Hylemxylem", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Shield Facility To Worm Pod", player),
-        HelperCall(helper_func=enter_wormpod, helper_name="enter_wormpod")
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=enter_hylemxylem, helper_name="enter_hylemxylem"), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Worm Pod To Shield Facility", player),
         HelperCall(helper_func=airship, helper_name="airship", body_rule=Has("DOCK KEY"))
     )
-
-    world.set_rule(
-        multiworld.get_entrance("Drill Castle To Sage Labyrinth", player),
-        HelperCall(helper_func=skull_bomb, helper_name="skull_bomb", body_rule=Has("SKULL BOMB"))
-    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Afterlife: TV", player),
         HelperCall(helper_func=cave_key, helper_name="cave_key", body_rule=Has("CAVE KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Airship: Talk to Somsnosa", player),
+        HelperCall(helper_func=worm_room_key, helper_name="worm_room_key", body_rule=Has("WORM ROOM KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Drill Castle: Island Banana", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Drill Castle: Island Pot", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Drill Castle: Cave Sarcophagus", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Drill Castle: TV", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Underground Sarcophagus", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Shielded Key", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Buy Clicker", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Shielded Chest", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Cave Fridge", player),
+        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Roof Sarcophagus", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Under Lair Sarcophagus 1", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Under Lair Sarcophagus 2", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Under Lair Sarcophagus 3", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Sage Sarcophagus", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Sage Item 1", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: Sage Item 2", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Foglast: TV", player),
+        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=clicker, helper_name="clicker", body_rule=Has("CLICKER")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Upper Chamber Banana", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Across Upper Reservoir Chest", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Drained Lower Reservoir Chest", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Drained Lower Reservoir Burrito 1", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Drained Lower Reservoir Burrito 2", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 1", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 2", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 3", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Sarcophagus", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 1", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 2", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 3", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hylemxylem: Upper Reservoir Hole Key", player),
+        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Defeat Gibby", player),
+        HasAll('UPPER CHAMBER KEY', 'VESSEL ROOM KEY')
     )
 
     world.set_rule(
@@ -262,6 +422,46 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Sage Airship: TV", player),
+        HelperCall(helper_func=all_tokens, helper_name="all_tokens", body_rule=Has("SAGE TOKEN", 3))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Motor Hunter Sarcophagus", player),
+        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Sage Item 1", player),
+        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Sage Item 2", player),
+        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Sage Left Arm", player),
+        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Sage Right Arm", player),
+        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Sage Left Leg", player),
+        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sage Labyrinth: Sage Right Leg", player),
+        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
+    )
+
+    world.set_rule(
         multiworld.get_location("Viewax's Edifice: Canopic Jar", player),
         HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE"))
     )
@@ -273,7 +473,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: Shielded Key", player),
-        And(HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE")), HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE")))
+        HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE"))
     )
 
     world.set_rule(
@@ -359,204 +559,4 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Viewax's Edifice: TV", player),
         And(HelperCall(helper_func=jail_key, helper_name="jail_key", body_rule=Has("JAIL KEY")), HelperCall(helper_func=paddle, helper_name="paddle", body_rule=Has("PADDLE")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Airship: Talk to Somsnosa", player),
-        HelperCall(helper_func=worm_room_key, helper_name="worm_room_key", body_rule=Has("WORM ROOM KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Underground Sarcophagus", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Shielded Key", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Buy Clicker", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Shielded Chest", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Cave Fridge", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Roof Sarcophagus", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Under Lair Sarcophagus 1", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Under Lair Sarcophagus 2", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Under Lair Sarcophagus 3", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Sage Sarcophagus", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Sage Item 1", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: Sage Item 2", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=bridge_key, helper_name="bridge_key", body_rule=Has("BRIDGE KEY")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Foglast: TV", player),
-        And(HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE")), HelperCall(helper_func=clicker, helper_name="clicker", body_rule=Has("CLICKER")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Drill Castle: Island Banana", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Drill Castle: Island Pot", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Drill Castle: Cave Sarcophagus", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Drill Castle: TV", player),
-        HelperCall(helper_func=air_dash, helper_name="air_dash", body_rule=Has("PNEUMATOPHORE"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Motor Hunter Sarcophagus", player),
-        And(HelperCall(helper_func=charge_up, helper_name="charge_up", body_rule=Has("CHARGE UP")), HelperCall(helper_func=paper_cup, helper_name="paper_cup", body_rule=Has("PAPER CUP")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Sage Item 1", player),
-        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Sage Item 2", player),
-        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Sage Left Arm", player),
-        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Sage Right Arm", player),
-        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Sage Left Leg", player),
-        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Labyrinth: Sage Right Leg", player),
-        HelperCall(helper_func=deep_key, helper_name="deep_key", body_rule=Has("DEEP KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sage Airship: TV", player),
-        HelperCall(helper_func=all_tokens, helper_name="all_tokens", body_rule=Has("SAGE TOKEN", 3))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Upper Chamber Banana", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Across Upper Reservoir Chest", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Drained Lower Reservoir Chest", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Drained Lower Reservoir Burrito 1", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Drained Lower Reservoir Burrito 2", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 1", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 2", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Pot 3", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Lower Reservoir Hole Sarcophagus", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 1", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 2", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Drained Upper Reservoir Burrito 3", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hylemxylem: Upper Reservoir Hole Key", player),
-        HelperCall(helper_func=upper_chamber_key, helper_name="upper_chamber_key", body_rule=Has("UPPER CHAMBER KEY"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Defeat Gibby", player),
-        HasAll('UPPER CHAMBER KEY', 'VESSEL ROOM KEY')
     )

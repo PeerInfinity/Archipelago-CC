@@ -125,6 +125,13 @@ class BakingAdventureWorld(RuleWorldMixin, World):
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
+        "Bake for 9-11 Minutes": True,
+        "Cool on Wire Rack": True,
+        "Gradually Mix Dry into Wet": True,
+        "Fold in Chocolate Chips": True,
+        "Measure Flour": True,
+        "Add Baking Soda and Salt": True,
+        "Scoop Dough onto Sheets": True,
         "Gather Mixing Bowls": True,
         "Get Electric Mixer": True,
         "Find Measuring Tools": True,
@@ -134,13 +141,6 @@ class BakingAdventureWorld(RuleWorldMixin, World):
         "Cream Butter and Sugars": True,
         "Add Eggs": True,
         "Add Vanilla": True,
-        "Measure Flour": True,
-        "Add Baking Soda and Salt": True,
-        "Gradually Mix Dry into Wet": True,
-        "Fold in Chocolate Chips": True,
-        "Scoop Dough onto Sheets": True,
-        "Bake for 9-11 Minutes": True,
-        "Cool on Wire Rack": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):

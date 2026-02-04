@@ -51,6 +51,27 @@ class _Dungeon:
 # Dungeon data (name -> {regions, bosses})
 # Boss defeat functions are defined in Rules.py and wired up by set_rules()
 DUNGEON_DATA = {
+    "Agahnims Tower": {
+        "regions": ["Agahnims Tower", "Agahnim 1"],
+        "bosses": {
+        "None": ("Agahnim", "_can_defeat_Agahnims_Tower_default"),
+        },
+    },
+    "Ganons Tower": {
+        "regions": ["Ganons Tower (Entrance)", "Ganons Tower (Tile Room)", "Ganons Tower (Compass Room)", "Ganons Tower (Hookshot Room)", "Ganons Tower (Map Room)", "Ganons Tower (Firesnake Room)", "Ganons Tower (Teleport Room)", "Ganons Tower (Bottom)", "Ganons Tower (Top)", "Ganons Tower (Before Moldorm)", "Ganons Tower (Moldorm)", "Agahnim 2"],
+        "bosses": {
+        "None": ("Agahnim2", "_can_defeat_Ganons_Tower_default"),
+        "bottom": ("Armos Knights", "_can_defeat_Ganons_Tower_bottom"),
+        "middle": ("Lanmolas", "_can_defeat_Ganons_Tower_middle"),
+        "top": ("Moldorm", "_can_defeat_Ganons_Tower_top"),
+        },
+    },
+    "Thieves Town": {
+        "regions": ["Thieves Town (Entrance)", "Thieves Town (Deep)", "Blind Fight"],
+        "bosses": {
+        "None": ("Blind", "_can_defeat_Thieves_Town_default"),
+        },
+    },
     "Desert Palace": {
         "regions": ["Desert Palace North", "Desert Palace Main (Inner)", "Desert Palace Main (Outer)", "Desert Palace East"],
         "bosses": {
@@ -69,36 +90,6 @@ DUNGEON_DATA = {
 
         },
     },
-    "Agahnims Tower": {
-        "regions": ["Agahnims Tower", "Agahnim 1"],
-        "bosses": {
-        "None": ("Agahnim", "_can_defeat_Agahnims_Tower_default"),
-        },
-    },
-    "Tower of Hera": {
-        "regions": ["Tower of Hera (Bottom)", "Tower of Hera (Basement)", "Tower of Hera (Top)"],
-        "bosses": {
-        "None": ("Moldorm", "_can_defeat_Tower_of_Hera_default"),
-        },
-    },
-    "Swamp Palace": {
-        "regions": ["Swamp Palace (Entrance)", "Swamp Palace (First Room)", "Swamp Palace (Starting Area)", "Swamp Palace (West)", "Swamp Palace (Center)", "Swamp Palace (North)"],
-        "bosses": {
-        "None": ("Arrghus", "_can_defeat_Swamp_Palace_default"),
-        },
-    },
-    "Thieves Town": {
-        "regions": ["Thieves Town (Entrance)", "Thieves Town (Deep)", "Blind Fight"],
-        "bosses": {
-        "None": ("Blind", "_can_defeat_Thieves_Town_default"),
-        },
-    },
-    "Skull Woods": {
-        "regions": ["Skull Woods Final Section (Entrance)", "Skull Woods First Section", "Skull Woods Second Section", "Skull Woods Second Section (Drop)", "Skull Woods Final Section (Mothula)", "Skull Woods First Section (Right)", "Skull Woods First Section (Left)", "Skull Woods First Section (Top)"],
-        "bosses": {
-        "None": ("Mothula", "_can_defeat_Skull_Woods_default"),
-        },
-    },
     "Ice Palace": {
         "regions": ["Ice Palace (Entrance)", "Ice Palace (Second Section)", "Ice Palace (Main)", "Ice Palace (East)", "Ice Palace (East Top)", "Ice Palace (Kholdstare)"],
         "bosses": {
@@ -111,25 +102,34 @@ DUNGEON_DATA = {
         "None": ("Vitreous", "_can_defeat_Misery_Mire_default"),
         },
     },
-    "Turtle Rock": {
-        "regions": ["Turtle Rock (Entrance)", "Turtle Rock (First Section)", "Turtle Rock (Chain Chomp Room)", "Turtle Rock (Pokey Room)", "Turtle Rock (Second Section)", "Turtle Rock (Big Chest)", "Turtle Rock (Crystaroller Room)", "Turtle Rock (Dark Room)", "Turtle Rock (Eye Bridge)", "Turtle Rock (Trinexx)"],
-        "bosses": {
-        "None": ("Trinexx", "_can_defeat_Turtle_Rock_default"),
-        },
-    },
     "Palace of Darkness": {
         "regions": ["Palace of Darkness (Entrance)", "Palace of Darkness (Center)", "Palace of Darkness (Big Key Chest)", "Palace of Darkness (Bonk Section)", "Palace of Darkness (North)", "Palace of Darkness (Maze)", "Palace of Darkness (Harmless Hellway)", "Palace of Darkness (Final Section)"],
         "bosses": {
         "None": ("Helmasaur King", "_can_defeat_Palace_of_Darkness_default"),
         },
     },
-    "Ganons Tower": {
-        "regions": ["Ganons Tower (Entrance)", "Ganons Tower (Tile Room)", "Ganons Tower (Compass Room)", "Ganons Tower (Hookshot Room)", "Ganons Tower (Map Room)", "Ganons Tower (Firesnake Room)", "Ganons Tower (Teleport Room)", "Ganons Tower (Bottom)", "Ganons Tower (Top)", "Ganons Tower (Before Moldorm)", "Ganons Tower (Moldorm)", "Agahnim 2"],
+    "Skull Woods": {
+        "regions": ["Skull Woods Final Section (Entrance)", "Skull Woods First Section", "Skull Woods Second Section", "Skull Woods Second Section (Drop)", "Skull Woods Final Section (Mothula)", "Skull Woods First Section (Right)", "Skull Woods First Section (Left)", "Skull Woods First Section (Top)"],
         "bosses": {
-        "None": ("Agahnim2", "_can_defeat_Ganons_Tower_default"),
-        "bottom": ("Armos Knights", "_can_defeat_Ganons_Tower_bottom"),
-        "middle": ("Lanmolas", "_can_defeat_Ganons_Tower_middle"),
-        "top": ("Moldorm", "_can_defeat_Ganons_Tower_top"),
+        "None": ("Mothula", "_can_defeat_Skull_Woods_default"),
+        },
+    },
+    "Swamp Palace": {
+        "regions": ["Swamp Palace (Entrance)", "Swamp Palace (First Room)", "Swamp Palace (Starting Area)", "Swamp Palace (West)", "Swamp Palace (Center)", "Swamp Palace (North)"],
+        "bosses": {
+        "None": ("Arrghus", "_can_defeat_Swamp_Palace_default"),
+        },
+    },
+    "Tower of Hera": {
+        "regions": ["Tower of Hera (Bottom)", "Tower of Hera (Basement)", "Tower of Hera (Top)"],
+        "bosses": {
+        "None": ("Moldorm", "_can_defeat_Tower_of_Hera_default"),
+        },
+    },
+    "Turtle Rock": {
+        "regions": ["Turtle Rock (Entrance)", "Turtle Rock (First Section)", "Turtle Rock (Chain Chomp Room)", "Turtle Rock (Pokey Room)", "Turtle Rock (Second Section)", "Turtle Rock (Big Chest)", "Turtle Rock (Crystaroller Room)", "Turtle Rock (Dark Room)", "Turtle Rock (Eye Bridge)", "Turtle Rock (Trinexx)"],
+        "bosses": {
+        "None": ("Trinexx", "_can_defeat_Turtle_Rock_default"),
         },
     },
 }
@@ -138,569 +138,569 @@ DUNGEON_DATA = {
 # Region display names (hint text)
 REGION_HINTS: Dict[str, str] = {
     "Menu": "Light World",
-    "Death Mountain Entrance": "Light World",
-    "Lake Hylia Central Island": "Light World",
-    "Blinds Hideout": "a bounty of five items",
-    "Hyrule Castle Secret Entrance": "a drop's exit",
-    "Zoras River": "Light World",
-    "Waterfall of Wishing": "a cave with two chests",
-    "Kings Grave Area": "Light World",
-    "Kings Grave": "a cave with a chest",
-    "North Fairy Cave": "a drop's exit",
-    "Dam": "the dam",
-    "Links House": "your house",
-    "Chris Houlihan Room": "I AM ERROR",
-    "Tavern": "the tavern",
-    "Elder House": "a connector",
-    "Snitch Lady (East)": "a boring house",
-    "Snitch Lady (West)": "a boring house",
-    "Bush Covered House": "the grass man",
-    "Tavern (Front)": "the tavern",
-    "Light World Bomb Hut": "a restock room",
-    "Kakariko Shop": "a common shop",
-    "Fortune Teller (Light)": "a fortune teller",
-    "Lake Hylia Fortune Teller": "a fortune teller",
-    "Lumberjack House": "a boring house",
-    "Bonk Fairy (Light)": "a fairy fountain",
-    "Bonk Fairy (Dark)": "a fairy fountain",
-    "Lake Hylia Healer Fairy": "a fairy fountain",
-    "Swamp Healer Fairy": "a fairy fountain",
-    "Desert Healer Fairy": "a fairy fountain",
-    "Dark Lake Hylia Healer Fairy": "a fairy fountain",
-    "Dark Lake Hylia Ledge Healer Fairy": "a fairy fountain",
-    "Dark Desert Healer Fairy": "a fairy fountain",
-    "Dark Death Mountain Healer Fairy": "a fairy fountain",
-    "Chicken House": "a house with a chest",
-    "Aginahs Cave": "a cave with a chest",
-    "Sahasrahlas Hut": "Sahasrahla",
-    "Kakariko Well (top)": "a drop's exit",
-    "Kakariko Well (bottom)": "a drop's exit",
-    "Blacksmiths Hut": "the smith",
-    "Bat Cave Drop Ledge": "Light World",
-    "Bat Cave (right)": "a drop's exit",
-    "Bat Cave (left)": "a drop's exit",
-    "Sick Kids House": "the sick kid",
-    "Hobo Bridge": "Light World",
-    "Lost Woods Hideout (top)": "a drop's exit",
-    "Lost Woods Hideout (bottom)": "a drop's exit",
-    "Lumberjack Tree (top)": "a drop's exit",
-    "Lumberjack Tree (bottom)": "a drop's exit",
-    "Cave 45 Ledge": "Light World",
-    "Cave 45": "a cave with an item",
-    "Graveyard Ledge": "Light World",
-    "Graveyard Cave": "a cave with an item",
-    "Checkerboard Cave": "a cave with an item",
-    "Long Fairy Cave": "a fairy fountain",
-    "Mini Moldorm Cave": "a bounty of five items",
-    "Ice Rod Cave": "a cave with a chest",
-    "Good Bee Cave": "a cold bee",
     "20 Rupee Cave": "a cave with some cash",
-    "Cave Shop (Lake Hylia)": "a common shop",
-    "Cave Shop (Dark Death Mountain)": "a common shop",
-    "Bonk Rock Cave": "a cave with a chest",
-    "Library": "the library",
-    "Kakariko Gamble Game": "a game of chance",
-    "Potion Shop": "the potion shop",
-    "Lake Hylia Island": "Light World",
-    "Capacity Upgrade": "the queen of fairies",
-    "Two Brothers House": "a connector",
-    "Maze Race Ledge": "Light World",
     "50 Rupee Cave": "a cave with some cash",
-    "Desert Ledge": "Light World",
-    "Desert Ledge (Northeast)": "Light World",
-    "Desert Palace Stairs": "Light World",
-    "Desert Palace Lone Stairs": "Light World",
-    "Desert Palace Entrance (North) Spot": "Light World",
-    "Desert Palace Main (Outer)": "Desert Palace",
-    "Desert Palace Main (Inner)": "Desert Palace",
-    "Desert Palace East": "Desert Palace",
-    "Desert Palace North": "Desert Palace",
-    "Master Sword Meadow": "Light World",
-    "Lost Woods Gamble": "a game of chance",
-    "Hyrule Castle Courtyard": "Light World",
-    "Hyrule Castle Ledge": "Light World",
-    "Sewer Drop": "a drop's exit",
-    "Sewers (Dark)": "a drop's exit",
-    "Sewers": "a drop's exit",
-    "Sewers Secret Room": "a drop's exit",
-    "Sanctuary": "a drop's exit",
-    "Agahnims Tower": "Castle Tower",
     "Agahnim 1": "Castle Tower",
-    "Old Man Cave": "a connector",
-    "Old Man House": "a connector",
-    "Old Man House Back": "a connector",
+    "Agahnim 2": "Ganon's Tower",
+    "Agahnims Tower": "Castle Tower",
+    "Aginahs Cave": "a cave with a chest",
+    "Archery Game": "a game of skill",
+    "Bat Cave (left)": "a drop's exit",
+    "Bat Cave (right)": "a drop's exit",
+    "Bat Cave Drop Ledge": "Light World",
+    "Big Bomb Shop": "the bomb shop",
+    "Blacksmiths Hut": "the smith",
+    "Blind Fight": "Thieves' Town",
+    "Blinds Hideout": "a bounty of five items",
+    "Bombos Tablet Ledge": "Light World",
+    "Bonk Fairy (Dark)": "a fairy fountain",
+    "Bonk Fairy (Light)": "a fairy fountain",
+    "Bonk Rock Cave": "a cave with a chest",
+    "Bottom of Pyramid": "a drop's exit",
+    "Brewery": "a house with a chest",
+    "Bumper Cave": "a connector",
+    "Bumper Cave Entrance": "Dark World",
+    "Bumper Cave Ledge": "Dark World",
+    "Bush Covered House": "the grass man",
+    "C-Shaped House": "a house with a chest",
+    "Capacity Upgrade": "the queen of fairies",
+    "Catfish": "Dark World",
+    "Cave 45": "a cave with an item",
+    "Cave 45 Ledge": "Light World",
+    "Cave Shop (Dark Death Mountain)": "a common shop",
+    "Cave Shop (Lake Hylia)": "a common shop",
+    "Checkerboard Cave": "a cave with an item",
+    "Chest Game": "a game of 16 chests",
+    "Chicken House": "a house with a chest",
+    "Chris Houlihan Room": "I AM ERROR",
+    "Dam": "the dam",
+    "Dark Death Mountain (East Bottom)": "Dark World",
+    "Dark Death Mountain (Top)": "Dark World",
+    "Dark Death Mountain (West Bottom)": "Dark World",
+    "Dark Death Mountain Bunny Descent Area": "Dark World",
+    "Dark Death Mountain Healer Fairy": "a fairy fountain",
+    "Dark Death Mountain Isolated Ledge": "Dark World",
+    "Dark Death Mountain Ledge": "Dark World",
+    "Dark Desert": "Dark World",
+    "Dark Desert Healer Fairy": "a fairy fountain",
+    "Dark Desert Hint": "a storyteller",
+    "Dark Grassy Lawn": "Dark World",
+    "Dark Lake Hylia": "Dark World",
+    "Dark Lake Hylia Central Island": "Dark World",
+    "Dark Lake Hylia Healer Fairy": "a fairy fountain",
+    "Dark Lake Hylia Ledge": "Dark World",
+    "Dark Lake Hylia Ledge Healer Fairy": "a fairy fountain",
+    "Dark Lake Hylia Ledge Hint": "a storyteller",
+    "Dark Lake Hylia Ledge Spike Cave": "a spiky hint",
+    "Dark Lake Hylia Shop": "a common shop",
+    "Dark Sanctuary Hint": "a storyteller",
+    "Dark World Hammer Peg Cave": "a cave with an item",
+    "Dark World Lumberjack Shop": "a common shop",
+    "Dark World Potion Shop": "a common shop",
     "Death Mountain": "Light World",
+    "Death Mountain (Top)": "Light World",
+    "Death Mountain Entrance": "Light World",
+    "Death Mountain Floating Island (Dark World)": "Dark World",
+    "Death Mountain Floating Island (Light World)": "Light World",
     "Death Mountain Return Cave": "a connector",
     "Death Mountain Return Ledge": "Light World",
-    "Spectacle Rock Cave (Top)": "a connector",
-    "Spectacle Rock Cave (Bottom)": "a connector",
-    "Spectacle Rock Cave (Peak)": "a connector",
+    "Desert Healer Fairy": "a fairy fountain",
+    "Desert Ledge": "Light World",
+    "Desert Ledge (Northeast)": "Light World",
+    "Desert Northern Cliffs": "Light World",
+    "Desert Palace East": "Desert Palace",
+    "Desert Palace Entrance (North) Spot": "Light World",
+    "Desert Palace Lone Stairs": "Light World",
+    "Desert Palace Main (Inner)": "Desert Palace",
+    "Desert Palace Main (Outer)": "Desert Palace",
+    "Desert Palace North": "Desert Palace",
+    "Desert Palace Stairs": "Light World",
+    "East Dark World": "Dark World",
+    "East Dark World Hint": "a storyteller",
     "East Death Mountain (Bottom)": "Light World",
-    "Hookshot Fairy": "fairies deep in a cave",
-    "Paradox Cave Front": "a connector",
-    "Paradox Cave Chest Area": "a connector",
-    "Paradox Cave": "a connector",
-    "Light World Death Mountain Shop": "a common shop",
     "East Death Mountain (Top)": "Light World",
-    "Spiral Cave Ledge": "Light World",
-    "Spiral Cave (Top)": "a connector",
-    "Spiral Cave (Bottom)": "a connector",
-    "Fairy Ascension Plateau": "Light World",
+    "Elder House": "a connector",
     "Fairy Ascension Cave (Bottom)": "a connector",
     "Fairy Ascension Cave (Drop)": "a connector",
     "Fairy Ascension Cave (Top)": "a connector",
     "Fairy Ascension Ledge": "Light World",
-    "Death Mountain (Top)": "Light World",
-    "Spectacle Rock": "Light World",
-    "Tower of Hera (Bottom)": "Tower of Hera",
-    "Tower of Hera (Basement)": "Tower of Hera",
-    "Tower of Hera (Top)": "Tower of Hera",
-    "East Dark World": "Dark World",
-    "Catfish": "Dark World",
-    "Northeast Dark World": "Dark World",
-    "Palace of Darkness Hint": "a storyteller",
-    "East Dark World Hint": "a storyteller",
-    "South Dark World": "Dark World",
-    "Bombos Tablet Ledge": "Light World",
-    "Big Bomb Shop": "the bomb shop",
-    "Archery Game": "a game of skill",
-    "Dark Lake Hylia": "Dark World",
-    "Dark Lake Hylia Central Island": "Dark World",
-    "Dark Lake Hylia Ledge": "Dark World",
-    "Dark Lake Hylia Ledge Hint": "a storyteller",
-    "Dark Lake Hylia Ledge Spike Cave": "a spiky hint",
-    "Hype Cave": "a bounty of five items",
-    "West Dark World": "Dark World",
-    "Dark Grassy Lawn": "Dark World",
-    "Hammer Peg Area": "Dark World",
-    "Bumper Cave Entrance": "Dark World",
+    "Fairy Ascension Plateau": "Light World",
     "Fortune Teller (Dark)": "a fortune teller",
-    "Village of Outcasts Shop": "a common shop",
-    "Dark Lake Hylia Shop": "a common shop",
-    "Dark World Lumberjack Shop": "a common shop",
-    "Dark World Potion Shop": "a common shop",
-    "Dark World Hammer Peg Cave": "a cave with an item",
-    "Pyramid Fairy": "a cave with two chests",
-    "Brewery": "a house with a chest",
-    "C-Shaped House": "a house with a chest",
-    "Chest Game": "a game of 16 chests",
-    "Red Shield Shop": "the rare shop",
-    "Dark Sanctuary Hint": "a storyteller",
-    "Bumper Cave": "a connector",
-    "Bumper Cave Ledge": "Dark World",
-    "Skull Woods Forest": "Dark World",
-    "Skull Woods Forest (West)": "Dark World",
-    "Dark Desert": "Dark World",
-    "Mire Shed": "a cave with two chests",
-    "Dark Desert Hint": "a storyteller",
-    "Dark Death Mountain (West Bottom)": "Dark World",
-    "Dark Death Mountain (Top)": "Dark World",
-    "Dark Death Mountain Ledge": "Dark World",
-    "Dark Death Mountain Isolated Ledge": "Dark World",
-    "Dark Death Mountain (East Bottom)": "Dark World",
-    "Superbunny Cave (Top)": "a connector",
-    "Superbunny Cave (Bottom)": "a connector",
-    "Hookshot Cave": "a connector",
-    "Hookshot Cave (Upper)": "a connector",
-    "Death Mountain Floating Island (Dark World)": "Dark World",
-    "Death Mountain Floating Island (Light World)": "Light World",
-    "Turtle Rock (Top)": "Dark World",
-    "Mimic Cave Ledge": "Light World",
-    "Swamp Palace (Entrance)": "Swamp Palace",
-    "Swamp Palace (First Room)": "Swamp Palace",
-    "Swamp Palace (Starting Area)": "Swamp Palace",
-    "Swamp Palace (Center)": "Swamp Palace",
-    "Swamp Palace (West)": "Swamp Palace",
-    "Swamp Palace (North)": "Swamp Palace",
-    "Thieves Town (Entrance)": "Thieves' Town",
-    "Thieves Town (Deep)": "Thieves' Town",
-    "Blind Fight": "Thieves' Town",
-    "Skull Woods First Section": "Skull Woods",
-    "Skull Woods First Section (Right)": "Skull Woods",
-    "Skull Woods First Section (Left)": "Skull Woods",
-    "Skull Woods First Section (Top)": "Skull Woods",
-    "Skull Woods Second Section (Drop)": "Skull Woods",
-    "Skull Woods Second Section": "Skull Woods",
-    "Skull Woods Final Section (Entrance)": "Skull Woods",
-    "Skull Woods Final Section (Mothula)": "Skull Woods",
-    "Ice Palace (Entrance)": "Ice Palace",
-    "Ice Palace (Second Section)": "Ice Palace",
-    "Ice Palace (Main)": "Ice Palace",
-    "Ice Palace (East)": "Ice Palace",
-    "Ice Palace (East Top)": "Ice Palace",
-    "Ice Palace (Kholdstare)": "Ice Palace",
-    "Misery Mire (Entrance)": "Misery Mire",
-    "Misery Mire (Main)": "Misery Mire",
-    "Misery Mire (West)": "Misery Mire",
-    "Misery Mire (Final Area)": "Misery Mire",
-    "Misery Mire (Vitreous)": "Misery Mire",
-    "Turtle Rock (Entrance)": "Turtle Rock",
-    "Turtle Rock (First Section)": "Turtle Rock",
-    "Turtle Rock (Pokey Room)": "Turtle Rock",
-    "Turtle Rock (Chain Chomp Room)": "Turtle Rock",
-    "Turtle Rock (Second Section)": "Turtle Rock",
-    "Turtle Rock (Second Section Bomb Wall)": "Turtle Rock",
-    "Turtle Rock (Big Chest)": "Turtle Rock",
-    "Turtle Rock (Crystaroller Room)": "Turtle Rock",
-    "Turtle Rock (Dark Room)": "Turtle Rock",
-    "Turtle Rock (Eye Bridge Bomb Wall)": "Turtle Rock",
-    "Turtle Rock (Eye Bridge)": "Turtle Rock",
-    "Turtle Rock (Trinexx)": "Turtle Rock",
-    "Palace of Darkness (Entrance)": "Palace of Darkness",
-    "Palace of Darkness (Center)": "Palace of Darkness",
-    "Palace of Darkness (Big Key Chest)": "Palace of Darkness",
-    "Palace of Darkness (Bonk Section)": "Palace of Darkness",
-    "Palace of Darkness (North)": "Palace of Darkness",
-    "Palace of Darkness (Maze)": "Palace of Darkness",
-    "Palace of Darkness (Harmless Hellway)": "Palace of Darkness",
-    "Palace of Darkness (Final Section)": "Palace of Darkness",
-    "Ganons Tower (Entrance)": "Ganon's Tower",
-    "Ganons Tower (Tile Room)": "Ganon's Tower",
+    "Fortune Teller (Light)": "a fortune teller",
+    "Ganons Tower (Before Moldorm)": "Ganon's Tower",
+    "Ganons Tower (Bottom)": "Ganon's Tower",
     "Ganons Tower (Compass Room)": "Ganon's Tower",
+    "Ganons Tower (Entrance)": "Ganon's Tower",
+    "Ganons Tower (Firesnake Room)": "Ganon's Tower",
     "Ganons Tower (Hookshot Room)": "Ganon's Tower",
     "Ganons Tower (Map Room)": "Ganon's Tower",
-    "Ganons Tower (Firesnake Room)": "Ganon's Tower",
-    "Ganons Tower (Teleport Room)": "Ganon's Tower",
-    "Ganons Tower (Bottom)": "Ganon's Tower",
-    "Ganons Tower (Top)": "Ganon's Tower",
-    "Ganons Tower (Before Moldorm)": "Ganon's Tower",
     "Ganons Tower (Moldorm)": "Ganon's Tower",
-    "Agahnim 2": "Ganon's Tower",
+    "Ganons Tower (Teleport Room)": "Ganon's Tower",
+    "Ganons Tower (Tile Room)": "Ganon's Tower",
+    "Ganons Tower (Top)": "Ganon's Tower",
+    "Good Bee Cave": "a cold bee",
+    "Graveyard Cave": "a cave with an item",
+    "Graveyard Ledge": "Light World",
+    "Hammer Peg Area": "Dark World",
+    "Hobo Bridge": "Light World",
+    "Hookshot Cave": "a connector",
+    "Hookshot Cave (Upper)": "a connector",
+    "Hookshot Fairy": "fairies deep in a cave",
+    "Hype Cave": "a bounty of five items",
+    "Hyrule Castle Courtyard": "Light World",
+    "Hyrule Castle Ledge": "Light World",
+    "Hyrule Castle Secret Entrance": "a drop's exit",
+    "Ice Palace (East Top)": "Ice Palace",
+    "Ice Palace (East)": "Ice Palace",
+    "Ice Palace (Entrance)": "Ice Palace",
+    "Ice Palace (Kholdstare)": "Ice Palace",
+    "Ice Palace (Main)": "Ice Palace",
+    "Ice Palace (Second Section)": "Ice Palace",
+    "Ice Rod Cave": "a cave with a chest",
+    "Kakariko Gamble Game": "a game of chance",
+    "Kakariko Shop": "a common shop",
+    "Kakariko Well (bottom)": "a drop's exit",
+    "Kakariko Well (top)": "a drop's exit",
+    "Kings Grave": "a cave with a chest",
+    "Kings Grave Area": "Light World",
+    "Lake Hylia Central Island": "Light World",
+    "Lake Hylia Fortune Teller": "a fortune teller",
+    "Lake Hylia Healer Fairy": "a fairy fountain",
+    "Lake Hylia Island": "Light World",
+    "Library": "the library",
+    "Light World Bomb Hut": "a restock room",
+    "Light World Death Mountain Shop": "a common shop",
+    "Links House": "your house",
+    "Long Fairy Cave": "a fairy fountain",
+    "Lost Woods Gamble": "a game of chance",
+    "Lost Woods Hideout (bottom)": "a drop's exit",
+    "Lost Woods Hideout (top)": "a drop's exit",
+    "Lumberjack House": "a boring house",
+    "Lumberjack Tree (bottom)": "a drop's exit",
+    "Lumberjack Tree (top)": "a drop's exit",
+    "Master Sword Meadow": "Light World",
+    "Maze Race Ledge": "Light World",
+    "Mimic Cave Ledge": "Light World",
+    "Mini Moldorm Cave": "a bounty of five items",
+    "Mire Shed": "a cave with two chests",
+    "Misery Mire (Entrance)": "Misery Mire",
+    "Misery Mire (Final Area)": "Misery Mire",
+    "Misery Mire (Main)": "Misery Mire",
+    "Misery Mire (Vitreous)": "Misery Mire",
+    "Misery Mire (West)": "Misery Mire",
+    "North Fairy Cave": "a drop's exit",
+    "Northeast Dark World": "Dark World",
+    "Old Man Cave": "a connector",
+    "Old Man House": "a connector",
+    "Old Man House Back": "a connector",
+    "Palace of Darkness (Big Key Chest)": "Palace of Darkness",
+    "Palace of Darkness (Bonk Section)": "Palace of Darkness",
+    "Palace of Darkness (Center)": "Palace of Darkness",
+    "Palace of Darkness (Entrance)": "Palace of Darkness",
+    "Palace of Darkness (Final Section)": "Palace of Darkness",
+    "Palace of Darkness (Harmless Hellway)": "Palace of Darkness",
+    "Palace of Darkness (Maze)": "Palace of Darkness",
+    "Palace of Darkness (North)": "Palace of Darkness",
+    "Palace of Darkness Hint": "a storyteller",
+    "Paradox Cave": "a connector",
+    "Paradox Cave Chest Area": "a connector",
+    "Paradox Cave Front": "a connector",
+    "Potion Shop": "the potion shop",
     "Pyramid": "a drop's exit",
-    "Bottom of Pyramid": "a drop's exit",
+    "Pyramid Fairy": "a cave with two chests",
     "Pyramid Ledge": "Dark World",
-    "Desert Northern Cliffs": "Light World",
-    "Dark Death Mountain Bunny Descent Area": "Dark World",
+    "Red Shield Shop": "the rare shop",
+    "Sahasrahlas Hut": "Sahasrahla",
+    "Sanctuary": "a drop's exit",
+    "Sewer Drop": "a drop's exit",
+    "Sewers": "a drop's exit",
+    "Sewers (Dark)": "a drop's exit",
+    "Sewers Secret Room": "a drop's exit",
+    "Sick Kids House": "the sick kid",
+    "Skull Woods Final Section (Entrance)": "Skull Woods",
+    "Skull Woods Final Section (Mothula)": "Skull Woods",
+    "Skull Woods First Section": "Skull Woods",
+    "Skull Woods First Section (Left)": "Skull Woods",
+    "Skull Woods First Section (Right)": "Skull Woods",
+    "Skull Woods First Section (Top)": "Skull Woods",
+    "Skull Woods Forest": "Dark World",
+    "Skull Woods Forest (West)": "Dark World",
+    "Skull Woods Second Section": "Skull Woods",
+    "Skull Woods Second Section (Drop)": "Skull Woods",
+    "Snitch Lady (East)": "a boring house",
+    "Snitch Lady (West)": "a boring house",
+    "South Dark World": "Dark World",
+    "Spectacle Rock": "Light World",
+    "Spectacle Rock Cave (Bottom)": "a connector",
+    "Spectacle Rock Cave (Peak)": "a connector",
+    "Spectacle Rock Cave (Top)": "a connector",
+    "Spiral Cave (Bottom)": "a connector",
+    "Spiral Cave (Top)": "a connector",
+    "Spiral Cave Ledge": "Light World",
+    "Superbunny Cave (Bottom)": "a connector",
+    "Superbunny Cave (Top)": "a connector",
+    "Swamp Healer Fairy": "a fairy fountain",
+    "Swamp Palace (Center)": "Swamp Palace",
+    "Swamp Palace (Entrance)": "Swamp Palace",
+    "Swamp Palace (First Room)": "Swamp Palace",
+    "Swamp Palace (North)": "Swamp Palace",
+    "Swamp Palace (Starting Area)": "Swamp Palace",
+    "Swamp Palace (West)": "Swamp Palace",
+    "Tavern": "the tavern",
+    "Tavern (Front)": "the tavern",
+    "Thieves Town (Deep)": "Thieves' Town",
+    "Thieves Town (Entrance)": "Thieves' Town",
+    "Tower of Hera (Basement)": "Tower of Hera",
+    "Tower of Hera (Bottom)": "Tower of Hera",
+    "Tower of Hera (Top)": "Tower of Hera",
+    "Turtle Rock (Big Chest)": "Turtle Rock",
+    "Turtle Rock (Chain Chomp Room)": "Turtle Rock",
+    "Turtle Rock (Crystaroller Room)": "Turtle Rock",
+    "Turtle Rock (Dark Room)": "Turtle Rock",
+    "Turtle Rock (Entrance)": "Turtle Rock",
+    "Turtle Rock (Eye Bridge Bomb Wall)": "Turtle Rock",
+    "Turtle Rock (Eye Bridge)": "Turtle Rock",
+    "Turtle Rock (First Section)": "Turtle Rock",
+    "Turtle Rock (Pokey Room)": "Turtle Rock",
+    "Turtle Rock (Second Section Bomb Wall)": "Turtle Rock",
+    "Turtle Rock (Second Section)": "Turtle Rock",
+    "Turtle Rock (Top)": "Dark World",
+    "Turtle Rock (Trinexx)": "Turtle Rock",
+    "Two Brothers House": "a connector",
+    "Village of Outcasts Shop": "a common shop",
+    "Waterfall of Wishing": "a cave with two chests",
+    "West Dark World": "Dark World",
+    "Zoras River": "Light World",
 }
 
 # Regions that were added after sphere calculation (from original export)
-DYNAMICALLY_ADDED_REGIONS = {"Snitch Lady (East)", "Snitch Lady (West)", "Bush Covered House", "Tavern (Front)", "Light World Bomb Hut", "Kakariko Shop", "Fortune Teller (Light)", "Lake Hylia Fortune Teller", "Lumberjack House", "Bonk Fairy (Light)", "Bonk Fairy (Dark)", "Lake Hylia Healer Fairy", "Swamp Healer Fairy", "Desert Healer Fairy", "Dark Lake Hylia Healer Fairy", "Dark Lake Hylia Ledge Healer Fairy", "Dark Desert Healer Fairy", "Dark Death Mountain Healer Fairy", "Long Fairy Cave", "Good Bee Cave", "20 Rupee Cave", "Cave Shop (Lake Hylia)", "Cave Shop (Dark Death Mountain)", "Kakariko Gamble Game", "50 Rupee Cave", "Lost Woods Gamble", "Hookshot Fairy", "Light World Death Mountain Shop", "Palace of Darkness Hint", "East Dark World Hint", "Big Bomb Shop", "Archery Game", "Dark Lake Hylia Ledge Hint", "Dark Lake Hylia Ledge Spike Cave", "Fortune Teller (Dark)", "Village of Outcasts Shop", "Dark Lake Hylia Shop", "Dark World Lumberjack Shop", "Dark World Potion Shop", "Red Shield Shop", "Dark Sanctuary Hint", "Dark Desert Hint", "Desert Northern Cliffs", "Dark Death Mountain Bunny Descent Area"}
+DYNAMICALLY_ADDED_REGIONS = {"20 Rupee Cave", "50 Rupee Cave", "Archery Game", "Big Bomb Shop", "Bonk Fairy (Dark)", "Bonk Fairy (Light)", "Bush Covered House", "Cave Shop (Dark Death Mountain)", "Cave Shop (Lake Hylia)", "Dark Death Mountain Bunny Descent Area", "Dark Death Mountain Healer Fairy", "Dark Desert Healer Fairy", "Dark Desert Hint", "Dark Lake Hylia Healer Fairy", "Dark Lake Hylia Ledge Healer Fairy", "Dark Lake Hylia Ledge Hint", "Dark Lake Hylia Ledge Spike Cave", "Dark Lake Hylia Shop", "Dark Sanctuary Hint", "Dark World Lumberjack Shop", "Dark World Potion Shop", "Desert Healer Fairy", "Desert Northern Cliffs", "East Dark World Hint", "Fortune Teller (Dark)", "Fortune Teller (Light)", "Good Bee Cave", "Hookshot Fairy", "Kakariko Gamble Game", "Kakariko Shop", "Lake Hylia Fortune Teller", "Lake Hylia Healer Fairy", "Light World Bomb Hut", "Light World Death Mountain Shop", "Long Fairy Cave", "Lost Woods Gamble", "Lumberjack House", "Palace of Darkness Hint", "Red Shield Shop", "Snitch Lady (East)", "Snitch Lady (West)", "Swamp Healer Fairy", "Tavern (Front)", "Village of Outcasts Shop"}
 
 # Region to dungeon mapping
 REGION_DUNGEONS: Dict[str, str] = {
-    "Desert Palace Main (Outer)": "Desert Palace",
-    "Desert Palace Main (Inner)": "Desert Palace",
+    "Agahnim 1": "Agahnims Tower",
+    "Agahnim 2": "Ganons Tower",
+    "Agahnims Tower": "Agahnims Tower",
+    "Blind Fight": "Thieves Town",
     "Desert Palace East": "Desert Palace",
+    "Desert Palace Main (Inner)": "Desert Palace",
+    "Desert Palace Main (Outer)": "Desert Palace",
     "Desert Palace North": "Desert Palace",
     "Eastern Palace": "Eastern Palace",
-    "Hyrule Castle": "Hyrule Castle",
-    "Sewer Drop": "Hyrule Castle",
-    "Sewers (Dark)": "Hyrule Castle",
-    "Sewers": "Hyrule Castle",
-    "Sanctuary": "Hyrule Castle",
-    "Agahnims Tower": "Agahnims Tower",
-    "Agahnim 1": "Agahnims Tower",
-    "Tower of Hera (Bottom)": "Tower of Hera",
-    "Tower of Hera (Basement)": "Tower of Hera",
-    "Tower of Hera (Top)": "Tower of Hera",
-    "Swamp Palace (Entrance)": "Swamp Palace",
-    "Swamp Palace (First Room)": "Swamp Palace",
-    "Swamp Palace (Starting Area)": "Swamp Palace",
-    "Swamp Palace (Center)": "Swamp Palace",
-    "Swamp Palace (West)": "Swamp Palace",
-    "Swamp Palace (North)": "Swamp Palace",
-    "Thieves Town (Entrance)": "Thieves Town",
-    "Thieves Town (Deep)": "Thieves Town",
-    "Blind Fight": "Thieves Town",
-    "Skull Woods First Section": "Skull Woods",
-    "Skull Woods First Section (Right)": "Skull Woods",
-    "Skull Woods First Section (Left)": "Skull Woods",
-    "Skull Woods First Section (Top)": "Skull Woods",
-    "Skull Woods Second Section (Drop)": "Skull Woods",
-    "Skull Woods Second Section": "Skull Woods",
-    "Skull Woods Final Section (Entrance)": "Skull Woods",
-    "Skull Woods Final Section (Mothula)": "Skull Woods",
-    "Ice Palace (Entrance)": "Ice Palace",
-    "Ice Palace (Second Section)": "Ice Palace",
-    "Ice Palace (Main)": "Ice Palace",
-    "Ice Palace (East)": "Ice Palace",
-    "Ice Palace (East Top)": "Ice Palace",
-    "Ice Palace (Kholdstare)": "Ice Palace",
-    "Misery Mire (Entrance)": "Misery Mire",
-    "Misery Mire (Main)": "Misery Mire",
-    "Misery Mire (West)": "Misery Mire",
-    "Misery Mire (Final Area)": "Misery Mire",
-    "Misery Mire (Vitreous)": "Misery Mire",
-    "Turtle Rock (Entrance)": "Turtle Rock",
-    "Turtle Rock (First Section)": "Turtle Rock",
-    "Turtle Rock (Pokey Room)": "Turtle Rock",
-    "Turtle Rock (Chain Chomp Room)": "Turtle Rock",
-    "Turtle Rock (Second Section)": "Turtle Rock",
-    "Turtle Rock (Big Chest)": "Turtle Rock",
-    "Turtle Rock (Crystaroller Room)": "Turtle Rock",
-    "Turtle Rock (Dark Room)": "Turtle Rock",
-    "Turtle Rock (Eye Bridge)": "Turtle Rock",
-    "Turtle Rock (Trinexx)": "Turtle Rock",
-    "Palace of Darkness (Entrance)": "Palace of Darkness",
-    "Palace of Darkness (Center)": "Palace of Darkness",
-    "Palace of Darkness (Big Key Chest)": "Palace of Darkness",
-    "Palace of Darkness (Bonk Section)": "Palace of Darkness",
-    "Palace of Darkness (North)": "Palace of Darkness",
-    "Palace of Darkness (Maze)": "Palace of Darkness",
-    "Palace of Darkness (Harmless Hellway)": "Palace of Darkness",
-    "Palace of Darkness (Final Section)": "Palace of Darkness",
-    "Ganons Tower (Entrance)": "Ganons Tower",
-    "Ganons Tower (Tile Room)": "Ganons Tower",
+    "Ganons Tower (Before Moldorm)": "Ganons Tower",
+    "Ganons Tower (Bottom)": "Ganons Tower",
     "Ganons Tower (Compass Room)": "Ganons Tower",
+    "Ganons Tower (Entrance)": "Ganons Tower",
+    "Ganons Tower (Firesnake Room)": "Ganons Tower",
     "Ganons Tower (Hookshot Room)": "Ganons Tower",
     "Ganons Tower (Map Room)": "Ganons Tower",
-    "Ganons Tower (Firesnake Room)": "Ganons Tower",
-    "Ganons Tower (Teleport Room)": "Ganons Tower",
-    "Ganons Tower (Bottom)": "Ganons Tower",
-    "Ganons Tower (Top)": "Ganons Tower",
-    "Ganons Tower (Before Moldorm)": "Ganons Tower",
     "Ganons Tower (Moldorm)": "Ganons Tower",
-    "Agahnim 2": "Ganons Tower",
+    "Ganons Tower (Teleport Room)": "Ganons Tower",
+    "Ganons Tower (Tile Room)": "Ganons Tower",
+    "Ganons Tower (Top)": "Ganons Tower",
+    "Hyrule Castle": "Hyrule Castle",
+    "Ice Palace (East Top)": "Ice Palace",
+    "Ice Palace (East)": "Ice Palace",
+    "Ice Palace (Entrance)": "Ice Palace",
+    "Ice Palace (Kholdstare)": "Ice Palace",
+    "Ice Palace (Main)": "Ice Palace",
+    "Ice Palace (Second Section)": "Ice Palace",
+    "Misery Mire (Entrance)": "Misery Mire",
+    "Misery Mire (Final Area)": "Misery Mire",
+    "Misery Mire (Main)": "Misery Mire",
+    "Misery Mire (Vitreous)": "Misery Mire",
+    "Misery Mire (West)": "Misery Mire",
+    "Palace of Darkness (Big Key Chest)": "Palace of Darkness",
+    "Palace of Darkness (Bonk Section)": "Palace of Darkness",
+    "Palace of Darkness (Center)": "Palace of Darkness",
+    "Palace of Darkness (Entrance)": "Palace of Darkness",
+    "Palace of Darkness (Final Section)": "Palace of Darkness",
+    "Palace of Darkness (Harmless Hellway)": "Palace of Darkness",
+    "Palace of Darkness (Maze)": "Palace of Darkness",
+    "Palace of Darkness (North)": "Palace of Darkness",
+    "Sanctuary": "Hyrule Castle",
+    "Sewer Drop": "Hyrule Castle",
+    "Sewers": "Hyrule Castle",
+    "Sewers (Dark)": "Hyrule Castle",
+    "Skull Woods Final Section (Entrance)": "Skull Woods",
+    "Skull Woods Final Section (Mothula)": "Skull Woods",
+    "Skull Woods First Section": "Skull Woods",
+    "Skull Woods First Section (Left)": "Skull Woods",
+    "Skull Woods First Section (Right)": "Skull Woods",
+    "Skull Woods First Section (Top)": "Skull Woods",
+    "Skull Woods Second Section": "Skull Woods",
+    "Skull Woods Second Section (Drop)": "Skull Woods",
+    "Swamp Palace (Center)": "Swamp Palace",
+    "Swamp Palace (Entrance)": "Swamp Palace",
+    "Swamp Palace (First Room)": "Swamp Palace",
+    "Swamp Palace (North)": "Swamp Palace",
+    "Swamp Palace (Starting Area)": "Swamp Palace",
+    "Swamp Palace (West)": "Swamp Palace",
+    "Thieves Town (Deep)": "Thieves Town",
+    "Thieves Town (Entrance)": "Thieves Town",
+    "Tower of Hera (Basement)": "Tower of Hera",
+    "Tower of Hera (Bottom)": "Tower of Hera",
+    "Tower of Hera (Top)": "Tower of Hera",
+    "Turtle Rock (Big Chest)": "Turtle Rock",
+    "Turtle Rock (Chain Chomp Room)": "Turtle Rock",
+    "Turtle Rock (Crystaroller Room)": "Turtle Rock",
+    "Turtle Rock (Dark Room)": "Turtle Rock",
+    "Turtle Rock (Entrance)": "Turtle Rock",
+    "Turtle Rock (Eye Bridge)": "Turtle Rock",
+    "Turtle Rock (First Section)": "Turtle Rock",
+    "Turtle Rock (Pokey Room)": "Turtle Rock",
+    "Turtle Rock (Second Section)": "Turtle Rock",
+    "Turtle Rock (Trinexx)": "Turtle Rock",
 }
 
 # Region extra attributes (game-specific, e.g., code)
 REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {
     "Menu": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Light World": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Death Mountain Entrance": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Lake Hylia Central Island": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Blinds Hideout": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Hyrule Castle Secret Entrance": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Zoras River": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Waterfall of Wishing": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Kings Grave Area": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Kings Grave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "North Fairy Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Dam": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Links House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Chris Houlihan Room": {"is_dark_world": False, "is_light_world": False, "type": 3},
-    "Tavern": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Elder House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Snitch Lady (East)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Snitch Lady (West)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Bush Covered House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Tavern (Front)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Light World Bomb Hut": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Kakariko Shop": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Fortune Teller (Light)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Lake Hylia Fortune Teller": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Lumberjack House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Bonk Fairy (Light)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Bonk Fairy (Dark)": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Lake Hylia Healer Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Swamp Healer Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Desert Healer Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Dark Lake Hylia Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Lake Hylia Ledge Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Desert Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Death Mountain Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Chicken House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Aginahs Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Sahasrahlas Hut": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Kakariko Well (top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Kakariko Well (bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Blacksmiths Hut": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Bat Cave Drop Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Bat Cave (right)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Bat Cave (left)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Sick Kids House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Hobo Bridge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Lost Woods Hideout (top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Lost Woods Hideout (bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Lumberjack Tree (top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Lumberjack Tree (bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Cave 45 Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Cave 45": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Graveyard Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Graveyard Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Checkerboard Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Long Fairy Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Mini Moldorm Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Ice Rod Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Good Bee Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "20 Rupee Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Cave Shop (Lake Hylia)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Cave Shop (Dark Death Mountain)": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Bonk Rock Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Library": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Kakariko Gamble Game": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Potion Shop": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Lake Hylia Island": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Capacity Upgrade": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Two Brothers House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Maze Race Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
     "50 Rupee Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Desert Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Desert Ledge (Northeast)": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Desert Palace Stairs": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Desert Palace Lone Stairs": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Desert Palace Entrance (North) Spot": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Desert Palace Main (Outer)": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Desert Palace Main (Inner)": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Desert Palace East": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Desert Palace North": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Eastern Palace": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Master Sword Meadow": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Lost Woods Gamble": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Hyrule Castle Courtyard": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Hyrule Castle Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Hyrule Castle": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Sewer Drop": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Sewers (Dark)": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Sewers": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Sewers Secret Room": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Sanctuary": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Agahnims Tower": {"is_dark_world": False, "is_light_world": True, "type": 4},
     "Agahnim 1": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Old Man Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Old Man House": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Old Man House Back": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Agahnim 2": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Agahnims Tower": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Aginahs Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Archery Game": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Bat Cave (left)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Bat Cave (right)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Bat Cave Drop Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Big Bomb Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Blacksmiths Hut": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Blind Fight": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Blinds Hideout": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Bombos Tablet Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Bonk Fairy (Dark)": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Bonk Fairy (Light)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Bonk Rock Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Bottom of Pyramid": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Brewery": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Bumper Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Bumper Cave Entrance": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Bumper Cave Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Bush Covered House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "C-Shaped House": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Capacity Upgrade": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Catfish": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Cave 45": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Cave 45 Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Cave Shop (Dark Death Mountain)": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Cave Shop (Lake Hylia)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Checkerboard Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Chest Game": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Chicken House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Chris Houlihan Room": {"is_dark_world": False, "is_light_world": False, "type": 3},
+    "Dam": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Dark Death Mountain (East Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Death Mountain (Top)": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Death Mountain (West Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Death Mountain Bunny Descent Area": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Death Mountain Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Death Mountain Isolated Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Death Mountain Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Desert": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Desert Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Desert Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Grassy Lawn": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Lake Hylia": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Lake Hylia Central Island": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Lake Hylia Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Lake Hylia Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Dark Lake Hylia Ledge Healer Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Lake Hylia Ledge Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Lake Hylia Ledge Spike Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Lake Hylia Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark Sanctuary Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark World Hammer Peg Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark World Lumberjack Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Dark World Potion Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
     "Death Mountain": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Death Mountain (Top)": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Death Mountain Entrance": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Death Mountain Floating Island (Dark World)": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Death Mountain Floating Island (Light World)": {"is_dark_world": False, "is_light_world": True, "type": 1},
     "Death Mountain Return Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "Death Mountain Return Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Spectacle Rock Cave (Top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Spectacle Rock Cave (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Spectacle Rock Cave (Peak)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Desert Healer Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Desert Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Desert Ledge (Northeast)": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Desert Northern Cliffs": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Desert Palace East": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Desert Palace Entrance (North) Spot": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Desert Palace Lone Stairs": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Desert Palace Main (Inner)": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Desert Palace Main (Outer)": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Desert Palace North": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Desert Palace Stairs": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "East Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "East Dark World Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
     "East Death Mountain (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Hookshot Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Paradox Cave Front": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Paradox Cave Chest Area": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Paradox Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Light World Death Mountain Shop": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "East Death Mountain (Top)": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Spiral Cave Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Spiral Cave (Top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Spiral Cave (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Fairy Ascension Plateau": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Eastern Palace": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Elder House": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "Fairy Ascension Cave (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "Fairy Ascension Cave (Drop)": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "Fairy Ascension Cave (Top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "Fairy Ascension Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Death Mountain (Top)": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Spectacle Rock": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Tower of Hera (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Tower of Hera (Basement)": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "Tower of Hera (Top)": {"is_dark_world": False, "is_light_world": True, "type": 4},
-    "East Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Catfish": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Northeast Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Palace of Darkness Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "East Dark World Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "South Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Bombos Tablet Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Big Bomb Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Archery Game": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Lake Hylia": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Lake Hylia Central Island": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Lake Hylia Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Lake Hylia Ledge Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Lake Hylia Ledge Spike Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Hype Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "West Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Grassy Lawn": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Hammer Peg Area": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Bumper Cave Entrance": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Fairy Ascension Plateau": {"is_dark_world": False, "is_light_world": True, "type": 1},
     "Fortune Teller (Dark)": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Village of Outcasts Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Lake Hylia Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark World Lumberjack Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark World Potion Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark World Hammer Peg Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Pyramid Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Brewery": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "C-Shaped House": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Chest Game": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Red Shield Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Sanctuary Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Bumper Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Bumper Cave Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Skull Woods Forest": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Skull Woods Forest (West)": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Desert": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Mire Shed": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Desert Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Dark Death Mountain (West Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Death Mountain (Top)": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Death Mountain Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Death Mountain Isolated Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Dark Death Mountain (East Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Superbunny Cave (Top)": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Superbunny Cave (Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Spike Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Hookshot Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Hookshot Cave (Upper)": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Death Mountain Floating Island (Dark World)": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Death Mountain Floating Island (Light World)": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Turtle Rock (Top)": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Mimic Cave Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Mimic Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
-    "Swamp Palace (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Swamp Palace (First Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Swamp Palace (Starting Area)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Swamp Palace (Center)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Swamp Palace (West)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Swamp Palace (North)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Thieves Town (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Thieves Town (Deep)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Blind Fight": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods First Section": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods First Section (Right)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods First Section (Left)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods First Section (Top)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods Second Section (Drop)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods Second Section": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods Final Section (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Skull Woods Final Section (Mothula)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ice Palace (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ice Palace (Second Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ice Palace (Main)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ice Palace (East)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ice Palace (East Top)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ice Palace (Kholdstare)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Misery Mire (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Misery Mire (Main)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Misery Mire (West)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Misery Mire (Final Area)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Misery Mire (Vitreous)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (First Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Pokey Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Chain Chomp Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Second Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Second Section Bomb Wall)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Big Chest)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Crystaroller Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Dark Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Eye Bridge Bomb Wall)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Eye Bridge)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Turtle Rock (Trinexx)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Center)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Big Key Chest)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Bonk Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (North)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Maze)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Harmless Hellway)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Palace of Darkness (Final Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Tile Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Fortune Teller (Light)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Ganons Tower (Before Moldorm)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ganons Tower (Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 4},
     "Ganons Tower (Compass Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ganons Tower (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ganons Tower (Firesnake Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
     "Ganons Tower (Hookshot Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
     "Ganons Tower (Map Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Firesnake Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Teleport Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Top)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Ganons Tower (Before Moldorm)": {"is_dark_world": True, "is_light_world": False, "type": 4},
     "Ganons Tower (Moldorm)": {"is_dark_world": True, "is_light_world": False, "type": 4},
-    "Agahnim 2": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ganons Tower (Teleport Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ganons Tower (Tile Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ganons Tower (Top)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Good Bee Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Graveyard Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Graveyard Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Hammer Peg Area": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Hobo Bridge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Hookshot Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Hookshot Cave (Upper)": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Hookshot Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Hype Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Hyrule Castle": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Hyrule Castle Courtyard": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Hyrule Castle Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Hyrule Castle Secret Entrance": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Ice Palace (East Top)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ice Palace (East)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ice Palace (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ice Palace (Kholdstare)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ice Palace (Main)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ice Palace (Second Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Ice Rod Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Kakariko Gamble Game": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Kakariko Shop": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Kakariko Well (bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Kakariko Well (top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Kings Grave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Kings Grave Area": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Lake Hylia Central Island": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Lake Hylia Fortune Teller": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lake Hylia Healer Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lake Hylia Island": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Library": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Light World": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Light World Bomb Hut": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Light World Death Mountain Shop": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Links House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Long Fairy Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lost Woods Gamble": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lost Woods Hideout (bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lost Woods Hideout (top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lumberjack House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lumberjack Tree (bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Lumberjack Tree (top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Master Sword Meadow": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Maze Race Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Mimic Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Mimic Cave Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Mini Moldorm Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Mire Shed": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Misery Mire (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Misery Mire (Final Area)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Misery Mire (Main)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Misery Mire (Vitreous)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Misery Mire (West)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "North Fairy Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Northeast Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Old Man Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Old Man House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Old Man House Back": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Palace of Darkness (Big Key Chest)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (Bonk Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (Center)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (Final Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (Harmless Hellway)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (Maze)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness (North)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Palace of Darkness Hint": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Paradox Cave": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Paradox Cave Chest Area": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Paradox Cave Front": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Potion Shop": {"is_dark_world": False, "is_light_world": True, "type": 3},
     "Pyramid": {"is_dark_world": True, "is_light_world": False, "type": 3},
-    "Bottom of Pyramid": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Pyramid Fairy": {"is_dark_world": True, "is_light_world": False, "type": 3},
     "Pyramid Ledge": {"is_dark_world": True, "is_light_world": False, "type": 2},
-    "Desert Northern Cliffs": {"is_dark_world": False, "is_light_world": True, "type": 1},
-    "Dark Death Mountain Bunny Descent Area": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Red Shield Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Sahasrahlas Hut": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Sanctuary": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Sewer Drop": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Sewers": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Sewers (Dark)": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Sewers Secret Room": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Sick Kids House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Skull Woods Final Section (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods Final Section (Mothula)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods First Section": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods First Section (Left)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods First Section (Right)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods First Section (Top)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods Forest": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Skull Woods Forest (West)": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Skull Woods Second Section": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Skull Woods Second Section (Drop)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Snitch Lady (East)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Snitch Lady (West)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "South Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Spectacle Rock": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Spectacle Rock Cave (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Spectacle Rock Cave (Peak)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Spectacle Rock Cave (Top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Spike Cave": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Spiral Cave (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Spiral Cave (Top)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Spiral Cave Ledge": {"is_dark_world": False, "is_light_world": True, "type": 1},
+    "Superbunny Cave (Bottom)": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Superbunny Cave (Top)": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Swamp Healer Fairy": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Swamp Palace (Center)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Swamp Palace (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Swamp Palace (First Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Swamp Palace (North)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Swamp Palace (Starting Area)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Swamp Palace (West)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Tavern": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Tavern (Front)": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Thieves Town (Deep)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Thieves Town (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Tower of Hera (Basement)": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Tower of Hera (Bottom)": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Tower of Hera (Top)": {"is_dark_world": False, "is_light_world": True, "type": 4},
+    "Turtle Rock (Big Chest)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Chain Chomp Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Crystaroller Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Dark Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Entrance)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Eye Bridge Bomb Wall)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Eye Bridge)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (First Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Pokey Room)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Second Section Bomb Wall)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Second Section)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Turtle Rock (Top)": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Turtle Rock (Trinexx)": {"is_dark_world": True, "is_light_world": False, "type": 4},
+    "Two Brothers House": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "Village of Outcasts Shop": {"is_dark_world": True, "is_light_world": False, "type": 3},
+    "Waterfall of Wishing": {"is_dark_world": False, "is_light_world": True, "type": 3},
+    "West Dark World": {"is_dark_world": True, "is_light_world": False, "type": 2},
+    "Zoras River": {"is_dark_world": False, "is_light_world": True, "type": 1},
 }
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Light World", "Death Mountain Entrance", "Lake Hylia Central Island", "Blinds Hideout", "Hyrule Castle Secret Entrance", "Zoras River", "Waterfall of Wishing", "Kings Grave Area", "Kings Grave", "North Fairy Cave", "Dam", "Links House", "Chris Houlihan Room", "Tavern", "Elder House", "Snitch Lady (East)", "Snitch Lady (West)", "Bush Covered House", "Tavern (Front)", "Light World Bomb Hut", "Kakariko Shop", "Fortune Teller (Light)", "Lake Hylia Fortune Teller", "Lumberjack House", "Bonk Fairy (Light)", "Bonk Fairy (Dark)", "Lake Hylia Healer Fairy", "Swamp Healer Fairy", "Desert Healer Fairy", "Dark Lake Hylia Healer Fairy", "Dark Lake Hylia Ledge Healer Fairy", "Dark Desert Healer Fairy", "Dark Death Mountain Healer Fairy", "Chicken House", "Aginahs Cave", "Sahasrahlas Hut", "Kakariko Well (top)", "Kakariko Well (bottom)", "Blacksmiths Hut", "Bat Cave Drop Ledge", "Bat Cave (right)", "Bat Cave (left)", "Sick Kids House", "Hobo Bridge", "Lost Woods Hideout (top)", "Lost Woods Hideout (bottom)", "Lumberjack Tree (top)", "Lumberjack Tree (bottom)", "Cave 45 Ledge", "Cave 45", "Graveyard Ledge", "Graveyard Cave", "Checkerboard Cave", "Long Fairy Cave", "Mini Moldorm Cave", "Ice Rod Cave", "Good Bee Cave", "20 Rupee Cave", "Cave Shop (Lake Hylia)", "Cave Shop (Dark Death Mountain)", "Bonk Rock Cave", "Library", "Kakariko Gamble Game", "Potion Shop", "Lake Hylia Island", "Capacity Upgrade", "Two Brothers House", "Maze Race Ledge", "50 Rupee Cave", "Desert Ledge", "Desert Ledge (Northeast)", "Desert Palace Stairs", "Desert Palace Lone Stairs", "Desert Palace Entrance (North) Spot", "Desert Palace Main (Outer)", "Desert Palace Main (Inner)", "Desert Palace East", "Desert Palace North", "Eastern Palace", "Master Sword Meadow", "Lost Woods Gamble", "Hyrule Castle Courtyard", "Hyrule Castle Ledge", "Hyrule Castle", "Sewer Drop", "Sewers (Dark)", "Sewers", "Sewers Secret Room", "Sanctuary", "Agahnims Tower", "Agahnim 1", "Old Man Cave", "Old Man House", "Old Man House Back", "Death Mountain", "Death Mountain Return Cave", "Death Mountain Return Ledge", "Spectacle Rock Cave (Top)", "Spectacle Rock Cave (Bottom)", "Spectacle Rock Cave (Peak)", "East Death Mountain (Bottom)", "Hookshot Fairy", "Paradox Cave Front", "Paradox Cave Chest Area", "Paradox Cave", "Light World Death Mountain Shop", "East Death Mountain (Top)", "Spiral Cave Ledge", "Spiral Cave (Top)", "Spiral Cave (Bottom)", "Fairy Ascension Plateau", "Fairy Ascension Cave (Bottom)", "Fairy Ascension Cave (Drop)", "Fairy Ascension Cave (Top)", "Fairy Ascension Ledge", "Death Mountain (Top)", "Spectacle Rock", "Tower of Hera (Bottom)", "Tower of Hera (Basement)", "Tower of Hera (Top)", "East Dark World", "Catfish", "Northeast Dark World", "Palace of Darkness Hint", "East Dark World Hint", "South Dark World", "Bombos Tablet Ledge", "Big Bomb Shop", "Archery Game", "Dark Lake Hylia", "Dark Lake Hylia Central Island", "Dark Lake Hylia Ledge", "Dark Lake Hylia Ledge Hint", "Dark Lake Hylia Ledge Spike Cave", "Hype Cave", "West Dark World", "Dark Grassy Lawn", "Hammer Peg Area", "Bumper Cave Entrance", "Fortune Teller (Dark)", "Village of Outcasts Shop", "Dark Lake Hylia Shop", "Dark World Lumberjack Shop", "Dark World Potion Shop", "Dark World Hammer Peg Cave", "Pyramid Fairy", "Brewery", "C-Shaped House", "Chest Game", "Red Shield Shop", "Dark Sanctuary Hint", "Bumper Cave", "Bumper Cave Ledge", "Skull Woods Forest", "Skull Woods Forest (West)", "Dark Desert", "Mire Shed", "Dark Desert Hint", "Dark Death Mountain (West Bottom)", "Dark Death Mountain (Top)", "Dark Death Mountain Ledge", "Dark Death Mountain Isolated Ledge", "Dark Death Mountain (East Bottom)", "Superbunny Cave (Top)", "Superbunny Cave (Bottom)", "Spike Cave", "Hookshot Cave", "Hookshot Cave (Upper)", "Death Mountain Floating Island (Dark World)", "Death Mountain Floating Island (Light World)", "Turtle Rock (Top)", "Mimic Cave Ledge", "Mimic Cave", "Swamp Palace (Entrance)", "Swamp Palace (First Room)", "Swamp Palace (Starting Area)", "Swamp Palace (Center)", "Swamp Palace (West)", "Swamp Palace (North)", "Thieves Town (Entrance)", "Thieves Town (Deep)", "Blind Fight", "Skull Woods First Section", "Skull Woods First Section (Right)", "Skull Woods First Section (Left)", "Skull Woods First Section (Top)", "Skull Woods Second Section (Drop)", "Skull Woods Second Section", "Skull Woods Final Section (Entrance)", "Skull Woods Final Section (Mothula)", "Ice Palace (Entrance)", "Ice Palace (Second Section)", "Ice Palace (Main)", "Ice Palace (East)", "Ice Palace (East Top)", "Ice Palace (Kholdstare)", "Misery Mire (Entrance)", "Misery Mire (Main)", "Misery Mire (West)", "Misery Mire (Final Area)", "Misery Mire (Vitreous)", "Turtle Rock (Entrance)", "Turtle Rock (First Section)", "Turtle Rock (Pokey Room)", "Turtle Rock (Chain Chomp Room)", "Turtle Rock (Second Section)", "Turtle Rock (Second Section Bomb Wall)", "Turtle Rock (Big Chest)", "Turtle Rock (Crystaroller Room)", "Turtle Rock (Dark Room)", "Turtle Rock (Eye Bridge Bomb Wall)", "Turtle Rock (Eye Bridge)", "Turtle Rock (Trinexx)", "Palace of Darkness (Entrance)", "Palace of Darkness (Center)", "Palace of Darkness (Big Key Chest)", "Palace of Darkness (Bonk Section)", "Palace of Darkness (North)", "Palace of Darkness (Maze)", "Palace of Darkness (Harmless Hellway)", "Palace of Darkness (Final Section)", "Ganons Tower (Entrance)", "Ganons Tower (Tile Room)", "Ganons Tower (Compass Room)", "Ganons Tower (Hookshot Room)", "Ganons Tower (Map Room)", "Ganons Tower (Firesnake Room)", "Ganons Tower (Teleport Room)", "Ganons Tower (Bottom)", "Ganons Tower (Top)", "Ganons Tower (Before Moldorm)", "Ganons Tower (Moldorm)", "Agahnim 2", "Pyramid", "Bottom of Pyramid", "Pyramid Ledge", "Desert Northern Cliffs", "Dark Death Mountain Bunny Descent Area"]
+    region_names = ["Menu", "20 Rupee Cave", "50 Rupee Cave", "Agahnim 1", "Agahnim 2", "Agahnims Tower", "Aginahs Cave", "Archery Game", "Bat Cave (left)", "Bat Cave (right)", "Bat Cave Drop Ledge", "Big Bomb Shop", "Blacksmiths Hut", "Blind Fight", "Blinds Hideout", "Bombos Tablet Ledge", "Bonk Fairy (Dark)", "Bonk Fairy (Light)", "Bonk Rock Cave", "Bottom of Pyramid", "Brewery", "Bumper Cave", "Bumper Cave Entrance", "Bumper Cave Ledge", "Bush Covered House", "C-Shaped House", "Capacity Upgrade", "Catfish", "Cave 45", "Cave 45 Ledge", "Cave Shop (Dark Death Mountain)", "Cave Shop (Lake Hylia)", "Checkerboard Cave", "Chest Game", "Chicken House", "Chris Houlihan Room", "Dam", "Dark Death Mountain (East Bottom)", "Dark Death Mountain (Top)", "Dark Death Mountain (West Bottom)", "Dark Death Mountain Bunny Descent Area", "Dark Death Mountain Healer Fairy", "Dark Death Mountain Isolated Ledge", "Dark Death Mountain Ledge", "Dark Desert", "Dark Desert Healer Fairy", "Dark Desert Hint", "Dark Grassy Lawn", "Dark Lake Hylia", "Dark Lake Hylia Central Island", "Dark Lake Hylia Healer Fairy", "Dark Lake Hylia Ledge", "Dark Lake Hylia Ledge Healer Fairy", "Dark Lake Hylia Ledge Hint", "Dark Lake Hylia Ledge Spike Cave", "Dark Lake Hylia Shop", "Dark Sanctuary Hint", "Dark World Hammer Peg Cave", "Dark World Lumberjack Shop", "Dark World Potion Shop", "Death Mountain", "Death Mountain (Top)", "Death Mountain Entrance", "Death Mountain Floating Island (Dark World)", "Death Mountain Floating Island (Light World)", "Death Mountain Return Cave", "Death Mountain Return Ledge", "Desert Healer Fairy", "Desert Ledge", "Desert Ledge (Northeast)", "Desert Northern Cliffs", "Desert Palace East", "Desert Palace Entrance (North) Spot", "Desert Palace Lone Stairs", "Desert Palace Main (Inner)", "Desert Palace Main (Outer)", "Desert Palace North", "Desert Palace Stairs", "East Dark World", "East Dark World Hint", "East Death Mountain (Bottom)", "East Death Mountain (Top)", "Eastern Palace", "Elder House", "Fairy Ascension Cave (Bottom)", "Fairy Ascension Cave (Drop)", "Fairy Ascension Cave (Top)", "Fairy Ascension Ledge", "Fairy Ascension Plateau", "Fortune Teller (Dark)", "Fortune Teller (Light)", "Ganons Tower (Before Moldorm)", "Ganons Tower (Bottom)", "Ganons Tower (Compass Room)", "Ganons Tower (Entrance)", "Ganons Tower (Firesnake Room)", "Ganons Tower (Hookshot Room)", "Ganons Tower (Map Room)", "Ganons Tower (Moldorm)", "Ganons Tower (Teleport Room)", "Ganons Tower (Tile Room)", "Ganons Tower (Top)", "Good Bee Cave", "Graveyard Cave", "Graveyard Ledge", "Hammer Peg Area", "Hobo Bridge", "Hookshot Cave", "Hookshot Cave (Upper)", "Hookshot Fairy", "Hype Cave", "Hyrule Castle", "Hyrule Castle Courtyard", "Hyrule Castle Ledge", "Hyrule Castle Secret Entrance", "Ice Palace (East Top)", "Ice Palace (East)", "Ice Palace (Entrance)", "Ice Palace (Kholdstare)", "Ice Palace (Main)", "Ice Palace (Second Section)", "Ice Rod Cave", "Kakariko Gamble Game", "Kakariko Shop", "Kakariko Well (bottom)", "Kakariko Well (top)", "Kings Grave", "Kings Grave Area", "Lake Hylia Central Island", "Lake Hylia Fortune Teller", "Lake Hylia Healer Fairy", "Lake Hylia Island", "Library", "Light World", "Light World Bomb Hut", "Light World Death Mountain Shop", "Links House", "Long Fairy Cave", "Lost Woods Gamble", "Lost Woods Hideout (bottom)", "Lost Woods Hideout (top)", "Lumberjack House", "Lumberjack Tree (bottom)", "Lumberjack Tree (top)", "Master Sword Meadow", "Maze Race Ledge", "Mimic Cave", "Mimic Cave Ledge", "Mini Moldorm Cave", "Mire Shed", "Misery Mire (Entrance)", "Misery Mire (Final Area)", "Misery Mire (Main)", "Misery Mire (Vitreous)", "Misery Mire (West)", "North Fairy Cave", "Northeast Dark World", "Old Man Cave", "Old Man House", "Old Man House Back", "Palace of Darkness (Big Key Chest)", "Palace of Darkness (Bonk Section)", "Palace of Darkness (Center)", "Palace of Darkness (Entrance)", "Palace of Darkness (Final Section)", "Palace of Darkness (Harmless Hellway)", "Palace of Darkness (Maze)", "Palace of Darkness (North)", "Palace of Darkness Hint", "Paradox Cave", "Paradox Cave Chest Area", "Paradox Cave Front", "Potion Shop", "Pyramid", "Pyramid Fairy", "Pyramid Ledge", "Red Shield Shop", "Sahasrahlas Hut", "Sanctuary", "Sewer Drop", "Sewers", "Sewers (Dark)", "Sewers Secret Room", "Sick Kids House", "Skull Woods Final Section (Entrance)", "Skull Woods Final Section (Mothula)", "Skull Woods First Section", "Skull Woods First Section (Left)", "Skull Woods First Section (Right)", "Skull Woods First Section (Top)", "Skull Woods Forest", "Skull Woods Forest (West)", "Skull Woods Second Section", "Skull Woods Second Section (Drop)", "Snitch Lady (East)", "Snitch Lady (West)", "South Dark World", "Spectacle Rock", "Spectacle Rock Cave (Bottom)", "Spectacle Rock Cave (Peak)", "Spectacle Rock Cave (Top)", "Spike Cave", "Spiral Cave (Bottom)", "Spiral Cave (Top)", "Spiral Cave Ledge", "Superbunny Cave (Bottom)", "Superbunny Cave (Top)", "Swamp Healer Fairy", "Swamp Palace (Center)", "Swamp Palace (Entrance)", "Swamp Palace (First Room)", "Swamp Palace (North)", "Swamp Palace (Starting Area)", "Swamp Palace (West)", "Tavern", "Tavern (Front)", "Thieves Town (Deep)", "Thieves Town (Entrance)", "Tower of Hera (Basement)", "Tower of Hera (Bottom)", "Tower of Hera (Top)", "Turtle Rock (Big Chest)", "Turtle Rock (Chain Chomp Room)", "Turtle Rock (Crystaroller Room)", "Turtle Rock (Dark Room)", "Turtle Rock (Entrance)", "Turtle Rock (Eye Bridge Bomb Wall)", "Turtle Rock (Eye Bridge)", "Turtle Rock (First Section)", "Turtle Rock (Pokey Room)", "Turtle Rock (Second Section Bomb Wall)", "Turtle Rock (Second Section)", "Turtle Rock (Top)", "Turtle Rock (Trinexx)", "Two Brothers House", "Village of Outcasts Shop", "Waterfall of Wishing", "West Dark World", "Zoras River"]
 
     regions = {}
     for region_name in region_names:
@@ -774,6 +774,176 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Menu"], regions["Links House"], "Links House S&Q")
     _create_entrance(regions["Menu"], regions["Sanctuary"], "Sanctuary S&Q")
     _create_entrance(regions["Menu"], regions["Old Man House"], "Old Man S&Q")
+    _create_entrance(regions["Agahnims Tower"], regions["Agahnim 1"], "Agahnim 1")
+    _create_entrance(regions["Agahnims Tower"], regions["Hyrule Castle Ledge"], "Agahnims Tower Exit")
+    _create_entrance(regions["Bat Cave (left)"], regions["Light World"], "Bat Cave Exit")
+    _create_entrance(regions["Bat Cave (right)"], regions["Bat Cave (left)"], "Bat Cave Door")
+    _create_entrance(regions["Bat Cave Drop Ledge"], regions["Bat Cave (right)"], "Bat Cave Drop")
+    _create_entrance(regions["Bottom of Pyramid"], regions["Pyramid Ledge"], "Pyramid Exit")
+    _create_entrance(regions["Bumper Cave"], regions["West Dark World"], "Bumper Cave Exit (Bottom)")
+    _create_entrance(regions["Bumper Cave"], regions["Bumper Cave Ledge"], "Bumper Cave Exit (Top)")
+    _create_entrance(regions["Bumper Cave Entrance"], regions["Bumper Cave"], "Bumper Cave (Bottom)")
+    _create_entrance(regions["Bumper Cave Entrance"], regions["Death Mountain Entrance"], "Bumper Cave Entrance Mirror Spot")
+    _create_entrance(regions["Bumper Cave Entrance"], regions["West Dark World"], "Bumper Cave Entrance Drop")
+    _create_entrance(regions["Bumper Cave Ledge"], regions["West Dark World"], "Bumper Cave Ledge Drop")
+    _create_entrance(regions["Bumper Cave Ledge"], regions["Bumper Cave"], "Bumper Cave (Top)")
+    _create_entrance(regions["Bumper Cave Ledge"], regions["Death Mountain Return Ledge"], "Bumper Cave Ledge Mirror Spot")
+    _create_entrance(regions["Catfish"], regions["Northeast Dark World"], "Catfish Exit Rock")
+    _create_entrance(regions["Cave 45 Ledge"], regions["Cave 45"], "Cave 45")
+    _create_entrance(regions["Chris Houlihan Room"], regions["Light World"], "Chris Houlihan Room Exit")
+    _create_entrance(regions["Dark Death Mountain (East Bottom)"], regions["Superbunny Cave (Bottom)"], "Superbunny Cave (Bottom)")
+    _create_entrance(regions["Dark Death Mountain (East Bottom)"], regions["Cave Shop (Dark Death Mountain)"], "Cave Shop (Dark Death Mountain)")
+    _create_entrance(regions["Dark Death Mountain (East Bottom)"], regions["Fairy Ascension Plateau"], "Fairy Ascension Mirror Spot")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Dark Death Mountain (East Bottom)"], "Dark Death Mountain Drop (East)")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Dark Death Mountain (West Bottom)"], "Dark Death Mountain Drop (West)")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Ganons Tower (Entrance)"], "Ganons Tower")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Superbunny Cave (Top)"], "Superbunny Cave (Top)")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Hookshot Cave"], "Hookshot Cave")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["East Death Mountain (Top)"], "East Death Mountain (Top) Mirror Spot")
+    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Turtle Rock (Entrance)"], "Turtle Rock")
+    _create_entrance(regions["Dark Death Mountain (West Bottom)"], regions["Spike Cave"], "Spike Cave")
+    _create_entrance(regions["Dark Death Mountain (West Bottom)"], regions["Spectacle Rock"], "Spectacle Rock Mirror Spot")
+    _create_entrance(regions["Dark Death Mountain (West Bottom)"], regions["Dark Death Mountain Healer Fairy"], "Dark Death Mountain Fairy")
+    _create_entrance(regions["Dark Death Mountain Isolated Ledge"], regions["Fairy Ascension Ledge"], "Isolated Ledge Mirror Spot")
+    _create_entrance(regions["Dark Death Mountain Isolated Ledge"], regions["Turtle Rock (Eye Bridge)"], "Turtle Rock Isolated Ledge Entrance")
+    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Turtle Rock (Big Chest)"], "Dark Death Mountain Ledge (East)")
+    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Turtle Rock (Second Section)"], "Dark Death Mountain Ledge (West)")
+    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Mimic Cave Ledge"], "Mimic Cave Mirror Spot")
+    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Spiral Cave Ledge"], "Spiral Cave Mirror Spot")
+    _create_entrance(regions["Dark Desert"], regions["Misery Mire (Entrance)"], "Misery Mire")
+    _create_entrance(regions["Dark Desert"], regions["Mire Shed"], "Mire Shed")
+    _create_entrance(regions["Dark Desert"], regions["Desert Ledge (Northeast)"], "Desert Ledge (Northeast) Mirror Spot")
+    _create_entrance(regions["Dark Desert"], regions["Desert Ledge"], "Desert Ledge Mirror Spot")
+    _create_entrance(regions["Dark Desert"], regions["Desert Palace Stairs"], "Desert Palace Stairs Mirror Spot")
+    _create_entrance(regions["Dark Desert"], regions["Desert Palace Entrance (North) Spot"], "Desert Palace Entrance (North) Mirror Spot")
+    _create_entrance(regions["Dark Desert"], regions["Dark Desert Hint"], "Dark Desert Hint")
+    _create_entrance(regions["Dark Desert"], regions["Dark Desert Healer Fairy"], "Dark Desert Fairy")
+    _create_entrance(regions["Dark Grassy Lawn"], regions["West Dark World"], "Grassy Lawn Pegs")
+    _create_entrance(regions["Dark Grassy Lawn"], regions["Village of Outcasts Shop"], "Village of Outcasts Shop")
+    _create_entrance(regions["Dark Lake Hylia"], regions["Lake Hylia Island"], "Lake Hylia Island Mirror Spot")
+    _create_entrance(regions["Dark Lake Hylia"], regions["East Dark World"], "East Dark World Pier")
+    _create_entrance(regions["Dark Lake Hylia"], regions["Dark Lake Hylia Ledge"], "Dark Lake Hylia Ledge")
+    _create_entrance(regions["Dark Lake Hylia Central Island"], regions["Ice Palace (Entrance)"], "Ice Palace")
+    _create_entrance(regions["Dark Lake Hylia Central Island"], regions["Lake Hylia Central Island"], "Lake Hylia Central Island Mirror Spot")
+    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia"], "Dark Lake Hylia Ledge Drop")
+    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia Ledge Healer Fairy"], "Dark Lake Hylia Ledge Fairy")
+    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia Ledge Hint"], "Dark Lake Hylia Ledge Hint")
+    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia Ledge Spike Cave"], "Dark Lake Hylia Ledge Spike Cave")
+    _create_entrance(regions["Death Mountain"], regions["Old Man Cave"], "Old Man Cave (East)")
+    _create_entrance(regions["Death Mountain"], regions["Old Man House"], "Old Man House (Bottom)")
+    _create_entrance(regions["Death Mountain"], regions["Old Man House Back"], "Old Man House (Top)")
+    _create_entrance(regions["Death Mountain"], regions["Death Mountain Return Cave"], "Death Mountain Return Cave (East)")
+    _create_entrance(regions["Death Mountain"], regions["Spectacle Rock Cave (Top)"], "Spectacle Rock Cave")
+    _create_entrance(regions["Death Mountain"], regions["Spectacle Rock Cave (Peak)"], "Spectacle Rock Cave Peak")
+    _create_entrance(regions["Death Mountain"], regions["Spectacle Rock Cave (Bottom)"], "Spectacle Rock Cave (Bottom)")
+    _create_entrance(regions["Death Mountain"], regions["East Death Mountain (Bottom)"], "Broken Bridge (West)")
+    _create_entrance(regions["Death Mountain"], regions["Dark Death Mountain (West Bottom)"], "Death Mountain Teleporter")
+    _create_entrance(regions["Death Mountain (Top)"], regions["East Death Mountain (Top)"], "East Death Mountain (Top)")
+    _create_entrance(regions["Death Mountain (Top)"], regions["Tower of Hera (Bottom)"], "Tower of Hera")
+    _create_entrance(regions["Death Mountain (Top)"], regions["Death Mountain"], "Death Mountain Drop")
+    _create_entrance(regions["Death Mountain Entrance"], regions["Old Man Cave"], "Old Man Cave (West)")
+    _create_entrance(regions["Death Mountain Entrance"], regions["Light World"], "Death Mountain Entrance Drop")
+    _create_entrance(regions["Death Mountain Floating Island (Dark World)"], regions["Dark Death Mountain (Top)"], "Floating Island Drop")
+    _create_entrance(regions["Death Mountain Floating Island (Dark World)"], regions["Hookshot Cave (Upper)"], "Hookshot Cave Back Entrance")
+    _create_entrance(regions["Death Mountain Floating Island (Dark World)"], regions["Death Mountain Floating Island (Light World)"], "Floating Island Mirror Spot")
+    _create_entrance(regions["Death Mountain Return Cave"], regions["Death Mountain Return Ledge"], "Death Mountain Return Cave Exit (West)")
+    _create_entrance(regions["Death Mountain Return Cave"], regions["Death Mountain"], "Death Mountain Return Cave Exit (East)")
+    _create_entrance(regions["Death Mountain Return Ledge"], regions["Light World"], "Death Mountain Return Ledge Drop")
+    _create_entrance(regions["Death Mountain Return Ledge"], regions["Death Mountain Return Cave"], "Death Mountain Return Cave (West)")
+    _create_entrance(regions["Desert Ledge"], regions["Desert Palace Entrance (North) Spot"], "Desert Palace Entrance (North) Rocks")
+    _create_entrance(regions["Desert Ledge"], regions["Desert Palace Main (Outer)"], "Desert Palace Entrance (West)")
+    _create_entrance(regions["Desert Ledge (Northeast)"], regions["Checkerboard Cave"], "Checkerboard Cave")
+    _create_entrance(regions["Desert Palace Entrance (North) Spot"], regions["Desert Palace North"], "Desert Palace Entrance (North)")
+    _create_entrance(regions["Desert Palace Entrance (North) Spot"], regions["Desert Ledge"], "Desert Ledge Return Rocks")
+    _create_entrance(regions["Desert Palace Lone Stairs"], regions["Light World"], "Desert Palace Stairs Drop")
+    _create_entrance(regions["Desert Palace Lone Stairs"], regions["Desert Palace Main (Outer)"], "Desert Palace Entrance (East)")
+    _create_entrance(regions["Desert Palace Main (Inner)"], regions["Desert Palace Stairs"], "Desert Palace Exit (South)")
+    _create_entrance(regions["Desert Palace Main (Inner)"], regions["Desert Palace Main (Outer)"], "Desert Palace Pots (Inner)")
+    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Palace Main (Inner)"], "Desert Palace Pots (Outer)")
+    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Ledge"], "Desert Palace Exit (West)")
+    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Palace Lone Stairs"], "Desert Palace Exit (East)")
+    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Palace East"], "Desert Palace East Wing")
+    _create_entrance(regions["Desert Palace North"], regions["Desert Palace Entrance (North) Spot"], "Desert Palace Exit (North)")
+    _create_entrance(regions["Desert Palace Stairs"], regions["Desert Palace Main (Inner)"], "Desert Palace Entrance (South)")
+    _create_entrance(regions["East Dark World"], regions["Pyramid Fairy"], "Pyramid Fairy")
+    _create_entrance(regions["East Dark World"], regions["South Dark World"], "South Dark World Bridge")
+    _create_entrance(regions["East Dark World"], regions["Palace of Darkness (Entrance)"], "Palace of Darkness")
+    _create_entrance(regions["East Dark World"], regions["Dark Lake Hylia"], "Dark Lake Hylia Drop (East)")
+    _create_entrance(regions["East Dark World"], regions["Hyrule Castle Ledge"], "Hyrule Castle Ledge Mirror Spot")
+    _create_entrance(regions["East Dark World"], regions["Dark Lake Hylia Healer Fairy"], "Dark Lake Hylia Fairy")
+    _create_entrance(regions["East Dark World"], regions["Palace of Darkness Hint"], "Palace of Darkness Hint")
+    _create_entrance(regions["East Dark World"], regions["East Dark World Hint"], "East Dark World Hint")
+    _create_entrance(regions["East Dark World"], regions["Pyramid"], "Pyramid Hole")
+    _create_entrance(regions["East Dark World"], regions["Northeast Dark World"], "Northeast Dark World Broken Bridge Pass")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Death Mountain"], "Broken Bridge (East)")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Paradox Cave Front"], "Paradox Cave (Bottom)")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Paradox Cave"], "Paradox Cave (Middle)")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Dark Death Mountain (East Bottom)"], "East Death Mountain Teleporter")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Hookshot Fairy"], "Hookshot Fairy")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Fairy Ascension Plateau"], "Fairy Ascension Rocks")
+    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Spiral Cave (Bottom)"], "Spiral Cave (Bottom)")
+    _create_entrance(regions["East Death Mountain (Top)"], regions["Paradox Cave"], "Paradox Cave (Top)")
+    _create_entrance(regions["East Death Mountain (Top)"], regions["Death Mountain (Top)"], "Death Mountain (Top)")
+    _create_entrance(regions["East Death Mountain (Top)"], regions["Spiral Cave Ledge"], "Spiral Cave Ledge Access")
+    _create_entrance(regions["East Death Mountain (Top)"], regions["East Death Mountain (Bottom)"], "East Death Mountain Drop")
+    _create_entrance(regions["East Death Mountain (Top)"], regions["Turtle Rock (Top)"], "Turtle Rock Teleporter")
+    _create_entrance(regions["East Death Mountain (Top)"], regions["Fairy Ascension Ledge"], "Fairy Ascension Ledge")
+    _create_entrance(regions["Eastern Palace"], regions["Light World"], "Eastern Palace Exit")
+    _create_entrance(regions["Elder House"], regions["Light World"], "Elder House Exit (East)")
+    _create_entrance(regions["Elder House"], regions["Light World"], "Elder House Exit (West)")
+    _create_entrance(regions["Fairy Ascension Cave (Bottom)"], regions["Fairy Ascension Cave (Top)"], "Fairy Ascension Cave Climb")
+    _create_entrance(regions["Fairy Ascension Cave (Bottom)"], regions["Fairy Ascension Plateau"], "Fairy Ascension Cave Exit (Bottom)")
+    _create_entrance(regions["Fairy Ascension Cave (Drop)"], regions["Fairy Ascension Cave (Bottom)"], "Fairy Ascension Cave Pots")
+    _create_entrance(regions["Fairy Ascension Cave (Top)"], regions["Fairy Ascension Ledge"], "Fairy Ascension Cave Exit (Top)")
+    _create_entrance(regions["Fairy Ascension Cave (Top)"], regions["Fairy Ascension Cave (Drop)"], "Fairy Ascension Cave Drop")
+    _create_entrance(regions["Fairy Ascension Ledge"], regions["Fairy Ascension Plateau"], "Fairy Ascension Ledge Drop")
+    _create_entrance(regions["Fairy Ascension Ledge"], regions["Fairy Ascension Cave (Top)"], "Fairy Ascension Cave (Top)")
+    _create_entrance(regions["Fairy Ascension Plateau"], regions["East Death Mountain (Bottom)"], "Fairy Ascension Drop")
+    _create_entrance(regions["Fairy Ascension Plateau"], regions["Fairy Ascension Cave (Bottom)"], "Fairy Ascension Cave (Bottom)")
+    _create_entrance(regions["Ganons Tower (Before Moldorm)"], regions["Ganons Tower (Moldorm)"], "Ganons Tower Moldorm Door")
+    _create_entrance(regions["Ganons Tower (Compass Room)"], regions["Ganons Tower (Bottom)"], "Ganons Tower (Bottom) (East)")
+    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Ganons Tower (Tile Room)"], "Ganons Tower (Tile Room)")
+    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Ganons Tower (Hookshot Room)"], "Ganons Tower (Hookshot Room)")
+    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Ganons Tower (Top)"], "Ganons Tower Big Key Door")
+    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Dark Death Mountain (Top)"], "Ganons Tower Exit")
+    _create_entrance(regions["Ganons Tower (Firesnake Room)"], regions["Ganons Tower (Teleport Room)"], "Ganons Tower (Firesnake Room)")
+    _create_entrance(regions["Ganons Tower (Hookshot Room)"], regions["Ganons Tower (Map Room)"], "Ganons Tower (Map Room)")
+    _create_entrance(regions["Ganons Tower (Hookshot Room)"], regions["Ganons Tower (Firesnake Room)"], "Ganons Tower (Double Switch Room)")
+    _create_entrance(regions["Ganons Tower (Moldorm)"], regions["Agahnim 2"], "Ganons Tower Moldorm Gap")
+    _create_entrance(regions["Ganons Tower (Teleport Room)"], regions["Ganons Tower (Bottom)"], "Ganons Tower (Bottom) (West)")
+    _create_entrance(regions["Ganons Tower (Tile Room)"], regions["Ganons Tower (Compass Room)"], "Ganons Tower (Tile Room) Key Door")
+    _create_entrance(regions["Ganons Tower (Top)"], regions["Ganons Tower (Before Moldorm)"], "Ganons Tower Torch Rooms")
+    _create_entrance(regions["Graveyard Ledge"], regions["Graveyard Cave"], "Graveyard Cave")
+    _create_entrance(regions["Hammer Peg Area"], regions["Bat Cave Drop Ledge"], "Bat Cave Drop Ledge Mirror Spot")
+    _create_entrance(regions["Hammer Peg Area"], regions["Dark World Hammer Peg Cave"], "Dark World Hammer Peg Cave")
+    _create_entrance(regions["Hammer Peg Area"], regions["West Dark World"], "Peg Area Rocks")
+    _create_entrance(regions["Hookshot Cave"], regions["Dark Death Mountain (Top)"], "Hookshot Cave Exit (South)")
+    _create_entrance(regions["Hookshot Cave"], regions["Hookshot Cave (Upper)"], "Hookshot Cave Bomb Wall (South)")
+    _create_entrance(regions["Hookshot Cave (Upper)"], regions["Death Mountain Floating Island (Dark World)"], "Hookshot Cave Exit (North)")
+    _create_entrance(regions["Hookshot Cave (Upper)"], regions["Hookshot Cave"], "Hookshot Cave Bomb Wall (North)")
+    _create_entrance(regions["Hyrule Castle"], regions["Hyrule Castle Ledge"], "Hyrule Castle Exit (East)")
+    _create_entrance(regions["Hyrule Castle"], regions["Hyrule Castle Ledge"], "Hyrule Castle Exit (West)")
+    _create_entrance(regions["Hyrule Castle"], regions["Hyrule Castle Courtyard"], "Hyrule Castle Exit (South)")
+    _create_entrance(regions["Hyrule Castle"], regions["Sewers (Dark)"], "Throne Room")
+    _create_entrance(regions["Hyrule Castle Courtyard"], regions["Hyrule Castle Secret Entrance"], "Hyrule Castle Secret Entrance Stairs")
+    _create_entrance(regions["Hyrule Castle Courtyard"], regions["Hyrule Castle"], "Hyrule Castle Entrance (South)")
+    _create_entrance(regions["Hyrule Castle Ledge"], regions["Hyrule Castle"], "Hyrule Castle Entrance (East)")
+    _create_entrance(regions["Hyrule Castle Ledge"], regions["Hyrule Castle"], "Hyrule Castle Entrance (West)")
+    _create_entrance(regions["Hyrule Castle Ledge"], regions["Agahnims Tower"], "Agahnims Tower")
+    _create_entrance(regions["Hyrule Castle Ledge"], regions["Hyrule Castle Courtyard"], "Hyrule Castle Ledge Courtyard Drop")
+    _create_entrance(regions["Hyrule Castle Secret Entrance"], regions["Hyrule Castle Courtyard"], "Hyrule Castle Secret Entrance Exit")
+    _create_entrance(regions["Ice Palace (East)"], regions["Ice Palace (East Top)"], "Ice Palace (East Top)")
+    _create_entrance(regions["Ice Palace (Entrance)"], regions["Ice Palace (Second Section)"], "Ice Palace (Second Section)")
+    _create_entrance(regions["Ice Palace (Entrance)"], regions["Dark Lake Hylia Central Island"], "Ice Palace Exit")
+    _create_entrance(regions["Ice Palace (Main)"], regions["Ice Palace (East)"], "Ice Palace (East)")
+    _create_entrance(regions["Ice Palace (Main)"], regions["Ice Palace (Kholdstare)"], "Ice Palace (Kholdstare)")
+    _create_entrance(regions["Ice Palace (Second Section)"], regions["Ice Palace (Main)"], "Ice Palace (Main)")
+    _create_entrance(regions["Kakariko Well (bottom)"], regions["Light World"], "Kakariko Well Exit")
+    _create_entrance(regions["Kakariko Well (top)"], regions["Kakariko Well (bottom)"], "Kakariko Well (top to bottom)")
+    _create_entrance(regions["Kings Grave Area"], regions["Kings Grave"], "Kings Grave")
+    _create_entrance(regions["Kings Grave Area"], regions["Light World"], "Kings Grave Inner Rocks")
+    _create_entrance(regions["Lake Hylia Central Island"], regions["Capacity Upgrade"], "Capacity Upgrade")
+    _create_entrance(regions["Lake Hylia Central Island"], regions["Dark Lake Hylia Central Island"], "Lake Hylia Central Island Teleporter")
     _create_entrance(regions["Light World"], regions["Blinds Hideout"], "Blinds Hideout")
     _create_entrance(regions["Light World"], regions["Hyrule Castle Secret Entrance"], "Hyrule Castle Secret Entrance Drop")
     _create_entrance(regions["Light World"], regions["Zoras River"], "Zoras River")
@@ -840,148 +1010,77 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Light World"], regions["Lake Hylia Fortune Teller"], "Lake Hylia Fortune Teller")
     _create_entrance(regions["Light World"], regions["Kakariko Gamble Game"], "Kakariko Gamble Game")
     _create_entrance(regions["Light World"], regions["East Dark World"], "Top of Pyramid")
-    _create_entrance(regions["Death Mountain Entrance"], regions["Old Man Cave"], "Old Man Cave (West)")
-    _create_entrance(regions["Death Mountain Entrance"], regions["Light World"], "Death Mountain Entrance Drop")
-    _create_entrance(regions["Lake Hylia Central Island"], regions["Capacity Upgrade"], "Capacity Upgrade")
-    _create_entrance(regions["Lake Hylia Central Island"], regions["Dark Lake Hylia Central Island"], "Lake Hylia Central Island Teleporter")
-    _create_entrance(regions["Hyrule Castle Secret Entrance"], regions["Hyrule Castle Courtyard"], "Hyrule Castle Secret Entrance Exit")
-    _create_entrance(regions["Kings Grave Area"], regions["Kings Grave"], "Kings Grave")
-    _create_entrance(regions["Kings Grave Area"], regions["Light World"], "Kings Grave Inner Rocks")
-    _create_entrance(regions["North Fairy Cave"], regions["Light World"], "North Fairy Cave Exit")
     _create_entrance(regions["Links House"], regions["Light World"], "Links House Exit")
-    _create_entrance(regions["Chris Houlihan Room"], regions["Light World"], "Chris Houlihan Room Exit")
-    _create_entrance(regions["Elder House"], regions["Light World"], "Elder House Exit (East)")
-    _create_entrance(regions["Elder House"], regions["Light World"], "Elder House Exit (West)")
-    _create_entrance(regions["Kakariko Well (top)"], regions["Kakariko Well (bottom)"], "Kakariko Well (top to bottom)")
-    _create_entrance(regions["Kakariko Well (bottom)"], regions["Light World"], "Kakariko Well Exit")
-    _create_entrance(regions["Bat Cave Drop Ledge"], regions["Bat Cave (right)"], "Bat Cave Drop")
-    _create_entrance(regions["Bat Cave (right)"], regions["Bat Cave (left)"], "Bat Cave Door")
-    _create_entrance(regions["Bat Cave (left)"], regions["Light World"], "Bat Cave Exit")
-    _create_entrance(regions["Lost Woods Hideout (top)"], regions["Lost Woods Hideout (bottom)"], "Lost Woods Hideout (top to bottom)")
     _create_entrance(regions["Lost Woods Hideout (bottom)"], regions["Light World"], "Lost Woods Hideout Exit")
-    _create_entrance(regions["Lumberjack Tree (top)"], regions["Lumberjack Tree (bottom)"], "Lumberjack Tree (top to bottom)")
+    _create_entrance(regions["Lost Woods Hideout (top)"], regions["Lost Woods Hideout (bottom)"], "Lost Woods Hideout (top to bottom)")
     _create_entrance(regions["Lumberjack Tree (bottom)"], regions["Light World"], "Lumberjack Tree Exit")
-    _create_entrance(regions["Cave 45 Ledge"], regions["Cave 45"], "Cave 45")
-    _create_entrance(regions["Graveyard Ledge"], regions["Graveyard Cave"], "Graveyard Cave")
-    _create_entrance(regions["Two Brothers House"], regions["Light World"], "Two Brothers House Exit (East)")
-    _create_entrance(regions["Two Brothers House"], regions["Maze Race Ledge"], "Two Brothers House Exit (West)")
+    _create_entrance(regions["Lumberjack Tree (top)"], regions["Lumberjack Tree (bottom)"], "Lumberjack Tree (top to bottom)")
     _create_entrance(regions["Maze Race Ledge"], regions["Two Brothers House"], "Two Brothers House (West)")
-    _create_entrance(regions["Desert Ledge"], regions["Desert Palace Entrance (North) Spot"], "Desert Palace Entrance (North) Rocks")
-    _create_entrance(regions["Desert Ledge"], regions["Desert Palace Main (Outer)"], "Desert Palace Entrance (West)")
-    _create_entrance(regions["Desert Ledge (Northeast)"], regions["Checkerboard Cave"], "Checkerboard Cave")
-    _create_entrance(regions["Desert Palace Stairs"], regions["Desert Palace Main (Inner)"], "Desert Palace Entrance (South)")
-    _create_entrance(regions["Desert Palace Lone Stairs"], regions["Light World"], "Desert Palace Stairs Drop")
-    _create_entrance(regions["Desert Palace Lone Stairs"], regions["Desert Palace Main (Outer)"], "Desert Palace Entrance (East)")
-    _create_entrance(regions["Desert Palace Entrance (North) Spot"], regions["Desert Palace North"], "Desert Palace Entrance (North)")
-    _create_entrance(regions["Desert Palace Entrance (North) Spot"], regions["Desert Ledge"], "Desert Ledge Return Rocks")
-    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Palace Main (Inner)"], "Desert Palace Pots (Outer)")
-    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Ledge"], "Desert Palace Exit (West)")
-    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Palace Lone Stairs"], "Desert Palace Exit (East)")
-    _create_entrance(regions["Desert Palace Main (Outer)"], regions["Desert Palace East"], "Desert Palace East Wing")
-    _create_entrance(regions["Desert Palace Main (Inner)"], regions["Desert Palace Stairs"], "Desert Palace Exit (South)")
-    _create_entrance(regions["Desert Palace Main (Inner)"], regions["Desert Palace Main (Outer)"], "Desert Palace Pots (Inner)")
-    _create_entrance(regions["Desert Palace North"], regions["Desert Palace Entrance (North) Spot"], "Desert Palace Exit (North)")
-    _create_entrance(regions["Eastern Palace"], regions["Light World"], "Eastern Palace Exit")
-    _create_entrance(regions["Hyrule Castle Courtyard"], regions["Hyrule Castle Secret Entrance"], "Hyrule Castle Secret Entrance Stairs")
-    _create_entrance(regions["Hyrule Castle Courtyard"], regions["Hyrule Castle"], "Hyrule Castle Entrance (South)")
-    _create_entrance(regions["Hyrule Castle Ledge"], regions["Hyrule Castle"], "Hyrule Castle Entrance (East)")
-    _create_entrance(regions["Hyrule Castle Ledge"], regions["Hyrule Castle"], "Hyrule Castle Entrance (West)")
-    _create_entrance(regions["Hyrule Castle Ledge"], regions["Agahnims Tower"], "Agahnims Tower")
-    _create_entrance(regions["Hyrule Castle Ledge"], regions["Hyrule Castle Courtyard"], "Hyrule Castle Ledge Courtyard Drop")
-    _create_entrance(regions["Hyrule Castle"], regions["Hyrule Castle Ledge"], "Hyrule Castle Exit (East)")
-    _create_entrance(regions["Hyrule Castle"], regions["Hyrule Castle Ledge"], "Hyrule Castle Exit (West)")
-    _create_entrance(regions["Hyrule Castle"], regions["Hyrule Castle Courtyard"], "Hyrule Castle Exit (South)")
-    _create_entrance(regions["Hyrule Castle"], regions["Sewers (Dark)"], "Throne Room")
-    _create_entrance(regions["Sewer Drop"], regions["Sewers"], "Sewer Drop")
-    _create_entrance(regions["Sewers (Dark)"], regions["Sewers"], "Sewers Door")
-    _create_entrance(regions["Sewers"], regions["Sanctuary"], "Sanctuary Push Door")
-    _create_entrance(regions["Sewers"], regions["Sewers (Dark)"], "Sewers Back Door")
-    _create_entrance(regions["Sewers"], regions["Sewers Secret Room"], "Sewers Secret Room")
-    _create_entrance(regions["Sanctuary"], regions["Light World"], "Sanctuary Exit")
-    _create_entrance(regions["Agahnims Tower"], regions["Agahnim 1"], "Agahnim 1")
-    _create_entrance(regions["Agahnims Tower"], regions["Hyrule Castle Ledge"], "Agahnims Tower Exit")
+    _create_entrance(regions["Mimic Cave Ledge"], regions["Mimic Cave"], "Mimic Cave")
+    _create_entrance(regions["Misery Mire (Entrance)"], regions["Misery Mire (Main)"], "Misery Mire Entrance Gap")
+    _create_entrance(regions["Misery Mire (Entrance)"], regions["Dark Desert"], "Misery Mire Exit")
+    _create_entrance(regions["Misery Mire (Final Area)"], regions["Misery Mire (Vitreous)"], "Misery Mire (Vitreous)")
+    _create_entrance(regions["Misery Mire (Main)"], regions["Misery Mire (West)"], "Misery Mire (West)")
+    _create_entrance(regions["Misery Mire (Main)"], regions["Misery Mire (Final Area)"], "Misery Mire Big Key Door")
+    _create_entrance(regions["North Fairy Cave"], regions["Light World"], "North Fairy Cave Exit")
+    _create_entrance(regions["Northeast Dark World"], regions["West Dark World"], "West Dark World Gap")
+    _create_entrance(regions["Northeast Dark World"], regions["Dark World Potion Shop"], "Dark World Potion Shop")
+    _create_entrance(regions["Northeast Dark World"], regions["East Dark World"], "East Dark World Broken Bridge Pass")
+    _create_entrance(regions["Northeast Dark World"], regions["Catfish"], "Catfish Entrance Rock")
+    _create_entrance(regions["Northeast Dark World"], regions["Dark Lake Hylia"], "Dark Lake Hylia Teleporter")
     _create_entrance(regions["Old Man Cave"], regions["Death Mountain"], "Old Man Cave Exit (East)")
     _create_entrance(regions["Old Man Cave"], regions["Light World"], "Old Man Cave Exit (West)")
     _create_entrance(regions["Old Man House"], regions["Death Mountain"], "Old Man House Exit (Bottom)")
     _create_entrance(regions["Old Man House"], regions["Old Man House Back"], "Old Man House Front to Back")
     _create_entrance(regions["Old Man House Back"], regions["Death Mountain"], "Old Man House Exit (Top)")
     _create_entrance(regions["Old Man House Back"], regions["Old Man House"], "Old Man House Back to Front")
-    _create_entrance(regions["Death Mountain"], regions["Old Man Cave"], "Old Man Cave (East)")
-    _create_entrance(regions["Death Mountain"], regions["Old Man House"], "Old Man House (Bottom)")
-    _create_entrance(regions["Death Mountain"], regions["Old Man House Back"], "Old Man House (Top)")
-    _create_entrance(regions["Death Mountain"], regions["Death Mountain Return Cave"], "Death Mountain Return Cave (East)")
-    _create_entrance(regions["Death Mountain"], regions["Spectacle Rock Cave (Top)"], "Spectacle Rock Cave")
-    _create_entrance(regions["Death Mountain"], regions["Spectacle Rock Cave (Peak)"], "Spectacle Rock Cave Peak")
-    _create_entrance(regions["Death Mountain"], regions["Spectacle Rock Cave (Bottom)"], "Spectacle Rock Cave (Bottom)")
-    _create_entrance(regions["Death Mountain"], regions["East Death Mountain (Bottom)"], "Broken Bridge (West)")
-    _create_entrance(regions["Death Mountain"], regions["Dark Death Mountain (West Bottom)"], "Death Mountain Teleporter")
-    _create_entrance(regions["Death Mountain Return Cave"], regions["Death Mountain Return Ledge"], "Death Mountain Return Cave Exit (West)")
-    _create_entrance(regions["Death Mountain Return Cave"], regions["Death Mountain"], "Death Mountain Return Cave Exit (East)")
-    _create_entrance(regions["Death Mountain Return Ledge"], regions["Light World"], "Death Mountain Return Ledge Drop")
-    _create_entrance(regions["Death Mountain Return Ledge"], regions["Death Mountain Return Cave"], "Death Mountain Return Cave (West)")
-    _create_entrance(regions["Spectacle Rock Cave (Top)"], regions["Spectacle Rock Cave (Bottom)"], "Spectacle Rock Cave Drop")
-    _create_entrance(regions["Spectacle Rock Cave (Top)"], regions["Death Mountain"], "Spectacle Rock Cave Exit (Top)")
-    _create_entrance(regions["Spectacle Rock Cave (Bottom)"], regions["Death Mountain"], "Spectacle Rock Cave Exit")
-    _create_entrance(regions["Spectacle Rock Cave (Peak)"], regions["Spectacle Rock Cave (Bottom)"], "Spectacle Rock Cave Peak Drop")
-    _create_entrance(regions["Spectacle Rock Cave (Peak)"], regions["Death Mountain"], "Spectacle Rock Cave Exit (Peak)")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Death Mountain"], "Broken Bridge (East)")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Paradox Cave Front"], "Paradox Cave (Bottom)")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Paradox Cave"], "Paradox Cave (Middle)")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Dark Death Mountain (East Bottom)"], "East Death Mountain Teleporter")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Hookshot Fairy"], "Hookshot Fairy")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Fairy Ascension Plateau"], "Fairy Ascension Rocks")
-    _create_entrance(regions["East Death Mountain (Bottom)"], regions["Spiral Cave (Bottom)"], "Spiral Cave (Bottom)")
-    _create_entrance(regions["Paradox Cave Front"], regions["Paradox Cave Chest Area"], "Paradox Cave Push Block Reverse")
-    _create_entrance(regions["Paradox Cave Front"], regions["East Death Mountain (Bottom)"], "Paradox Cave Exit (Bottom)")
-    _create_entrance(regions["Paradox Cave Front"], regions["Light World Death Mountain Shop"], "Light World Death Mountain Shop")
-    _create_entrance(regions["Paradox Cave Chest Area"], regions["Paradox Cave Front"], "Paradox Cave Push Block")
-    _create_entrance(regions["Paradox Cave Chest Area"], regions["Paradox Cave"], "Paradox Cave Bomb Jump")
+    _create_entrance(regions["Palace of Darkness (Bonk Section)"], regions["Palace of Darkness (Center)"], "Palace of Darkness Hammer Peg Drop")
+    _create_entrance(regions["Palace of Darkness (Center)"], regions["Palace of Darkness (Big Key Chest)"], "Palace of Darkness Big Key Chest Staircase")
+    _create_entrance(regions["Palace of Darkness (Center)"], regions["Palace of Darkness (North)"], "Palace of Darkness (North)")
+    _create_entrance(regions["Palace of Darkness (Center)"], regions["Palace of Darkness (Final Section)"], "Palace of Darkness Big Key Door")
+    _create_entrance(regions["Palace of Darkness (Entrance)"], regions["Palace of Darkness (Center)"], "Palace of Darkness Bridge Room")
+    _create_entrance(regions["Palace of Darkness (Entrance)"], regions["Palace of Darkness (Bonk Section)"], "Palace of Darkness Bonk Wall")
+    _create_entrance(regions["Palace of Darkness (Entrance)"], regions["East Dark World"], "Palace of Darkness Exit")
+    _create_entrance(regions["Palace of Darkness (North)"], regions["Palace of Darkness (Harmless Hellway)"], "Palace of Darkness Spike Statue Room Door")
+    _create_entrance(regions["Palace of Darkness (North)"], regions["Palace of Darkness (Maze)"], "Palace of Darkness Maze Door")
     _create_entrance(regions["Paradox Cave"], regions["East Death Mountain (Bottom)"], "Paradox Cave Exit (Middle)")
     _create_entrance(regions["Paradox Cave"], regions["East Death Mountain (Top)"], "Paradox Cave Exit (Top)")
     _create_entrance(regions["Paradox Cave"], regions["Paradox Cave Chest Area"], "Paradox Cave Drop")
-    _create_entrance(regions["East Death Mountain (Top)"], regions["Paradox Cave"], "Paradox Cave (Top)")
-    _create_entrance(regions["East Death Mountain (Top)"], regions["Death Mountain (Top)"], "Death Mountain (Top)")
-    _create_entrance(regions["East Death Mountain (Top)"], regions["Spiral Cave Ledge"], "Spiral Cave Ledge Access")
-    _create_entrance(regions["East Death Mountain (Top)"], regions["East Death Mountain (Bottom)"], "East Death Mountain Drop")
-    _create_entrance(regions["East Death Mountain (Top)"], regions["Turtle Rock (Top)"], "Turtle Rock Teleporter")
-    _create_entrance(regions["East Death Mountain (Top)"], regions["Fairy Ascension Ledge"], "Fairy Ascension Ledge")
-    _create_entrance(regions["Spiral Cave Ledge"], regions["Spiral Cave (Top)"], "Spiral Cave")
-    _create_entrance(regions["Spiral Cave Ledge"], regions["East Death Mountain (Bottom)"], "Spiral Cave Ledge Drop")
-    _create_entrance(regions["Spiral Cave (Top)"], regions["Spiral Cave (Bottom)"], "Spiral Cave (top to bottom)")
-    _create_entrance(regions["Spiral Cave (Top)"], regions["Spiral Cave Ledge"], "Spiral Cave Exit (Top)")
-    _create_entrance(regions["Spiral Cave (Bottom)"], regions["East Death Mountain (Bottom)"], "Spiral Cave Exit")
-    _create_entrance(regions["Fairy Ascension Plateau"], regions["East Death Mountain (Bottom)"], "Fairy Ascension Drop")
-    _create_entrance(regions["Fairy Ascension Plateau"], regions["Fairy Ascension Cave (Bottom)"], "Fairy Ascension Cave (Bottom)")
-    _create_entrance(regions["Fairy Ascension Cave (Bottom)"], regions["Fairy Ascension Cave (Top)"], "Fairy Ascension Cave Climb")
-    _create_entrance(regions["Fairy Ascension Cave (Bottom)"], regions["Fairy Ascension Plateau"], "Fairy Ascension Cave Exit (Bottom)")
-    _create_entrance(regions["Fairy Ascension Cave (Drop)"], regions["Fairy Ascension Cave (Bottom)"], "Fairy Ascension Cave Pots")
-    _create_entrance(regions["Fairy Ascension Cave (Top)"], regions["Fairy Ascension Ledge"], "Fairy Ascension Cave Exit (Top)")
-    _create_entrance(regions["Fairy Ascension Cave (Top)"], regions["Fairy Ascension Cave (Drop)"], "Fairy Ascension Cave Drop")
-    _create_entrance(regions["Fairy Ascension Ledge"], regions["Fairy Ascension Plateau"], "Fairy Ascension Ledge Drop")
-    _create_entrance(regions["Fairy Ascension Ledge"], regions["Fairy Ascension Cave (Top)"], "Fairy Ascension Cave (Top)")
-    _create_entrance(regions["Death Mountain (Top)"], regions["East Death Mountain (Top)"], "East Death Mountain (Top)")
-    _create_entrance(regions["Death Mountain (Top)"], regions["Tower of Hera (Bottom)"], "Tower of Hera")
-    _create_entrance(regions["Death Mountain (Top)"], regions["Death Mountain"], "Death Mountain Drop")
-    _create_entrance(regions["Spectacle Rock"], regions["Death Mountain (Top)"], "Spectacle Rock Drop")
-    _create_entrance(regions["Tower of Hera (Bottom)"], regions["Tower of Hera (Basement)"], "Tower of Hera Small Key Door")
-    _create_entrance(regions["Tower of Hera (Bottom)"], regions["Tower of Hera (Top)"], "Tower of Hera Big Key Door")
-    _create_entrance(regions["Tower of Hera (Bottom)"], regions["Death Mountain (Top)"], "Tower of Hera Exit")
-    _create_entrance(regions["East Dark World"], regions["Pyramid Fairy"], "Pyramid Fairy")
-    _create_entrance(regions["East Dark World"], regions["South Dark World"], "South Dark World Bridge")
-    _create_entrance(regions["East Dark World"], regions["Palace of Darkness (Entrance)"], "Palace of Darkness")
-    _create_entrance(regions["East Dark World"], regions["Dark Lake Hylia"], "Dark Lake Hylia Drop (East)")
-    _create_entrance(regions["East Dark World"], regions["Hyrule Castle Ledge"], "Hyrule Castle Ledge Mirror Spot")
-    _create_entrance(regions["East Dark World"], regions["Dark Lake Hylia Healer Fairy"], "Dark Lake Hylia Fairy")
-    _create_entrance(regions["East Dark World"], regions["Palace of Darkness Hint"], "Palace of Darkness Hint")
-    _create_entrance(regions["East Dark World"], regions["East Dark World Hint"], "East Dark World Hint")
-    _create_entrance(regions["East Dark World"], regions["Pyramid"], "Pyramid Hole")
-    _create_entrance(regions["East Dark World"], regions["Northeast Dark World"], "Northeast Dark World Broken Bridge Pass")
-    _create_entrance(regions["Catfish"], regions["Northeast Dark World"], "Catfish Exit Rock")
-    _create_entrance(regions["Northeast Dark World"], regions["West Dark World"], "West Dark World Gap")
-    _create_entrance(regions["Northeast Dark World"], regions["Dark World Potion Shop"], "Dark World Potion Shop")
-    _create_entrance(regions["Northeast Dark World"], regions["East Dark World"], "East Dark World Broken Bridge Pass")
-    _create_entrance(regions["Northeast Dark World"], regions["Catfish"], "Catfish Entrance Rock")
-    _create_entrance(regions["Northeast Dark World"], regions["Dark Lake Hylia"], "Dark Lake Hylia Teleporter")
+    _create_entrance(regions["Paradox Cave Chest Area"], regions["Paradox Cave Front"], "Paradox Cave Push Block")
+    _create_entrance(regions["Paradox Cave Chest Area"], regions["Paradox Cave"], "Paradox Cave Bomb Jump")
+    _create_entrance(regions["Paradox Cave Front"], regions["Paradox Cave Chest Area"], "Paradox Cave Push Block Reverse")
+    _create_entrance(regions["Paradox Cave Front"], regions["East Death Mountain (Bottom)"], "Paradox Cave Exit (Bottom)")
+    _create_entrance(regions["Paradox Cave Front"], regions["Light World Death Mountain Shop"], "Light World Death Mountain Shop")
+    _create_entrance(regions["Pyramid"], regions["Bottom of Pyramid"], "Ganon Drop")
+    _create_entrance(regions["Pyramid Ledge"], regions["Bottom of Pyramid"], "Pyramid Entrance")
+    _create_entrance(regions["Pyramid Ledge"], regions["East Dark World"], "Pyramid Drop")
+    _create_entrance(regions["Sanctuary"], regions["Light World"], "Sanctuary Exit")
+    _create_entrance(regions["Sewer Drop"], regions["Sewers"], "Sewer Drop")
+    _create_entrance(regions["Sewers"], regions["Sanctuary"], "Sanctuary Push Door")
+    _create_entrance(regions["Sewers"], regions["Sewers (Dark)"], "Sewers Back Door")
+    _create_entrance(regions["Sewers"], regions["Sewers Secret Room"], "Sewers Secret Room")
+    _create_entrance(regions["Sewers (Dark)"], regions["Sewers"], "Sewers Door")
+    _create_entrance(regions["Skull Woods Final Section (Entrance)"], regions["Skull Woods Final Section (Mothula)"], "Skull Woods Torch Room")
+    _create_entrance(regions["Skull Woods Final Section (Entrance)"], regions["Skull Woods Forest (West)"], "Skull Woods Final Section Exit")
+    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods Forest"], "Skull Woods First Section Exit")
+    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods First Section (Top)"], "Skull Woods First Section Bomb Jump")
+    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods First Section (Right)"], "Skull Woods First Section South Door")
+    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods First Section (Left)"], "Skull Woods First Section West Door")
+    _create_entrance(regions["Skull Woods First Section (Left)"], regions["Skull Woods First Section"], "Skull Woods First Section (Left) Door to Exit")
+    _create_entrance(regions["Skull Woods First Section (Left)"], regions["Skull Woods First Section (Right)"], "Skull Woods First Section (Left) Door to Right")
+    _create_entrance(regions["Skull Woods First Section (Right)"], regions["Skull Woods First Section"], "Skull Woods First Section (Right) North Door")
+    _create_entrance(regions["Skull Woods First Section (Top)"], regions["Skull Woods First Section"], "Skull Woods First Section (Top) One-Way Path")
+    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section (Right)"], "Skull Woods First Section Hole (East)")
+    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section (Left)"], "Skull Woods First Section Hole (West)")
+    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section (Top)"], "Skull Woods First Section Hole (North)")
+    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section"], "Skull Woods First Section Door")
+    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods Second Section"], "Skull Woods Second Section Door (East)")
+    _create_entrance(regions["Skull Woods Forest (West)"], regions["Skull Woods Second Section (Drop)"], "Skull Woods Second Section Hole")
+    _create_entrance(regions["Skull Woods Forest (West)"], regions["Skull Woods Second Section"], "Skull Woods Second Section Door (West)")
+    _create_entrance(regions["Skull Woods Forest (West)"], regions["Skull Woods Final Section (Entrance)"], "Skull Woods Final Section")
+    _create_entrance(regions["Skull Woods Second Section"], regions["Skull Woods Forest"], "Skull Woods Second Section Exit (East)")
+    _create_entrance(regions["Skull Woods Second Section"], regions["Skull Woods Forest (West)"], "Skull Woods Second Section Exit (West)")
+    _create_entrance(regions["Skull Woods Second Section (Drop)"], regions["Skull Woods Second Section"], "Skull Woods Second Section (Drop)")
     _create_entrance(regions["South Dark World"], regions["Dark Lake Hylia"], "Dark Lake Hylia Drop (South)")
     _create_entrance(regions["South Dark World"], regions["Hype Cave"], "Hype Cave")
     _create_entrance(regions["South Dark World"], regions["Swamp Palace (Entrance)"], "Swamp Palace")
@@ -994,15 +1093,59 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["South Dark World"], regions["Bonk Fairy (Dark)"], "Bonk Fairy (Dark)")
     _create_entrance(regions["South Dark World"], regions["Dark Lake Hylia Shop"], "Dark Lake Hylia Shop")
     _create_entrance(regions["South Dark World"], regions["Bombos Tablet Ledge"], "Bombos Tablet Mirror Spot")
-    _create_entrance(regions["Dark Lake Hylia"], regions["Lake Hylia Island"], "Lake Hylia Island Mirror Spot")
-    _create_entrance(regions["Dark Lake Hylia"], regions["East Dark World"], "East Dark World Pier")
-    _create_entrance(regions["Dark Lake Hylia"], regions["Dark Lake Hylia Ledge"], "Dark Lake Hylia Ledge")
-    _create_entrance(regions["Dark Lake Hylia Central Island"], regions["Ice Palace (Entrance)"], "Ice Palace")
-    _create_entrance(regions["Dark Lake Hylia Central Island"], regions["Lake Hylia Central Island"], "Lake Hylia Central Island Mirror Spot")
-    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia"], "Dark Lake Hylia Ledge Drop")
-    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia Ledge Healer Fairy"], "Dark Lake Hylia Ledge Fairy")
-    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia Ledge Hint"], "Dark Lake Hylia Ledge Hint")
-    _create_entrance(regions["Dark Lake Hylia Ledge"], regions["Dark Lake Hylia Ledge Spike Cave"], "Dark Lake Hylia Ledge Spike Cave")
+    _create_entrance(regions["Spectacle Rock"], regions["Death Mountain (Top)"], "Spectacle Rock Drop")
+    _create_entrance(regions["Spectacle Rock Cave (Bottom)"], regions["Death Mountain"], "Spectacle Rock Cave Exit")
+    _create_entrance(regions["Spectacle Rock Cave (Peak)"], regions["Spectacle Rock Cave (Bottom)"], "Spectacle Rock Cave Peak Drop")
+    _create_entrance(regions["Spectacle Rock Cave (Peak)"], regions["Death Mountain"], "Spectacle Rock Cave Exit (Peak)")
+    _create_entrance(regions["Spectacle Rock Cave (Top)"], regions["Spectacle Rock Cave (Bottom)"], "Spectacle Rock Cave Drop")
+    _create_entrance(regions["Spectacle Rock Cave (Top)"], regions["Death Mountain"], "Spectacle Rock Cave Exit (Top)")
+    _create_entrance(regions["Spiral Cave (Bottom)"], regions["East Death Mountain (Bottom)"], "Spiral Cave Exit")
+    _create_entrance(regions["Spiral Cave (Top)"], regions["Spiral Cave (Bottom)"], "Spiral Cave (top to bottom)")
+    _create_entrance(regions["Spiral Cave (Top)"], regions["Spiral Cave Ledge"], "Spiral Cave Exit (Top)")
+    _create_entrance(regions["Spiral Cave Ledge"], regions["Spiral Cave (Top)"], "Spiral Cave")
+    _create_entrance(regions["Spiral Cave Ledge"], regions["East Death Mountain (Bottom)"], "Spiral Cave Ledge Drop")
+    _create_entrance(regions["Superbunny Cave (Bottom)"], regions["Superbunny Cave (Top)"], "Superbunny Cave Climb")
+    _create_entrance(regions["Superbunny Cave (Bottom)"], regions["Dark Death Mountain (East Bottom)"], "Superbunny Cave Exit (Bottom)")
+    _create_entrance(regions["Superbunny Cave (Top)"], regions["Dark Death Mountain (Top)"], "Superbunny Cave Exit (Top)")
+    _create_entrance(regions["Swamp Palace (Center)"], regions["Swamp Palace (North)"], "Swamp Palace (North)")
+    _create_entrance(regions["Swamp Palace (Center)"], regions["Swamp Palace (West)"], "Swamp Palace (West)")
+    _create_entrance(regions["Swamp Palace (Entrance)"], regions["Swamp Palace (First Room)"], "Swamp Palace Moat")
+    _create_entrance(regions["Swamp Palace (Entrance)"], regions["South Dark World"], "Swamp Palace Exit")
+    _create_entrance(regions["Swamp Palace (First Room)"], regions["Swamp Palace (Starting Area)"], "Swamp Palace Small Key Door")
+    _create_entrance(regions["Swamp Palace (Starting Area)"], regions["Swamp Palace (Center)"], "Swamp Palace (Center)")
+    _create_entrance(regions["Thieves Town (Deep)"], regions["Blind Fight"], "Blind Fight")
+    _create_entrance(regions["Thieves Town (Entrance)"], regions["Thieves Town (Deep)"], "Thieves Town Big Key Door")
+    _create_entrance(regions["Thieves Town (Entrance)"], regions["West Dark World"], "Thieves Town Exit")
+    _create_entrance(regions["Tower of Hera (Bottom)"], regions["Tower of Hera (Basement)"], "Tower of Hera Small Key Door")
+    _create_entrance(regions["Tower of Hera (Bottom)"], regions["Tower of Hera (Top)"], "Tower of Hera Big Key Door")
+    _create_entrance(regions["Tower of Hera (Bottom)"], regions["Death Mountain (Top)"], "Tower of Hera Exit")
+    _create_entrance(regions["Turtle Rock (Big Chest)"], regions["Turtle Rock (Second Section)"], "Turtle Rock (Big Chest) (North)")
+    _create_entrance(regions["Turtle Rock (Big Chest)"], regions["Dark Death Mountain Ledge"], "Turtle Rock Ledge Exit (East)")
+    _create_entrance(regions["Turtle Rock (Chain Chomp Room)"], regions["Turtle Rock (Second Section)"], "Turtle Rock (Chain Chomp Room) (North)")
+    _create_entrance(regions["Turtle Rock (Chain Chomp Room)"], regions["Turtle Rock (Pokey Room)"], "Turtle Rock (Chain Chomp Room) (South)")
+    _create_entrance(regions["Turtle Rock (Crystaroller Room)"], regions["Turtle Rock (Dark Room)"], "Turtle Rock Dark Room Staircase")
+    _create_entrance(regions["Turtle Rock (Crystaroller Room)"], regions["Turtle Rock (Second Section)"], "Turtle Rock Big Key Door Reverse")
+    _create_entrance(regions["Turtle Rock (Dark Room)"], regions["Turtle Rock (Crystaroller Room)"], "Turtle Rock (Dark Room) (North)")
+    _create_entrance(regions["Turtle Rock (Dark Room)"], regions["Turtle Rock (Eye Bridge)"], "Turtle Rock (Dark Room) (South)")
+    _create_entrance(regions["Turtle Rock (Entrance)"], regions["Turtle Rock (First Section)"], "Turtle Rock Entrance Gap")
+    _create_entrance(regions["Turtle Rock (Entrance)"], regions["Dark Death Mountain (Top)"], "Turtle Rock Exit (Front)")
+    _create_entrance(regions["Turtle Rock (Eye Bridge Bomb Wall)"], regions["Dark Death Mountain Isolated Ledge"], "Turtle Rock Isolated Ledge Exit")
+    _create_entrance(regions["Turtle Rock (Eye Bridge Bomb Wall)"], regions["Turtle Rock (Eye Bridge)"], "Turtle Rock Eye Bridge from Bomb Wall")
+    _create_entrance(regions["Turtle Rock (Eye Bridge)"], regions["Turtle Rock (Dark Room)"], "Turtle Rock Dark Room (South)")
+    _create_entrance(regions["Turtle Rock (Eye Bridge)"], regions["Turtle Rock (Trinexx)"], "Turtle Rock (Trinexx)")
+    _create_entrance(regions["Turtle Rock (Eye Bridge)"], regions["Turtle Rock (Eye Bridge Bomb Wall)"], "Turtle Rock Eye Bridge Bomb Wall")
+    _create_entrance(regions["Turtle Rock (First Section)"], regions["Turtle Rock (Pokey Room)"], "Turtle Rock Entrance to Pokey Room")
+    _create_entrance(regions["Turtle Rock (First Section)"], regions["Turtle Rock (Entrance)"], "Turtle Rock Entrance Gap Reverse")
+    _create_entrance(regions["Turtle Rock (Pokey Room)"], regions["Turtle Rock (Chain Chomp Room)"], "Turtle Rock (Pokey Room) (North)")
+    _create_entrance(regions["Turtle Rock (Pokey Room)"], regions["Turtle Rock (First Section)"], "Turtle Rock (Pokey Room) (South)")
+    _create_entrance(regions["Turtle Rock (Second Section Bomb Wall)"], regions["Dark Death Mountain Ledge"], "Turtle Rock Ledge Exit (West)")
+    _create_entrance(regions["Turtle Rock (Second Section Bomb Wall)"], regions["Turtle Rock (Second Section)"], "Turtle Rock Second Section from Bomb Wall")
+    _create_entrance(regions["Turtle Rock (Second Section)"], regions["Turtle Rock (Chain Chomp Room)"], "Turtle Rock Chain Chomp Staircase")
+    _create_entrance(regions["Turtle Rock (Second Section)"], regions["Turtle Rock (Crystaroller Room)"], "Turtle Rock Big Key Door")
+    _create_entrance(regions["Turtle Rock (Second Section)"], regions["Turtle Rock (Second Section Bomb Wall)"], "Turtle Rock Second Section Bomb Wall")
+    _create_entrance(regions["Turtle Rock (Top)"], regions["Dark Death Mountain (Top)"], "Turtle Rock Drop")
+    _create_entrance(regions["Two Brothers House"], regions["Light World"], "Two Brothers House Exit (East)")
+    _create_entrance(regions["Two Brothers House"], regions["Maze Race Ledge"], "Two Brothers House Exit (West)")
     _create_entrance(regions["West Dark World"], regions["South Dark World"], "Village of Outcasts Drop")
     _create_entrance(regions["West Dark World"], regions["East Dark World"], "East Dark World River Pier")
     _create_entrance(regions["West Dark World"], regions["Brewery"], "Brewery")
@@ -1019,149 +1162,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["West Dark World"], regions["Dark Sanctuary Hint"], "Dark Sanctuary Hint")
     _create_entrance(regions["West Dark World"], regions["Fortune Teller (Dark)"], "Fortune Teller (Dark)")
     _create_entrance(regions["West Dark World"], regions["Dark World Lumberjack Shop"], "Dark World Lumberjack Shop")
-    _create_entrance(regions["Dark Grassy Lawn"], regions["West Dark World"], "Grassy Lawn Pegs")
-    _create_entrance(regions["Dark Grassy Lawn"], regions["Village of Outcasts Shop"], "Village of Outcasts Shop")
-    _create_entrance(regions["Hammer Peg Area"], regions["Bat Cave Drop Ledge"], "Bat Cave Drop Ledge Mirror Spot")
-    _create_entrance(regions["Hammer Peg Area"], regions["Dark World Hammer Peg Cave"], "Dark World Hammer Peg Cave")
-    _create_entrance(regions["Hammer Peg Area"], regions["West Dark World"], "Peg Area Rocks")
-    _create_entrance(regions["Bumper Cave Entrance"], regions["Bumper Cave"], "Bumper Cave (Bottom)")
-    _create_entrance(regions["Bumper Cave Entrance"], regions["Death Mountain Entrance"], "Bumper Cave Entrance Mirror Spot")
-    _create_entrance(regions["Bumper Cave Entrance"], regions["West Dark World"], "Bumper Cave Entrance Drop")
-    _create_entrance(regions["Bumper Cave"], regions["West Dark World"], "Bumper Cave Exit (Bottom)")
-    _create_entrance(regions["Bumper Cave"], regions["Bumper Cave Ledge"], "Bumper Cave Exit (Top)")
-    _create_entrance(regions["Bumper Cave Ledge"], regions["West Dark World"], "Bumper Cave Ledge Drop")
-    _create_entrance(regions["Bumper Cave Ledge"], regions["Bumper Cave"], "Bumper Cave (Top)")
-    _create_entrance(regions["Bumper Cave Ledge"], regions["Death Mountain Return Ledge"], "Bumper Cave Ledge Mirror Spot")
-    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section (Right)"], "Skull Woods First Section Hole (East)")
-    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section (Left)"], "Skull Woods First Section Hole (West)")
-    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section (Top)"], "Skull Woods First Section Hole (North)")
-    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods First Section"], "Skull Woods First Section Door")
-    _create_entrance(regions["Skull Woods Forest"], regions["Skull Woods Second Section"], "Skull Woods Second Section Door (East)")
-    _create_entrance(regions["Skull Woods Forest (West)"], regions["Skull Woods Second Section (Drop)"], "Skull Woods Second Section Hole")
-    _create_entrance(regions["Skull Woods Forest (West)"], regions["Skull Woods Second Section"], "Skull Woods Second Section Door (West)")
-    _create_entrance(regions["Skull Woods Forest (West)"], regions["Skull Woods Final Section (Entrance)"], "Skull Woods Final Section")
-    _create_entrance(regions["Dark Desert"], regions["Misery Mire (Entrance)"], "Misery Mire")
-    _create_entrance(regions["Dark Desert"], regions["Mire Shed"], "Mire Shed")
-    _create_entrance(regions["Dark Desert"], regions["Desert Ledge (Northeast)"], "Desert Ledge (Northeast) Mirror Spot")
-    _create_entrance(regions["Dark Desert"], regions["Desert Ledge"], "Desert Ledge Mirror Spot")
-    _create_entrance(regions["Dark Desert"], regions["Desert Palace Stairs"], "Desert Palace Stairs Mirror Spot")
-    _create_entrance(regions["Dark Desert"], regions["Desert Palace Entrance (North) Spot"], "Desert Palace Entrance (North) Mirror Spot")
-    _create_entrance(regions["Dark Desert"], regions["Dark Desert Hint"], "Dark Desert Hint")
-    _create_entrance(regions["Dark Desert"], regions["Dark Desert Healer Fairy"], "Dark Desert Fairy")
-    _create_entrance(regions["Dark Death Mountain (West Bottom)"], regions["Spike Cave"], "Spike Cave")
-    _create_entrance(regions["Dark Death Mountain (West Bottom)"], regions["Spectacle Rock"], "Spectacle Rock Mirror Spot")
-    _create_entrance(regions["Dark Death Mountain (West Bottom)"], regions["Dark Death Mountain Healer Fairy"], "Dark Death Mountain Fairy")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Dark Death Mountain (East Bottom)"], "Dark Death Mountain Drop (East)")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Dark Death Mountain (West Bottom)"], "Dark Death Mountain Drop (West)")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Ganons Tower (Entrance)"], "Ganons Tower")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Superbunny Cave (Top)"], "Superbunny Cave (Top)")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Hookshot Cave"], "Hookshot Cave")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["East Death Mountain (Top)"], "East Death Mountain (Top) Mirror Spot")
-    _create_entrance(regions["Dark Death Mountain (Top)"], regions["Turtle Rock (Entrance)"], "Turtle Rock")
-    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Turtle Rock (Big Chest)"], "Dark Death Mountain Ledge (East)")
-    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Turtle Rock (Second Section)"], "Dark Death Mountain Ledge (West)")
-    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Mimic Cave Ledge"], "Mimic Cave Mirror Spot")
-    _create_entrance(regions["Dark Death Mountain Ledge"], regions["Spiral Cave Ledge"], "Spiral Cave Mirror Spot")
-    _create_entrance(regions["Dark Death Mountain Isolated Ledge"], regions["Fairy Ascension Ledge"], "Isolated Ledge Mirror Spot")
-    _create_entrance(regions["Dark Death Mountain Isolated Ledge"], regions["Turtle Rock (Eye Bridge)"], "Turtle Rock Isolated Ledge Entrance")
-    _create_entrance(regions["Dark Death Mountain (East Bottom)"], regions["Superbunny Cave (Bottom)"], "Superbunny Cave (Bottom)")
-    _create_entrance(regions["Dark Death Mountain (East Bottom)"], regions["Cave Shop (Dark Death Mountain)"], "Cave Shop (Dark Death Mountain)")
-    _create_entrance(regions["Dark Death Mountain (East Bottom)"], regions["Fairy Ascension Plateau"], "Fairy Ascension Mirror Spot")
-    _create_entrance(regions["Superbunny Cave (Top)"], regions["Dark Death Mountain (Top)"], "Superbunny Cave Exit (Top)")
-    _create_entrance(regions["Superbunny Cave (Bottom)"], regions["Superbunny Cave (Top)"], "Superbunny Cave Climb")
-    _create_entrance(regions["Superbunny Cave (Bottom)"], regions["Dark Death Mountain (East Bottom)"], "Superbunny Cave Exit (Bottom)")
-    _create_entrance(regions["Hookshot Cave"], regions["Dark Death Mountain (Top)"], "Hookshot Cave Exit (South)")
-    _create_entrance(regions["Hookshot Cave"], regions["Hookshot Cave (Upper)"], "Hookshot Cave Bomb Wall (South)")
-    _create_entrance(regions["Hookshot Cave (Upper)"], regions["Death Mountain Floating Island (Dark World)"], "Hookshot Cave Exit (North)")
-    _create_entrance(regions["Hookshot Cave (Upper)"], regions["Hookshot Cave"], "Hookshot Cave Bomb Wall (North)")
-    _create_entrance(regions["Death Mountain Floating Island (Dark World)"], regions["Dark Death Mountain (Top)"], "Floating Island Drop")
-    _create_entrance(regions["Death Mountain Floating Island (Dark World)"], regions["Hookshot Cave (Upper)"], "Hookshot Cave Back Entrance")
-    _create_entrance(regions["Death Mountain Floating Island (Dark World)"], regions["Death Mountain Floating Island (Light World)"], "Floating Island Mirror Spot")
-    _create_entrance(regions["Turtle Rock (Top)"], regions["Dark Death Mountain (Top)"], "Turtle Rock Drop")
-    _create_entrance(regions["Mimic Cave Ledge"], regions["Mimic Cave"], "Mimic Cave")
-    _create_entrance(regions["Swamp Palace (Entrance)"], regions["Swamp Palace (First Room)"], "Swamp Palace Moat")
-    _create_entrance(regions["Swamp Palace (Entrance)"], regions["South Dark World"], "Swamp Palace Exit")
-    _create_entrance(regions["Swamp Palace (First Room)"], regions["Swamp Palace (Starting Area)"], "Swamp Palace Small Key Door")
-    _create_entrance(regions["Swamp Palace (Starting Area)"], regions["Swamp Palace (Center)"], "Swamp Palace (Center)")
-    _create_entrance(regions["Swamp Palace (Center)"], regions["Swamp Palace (North)"], "Swamp Palace (North)")
-    _create_entrance(regions["Swamp Palace (Center)"], regions["Swamp Palace (West)"], "Swamp Palace (West)")
-    _create_entrance(regions["Thieves Town (Entrance)"], regions["Thieves Town (Deep)"], "Thieves Town Big Key Door")
-    _create_entrance(regions["Thieves Town (Entrance)"], regions["West Dark World"], "Thieves Town Exit")
-    _create_entrance(regions["Thieves Town (Deep)"], regions["Blind Fight"], "Blind Fight")
-    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods Forest"], "Skull Woods First Section Exit")
-    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods First Section (Top)"], "Skull Woods First Section Bomb Jump")
-    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods First Section (Right)"], "Skull Woods First Section South Door")
-    _create_entrance(regions["Skull Woods First Section"], regions["Skull Woods First Section (Left)"], "Skull Woods First Section West Door")
-    _create_entrance(regions["Skull Woods First Section (Right)"], regions["Skull Woods First Section"], "Skull Woods First Section (Right) North Door")
-    _create_entrance(regions["Skull Woods First Section (Left)"], regions["Skull Woods First Section"], "Skull Woods First Section (Left) Door to Exit")
-    _create_entrance(regions["Skull Woods First Section (Left)"], regions["Skull Woods First Section (Right)"], "Skull Woods First Section (Left) Door to Right")
-    _create_entrance(regions["Skull Woods First Section (Top)"], regions["Skull Woods First Section"], "Skull Woods First Section (Top) One-Way Path")
-    _create_entrance(regions["Skull Woods Second Section (Drop)"], regions["Skull Woods Second Section"], "Skull Woods Second Section (Drop)")
-    _create_entrance(regions["Skull Woods Second Section"], regions["Skull Woods Forest"], "Skull Woods Second Section Exit (East)")
-    _create_entrance(regions["Skull Woods Second Section"], regions["Skull Woods Forest (West)"], "Skull Woods Second Section Exit (West)")
-    _create_entrance(regions["Skull Woods Final Section (Entrance)"], regions["Skull Woods Final Section (Mothula)"], "Skull Woods Torch Room")
-    _create_entrance(regions["Skull Woods Final Section (Entrance)"], regions["Skull Woods Forest (West)"], "Skull Woods Final Section Exit")
-    _create_entrance(regions["Ice Palace (Entrance)"], regions["Ice Palace (Second Section)"], "Ice Palace (Second Section)")
-    _create_entrance(regions["Ice Palace (Entrance)"], regions["Dark Lake Hylia Central Island"], "Ice Palace Exit")
-    _create_entrance(regions["Ice Palace (Second Section)"], regions["Ice Palace (Main)"], "Ice Palace (Main)")
-    _create_entrance(regions["Ice Palace (Main)"], regions["Ice Palace (East)"], "Ice Palace (East)")
-    _create_entrance(regions["Ice Palace (Main)"], regions["Ice Palace (Kholdstare)"], "Ice Palace (Kholdstare)")
-    _create_entrance(regions["Ice Palace (East)"], regions["Ice Palace (East Top)"], "Ice Palace (East Top)")
-    _create_entrance(regions["Misery Mire (Entrance)"], regions["Misery Mire (Main)"], "Misery Mire Entrance Gap")
-    _create_entrance(regions["Misery Mire (Entrance)"], regions["Dark Desert"], "Misery Mire Exit")
-    _create_entrance(regions["Misery Mire (Main)"], regions["Misery Mire (West)"], "Misery Mire (West)")
-    _create_entrance(regions["Misery Mire (Main)"], regions["Misery Mire (Final Area)"], "Misery Mire Big Key Door")
-    _create_entrance(regions["Misery Mire (Final Area)"], regions["Misery Mire (Vitreous)"], "Misery Mire (Vitreous)")
-    _create_entrance(regions["Turtle Rock (Entrance)"], regions["Turtle Rock (First Section)"], "Turtle Rock Entrance Gap")
-    _create_entrance(regions["Turtle Rock (Entrance)"], regions["Dark Death Mountain (Top)"], "Turtle Rock Exit (Front)")
-    _create_entrance(regions["Turtle Rock (First Section)"], regions["Turtle Rock (Pokey Room)"], "Turtle Rock Entrance to Pokey Room")
-    _create_entrance(regions["Turtle Rock (First Section)"], regions["Turtle Rock (Entrance)"], "Turtle Rock Entrance Gap Reverse")
-    _create_entrance(regions["Turtle Rock (Pokey Room)"], regions["Turtle Rock (Chain Chomp Room)"], "Turtle Rock (Pokey Room) (North)")
-    _create_entrance(regions["Turtle Rock (Pokey Room)"], regions["Turtle Rock (First Section)"], "Turtle Rock (Pokey Room) (South)")
-    _create_entrance(regions["Turtle Rock (Chain Chomp Room)"], regions["Turtle Rock (Second Section)"], "Turtle Rock (Chain Chomp Room) (North)")
-    _create_entrance(regions["Turtle Rock (Chain Chomp Room)"], regions["Turtle Rock (Pokey Room)"], "Turtle Rock (Chain Chomp Room) (South)")
-    _create_entrance(regions["Turtle Rock (Second Section)"], regions["Turtle Rock (Chain Chomp Room)"], "Turtle Rock Chain Chomp Staircase")
-    _create_entrance(regions["Turtle Rock (Second Section)"], regions["Turtle Rock (Crystaroller Room)"], "Turtle Rock Big Key Door")
-    _create_entrance(regions["Turtle Rock (Second Section)"], regions["Turtle Rock (Second Section Bomb Wall)"], "Turtle Rock Second Section Bomb Wall")
-    _create_entrance(regions["Turtle Rock (Second Section Bomb Wall)"], regions["Dark Death Mountain Ledge"], "Turtle Rock Ledge Exit (West)")
-    _create_entrance(regions["Turtle Rock (Second Section Bomb Wall)"], regions["Turtle Rock (Second Section)"], "Turtle Rock Second Section from Bomb Wall")
-    _create_entrance(regions["Turtle Rock (Big Chest)"], regions["Turtle Rock (Second Section)"], "Turtle Rock (Big Chest) (North)")
-    _create_entrance(regions["Turtle Rock (Big Chest)"], regions["Dark Death Mountain Ledge"], "Turtle Rock Ledge Exit (East)")
-    _create_entrance(regions["Turtle Rock (Crystaroller Room)"], regions["Turtle Rock (Dark Room)"], "Turtle Rock Dark Room Staircase")
-    _create_entrance(regions["Turtle Rock (Crystaroller Room)"], regions["Turtle Rock (Second Section)"], "Turtle Rock Big Key Door Reverse")
-    _create_entrance(regions["Turtle Rock (Dark Room)"], regions["Turtle Rock (Crystaroller Room)"], "Turtle Rock (Dark Room) (North)")
-    _create_entrance(regions["Turtle Rock (Dark Room)"], regions["Turtle Rock (Eye Bridge)"], "Turtle Rock (Dark Room) (South)")
-    _create_entrance(regions["Turtle Rock (Eye Bridge Bomb Wall)"], regions["Dark Death Mountain Isolated Ledge"], "Turtle Rock Isolated Ledge Exit")
-    _create_entrance(regions["Turtle Rock (Eye Bridge Bomb Wall)"], regions["Turtle Rock (Eye Bridge)"], "Turtle Rock Eye Bridge from Bomb Wall")
-    _create_entrance(regions["Turtle Rock (Eye Bridge)"], regions["Turtle Rock (Dark Room)"], "Turtle Rock Dark Room (South)")
-    _create_entrance(regions["Turtle Rock (Eye Bridge)"], regions["Turtle Rock (Trinexx)"], "Turtle Rock (Trinexx)")
-    _create_entrance(regions["Turtle Rock (Eye Bridge)"], regions["Turtle Rock (Eye Bridge Bomb Wall)"], "Turtle Rock Eye Bridge Bomb Wall")
-    _create_entrance(regions["Palace of Darkness (Entrance)"], regions["Palace of Darkness (Center)"], "Palace of Darkness Bridge Room")
-    _create_entrance(regions["Palace of Darkness (Entrance)"], regions["Palace of Darkness (Bonk Section)"], "Palace of Darkness Bonk Wall")
-    _create_entrance(regions["Palace of Darkness (Entrance)"], regions["East Dark World"], "Palace of Darkness Exit")
-    _create_entrance(regions["Palace of Darkness (Center)"], regions["Palace of Darkness (Big Key Chest)"], "Palace of Darkness Big Key Chest Staircase")
-    _create_entrance(regions["Palace of Darkness (Center)"], regions["Palace of Darkness (North)"], "Palace of Darkness (North)")
-    _create_entrance(regions["Palace of Darkness (Center)"], regions["Palace of Darkness (Final Section)"], "Palace of Darkness Big Key Door")
-    _create_entrance(regions["Palace of Darkness (Bonk Section)"], regions["Palace of Darkness (Center)"], "Palace of Darkness Hammer Peg Drop")
-    _create_entrance(regions["Palace of Darkness (North)"], regions["Palace of Darkness (Harmless Hellway)"], "Palace of Darkness Spike Statue Room Door")
-    _create_entrance(regions["Palace of Darkness (North)"], regions["Palace of Darkness (Maze)"], "Palace of Darkness Maze Door")
-    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Ganons Tower (Tile Room)"], "Ganons Tower (Tile Room)")
-    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Ganons Tower (Hookshot Room)"], "Ganons Tower (Hookshot Room)")
-    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Ganons Tower (Top)"], "Ganons Tower Big Key Door")
-    _create_entrance(regions["Ganons Tower (Entrance)"], regions["Dark Death Mountain (Top)"], "Ganons Tower Exit")
-    _create_entrance(regions["Ganons Tower (Tile Room)"], regions["Ganons Tower (Compass Room)"], "Ganons Tower (Tile Room) Key Door")
-    _create_entrance(regions["Ganons Tower (Compass Room)"], regions["Ganons Tower (Bottom)"], "Ganons Tower (Bottom) (East)")
-    _create_entrance(regions["Ganons Tower (Hookshot Room)"], regions["Ganons Tower (Map Room)"], "Ganons Tower (Map Room)")
-    _create_entrance(regions["Ganons Tower (Hookshot Room)"], regions["Ganons Tower (Firesnake Room)"], "Ganons Tower (Double Switch Room)")
-    _create_entrance(regions["Ganons Tower (Firesnake Room)"], regions["Ganons Tower (Teleport Room)"], "Ganons Tower (Firesnake Room)")
-    _create_entrance(regions["Ganons Tower (Teleport Room)"], regions["Ganons Tower (Bottom)"], "Ganons Tower (Bottom) (West)")
-    _create_entrance(regions["Ganons Tower (Top)"], regions["Ganons Tower (Before Moldorm)"], "Ganons Tower Torch Rooms")
-    _create_entrance(regions["Ganons Tower (Before Moldorm)"], regions["Ganons Tower (Moldorm)"], "Ganons Tower Moldorm Door")
-    _create_entrance(regions["Ganons Tower (Moldorm)"], regions["Agahnim 2"], "Ganons Tower Moldorm Gap")
-    _create_entrance(regions["Pyramid"], regions["Bottom of Pyramid"], "Ganon Drop")
-    _create_entrance(regions["Bottom of Pyramid"], regions["Pyramid Ledge"], "Pyramid Exit")
-    _create_entrance(regions["Pyramid Ledge"], regions["Bottom of Pyramid"], "Pyramid Entrance")
-    _create_entrance(regions["Pyramid Ledge"], regions["East Dark World"], "Pyramid Drop")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:
