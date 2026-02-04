@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "test_data_updated": "2025-12-06T14:30:37.513435",
+    "test_data_updated": "2026-02-03T14:20:27.459396",
     "test_data_source": {
       "average_time_per_template_seconds": 18.6,
       "batch_processing_time_minutes": 24.6,
@@ -9,14 +9,15 @@
       "last_updated": "2025-10-09T23:50:14.807461",
       "script_version": "1.0.0"
     },
-    "games_with_test_data": 102,
-    "total_games": 105,
-    "games_without_test_data": 3,
+    "games_with_test_data": 73,
+    "total_games": 155,
+    "games_without_test_data": 82,
     "test_types_loaded": [
       "minimal_spoiler",
       "full_spoiler",
       "multiclient",
-      "multiworld"
+      "multiworld",
+      "spoiler_fuzz"
     ]
   },
   "alttp": {
@@ -98,19 +99,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -120,11 +121,18 @@
         "total_locations": 268
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 2,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -210,19 +218,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -232,11 +240,18 @@
         "total_locations": 25
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 5,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -319,19 +334,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -341,11 +356,18 @@
         "total_locations": 131
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 3,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -428,19 +450,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -450,11 +472,18 @@
         "total_locations": 232
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 1,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -594,19 +623,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -616,11 +645,18 @@
         "total_locations": 8
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 4,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -671,19 +707,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -693,11 +729,18 @@
         "total_locations": 237
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 6,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -748,19 +791,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -770,11 +813,18 @@
         "total_locations": 252
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 8,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 8,
+        "runs_failed": 2,
+        "failure_types": "2 test"
       }
     }
   },
@@ -825,19 +875,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -847,11 +897,18 @@
         "total_locations": 100
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 9,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -903,19 +960,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -925,11 +982,18 @@
         "total_locations": 125
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -981,19 +1045,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1006,8 +1070,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1058,19 +1129,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1083,8 +1154,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1111,19 +1189,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1136,8 +1214,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1188,19 +1273,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1213,8 +1298,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1241,19 +1333,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1266,8 +1358,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1319,19 +1418,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1344,8 +1443,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1396,19 +1502,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1421,8 +1527,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1473,19 +1586,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1498,8 +1611,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1550,19 +1670,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1575,8 +1695,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1627,19 +1754,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1652,8 +1779,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1680,19 +1814,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1705,8 +1839,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1758,19 +1899,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1783,8 +1924,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1835,19 +1983,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1860,8 +2008,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -1913,19 +2068,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -1938,8 +2093,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 5,
+        "failure_types": "2 gen, 3 test"
       }
     }
   },
@@ -1990,19 +2152,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2015,8 +2177,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2067,19 +2236,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2092,8 +2261,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2144,19 +2320,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2169,8 +2345,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2275,19 +2458,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2300,8 +2483,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 1,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2353,19 +2543,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2378,8 +2568,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 8,
+        "runs_failed": 2,
+        "failure_types": "2 test"
       }
     }
   },
@@ -2431,19 +2628,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2456,8 +2653,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 5,
+        "failure_types": "5 test"
       }
     }
   },
@@ -2508,19 +2712,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2533,8 +2737,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2585,19 +2796,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2610,8 +2821,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 1,
+        "failure_types": "1 test"
       }
     }
   },
@@ -2639,19 +2857,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2664,8 +2882,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2716,19 +2941,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2741,8 +2966,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2794,19 +3026,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2819,8 +3051,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2872,19 +3111,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2897,8 +3136,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -2949,19 +3195,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -2974,8 +3220,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3026,19 +3279,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3051,8 +3304,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3103,19 +3363,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3128,8 +3388,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3180,19 +3447,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3205,8 +3472,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3257,19 +3531,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3282,8 +3556,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3334,19 +3615,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3359,8 +3640,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3411,19 +3699,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3436,8 +3724,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3644,19 +3939,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3669,8 +3964,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3721,19 +4023,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3746,8 +4048,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3876,19 +4185,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3901,8 +4210,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -3929,19 +4245,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -3954,8 +4270,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 7,
+        "runs_failed": 3,
+        "failure_types": "3 test"
       }
     }
   },
@@ -4006,19 +4329,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4031,8 +4354,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4059,19 +4389,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4084,8 +4414,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4136,19 +4473,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4161,8 +4498,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 0,
+        "runs_failed": 10,
+        "failure_types": "10 gen"
       }
     }
   },
@@ -4213,19 +4557,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4238,8 +4582,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 8,
+        "failure_types": "8 test"
       }
     }
   },
@@ -4290,19 +4641,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4315,8 +4666,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4344,19 +4702,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4369,8 +4727,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4422,19 +4787,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4447,8 +4812,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 1,
+        "failure_types": "1 test"
       }
     }
   },
@@ -4475,19 +4847,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4500,8 +4872,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4553,19 +4932,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4578,8 +4957,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 0,
+        "runs_failed": 6,
+        "failure_types": "2 gen, 4 test"
       }
     }
   },
@@ -4630,19 +5016,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4655,8 +5041,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 8,
+        "failure_types": "8 test"
       }
     }
   },
@@ -4707,19 +5100,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4732,8 +5125,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 9,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4784,19 +5184,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4809,8 +5209,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4861,19 +5268,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4886,8 +5293,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -4939,19 +5353,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -4964,8 +5378,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 5,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5016,19 +5437,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5041,8 +5462,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": false,
+        "total_runs": 10,
+        "runs_passed": 2,
+        "runs_failed": 8,
+        "failure_types": "8 test"
       }
     }
   },
@@ -5093,19 +5521,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5118,8 +5546,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5170,19 +5605,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5195,8 +5630,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5224,19 +5666,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5249,8 +5691,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5301,19 +5750,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5326,8 +5775,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5431,19 +5887,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5456,8 +5912,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5586,19 +6049,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5611,8 +6074,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5695,19 +6165,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5720,8 +6190,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5804,19 +6281,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5826,11 +6303,18 @@
         "total_locations": 16
       },
       "multiworld": {
-        "passed": true,
-        "players_passed": 1,
+        "passed": null,
+        "players_passed": 0,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 0,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -5913,19 +6397,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -5938,8 +6422,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -6022,19 +6513,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -6047,8 +6538,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -6075,19 +6573,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -6100,8 +6598,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
@@ -6128,19 +6633,19 @@
     "test_results": {
       "minimal_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "full_spoiler": {
         "passed": true,
-        "seeds_passed": 10,
+        "seeds_passed": 1,
         "seeds_failed": 0,
-        "total_seeds": 10,
+        "total_seeds": 1,
         "first_failure_seed": null,
-        "seed_range": "1-10"
+        "seed_range": "1"
       },
       "multiclient": {
         "passed": true,
@@ -6153,8 +6658,15 @@
         "passed": true,
         "players_passed": 1,
         "players_failed": 0,
-        "total_players": 10,
+        "total_players": 1,
         "first_failure_player": null
+      },
+      "spoiler_fuzz": {
+        "passed": true,
+        "total_runs": 10,
+        "runs_passed": 10,
+        "runs_failed": 0,
+        "failure_types": null
       }
     }
   },
