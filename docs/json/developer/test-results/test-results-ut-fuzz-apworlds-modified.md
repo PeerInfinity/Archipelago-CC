@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 19:19:22
+**Generated:** 2026-02-04 19:44:47
 
 **Source Data Created:** 2026-01-24T05:05:20.633697
 
@@ -180,7 +180,7 @@ Of the 50 games with 100% pass rate:
 | The Legend of Zelda - Oracle of Seasons | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Sims 4 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | ✅ | ✅ | N/A |
+| ToeJam and Earl | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% | N/A | N/A | N/A |
 | TurnipBoy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | Tyrian | ❌ | 10 | 3 | 3 | 0 | 4 | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% | ✅ | ✅ | N/A |

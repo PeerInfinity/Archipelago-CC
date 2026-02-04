@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid (APWorlds)
 
-**Generated:** 2026-02-04 19:19:22
+**Generated:** 2026-02-04 19:44:47
 
 **Source Data Last Updated:** 2026-01-23T07:07:32
 
@@ -139,7 +139,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | The Legend of Zelda - Oracle of Seasons | ❌ 7.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ❌ 7.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | The Sims 4 | ❌ 0.0% | ⚠️ 80.0% | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | ❌ 2.0% | ❌ 0.0% | ✅ | ✅ | N/A |
+| ToeJam and Earl | ❌ 2.0% | ❌ 0.0% | N/A | N/A | N/A |
 | TurnipBoy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Tyrian | ❌ 32.0% | ❌ 30.0% | ✅ | ✅ | N/A |
 | Vampire Survivors | ✅ 48.0% | ✅ 40.0% | ✅ | ✅ | N/A |
@@ -297,7 +297,7 @@ These games fail in both Universal Tracker versions.
 | The Legend of Zelda - Oracle of Seasons | ✅ | ✅ | N/A |
 | The Legend of Zelda - Phantom Hourglass | ✅ | ✅ | N/A |
 | The Sims 4 | 5.5KB | ✅ | N/A |
-| ToeJam and Earl | ✅ | ✅ | N/A |
+| ToeJam and Earl | N/A | N/A | N/A |
 | Tyrian | ✅ | ✅ | N/A |
 | Wario Land | ✅ | ✅ | N/A |
 | Watery Words | 9.1KB | ✅ | N/A |
