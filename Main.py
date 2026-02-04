@@ -19,7 +19,7 @@ from Utils import __version__, output_path, restricted_dumps, version_tuple
 from settings import get_settings
 from worlds import AutoWorld
 from worlds.generic.Rules import exclusion_rules, locality_rules
-from exporter import export_game_rules
+from exporter import export_game_rules, export_multiworld_pickle
 
 __all__ = ["main"]
 
@@ -424,6 +424,16 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
             # Clear exporter caches to allow GC
             clear_rule_cache()
             clear_handler_cache()
+
+        # Export multiworld as pickle for tracker (alternative to rules_json)
+        if settings.general_options.save_tracker_pickle:
+            export_multiworld_pickle(
+                multiworld,
+                temp_dir,
+                outfilebase,
+                settings.general_options.update_frontend_presets,
+                settings.general_options.skip_preset_copy_if_rules_identical,
+            )
 
         zipfilename = output_path(f"AP_{multiworld.seed_name}.zip")
         logger.info(f"Creating final archive at {zipfilename}")
