@@ -33,6 +33,7 @@ class ExpressionVisitorMixin:
             # Special handling for self.world.options.<setting>.value pattern
             # This resolves option values to constants at export time instead of runtime lookup
             # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            # Controlled by the resolve_options_to_constants setting
             if attr_name == 'value' and 'self' in self.closure_vars:
                 self_obj = self.closure_vars['self']
                 try:
@@ -44,6 +45,28 @@ class ExpressionVisitorMixin:
                         current = current.value
                     if isinstance(current, ast.Name) and current.id == 'self':
                         # We have self.X.Y.Z.value pattern
+                        # Check if this is a world.options pattern (chain includes 'options')
+                        is_options_pattern = 'options' in chain and len(chain) >= 3
+
+                        # Check if we should resolve options to constants
+                        should_resolve = True
+                        if is_options_pattern and hasattr(self, 'game_handler') and self.game_handler is not None:
+                            if hasattr(self.game_handler, 'should_resolve_options_to_constants'):
+                                should_resolve = self.game_handler.should_resolve_options_to_constants()
+
+                        if is_options_pattern and not should_resolve:
+                            # Return option_value reference instead of resolving to constant
+                            # Chain is like ['world', 'options', 'SettingName', 'value']
+                            # Find the setting name (element after 'options')
+                            try:
+                                options_idx = chain.index('options')
+                                if options_idx + 1 < len(chain) - 1:  # -1 to skip 'value' at the end
+                                    setting_name = chain[options_idx + 1]
+                                    logging.debug(f"visit_Attribute: Keeping self.world.options.{setting_name}.value as option_value (resolve_options_to_constants=False)")
+                                    return {'type': 'option_value', 'option': setting_name}
+                            except (ValueError, IndexError):
+                                pass  # Fall through to normal resolution
+
                         # Try to resolve the full chain via closure_vars
                         resolved = self_obj
                         for attr in chain:
