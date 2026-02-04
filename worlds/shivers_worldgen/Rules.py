@@ -75,8 +75,43 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("To Gods Room From Anansi", player),
-        CanReachRegion('Gods Room')
+        multiworld.get_entrance("To Lobby From Outside", player),
+        Has('Key for Front Door', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Lake From Underground Tunnels", player),
+        Has('Key for Underground Lake', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Underground Tunnels From Underground Lake", player),
+        Has('Key for Underground Lake', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Office Elevator From Underground Blue Tunnels", player),
+        Has('Key for Office Elevator', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Office Elevator From Office", player),
+        Has('Key for Office Elevator', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Workshop", player),
+        Has('Key for Workshop', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Lobby From Office", player),
+        Has('Key for Office', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Bedroom Elevator From Office", player),
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
@@ -87,77 +122,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("To Bedroom", player),
         Has('Key for Bedroom', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Egypt From Blue Maze", player),
-        Has('Crawling', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Three Floor Elevator From Blue Maze Bottom", player),
-        Has('Key for Three Floor Elevator', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Three Floor Elevator From Blue Maze Top", player),
-        Has('Key for Three Floor Elevator', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Shaman From Burial", player),
-        Has('Key for Shaman Room', 1)
-    )
-
-    multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player).access_rule = \
-        lambda state: ((state.can_reach_region('Bedroom', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))
-
-    world.set_rule(
-        multiworld.get_entrance("To Lobby From Egypt", player),
-        Has('Key for Egypt Room', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Burial From Egypt", player),
-        CanReachRegion('Egypt')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Blue Maze From Egypt", player),
-        Has('Crawling', 1)
-    )
-
-    multiworld.get_entrance("To Beth's Body From Generator", player).access_rule = \
-        lambda state: ((((((state.can_reach_region('Theater', player)) and (state.has('Viewed Norse Stone', player)))) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (beths_body_available(state, player)))
-
-    world.set_rule(
-        multiworld.get_entrance("To Anansi From Gods Room", player),
-        CanReachRegion('Maintenance Tunnels')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Norse Stone From Gods Room", player),
-        Has('Aligned Planets', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To UFO From Inventions", player),
-        Has('Key for UFO Room', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Torture From Inventions", player),
-        Has('Key for Torture Room', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Water Capture From Janitor Closet", player),
-        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Lobby From Library", player),
-        Has('Key for Library', 1)
     )
 
     world.set_rule(
@@ -199,6 +163,11 @@ def set_rules(world: "World") -> None:
         lambda state: ((((((((((water_capturable(state, player) + wax_capturable(state, player)) + ash_capturable(state, player)) + oil_capturable(state, player)) + cloth_capturable(state, player)) + wood_capturable(state, player)) + crystal_capturable(state, player)) + sand_capturable(state, player)) + metal_capturable(state, player)) + lightning_capturable(state, player)) >= state.multiworld.worlds[player].options.ixupi_captures_needed)
 
     world.set_rule(
+        multiworld.get_entrance("To Lobby From Library", player),
+        Has('Key for Library', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Maintenance Tunnels", player),
         Has('Key for Three Floor Elevator', 1)
     )
@@ -208,45 +177,26 @@ def set_rules(world: "World") -> None:
         Has('Key for Generator Room', 1)
     )
 
+    multiworld.get_entrance("To Beth's Body From Generator", player).access_rule = \
+        lambda state: ((((((state.can_reach_region('Theater', player)) and (state.has('Viewed Norse Stone', player)))) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (beths_body_available(state, player)))
+
     world.set_rule(
-        multiworld.get_entrance("To Maze From Maze Staircase", player),
-        CanReachRegion('Projector Room')
+        multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player),
+        CanReachRegion('Three Floor Elevator')
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Janitor Closet", player),
-        Has('Key for Janitor Closet', 1)
+        multiworld.get_entrance("To Maintenance Tunnels From Theater Back Hallway", player),
+        Has('Crawling', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Prehistoric From Ocean", player),
-        Has('Key for Ocean Room', 1)
+        multiworld.get_entrance("To Projector Room", player),
+        Has('Key for Projector Room', 1)
     )
 
-    world.set_rule(
-        multiworld.get_entrance("To Office Elevator From Office", player),
-        Has('Key for Office Elevator', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Workshop", player),
-        Has('Key for Workshop', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Lobby From Office", player),
-        Has('Key for Office', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Lobby From Outside", player),
-        Has('Key for Front Door', 1)
-    )
+    multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player).access_rule = \
+        lambda state: ((state.can_reach_region('Bedroom', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Prehistoric", player),
@@ -264,8 +214,38 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Torture", player),
-        Has('Key for Puzzle Room', 1)
+        multiworld.get_entrance("To Prehistoric From Ocean", player),
+        Has('Key for Ocean Room', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Maze From Maze Staircase", player),
+        CanReachRegion('Projector Room')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Lobby From Tar River", player),
+        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))), Has('Crawling'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Lobby From Egypt", player),
+        Has('Key for Egypt Room', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Burial From Egypt", player),
+        CanReachRegion('Egypt')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Blue Maze From Egypt", player),
+        Has('Crawling', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Shaman From Burial", player),
+        Has('Key for Shaman Room', 1)
     )
 
     world.set_rule(
@@ -279,33 +259,63 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Slide Room", player),
-        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
+        multiworld.get_entrance("To Anansi From Gods Room", player),
+        CanReachRegion('Maintenance Tunnels')
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Lobby From Slide Room", player),
-        Has('Lost Your Head', 1)
+        multiworld.get_entrance("To Norse Stone From Gods Room", player),
+        Has('Aligned Planets', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Lobby From Tar River", player),
-        And(HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))), Has('Crawling'))
+        multiworld.get_entrance("To Gods Room From Anansi", player),
+        CanReachRegion('Gods Room')
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player),
-        CanReachRegion('Three Floor Elevator')
+        multiworld.get_entrance("To Janitor Closet", player),
+        Has('Key for Janitor Closet', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Maintenance Tunnels From Theater Back Hallway", player),
+        multiworld.get_entrance("To Water Capture From Janitor Closet", player),
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Orrery From UFO", player),
+        Has('Viewed Fortune', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Inventions From UFO", player),
+        Has('Key for UFO Room', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Egypt From Blue Maze", player),
         Has('Crawling', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Projector Room", player),
-        Has('Key for Projector Room', 1)
+        multiworld.get_entrance("To Three Floor Elevator From Blue Maze Bottom", player),
+        Has('Key for Three Floor Elevator', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Three Floor Elevator From Blue Maze Top", player),
+        Has('Key for Three Floor Elevator', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To UFO From Inventions", player),
+        Has('Key for UFO Room', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Torture From Inventions", player),
+        Has('Key for Torture Room', 1)
     )
 
     world.set_rule(
@@ -322,113 +332,70 @@ def set_rules(world: "World") -> None:
         lambda state: ((((state.has('Viewed Egyptian Hieroglyphics Explained', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (state.has('Viewed Page 17', player)))
 
     world.set_rule(
-        multiworld.get_entrance("To Orrery From UFO", player),
-        Has('Viewed Fortune', 1)
+        multiworld.get_entrance("To Torture", player),
+        Has('Key for Puzzle Room', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Inventions From UFO", player),
-        Has('Key for UFO Room', 1)
+        multiworld.get_entrance("To Slide Room", player),
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Office Elevator From Underground Blue Tunnels", player),
-        Has('Key for Office Elevator', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Tunnels From Underground Lake", player),
-        Has('Key for Underground Lake', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Underground Lake From Underground Tunnels", player),
-        Has('Key for Underground Lake', 1)
+        multiworld.get_entrance("To Lobby From Slide Room", player),
+        Has('Lost Your Head', 1)
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
-        world.get_region("Gods Room"),
-        multiworld.get_entrance("To Gods Room From Anansi", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Bedroom"),
-        multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Egypt"),
-        multiworld.get_entrance("To Burial From Egypt", player)
+        world.get_region("Tar River"),
+        multiworld.get_entrance("To Tar River From Lobby", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("Theater"),
         multiworld.get_entrance("To Beth's Body From Generator", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Maintenance Tunnels"),
-        multiworld.get_entrance("To Anansi From Gods Room", player)
+        world.get_region("Three Floor Elevator"),
+        multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Tar River"),
-        multiworld.get_entrance("To Tar River From Lobby", player)
+        world.get_region("Bedroom"),
+        multiworld.get_entrance("To Clock Chains From Clock Tower Staircase", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("Projector Room"),
         multiworld.get_entrance("To Maze From Maze Staircase", player)
     )
     multiworld.register_indirect_condition(
+        world.get_region("Egypt"),
+        multiworld.get_entrance("To Burial From Egypt", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("Clock Tower"),
         multiworld.get_entrance("To Gods Room From Shaman", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Three Floor Elevator"),
-        multiworld.get_entrance("To Clock Tower Staircase From Theater Back Hallway", player)
+        world.get_region("Maintenance Tunnels"),
+        multiworld.get_entrance("To Anansi From Gods Room", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Gods Room"),
+        multiworld.get_entrance("To Gods Room From Anansi", player)
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Puzzle Solved Anansi Music Box", player),
-        Has('Set Song', 1)
+        multiworld.get_location("Puzzle Solved Office Elevator", player),
+        And(Or(CanReachRegion('Office'), CanReachRegion('Underground Lake')), Has('Key for Office Elevator'))
     )
 
     world.set_rule(
-        multiworld.get_location("Storage: Anansi Music Box", player),
-        Has('Set Song', 1)
+        multiworld.get_location("Puzzle Solved Three Floor Elevator", player),
+        And(Or(CanReachRegion('Blue Maze'), CanReachRegion('Maintenance Tunnels')), Has('Key for Three Floor Elevator'))
     )
 
     world.set_rule(
-        multiworld.get_location("Ixupi Captured Ash", player),
-        HelperCall(helper_func=ash_capturable, helper_name="ash_capturable", body_rule=(HasAll('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE')) | (HasAll('Ash Pot Complete', 'Ash Pot Complete DUPE')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Clock Tower", player),
-        Has('Set Time', 1)
-    )
-
-    multiworld.get_location("Jukebox", player).access_rule = \
-        lambda state: ((((state.can_reach_region('Anansi', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (state.can_reach_region('Clock Tower', player)))
-
-    world.set_rule(
-        multiworld.get_location("Ixupi Captured Cloth", player),
-        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ixupi Captured Crystal", player),
-        HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable", body_rule=(HasAll('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE')) | (HasAll('Crystal Pot Complete', 'Crystal Pot Complete DUPE')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Columns of RA", player),
-        Has('Viewed Egyptian Hieroglyphics Explained', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Red Door", player),
-        CanReachRegion('Maintenance Tunnels')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Storage: Janitor Closet", player),
-        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
+        multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
+        HasAll('Crawling', 'Key for Bedroom Elevator')
     )
 
     world.set_rule(
@@ -442,14 +409,22 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Puzzle Solved Maze Door", player),
+        multiworld.get_location("Storage: Theater", player),
         Has('Viewed Theater Movie', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Ixupi Captured Metal", player),
-        HelperCall(helper_func=metal_capturable, helper_name="metal_capturable", body_rule=(HasAll('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE')) | (HasAll('Metal Pot Complete', 'Metal Pot Complete DUPE')))
+        multiworld.get_location("Puzzle Solved Clock Tower Door", player),
+        CanReachRegion('Three Floor Elevator')
     )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Clock Tower", player),
+        Has('Set Time', 1)
+    )
+
+    multiworld.get_location("Jukebox", player).access_rule = \
+        lambda state: ((((state.can_reach_region('Anansi', player)) if (state.multiworld.worlds[player].options.puzzle_hints_required) else (True))) and (state.can_reach_region('Clock Tower', player)))
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Atlantis", player),
@@ -457,38 +432,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ixupi Captured Oil", player),
-        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Office Elevator", player),
-        And(Or(CanReachRegion('Office'), CanReachRegion('Underground Lake')), Has('Key for Office Elevator'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Three Floor Elevator", player),
-        And(Or(CanReachRegion('Blue Maze'), CanReachRegion('Maintenance Tunnels')), Has('Key for Three Floor Elevator'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Ixupi Captured Sand", player),
-        HelperCall(helper_func=sand_capturable, helper_name="sand_capturable", body_rule=(HasAll('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE')) | (HasAll('Sand Pot Complete', 'Sand Pot Complete DUPE')))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Shaman Drums", player),
-        CanReachRegion('Clock Tower')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
+        multiworld.get_location("Puzzle Solved Maze Door", player),
+        Has('Viewed Theater Movie', 1)
     )
 
     world.set_rule(
@@ -497,13 +442,33 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Storage: Theater", player),
-        Has('Viewed Theater Movie', 1)
+        multiworld.get_location("Puzzle Solved Columns of RA", player),
+        Has('Viewed Egyptian Hieroglyphics Explained', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Puzzle Solved Clock Tower Door", player),
-        CanReachRegion('Three Floor Elevator')
+        multiworld.get_location("Puzzle Solved Shaman Drums", player),
+        CanReachRegion('Clock Tower')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Red Door", player),
+        CanReachRegion('Maintenance Tunnels')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Puzzle Solved Anansi Music Box", player),
+        Has('Set Song', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Anansi Music Box", player),
+        Has('Set Song', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Storage: Janitor Closet", player),
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
     )
 
     world.set_rule(
@@ -517,6 +482,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Puzzle Solved Skull Dial Door", player),
+        HelperCall(helper_func=all_skull_dials_set, helper_name="all_skull_dials_set", body_rule=HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf'))
+    )
+
+    world.set_rule(
         multiworld.get_location("Ixupi Captured Water", player),
         HelperCall(helper_func=water_capturable, helper_name="water_capturable", body_rule=(HasAll('Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE')) | (HasAll('Water Pot Complete', 'Water Pot Complete DUPE')))
     )
@@ -527,6 +497,36 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Ixupi Captured Ash", player),
+        HelperCall(helper_func=ash_capturable, helper_name="ash_capturable", body_rule=(HasAll('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE')) | (HasAll('Ash Pot Complete', 'Ash Pot Complete DUPE')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Oil", player),
+        HelperCall(helper_func=oil_capturable, helper_name="oil_capturable", body_rule=(HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Cloth", player),
+        HelperCall(helper_func=cloth_capturable, helper_name="cloth_capturable", body_rule=(HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE')))
+    )
+
+    world.set_rule(
         multiworld.get_location("Ixupi Captured Wood", player),
         HelperCall(helper_func=wood_capturable, helper_name="wood_capturable", body_rule=(HasAll('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE')) | (HasAll('Wood Pot Complete', 'Wood Pot Complete DUPE')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Crystal", player),
+        HelperCall(helper_func=crystal_capturable, helper_name="crystal_capturable", body_rule=(HasAll('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE')) | (HasAll('Crystal Pot Complete', 'Crystal Pot Complete DUPE')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Sand", player),
+        HelperCall(helper_func=sand_capturable, helper_name="sand_capturable", body_rule=(HasAll('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE')) | (HasAll('Sand Pot Complete', 'Sand Pot Complete DUPE')))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Ixupi Captured Metal", player),
+        HelperCall(helper_func=metal_capturable, helper_name="metal_capturable", body_rule=(HasAll('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE')) | (HasAll('Metal Pot Complete', 'Metal Pot Complete DUPE')))
     )

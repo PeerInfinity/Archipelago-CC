@@ -31,86 +31,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("greenmaze_cutter -> greenmaze_pre_whistle", player),
-        Has('EkeEke', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("greenmaze_post_whistle -> greenmaze_pre_whistle", player),
-        Has('Einstein Whistle', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("greenmaze_pre_whistle -> greenmaze_post_whistle", player),
-        Has('Einstein Whistle', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("greenmaze_pre_whistle -> greenmaze_cutter", player),
-        Has('EkeEke', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("greenmaze_pre_whistle -> mountainous_area", player),
-        Has('Axe Magic', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("gumi -> gumi_after_swamp_shrine", player),
-        Has('event_visited_swamp_shrine', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_cave -> mountainous_area", player),
-        Has("Gola's Eye", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_cave -> kazalt", player),
-        HasAll('Blue Jewel', 'Green Jewel', 'Purple Jewel', 'Red Jewel', 'Yellow Jewel')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_raft_entrance", player),
-        Has('Snow Spikes', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_path_to_palace", player),
-        Has('Snow Spikes', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree", player),
-        HasAll('Axe Magic', 'event_visited_king_nole_labyrinth_raft_entrance')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_pre_door -> king_nole_labyrinth_post_door", player),
-        Has('Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_pre_door -> king_nole_labyrinth_exterior", player),
-        Has('Iron Boots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_exterior -> king_nole_labyrinth_fall_from_exterior", player),
-        Has('Axe Magic', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_raft", player),
-        Has('Logs', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("king_nole_palace -> end", player),
-        HasAll("Gola's Fang", "Gola's Horn", "Gola's Nail")
-    )
-
-    world.set_rule(
         multiworld.get_entrance("massan -> massan_cave", player),
         HasAll('Axe Magic', 'Lantern')
     )
@@ -123,6 +43,56 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("massan_cave -> massan", player),
         HasAll('Axe Magic', 'Lantern')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("route_massan_gumi -> swamp_shrine", player),
+        Has('Idol Stone', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("swamp_shrine -> route_massan_gumi", player),
+        Has('Idol Stone', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("gumi -> gumi_after_swamp_shrine", player),
+        Has('event_visited_swamp_shrine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("route_gumi_ryuma -> helga_hut", player),
+        HasAll('Einstein Whistle', 'event_visited_massan')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("route_gumi_ryuma -> mercator", player),
+        Has('Safety Pass', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ryuma -> ryuma_after_thieves_hideout", player),
+        Has('event_visited_thieves_hideout_post_key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ryuma -> ryuma_lighthouse_repaired", player),
+        Has('Sun Stone', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("ryuma_lighthouse_repaired -> ryuma", player),
+        Has('Sun Stone', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("thieves_hideout_pre_key -> thieves_hideout_post_key", player),
+        Has('Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("helga_hut -> route_gumi_ryuma", player),
+        HasAll('Einstein Whistle', 'event_visited_massan')
     )
 
     world.set_rule(
@@ -161,11 +131,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("mir_tower_pre_garlic -> mir_tower_post_garlic", player),
-        Has('Garlic', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("mir_tower_sector -> mir_tower_sector_tree_ledge", player),
         Has('Axe Magic', 1)
     )
@@ -186,78 +151,48 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("mir_tower_sector_tree_coast -> mir_tower_sector", player),
-        Has('Axe Magic', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("mir_tower_sector_tree_ledge -> mir_tower_sector", player),
         Has('Axe Magic', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("mountainous_area -> greenmaze_pre_whistle", player),
+        multiworld.get_entrance("mir_tower_sector_tree_coast -> mir_tower_sector", player),
         Has('Axe Magic', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("mountainous_area -> route_lake_shrine_cliff", player),
+        multiworld.get_entrance("mir_tower_pre_garlic -> mir_tower_post_garlic", player),
+        Has('Garlic', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("greenmaze_pre_whistle -> greenmaze_post_whistle", player),
+        Has('Einstein Whistle', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("greenmaze_pre_whistle -> greenmaze_cutter", player),
+        Has('EkeEke', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("greenmaze_pre_whistle -> mountainous_area", player),
         Has('Axe Magic', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("mountainous_area -> king_nole_cave", player),
-        Has("Gola's Eye", 1)
+        multiworld.get_entrance("greenmaze_cutter -> greenmaze_pre_whistle", player),
+        Has('EkeEke', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("route_massan_gumi -> swamp_shrine", player),
-        Has('Idol Stone', 1)
+        multiworld.get_entrance("greenmaze_post_whistle -> greenmaze_pre_whistle", player),
+        Has('Einstein Whistle', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("route_gumi_ryuma -> helga_hut", player),
-        HasAll('Einstein Whistle', 'event_visited_massan')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("route_gumi_ryuma -> mercator", player),
-        Has('Safety Pass', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("route_lake_shrine -> lake_shrine", player),
-        Has('Sword of Gaia', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("route_lake_shrine_cliff -> mountainous_area", player),
-        Has('Axe Magic', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ryuma -> ryuma_after_thieves_hideout", player),
-        Has('event_visited_thieves_hideout_post_key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ryuma -> ryuma_lighthouse_repaired", player),
-        Has('Sun Stone', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ryuma_lighthouse_repaired -> ryuma", player),
-        Has('Sun Stone', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("swamp_shrine -> route_massan_gumi", player),
-        Has('Idol Stone', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("thieves_hideout_pre_key -> thieves_hideout_post_key", player),
-        Has('Key', 1)
+        multiworld.get_entrance("verla_shore -> mir_tower_sector", player),
+        Has('event_visited_verla_mines', 1)
     )
 
     world.set_rule(
@@ -281,13 +216,78 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("verla_shore -> mir_tower_sector", player),
-        Has('event_visited_verla_mines', 1)
+        multiworld.get_entrance("route_lake_shrine -> lake_shrine", player),
+        Has('Sword of Gaia', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("helga_hut -> route_gumi_ryuma", player),
-        HasAll('Einstein Whistle', 'event_visited_massan')
+        multiworld.get_entrance("route_lake_shrine_cliff -> mountainous_area", player),
+        Has('Axe Magic', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("mountainous_area -> greenmaze_pre_whistle", player),
+        Has('Axe Magic', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("mountainous_area -> route_lake_shrine_cliff", player),
+        Has('Axe Magic', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("mountainous_area -> king_nole_cave", player),
+        Has("Gola's Eye", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_cave -> mountainous_area", player),
+        Has("Gola's Eye", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_cave -> kazalt", player),
+        HasAll('Blue Jewel', 'Green Jewel', 'Purple Jewel', 'Red Jewel', 'Yellow Jewel')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_pre_door -> king_nole_labyrinth_post_door", player),
+        Has('Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_pre_door -> king_nole_labyrinth_exterior", player),
+        Has('Iron Boots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_raft_entrance", player),
+        Has('Snow Spikes', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_path_to_palace", player),
+        Has('Snow Spikes', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree", player),
+        HasAll('Axe Magic', 'event_visited_king_nole_labyrinth_raft_entrance')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_exterior -> king_nole_labyrinth_fall_from_exterior", player),
+        Has('Axe Magic', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_raft", player),
+        Has('Logs', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("king_nole_palace -> end", player),
+        HasAll("Gola's Fang", "Gola's Horn", "Gola's Nail")
     )
     # Location rules
     world.set_rule(

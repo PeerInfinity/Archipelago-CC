@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Air Man Stage", "Bubble Man Stage", "Crash Man Stage", "Flash Man Stage", "Heat Man Stage", "Metal Man Stage", "Quick Man Stage", "Wily Stage 1", "Wily Stage 2", "Wily Stage 3", "Wily Stage 4", "Wily Stage 5", "Wily Stage 6", "Wood Man Stage"]
+    region_names = ["Menu", "Heat Man Stage", "Air Man Stage", "Wood Man Stage", "Bubble Man Stage", "Quick Man Stage", "Flash Man Stage", "Metal Man Stage", "Crash Man Stage", "Wily Stage 1", "Wily Stage 2", "Wily Stage 3", "Wily Stage 4", "Wily Stage 5", "Wily Stage 6"]
 
     regions = {}
     for region_name in region_names:

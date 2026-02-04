@@ -62,6 +62,46 @@ class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
         # Call base disconnect
         super().disconnect()
 
+    def initalize_tracker_core(self, connected_cls, raw_slot_data):
+        """
+        Initialize tracker core with worldgen support.
+
+        This overrides the base initalize_tracker_core to try worldgen-based
+        tracking first when rules.json is available, falling back to standard
+        YAML-based tracking if worldgen fails.
+        """
+        if getattr(connected_cls, "disable_ut", False):
+            self.log_to_tab("World Author has requested UT be disabled on this world, please respect their decision")
+            return
+
+        self._log_debug("initalize_tracker_core", {"rules_json_path": self.rules_json_path})
+
+        # Try worldgen-based tracking if rules.json is available.
+        # The presence of rules.json indicates the exporter ran and produced rules.
+        # In "hybrid" mode (skip_export_for_native_ut=True), the exporter skips rule
+        # generation for worlds with native UT support, so rules.json won't exist.
+        if self.rules_json_path:
+            self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
+            self._log_debug("attempting_worldgen_tracking", {"rules_json_path": self.rules_json_path})
+            # Generate a fresh worldgen world from the rules.json file
+            # This ensures the worldgen world matches the specific seed we're connecting to
+            worldgen_result = self.generate_and_load_worldgen_world(self.rules_json_path)
+            self._log_debug("generate_worldgen_result", {"success": worldgen_result})
+            if worldgen_result:
+                tracking_result = self.initialize_tracking_from_worldgen()
+                self._log_debug("initialize_tracking_result", {"success": tracking_result})
+                if tracking_result:
+                    self.logger.info("Using worldgen-based tracking")
+                    self._log_debug("using_worldgen_tracking", {"success": True})
+                    return
+                else:
+                    self.logger.warning("Failed to initialize tracking from worldgen, falling back")
+            else:
+                self.logger.warning("Failed to generate worldgen world, falling back to standard tracking")
+
+        # Fall back to base class YAML-based tracking
+        super().initalize_tracker_core(connected_cls, raw_slot_data)
+
     def updateTracker(self) -> CurrentTrackerState:
         """
         Update tracker state with extension support.

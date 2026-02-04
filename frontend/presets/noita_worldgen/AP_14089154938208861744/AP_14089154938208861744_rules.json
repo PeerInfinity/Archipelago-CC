@@ -10,19 +10,6 @@
   },
   "regions": {
     "1": {
-      "Menu": {
-        "name": "Menu",
-        "exits": [
-          {
-            "name": "Menu -> Forest",
-            "connected_region": "Forest",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
       "Abyss Orb Room": {
         "name": "Abyss Orb Room",
         "exits": [],
@@ -792,6 +779,19 @@
         "exits": [],
         "locations": [],
         "dynamically_added": true
+      },
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> Forest",
+            "connected_region": "Forest",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "Mines": {
         "name": "Mines",

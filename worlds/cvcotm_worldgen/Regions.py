@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Catacomb", "Abyss Stairway", "Audience Room", "Battle Arena", "Ceremonial Room", "Chapel Tower Bottom", "Chapel Tower Top", "Eternal Corridor Pit", "Machine Tower Bottom", "Machine Tower Top", "Observation Tower", "Underground Gallery Lower", "Underground Gallery Upper", "Underground Warehouse Main", "Underground Warehouse Start", "Underground Waterway End", "Underground Waterway Main", "Underground Waterway Start"]
+    region_names = ["Catacomb", "Abyss Stairway", "Audience Room", "Machine Tower Bottom", "Machine Tower Top", "Eternal Corridor Pit", "Chapel Tower Bottom", "Chapel Tower Top", "Battle Arena", "Underground Gallery Upper", "Underground Gallery Lower", "Underground Warehouse Start", "Underground Warehouse Main", "Underground Waterway Start", "Underground Waterway Main", "Underground Waterway End", "Observation Tower", "Ceremonial Room"]
 
     regions = {}
     for region_name in region_names:
@@ -61,19 +61,19 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Audience Room"], regions["Underground Waterway Start"], "Audience to Waterway")
     _create_entrance(regions["Audience Room"], regions["Observation Tower"], "Audience to Observation")
     _create_entrance(regions["Audience Room"], regions["Ceremonial Room"], "Ceremonial Door")
+    _create_entrance(regions["Machine Tower Bottom"], regions["Machine Tower Top"], "Machine Bottom to Top")
+    _create_entrance(regions["Eternal Corridor Pit"], regions["Underground Gallery Upper"], "Corridor to Gallery")
+    _create_entrance(regions["Eternal Corridor Pit"], regions["Chapel Tower Bottom"], "Escape the Gallery Pit")
     _create_entrance(regions["Chapel Tower Bottom"], regions["Eternal Corridor Pit"], "Into the Corridor Pit")
     _create_entrance(regions["Chapel Tower Bottom"], regions["Underground Waterway End"], "Dip Into Waterway End")
     _create_entrance(regions["Chapel Tower Bottom"], regions["Chapel Tower Top"], "Climb to Chapel Top")
     _create_entrance(regions["Chapel Tower Top"], regions["Battle Arena"], "Arena Passage")
-    _create_entrance(regions["Eternal Corridor Pit"], regions["Underground Gallery Upper"], "Corridor to Gallery")
-    _create_entrance(regions["Eternal Corridor Pit"], regions["Chapel Tower Bottom"], "Escape the Gallery Pit")
-    _create_entrance(regions["Machine Tower Bottom"], regions["Machine Tower Top"], "Machine Bottom to Top")
-    _create_entrance(regions["Underground Gallery Lower"], regions["Underground Gallery Upper"], "Gallery Lower to Upper")
     _create_entrance(regions["Underground Gallery Upper"], regions["Eternal Corridor Pit"], "Gallery to Corridor")
     _create_entrance(regions["Underground Gallery Upper"], regions["Underground Gallery Lower"], "Gallery Upper to Lower")
+    _create_entrance(regions["Underground Gallery Lower"], regions["Underground Gallery Upper"], "Gallery Lower to Upper")
     _create_entrance(regions["Underground Warehouse Start"], regions["Underground Warehouse Main"], "Into Warehouse Main")
-    _create_entrance(regions["Underground Waterway Main"], regions["Underground Waterway End"], "Onward to Waterway End")
     _create_entrance(regions["Underground Waterway Start"], regions["Underground Waterway Main"], "Into Waterway Main")
+    _create_entrance(regions["Underground Waterway Main"], regions["Underground Waterway End"], "Onward to Waterway End")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

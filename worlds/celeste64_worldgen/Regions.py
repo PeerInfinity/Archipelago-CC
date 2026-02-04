@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Badeline Island", "Badeline Tower Lower", "Badeline Tower Upper", "Forsaken City", "Freeway Island", "Granny Island", "Intro Islands", "North-East Feathers Island", "North-West Girders Island", "South-East House Island"]
+    region_names = ["Menu", "Forsaken City", "Intro Islands", "Granny Island", "Freeway Island", "North-West Girders Island", "North-East Feathers Island", "South-East House Island", "Badeline Tower Lower", "Badeline Tower Upper", "Badeline Island"]
 
     regions = {}
     for region_name in region_names:
@@ -52,9 +52,29 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Forsaken City"], "Menu -> Forsaken City")
-    _create_entrance(regions["Badeline Island"], regions["Badeline Tower Upper"], "Badeline Island -> Badeline Tower Upper")
-    _create_entrance(regions["Badeline Island"], regions["Granny Island"], "Badeline Island -> Granny Island")
-    _create_entrance(regions["Badeline Island"], regions["Freeway Island"], "Badeline Island -> Freeway Island")
+    _create_entrance(regions["Forsaken City"], regions["Intro Islands"], "Forsaken City -> Intro Islands")
+    _create_entrance(regions["Forsaken City"], regions["Granny Island"], "Forsaken City -> Granny Island")
+    _create_entrance(regions["Forsaken City"], regions["Freeway Island"], "Forsaken City -> Freeway Island")
+    _create_entrance(regions["Forsaken City"], regions["North-East Feathers Island"], "Forsaken City -> North-East Feathers Island")
+    _create_entrance(regions["Forsaken City"], regions["South-East House Island"], "Forsaken City -> South-East House Island")
+    _create_entrance(regions["Forsaken City"], regions["Badeline Tower Upper"], "Forsaken City -> Badeline Tower Upper")
+    _create_entrance(regions["Forsaken City"], regions["Badeline Island"], "Forsaken City -> Badeline Island")
+    _create_entrance(regions["Intro Islands"], regions["Granny Island"], "Intro Islands -> Granny Island")
+    _create_entrance(regions["Granny Island"], regions["Freeway Island"], "Granny Island -> Freeway Island")
+    _create_entrance(regions["Granny Island"], regions["North-West Girders Island"], "Granny Island -> North-West Girders Island")
+    _create_entrance(regions["Granny Island"], regions["Badeline Tower Lower"], "Granny Island -> Badeline Tower Lower")
+    _create_entrance(regions["Granny Island"], regions["South-East House Island"], "Granny Island -> South-East House Island")
+    _create_entrance(regions["Freeway Island"], regions["Granny Island"], "Freeway Island -> Granny Island")
+    _create_entrance(regions["Freeway Island"], regions["North-East Feathers Island"], "Freeway Island -> North-East Feathers Island")
+    _create_entrance(regions["Freeway Island"], regions["North-West Girders Island"], "Freeway Island -> North-West Girders Island")
+    _create_entrance(regions["North-West Girders Island"], regions["Freeway Island"], "North-West Girders Island -> Freeway Island")
+    _create_entrance(regions["North-East Feathers Island"], regions["South-East House Island"], "North-East Feathers Island -> South-East House Island")
+    _create_entrance(regions["North-East Feathers Island"], regions["Freeway Island"], "North-East Feathers Island -> Freeway Island")
+    _create_entrance(regions["North-East Feathers Island"], regions["Badeline Tower Lower"], "North-East Feathers Island -> Badeline Tower Lower")
+    _create_entrance(regions["North-East Feathers Island"], regions["Badeline Tower Upper"], "North-East Feathers Island -> Badeline Tower Upper")
+    _create_entrance(regions["South-East House Island"], regions["North-East Feathers Island"], "South-East House Island -> North-East Feathers Island")
+    _create_entrance(regions["South-East House Island"], regions["Granny Island"], "South-East House Island -> Granny Island")
+    _create_entrance(regions["South-East House Island"], regions["Badeline Tower Lower"], "South-East House Island -> Badeline Tower Lower")
     _create_entrance(regions["Badeline Tower Lower"], regions["South-East House Island"], "Badeline Tower Lower -> South-East House Island")
     _create_entrance(regions["Badeline Tower Lower"], regions["North-East Feathers Island"], "Badeline Tower Lower -> North-East Feathers Island")
     _create_entrance(regions["Badeline Tower Lower"], regions["Granny Island"], "Badeline Tower Lower -> Granny Island")
@@ -64,29 +84,9 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Badeline Tower Upper"], regions["South-East House Island"], "Badeline Tower Upper -> South-East House Island")
     _create_entrance(regions["Badeline Tower Upper"], regions["North-East Feathers Island"], "Badeline Tower Upper -> North-East Feathers Island")
     _create_entrance(regions["Badeline Tower Upper"], regions["Granny Island"], "Badeline Tower Upper -> Granny Island")
-    _create_entrance(regions["Forsaken City"], regions["Intro Islands"], "Forsaken City -> Intro Islands")
-    _create_entrance(regions["Forsaken City"], regions["Granny Island"], "Forsaken City -> Granny Island")
-    _create_entrance(regions["Forsaken City"], regions["Freeway Island"], "Forsaken City -> Freeway Island")
-    _create_entrance(regions["Forsaken City"], regions["North-East Feathers Island"], "Forsaken City -> North-East Feathers Island")
-    _create_entrance(regions["Forsaken City"], regions["South-East House Island"], "Forsaken City -> South-East House Island")
-    _create_entrance(regions["Forsaken City"], regions["Badeline Tower Upper"], "Forsaken City -> Badeline Tower Upper")
-    _create_entrance(regions["Forsaken City"], regions["Badeline Island"], "Forsaken City -> Badeline Island")
-    _create_entrance(regions["Freeway Island"], regions["Granny Island"], "Freeway Island -> Granny Island")
-    _create_entrance(regions["Freeway Island"], regions["North-East Feathers Island"], "Freeway Island -> North-East Feathers Island")
-    _create_entrance(regions["Freeway Island"], regions["North-West Girders Island"], "Freeway Island -> North-West Girders Island")
-    _create_entrance(regions["Granny Island"], regions["Freeway Island"], "Granny Island -> Freeway Island")
-    _create_entrance(regions["Granny Island"], regions["North-West Girders Island"], "Granny Island -> North-West Girders Island")
-    _create_entrance(regions["Granny Island"], regions["Badeline Tower Lower"], "Granny Island -> Badeline Tower Lower")
-    _create_entrance(regions["Granny Island"], regions["South-East House Island"], "Granny Island -> South-East House Island")
-    _create_entrance(regions["Intro Islands"], regions["Granny Island"], "Intro Islands -> Granny Island")
-    _create_entrance(regions["North-East Feathers Island"], regions["South-East House Island"], "North-East Feathers Island -> South-East House Island")
-    _create_entrance(regions["North-East Feathers Island"], regions["Freeway Island"], "North-East Feathers Island -> Freeway Island")
-    _create_entrance(regions["North-East Feathers Island"], regions["Badeline Tower Lower"], "North-East Feathers Island -> Badeline Tower Lower")
-    _create_entrance(regions["North-East Feathers Island"], regions["Badeline Tower Upper"], "North-East Feathers Island -> Badeline Tower Upper")
-    _create_entrance(regions["North-West Girders Island"], regions["Freeway Island"], "North-West Girders Island -> Freeway Island")
-    _create_entrance(regions["South-East House Island"], regions["North-East Feathers Island"], "South-East House Island -> North-East Feathers Island")
-    _create_entrance(regions["South-East House Island"], regions["Granny Island"], "South-East House Island -> Granny Island")
-    _create_entrance(regions["South-East House Island"], regions["Badeline Tower Lower"], "South-East House Island -> Badeline Tower Lower")
+    _create_entrance(regions["Badeline Island"], regions["Badeline Tower Upper"], "Badeline Island -> Badeline Tower Upper")
+    _create_entrance(regions["Badeline Island"], regions["Granny Island"], "Badeline Island -> Granny Island")
+    _create_entrance(regions["Badeline Island"], regions["Freeway Island"], "Badeline Island -> Freeway Island")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

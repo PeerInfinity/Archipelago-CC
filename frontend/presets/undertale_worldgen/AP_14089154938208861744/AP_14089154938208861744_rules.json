@@ -36,305 +36,6 @@
         "locations": [],
         "dynamically_added": true
       },
-      "Barrier": {
-        "name": "Barrier",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Cooking Show": {
-        "name": "Cooking Show",
-        "exits": [
-          {
-            "name": "News Show Entrance",
-            "connected_region": "News Show",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Core": {
-        "name": "Core",
-        "exits": [
-          {
-            "name": "Core Exit",
-            "connected_region": "New Home",
-            "access_rule": {
-              "rule": "_undertale_has_plot",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Mettaton Plush"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Trash Burger",
-            "id": 79011,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Core"
-              }
-            },
-            "item": {
-              "name": "1000G",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mettaton Plot",
-            "id": 79062,
-            "access_rule": {
-              "rule": "CanReachEntrance",
-              "args": {
-                "entrance_name": "Core Exit"
-              }
-            },
-            "item": {
-              "name": "1000G",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Hotland": {
-        "name": "Hotland",
-        "exits": [
-          {
-            "name": "Cooking Show Entrance",
-            "connected_region": "Cooking Show",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Lab Elevator",
-            "connected_region": "True Lab",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Noodles Fridge",
-            "id": 79008,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Hotland"
-              }
-            },
-            "item": {
-              "name": "500G",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pan Hidden",
-            "id": 79009,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Hotland"
-              }
-            },
-            "item": {
-              "name": "Faded Ribbon",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Apron Hidden",
-            "id": 79010,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "Cooking Show"
-              }
-            },
-            "item": {
-              "name": "Cinnamon Bun",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Bratty Catty 1",
-            "id": 79042,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Abandoned Quiche",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Bratty Catty 2",
-            "id": 79043,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Core Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Bratty Catty 3",
-            "id": 79044,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Sea Tea",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Bratty Catty 4",
-            "id": 79045,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Bisicle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Burgerpants 1",
-            "id": 79046,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Worn Dagger",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Burgerpants 2",
-            "id": 79047,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Spider Donut",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Burgerpants 3",
-            "id": 79048,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Punch Card",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Burgerpants 4",
-            "id": 79049,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "News Show"
-              }
-            },
-            "item": {
-              "name": "Right Home Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Alphys Date",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Alphys Date",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
       "Hub": {
         "name": "Hub",
         "exits": [
@@ -390,157 +91,6 @@
           }
         ],
         "locations": []
-      },
-      "Last Corridor": {
-        "name": "Last Corridor",
-        "exits": [
-          {
-            "name": "Last Corridor Exit",
-            "connected_region": "Barrier",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "New Home": {
-        "name": "New Home",
-        "exits": [
-          {
-            "name": "New Home Exit",
-            "connected_region": "Last Corridor",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Left Home Key",
-                      "Right Home Key"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Key Piece",
-                    "count": {
-                      "rule": "OptionValue",
-                      "args": {
-                        "option": "key_pieces"
-                      }
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Present Knife",
-            "id": 79012,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "New Home"
-              }
-            },
-            "item": {
-              "name": "Cowboy Hat",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Present Locket",
-            "id": 79013,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "New Home"
-              }
-            },
-            "item": {
-              "name": "Left Home Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Left New Home Key",
-            "id": 79064,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "New Home"
-              }
-            },
-            "item": {
-              "name": "Face Steak",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Right New Home Key",
-            "id": 79065,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "New Home"
-              }
-            },
-            "item": {
-              "name": "Manly Bandanna",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "News Show": {
-        "name": "News Show",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Old Home": {
-        "name": "Old Home",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Papyrus\" Home": {
-        "name": "Papyrus\" Home",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Papyrus Date",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Papyrus Date",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
       },
       "Ruins": {
         "name": "Ruins",
@@ -682,6 +232,12 @@
           }
         ]
       },
+      "Old Home": {
+        "name": "Old Home",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
       "Snowdin Forest": {
         "name": "Snowdin Forest",
         "exits": [
@@ -812,24 +368,18 @@
           }
         ]
       },
-      "True Lab": {
-        "name": "True Lab",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Undyne\"s Home": {
-        "name": "Undyne\"s Home",
+      "Papyrus\" Home": {
+        "name": "Papyrus\" Home",
         "exits": [],
         "locations": [
           {
-            "name": "Undyne Date",
+            "name": "Papyrus Date",
             "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Undyne Date",
+              "name": "Papyrus Date",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1149,6 +699,456 @@
             "locked": true
           }
         ]
+      },
+      "Undyne\"s Home": {
+        "name": "Undyne\"s Home",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Undyne Date",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Undyne Date",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Hotland": {
+        "name": "Hotland",
+        "exits": [
+          {
+            "name": "Cooking Show Entrance",
+            "connected_region": "Cooking Show",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Lab Elevator",
+            "connected_region": "True Lab",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Noodles Fridge",
+            "id": 79008,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Hotland"
+              }
+            },
+            "item": {
+              "name": "500G",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pan Hidden",
+            "id": 79009,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Hotland"
+              }
+            },
+            "item": {
+              "name": "Faded Ribbon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Apron Hidden",
+            "id": 79010,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Cooking Show"
+              }
+            },
+            "item": {
+              "name": "Cinnamon Bun",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bratty Catty 1",
+            "id": 79042,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Abandoned Quiche",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bratty Catty 2",
+            "id": 79043,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Core Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bratty Catty 3",
+            "id": 79044,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Sea Tea",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bratty Catty 4",
+            "id": 79045,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Bisicle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Burgerpants 1",
+            "id": 79046,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Worn Dagger",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Burgerpants 2",
+            "id": 79047,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Spider Donut",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Burgerpants 3",
+            "id": 79048,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Punch Card",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Burgerpants 4",
+            "id": 79049,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "News Show"
+              }
+            },
+            "item": {
+              "name": "Right Home Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Alphys Date",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Alphys Date",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Cooking Show": {
+        "name": "Cooking Show",
+        "exits": [
+          {
+            "name": "News Show Entrance",
+            "connected_region": "News Show",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "News Show": {
+        "name": "News Show",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "True Lab": {
+        "name": "True Lab",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Core": {
+        "name": "Core",
+        "exits": [
+          {
+            "name": "Core Exit",
+            "connected_region": "New Home",
+            "access_rule": {
+              "rule": "_undertale_has_plot",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Mettaton Plush"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Trash Burger",
+            "id": 79011,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Core"
+              }
+            },
+            "item": {
+              "name": "1000G",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mettaton Plot",
+            "id": 79062,
+            "access_rule": {
+              "rule": "CanReachEntrance",
+              "args": {
+                "entrance_name": "Core Exit"
+              }
+            },
+            "item": {
+              "name": "1000G",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "New Home": {
+        "name": "New Home",
+        "exits": [
+          {
+            "name": "New Home Exit",
+            "connected_region": "Last Corridor",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Left Home Key",
+                      "Right Home Key"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Key Piece",
+                    "count": {
+                      "rule": "OptionValue",
+                      "args": {
+                        "option": "key_pieces"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Present Knife",
+            "id": 79012,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
+            },
+            "item": {
+              "name": "Cowboy Hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Present Locket",
+            "id": 79013,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
+            },
+            "item": {
+              "name": "Left Home Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Left New Home Key",
+            "id": 79064,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
+            },
+            "item": {
+              "name": "Face Steak",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Right New Home Key",
+            "id": 79065,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "New Home"
+              }
+            },
+            "item": {
+              "name": "Manly Bandanna",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Last Corridor": {
+        "name": "Last Corridor",
+        "exits": [
+          {
+            "name": "Last Corridor Exit",
+            "connected_region": "Barrier",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Barrier": {
+        "name": "Barrier",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
       }
     }
   },
@@ -2097,17 +2097,6 @@
         "type": null,
         "max_count": 1
       },
-      "Alphys Date": {
-        "name": "Alphys Date",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
       "Papyrus Date": {
         "name": "Papyrus Date",
         "id": null,
@@ -2121,6 +2110,17 @@
       },
       "Undyne Date": {
         "name": "Undyne Date",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "Alphys Date": {
+        "name": "Alphys Date",
         "id": null,
         "groups": [
           "Event"
@@ -2193,34 +2193,14 @@
   },
   "canonical_placements": {
     "1": {
-      "Mettaton Plot": "1000G",
-      "Trash Burger": "1000G",
-      "Noodles Fridge": "500G",
-      "TemmieShop 2": "500G",
-      "Pan Hidden": "Faded Ribbon",
-      "Apron Hidden": "Cinnamon Bun",
-      "Bratty Catty 1": "Abandoned Quiche",
-      "Bratty Catty 2": "Core Key",
-      "Bratty Catty 3": "Sea Tea",
-      "Bratty Catty 4": "Bisicle",
-      "Burgerpants 1": "Worn Dagger",
-      "Astro 1": "Spider Donut",
-      "Burgerpants 2": "Spider Donut",
-      "Bunny 4": "Punch Card",
-      "Burgerpants 3": "Punch Card",
-      "Cider Sale": "Punch Card",
-      "Burgerpants 4": "Right Home Key",
-      "Alphys Date": "Alphys Date",
-      "Present Knife": "Cowboy Hat",
-      "Present Locket": "Left Home Key",
-      "Left New Home Key": "Face Steak",
-      "Right New Home Key": "Manly Bandanna",
-      "Papyrus Date": "Papyrus Date",
       "Candy 1": "Spider Cider",
       "Candy 2": "Old Tutu",
       "Candy 3": "temy armor",
       "Candy 4": "Snowdin Key",
       "Donut Sale": "Stained Apron",
+      "Bunny 4": "Punch Card",
+      "Burgerpants 3": "Punch Card",
+      "Cider Sale": "Punch Card",
       "Ribbon Cracks": "Torn Notebook",
       "Toy Knife Edge": "Burnt Pan",
       "B.Scotch Pie Given": "Instant Noodles",
@@ -2229,13 +2209,15 @@
       "Bunny 1": "Cloudy Glasses",
       "Bunny 2": "Waterfall Key",
       "Bunny 3": "Toy Knife",
-      "Undyne Date": "Undyne Date",
+      "Papyrus Date": "Papyrus Date",
       "Nicecream Waterfall": "Snowman Piece",
       "Grass Shoes": "Starfait",
       "Nicecream Punch Card": "Starfait",
       "Quiche Bench": "Tough Glove",
       "Tutu Hidden": "Hotland Key",
       "Card Reward": "Heart Locket",
+      "Astro 1": "Spider Donut",
+      "Burgerpants 2": "Spider Donut",
       "Astro 2": "Mettaton Plush",
       "Gerson 1": "Butterscotch Pie",
       "Gerson 2": "Crab Apple",
@@ -2243,7 +2225,25 @@
       "Gerson 4": "Ballet Shoes",
       "TemmieShop 1": "Astronaut Food",
       "TemmieShop 3": "Astronaut Food",
-      "TemmieShop 4": "Glamburger"
+      "Noodles Fridge": "500G",
+      "TemmieShop 2": "500G",
+      "TemmieShop 4": "Glamburger",
+      "Undyne Date": "Undyne Date",
+      "Pan Hidden": "Faded Ribbon",
+      "Apron Hidden": "Cinnamon Bun",
+      "Bratty Catty 1": "Abandoned Quiche",
+      "Bratty Catty 2": "Core Key",
+      "Bratty Catty 3": "Sea Tea",
+      "Bratty Catty 4": "Bisicle",
+      "Burgerpants 1": "Worn Dagger",
+      "Burgerpants 4": "Right Home Key",
+      "Alphys Date": "Alphys Date",
+      "Mettaton Plot": "1000G",
+      "Trash Burger": "1000G",
+      "Present Knife": "Cowboy Hat",
+      "Present Locket": "Left Home Key",
+      "Left New Home Key": "Face Steak",
+      "Right New Home Key": "Manly Bandanna"
     }
   },
   "progression_mapping": {

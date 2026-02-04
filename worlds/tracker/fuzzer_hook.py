@@ -126,6 +126,7 @@ class Hook(BaseHook):
         # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
         self.ut_core.seed_name = mw.seed_name
         self.ut_core.auto_discover_rules_json()
+        # initalize_tracker_core will use worldgen-based tracking if rules_json_path is set
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 
@@ -272,13 +273,15 @@ class Hook(BaseHook):
         - entrances_without_explain: Entrances with custom rules but no explain_json
         """
         try:
-            # Use the worldgen multiworld from TrackerCore
-            worldgen_mw = self.ut_core.multiworld
+            # Use the worldgen multiworld from TrackerCore (has Rule Builder rules with explain_json)
+            # NOT the tracking multiworld (which has the original game's rules without explain support)
+            worldgen_mw = self.ut_core.worldgen_multiworld
             if not worldgen_mw:
                 logger.warning("No worldgen multiworld available for explain stats")
                 return
 
-            world = worldgen_mw.worlds[self.ut_core.player_id]
+            # Worldgen world always uses player ID 1
+            world = worldgen_mw.worlds[1]
 
             # Collect location stats
             locations = list(world.get_locations())
@@ -318,7 +321,7 @@ class Hook(BaseHook):
             entrances_without_explain = 0
             entrances_without_explain_names = []
 
-            for region in worldgen_mw.get_regions(self.ut_core.player_id):
+            for region in worldgen_mw.get_regions(1):
                 for entrance in region.exits:
                     total_entrances += 1
                     access_rule = entrance.access_rule

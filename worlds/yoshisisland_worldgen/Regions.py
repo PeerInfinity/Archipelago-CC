@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8", "2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8", "3-1", "3-2", "3-3", "3-4", "3-5", "3-6", "3-7", "3-8", "4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "4-7", "4-8", "5-1", "5-2", "5-3", "5-4", "5-5", "5-6", "5-7", "5-8", "6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-7", "6-8", "Bigger Boo's Boss Room", "Bowser's Room", "Burt The Bashful's Boss Room", "Hookbill The Koopa's Boss Room", "Marching Milde's Boss Room", "Naval Piranha's Boss Room", "Overworld", "Prince Froggy's Boss Room", "Raphael The Raven's Boss Room", "Roger The Ghost's Boss Room", "Salvo The Slime's Boss Room", "Sluggy The Unshaven's Boss Room", "Tap-Tap The Red Nose's Boss Room", "World 1", "World 2", "World 3", "World 4", "World 5", "World 6"]
+    region_names = ["Menu", "Overworld", "World 1", "World 2", "World 3", "World 4", "World 5", "World 6", "1-1", "1-2", "1-3", "1-4", "Burt The Bashful's Boss Room", "1-5", "1-6", "1-7", "1-8", "Salvo The Slime's Boss Room", "2-1", "2-2", "2-3", "2-4", "Bigger Boo's Boss Room", "2-5", "2-6", "2-7", "2-8", "Roger The Ghost's Boss Room", "3-1", "3-2", "3-3", "3-4", "Prince Froggy's Boss Room", "3-5", "3-6", "3-7", "3-8", "Naval Piranha's Boss Room", "4-1", "4-2", "4-3", "4-4", "Marching Milde's Boss Room", "4-5", "4-6", "4-7", "4-8", "Hookbill The Koopa's Boss Room", "5-1", "5-2", "5-3", "5-4", "Sluggy The Unshaven's Boss Room", "5-5", "5-6", "5-7", "5-8", "Raphael The Raven's Boss Room", "6-1", "6-2", "6-3", "6-4", "Tap-Tap The Red Nose's Boss Room", "6-5", "6-6", "6-7", "6-8", "Bowser's Room"]
 
     regions = {}
     for region_name in region_names:
@@ -56,18 +56,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Overworld"], "Start Game")
-    _create_entrance(regions["1-4"], regions["Burt The Bashful's Boss Room"], "1-4 -> Burt The Bashful's Boss Room")
-    _create_entrance(regions["1-8"], regions["Salvo The Slime's Boss Room"], "1-8 -> Salvo The Slime's Boss Room")
-    _create_entrance(regions["2-4"], regions["Bigger Boo's Boss Room"], "2-4 -> Bigger Boo's Boss Room")
-    _create_entrance(regions["2-8"], regions["Roger The Ghost's Boss Room"], "2-8 -> Roger The Ghost's Boss Room")
-    _create_entrance(regions["3-4"], regions["Prince Froggy's Boss Room"], "3-4 -> Prince Froggy's Boss Room")
-    _create_entrance(regions["3-8"], regions["Naval Piranha's Boss Room"], "3-8 -> Naval Piranha's Boss Room")
-    _create_entrance(regions["4-4"], regions["Marching Milde's Boss Room"], "4-4 -> Marching Milde's Boss Room")
-    _create_entrance(regions["4-8"], regions["Hookbill The Koopa's Boss Room"], "4-8 -> Hookbill The Koopa's Boss Room")
-    _create_entrance(regions["5-4"], regions["Sluggy The Unshaven's Boss Room"], "5-4 -> Sluggy The Unshaven's Boss Room")
-    _create_entrance(regions["5-8"], regions["Raphael The Raven's Boss Room"], "5-8 -> Raphael The Raven's Boss Room")
-    _create_entrance(regions["6-4"], regions["Tap-Tap The Red Nose's Boss Room"], "6-4 -> Tap-Tap The Red Nose's Boss Room")
-    _create_entrance(regions["6-8"], regions["Bowser's Room"], "6-8 -> Bowser's Room")
     _create_entrance(regions["Overworld"], regions["World 1"], "Overworld")
     _create_entrance(regions["Overworld"], regions["World 1"], "Overworld -> World 1")
     _create_entrance(regions["Overworld"], regions["World 2"], "Overworld -> World 2")
@@ -123,6 +111,18 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["World 6"], regions["6-6"], "World 6 -> 6-6")
     _create_entrance(regions["World 6"], regions["6-7"], "World 6 -> 6-7")
     _create_entrance(regions["World 6"], regions["6-8"], "World 6 -> 6-8")
+    _create_entrance(regions["1-4"], regions["Burt The Bashful's Boss Room"], "1-4 -> Burt The Bashful's Boss Room")
+    _create_entrance(regions["1-8"], regions["Salvo The Slime's Boss Room"], "1-8 -> Salvo The Slime's Boss Room")
+    _create_entrance(regions["2-4"], regions["Bigger Boo's Boss Room"], "2-4 -> Bigger Boo's Boss Room")
+    _create_entrance(regions["2-8"], regions["Roger The Ghost's Boss Room"], "2-8 -> Roger The Ghost's Boss Room")
+    _create_entrance(regions["3-4"], regions["Prince Froggy's Boss Room"], "3-4 -> Prince Froggy's Boss Room")
+    _create_entrance(regions["3-8"], regions["Naval Piranha's Boss Room"], "3-8 -> Naval Piranha's Boss Room")
+    _create_entrance(regions["4-4"], regions["Marching Milde's Boss Room"], "4-4 -> Marching Milde's Boss Room")
+    _create_entrance(regions["4-8"], regions["Hookbill The Koopa's Boss Room"], "4-8 -> Hookbill The Koopa's Boss Room")
+    _create_entrance(regions["5-4"], regions["Sluggy The Unshaven's Boss Room"], "5-4 -> Sluggy The Unshaven's Boss Room")
+    _create_entrance(regions["5-8"], regions["Raphael The Raven's Boss Room"], "5-8 -> Raphael The Raven's Boss Room")
+    _create_entrance(regions["6-4"], regions["Tap-Tap The Red Nose's Boss Room"], "6-4 -> Tap-Tap The Red Nose's Boss Room")
+    _create_entrance(regions["6-8"], regions["Bowser's Room"], "6-8 -> Bowser's Room")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

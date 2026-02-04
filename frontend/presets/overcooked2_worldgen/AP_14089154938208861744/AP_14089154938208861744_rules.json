@@ -23,6 +23,1535 @@
         ],
         "locations": []
       },
+      "Overworld": {
+        "name": "Overworld",
+        "exits": [
+          {
+            "name": "Overworld -> 1-1",
+            "connected_region": "1-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Overworld -> 1-2",
+            "connected_region": "1-2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 2
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1-1 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 1-3",
+            "connected_region": "1-3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 7
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1-2 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 1-4",
+            "connected_region": "1-4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 16
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "1-3 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 1-5",
+            "connected_region": "1-5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 28
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "1-4 Level Complete",
+                      "Yellow Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 1-6",
+            "connected_region": "1-6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 44
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "1-5 Level Complete",
+                      "Yellow Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-1",
+            "connected_region": "2-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Overworld -> 2-2",
+            "connected_region": "2-2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 2
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Green Ramp"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-1 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-3",
+            "connected_region": "2-3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 9
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Green Ramp"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-2 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-4",
+            "connected_region": "2-4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 18
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-3 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-5",
+            "connected_region": "2-5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 31
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-4 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-6",
+            "connected_region": "2-6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 47
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "2-5 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-1",
+            "connected_region": "3-1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Blue Ramp"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> 3-2",
+            "connected_region": "3-2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 3
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-1 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-3",
+            "connected_region": "3-3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 10
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-2 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-4",
+            "connected_region": "3-4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 20
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-3 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-5",
+            "connected_region": "3-5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 33
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "3-4 Level Complete",
+                      "Blue Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-6",
+            "connected_region": "3-6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 50
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "3-5 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 4-1",
+            "connected_region": "4-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Overworld -> 4-2",
+            "connected_region": "4-2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 4
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-1 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 4-3",
+            "connected_region": "4-3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 11
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-2 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 4-4",
+            "connected_region": "4-4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 22
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-3 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 4-5",
+            "connected_region": "4-5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 36
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-4 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 4-6",
+            "connected_region": "4-6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 53
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "4-5 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-1",
+            "connected_region": "5-1",
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "Arithmetic",
+                  "args": {
+                    "left": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Star"
+                      }
+                    },
+                    "op": "+",
+                    "right": {
+                      "rule": "CountItem",
+                      "args": {
+                        "item_name": "Bonus Star"
+                      }
+                    }
+                  }
+                },
+                "op": ">=",
+                "right": 1
+              }
+            }
+          },
+          {
+            "name": "Overworld -> 5-2",
+            "connected_region": "5-2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 5
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Green Ramp"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "5-1 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-3",
+            "connected_region": "5-3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 13
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "5-2 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-4",
+            "connected_region": "5-4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 24
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "5-3 Level Complete",
+                      "Purple Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-5",
+            "connected_region": "5-5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 38
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "5-4 Level Complete",
+                      "Purple Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-6",
+            "connected_region": "5-6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 56
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "5-5 Level Complete",
+                      "Purple Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-1",
+            "connected_region": "6-1",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 1
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Pink Ramp"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-2",
+            "connected_region": "6-2",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 6
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "6-1 Level Complete",
+                      "Purple Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-3",
+            "connected_region": "6-3",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 15
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "6-2 Level Complete",
+                      "Purple Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-4",
+            "connected_region": "6-4",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 26
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "5-1 Level Complete",
+                          "Purple Ramp"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Green Ramp"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "6-3 Level Complete"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-5",
+            "connected_region": "6-5",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 41
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "6-1 Level Complete",
+                      "6-4 Level Complete",
+                      "Purple Ramp",
+                      "Red Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-6",
+            "connected_region": "6-6",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Compare",
+                  "args": {
+                    "left": {
+                      "rule": "Arithmetic",
+                      "args": {
+                        "left": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Star"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "rule": "CountItem",
+                          "args": {
+                            "item_name": "Bonus Star"
+                          }
+                        }
+                      }
+                    },
+                    "op": ">=",
+                    "right": 60
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "5-1 Level Complete",
+                      "6-1 Level Complete",
+                      "6-5 Level Complete",
+                      "Purple Ramp",
+                      "Red Ramp"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-1",
+            "connected_region": "Kevin-1",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dark Green Ramp",
+                  "Kevin-1"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-2",
+            "connected_region": "Kevin-2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Kevin-2"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-3",
+            "connected_region": "Kevin-3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Kevin-3"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-4",
+            "connected_region": "Kevin-4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Kevin-4"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-5",
+            "connected_region": "Kevin-5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Kevin-5"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-6",
+            "connected_region": "Kevin-6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Kevin-6"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-7",
+            "connected_region": "Kevin-7",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "Kevin-7",
+                  "Purple Ramp"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-8",
+            "connected_region": "Kevin-8",
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "5-1 Level Complete",
+                  "6-1 Level Complete",
+                  "Kevin-8",
+                  "Purple Ramp",
+                  "Red Ramp"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
       "1-1": {
         "name": "1-1",
         "exits": [
@@ -11834,1535 +13363,6 @@
             "event": true
           }
         ]
-      },
-      "Overworld": {
-        "name": "Overworld",
-        "exits": [
-          {
-            "name": "Overworld -> 1-1",
-            "connected_region": "1-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Overworld -> 1-2",
-            "connected_region": "1-2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "1-1 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 1-3",
-            "connected_region": "1-3",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 7
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "1-2 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 1-4",
-            "connected_region": "1-4",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 16
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "1-3 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 1-5",
-            "connected_region": "1-5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 28
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "1-4 Level Complete",
-                      "Yellow Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 1-6",
-            "connected_region": "1-6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 44
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "1-5 Level Complete",
-                      "Yellow Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 2-1",
-            "connected_region": "2-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Overworld -> 2-2",
-            "connected_region": "2-2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 2
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Green Ramp"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "2-1 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 2-3",
-            "connected_region": "2-3",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 9
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Green Ramp"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "2-2 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 2-4",
-            "connected_region": "2-4",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 18
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "2-3 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 2-5",
-            "connected_region": "2-5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 31
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "2-4 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 2-6",
-            "connected_region": "2-6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 47
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "2-5 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 3-1",
-            "connected_region": "3-1",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Blue Ramp"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> 3-2",
-            "connected_region": "3-2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 3
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "3-1 Level Complete",
-                      "Blue Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 3-3",
-            "connected_region": "3-3",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 10
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "3-2 Level Complete",
-                      "Blue Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 3-4",
-            "connected_region": "3-4",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 20
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "3-3 Level Complete",
-                      "Blue Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 3-5",
-            "connected_region": "3-5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 33
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "3-4 Level Complete",
-                      "Blue Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 3-6",
-            "connected_region": "3-6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 50
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "3-5 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 4-1",
-            "connected_region": "4-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Overworld -> 4-2",
-            "connected_region": "4-2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "4-1 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 4-3",
-            "connected_region": "4-3",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 11
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "4-2 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 4-4",
-            "connected_region": "4-4",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 22
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "4-3 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 4-5",
-            "connected_region": "4-5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 36
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "4-4 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 4-6",
-            "connected_region": "4-6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 53
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "4-5 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 5-1",
-            "connected_region": "5-1",
-            "access_rule": {
-              "rule": "Compare",
-              "args": {
-                "left": {
-                  "rule": "Arithmetic",
-                  "args": {
-                    "left": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Star"
-                      }
-                    },
-                    "op": "+",
-                    "right": {
-                      "rule": "CountItem",
-                      "args": {
-                        "item_name": "Bonus Star"
-                      }
-                    }
-                  }
-                },
-                "op": ">=",
-                "right": 1
-              }
-            }
-          },
-          {
-            "name": "Overworld -> 5-2",
-            "connected_region": "5-2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 5
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Green Ramp"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "5-1 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 5-3",
-            "connected_region": "5-3",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 13
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "5-2 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 5-4",
-            "connected_region": "5-4",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 24
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "5-3 Level Complete",
-                      "Purple Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 5-5",
-            "connected_region": "5-5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 38
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "5-4 Level Complete",
-                      "Purple Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 5-6",
-            "connected_region": "5-6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 56
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "5-5 Level Complete",
-                      "Purple Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 6-1",
-            "connected_region": "6-1",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 1
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Ramp"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 6-2",
-            "connected_region": "6-2",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 6
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "6-1 Level Complete",
-                      "Purple Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 6-3",
-            "connected_region": "6-3",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 15
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "6-2 Level Complete",
-                      "Purple Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 6-4",
-            "connected_region": "6-4",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 26
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "items": [
-                          "5-1 Level Complete",
-                          "Purple Ramp"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Green Ramp"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "6-3 Level Complete"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 6-5",
-            "connected_region": "6-5",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 41
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "6-1 Level Complete",
-                      "6-4 Level Complete",
-                      "Purple Ramp",
-                      "Red Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> 6-6",
-            "connected_region": "6-6",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Compare",
-                  "args": {
-                    "left": {
-                      "rule": "Arithmetic",
-                      "args": {
-                        "left": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Star"
-                          }
-                        },
-                        "op": "+",
-                        "right": {
-                          "rule": "CountItem",
-                          "args": {
-                            "item_name": "Bonus Star"
-                          }
-                        }
-                      }
-                    },
-                    "op": ">=",
-                    "right": 60
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "5-1 Level Complete",
-                      "6-1 Level Complete",
-                      "6-5 Level Complete",
-                      "Purple Ramp",
-                      "Red Ramp"
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-1",
-            "connected_region": "Kevin-1",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dark Green Ramp",
-                  "Kevin-1"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-2",
-            "connected_region": "Kevin-2",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Kevin-2"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-3",
-            "connected_region": "Kevin-3",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Kevin-3"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-4",
-            "connected_region": "Kevin-4",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Kevin-4"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-5",
-            "connected_region": "Kevin-5",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Kevin-5"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-6",
-            "connected_region": "Kevin-6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Kevin-6"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-7",
-            "connected_region": "Kevin-7",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "Kevin-7",
-                  "Purple Ramp"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Overworld -> Kevin-8",
-            "connected_region": "Kevin-8",
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "5-1 Level Complete",
-                  "6-1 Level Complete",
-                  "Kevin-8",
-                  "Purple Ramp",
-                  "Red Ramp"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": []
       }
     }
   },

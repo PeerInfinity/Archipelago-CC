@@ -89,7 +89,6 @@ class MetamathWorld(RuleWorldMixin, World):
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
-        "Prove Statement 10": "Statement 10",
         "Prove Statement 2": "Statement 2",
         "Prove Statement 3": "Statement 3",
         "Prove Statement 4": "Statement 4",
@@ -98,12 +97,12 @@ class MetamathWorld(RuleWorldMixin, World):
         "Prove Statement 7": "Statement 7",
         "Prove Statement 8": "Statement 8",
         "Prove Statement 9": "Statement 9",
+        "Prove Statement 10": "Statement 10",
     }
 
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Prove Statement 10": True,
         "Prove Statement 2": True,
         "Prove Statement 3": True,
         "Prove Statement 4": True,
@@ -112,6 +111,7 @@ class MetamathWorld(RuleWorldMixin, World):
         "Prove Statement 7": True,
         "Prove Statement 8": True,
         "Prove Statement 9": True,
+        "Prove Statement 10": True,
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):

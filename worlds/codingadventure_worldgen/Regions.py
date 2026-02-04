@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "AuthPath", "BackendTrack", "DataTrack", "DeploymentBranch", "DesignTrack", "DevOpsPath", "DjangoRoute", "ExpressRoute", "FlaskRoute", "FrontendTrack", "FullStackHub", "InteractiveAppHub", "LearningHub", "LogicPath", "NoSQLRoute", "PerfPath", "ProductionHub", "ReactRoute", "SQLRoute", "ScalingBranch", "SecurityBranch", "ServerPath", "StaticWebsiteHub", "TestPath", "ToolsPath", "VanillaRoute", "VisualPath", "VueRoute"]
+    region_names = ["Menu", "LearningHub", "VisualPath", "LogicPath", "ServerPath", "ToolsPath", "StaticWebsiteHub", "FrontendTrack", "ReactRoute", "VueRoute", "VanillaRoute", "BackendTrack", "ExpressRoute", "DjangoRoute", "FlaskRoute", "DesignTrack", "DataTrack", "SQLRoute", "NoSQLRoute", "InteractiveAppHub", "AuthPath", "PerfPath", "TestPath", "DevOpsPath", "FullStackHub", "SecurityBranch", "ScalingBranch", "DeploymentBranch", "ProductionHub"]
 
     regions = {}
     for region_name in region_names:
@@ -52,23 +52,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["LearningHub"], "StartLearning")
-    _create_entrance(regions["BackendTrack"], regions["ExpressRoute"], "ToExpressRoute")
-    _create_entrance(regions["BackendTrack"], regions["DjangoRoute"], "ToDjangoRoute")
-    _create_entrance(regions["BackendTrack"], regions["FlaskRoute"], "ToFlaskRoute")
-    _create_entrance(regions["DataTrack"], regions["SQLRoute"], "ToSQLRoute")
-    _create_entrance(regions["DataTrack"], regions["NoSQLRoute"], "ToNoSQLRoute")
-    _create_entrance(regions["FrontendTrack"], regions["ReactRoute"], "ToReactRoute")
-    _create_entrance(regions["FrontendTrack"], regions["VueRoute"], "ToVueRoute")
-    _create_entrance(regions["FrontendTrack"], regions["VanillaRoute"], "ToVanillaRoute")
-    _create_entrance(regions["FullStackHub"], regions["SecurityBranch"], "ToSecurityBranch")
-    _create_entrance(regions["FullStackHub"], regions["ScalingBranch"], "ToScalingBranch")
-    _create_entrance(regions["FullStackHub"], regions["DeploymentBranch"], "ToDeploymentBranch")
-    _create_entrance(regions["FullStackHub"], regions["ProductionHub"], "ToProduction")
-    _create_entrance(regions["InteractiveAppHub"], regions["AuthPath"], "ToAuthPath")
-    _create_entrance(regions["InteractiveAppHub"], regions["PerfPath"], "ToPerfPath")
-    _create_entrance(regions["InteractiveAppHub"], regions["TestPath"], "ToTestPath")
-    _create_entrance(regions["InteractiveAppHub"], regions["DevOpsPath"], "ToDevOpsPath")
-    _create_entrance(regions["InteractiveAppHub"], regions["FullStackHub"], "ToFullStackHub")
     _create_entrance(regions["LearningHub"], regions["VisualPath"], "ToVisualPath")
     _create_entrance(regions["LearningHub"], regions["LogicPath"], "ToLogicPath")
     _create_entrance(regions["LearningHub"], regions["ServerPath"], "ToServerPath")
@@ -79,6 +62,23 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["StaticWebsiteHub"], regions["DesignTrack"], "ToDesignTrack")
     _create_entrance(regions["StaticWebsiteHub"], regions["DataTrack"], "ToDataTrack")
     _create_entrance(regions["StaticWebsiteHub"], regions["InteractiveAppHub"], "ToInteractiveApp")
+    _create_entrance(regions["FrontendTrack"], regions["ReactRoute"], "ToReactRoute")
+    _create_entrance(regions["FrontendTrack"], regions["VueRoute"], "ToVueRoute")
+    _create_entrance(regions["FrontendTrack"], regions["VanillaRoute"], "ToVanillaRoute")
+    _create_entrance(regions["BackendTrack"], regions["ExpressRoute"], "ToExpressRoute")
+    _create_entrance(regions["BackendTrack"], regions["DjangoRoute"], "ToDjangoRoute")
+    _create_entrance(regions["BackendTrack"], regions["FlaskRoute"], "ToFlaskRoute")
+    _create_entrance(regions["DataTrack"], regions["SQLRoute"], "ToSQLRoute")
+    _create_entrance(regions["DataTrack"], regions["NoSQLRoute"], "ToNoSQLRoute")
+    _create_entrance(regions["InteractiveAppHub"], regions["AuthPath"], "ToAuthPath")
+    _create_entrance(regions["InteractiveAppHub"], regions["PerfPath"], "ToPerfPath")
+    _create_entrance(regions["InteractiveAppHub"], regions["TestPath"], "ToTestPath")
+    _create_entrance(regions["InteractiveAppHub"], regions["DevOpsPath"], "ToDevOpsPath")
+    _create_entrance(regions["InteractiveAppHub"], regions["FullStackHub"], "ToFullStackHub")
+    _create_entrance(regions["FullStackHub"], regions["SecurityBranch"], "ToSecurityBranch")
+    _create_entrance(regions["FullStackHub"], regions["ScalingBranch"], "ToScalingBranch")
+    _create_entrance(regions["FullStackHub"], regions["DeploymentBranch"], "ToDeploymentBranch")
+    _create_entrance(regions["FullStackHub"], regions["ProductionHub"], "ToProduction")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

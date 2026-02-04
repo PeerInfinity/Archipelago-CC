@@ -104,7 +104,7 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Crash Man Stage - 1-Up", player),
+        multiworld.get_location("Quick Man Stage - 1-Up 1", player),
         HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
     )
 
@@ -124,7 +124,7 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Quick Man Stage - 1-Up 1", player),
+        multiworld.get_location("Crash Man Stage - 1-Up", player),
         HasAny('Item 1 - Propeller', 'Item 2 - Rocket', 'Item 3 - Bouncy')
     )
 
@@ -154,10 +154,10 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Wily Machine 2 - Defeated", player).access_rule = \
-        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].wily_5_requirement, state.multiworld.worlds[player].wily_5_weapons)
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []})
 
     multiworld.get_location("Wily Stage 5 - Completed", player).access_rule = \
-        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].wily_5_requirement, state.multiworld.worlds[player].wily_5_weapons)
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement.value, {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []})
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),

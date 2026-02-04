@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Overworld", "Bottom Right Room", "Final Boss Room", "Right Room", "Top Left Room"]
+    region_names = ["Overworld", "Top Left Room", "Bottom Right Room", "Right Room", "Final Boss Room"]
 
     regions = {}
     for region_name in region_names:

@@ -56,73 +56,9 @@ def set_rules(world: "World") -> None:
         Has('Special1', 7)
     )
 
-    multiworld.get_entrance("Torture Chamber door", player).access_rule = \
-        lambda state: ((False) or (False) or (False) or (False) or (state.has('Chamber Key', player)))
-
-    world.set_rule(
-        multiworld.get_entrance("Lower sealed cracked wall", player),
-        And(Has('Magical Nitro', 2), Has('Mandragora', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Upper cracked wall", player),
-        HasAll('Magical Nitro', 'Mandragora')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dracula's door", player),
-        True_()
-    )
-
     world.set_rule(
         multiworld.get_entrance("Left Tower door", player),
         Has('Left Tower Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("From Clocktower Door 2", player),
-        Has('Clocktower Key2', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Clocktower Door 3", player),
-        Has('Clocktower Key3', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("From Clocktower Door 1", player),
-        Has('Clocktower Key1', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Clocktower Door 2", player),
-        Has('Clocktower Key2', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Clocktower Door 1", player),
-        Has('Clocktower Key1', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Execution gate", player),
-        Has('Execution Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("From Science Door 2", player),
-        Has('Science Key2', 1)
-    )
-
-    multiworld.get_entrance("Science Door 3", player).access_rule = \
-        lambda state: ((False) or (False) or (state.has('Science Key3', player)))
-
-    multiworld.get_entrance("Science Door 1", player).access_rule = \
-        lambda state: ((False) or (state.has('Science Key1', player)))
-
-    world.set_rule(
-        multiworld.get_entrance("To Science Door 2", player),
-        Has('Science Key2', 1)
     )
 
     multiworld.get_entrance("To Storeroom door", player).access_rule = \
@@ -137,6 +73,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("From Storeroom door", player),
+        Has('Storeroom Key', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("From maze gate", player),
         Has('Garden Key', 1)
     )
@@ -146,7 +87,66 @@ def set_rules(world: "World") -> None:
         Has('Copper Key', 1)
     )
 
+    multiworld.get_entrance("Torture Chamber door", player).access_rule = \
+        lambda state: ((False) or (False) or (False) or (False) or (state.has('Chamber Key', player)))
+
     world.set_rule(
-        multiworld.get_entrance("From Storeroom door", player),
-        Has('Storeroom Key', 1)
+        multiworld.get_entrance("Lower sealed cracked wall", player),
+        And(Has('Magical Nitro', 2), Has('Mandragora', 2))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Upper cracked wall", player),
+        HasAll('Magical Nitro', 'Mandragora')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Execution gate", player),
+        Has('Execution Key', 1)
+    )
+
+    multiworld.get_entrance("Science Door 1", player).access_rule = \
+        lambda state: ((False) or (state.has('Science Key1', player)))
+
+    world.set_rule(
+        multiworld.get_entrance("To Science Door 2", player),
+        Has('Science Key2', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("From Science Door 2", player),
+        Has('Science Key2', 1)
+    )
+
+    multiworld.get_entrance("Science Door 3", player).access_rule = \
+        lambda state: ((False) or (False) or (state.has('Science Key3', player)))
+
+    world.set_rule(
+        multiworld.get_entrance("To Clocktower Door 1", player),
+        Has('Clocktower Key1', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("From Clocktower Door 1", player),
+        Has('Clocktower Key1', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Clocktower Door 2", player),
+        Has('Clocktower Key2', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("From Clocktower Door 2", player),
+        Has('Clocktower Key2', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Clocktower Door 3", player),
+        Has('Clocktower Key3', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dracula's door", player),
+        True_()
     )

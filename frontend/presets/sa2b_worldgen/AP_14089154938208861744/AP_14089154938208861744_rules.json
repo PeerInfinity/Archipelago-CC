@@ -23,336 +23,6 @@
         ],
         "locations": []
       },
-      "Aquatic Mine": {
-        "name": "Aquatic Mine",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Aquatic Mine - 1",
-            "id": 16711687,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Knuckles - Shovel Claws"
-              }
-            },
-            "item": {
-              "name": "Extra Life",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Aquatic Mine - 2",
-            "id": 16711719,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Aquatic Mine - 1"
-              }
-            },
-            "item": {
-              "name": "Twenty Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Aquatic Mine - Chao Key 1",
-            "id": 16712711,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Aquatic Mine - Chao Key 2",
-            "id": 16712743,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Aquatic Mine - Chao Key 3",
-            "id": 16712775,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Aquatic Mine - Gold Beetle",
-            "id": 16713223,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Aquatic Mine - Upgrade",
-            "id": 16711847,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tails - Booster",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Biolizard": {
-        "name": "Biolizard",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Finalhazard",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "What Maria Wanted",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Cannon's Core": {
-        "name": "Cannon's Core",
-        "exits": [
-          {
-            "name": "Biolizard",
-            "connected_region": "Biolizard",
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Cannon's Core - 1"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Cannon's Core - 1",
-            "id": 16711710,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Knuckles - Air Necklace",
-                  "Knuckles - Hammer Gloves",
-                  "Sonic - Bounce Bracelet",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Cannon's Core - 2",
-            "id": 16711742,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Cannon's Core - 1"
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Eggman - Jet Engine",
-                      "Tails - Booster"
-                    ]
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Cannon's Core - Chao Key 1",
-            "id": 16712734,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Eggman - Large Cannon",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Five Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Cannon's Core - Chao Key 2",
-            "id": 16712766,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Cannon's Core - Chao Key 3",
-            "id": 16712798,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Knuckles - Air Necklace",
-                  "Knuckles - Hammer Gloves",
-                  "Sonic - Flame Ring",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Sonic - Magic Gloves",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Cannon's Core - Gold Beetle",
-            "id": 16713246,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Knuckles - Air Necklace",
-                  "Knuckles - Hammer Gloves",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Eggman - Mystic Melody",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Chao Karate - Beginner": {
-        "name": "Chao Karate - Beginner",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Chao Karate - Expert": {
-        "name": "Chao Karate - Expert",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Chao Karate - Standard": {
-        "name": "Chao Karate - Standard",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Chao Karate - Super": {
-        "name": "Chao Karate - Super",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Chao Race - Beginner": {
-        "name": "Chao Race - Beginner",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Chao Race - Expert": {
-        "name": "Chao Race - Expert",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Chao Race - Intermediate": {
-        "name": "Chao Race - Intermediate",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
       "City Escape": {
         "name": "City Escape",
         "exits": [],
@@ -466,17 +136,76 @@
           }
         ]
       },
-      "Cosmic Wall": {
-        "name": "Cosmic Wall",
+      "Metal Harbor": {
+        "name": "Metal Harbor",
         "exits": [],
         "locations": [
           {
-            "name": "Cosmic Wall - 1",
-            "id": 16711708,
+            "name": "Metal Harbor - 1",
+            "id": 16711683,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine"
+                "item_name": "Sonic - Light Shoes"
+              }
+            },
+            "item": {
+              "name": "Rouge - Pick Nails",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal Harbor - 2",
+            "id": 16711715,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Metal Harbor - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Sonic - Light Shoes"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal Harbor - Chao Key 1",
+            "id": 16712707,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sonic - Flame Ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal Harbor - Chao Key 2",
+            "id": 16712739,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sonic - Light Shoes"
               }
             },
             "item": {
@@ -488,24 +217,27 @@
             "locked": true
           },
           {
-            "name": "Cosmic Wall - 2",
-            "id": 16711740,
+            "name": "Metal Harbor - Chao Key 3",
+            "id": 16712771,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Cosmic Wall - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Sonic - Light Shoes"
+              }
+            },
+            "item": {
+              "name": "Shadow - Ancient Light",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal Harbor - Gold Beetle",
+            "id": 16713219,
+            "access_rule": {
+              "rule": "True_"
             },
             "item": {
               "name": "Emblem",
@@ -516,12 +248,156 @@
             "locked": true
           },
           {
-            "name": "Cosmic Wall - Chao Key 1",
-            "id": 16712732,
+            "name": "Metal Harbor - Upgrade",
+            "id": 16711843,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Green Forest": {
+        "name": "Green Forest",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Green Forest - 1",
+            "id": 16711684,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Green Forest - 2",
+            "id": 16711716,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Green Forest - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Green Forest - Chao Key 1",
+            "id": 16712708,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Green Forest - Chao Key 2",
+            "id": 16712740,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Green Forest - Chao Key 3",
+            "id": 16712772,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Green Forest - Gold Beetle",
+            "id": 16713220,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ten Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Green Forest - Upgrade",
+            "id": 16711844,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Shadow - Air Shoes",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Pyramid Cave": {
+        "name": "Pyramid Cave",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Pyramid Cave - 1",
+            "id": 16711690,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine"
+                "item_name": "Sonic - Bounce Bracelet"
+              }
+            },
+            "item": {
+              "name": "Five Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pyramid Cave - 2",
+            "id": 16711722,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Pyramid Cave - 1"
               }
             },
             "item": {
@@ -533,13 +409,10 @@
             "locked": true
           },
           {
-            "name": "Cosmic Wall - Chao Key 2",
-            "id": 16712764,
+            "name": "Pyramid Cave - Chao Key 1",
+            "id": 16712714,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Eggman - Jet Engine"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Emblem",
@@ -550,47 +423,65 @@
             "locked": true
           },
           {
-            "name": "Cosmic Wall - Chao Key 3",
-            "id": 16712796,
+            "name": "Pyramid Cave - Chao Key 2",
+            "id": 16712746,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine"
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
-              "name": "Emblem",
+              "name": "Magnetic Shield",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
           },
           {
-            "name": "Cosmic Wall - Gold Beetle",
-            "id": 16713244,
+            "name": "Pyramid Cave - Chao Key 3",
+            "id": 16712778,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Eggman - Jet Engine"
+                "items": [
+                  "Sonic - Bounce Bracelet",
+                  "Sonic - Light Shoes",
+                  "Sonic - Mystic Melody"
+                ]
               }
             },
             "item": {
               "name": "Emblem",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
           },
           {
-            "name": "Cosmic Wall - Upgrade",
-            "id": 16711868,
+            "name": "Pyramid Cave - Gold Beetle",
+            "id": 16713226,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine"
+                "item_name": "Sonic - Bounce Bracelet"
               }
+            },
+            "item": {
+              "name": "Extra Life",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pyramid Cave - Upgrade",
+            "id": 16711850,
+            "access_rule": {
+              "rule": "True_"
             },
             "item": {
               "name": "Emblem",
@@ -750,6 +641,991 @@
           }
         ]
       },
+      "Final Rush": {
+        "name": "Final Rush",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Final Rush - 1",
+            "id": 16711695,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Rush - 2",
+            "id": 16711727,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Final Rush - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Rush - Chao Key 1",
+            "id": 16712719,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Rouge - Mystic Melody",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Rush - Chao Key 2",
+            "id": 16712751,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magnetic Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Rush - Chao Key 3",
+            "id": 16712783,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Rush - Gold Beetle",
+            "id": 16713231,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Rush - Upgrade",
+            "id": 16711855,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Sonic - Bounce Bracelet"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Prison Lane": {
+        "name": "Prison Lane",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Prison Lane - 1",
+            "id": 16711682,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Prison Lane - 2",
+            "id": 16711714,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Prison Lane - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Prison Lane - Chao Key 1",
+            "id": 16712706,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Bazooka"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Prison Lane - Chao Key 2",
+            "id": 16712738,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Eggman - Protective Armor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Prison Lane - Chao Key 3",
+            "id": 16712770,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Ten Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Prison Lane - Gold Beetle",
+            "id": 16713218,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Prison Lane - Upgrade",
+            "id": 16711842,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Bazooka"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Mission Street": {
+        "name": "Mission Street",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Mission Street - 1",
+            "id": 16711686,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mission Street - 2",
+            "id": 16711718,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Mission Street - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Magnetic Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mission Street - Chao Key 1",
+            "id": 16712710,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Extra Life",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mission Street - Chao Key 2",
+            "id": 16712742,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mission Street - Chao Key 3",
+            "id": 16712774,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mission Street - Gold Beetle",
+            "id": 16713222,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mission Street - Upgrade",
+            "id": 16711846,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Extra Life",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Route 101": {
+        "name": "Route 101",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Route 101 - 1",
+            "id": 16711688,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Route 101 - 2",
+            "id": 16711720,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Route 101 - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Hidden Base": {
+        "name": "Hidden Base",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Hidden Base - 1",
+            "id": 16711689,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hidden Base - 2",
+            "id": 16711721,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Hidden Base - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hidden Base - Chao Key 1",
+            "id": 16712713,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Ten Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hidden Base - Chao Key 2",
+            "id": 16712745,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hidden Base - Gold Beetle",
+            "id": 16713225,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Tails - Laser Blaster",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hidden Base - Upgrade",
+            "id": 16711849,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Eternal Engine": {
+        "name": "Eternal Engine",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Eternal Engine - 1",
+            "id": 16711692,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Eternal Engine - 2",
+            "id": 16711724,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Eternal Engine - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tails - Booster"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Knuckles - Shovel Claws",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Eternal Engine - Chao Key 1",
+            "id": 16712716,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Eternal Engine - Chao Key 2",
+            "id": 16712748,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Eternal Engine - Chao Key 3",
+            "id": 16712780,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Eternal Engine - Gold Beetle",
+            "id": 16713228,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Eternal Engine - Upgrade",
+            "id": 16711852,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tails - Booster"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Wild Canyon": {
+        "name": "Wild Canyon",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Wild Canyon - 1",
+            "id": 16711681,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wild Canyon - 2",
+            "id": 16711713,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Wild Canyon - 1"
+              }
+            },
+            "item": {
+              "name": "Sonic - Light Shoes",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wild Canyon - Chao Key 1",
+            "id": 16712705,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wild Canyon - Chao Key 2",
+            "id": 16712737,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wild Canyon - Chao Key 3",
+            "id": 16712769,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wild Canyon - Gold Beetle",
+            "id": 16713217,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wild Canyon - Upgrade",
+            "id": 16711841,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Knuckles - Shovel Claws"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Pumpkin Hill": {
+        "name": "Pumpkin Hill",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Pumpkin Hill - 1",
+            "id": 16711685,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Knuckles - Shovel Claws"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pumpkin Hill - 2",
+            "id": 16711717,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Pumpkin Hill - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pumpkin Hill - Chao Key 1",
+            "id": 16712709,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pumpkin Hill - Chao Key 2",
+            "id": 16712741,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pumpkin Hill - Chao Key 3",
+            "id": 16712773,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Pumpkin Hill - Upgrade",
+            "id": 16711845,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Aquatic Mine": {
+        "name": "Aquatic Mine",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Aquatic Mine - 1",
+            "id": 16711687,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Knuckles - Shovel Claws"
+              }
+            },
+            "item": {
+              "name": "Extra Life",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Aquatic Mine - 2",
+            "id": 16711719,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Aquatic Mine - 1"
+              }
+            },
+            "item": {
+              "name": "Twenty Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Aquatic Mine - Chao Key 1",
+            "id": 16712711,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Aquatic Mine - Chao Key 2",
+            "id": 16712743,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Aquatic Mine - Chao Key 3",
+            "id": 16712775,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Aquatic Mine - Gold Beetle",
+            "id": 16713223,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Aquatic Mine - Upgrade",
+            "id": 16711847,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tails - Booster",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "Death Chamber": {
         "name": "Death Chamber",
         "exits": [],
@@ -884,6 +1760,1173 @@
             "id": 16711851,
             "access_rule": {
               "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Meteor Herd": {
+        "name": "Meteor Herd",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Meteor Herd - 1",
+            "id": 16711693,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knuckles - Hammer Gloves",
+                  "Knuckles - Shovel Claws"
+                ]
+              }
+            },
+            "item": {
+              "name": "Five Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Meteor Herd - 2",
+            "id": 16711725,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Meteor Herd - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Meteor Herd - Chao Key 1",
+            "id": 16712717,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Twenty Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Meteor Herd - Chao Key 2",
+            "id": 16712749,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Meteor Herd - Chao Key 3",
+            "id": 16712781,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Meteor Herd - Gold Beetle",
+            "id": 16713229,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Meteor Herd - Upgrade",
+            "id": 16711853,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Knuckles - Hammer Gloves"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Radical Highway": {
+        "name": "Radical Highway",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Radical Highway - 1",
+            "id": 16711699,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radical Highway - 2",
+            "id": 16711731,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Radical Highway - 1"
+              }
+            },
+            "item": {
+              "name": "Ten Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radical Highway - Chao Key 1",
+            "id": 16712723,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radical Highway - Chao Key 2",
+            "id": 16712755,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Five Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radical Highway - Chao Key 3",
+            "id": 16712787,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radical Highway - Gold Beetle",
+            "id": 16713235,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radical Highway - Upgrade",
+            "id": 16711859,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
+            },
+            "item": {
+              "name": "Sonic - Bounce Bracelet",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "White Jungle": {
+        "name": "White Jungle",
+        "exits": [],
+        "locations": [
+          {
+            "name": "White Jungle - 1",
+            "id": 16711704,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Jungle - 2",
+            "id": 16711736,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "White Jungle - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Jungle - Chao Key 1",
+            "id": 16712728,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Jungle - Chao Key 2",
+            "id": 16712760,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
+            },
+            "item": {
+              "name": "Sonic - Ancient Light",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Jungle - Chao Key 3",
+            "id": 16712792,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Jungle - Gold Beetle",
+            "id": 16713240,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Shadow - Air Shoes"
+              }
+            },
+            "item": {
+              "name": "Ten Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "White Jungle - Upgrade",
+            "id": 16711864,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Sky Rail": {
+        "name": "Sky Rail",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Sky Rail - 1",
+            "id": 16711706,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Invincibility",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sky Rail - 2",
+            "id": 16711738,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Sky Rail - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sky Rail - Chao Key 1",
+            "id": 16712730,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sky Rail - Chao Key 2",
+            "id": 16712762,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sky Rail - Chao Key 3",
+            "id": 16712794,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sky Rail - Gold Beetle",
+            "id": 16713242,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sky Rail - Upgrade",
+            "id": 16711866,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Final Chase": {
+        "name": "Final Chase",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Final Chase - 1",
+            "id": 16711709,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Twenty Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Chase - 2",
+            "id": 16711741,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Final Chase - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Chase - Chao Key 1",
+            "id": 16712733,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Chase - Chao Key 2",
+            "id": 16712765,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Chase - Chao Key 3",
+            "id": 16712797,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Knuckles - Air Necklace",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Chase - Gold Beetle",
+            "id": 16713245,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Chase - Upgrade",
+            "id": 16711869,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Iron Gate": {
+        "name": "Iron Gate",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Iron Gate - 1",
+            "id": 16711696,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iron Gate - 2",
+            "id": 16711728,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Iron Gate - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iron Gate - Chao Key 1",
+            "id": 16712720,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iron Gate - Chao Key 2",
+            "id": 16712752,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Extra Life",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iron Gate - Chao Key 3",
+            "id": 16712784,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iron Gate - Gold Beetle",
+            "id": 16713232,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Shadow - Flame Ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iron Gate - Upgrade",
+            "id": 16711856,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Large Cannon"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Sand Ocean": {
+        "name": "Sand Ocean",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Sand Ocean - 1",
+            "id": 16711698,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sand Ocean - 2",
+            "id": 16711730,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Sand Ocean - 1"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sand Ocean - Chao Key 1",
+            "id": 16712722,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sand Ocean - Chao Key 2",
+            "id": 16712754,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sand Ocean - Chao Key 3",
+            "id": 16712786,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sand Ocean - Gold Beetle",
+            "id": 16713234,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magnetic Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sand Ocean - Upgrade",
+            "id": 16711858,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Lost Colony": {
+        "name": "Lost Colony",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Lost Colony - 1",
+            "id": 16711701,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lost Colony - 2",
+            "id": 16711733,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Lost Colony - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lost Colony - Chao Key 1",
+            "id": 16712725,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lost Colony - Chao Key 2",
+            "id": 16712757,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lost Colony - Chao Key 3",
+            "id": 16712789,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lost Colony - Gold Beetle",
+            "id": 16713237,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lost Colony - Upgrade",
+            "id": 16711861,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Weapons Bed": {
+        "name": "Weapons Bed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Weapons Bed - 1",
+            "id": 16711702,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Weapons Bed - 2",
+            "id": 16711734,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Weapons Bed - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Eggman - Large Cannon"
+                    ]
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Shadow - Mystic Melody",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Weapons Bed - Chao Key 1",
+            "id": 16712726,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Magnetic Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Weapons Bed - Chao Key 2",
+            "id": 16712758,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Weapons Bed - Chao Key 3",
+            "id": 16712790,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Weapons Bed - Upgrade",
+            "id": 16711862,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Cosmic Wall": {
+        "name": "Cosmic Wall",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Cosmic Wall - 1",
+            "id": 16711708,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cosmic Wall - 2",
+            "id": 16711740,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Cosmic Wall - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Eggman - Jet Engine"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cosmic Wall - Chao Key 1",
+            "id": 16712732,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cosmic Wall - Chao Key 2",
+            "id": 16712764,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cosmic Wall - Chao Key 3",
+            "id": 16712796,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cosmic Wall - Gold Beetle",
+            "id": 16713244,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cosmic Wall - Upgrade",
+            "id": 16711868,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Eggman - Jet Engine"
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1125,315 +3168,46 @@
           }
         ]
       },
-      "Eternal Engine": {
-        "name": "Eternal Engine",
+      "Security Hall": {
+        "name": "Security Hall",
         "exits": [],
         "locations": [
           {
-            "name": "Eternal Engine - 1",
-            "id": 16711692,
+            "name": "Security Hall - 1",
+            "id": 16711703,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Tails - Bazooka",
-                  "Tails - Booster"
-                ]
+                "item_name": "Rouge - Pick Nails"
               }
             },
             "item": {
-              "name": "Emblem",
+              "name": "Invincibility",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
           },
           {
-            "name": "Eternal Engine - 2",
-            "id": 16711724,
+            "name": "Security Hall - 2",
+            "id": 16711735,
             "access_rule": {
               "rule": "And",
               "children": [
                 {
                   "rule": "CanReachLocation",
                   "args": {
-                    "location_name": "Eternal Engine - 1"
+                    "location_name": "Security Hall - 1"
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tails - Booster"
+                    "item_name": "Rouge - Pick Nails"
                   }
                 }
               ]
-            },
-            "item": {
-              "name": "Knuckles - Shovel Claws",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Eternal Engine - Chao Key 1",
-            "id": 16712716,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Eternal Engine - Chao Key 2",
-            "id": 16712748,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Tails - Bazooka",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Eternal Engine - Chao Key 3",
-            "id": 16712780,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Eternal Engine - Gold Beetle",
-            "id": 16713228,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Tails - Bazooka",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Eternal Engine - Upgrade",
-            "id": 16711852,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Final Chase": {
-        "name": "Final Chase",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Final Chase - 1",
-            "id": 16711709,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Twenty Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Chase - 2",
-            "id": 16711741,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Final Chase - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Chase - Chao Key 1",
-            "id": 16712733,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Chase - Chao Key 2",
-            "id": 16712765,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Chase - Chao Key 3",
-            "id": 16712797,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Knuckles - Air Necklace",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Chase - Gold Beetle",
-            "id": 16713245,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Chase - Upgrade",
-            "id": 16711869,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Final Rush": {
-        "name": "Final Rush",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Final Rush - 1",
-            "id": 16711695,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Bounce Bracelet"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Rush - 2",
-            "id": 16711727,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Final Rush - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Rush - Chao Key 1",
-            "id": 16712719,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Rouge - Mystic Melody",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Rush - Chao Key 2",
-            "id": 16712751,
-            "access_rule": {
-              "rule": "True_"
             },
             "item": {
               "name": "Magnetic Shield",
@@ -1444,25 +3218,8 @@
             "locked": true
           },
           {
-            "name": "Final Rush - Chao Key 3",
-            "id": 16712783,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Bounce Bracelet"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Final Rush - Gold Beetle",
-            "id": 16713231,
+            "name": "Security Hall - Chao Key 1",
+            "id": 16712727,
             "access_rule": {
               "rule": "True_"
             },
@@ -1475,12 +3232,97 @@
             "locked": true
           },
           {
-            "name": "Final Rush - Upgrade",
-            "id": 16711855,
+            "name": "Security Hall - Chao Key 2",
+            "id": 16712759,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Security Hall - Chao Key 3",
+            "id": 16712791,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet"
+                "item_name": "Rouge - Pick Nails"
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Security Hall - Gold Beetle",
+            "id": 16713239,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Security Hall - Upgrade",
+            "id": 16711863,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rouge - Iron Boots",
+                  "Rouge - Mystic Melody"
+                ]
+              }
+            },
+            "item": {
+              "name": "Knuckles - Mystic Melody",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Route 280": {
+        "name": "Route 280",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Route 280 - 1",
+            "id": 16711705,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Route 280 - 2",
+            "id": 16711737,
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Route 280 - 1"
               }
             },
             "item": {
@@ -1492,6 +3334,356 @@
             "locked": true
           }
         ]
+      },
+      "Mad Space": {
+        "name": "Mad Space",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Mad Space - 1",
+            "id": 16711707,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rouge - Iron Boots",
+                  "Rouge - Pick Nails"
+                ]
+              }
+            },
+            "item": {
+              "name": "Eggman - Laser Blaster",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mad Space - 2",
+            "id": 16711739,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Mad Space - 1"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Rouge - Iron Boots"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mad Space - Chao Key 1",
+            "id": 16712731,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Five Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mad Space - Chao Key 2",
+            "id": 16712763,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rouge - Iron Boots"
+              }
+            },
+            "item": {
+              "name": "Ten Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mad Space - Chao Key 3",
+            "id": 16712795,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rouge - Iron Boots"
+              }
+            },
+            "item": {
+              "name": "Invincibility",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mad Space - Gold Beetle",
+            "id": 16713243,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rouge - Iron Boots"
+              }
+            },
+            "item": {
+              "name": "Sonic - Mystic Melody",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mad Space - Upgrade",
+            "id": 16711867,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Invincibility",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Cannon's Core": {
+        "name": "Cannon's Core",
+        "exits": [
+          {
+            "name": "Biolizard",
+            "connected_region": "Biolizard",
+            "access_rule": {
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Cannon's Core - 1"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Cannon's Core - 1",
+            "id": 16711710,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Knuckles - Air Necklace",
+                  "Knuckles - Hammer Gloves",
+                  "Sonic - Bounce Bracelet",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cannon's Core - 2",
+            "id": 16711742,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Cannon's Core - 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Tails - Booster"
+                    ]
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cannon's Core - Chao Key 1",
+            "id": 16712734,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Five Rings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cannon's Core - Chao Key 2",
+            "id": 16712766,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Emblem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cannon's Core - Chao Key 3",
+            "id": 16712798,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Knuckles - Air Necklace",
+                  "Knuckles - Hammer Gloves",
+                  "Sonic - Flame Ring",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Sonic - Magic Gloves",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cannon's Core - Gold Beetle",
+            "id": 16713246,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Knuckles - Air Necklace",
+                  "Knuckles - Hammer Gloves",
+                  "Tails - Booster"
+                ]
+              }
+            },
+            "item": {
+              "name": "Eggman - Mystic Melody",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Chao Race - Beginner": {
+        "name": "Chao Race - Beginner",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Chao Karate - Beginner": {
+        "name": "Chao Karate - Beginner",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Chao Race - Intermediate": {
+        "name": "Chao Race - Intermediate",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Chao Karate - Standard": {
+        "name": "Chao Karate - Standard",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Chao Race - Expert": {
+        "name": "Chao Race - Expert",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Chao Karate - Expert": {
+        "name": "Chao Karate - Expert",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Chao Karate - Super": {
+        "name": "Chao Karate - Super",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Kart Race - Beginner": {
+        "name": "Kart Race - Beginner",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Kart Race - Intermediate": {
+        "name": "Kart Race - Intermediate",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
+      },
+      "Kart Race - Expert": {
+        "name": "Kart Race - Expert",
+        "exits": [],
+        "locations": [],
+        "dynamically_added": true
       },
       "Gate 0": {
         "name": "Gate 0",
@@ -1925,2216 +4117,24 @@
           }
         ]
       },
-      "Green Forest": {
-        "name": "Green Forest",
+      "Biolizard": {
+        "name": "Biolizard",
         "exits": [],
         "locations": [
           {
-            "name": "Green Forest - 1",
-            "id": 16711684,
+            "name": "Finalhazard",
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Emblem",
+              "name": "What Maria Wanted",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "Green Forest - 2",
-            "id": 16711716,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Green Forest - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Green Forest - Chao Key 1",
-            "id": 16712708,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Green Forest - Chao Key 2",
-            "id": 16712740,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Green Forest - Chao Key 3",
-            "id": 16712772,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Green Forest - Gold Beetle",
-            "id": 16713220,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Green Forest - Upgrade",
-            "id": 16711844,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shadow - Air Shoes",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Hidden Base": {
-        "name": "Hidden Base",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Hidden Base - 1",
-            "id": 16711689,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hidden Base - 2",
-            "id": 16711721,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Hidden Base - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hidden Base - Chao Key 1",
-            "id": 16712713,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hidden Base - Chao Key 2",
-            "id": 16712745,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hidden Base - Gold Beetle",
-            "id": 16713225,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Tails - Laser Blaster",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hidden Base - Upgrade",
-            "id": 16711849,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Tails - Bazooka",
-                  "Tails - Booster"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Iron Gate": {
-        "name": "Iron Gate",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Iron Gate - 1",
-            "id": 16711696,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iron Gate - 2",
-            "id": 16711728,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Iron Gate - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iron Gate - Chao Key 1",
-            "id": 16712720,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iron Gate - Chao Key 2",
-            "id": 16712752,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Extra Life",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iron Gate - Chao Key 3",
-            "id": 16712784,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iron Gate - Gold Beetle",
-            "id": 16713232,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shadow - Flame Ring",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Iron Gate - Upgrade",
-            "id": 16711856,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Eggman - Large Cannon"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Kart Race - Beginner": {
-        "name": "Kart Race - Beginner",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Kart Race - Expert": {
-        "name": "Kart Race - Expert",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Kart Race - Intermediate": {
-        "name": "Kart Race - Intermediate",
-        "exits": [],
-        "locations": [],
-        "dynamically_added": true
-      },
-      "Lost Colony": {
-        "name": "Lost Colony",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Lost Colony - 1",
-            "id": 16711701,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Eggman - Jet Engine"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Lost Colony - 2",
-            "id": 16711733,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Lost Colony - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Lost Colony - Chao Key 1",
-            "id": 16712725,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Lost Colony - Chao Key 2",
-            "id": 16712757,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Lost Colony - Chao Key 3",
-            "id": 16712789,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Eggman - Jet Engine"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Lost Colony - Gold Beetle",
-            "id": 16713237,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Eggman - Jet Engine"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Lost Colony - Upgrade",
-            "id": 16711861,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mad Space": {
-        "name": "Mad Space",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Mad Space - 1",
-            "id": 16711707,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Rouge - Iron Boots",
-                  "Rouge - Pick Nails"
-                ]
-              }
-            },
-            "item": {
-              "name": "Eggman - Laser Blaster",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mad Space - 2",
-            "id": 16711739,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Mad Space - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Iron Boots"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mad Space - Chao Key 1",
-            "id": 16712731,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Five Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mad Space - Chao Key 2",
-            "id": 16712763,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rouge - Iron Boots"
-              }
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mad Space - Chao Key 3",
-            "id": 16712795,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rouge - Iron Boots"
-              }
-            },
-            "item": {
-              "name": "Invincibility",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mad Space - Gold Beetle",
-            "id": 16713243,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rouge - Iron Boots"
-              }
-            },
-            "item": {
-              "name": "Sonic - Mystic Melody",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mad Space - Upgrade",
-            "id": 16711867,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Invincibility",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Metal Harbor": {
-        "name": "Metal Harbor",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Metal Harbor - 1",
-            "id": 16711683,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Light Shoes"
-              }
-            },
-            "item": {
-              "name": "Rouge - Pick Nails",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal Harbor - 2",
-            "id": 16711715,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Metal Harbor - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Light Shoes"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal Harbor - Chao Key 1",
-            "id": 16712707,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sonic - Flame Ring",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal Harbor - Chao Key 2",
-            "id": 16712739,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Light Shoes"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal Harbor - Chao Key 3",
-            "id": 16712771,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Light Shoes"
-              }
-            },
-            "item": {
-              "name": "Shadow - Ancient Light",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal Harbor - Gold Beetle",
-            "id": 16713219,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Metal Harbor - Upgrade",
-            "id": 16711843,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Meteor Herd": {
-        "name": "Meteor Herd",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Meteor Herd - 1",
-            "id": 16711693,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Knuckles - Hammer Gloves",
-                  "Knuckles - Shovel Claws"
-                ]
-              }
-            },
-            "item": {
-              "name": "Five Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Meteor Herd - 2",
-            "id": 16711725,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Meteor Herd - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Meteor Herd - Chao Key 1",
-            "id": 16712717,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Twenty Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Meteor Herd - Chao Key 2",
-            "id": 16712749,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Meteor Herd - Chao Key 3",
-            "id": 16712781,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Meteor Herd - Gold Beetle",
-            "id": 16713229,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Meteor Herd - Upgrade",
-            "id": 16711853,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Knuckles - Hammer Gloves"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mission Street": {
-        "name": "Mission Street",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Mission Street - 1",
-            "id": 16711686,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mission Street - 2",
-            "id": 16711718,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Mission Street - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Magnetic Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mission Street - Chao Key 1",
-            "id": 16712710,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Extra Life",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mission Street - Chao Key 2",
-            "id": 16712742,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mission Street - Chao Key 3",
-            "id": 16712774,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mission Street - Gold Beetle",
-            "id": 16713222,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mission Street - Upgrade",
-            "id": 16711846,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Extra Life",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Prison Lane": {
-        "name": "Prison Lane",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Prison Lane - 1",
-            "id": 16711682,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Prison Lane - 2",
-            "id": 16711714,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Prison Lane - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Prison Lane - Chao Key 1",
-            "id": 16712706,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Bazooka"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Prison Lane - Chao Key 2",
-            "id": 16712738,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Booster"
-              }
-            },
-            "item": {
-              "name": "Eggman - Protective Armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Prison Lane - Chao Key 3",
-            "id": 16712770,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Prison Lane - Gold Beetle",
-            "id": 16713218,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Prison Lane - Upgrade",
-            "id": 16711842,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tails - Bazooka"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Pumpkin Hill": {
-        "name": "Pumpkin Hill",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Pumpkin Hill - 1",
-            "id": 16711685,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Knuckles - Shovel Claws"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pumpkin Hill - 2",
-            "id": 16711717,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Pumpkin Hill - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pumpkin Hill - Chao Key 1",
-            "id": 16712709,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pumpkin Hill - Chao Key 2",
-            "id": 16712741,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pumpkin Hill - Chao Key 3",
-            "id": 16712773,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pumpkin Hill - Upgrade",
-            "id": 16711845,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Pyramid Cave": {
-        "name": "Pyramid Cave",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Pyramid Cave - 1",
-            "id": 16711690,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Bounce Bracelet"
-              }
-            },
-            "item": {
-              "name": "Five Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pyramid Cave - 2",
-            "id": 16711722,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Pyramid Cave - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pyramid Cave - Chao Key 1",
-            "id": 16712714,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pyramid Cave - Chao Key 2",
-            "id": 16712746,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Bounce Bracelet"
-              }
-            },
-            "item": {
-              "name": "Magnetic Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pyramid Cave - Chao Key 3",
-            "id": 16712778,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Sonic - Bounce Bracelet",
-                  "Sonic - Light Shoes",
-                  "Sonic - Mystic Melody"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pyramid Cave - Gold Beetle",
-            "id": 16713226,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Sonic - Bounce Bracelet"
-              }
-            },
-            "item": {
-              "name": "Extra Life",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Pyramid Cave - Upgrade",
-            "id": 16711850,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Radical Highway": {
-        "name": "Radical Highway",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Radical Highway - 1",
-            "id": 16711699,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radical Highway - 2",
-            "id": 16711731,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Radical Highway - 1"
-              }
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radical Highway - Chao Key 1",
-            "id": 16712723,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radical Highway - Chao Key 2",
-            "id": 16712755,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Five Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radical Highway - Chao Key 3",
-            "id": 16712787,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radical Highway - Gold Beetle",
-            "id": 16713235,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Radical Highway - Upgrade",
-            "id": 16711859,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shadow - Air Shoes"
-              }
-            },
-            "item": {
-              "name": "Sonic - Bounce Bracelet",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Route 101": {
-        "name": "Route 101",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Route 101 - 1",
-            "id": 16711688,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Route 101 - 2",
-            "id": 16711720,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Route 101 - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Route 280": {
-        "name": "Route 280",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Route 280 - 1",
-            "id": 16711705,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Route 280 - 2",
-            "id": 16711737,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Route 280 - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Sand Ocean": {
-        "name": "Sand Ocean",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Sand Ocean - 1",
-            "id": 16711698,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sand Ocean - 2",
-            "id": 16711730,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Sand Ocean - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sand Ocean - Chao Key 1",
-            "id": 16712722,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sand Ocean - Chao Key 2",
-            "id": 16712754,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sand Ocean - Chao Key 3",
-            "id": 16712786,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sand Ocean - Gold Beetle",
-            "id": 16713234,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Magnetic Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sand Ocean - Upgrade",
-            "id": 16711858,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Eggman - Jet Engine"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Security Hall": {
-        "name": "Security Hall",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Security Hall - 1",
-            "id": 16711703,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rouge - Pick Nails"
-              }
-            },
-            "item": {
-              "name": "Invincibility",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Security Hall - 2",
-            "id": 16711735,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Security Hall - 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Pick Nails"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Magnetic Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Security Hall - Chao Key 1",
-            "id": 16712727,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Security Hall - Chao Key 2",
-            "id": 16712759,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Security Hall - Chao Key 3",
-            "id": 16712791,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rouge - Pick Nails"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Security Hall - Gold Beetle",
-            "id": 16713239,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Security Hall - Upgrade",
-            "id": 16711863,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Rouge - Iron Boots",
-                  "Rouge - Mystic Melody"
-                ]
-              }
-            },
-            "item": {
-              "name": "Knuckles - Mystic Melody",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Sky Rail": {
-        "name": "Sky Rail",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Sky Rail - 1",
-            "id": 16711706,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Invincibility",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sky Rail - 2",
-            "id": 16711738,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Sky Rail - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sky Rail - Chao Key 1",
-            "id": 16712730,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sky Rail - Chao Key 2",
-            "id": 16712762,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sky Rail - Chao Key 3",
-            "id": 16712794,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sky Rail - Gold Beetle",
-            "id": 16713242,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sky Rail - Upgrade",
-            "id": 16711866,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Weapons Bed": {
-        "name": "Weapons Bed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Weapons Bed - 1",
-            "id": 16711702,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Eggman - Large Cannon"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Weapons Bed - 2",
-            "id": 16711734,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Weapons Bed - 1"
-                  }
-                },
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Eggman - Jet Engine",
-                      "Eggman - Large Cannon"
-                    ]
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "Shadow - Mystic Melody",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Weapons Bed - Chao Key 1",
-            "id": 16712726,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Magnetic Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Weapons Bed - Chao Key 2",
-            "id": 16712758,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Eggman - Large Cannon"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Weapons Bed - Chao Key 3",
-            "id": 16712790,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Eggman - Jet Engine",
-                  "Eggman - Large Cannon"
-                ]
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Weapons Bed - Upgrade",
-            "id": 16711862,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "White Jungle": {
-        "name": "White Jungle",
-        "exits": [],
-        "locations": [
-          {
-            "name": "White Jungle - 1",
-            "id": 16711704,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shadow - Air Shoes"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "White Jungle - 2",
-            "id": 16711736,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "White Jungle - 1"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "White Jungle - Chao Key 1",
-            "id": 16712728,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "White Jungle - Chao Key 2",
-            "id": 16712760,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shadow - Air Shoes"
-              }
-            },
-            "item": {
-              "name": "Sonic - Ancient Light",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "White Jungle - Chao Key 3",
-            "id": 16712792,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shadow - Air Shoes"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "White Jungle - Gold Beetle",
-            "id": 16713240,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Shadow - Air Shoes"
-              }
-            },
-            "item": {
-              "name": "Ten Rings",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "White Jungle - Upgrade",
-            "id": 16711864,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Wild Canyon": {
-        "name": "Wild Canyon",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Wild Canyon - 1",
-            "id": 16711681,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wild Canyon - 2",
-            "id": 16711713,
-            "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Wild Canyon - 1"
-              }
-            },
-            "item": {
-              "name": "Sonic - Light Shoes",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wild Canyon - Chao Key 1",
-            "id": 16712705,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wild Canyon - Chao Key 2",
-            "id": 16712737,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wild Canyon - Chao Key 3",
-            "id": 16712769,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wild Canyon - Gold Beetle",
-            "id": 16713217,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Wild Canyon - Upgrade",
-            "id": 16711841,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Knuckles - Shovel Claws"
-              }
-            },
-            "item": {
-              "name": "Emblem",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -6373,16 +6373,6 @@
   },
   "canonical_placements": {
     "1": {
-      "Aquatic Mine - 1": "Extra Life",
-      "Crazy Gadget - 1": "Extra Life",
-      "Iron Gate - Chao Key 2": "Extra Life",
-      "Mission Street - Chao Key 1": "Extra Life",
-      "Mission Street - Upgrade": "Extra Life",
-      "Pyramid Cave - Gold Beetle": "Extra Life",
-      "Aquatic Mine - 2": "Twenty Rings",
-      "Egg Quarters - Chao Key 2": "Twenty Rings",
-      "Final Chase - 1": "Twenty Rings",
-      "Meteor Herd - Chao Key 1": "Twenty Rings",
       "Aquatic Mine - Chao Key 1": "Emblem",
       "Aquatic Mine - Chao Key 3": "Emblem",
       "Aquatic Mine - Gold Beetle": "Emblem",
@@ -6521,12 +6511,6 @@
       "White Jungle - Chao Key 1": "Emblem",
       "Wild Canyon - Chao Key 2": "Emblem",
       "Wild Canyon - Gold Beetle": "Emblem",
-      "Aquatic Mine - Upgrade": "Tails - Booster",
-      "Finalhazard": "What Maria Wanted",
-      "Cannon's Core - 2": "Shield",
-      "Egg Quarters - Chao Key 3": "Shield",
-      "Meteor Herd - Chao Key 2": "Shield",
-      "Sky Rail - Upgrade": "Shield",
       "Cannon's Core - Chao Key 1": "Five Rings",
       "City Escape - 2": "Five Rings",
       "Gate 3 Boss": "Five Rings",
@@ -6534,11 +6518,19 @@
       "Meteor Herd - 1": "Five Rings",
       "Pyramid Cave - 1": "Five Rings",
       "Radical Highway - Chao Key 2": "Five Rings",
-      "Cannon's Core - Chao Key 3": "Sonic - Magic Gloves",
-      "Cannon's Core - Gold Beetle": "Eggman - Mystic Melody",
       "City Escape - Chao Key 1": "Eggman - Large Cannon",
       "City Escape - Chao Key 2": "Rouge - Iron Boots",
       "City Escape - Chao Key 3": "Eggman - Jet Engine",
+      "Metal Harbor - 1": "Rouge - Pick Nails",
+      "Metal Harbor - Chao Key 1": "Sonic - Flame Ring",
+      "Metal Harbor - Chao Key 3": "Shadow - Ancient Light",
+      "Green Forest - Gold Beetle": "Ten Rings",
+      "Hidden Base - Chao Key 1": "Ten Rings",
+      "Mad Space - Chao Key 2": "Ten Rings",
+      "Prison Lane - Chao Key 3": "Ten Rings",
+      "Radical Highway - 2": "Ten Rings",
+      "White Jungle - Gold Beetle": "Ten Rings",
+      "Green Forest - Upgrade": "Shadow - Air Shoes",
       "Crazy Gadget - Gold Beetle": "Magnetic Shield",
       "Crazy Gadget - Upgrade": "Magnetic Shield",
       "Dry Lagoon - Chao Key 1": "Magnetic Shield",
@@ -6548,38 +6540,46 @@
       "Sand Ocean - Gold Beetle": "Magnetic Shield",
       "Security Hall - 2": "Magnetic Shield",
       "Weapons Bed - Chao Key 1": "Magnetic Shield",
-      "Death Chamber - Chao Key 3": "Tails - Mystic Melody",
-      "Dry Lagoon - 2": "Rouge - Treasure Scope",
-      "Dry Lagoon - Upgrade": "Tails - Bazooka",
-      "Egg Quarters - Chao Key 1": "Knuckles - Sunglasses",
-      "Egg Quarters - Upgrade": "Knuckles - Hammer Gloves",
-      "Eternal Engine - 2": "Knuckles - Shovel Claws",
-      "Final Chase - Chao Key 3": "Knuckles - Air Necklace",
+      "Aquatic Mine - 1": "Extra Life",
+      "Crazy Gadget - 1": "Extra Life",
+      "Iron Gate - Chao Key 2": "Extra Life",
+      "Mission Street - Chao Key 1": "Extra Life",
+      "Mission Street - Upgrade": "Extra Life",
+      "Pyramid Cave - Gold Beetle": "Extra Life",
       "Final Rush - Chao Key 1": "Rouge - Mystic Melody",
-      "Green Forest - Gold Beetle": "Ten Rings",
-      "Hidden Base - Chao Key 1": "Ten Rings",
-      "Mad Space - Chao Key 2": "Ten Rings",
-      "Prison Lane - Chao Key 3": "Ten Rings",
-      "Radical Highway - 2": "Ten Rings",
-      "White Jungle - Gold Beetle": "Ten Rings",
-      "Green Forest - Upgrade": "Shadow - Air Shoes",
+      "Prison Lane - Chao Key 2": "Eggman - Protective Armor",
       "Hidden Base - Gold Beetle": "Tails - Laser Blaster",
-      "Iron Gate - Gold Beetle": "Shadow - Flame Ring",
-      "Mad Space - 1": "Eggman - Laser Blaster",
+      "Eternal Engine - 2": "Knuckles - Shovel Claws",
+      "Wild Canyon - 2": "Sonic - Light Shoes",
+      "Aquatic Mine - 2": "Twenty Rings",
+      "Egg Quarters - Chao Key 2": "Twenty Rings",
+      "Final Chase - 1": "Twenty Rings",
+      "Meteor Herd - Chao Key 1": "Twenty Rings",
+      "Aquatic Mine - Upgrade": "Tails - Booster",
+      "Death Chamber - Chao Key 3": "Tails - Mystic Melody",
+      "Cannon's Core - 2": "Shield",
+      "Egg Quarters - Chao Key 3": "Shield",
+      "Meteor Herd - Chao Key 2": "Shield",
+      "Sky Rail - Upgrade": "Shield",
+      "Radical Highway - Upgrade": "Sonic - Bounce Bracelet",
+      "White Jungle - Chao Key 2": "Sonic - Ancient Light",
       "Mad Space - Chao Key 3": "Invincibility",
       "Mad Space - Upgrade": "Invincibility",
       "Security Hall - 1": "Invincibility",
       "Sky Rail - 1": "Invincibility",
-      "Mad Space - Gold Beetle": "Sonic - Mystic Melody",
-      "Metal Harbor - 1": "Rouge - Pick Nails",
-      "Metal Harbor - Chao Key 1": "Sonic - Flame Ring",
-      "Metal Harbor - Chao Key 3": "Shadow - Ancient Light",
-      "Prison Lane - Chao Key 2": "Eggman - Protective Armor",
-      "Radical Highway - Upgrade": "Sonic - Bounce Bracelet",
-      "Security Hall - Upgrade": "Knuckles - Mystic Melody",
+      "Final Chase - Chao Key 3": "Knuckles - Air Necklace",
+      "Iron Gate - Gold Beetle": "Shadow - Flame Ring",
       "Weapons Bed - 2": "Shadow - Mystic Melody",
-      "White Jungle - Chao Key 2": "Sonic - Ancient Light",
-      "Wild Canyon - 2": "Sonic - Light Shoes"
+      "Dry Lagoon - 2": "Rouge - Treasure Scope",
+      "Dry Lagoon - Upgrade": "Tails - Bazooka",
+      "Egg Quarters - Chao Key 1": "Knuckles - Sunglasses",
+      "Egg Quarters - Upgrade": "Knuckles - Hammer Gloves",
+      "Security Hall - Upgrade": "Knuckles - Mystic Melody",
+      "Mad Space - 1": "Eggman - Laser Blaster",
+      "Mad Space - Gold Beetle": "Sonic - Mystic Melody",
+      "Cannon's Core - Chao Key 3": "Sonic - Magic Gloves",
+      "Cannon's Core - Gold Beetle": "Eggman - Mystic Melody",
+      "Finalhazard": "What Maria Wanted"
     }
   },
   "progression_mapping": {

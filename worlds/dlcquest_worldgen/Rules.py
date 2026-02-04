@@ -21,26 +21,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Behind Tree Double Jump", player),
-        Has('Double Jump Pack', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forest Entrance", player),
-        Has('Map Pack', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cave Tree", player),
-        Has('Time is Money Pack', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Cave Roof", player),
-        Has('Double Jump Pack', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Moving", player),
         Has('Movement Pack', 1)
     )
@@ -56,7 +36,27 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("Behind Tree Double Jump", player),
+        Has('Double Jump Pack', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forest Entrance", player),
+        Has('Map Pack', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Cloud Double Jump", player),
+        Has('Double Jump Pack', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cave Tree", player),
+        Has('Time is Money Pack', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Cave Roof", player),
         Has('Double Jump Pack', 1)
     )
 
@@ -75,41 +75,6 @@ def set_rules(world: "World") -> None:
         Has('Double Jump Pack', 1)
     )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("Double Jump Pack", player),
-        Compare(CountItem(" coins"), ">=", 100)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Map Pack", player),
-        Compare(CountItem(" coins"), ">=", 140)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sexy Outfits Pack", player),
-        Compare(CountItem(" coins"), ">=", 5)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pet Pack", player),
-        Compare(CountItem(" coins"), ">=", 5)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Top Hat Pack", player),
-        Compare(CountItem(" coins"), ">=", 5)
-    )
-
-    world.set_rule(
-        multiworld.get_location("North West Alcove Sheep", player),
-        Has('Time is Money Pack', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("North West Ceiling Sheep", player),
-        Has('Time is Money Pack', 1)
-    )
-
     world.set_rule(
         multiworld.get_location("Movement Pack", player),
         Compare(CountItem(" coins"), ">=", 4)
@@ -151,18 +116,43 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Double Jump Pack", player),
+        Compare(CountItem(" coins"), ">=", 100)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Map Pack", player),
+        Compare(CountItem(" coins"), ">=", 140)
+    )
+
+    world.set_rule(
         multiworld.get_location("West Cave Sheep", player),
         Has('Time is Money Pack', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Finish the Fight Pack", player),
+        multiworld.get_location("Pet Pack", player),
         Compare(CountItem(" coins"), ">=", 5)
     )
 
     world.set_rule(
-        multiworld.get_location("Winning Basic", player),
-        HasAll('Armor for your Horse Pack', 'Finish the Fight Pack')
+        multiworld.get_location("Top Hat Pack", player),
+        Compare(CountItem(" coins"), ">=", 5)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North West Alcove Sheep", player),
+        Has('Time is Money Pack', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("North West Ceiling Sheep", player),
+        Has('Time is Money Pack', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sexy Outfits Pack", player),
+        Compare(CountItem(" coins"), ">=", 5)
     )
 
     world.set_rule(
@@ -178,4 +168,14 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("The Zombie Pack", player),
         Compare(CountItem(" coins"), ">=", 5)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Finish the Fight Pack", player),
+        Compare(CountItem(" coins"), ">=", 5)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Winning Basic", player),
+        HasAll('Armor for your Horse Pack', 'Finish the Fight Pack')
     )

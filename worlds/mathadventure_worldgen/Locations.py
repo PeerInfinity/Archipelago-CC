@@ -30,14 +30,14 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
-    "Equality Substitution Right": LocationData("ArithmeticOperations", "Equality Substitution Right", 200000006, False),
-    "Equality Substitution Left": LocationData("ArithmeticOperations", "Equality Substitution Left", 200000007, False),
-    "Addition Associativity": LocationData("ArithmeticOperations", "Addition Associativity", 200000008, False),
-    "1 is Complex": LocationData("Axioms", "1 is Complex", 200000004, False),
-    "2 is Complex": LocationData("BasicProperties", "2 is Complex", 200000005, False),
     "Definition of 2": LocationData("Definitions", "Definition of 2", 200000001, False),
     "Definition of 3": LocationData("Definitions", "Definition of 3", 200000002, False),
     "Definition of 4": LocationData("Definitions", "Definition of 4", 200000003, False),
+    "1 is Complex": LocationData("Axioms", "1 is Complex", 200000004, False),
+    "2 is Complex": LocationData("BasicProperties", "2 is Complex", 200000005, False),
+    "Equality Substitution Right": LocationData("ArithmeticOperations", "Equality Substitution Right", 200000006, False),
+    "Equality Substitution Left": LocationData("ArithmeticOperations", "Equality Substitution Left", 200000007, False),
+    "Addition Associativity": LocationData("ArithmeticOperations", "Addition Associativity", 200000008, False),
     "Triple Equality Transitivity": LocationData("ProofCompletion", "Triple Equality Transitivity", 200000009, False),
     "Final Equality": LocationData("ProofCompletion", "Final Equality", 200000010, False),
     "Theorem: 2+2=4": LocationData("ProofCompletion", "Theorem: 2+2=4", None, True),

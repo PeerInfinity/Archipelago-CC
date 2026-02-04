@@ -26,16 +26,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Kiiruberg -> Mountain Top", player),
-        Has('Kiiruberg stamp', 8)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Logcity -> Kiiruberg", player),
-        Has('Logcity stamp', 8)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Oaklaville -> Stanhamn", player),
         Has('Oaklaville stamp', 8)
     )
@@ -44,14 +34,19 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Stanhamn -> Logcity", player),
         Has('Stanhamn stamp', 8)
     )
-    # Location rules
+
     world.set_rule(
-        multiworld.get_location("Quest - Experience TOEM", player),
-        CanReachRegion('Mountain Top')
+        multiworld.get_entrance("Logcity -> Kiiruberg", player),
+        Has('Logcity stamp', 8)
     )
 
     world.set_rule(
-        multiworld.get_location("Quest - Ancient paintings", player),
+        multiworld.get_entrance("Kiiruberg -> Mountain Top", player),
+        Has('Kiiruberg stamp', 8)
+    )
+    # Location rules
+    world.set_rule(
+        multiworld.get_location("Quest - Experience TOEM", player),
         CanReachRegion('Mountain Top')
     )
 
@@ -63,4 +58,9 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Quest - Ghost helper!", player),
         CanReachRegion('Logcity')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quest - Ancient paintings", player),
+        CanReachRegion('Mountain Top')
     )

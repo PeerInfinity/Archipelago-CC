@@ -21,8 +21,103 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Badeline Island -> Badeline Tower Upper", player),
-        HasAny('Air Dash', 'Ground Dash')
+        multiworld.get_entrance("Forsaken City -> Granny Island", player),
+        HasAny('Climb Sign Checkpoint', 'Granny Checkpoint', 'South-East Tower Checkpoint')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forsaken City -> Freeway Island", player),
+        HasAny('Freeway Checkpoint', 'Freeway Feather Checkpoint')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forsaken City -> North-East Feathers Island", player),
+        Has('Feather Maze Checkpoint', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forsaken City -> South-East House Island", player),
+        Has('Double Dash House Checkpoint', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forsaken City -> Badeline Tower Upper", player),
+        Has('Badeline Tower Checkpoint', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Forsaken City -> Badeline Island", player),
+        Has('Badeline Island Checkpoint', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Intro Islands -> Granny Island", player),
+        HasAny('Air Dash', 'Climb', 'Ground Dash', 'Skid Jump')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Granny Island -> Freeway Island", player),
+        HasAll('Air Dash', 'Dash Refills')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Granny Island -> North-West Girders Island", player),
+        Has('Traffic Blocks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Granny Island -> Badeline Tower Lower", player),
+        HasAll('Air Dash', 'Climb', 'Dash Refills')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Granny Island -> South-East House Island", player),
+        HasAll('Air Dash', 'Climb', 'Double Dash Refills')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Freeway Island -> Granny Island", player),
+        Or(HasAll('Air Dash', 'Dash Refills'), Has('Traffic Blocks'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Freeway Island -> North-East Feathers Island", player),
+        Has('Feathers', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Freeway Island -> North-West Girders Island", player),
+        False_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North-West Girders Island -> Freeway Island", player),
+        Has('Traffic Blocks', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North-East Feathers Island -> Freeway Island", player),
+        Has('Feathers', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North-East Feathers Island -> Badeline Tower Lower", player),
+        Has('Feathers', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("North-East Feathers Island -> Badeline Tower Upper", player),
+        HasAll('Air Dash', 'Climb', 'Feathers')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South-East House Island -> Granny Island", player),
+        HasAll('Air Dash', 'Double Dash Refills', 'Traffic Blocks')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("South-East House Island -> Badeline Tower Lower", player),
+        HasAll('Air Dash', 'Double Dash Refills')
     )
 
     world.set_rule(
@@ -66,138 +161,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Forsaken City -> Granny Island", player),
-        HasAny('Climb Sign Checkpoint', 'Granny Checkpoint', 'South-East Tower Checkpoint')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forsaken City -> Freeway Island", player),
-        HasAny('Freeway Checkpoint', 'Freeway Feather Checkpoint')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forsaken City -> North-East Feathers Island", player),
-        Has('Feather Maze Checkpoint', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forsaken City -> South-East House Island", player),
-        Has('Double Dash House Checkpoint', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forsaken City -> Badeline Tower Upper", player),
-        Has('Badeline Tower Checkpoint', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Forsaken City -> Badeline Island", player),
-        Has('Badeline Island Checkpoint', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Freeway Island -> Granny Island", player),
-        Or(HasAll('Air Dash', 'Dash Refills'), Has('Traffic Blocks'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Freeway Island -> North-East Feathers Island", player),
-        Has('Feathers', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Freeway Island -> North-West Girders Island", player),
-        False_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Granny Island -> Freeway Island", player),
-        HasAll('Air Dash', 'Dash Refills')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Granny Island -> North-West Girders Island", player),
-        Has('Traffic Blocks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Granny Island -> Badeline Tower Lower", player),
-        HasAll('Air Dash', 'Climb', 'Dash Refills')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Granny Island -> South-East House Island", player),
-        HasAll('Air Dash', 'Climb', 'Double Dash Refills')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Intro Islands -> Granny Island", player),
-        HasAny('Air Dash', 'Climb', 'Ground Dash', 'Skid Jump')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North-East Feathers Island -> Freeway Island", player),
-        Has('Feathers', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North-East Feathers Island -> Badeline Tower Lower", player),
-        Has('Feathers', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North-East Feathers Island -> Badeline Tower Upper", player),
-        HasAll('Air Dash', 'Climb', 'Feathers')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("North-West Girders Island -> Freeway Island", player),
-        Has('Traffic Blocks', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("South-East House Island -> Granny Island", player),
-        HasAll('Air Dash', 'Double Dash Refills', 'Traffic Blocks')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("South-East House Island -> Badeline Tower Lower", player),
-        HasAll('Air Dash', 'Double Dash Refills')
+        multiworld.get_entrance("Badeline Island -> Badeline Tower Upper", player),
+        HasAny('Air Dash', 'Ground Dash')
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Badeline Island Cassette Strawberry", player),
-        HasAll('Air Dash', 'Breakable Blocks', 'Cassettes', 'Climb', 'Dash Refills', 'Double Dash Refills', 'Feathers', 'Springs', 'Traffic Blocks')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badeline Tower Breakable Bottom Strawberry", player),
-        HasAll('Air Dash', 'Breakable Blocks', 'Feathers')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Badeline Tower Cassette Strawberry", player),
-        HasAll('Air Dash', 'Cassettes', 'Coins', 'Dash Refills', 'Skid Jump')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Girders Strawberry", player),
-        HasAll('Air Dash', 'Climb')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Breakable Blocks Strawberry", player),
-        Or(HasAll('Air Dash', 'Breakable Blocks'), HasAll('Breakable Blocks', 'Ground Dash'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("South End of Bridge Cassette Strawberry", player),
-        HasAll('Air Dash', 'Cassettes', 'Climb', 'Coins')
-    )
-
-    world.set_rule(
-        multiworld.get_location("North End of Bridge Cassette Strawberry", player),
-        HasAll('Air Dash', 'Cassettes', 'Climb')
+        multiworld.get_location("First Strawberry", player),
+        HasAny('Air Dash', 'Climb', 'Ground Dash')
     )
 
     world.set_rule(
@@ -246,8 +216,23 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("First Strawberry", player),
-        HasAny('Air Dash', 'Climb', 'Ground Dash')
+        multiworld.get_location("Girders Strawberry", player),
+        HasAll('Air Dash', 'Climb')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Breakable Blocks Strawberry", player),
+        Or(HasAll('Air Dash', 'Breakable Blocks'), HasAll('Breakable Blocks', 'Ground Dash'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("South End of Bridge Cassette Strawberry", player),
+        HasAll('Air Dash', 'Cassettes', 'Climb', 'Coins')
+    )
+
+    world.set_rule(
+        multiworld.get_location("North End of Bridge Cassette Strawberry", player),
+        HasAll('Air Dash', 'Cassettes', 'Climb')
     )
 
     world.set_rule(
@@ -293,4 +278,19 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Cassette Hidden in the House Strawberry", player),
         HasAll('Air Dash', 'Cassettes', 'Climb', 'Double Dash Refills')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badeline Tower Breakable Bottom Strawberry", player),
+        HasAll('Air Dash', 'Breakable Blocks', 'Feathers')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badeline Tower Cassette Strawberry", player),
+        HasAll('Air Dash', 'Cassettes', 'Coins', 'Dash Refills', 'Skid Jump')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Badeline Island Cassette Strawberry", player),
+        HasAll('Air Dash', 'Breakable Blocks', 'Cassettes', 'Climb', 'Dash Refills', 'Double Dash Refills', 'Feathers', 'Springs', 'Traffic Blocks')
     )

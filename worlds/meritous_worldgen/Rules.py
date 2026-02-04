@@ -26,8 +26,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("To Third Quarter", player),
-        Has('Ataraxia Defeated', 1)
+        multiworld.get_entrance("To Ataraxia", player),
+        And(HasGroup('Important Artifacts', 2), HasGroup('PSI Keys', 2))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("To Merodach", player),
+        And(HasGroup('Important Artifacts', 3), HasGroup('PSI Keys', 3))
     )
 
     world.set_rule(
@@ -46,16 +51,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("To Third Quarter", player),
+        Has('Ataraxia Defeated', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("To Last Quarter", player),
         Has('Merodach Defeated', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Ataraxia", player),
-        And(HasGroup('Important Artifacts', 2), HasGroup('PSI Keys', 2))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("To Merodach", player),
-        And(HasGroup('Important Artifacts', 3), HasGroup('PSI Keys', 3))
     )

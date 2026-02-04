@@ -23,193 +23,6 @@
         ],
         "locations": []
       },
-      "BlackCastle": {
-        "name": "BlackCastle",
-        "hint_text": "Black Castle",
-        "exits": [
-          {
-            "name": "BlackCastleExit",
-            "connected_region": "Overworld",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "BlackCastleVaultEntrance",
-            "connected_region": "BlackCastleVault",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bridge",
-                  "Magnet"
-                ]
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Dungeon0",
-            "id": 118000019,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Left Difficulty Switch",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Dungeon1",
-            "id": 118000021,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Slow Yorgle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Black Castle Foyer",
-            "id": 118000027,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Slay Rhindle",
-            "id": 118000208,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Right Difficulty Switch",
-                  "Sword"
-                ]
-              }
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "BlackCastleVault": {
-        "name": "BlackCastleVault",
-        "hint_text": "Black Castle Vault",
-        "exits": [
-          {
-            "name": "BlackCastleReturnPassage",
-            "connected_region": "BlackCastle",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Dungeon Vault",
-            "id": 118000181,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "CreditsRoom": {
-        "name": "CreditsRoom",
-        "hint_text": "Credits Room",
-        "exits": [
-          {
-            "name": "CreditsExit",
-            "connected_region": "Overworld",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "CreditsToFarSide",
-            "connected_region": "CreditsRoomFarSide",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Magnet"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Credits Left Side",
-            "id": 118000030,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "CreditsRoomFarSide": {
-        "name": "CreditsRoomFarSide",
-        "hint_text": "Credits Far Side",
-        "exits": [
-          {
-            "name": "CreditsFromFarSide",
-            "connected_region": "CreditsRoom",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Credits Right Side",
-            "id": 118000190,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Yellow Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
       "Overworld": {
         "name": "Overworld",
         "exits": [
@@ -420,6 +233,56 @@
           }
         ]
       },
+      "YellowCastle": {
+        "name": "YellowCastle",
+        "hint_text": "Yellow Castle",
+        "exits": [
+          {
+            "name": "YellowCastleExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Inside Yellow Castle",
+            "id": 118000018,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Chalice Home",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chalice",
+                  "Yellow Key"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
       "WhiteCastle": {
         "name": "WhiteCastle",
         "hint_text": "White Castle",
@@ -564,22 +427,63 @@
           }
         ]
       },
-      "YellowCastle": {
-        "name": "YellowCastle",
-        "hint_text": "Yellow Castle",
+      "BlackCastle": {
+        "name": "BlackCastle",
+        "hint_text": "Black Castle",
         "exits": [
           {
-            "name": "YellowCastleExit",
+            "name": "BlackCastleExit",
             "connected_region": "Overworld",
             "access_rule": {
               "rule": "True_"
+            }
+          },
+          {
+            "name": "BlackCastleVaultEntrance",
+            "connected_region": "BlackCastleVault",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
         "locations": [
           {
-            "name": "Inside Yellow Castle",
-            "id": 118000018,
+            "name": "Dungeon0",
+            "id": 118000019,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Left Difficulty Switch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Dungeon1",
+            "id": 118000021,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Slow Yorgle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Black Castle Foyer",
+            "id": 118000027,
             "access_rule": {
               "rule": "True_"
             },
@@ -592,25 +496,121 @@
             "locked": false
           },
           {
-            "name": "Chalice Home",
-            "id": null,
+            "name": "Slay Rhindle",
+            "id": 118000208,
             "access_rule": {
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Chalice",
-                  "Yellow Key"
+                  "Right Difficulty Switch",
+                  "Sword"
                 ]
               }
             },
             "item": {
-              "name": "Victory",
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "BlackCastleVault": {
+        "name": "BlackCastleVault",
+        "hint_text": "Black Castle Vault",
+        "exits": [
+          {
+            "name": "BlackCastleReturnPassage",
+            "connected_region": "BlackCastle",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Dungeon Vault",
+            "id": 118000181,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "CreditsRoom": {
+        "name": "CreditsRoom",
+        "hint_text": "Credits Room",
+        "exits": [
+          {
+            "name": "CreditsExit",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "CreditsToFarSide",
+            "connected_region": "CreditsRoomFarSide",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Magnet"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Credits Left Side",
+            "id": 118000030,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "CreditsRoomFarSide": {
+        "name": "CreditsRoomFarSide",
+        "hint_text": "Credits Far Side",
+        "exits": [
+          {
+            "name": "CreditsFromFarSide",
+            "connected_region": "CreditsRoom",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Credits Right Side",
+            "id": 118000190,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Yellow Key",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": false
           }
         ]
       }

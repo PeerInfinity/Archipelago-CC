@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Airport", "BaseUltraRocks", "Beanbean Castle Town", "BooStatue", "Bowser's Castle", "Bowser's Castle Mini", "Cackletta's Soul", "Chucklehuck Woods", "Fungitown", "Fungitown Shop Beanstar Complete Flag", "Fungitown Shop Birdo Flag", "GwarharEntrance", "GwarharMain", "Hooniversity", "JokesEntrance", "JokesMain", "Main Area", "Oasis", "PostJokes", "Sewers", "Shop Beanstar Complete Flag", "Shop Birdo Flag", "Shop Chuckolator Flag", "Shop Enter Fungitown Flag", "Shop Mom Piranha Flag", "Shop Starting Flag", "Surfable", "TeeheeValley", "Theater", "Winkle"]
+    region_names = ["Menu", "Main Area", "Chucklehuck Woods", "Beanbean Castle Town", "Shop Starting Flag", "Shop Chuckolator Flag", "Shop Mom Piranha Flag", "Shop Enter Fungitown Flag", "Shop Beanstar Complete Flag", "Shop Birdo Flag", "Surfable", "Hooniversity", "GwarharEntrance", "GwarharMain", "TeeheeValley", "Winkle", "Sewers", "Airport", "JokesEntrance", "JokesMain", "PostJokes", "Theater", "Fungitown", "Fungitown Shop Beanstar Complete Flag", "Fungitown Shop Birdo Flag", "BooStatue", "Oasis", "BaseUltraRocks", "Cackletta's Soul", "Bowser's Castle", "Bowser's Castle Mini"]
 
     regions = {}
     for region_name in region_names:
@@ -52,16 +52,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Main Area"], "Main Area")
-    _create_entrance(regions["Bowser's Castle"], regions["Bowser's Castle Mini"], "Bowser's Castle Mini")
-    _create_entrance(regions["Bowser's Castle Mini"], regions["Cackletta's Soul"], "Cackletta's Soul")
-    _create_entrance(regions["Chucklehuck Woods"], regions["Winkle"], "Winkle")
-    _create_entrance(regions["Chucklehuck Woods"], regions["Beanbean Castle Town"], "Beanbean Castle Town")
-    _create_entrance(regions["Fungitown"], regions["Fungitown Shop Beanstar Complete Flag"], "Fungitown Shop Beanstar Complete Flag")
-    _create_entrance(regions["Fungitown"], regions["Fungitown Shop Birdo Flag"], "Fungitown Shop Birdo Flag")
-    _create_entrance(regions["GwarharEntrance"], regions["GwarharMain"], "GwarharMain")
-    _create_entrance(regions["Hooniversity"], regions["Oasis"], "Oasis")
-    _create_entrance(regions["JokesEntrance"], regions["JokesMain"], "JokesMain")
-    _create_entrance(regions["JokesMain"], regions["PostJokes"], "PostJokes")
     _create_entrance(regions["Main Area"], regions["BaseUltraRocks"], "BaseUltraRocks")
     _create_entrance(regions["Main Area"], regions["Chucklehuck Woods"], "Chucklehuck Woods")
     _create_entrance(regions["Main Area"], regions["BooStatue"], "BooStatue")
@@ -72,7 +62,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Main Area"], regions["Airport"], "Airport")
     _create_entrance(regions["Main Area"], regions["Theater"], "Theater")
     _create_entrance(regions["Main Area"], regions["Surfable"], "Surfable")
-    _create_entrance(regions["PostJokes"], regions["Bowser's Castle"], "Bowser's Castle")
+    _create_entrance(regions["Chucklehuck Woods"], regions["Winkle"], "Winkle")
+    _create_entrance(regions["Chucklehuck Woods"], regions["Beanbean Castle Town"], "Beanbean Castle Town")
     _create_entrance(regions["Shop Starting Flag"], regions["Shop Chuckolator Flag"], "Shop Chuckolator Flag")
     _create_entrance(regions["Shop Starting Flag"], regions["Shop Mom Piranha Flag"], "Shop Mom Piranha Flag")
     _create_entrance(regions["Shop Starting Flag"], regions["Shop Enter Fungitown Flag"], "Shop Enter Fungitown Flag")
@@ -81,9 +72,18 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Surfable"], regions["GwarharEntrance"], "GwarharEntrance  ")
     _create_entrance(regions["Surfable"], regions["Oasis"], "Oasis   ")
     _create_entrance(regions["Surfable"], regions["JokesEntrance"], "JokesEntrance")
+    _create_entrance(regions["Hooniversity"], regions["Oasis"], "Oasis")
+    _create_entrance(regions["GwarharEntrance"], regions["GwarharMain"], "GwarharMain")
     _create_entrance(regions["TeeheeValley"], regions["GwarharEntrance"], "GwarharEntrance")
     _create_entrance(regions["TeeheeValley"], regions["Oasis"], "Oasis  ")
     _create_entrance(regions["TeeheeValley"], regions["Fungitown"], "Fungitown")
+    _create_entrance(regions["JokesEntrance"], regions["JokesMain"], "JokesMain")
+    _create_entrance(regions["JokesMain"], regions["PostJokes"], "PostJokes")
+    _create_entrance(regions["PostJokes"], regions["Bowser's Castle"], "Bowser's Castle")
+    _create_entrance(regions["Fungitown"], regions["Fungitown Shop Beanstar Complete Flag"], "Fungitown Shop Beanstar Complete Flag")
+    _create_entrance(regions["Fungitown"], regions["Fungitown Shop Birdo Flag"], "Fungitown Shop Birdo Flag")
+    _create_entrance(regions["Bowser's Castle"], regions["Bowser's Castle Mini"], "Bowser's Castle Mini")
+    _create_entrance(regions["Bowser's Castle Mini"], regions["Cackletta's Soul"], "Cackletta's Soul")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

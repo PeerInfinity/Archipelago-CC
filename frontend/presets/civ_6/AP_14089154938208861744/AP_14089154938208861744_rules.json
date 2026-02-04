@@ -469,232 +469,6 @@
           }
         ]
       },
-      "ERA_ATOMIC": {
-        "name": "ERA_ATOMIC",
-        "exits": [
-          {
-            "name": "ERA_ATOMIC -> ERA_INFORMATION",
-            "connected_region": "ERA_INFORMATION",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_ATOMIC"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_ATOMIC"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "TECH_AP_ATOMIC_50",
-            "id": 5041050,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Aerodrome",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_51",
-            "id": 5041051,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Ideology",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_52",
-            "id": 5041052,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Space Port",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_53",
-            "id": 5041053,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Preserve",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_54",
-            "id": 5041054,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Space Port",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_55",
-            "id": 5041055,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Smart Power Doctrine",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_56",
-            "id": 5041056,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Near Future Governance",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_ATOMIC_57",
-            "id": 5041057,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Nuclear Program",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_ATOMIC_43",
-            "id": 5041120,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Pottery",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_ATOMIC_44",
-            "id": 5041121,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Craftsmanship",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_ATOMIC_45",
-            "id": 5041122,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Buttress",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_ATOMIC_46",
-            "id": 5041123,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Metal Casting",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_ATOMIC_47",
-            "id": 5041124,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mercenaries",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
       "ERA_CLASSICAL": {
         "name": "ERA_CLASSICAL",
         "exits": [
@@ -949,158 +723,56 @@
           }
         ]
       },
-      "ERA_FUTURE": {
-        "name": "ERA_FUTURE",
-        "exits": [],
+      "ERA_MEDIEVAL": {
+        "name": "ERA_MEDIEVAL",
+        "exits": [
+          {
+            "name": "ERA_MEDIEVAL -> ERA_RENAISSANCE",
+            "connected_region": "ERA_RENAISSANCE",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_MEDIEVAL"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_MEDIEVAL"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
         "locations": [
           {
-            "name": "TECH_AP_FUTURE_69",
-            "id": 5041069,
+            "name": "TECH_AP_MEDIEVAL_19",
+            "id": 5041019,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Scientific Theory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_70",
-            "id": 5041070,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Space Race",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_71",
-            "id": 5041071,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Construction",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_72",
-            "id": 5041072,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Iron Working",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_73",
-            "id": 5041073,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Feudalism",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_74",
-            "id": 5041074,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Environmentalism",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_75",
-            "id": 5041075,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Horseback Riding",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_FUTURE_76",
-            "id": 5041076,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Combustion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_FUTURE_50",
-            "id": 5041127,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Scorched Earth",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_FUTURE_56",
-            "id": 5041133,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cultural Heritage",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_FUTURE_57",
-            "id": 5041134,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Space Port",
+              "name": "Divine Right",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1108,13 +780,13 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_FUTURE_58",
-            "id": 5041135,
+            "name": "TECH_AP_MEDIEVAL_20",
+            "id": 5041020,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Archery",
+              "name": "Rifling",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1122,13 +794,13 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_FUTURE_59",
-            "id": 5041136,
+            "name": "TECH_AP_MEDIEVAL_21",
+            "id": 5041021,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Seasteads",
+              "name": "Machinery",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1136,36 +808,426 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_FUTURE_60",
-            "id": 5041137,
+            "name": "TECH_AP_MEDIEVAL_22",
+            "id": 5041022,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Telecommunications",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Complete a victory type",
-            "id": null,
-            "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": "ERA_FUTURE"
-              }
-            },
-            "item": {
-              "name": "Victory",
+              "name": "Combined Arms",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "event": true
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_MEDIEVAL_23",
+            "id": 5041023,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cybernetics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_MEDIEVAL_24",
+            "id": 5041024,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Composites",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_MEDIEVAL_25",
+            "id": 5041025,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Commercial Hub",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_MEDIEVAL_67",
+            "id": 5041067,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Exploration",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_14",
+            "id": 5041091,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Encampment",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_15",
+            "id": 5041092,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Social Media",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_16",
+            "id": 5041093,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Printing",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_17",
+            "id": 5041094,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Industrial Zone",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_18",
+            "id": 5041095,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Engineering",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_19",
+            "id": 5041096,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Guidance Systems",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_MEDIEVAL_20",
+            "id": 5041097,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Refining",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "ERA_RENAISSANCE": {
+        "name": "ERA_RENAISSANCE",
+        "exits": [
+          {
+            "name": "ERA_RENAISSANCE -> ERA_INDUSTRIAL",
+            "connected_region": "ERA_INDUSTRIAL",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_RENAISSANCE"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_RENAISSANCE"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "TECH_AP_RENAISSANCE_26",
+            "id": 5041026,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Colonialism",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_27",
+            "id": 5041027,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Exodus Imperative",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_28",
+            "id": 5041028,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Diplomatic Quarter",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_29",
+            "id": 5041029,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Advanced Ballistics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_30",
+            "id": 5041030,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Neighborhood",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_31",
+            "id": 5041031,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Harbor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_32",
+            "id": 5041032,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cartography",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_33",
+            "id": 5041033,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Reformed Church",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_RENAISSANCE_34",
+            "id": 5041034,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Digital Democracy",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_RENAISSANCE_21",
+            "id": 5041098,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Suffrage",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_RENAISSANCE_22",
+            "id": 5041099,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Square Rigging",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_RENAISSANCE_23",
+            "id": 5041100,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Theater",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_RENAISSANCE_24",
+            "id": 5041101,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Civil Service",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_RENAISSANCE_25",
+            "id": 5041102,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Guilds",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_RENAISSANCE_26",
+            "id": 5041103,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "The Wheel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
           }
         ]
       },
@@ -1417,528 +1479,6 @@
               "name": "Civil Engineering",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "ERA_INFORMATION": {
-        "name": "ERA_INFORMATION",
-        "exits": [
-          {
-            "name": "ERA_INFORMATION -> ERA_FUTURE",
-            "connected_region": "ERA_FUTURE",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_INFORMATION"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_INFORMATION"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "TECH_AP_INFORMATION_58",
-            "id": 5041058,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Future Civic",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_59",
-            "id": 5041059,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Astronomy",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_60",
-            "id": 5041060,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Military Training",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_61",
-            "id": 5041061,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Synthetic Materials",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_62",
-            "id": 5041062,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cultural Hegemony",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_63",
-            "id": 5041063,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Medieval Faires",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_64",
-            "id": 5041064,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Space Port",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_65",
-            "id": 5041065,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cold War",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_INFORMATION_66",
-            "id": 5041066,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Corporate Libertarianism",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_48",
-            "id": 5041125,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Advanced Power Cells",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_49",
-            "id": 5041126,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Space Port",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_51",
-            "id": 5041128,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Steam Power",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_52",
-            "id": 5041129,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Synthetic Technocracy",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_53",
-            "id": 5041130,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Siege Tactics",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_54",
-            "id": 5041131,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Masonry",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_INFORMATION_55",
-            "id": 5041132,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Code of Laws",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "ERA_MEDIEVAL": {
-        "name": "ERA_MEDIEVAL",
-        "exits": [
-          {
-            "name": "ERA_MEDIEVAL -> ERA_RENAISSANCE",
-            "connected_region": "ERA_RENAISSANCE",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_non_progressive_items",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_MEDIEVAL"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "has_progressive_items",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "ERA_MEDIEVAL"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "TECH_AP_MEDIEVAL_19",
-            "id": 5041019,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Divine Right",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_20",
-            "id": 5041020,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Rifling",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_21",
-            "id": 5041021,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Machinery",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_22",
-            "id": 5041022,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Combined Arms",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_23",
-            "id": 5041023,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cybernetics",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_24",
-            "id": 5041024,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Composites",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_25",
-            "id": 5041025,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Commercial Hub",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_MEDIEVAL_67",
-            "id": 5041067,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Exploration",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_14",
-            "id": 5041091,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Encampment",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_15",
-            "id": 5041092,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Social Media",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_16",
-            "id": 5041093,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Printing",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_17",
-            "id": 5041094,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Industrial Zone",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_18",
-            "id": 5041095,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Engineering",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_19",
-            "id": 5041096,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Guidance Systems",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_MEDIEVAL_20",
-            "id": 5041097,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refining",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2227,12 +1767,12 @@
           }
         ]
       },
-      "ERA_RENAISSANCE": {
-        "name": "ERA_RENAISSANCE",
+      "ERA_ATOMIC": {
+        "name": "ERA_ATOMIC",
         "exits": [
           {
-            "name": "ERA_RENAISSANCE -> ERA_INDUSTRIAL",
-            "connected_region": "ERA_INDUSTRIAL",
+            "name": "ERA_ATOMIC -> ERA_INFORMATION",
+            "connected_region": "ERA_INFORMATION",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -2244,7 +1784,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "ERA_RENAISSANCE"
+                        "value": "ERA_ATOMIC"
                       },
                       "_converted_from_ast": true
                     }
@@ -2258,7 +1798,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "ERA_RENAISSANCE"
+                        "value": "ERA_ATOMIC"
                       },
                       "_converted_from_ast": true
                     }
@@ -2270,41 +1810,13 @@
         ],
         "locations": [
           {
-            "name": "TECH_AP_RENAISSANCE_26",
-            "id": 5041026,
+            "name": "TECH_AP_ATOMIC_50",
+            "id": 5041050,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Colonialism",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_RENAISSANCE_27",
-            "id": 5041027,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Exodus Imperative",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_RENAISSANCE_28",
-            "id": 5041028,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Diplomatic Quarter",
+              "name": "Progressive Aerodrome",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2312,13 +1824,13 @@
             "locked": false
           },
           {
-            "name": "TECH_AP_RENAISSANCE_29",
-            "id": 5041029,
+            "name": "TECH_AP_ATOMIC_51",
+            "id": 5041051,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Advanced Ballistics",
+              "name": "Ideology",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2326,13 +1838,27 @@
             "locked": false
           },
           {
-            "name": "TECH_AP_RENAISSANCE_30",
-            "id": 5041030,
+            "name": "TECH_AP_ATOMIC_52",
+            "id": 5041052,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Neighborhood",
+              "name": "Progressive Space Port",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_ATOMIC_53",
+            "id": 5041053,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Preserve",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2340,13 +1866,13 @@
             "locked": false
           },
           {
-            "name": "TECH_AP_RENAISSANCE_31",
-            "id": 5041031,
+            "name": "TECH_AP_ATOMIC_54",
+            "id": 5041054,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Harbor",
+              "name": "Progressive Space Port",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2354,69 +1880,13 @@
             "locked": false
           },
           {
-            "name": "TECH_AP_RENAISSANCE_32",
-            "id": 5041032,
+            "name": "TECH_AP_ATOMIC_55",
+            "id": 5041055,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Cartography",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_RENAISSANCE_33",
-            "id": 5041033,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Reformed Church",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "TECH_AP_RENAISSANCE_34",
-            "id": 5041034,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Digital Democracy",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_RENAISSANCE_21",
-            "id": 5041098,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Suffrage",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "CIVIC_AP_RENAISSANCE_22",
-            "id": 5041099,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Square Rigging",
+              "name": "Smart Power Doctrine",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2424,13 +1894,239 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_RENAISSANCE_23",
-            "id": 5041100,
+            "name": "TECH_AP_ATOMIC_56",
+            "id": 5041056,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Theater",
+              "name": "Near Future Governance",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_ATOMIC_57",
+            "id": 5041057,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Nuclear Program",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_ATOMIC_43",
+            "id": 5041120,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pottery",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_ATOMIC_44",
+            "id": 5041121,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Craftsmanship",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_ATOMIC_45",
+            "id": 5041122,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Buttress",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_ATOMIC_46",
+            "id": 5041123,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Metal Casting",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_ATOMIC_47",
+            "id": 5041124,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mercenaries",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "ERA_INFORMATION": {
+        "name": "ERA_INFORMATION",
+        "exits": [
+          {
+            "name": "ERA_INFORMATION -> ERA_FUTURE",
+            "connected_region": "ERA_FUTURE",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_INFORMATION"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_INFORMATION"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "TECH_AP_INFORMATION_58",
+            "id": 5041058,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Future Civic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_INFORMATION_59",
+            "id": 5041059,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Astronomy",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_INFORMATION_60",
+            "id": 5041060,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Military Training",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_INFORMATION_61",
+            "id": 5041061,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Synthetic Materials",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_INFORMATION_62",
+            "id": 5041062,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cultural Hegemony",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_INFORMATION_63",
+            "id": 5041063,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Medieval Faires",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_INFORMATION_64",
+            "id": 5041064,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Space Port",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2438,13 +2134,13 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_RENAISSANCE_24",
-            "id": 5041101,
+            "name": "TECH_AP_INFORMATION_65",
+            "id": 5041065,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Civil Service",
+              "name": "Cold War",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2452,13 +2148,27 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_RENAISSANCE_25",
-            "id": 5041102,
+            "name": "TECH_AP_INFORMATION_66",
+            "id": 5041066,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Guilds",
+              "name": "Corporate Libertarianism",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_INFORMATION_48",
+            "id": 5041125,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Advanced Power Cells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2466,18 +2176,308 @@
             "locked": false
           },
           {
-            "name": "CIVIC_AP_RENAISSANCE_26",
-            "id": 5041103,
+            "name": "CIVIC_AP_INFORMATION_49",
+            "id": 5041126,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "The Wheel",
+              "name": "Progressive Space Port",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_INFORMATION_51",
+            "id": 5041128,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Steam Power",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "CIVIC_AP_INFORMATION_52",
+            "id": 5041129,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Synthetic Technocracy",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_INFORMATION_53",
+            "id": 5041130,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Siege Tactics",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_INFORMATION_54",
+            "id": 5041131,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Masonry",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_INFORMATION_55",
+            "id": 5041132,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Code of Laws",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "ERA_FUTURE": {
+        "name": "ERA_FUTURE",
+        "exits": [],
+        "locations": [
+          {
+            "name": "TECH_AP_FUTURE_69",
+            "id": 5041069,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Scientific Theory",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_70",
+            "id": 5041070,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Space Race",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_71",
+            "id": 5041071,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Construction",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_72",
+            "id": 5041072,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Iron Working",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_73",
+            "id": 5041073,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Feudalism",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_74",
+            "id": 5041074,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Environmentalism",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_75",
+            "id": 5041075,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Horseback Riding",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "TECH_AP_FUTURE_76",
+            "id": 5041076,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Combustion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_FUTURE_50",
+            "id": 5041127,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Scorched Earth",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_FUTURE_56",
+            "id": 5041133,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cultural Heritage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_FUTURE_57",
+            "id": 5041134,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Space Port",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_FUTURE_58",
+            "id": 5041135,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Archery",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_FUTURE_59",
+            "id": 5041136,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seasteads",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "CIVIC_AP_FUTURE_60",
+            "id": 5041137,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Telecommunications",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Complete a victory type",
+            "id": null,
+            "access_rule": {
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "ERA_FUTURE"
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       }

@@ -60,21 +60,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("ACDC Cyberworld -> SciLab Cyberworld", player),
-        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ACDC Cyberworld -> Yoka Cyberworld", player),
-        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("ACDC Cyberworld -> Beach Cyberworld", player),
-        And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
-    )
-
-    world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> SciLab Overworld", player),
         Has('SubPET', 1)
     )
@@ -90,42 +75,17 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Beach Cyberworld -> SciLab Cyberworld", player),
+        multiworld.get_entrance("ACDC Cyberworld -> SciLab Cyberworld", player),
         Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Beach Cyberworld -> Yoka Cyberworld", player),
+        multiworld.get_entrance("ACDC Cyberworld -> Yoka Cyberworld", player),
         Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
-        And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8), Has('Press'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach Overworld -> SciLab Overworld", player),
-        Has('SubPET', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach Overworld -> Yoka Overworld", player),
-        Has('Needle', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Beach Overworld -> WWW Island", player),
-        Has('Progressive Undernet Rank', 8)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player),
-        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player),
+        multiworld.get_entrance("ACDC Cyberworld -> Beach Cyberworld", player),
         And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
     )
 
@@ -145,12 +105,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player),
-        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
+        multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player),
+        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player),
+        multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player),
         And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
     )
 
@@ -173,6 +133,46 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Yoka Overworld -> Secret Area", player),
         And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 12), Has('Hammer'))
     )
+
+    world.set_rule(
+        multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player),
+        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player),
+        And(CanReachRegion('Yoka Overworld'), Has('CBeacPas'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beach Overworld -> SciLab Overworld", player),
+        Has('SubPET', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beach Overworld -> Yoka Overworld", player),
+        Has('Needle', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beach Overworld -> WWW Island", player),
+        Has('Progressive Undernet Rank', 8)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beach Cyberworld -> SciLab Cyberworld", player),
+        Or(CanReachRegion('SciLab Overworld'), Has('CSciPass'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beach Cyberworld -> Yoka Cyberworld", player),
+        Or(And(CanReachRegion('SciLab Overworld'), Has('Press')), Has('CYokaPas'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
+        And(Compare(HelperCall(helper_func=explore_score, helper_name="explore_score", args=()), ">", 8), Has('Press'))
+    )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
         world.get_region("SciLab Overworld"),
@@ -185,6 +185,70 @@ def set_rules(world: "World") -> None:
     multiworld.register_indirect_condition(
         world.get_region("Yoka Overworld"),
         multiworld.get_entrance("ACDC Cyberworld -> Beach Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("SciLab Overworld -> SciLab Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Yoka Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("SciLab Overworld"),
@@ -234,76 +298,7 @@ def set_rules(world: "World") -> None:
         world.get_region("Secret Area"),
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
     )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("SciLab Cyberworld -> Yoka Cyberworld", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Overworld"),
-        multiworld.get_entrance("SciLab Cyberworld -> Beach Cyberworld", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("SciLab Overworld -> SciLab Cyberworld", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("Yoka Cyberworld -> SciLab Cyberworld", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Overworld"),
-        multiworld.get_entrance("Yoka Cyberworld -> Beach Cyberworld", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Yoka Cyberworld", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("WWW Island"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Cyberworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Cyberworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Beach Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Beach Cyberworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Undernet"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Deep Undernet"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Secret Area"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("ACDC 1 PMD", player),
-        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_www_id, helper_name="has_www_id", body_rule=Has("WWW ID")))
-    )
-
     world.set_rule(
         multiworld.get_location("ACDC SonicWav W Trade", player),
         Has('SonicWav W', 1)
@@ -440,68 +435,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Beach 1 PMD", player),
-        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach 2 East BMD", player),
-        Has('Press', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Villain", player),
-        Has('BlckMnd', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hospital DynaWav V Trade", player),
-        Has('DynaWave V', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN WideSwrd C Trade", player),
-        Has('WideSwrd C', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN HoleMetr H Trade", player),
-        Has('HoleMetr H', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN Shadow J Trade", player),
-        Has('Shadow J', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades GrabBack K Trade", player),
-        Has('GrabBack K', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hades South BMD", player),
-        Has('Press', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN Security Panel PMD", player),
-        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Beach DNN Main Console PMD", player),
-        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 7 PMD", player),
-        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SciLab 1 WWW BMD", player),
-        Has('WWW ID', 1)
+        multiworld.get_location("ACDC 1 PMD", player),
+        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_www_id, helper_name="has_www_id", body_rule=Has("WWW ID")))
     )
 
     world.set_rule(
@@ -650,33 +585,8 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Secret 3 Island BMD", player),
-        Has('Press', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Secret 3 BugFrag BMD", player),
-        Has('Press', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Undernet 1 WWW BMD", player),
+        multiworld.get_location("SciLab 1 WWW BMD", player),
         Has('WWW ID', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka 1 WWW BMD", player),
-        Has('WWW ID', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka 1 PMD", player),
-        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_press, helper_name="has_press", body_rule=Has("Press")))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Yoka 2 Upper BMD", player),
-        Has('Press', 1)
     )
 
     world.set_rule(
@@ -697,4 +607,94 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Comedian", player),
         Has('Humor', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoka 1 WWW BMD", player),
+        Has('WWW ID', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoka 1 PMD", player),
+        And(HelperCall(helper_func=can_unlock, helper_name="can_unlock"), HelperCall(helper_func=has_press, helper_name="has_press", body_rule=Has("Press")))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Yoka 2 Upper BMD", player),
+        Has('Press', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hospital DynaWav V Trade", player),
+        Has('DynaWave V', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach DNN WideSwrd C Trade", player),
+        Has('WideSwrd C', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach DNN HoleMetr H Trade", player),
+        Has('HoleMetr H', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach DNN Shadow J Trade", player),
+        Has('Shadow J', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hades GrabBack K Trade", player),
+        Has('GrabBack K', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hades South BMD", player),
+        Has('Press', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach DNN Security Panel PMD", player),
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach DNN Main Console PMD", player),
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach 1 PMD", player),
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Beach 2 East BMD", player),
+        Has('Press', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Villain", player),
+        Has('BlckMnd', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Undernet 1 WWW BMD", player),
+        Has('WWW ID', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Undernet 7 PMD", player),
+        Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Secret 3 Island BMD", player),
+        Has('Press', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Secret 3 BugFrag BMD", player),
+        Has('Press', 1)
     )

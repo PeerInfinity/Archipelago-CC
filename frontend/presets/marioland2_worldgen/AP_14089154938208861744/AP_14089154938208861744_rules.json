@@ -131,6 +131,339 @@
         ],
         "locations": []
       },
+      "Mushroom Zone": {
+        "name": "Mushroom Zone",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Mushroom Zone - Normal Exit",
+            "id": 1,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pumpkin Zone Secret 2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mushroom Zone - Midway Bell",
+            "id": 2,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Scenic Course": {
+        "name": "Scenic Course",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Scenic Course - Normal Exit",
+            "id": 3,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tree Zone 1": {
+        "name": "Tree Zone 1",
+        "exits": [
+          {
+            "name": "Tree Zone 1 -> Tree Zone 2",
+            "connected_region": "Tree Zone 2",
+            "access_rule": {
+              "rule": "has_level_progression",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Tree Zone Progression"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Tree Zone 1 - Normal Exit",
+            "id": 4,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tree Zone Secret",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tree Zone 1 - Midway Bell",
+            "id": 5,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tree Zone 2": {
+        "name": "Tree Zone 2",
+        "exits": [
+          {
+            "name": "Tree Zone 2 -> Tree Zone 3",
+            "connected_region": "Tree Zone 3",
+            "access_rule": {
+              "rule": "has_level_progression",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Tree Zone Progression"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Tree Zone 2 -> Tree Zone Secret Course",
+            "connected_region": "Tree Zone Secret Course",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Tree Zone Secret"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Tree Zone 2 - Normal Exit",
+            "id": 6,
+            "access_rule": {
+              "rule": "tree_zone_2_normal_exit",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Tree Zone Progression",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tree Zone 2 - Secret Exit",
+            "id": 7,
+            "access_rule": {
+              "rule": "tree_zone_2_secret_exit",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tree Zone 2 - Midway Bell",
+            "id": 8,
+            "access_rule": {
+              "rule": "tree_zone_2_midway_bell",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Space Zone Secret",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tree Zone 3": {
+        "name": "Tree Zone 3",
+        "exits": [
+          {
+            "name": "Tree Zone 3 -> Tree Zone 4",
+            "connected_region": "Tree Zone 4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Tree Zone 3 - Normal Exit",
+            "id": 9,
+            "access_rule": {
+              "rule": "tree_zone_3_normal_exit",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tree Zone 4": {
+        "name": "Tree Zone 4",
+        "exits": [
+          {
+            "name": "Tree Zone 4 -> Tree Zone 5",
+            "connected_region": "Tree Zone 5",
+            "access_rule": {
+              "rule": "has_level_progression",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Tree Zone Progression"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Tree Zone 4 - Normal Exit",
+            "id": 10,
+            "access_rule": {
+              "rule": "tree_zone_4_normal_exit",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tree Zone 4 - Midway Bell",
+            "id": 11,
+            "access_rule": {
+              "rule": "tree_zone_4_midway_bell",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Macro Zone Secret 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tree Zone 5": {
+        "name": "Tree Zone 5",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tree Zone 5 - Boss",
+            "id": null,
+            "access_rule": {
+              "rule": "tree_zone_5_boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Tree Coin",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          },
+          {
+            "name": "Tree Zone 5 - Midway Bell",
+            "id": 13,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tree Zone Secret Course": {
+        "name": "Tree Zone Secret Course",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tree Zone Secret Course - Normal Exit",
+            "id": 14,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pumpkin Zone Progression",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "Hippo Zone": {
         "name": "Hippo Zone",
         "exits": [],
@@ -146,6 +479,140 @@
               "name": "Super Star Duration Increase",
               "player": 1,
               "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Space Zone 1": {
+        "name": "Space Zone 1",
+        "exits": [
+          {
+            "name": "Space Zone 1 -> Space Zone Secret Course",
+            "connected_region": "Space Zone Secret Course",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Space Zone Secret"
+              }
+            }
+          },
+          {
+            "name": "Space Zone 1 -> Space Zone 2",
+            "connected_region": "Space Zone 2",
+            "access_rule": {
+              "rule": "has_level_progression",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Space Zone Progression"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Space Zone 1 - Normal Exit",
+            "id": 16,
+            "access_rule": {
+              "rule": "space_zone_1_normal_exit",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Turtle Zone Progression",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Space Zone 1 - Secret Exit",
+            "id": 17,
+            "access_rule": {
+              "rule": "space_zone_1_secret_exit",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Macro Zone Progression",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Space Zone 1 - Midway Bell",
+            "id": 18,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Super Star Duration Increase",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Space Zone Secret Course": {
+        "name": "Space Zone Secret Course",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Space Zone Secret Course - Normal Exit",
+            "id": 19,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Mario Zone Progression",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Space Zone 2": {
+        "name": "Space Zone 2",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Space Zone 2 - Boss",
+            "id": null,
+            "access_rule": {
+              "rule": "space_zone_2_boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Space Coin",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          },
+          {
+            "name": "Space Zone 2 - Midway Bell",
+            "id": 21,
+            "access_rule": {
+              "rule": "space_zone_2_midway_bell",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Mario Zone Progression",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -420,265 +887,6 @@
               "name": "Pumpkin Zone Progression",
               "player": 1,
               "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mario Zone 1": {
-        "name": "Mario Zone 1",
-        "exits": [
-          {
-            "name": "Mario Zone 1 -> Mario Zone 2",
-            "connected_region": "Mario Zone 2",
-            "access_rule": {
-              "rule": "has_level_progression",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Mario Zone Progression"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Mario Zone 1 - Normal Exit",
-            "id": 44,
-            "access_rule": {
-              "rule": "mario_zone_1_normal_exit",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Tree Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mario Zone 1 - Midway Bell",
-            "id": 45,
-            "access_rule": {
-              "rule": "mario_zone_1_midway_bell",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Space Physics",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mario Zone 2": {
-        "name": "Mario Zone 2",
-        "exits": [
-          {
-            "name": "Mario Zone 2 -> Mario Zone 3",
-            "connected_region": "Mario Zone 3",
-            "access_rule": {
-              "rule": "has_level_progression",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Mario Zone Progression"
-                  }
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Mario Zone 2 - Normal Exit",
-            "id": 46,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mario Zone 2 - Midway Bell",
-            "id": 47,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mario Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mario Zone 3": {
-        "name": "Mario Zone 3",
-        "exits": [
-          {
-            "name": "Mario Zone 3 -> Mario Zone 4",
-            "connected_region": "Mario Zone 4",
-            "access_rule": {
-              "rule": "has_level_progression",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Mario Zone Progression"
-                  }
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 3
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Mario Zone 3 - Normal Exit",
-            "id": 48,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Macro Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mario Zone 3 - Midway Bell",
-            "id": 49,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mario Zone 4": {
-        "name": "Mario Zone 4",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Mario Zone 4 - Boss",
-            "id": null,
-            "access_rule": {
-              "rule": "mario_zone_4_boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Mario Coin",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          },
-          {
-            "name": "Mario Zone 4 - Midway Bell",
-            "id": 51,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Mario's Castle": {
-        "name": "Mario's Castle",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Mario's Castle - Wario",
-            "id": null,
-            "access_rule": {
-              "rule": "marios_castle_wario",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Wario Defeated",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Mushroom Zone": {
-        "name": "Mushroom Zone",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Mushroom Zone - Normal Exit",
-            "id": 1,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Pumpkin Zone Secret 2",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Mushroom Zone - Midway Bell",
-            "id": 2,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -979,42 +1187,12 @@
           }
         ]
       },
-      "Scenic Course": {
-        "name": "Scenic Course",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Scenic Course - Normal Exit",
-            "id": 3,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Space Zone 1": {
-        "name": "Space Zone 1",
+      "Mario Zone 1": {
+        "name": "Mario Zone 1",
         "exits": [
           {
-            "name": "Space Zone 1 -> Space Zone Secret Course",
-            "connected_region": "Space Zone Secret Course",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Space Zone Secret"
-              }
-            }
-          },
-          {
-            "name": "Space Zone 1 -> Space Zone 2",
-            "connected_region": "Space Zone 2",
+            "name": "Mario Zone 1 -> Mario Zone 2",
+            "connected_region": "Mario Zone 2",
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
@@ -1022,7 +1200,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "Space Zone Progression"
+                    "value": "Mario Zone Progression"
                   }
                 }
               ]
@@ -1031,201 +1209,10 @@
         ],
         "locations": [
           {
-            "name": "Space Zone 1 - Normal Exit",
-            "id": 16,
+            "name": "Mario Zone 1 - Normal Exit",
+            "id": 44,
             "access_rule": {
-              "rule": "space_zone_1_normal_exit",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Turtle Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Space Zone 1 - Secret Exit",
-            "id": 17,
-            "access_rule": {
-              "rule": "space_zone_1_secret_exit",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Macro Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Space Zone 1 - Midway Bell",
-            "id": 18,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Space Zone 2": {
-        "name": "Space Zone 2",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Space Zone 2 - Boss",
-            "id": null,
-            "access_rule": {
-              "rule": "space_zone_2_boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Space Coin",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          },
-          {
-            "name": "Space Zone 2 - Midway Bell",
-            "id": 21,
-            "access_rule": {
-              "rule": "space_zone_2_midway_bell",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Mario Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Space Zone Secret Course": {
-        "name": "Space Zone Secret Course",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Space Zone Secret Course - Normal Exit",
-            "id": 19,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mario Zone Progression",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tree Zone 1": {
-        "name": "Tree Zone 1",
-        "exits": [
-          {
-            "name": "Tree Zone 1 -> Tree Zone 2",
-            "connected_region": "Tree Zone 2",
-            "access_rule": {
-              "rule": "has_level_progression",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Tree Zone Progression"
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Tree Zone 1 - Normal Exit",
-            "id": 4,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tree Zone Secret",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Tree Zone 1 - Midway Bell",
-            "id": 5,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tree Zone 2": {
-        "name": "Tree Zone 2",
-        "exits": [
-          {
-            "name": "Tree Zone 2 -> Tree Zone 3",
-            "connected_region": "Tree Zone 3",
-            "access_rule": {
-              "rule": "has_level_progression",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Tree Zone Progression"
-                  }
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Tree Zone 2 -> Tree Zone Secret Course",
-            "connected_region": "Tree Zone Secret Course",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tree Zone Secret"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Tree Zone 2 - Normal Exit",
-            "id": 6,
-            "access_rule": {
-              "rule": "tree_zone_2_normal_exit",
+              "rule": "mario_zone_1_normal_exit",
               "_original_ast_type": "helper"
             },
             "item": {
@@ -1237,11 +1224,54 @@
             "locked": true
           },
           {
-            "name": "Tree Zone 2 - Secret Exit",
-            "id": 7,
+            "name": "Mario Zone 1 - Midway Bell",
+            "id": 45,
             "access_rule": {
-              "rule": "tree_zone_2_secret_exit",
+              "rule": "mario_zone_1_midway_bell",
               "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Space Physics",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Mario Zone 2": {
+        "name": "Mario Zone 2",
+        "exits": [
+          {
+            "name": "Mario Zone 2 -> Mario Zone 3",
+            "connected_region": "Mario Zone 3",
+            "access_rule": {
+              "rule": "has_level_progression",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Mario Zone Progression"
+                  }
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Mario Zone 2 - Normal Exit",
+            "id": 46,
+            "access_rule": {
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1252,14 +1282,13 @@
             "locked": true
           },
           {
-            "name": "Tree Zone 2 - Midway Bell",
-            "id": 8,
+            "name": "Mario Zone 2 - Midway Bell",
+            "id": 47,
             "access_rule": {
-              "rule": "tree_zone_2_midway_bell",
-              "_original_ast_type": "helper"
+              "rule": "True_"
             },
             "item": {
-              "name": "Space Zone Secret",
+              "name": "Mario Zone Progression",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1268,41 +1297,12 @@
           }
         ]
       },
-      "Tree Zone 3": {
-        "name": "Tree Zone 3",
+      "Mario Zone 3": {
+        "name": "Mario Zone 3",
         "exits": [
           {
-            "name": "Tree Zone 3 -> Tree Zone 4",
-            "connected_region": "Tree Zone 4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Tree Zone 3 - Normal Exit",
-            "id": 9,
-            "access_rule": {
-              "rule": "tree_zone_3_normal_exit",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Super Star Duration Increase",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tree Zone 4": {
-        "name": "Tree Zone 4",
-        "exits": [
-          {
-            "name": "Tree Zone 4 -> Tree Zone 5",
-            "connected_region": "Tree Zone 5",
+            "name": "Mario Zone 3 -> Mario Zone 4",
+            "connected_region": "Mario Zone 4",
             "access_rule": {
               "rule": "has_level_progression",
               "_original_ast_type": "helper",
@@ -1310,7 +1310,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "Tree Zone Progression"
+                    "value": "Mario Zone Progression"
                   }
                 },
                 {
@@ -1325,11 +1325,24 @@
         ],
         "locations": [
           {
-            "name": "Tree Zone 4 - Normal Exit",
-            "id": 10,
+            "name": "Mario Zone 3 - Normal Exit",
+            "id": 48,
             "access_rule": {
-              "rule": "tree_zone_4_normal_exit",
-              "_original_ast_type": "helper"
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Macro Zone Progression",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Mario Zone 3 - Midway Bell",
+            "id": 49,
+            "access_rule": {
+              "rule": "True_"
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1338,37 +1351,22 @@
               "type": "None"
             },
             "locked": true
-          },
-          {
-            "name": "Tree Zone 4 - Midway Bell",
-            "id": 11,
-            "access_rule": {
-              "rule": "tree_zone_4_midway_bell",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Macro Zone Secret 1",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
           }
         ]
       },
-      "Tree Zone 5": {
-        "name": "Tree Zone 5",
+      "Mario Zone 4": {
+        "name": "Mario Zone 4",
         "exits": [],
         "locations": [
           {
-            "name": "Tree Zone 5 - Boss",
+            "name": "Mario Zone 4 - Boss",
             "id": null,
             "access_rule": {
-              "rule": "tree_zone_5_boss",
+              "rule": "mario_zone_4_boss",
               "_original_ast_type": "helper"
             },
             "item": {
-              "name": "Tree Coin",
+              "name": "Mario Coin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1377,8 +1375,8 @@
             "event": true
           },
           {
-            "name": "Tree Zone 5 - Midway Bell",
-            "id": 13,
+            "name": "Mario Zone 4 - Midway Bell",
+            "id": 51,
             "access_rule": {
               "rule": "True_"
             },
@@ -1386,26 +1384,6 @@
               "name": "Super Star Duration Increase",
               "player": 1,
               "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "Tree Zone Secret Course": {
-        "name": "Tree Zone Secret Course",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tree Zone Secret Course - Normal Exit",
-            "id": 14,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Pumpkin Zone Progression",
-              "player": 1,
-              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -1602,6 +1580,28 @@
               "type": "None"
             },
             "locked": true
+          }
+        ]
+      },
+      "Mario's Castle": {
+        "name": "Mario's Castle",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Mario's Castle - Wario",
+            "id": null,
+            "access_rule": {
+              "rule": "marios_castle_wario",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Wario Defeated",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -31940,6 +31940,7 @@
   },
   "canonical_placements": {
     "1": {
+      "Mushroom Zone - Normal Exit": "Pumpkin Zone Secret 2",
       "Hippo Zone - Normal or Secret Exit": "Super Star Duration Increase",
       "Macro Zone 1 - Midway Bell": "Super Star Duration Increase",
       "Macro Zone 2 - Midway Bell": "Super Star Duration Increase",
@@ -31965,26 +31966,27 @@
       "Turtle Zone 1 - Normal Exit": "Super Star Duration Increase",
       "Turtle Zone 2 - Midway Bell": "Super Star Duration Increase",
       "Turtle Zone 3 - Midway Bell": "Super Star Duration Increase",
+      "Tree Zone 1 - Normal Exit": "Tree Zone Secret",
       "Macro Zone 1 - Normal Exit": "Tree Zone Progression",
       "Mario Zone 1 - Normal Exit": "Tree Zone Progression",
       "Tree Zone 2 - Normal Exit": "Tree Zone Progression",
-      "Macro Zone 1 - Secret Exit": "Turtle Zone Progression",
-      "Space Zone 1 - Normal Exit": "Turtle Zone Progression",
+      "Tree Zone 2 - Midway Bell": "Space Zone Secret",
+      "Tree Zone 4 - Midway Bell": "Macro Zone Secret 1",
+      "Tree Zone 5 - Boss": "Tree Coin",
       "Macro Zone 2 - Normal Exit": "Pumpkin Zone Progression",
       "Macro Zone Secret Course - Normal Exit": "Pumpkin Zone Progression",
       "Tree Zone Secret Course - Normal Exit": "Pumpkin Zone Progression",
-      "Macro Zone 4 - Boss": "Macro Coin",
-      "Macro Zone 4 - Midway Bell": "Turtle Zone Secret",
-      "Mario Zone 1 - Midway Bell": "Space Physics",
-      "Mario Zone 2 - Midway Bell": "Mario Zone Progression",
-      "Space Zone 2 - Midway Bell": "Mario Zone Progression",
-      "Space Zone Secret Course - Normal Exit": "Mario Zone Progression",
+      "Macro Zone 1 - Secret Exit": "Turtle Zone Progression",
+      "Space Zone 1 - Normal Exit": "Turtle Zone Progression",
       "Mario Zone 3 - Normal Exit": "Macro Zone Progression",
       "Space Zone 1 - Secret Exit": "Macro Zone Progression",
       "Turtle Zone 2 - Normal Exit": "Macro Zone Progression",
-      "Mario Zone 4 - Boss": "Mario Coin",
-      "Mario's Castle - Wario": "Wario Defeated",
-      "Mushroom Zone - Normal Exit": "Pumpkin Zone Secret 2",
+      "Mario Zone 2 - Midway Bell": "Mario Zone Progression",
+      "Space Zone 2 - Midway Bell": "Mario Zone Progression",
+      "Space Zone Secret Course - Normal Exit": "Mario Zone Progression",
+      "Space Zone 2 - Boss": "Space Coin",
+      "Macro Zone 4 - Boss": "Macro Coin",
+      "Macro Zone 4 - Midway Bell": "Turtle Zone Secret",
       "Pumpkin Zone 1 - Midway Bell": "Pumpkin Zone Secret 1",
       "Pumpkin Zone 2 - Normal Exit": "Space Zone Progression",
       "Pumpkin Zone 2 - Secret Exit": "Mushroom",
@@ -31992,14 +31994,12 @@
       "Pumpkin Zone 3 - Normal Exit": "Carrot",
       "Pumpkin Zone 3 - Secret Exit": "Macro Zone Secret 2",
       "Pumpkin Zone 4 - Boss": "Pumpkin Coin",
-      "Space Zone 2 - Boss": "Space Coin",
-      "Tree Zone 1 - Normal Exit": "Tree Zone Secret",
-      "Tree Zone 2 - Midway Bell": "Space Zone Secret",
-      "Tree Zone 4 - Midway Bell": "Macro Zone Secret 1",
-      "Tree Zone 5 - Boss": "Tree Coin",
+      "Mario Zone 1 - Midway Bell": "Space Physics",
+      "Mario Zone 4 - Boss": "Mario Coin",
       "Turtle Zone 2 - Secret Exit": "Hippo Bubble",
       "Turtle Zone 3 - Boss": "Turtle Coin",
-      "Turtle Zone Secret Course - Normal Exit": "Water Physics"
+      "Turtle Zone Secret Course - Normal Exit": "Water Physics",
+      "Mario's Castle - Wario": "Wario Defeated"
     }
   },
   "progression_mapping": {
@@ -42625,15 +42625,7 @@
             },
             {
               "type": "assign",
-              "name": "reachable_coins_from_start",
-              "value": {
-                "type": "constant",
-                "value": 0
-              }
-            },
-            {
-              "type": "assign",
-              "name": "reachable_coins_from_bell",
+              "name": "reachable_coins",
               "value": {
                 "type": "constant",
                 "value": 0
@@ -42657,7 +42649,7 @@
               "body": [
                 {
                   "type": "aug_assign",
-                  "target": "reachable_coins_from_start",
+                  "target": "reachable_coins",
                   "op": "+",
                   "value": {
                     "type": "constant",
@@ -42682,7 +42674,7 @@
                   "body": [
                     {
                       "type": "aug_assign",
-                      "target": "reachable_coins_from_start",
+                      "target": "reachable_coins",
                       "op": "+",
                       "value": {
                         "type": "constant",
@@ -42714,7 +42706,7 @@
                           "body": [
                             {
                               "type": "aug_assign",
-                              "target": "reachable_coins_from_start",
+                              "target": "reachable_coins",
                               "op": "+",
                               "value": {
                                 "type": "constant",
@@ -42725,7 +42717,7 @@
                           "orelse": [
                             {
                               "type": "aug_assign",
-                              "target": "reachable_coins_from_start",
+                              "target": "reachable_coins",
                               "op": "+",
                               "value": {
                                 "type": "constant",
@@ -42748,183 +42740,56 @@
               },
               "body": [
                 {
+                  "type": "assign",
+                  "name": "bell_coins",
+                  "value": {
+                    "type": "constant",
+                    "value": 10
+                  }
+                },
+                {
                   "type": "if_statement",
                   "test": {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Pipe Traversal - Down",
-                              "Pipe Traversal"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "or",
-                        "conditions": [
-                          {
-                            "type": "name",
-                            "name": "auto_scroll"
-                          },
-                          {
-                            "type": "not",
-                            "condition": {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Pipe Traversal - Left",
-                                    "Pipe Traversal"
-                                  ]
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    ]
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "auto_scroll"
+                    }
                   },
                   "body": [
                     {
                       "type": "aug_assign",
-                      "target": "reachable_coins_from_bell",
+                      "target": "bell_coins",
                       "op": "+",
                       "value": {
                         "type": "constant",
-                        "value": 10
+                        "value": 46
                       }
                     }
-                  ],
-                  "orelse": [
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "bell_coins"
+                    },
+                    "op": ">",
+                    "right": {
+                      "type": "name",
+                      "name": "reachable_coins"
+                    }
+                  },
+                  "body": [
                     {
-                      "type": "if_statement",
-                      "test": {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "state_method",
-                            "method": "has_any",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": [
-                                  "Pipe Traversal - Left",
-                                  "Pipe Traversal"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "type": "not",
-                            "condition": {
-                              "type": "name",
-                              "name": "auto_scroll"
-                            }
-                          }
-                        ]
-                      },
-                      "body": [
-                        {
-                          "type": "if_statement",
-                          "test": {
-                            "type": "state_method",
-                            "method": "has_any",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": [
-                                  "Pipe Traversal - Down",
-                                  "Pipe Traversal"
-                                ]
-                              }
-                            ]
-                          },
-                          "body": [
-                            {
-                              "type": "aug_assign",
-                              "target": "reachable_coins_from_bell",
-                              "op": "+",
-                              "value": {
-                                "type": "constant",
-                                "value": 31
-                              }
-                            },
-                            {
-                              "type": "if_statement",
-                              "test": {
-                                "type": "state_method",
-                                "method": "has_any",
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": [
-                                      "Pipe Traversal - Right",
-                                      "Pipe Traversal"
-                                    ]
-                                  }
-                                ]
-                              },
-                              "body": [
-                                {
-                                  "type": "aug_assign",
-                                  "target": "reachable_coins_from_bell",
-                                  "op": "+",
-                                  "value": {
-                                    "type": "constant",
-                                    "value": 18
-                                  }
-                                },
-                                {
-                                  "type": "if_statement",
-                                  "test": {
-                                    "type": "state_method",
-                                    "method": "has_any",
-                                    "args": [
-                                      {
-                                        "type": "constant",
-                                        "value": [
-                                          "Pipe Traversal - Up",
-                                          "Pipe Traversal"
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  "body": [
-                                    {
-                                      "type": "aug_assign",
-                                      "target": "reachable_coins_from_bell",
-                                      "op": "+",
-                                      "value": {
-                                        "type": "constant",
-                                        "value": 25
-                                      }
-                                    }
-                                  ]
-                                }
-                              ]
-                            }
-                          ],
-                          "orelse": [
-                            {
-                              "type": "aug_assign",
-                              "target": "reachable_coins_from_bell",
-                              "op": "+",
-                              "value": {
-                                "type": "constant",
-                                "value": 18
-                              }
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "assign",
+                      "name": "reachable_coins",
+                      "value": {
+                        "type": "name",
+                        "name": "bell_coins"
+                      }
                     }
                   ]
                 }
@@ -42940,18 +42805,8 @@
                 },
                 "op": "<=",
                 "right": {
-                  "type": "call",
-                  "func": "max",
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "reachable_coins_from_start"
-                    },
-                    {
-                      "type": "name",
-                      "name": "reachable_coins_from_bell"
-                    }
-                  ]
+                  "type": "name",
+                  "name": "reachable_coins"
                 }
               }
             }

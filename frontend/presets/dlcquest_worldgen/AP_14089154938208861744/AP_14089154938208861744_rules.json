@@ -23,385 +23,6 @@
         ],
         "locations": []
       },
-      "Behind Tree": {
-        "name": "Behind Tree",
-        "exits": [
-          {
-            "name": "Behind Tree Double Jump",
-            "connected_region": "Double Jump Behind Tree",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Double Jump Pack"
-              }
-            }
-          },
-          {
-            "name": "Forest Entrance",
-            "connected_region": "The Forest",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Map Pack"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Double Jump Pack",
-            "id": 120005,
-            "access_rule": {
-              "rule": "Compare",
-              "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": " coins"
-                  }
-                },
-                "op": ">=",
-                "right": 100
-              }
-            },
-            "item": {
-              "name": "Loading Screen",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Map Pack",
-            "id": 120009,
-            "access_rule": {
-              "rule": "Compare",
-              "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": " coins"
-                  }
-                },
-                "op": ">=",
-                "right": 140
-              }
-            },
-            "item": {
-              "name": "Armor for your Horse Pack",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Between Trees Sheep",
-            "id": 120047,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Name Change Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Hole in the Wall Sheep",
-            "id": 120048,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Name Change Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Behind Tree coins",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "60 coins",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Double Jump Behind Tree": {
-        "name": "Double Jump Behind Tree",
-        "exits": [
-          {
-            "name": "True Double Jump",
-            "connected_region": "True Double Jump Behind Tree",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Sexy Outfits Pack",
-            "id": 120007,
-            "access_rule": {
-              "rule": "Compare",
-              "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": " coins"
-                  }
-                },
-                "op": ">=",
-                "right": 5
-              }
-            },
-            "item": {
-              "name": "Name Change Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Double Jump Alcove Sheep",
-            "id": 120042,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Night Map Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Sexy Outfits Sheep",
-            "id": 120044,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Loading Screen",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Double Jump Behind Tree coins",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "89 coins",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Double Jump Total Left": {
-        "name": "Double Jump Total Left",
-        "exits": [
-          {
-            "name": "Cave Tree",
-            "connected_region": "Double Jump Total Left Cave",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Time is Money Pack"
-              }
-            }
-          },
-          {
-            "name": "Cave Roof",
-            "connected_region": "Double Jump Total Left Roof",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Double Jump Pack"
-              }
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Pet Pack",
-            "id": 120006,
-            "access_rule": {
-              "rule": "Compare",
-              "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": " coins"
-                  }
-                },
-                "op": ">=",
-                "right": 5
-              }
-            },
-            "item": {
-              "name": "Map Pack",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Top Hat Pack",
-            "id": 120008,
-            "access_rule": {
-              "rule": "Compare",
-              "args": {
-                "left": {
-                  "rule": "CountItem",
-                  "args": {
-                    "item_name": " coins"
-                  }
-                },
-                "op": ">=",
-                "right": 5
-              }
-            },
-            "item": {
-              "name": "Loading Screen",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "North West Alcove Sheep",
-            "id": 120052,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Time is Money Pack"
-              }
-            },
-            "item": {
-              "name": "Audio Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Double Jump Total Left coins",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "50 coins",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Double Jump Total Left Cave": {
-        "name": "Double Jump Total Left Cave",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Top Hat Sheep",
-            "id": 120050,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Pause Menu Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Double Jump Total Left Cave coins",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "9 coins",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
-      "Double Jump Total Left Roof": {
-        "name": "Double Jump Total Left Roof",
-        "exits": [],
-        "locations": [
-          {
-            "name": "North West Ceiling Sheep",
-            "id": 120051,
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Time is Money Pack"
-              }
-            },
-            "item": {
-              "name": "Pet Pack",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "Double Jump Total Left Roof coins",
-            "id": null,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "10 coins",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
-          }
-        ]
-      },
       "Move Right": {
         "name": "Move Right",
         "exits": [
@@ -661,6 +282,124 @@
           }
         ]
       },
+      "Behind Tree": {
+        "name": "Behind Tree",
+        "exits": [
+          {
+            "name": "Behind Tree Double Jump",
+            "connected_region": "Double Jump Behind Tree",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Double Jump Pack"
+              }
+            }
+          },
+          {
+            "name": "Forest Entrance",
+            "connected_region": "The Forest",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Map Pack"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Double Jump Pack",
+            "id": 120005,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
+                },
+                "op": ">=",
+                "right": 100
+              }
+            },
+            "item": {
+              "name": "Loading Screen",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Map Pack",
+            "id": 120009,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
+                },
+                "op": ">=",
+                "right": 140
+              }
+            },
+            "item": {
+              "name": "Armor for your Horse Pack",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Between Trees Sheep",
+            "id": 120047,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Name Change Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hole in the Wall Sheep",
+            "id": 120048,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Name Change Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Behind Tree coins",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "60 coins",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
       "Psychological Warfare": {
         "name": "Psychological Warfare",
         "exits": [
@@ -710,13 +449,34 @@
           }
         ]
       },
-      "The Final Boss Room": {
-        "name": "The Final Boss Room",
-        "exits": [],
+      "Double Jump Total Left": {
+        "name": "Double Jump Total Left",
+        "exits": [
+          {
+            "name": "Cave Tree",
+            "connected_region": "Double Jump Total Left Cave",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Time is Money Pack"
+              }
+            }
+          },
+          {
+            "name": "Cave Roof",
+            "connected_region": "Double Jump Total Left Roof",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Double Jump Pack"
+              }
+            }
+          }
+        ],
         "locations": [
           {
-            "name": "Finish the Fight Pack",
-            "id": 120015,
+            "name": "Pet Pack",
+            "id": 120006,
             "access_rule": {
               "rule": "Compare",
               "args": {
@@ -731,7 +491,7 @@
               }
             },
             "item": {
-              "name": "Finish the Fight Pack",
+              "name": "Map Pack",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -739,19 +499,257 @@
             "locked": true
           },
           {
-            "name": "Winning Basic",
-            "id": null,
+            "name": "Top Hat Pack",
+            "id": 120008,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Compare",
               "args": {
-                "items": [
-                  "Armor for your Horse Pack",
-                  "Finish the Fight Pack"
-                ]
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
+                },
+                "op": ">=",
+                "right": 5
               }
             },
             "item": {
-              "name": "Victory Basic",
+              "name": "Loading Screen",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "North West Alcove Sheep",
+            "id": 120052,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Time is Money Pack"
+              }
+            },
+            "item": {
+              "name": "Audio Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Double Jump Total Left coins",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "50 coins",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Double Jump Total Left Cave": {
+        "name": "Double Jump Total Left Cave",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Top Hat Sheep",
+            "id": 120050,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Pause Menu Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Double Jump Total Left Cave coins",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "9 coins",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Double Jump Total Left Roof": {
+        "name": "Double Jump Total Left Roof",
+        "exits": [],
+        "locations": [
+          {
+            "name": "North West Ceiling Sheep",
+            "id": 120051,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Time is Money Pack"
+              }
+            },
+            "item": {
+              "name": "Pet Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Double Jump Total Left Roof coins",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "10 coins",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "Double Jump Behind Tree": {
+        "name": "Double Jump Behind Tree",
+        "exits": [
+          {
+            "name": "True Double Jump",
+            "connected_region": "True Double Jump Behind Tree",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sexy Outfits Pack",
+            "id": 120007,
+            "access_rule": {
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
+                },
+                "op": ">=",
+                "right": 5
+              }
+            },
+            "item": {
+              "name": "Name Change Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Double Jump Alcove Sheep",
+            "id": 120042,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Night Map Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sexy Outfits Sheep",
+            "id": 120044,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Loading Screen",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Double Jump Behind Tree coins",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "89 coins",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
+          }
+        ]
+      },
+      "True Double Jump Behind Tree": {
+        "name": "True Double Jump Behind Tree",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Double Jump Floating Sheep",
+            "id": 120043,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Sexy Outfits Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cutscene Sheep",
+            "id": 120054,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Loading Screen",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "True Double Jump Behind Tree coins",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "7 coins",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -956,46 +954,48 @@
           }
         ]
       },
-      "True Double Jump Behind Tree": {
-        "name": "True Double Jump Behind Tree",
+      "The Final Boss Room": {
+        "name": "The Final Boss Room",
         "exits": [],
         "locations": [
           {
-            "name": "Double Jump Floating Sheep",
-            "id": 120043,
+            "name": "Finish the Fight Pack",
+            "id": 120015,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Compare",
+              "args": {
+                "left": {
+                  "rule": "CountItem",
+                  "args": {
+                    "item_name": " coins"
+                  }
+                },
+                "op": ">=",
+                "right": 5
+              }
             },
             "item": {
-              "name": "Sexy Outfits Pack",
+              "name": "Finish the Fight Pack",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
           },
           {
-            "name": "Cutscene Sheep",
-            "id": 120054,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Loading Screen",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "True Double Jump Behind Tree coins",
+            "name": "Winning Basic",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Armor for your Horse Pack",
+                  "Finish the Fight Pack"
+                ]
+              }
             },
             "item": {
-              "name": "7 coins",
+              "name": "Victory Basic",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1578,6 +1578,28 @@
         "type": null,
         "max_count": 1
       },
+      "4 coins": {
+        "name": "4 coins",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "46 coins": {
+        "name": "46 coins",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "60 coins": {
         "name": "60 coins",
         "id": null,
@@ -1589,8 +1611,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "89 coins": {
-        "name": "89 coins",
+      "100 coins": {
+        "name": "100 coins",
         "id": null,
         "groups": [
           "Event"
@@ -1633,8 +1655,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "4 coins": {
-        "name": "4 coins",
+      "89 coins": {
+        "name": "89 coins",
         "id": null,
         "groups": [
           "Event"
@@ -1644,30 +1666,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "46 coins": {
-        "name": "46 coins",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "100 coins": {
-        "name": "100 coins",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Victory Basic": {
-        "name": "Victory Basic",
+      "7 coins": {
+        "name": "7 coins",
         "id": null,
         "groups": [
           "Event"
@@ -1710,8 +1710,8 @@
         "type": "Event",
         "max_count": 1
       },
-      "7 coins": {
-        "name": "7 coins",
+      "Victory Basic": {
+        "name": "Victory Basic",
         "id": null,
         "groups": [
           "Event"
@@ -1795,6 +1795,16 @@
   },
   "canonical_placements": {
     "1": {
+      "Movement Pack": "Movement Pack",
+      "Animation Pack": "Psychological Warfare Pack",
+      "Audio Pack": "Name Change Pack",
+      "Between Trees Sheep": "Name Change Pack",
+      "Hole in the Wall Sheep": "Name Change Pack",
+      "Sexy Outfits Pack": "Name Change Pack",
+      "Pause Menu Pack": "Time is Money Pack",
+      "Move Right coins": "4 coins",
+      "Time is Money Pack": "Zombie Sheep",
+      "Psychological Warfare Pack": "Animation Pack",
       "Armor for your Horse Pack": "Loading Screen",
       "Cutscene Sheep": "Loading Screen",
       "Double Jump Pack": "Loading Screen",
@@ -1802,14 +1812,11 @@
       "Sexy Outfits Sheep": "Loading Screen",
       "Shepherd Sheep": "Loading Screen",
       "Top Hat Pack": "Loading Screen",
+      "Movement Pack coins": "46 coins",
       "Map Pack": "Armor for your Horse Pack",
-      "Audio Pack": "Name Change Pack",
-      "Between Trees Sheep": "Name Change Pack",
-      "Hole in the Wall Sheep": "Name Change Pack",
-      "Sexy Outfits Pack": "Name Change Pack",
       "Behind Tree coins": "60 coins",
-      "Double Jump Alcove Sheep": "Night Map Pack",
-      "Double Jump Behind Tree coins": "89 coins",
+      "West Cave Sheep": "Double Jump Pack",
+      "Psychological Warfare coins": "100 coins",
       "Pet Pack": "Map Pack",
       "North West Alcove Sheep": "Audio Pack",
       "Double Jump Total Left coins": "50 coins",
@@ -1817,17 +1824,10 @@
       "Double Jump Total Left Cave coins": "9 coins",
       "North West Ceiling Sheep": "Pet Pack",
       "Double Jump Total Left Roof coins": "10 coins",
-      "Movement Pack": "Movement Pack",
-      "Animation Pack": "Psychological Warfare Pack",
-      "Pause Menu Pack": "Time is Money Pack",
-      "Move Right coins": "4 coins",
-      "Time is Money Pack": "Zombie Sheep",
-      "Psychological Warfare Pack": "Animation Pack",
-      "Movement Pack coins": "46 coins",
-      "West Cave Sheep": "Double Jump Pack",
-      "Psychological Warfare coins": "100 coins",
-      "Finish the Fight Pack": "Finish the Fight Pack",
-      "Winning Basic": "Victory Basic",
+      "Double Jump Alcove Sheep": "Night Map Pack",
+      "Double Jump Behind Tree coins": "89 coins",
+      "Double Jump Floating Sheep": "Sexy Outfits Pack",
+      "True Double Jump Behind Tree coins": "7 coins",
       "Gun Pack": "Temporary Spike",
       "The Forest coins": "171 coins",
       "The Zombie Pack": "Top Hat Pack",
@@ -1835,8 +1835,8 @@
       "The Forest with double Jump coins": "76 coins",
       "Forest High Sheep": "Gun Pack",
       "The Forest with double Jump Part 2 coins": "203 coins",
-      "Double Jump Floating Sheep": "Sexy Outfits Pack",
-      "True Double Jump Behind Tree coins": "7 coins"
+      "Finish the Fight Pack": "Finish the Fight Pack",
+      "Winning Basic": "Victory Basic"
     }
   },
   "progression_mapping": {

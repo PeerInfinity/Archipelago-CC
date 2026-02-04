@@ -279,6 +279,41 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Overworld -> World 1", player),
+        Has('World 1 Gate', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld -> World 2", player),
+        Has('World 2 Gate', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld -> World 3", player),
+        Has('World 3 Gate', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld -> World 4", player),
+        Has('World 4 Gate', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld -> World 5", player),
+        Has('World 5 Gate', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Overworld -> World 6", player),
+        Has('World 6 Gate', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("World 6 -> 6-8", player),
+        HelperCall(helper_func=castle_access, helper_name="castle_access")
+    )
+
+    world.set_rule(
         multiworld.get_entrance("1-4 -> Burt The Bashful's Boss Room", player),
         HelperCall(helper_func=_14Clear, helper_name="_14Clear")
     )
@@ -336,41 +371,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("6-8 -> Bowser's Room", player),
         HelperCall(helper_func=castle_clear, helper_name="castle_clear")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld -> World 1", player),
-        Has('World 1 Gate', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld -> World 2", player),
-        Has('World 2 Gate', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld -> World 3", player),
-        Has('World 3 Gate', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld -> World 4", player),
-        Has('World 4 Gate', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld -> World 5", player),
-        Has('World 5 Gate', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Overworld -> World 6", player),
-        Has('World 6 Gate', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("World 6 -> 6-8", player),
-        HelperCall(helper_func=castle_access, helper_name="castle_access")
     )
     # Location rules
     world.set_rule(
@@ -444,6 +444,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Burt The Bashful's Boss Room", player),
+        HelperCall(helper_func=_14Boss, helper_name="_14Boss")
+    )
+
+    world.set_rule(
         multiworld.get_location("Hop! Hop! Donut Lifts: Stars", player),
         Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), HelperCall(helper_func=has_midring, helper_name="has_midring"))
     )
@@ -501,6 +506,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Level Clear", player),
         HelperCall(helper_func=_18CanFightBoss, helper_name="_18CanFightBoss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Salvo The Slime's Boss Room", player),
+        HelperCall(helper_func=_18Boss, helper_name="_18Boss")
     )
 
     world.set_rule(
@@ -576,6 +586,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Level Clear", player),
         HelperCall(helper_func=_24CanFightBoss, helper_name="_24CanFightBoss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bigger Boo's Boss Room", player),
+        HelperCall(helper_func=_24Boss, helper_name="_24Boss")
     )
 
     world.set_rule(
@@ -664,6 +679,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Roger The Ghost's Boss Room", player),
+        HelperCall(helper_func=_28Boss, helper_name="_28Boss")
+    )
+
+    world.set_rule(
         multiworld.get_location("Welcome To Monkey World!: Stars", player),
         HelperCall(helper_func=has_midring, helper_name="has_midring")
     )
@@ -726,6 +746,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Level Clear", player),
         HelperCall(helper_func=_34CanFightBoss, helper_name="_34CanFightBoss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Prince Froggy's Boss Room", player),
+        HelperCall(helper_func=_34Boss, helper_name="_34Boss")
     )
 
     world.set_rule(
@@ -799,6 +824,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Naval Piranha's Boss Room", player),
+        HelperCall(helper_func=_38Boss, helper_name="_38Boss")
+    )
+
+    world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Red Coins", player),
         Has('Super Star', 1)
     )
@@ -850,7 +880,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Stars", player),
-        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('! Switch', 'Tulip'))
+        And(HelperCall(helper_func=has_midring, helper_name="has_midring"), HasAll('Tulip', '! Switch'))
     )
 
     world.set_rule(
@@ -876,6 +906,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Level Clear", player),
         HelperCall(helper_func=_44CanFightBoss, helper_name="_44CanFightBoss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Marching Milde's Boss Room", player),
+        HelperCall(helper_func=_44Boss, helper_name="_44Boss")
     )
 
     world.set_rule(
@@ -959,13 +994,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Hookbill The Koopa's Boss Room", player),
+        HelperCall(helper_func=_48Boss, helper_name="_48Boss")
+    )
+
+    world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Red Coins", player),
         HasAll('Dashed Stairs', 'Helicopter Morph')
     )
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Stars", player),
-        Or(And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), Has('Tulip'))
+        Or(HelperCall(helper_func=cansee_clouds, helper_name="cansee_clouds"), And(HelperCall(helper_func=has_midring, helper_name="has_midring"), Has('Dashed Stairs')), Has('Tulip'))
     )
 
     world.set_rule(
@@ -1011,6 +1051,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Level Clear", player),
         HelperCall(helper_func=_54CanFightBoss, helper_name="_54CanFightBoss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sluggy The Unshaven's Boss Room", player),
+        HelperCall(helper_func=_54Boss, helper_name="_54Boss")
     )
 
     world.set_rule(
@@ -1074,6 +1119,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Raphael The Raven's Boss Room", player),
+        HelperCall(helper_func=_58Boss, helper_name="_58Boss")
+    )
+
+    world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Red Coins", player),
         HasAll('Dashed Platform', 'Large Spring Ball')
     )
@@ -1131,6 +1181,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Level Clear", player),
         HelperCall(helper_func=_64CanFightBoss, helper_name="_64CanFightBoss")
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tap-Tap The Red Nose's Boss Room", player),
+        HelperCall(helper_func=_64Boss, helper_name="_64Boss")
     )
 
     world.set_rule(
@@ -1199,61 +1254,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Bigger Boo's Boss Room", player),
-        HelperCall(helper_func=_24Boss, helper_name="_24Boss")
-    )
-
-    world.set_rule(
         multiworld.get_location("King Bowser's Castle: Level Clear", player),
         HelperCall(helper_func=_68Clear, helper_name="_68Clear")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Burt The Bashful's Boss Room", player),
-        HelperCall(helper_func=_14Boss, helper_name="_14Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Hookbill The Koopa's Boss Room", player),
-        HelperCall(helper_func=_48Boss, helper_name="_48Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Marching Milde's Boss Room", player),
-        HelperCall(helper_func=_44Boss, helper_name="_44Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Naval Piranha's Boss Room", player),
-        HelperCall(helper_func=_38Boss, helper_name="_38Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prince Froggy's Boss Room", player),
-        HelperCall(helper_func=_34Boss, helper_name="_34Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Raphael The Raven's Boss Room", player),
-        HelperCall(helper_func=_58Boss, helper_name="_58Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Roger The Ghost's Boss Room", player),
-        HelperCall(helper_func=_28Boss, helper_name="_28Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Salvo The Slime's Boss Room", player),
-        HelperCall(helper_func=_18Boss, helper_name="_18Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sluggy The Unshaven's Boss Room", player),
-        HelperCall(helper_func=_54Boss, helper_name="_54Boss")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tap-Tap The Red Nose's Boss Room", player),
-        HelperCall(helper_func=_64Boss, helper_name="_64Boss")
     )

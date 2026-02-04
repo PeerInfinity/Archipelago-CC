@@ -23,6 +23,452 @@
         ],
         "locations": []
       },
+      "Overworld": {
+        "name": "Overworld",
+        "exits": [
+          {
+            "name": "Overworld",
+            "connected_region": "World 1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Overworld -> World 1",
+            "connected_region": "World 1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "World 1 Gate"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> World 2",
+            "connected_region": "World 2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "World 2 Gate"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> World 3",
+            "connected_region": "World 3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "World 3 Gate"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> World 4",
+            "connected_region": "World 4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "World 4 Gate"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> World 5",
+            "connected_region": "World 5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "World 5 Gate"
+              }
+            }
+          },
+          {
+            "name": "Overworld -> World 6",
+            "connected_region": "World 6",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "World 6 Gate"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "World 1": {
+        "name": "World 1",
+        "exits": [
+          {
+            "name": "World 1 -> 1-1",
+            "connected_region": "1-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-2",
+            "connected_region": "1-2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-3",
+            "connected_region": "1-3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-4",
+            "connected_region": "1-4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-5",
+            "connected_region": "1-5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-6",
+            "connected_region": "1-6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-7",
+            "connected_region": "1-7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 1 -> 1-8",
+            "connected_region": "1-8",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "World 2": {
+        "name": "World 2",
+        "exits": [
+          {
+            "name": "World 2 -> 2-1",
+            "connected_region": "2-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-2",
+            "connected_region": "2-2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-3",
+            "connected_region": "2-3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-4",
+            "connected_region": "2-4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-5",
+            "connected_region": "2-5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-6",
+            "connected_region": "2-6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-7",
+            "connected_region": "2-7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 2 -> 2-8",
+            "connected_region": "2-8",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "World 3": {
+        "name": "World 3",
+        "exits": [
+          {
+            "name": "World 3 -> 3-1",
+            "connected_region": "3-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-2",
+            "connected_region": "3-2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-3",
+            "connected_region": "3-3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-4",
+            "connected_region": "3-4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-5",
+            "connected_region": "3-5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-6",
+            "connected_region": "3-6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-7",
+            "connected_region": "3-7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 3 -> 3-8",
+            "connected_region": "3-8",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "World 4": {
+        "name": "World 4",
+        "exits": [
+          {
+            "name": "World 4 -> 4-1",
+            "connected_region": "4-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-2",
+            "connected_region": "4-2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-3",
+            "connected_region": "4-3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-4",
+            "connected_region": "4-4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-5",
+            "connected_region": "4-5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-6",
+            "connected_region": "4-6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-7",
+            "connected_region": "4-7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 4 -> 4-8",
+            "connected_region": "4-8",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "World 5": {
+        "name": "World 5",
+        "exits": [
+          {
+            "name": "World 5 -> 5-1",
+            "connected_region": "5-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-2",
+            "connected_region": "5-2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-3",
+            "connected_region": "5-3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-4",
+            "connected_region": "5-4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-5",
+            "connected_region": "5-5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-6",
+            "connected_region": "5-6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-7",
+            "connected_region": "5-7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 5 -> 5-8",
+            "connected_region": "5-8",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "World 6": {
+        "name": "World 6",
+        "exits": [
+          {
+            "name": "World 6 -> 6-1",
+            "connected_region": "6-1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-2",
+            "connected_region": "6-2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-3",
+            "connected_region": "6-3",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-4",
+            "connected_region": "6-4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-5",
+            "connected_region": "6-5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-6",
+            "connected_region": "6-6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-7",
+            "connected_region": "6-7",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World 6 -> 6-8",
+            "connected_region": "6-8",
+            "access_rule": {
+              "rule": "castle_access",
+              "_original_ast_type": "helper"
+            }
+          }
+        ],
+        "locations": []
+      },
       "1-1": {
         "name": "1-1",
         "exits": [],
@@ -401,6 +847,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 3
+          }
+        ]
+      },
+      "Burt The Bashful's Boss Room": {
+        "name": "Burt The Bashful's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Burt The Bashful's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_14Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 3
           }
         ]
@@ -831,6 +1300,29 @@
           }
         ]
       },
+      "Salvo The Slime's Boss Room": {
+        "name": "Salvo The Slime's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Salvo The Slime's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_18Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "level_id": 7
+          }
+        ]
+      },
       "2-1": {
         "name": "2-1",
         "exits": [],
@@ -1218,6 +1710,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 15
+          }
+        ]
+      },
+      "Bigger Boo's Boss Room": {
+        "name": "Bigger Boo's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Bigger Boo's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_24Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 15
           }
         ]
@@ -1668,6 +2183,29 @@
           }
         ]
       },
+      "Roger The Ghost's Boss Room": {
+        "name": "Roger The Ghost's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Roger The Ghost's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_28Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "level_id": 19
+          }
+        ]
+      },
       "3-1": {
         "name": "3-1",
         "exits": [],
@@ -2030,6 +2568,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 27
+          }
+        ]
+      },
+      "Prince Froggy's Boss Room": {
+        "name": "Prince Froggy's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Prince Froggy's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_34Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 27
           }
         ]
@@ -2458,6 +3019,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 31
+          }
+        ]
+      },
+      "Naval Piranha's Boss Room": {
+        "name": "Naval Piranha's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Naval Piranha's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_38Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 31
           }
         ]
@@ -2899,6 +3483,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 39
+          }
+        ]
+      },
+      "Marching Milde's Boss Room": {
+        "name": "Marching Milde's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Marching Milde's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_44Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 39
           }
         ]
@@ -3374,6 +3981,29 @@
           }
         ]
       },
+      "Hookbill The Koopa's Boss Room": {
+        "name": "Hookbill The Koopa's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Hookbill The Koopa's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_48Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "level_id": 43
+          }
+        ]
+      },
       "5-1": {
         "name": "5-1",
         "exits": [],
@@ -3421,6 +4051,10 @@
               "rule": "Or",
               "children": [
                 {
+                  "rule": "cansee_clouds",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "And",
                   "children": [
                     {
@@ -3434,10 +4068,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "cansee_clouds",
-                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -3835,6 +4465,29 @@
           }
         ]
       },
+      "Sluggy The Unshaven's Boss Room": {
+        "name": "Sluggy The Unshaven's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Sluggy The Unshaven's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_54Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "level_id": 51
+          }
+        ]
+      },
       "5-5": {
         "name": "5-5",
         "exits": [],
@@ -4185,6 +4838,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 55
+          }
+        ]
+      },
+      "Raphael The Raven's Boss Room": {
+        "name": "Raphael The Raven's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Raphael The Raven's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_58Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 55
           }
         ]
@@ -4583,6 +5259,29 @@
               "type": "None"
             },
             "locked": true,
+            "level_id": 63
+          }
+        ]
+      },
+      "Tap-Tap The Red Nose's Boss Room": {
+        "name": "Tap-Tap The Red Nose's Boss Room",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tap-Tap The Red Nose's Boss Room",
+            "id": null,
+            "access_rule": {
+              "rule": "_64Boss",
+              "_original_ast_type": "helper"
+            },
+            "item": {
+              "name": "Boss Clear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
             "level_id": 63
           }
         ]
@@ -5035,29 +5734,6 @@
           }
         ]
       },
-      "Bigger Boo's Boss Room": {
-        "name": "Bigger Boo's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Bigger Boo's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_24Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 15
-          }
-        ]
-      },
       "Bowser's Room": {
         "name": "Bowser's Room",
         "exits": [],
@@ -5080,682 +5756,6 @@
             "level_id": 67
           }
         ]
-      },
-      "Burt The Bashful's Boss Room": {
-        "name": "Burt The Bashful's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Burt The Bashful's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_14Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 3
-          }
-        ]
-      },
-      "Hookbill The Koopa's Boss Room": {
-        "name": "Hookbill The Koopa's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Hookbill The Koopa's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_48Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 43
-          }
-        ]
-      },
-      "Marching Milde's Boss Room": {
-        "name": "Marching Milde's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Marching Milde's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_44Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 39
-          }
-        ]
-      },
-      "Naval Piranha's Boss Room": {
-        "name": "Naval Piranha's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Naval Piranha's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_38Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 31
-          }
-        ]
-      },
-      "Overworld": {
-        "name": "Overworld",
-        "exits": [
-          {
-            "name": "Overworld",
-            "connected_region": "World 1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Overworld -> World 1",
-            "connected_region": "World 1",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "World 1 Gate"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> World 2",
-            "connected_region": "World 2",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "World 2 Gate"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> World 3",
-            "connected_region": "World 3",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "World 3 Gate"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> World 4",
-            "connected_region": "World 4",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "World 4 Gate"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> World 5",
-            "connected_region": "World 5",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "World 5 Gate"
-              }
-            }
-          },
-          {
-            "name": "Overworld -> World 6",
-            "connected_region": "World 6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "World 6 Gate"
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Prince Froggy's Boss Room": {
-        "name": "Prince Froggy's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Prince Froggy's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_34Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 27
-          }
-        ]
-      },
-      "Raphael The Raven's Boss Room": {
-        "name": "Raphael The Raven's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Raphael The Raven's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_58Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 55
-          }
-        ]
-      },
-      "Roger The Ghost's Boss Room": {
-        "name": "Roger The Ghost's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Roger The Ghost's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_28Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 19
-          }
-        ]
-      },
-      "Salvo The Slime's Boss Room": {
-        "name": "Salvo The Slime's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Salvo The Slime's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_18Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 7
-          }
-        ]
-      },
-      "Sluggy The Unshaven's Boss Room": {
-        "name": "Sluggy The Unshaven's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Sluggy The Unshaven's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_54Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 51
-          }
-        ]
-      },
-      "Tap-Tap The Red Nose's Boss Room": {
-        "name": "Tap-Tap The Red Nose's Boss Room",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Tap-Tap The Red Nose's Boss Room",
-            "id": null,
-            "access_rule": {
-              "rule": "_64Boss",
-              "_original_ast_type": "helper"
-            },
-            "item": {
-              "name": "Boss Clear",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true,
-            "level_id": 63
-          }
-        ]
-      },
-      "World 1": {
-        "name": "World 1",
-        "exits": [
-          {
-            "name": "World 1 -> 1-1",
-            "connected_region": "1-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-2",
-            "connected_region": "1-2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-3",
-            "connected_region": "1-3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-4",
-            "connected_region": "1-4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-5",
-            "connected_region": "1-5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-6",
-            "connected_region": "1-6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-7",
-            "connected_region": "1-7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 1 -> 1-8",
-            "connected_region": "1-8",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "World 2": {
-        "name": "World 2",
-        "exits": [
-          {
-            "name": "World 2 -> 2-1",
-            "connected_region": "2-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-2",
-            "connected_region": "2-2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-3",
-            "connected_region": "2-3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-4",
-            "connected_region": "2-4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-5",
-            "connected_region": "2-5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-6",
-            "connected_region": "2-6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-7",
-            "connected_region": "2-7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 2 -> 2-8",
-            "connected_region": "2-8",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "World 3": {
-        "name": "World 3",
-        "exits": [
-          {
-            "name": "World 3 -> 3-1",
-            "connected_region": "3-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-2",
-            "connected_region": "3-2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-3",
-            "connected_region": "3-3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-4",
-            "connected_region": "3-4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-5",
-            "connected_region": "3-5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-6",
-            "connected_region": "3-6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-7",
-            "connected_region": "3-7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 3 -> 3-8",
-            "connected_region": "3-8",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "World 4": {
-        "name": "World 4",
-        "exits": [
-          {
-            "name": "World 4 -> 4-1",
-            "connected_region": "4-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-2",
-            "connected_region": "4-2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-3",
-            "connected_region": "4-3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-4",
-            "connected_region": "4-4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-5",
-            "connected_region": "4-5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-6",
-            "connected_region": "4-6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-7",
-            "connected_region": "4-7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 4 -> 4-8",
-            "connected_region": "4-8",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "World 5": {
-        "name": "World 5",
-        "exits": [
-          {
-            "name": "World 5 -> 5-1",
-            "connected_region": "5-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-2",
-            "connected_region": "5-2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-3",
-            "connected_region": "5-3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-4",
-            "connected_region": "5-4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-5",
-            "connected_region": "5-5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-6",
-            "connected_region": "5-6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-7",
-            "connected_region": "5-7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 5 -> 5-8",
-            "connected_region": "5-8",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
-      "World 6": {
-        "name": "World 6",
-        "exits": [
-          {
-            "name": "World 6 -> 6-1",
-            "connected_region": "6-1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-2",
-            "connected_region": "6-2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-3",
-            "connected_region": "6-3",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-4",
-            "connected_region": "6-4",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-5",
-            "connected_region": "6-5",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-6",
-            "connected_region": "6-6",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-7",
-            "connected_region": "6-7",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World 6 -> 6-8",
-            "connected_region": "6-8",
-            "access_rule": {
-              "rule": "castle_access",
-              "_original_ast_type": "helper"
-            }
-          }
-        ],
-        "locations": []
       }
     }
   },
@@ -6601,6 +6601,17 @@
         "type": null,
         "max_count": 1
       },
+      "Boss Clear": {
+        "name": "Boss Clear",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 11
+      },
       "Bandit Consumables": {
         "name": "Bandit Consumables",
         "id": null,
@@ -6622,17 +6633,6 @@
         "event": true,
         "type": "Event",
         "max_count": 1
-      },
-      "Boss Clear": {
-        "name": "Boss Clear",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "classification": "progression",
-        "event": true,
-        "type": "Event",
-        "max_count": 11
       },
       "Saved Baby Luigi": {
         "name": "Saved Baby Luigi",
@@ -6808,6 +6808,17 @@
       "Visit Koopa And Para-Koopa: Stars": "+20 Stars",
       "Burt The Bashful's Fort: Flowers": "World 3 Gate",
       "Burt The Bashful's Fort: Stars": "! Switch",
+      "Bigger Boo's Boss Room": "Boss Clear",
+      "Burt The Bashful's Boss Room": "Boss Clear",
+      "Hookbill The Koopa's Boss Room": "Boss Clear",
+      "Marching Milde's Boss Room": "Boss Clear",
+      "Naval Piranha's Boss Room": "Boss Clear",
+      "Prince Froggy's Boss Room": "Boss Clear",
+      "Raphael The Raven's Boss Room": "Boss Clear",
+      "Roger The Ghost's Boss Room": "Boss Clear",
+      "Salvo The Slime's Boss Room": "Boss Clear",
+      "Sluggy The Unshaven's Boss Room": "Boss Clear",
+      "Tap-Tap The Red Nose's Boss Room": "Boss Clear",
       "Hop! Hop! Donut Lifts: Red Coins": "Chomp Rock",
       "Hookbill The Koopa's Castle: Level Clear": "+10 Stars",
       "Hop! Hop! Donut Lifts: Flowers": "+10 Stars",
@@ -6913,17 +6924,6 @@
       "The Very Loooooong Cave: Stars": "Fire Melon",
       "KEEP MOVING!!!!: Flowers": "Bonus Panels",
       "King Bowser's Castle: Red Coins": "Bucket",
-      "Bigger Boo's Boss Room": "Boss Clear",
-      "Burt The Bashful's Boss Room": "Boss Clear",
-      "Hookbill The Koopa's Boss Room": "Boss Clear",
-      "Marching Milde's Boss Room": "Boss Clear",
-      "Naval Piranha's Boss Room": "Boss Clear",
-      "Prince Froggy's Boss Room": "Boss Clear",
-      "Raphael The Raven's Boss Room": "Boss Clear",
-      "Roger The Ghost's Boss Room": "Boss Clear",
-      "Salvo The Slime's Boss Room": "Boss Clear",
-      "Sluggy The Unshaven's Boss Room": "Boss Clear",
-      "Tap-Tap The Red Nose's Boss Room": "Boss Clear",
       "King Bowser's Castle: Level Clear": "Saved Baby Luigi"
     }
   },
@@ -8910,8 +8910,17 @@
         "value": false
       },
       "has_midring": {
-        "type": "constant",
-        "value": true
+        "type": "or",
+        "conditions": [
+          {
+            "type": "constant",
+            "value": true
+          },
+          {
+            "type": "item_check",
+            "item": "Middle Ring"
+          }
+        ]
       },
       "item_bonus": {
         "type": "item_check",

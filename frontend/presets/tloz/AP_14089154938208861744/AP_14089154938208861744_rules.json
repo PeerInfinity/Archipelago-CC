@@ -10,19 +10,6 @@
   },
   "regions": {
     "1": {
-      "Menu": {
-        "name": "Menu",
-        "exits": [
-          {
-            "name": "Begin Game",
-            "connected_region": "Overworld",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
-      },
       "Level 1": {
         "name": "Level 1",
         "exits": [],
@@ -1461,6 +1448,12 @@
                   }
                 },
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Level 2 Boss"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1534,12 +1527,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Level 2 Boss"
-                  }
                 }
               ]
             },
@@ -2950,6 +2937,12 @@
                   }
                 },
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Level 3 Boss"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -3024,12 +3017,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Level 3 Boss"
-                  }
                 }
               ]
             },
@@ -3545,6 +3532,15 @@
                   ]
                 },
                 {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Raft",
+                      "Recorder"
+                    ]
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -3560,15 +3556,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Raft",
-                      "Recorder"
-                    ]
-                  }
                 },
                 {
                   "rule": "Has",
@@ -3695,6 +3682,15 @@
                   ]
                 },
                 {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Raft",
+                      "Recorder"
+                    ]
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -3710,15 +3706,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Raft",
-                      "Recorder"
-                    ]
-                  }
                 },
                 {
                   "rule": "HasAll",
@@ -4266,6 +4253,12 @@
                   }
                 },
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Level 4 Boss"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -4360,12 +4353,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Level 4 Boss"
-                  }
                 },
                 {
                   "rule": "HasAny",
@@ -4878,8 +4865,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -5006,8 +4993,8 @@
                   "args": {
                     "items": [
                       "Boss 5 Defeated",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -5412,34 +5399,6 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "HasGroup",
-                          "args": {
-                            "group": "arrows"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bow"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasGroup",
-                      "args": {
-                        "group": "swords"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
                           "rule": "Has",
                           "args": {
                             "item_name": "Heart Container",
@@ -5505,6 +5464,34 @@
                       "args": {
                         "item_name": "Heart Container",
                         "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "HasGroup",
+                          "args": {
+                            "group": "arrows"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bow"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "swords"
                       }
                     }
                   ]
@@ -5688,34 +5675,6 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "HasGroup",
-                          "args": {
-                            "group": "arrows"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bow"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasGroup",
-                      "args": {
-                        "group": "swords"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
                           "rule": "Has",
                           "args": {
                             "item_name": "Heart Container",
@@ -5781,6 +5740,34 @@
                       "args": {
                         "item_name": "Heart Container",
                         "count": 4
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "HasGroup",
+                          "args": {
+                            "group": "arrows"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bow"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "swords"
                       }
                     }
                   ]
@@ -6330,6 +6317,12 @@
                   }
                 },
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Level 5 Boss"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -6424,12 +6417,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Level 5 Boss"
-                  }
                 },
                 {
                   "rule": "Has",
@@ -6836,12 +6823,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "arrows"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -6942,11 +6923,17 @@
                   ]
                 },
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "arrows"
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Bow",
-                      "Stepladder"
+                      "Stepladder",
+                      "Bow"
                     ]
                   }
                 }
@@ -6969,12 +6956,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "arrows"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -7075,12 +7056,18 @@
                   ]
                 },
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "arrows"
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
                       "Boss 6 Defeated",
-                      "Bow",
-                      "Stepladder"
+                      "Stepladder",
+                      "Bow"
                     ]
                   }
                 }
@@ -7975,6 +7962,12 @@
                   }
                 },
                 {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Level 6 Boss"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -8069,12 +8062,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Level 6 Boss"
-                  }
                 },
                 {
                   "rule": "Has",
@@ -8213,8 +8200,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -8341,8 +8328,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -8468,8 +8455,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -8596,8 +8583,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -8725,8 +8712,8 @@
                     "items": [
                       "Boss 7 Defeated",
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -8852,8 +8839,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -8980,8 +8967,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9107,8 +9094,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9234,8 +9221,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9361,8 +9348,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9488,8 +9475,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9615,8 +9602,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9743,8 +9730,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9871,8 +9858,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -9999,8 +9986,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -10126,8 +10113,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -10253,8 +10240,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -10380,8 +10367,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -10508,8 +10495,8 @@
                   "args": {
                     "items": [
                       "Food",
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -10533,6 +10520,12 @@
                   "rule": "HasGroup",
                   "args": {
                     "group": "weapons"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Level 7 Boss"
                   }
                 },
                 {
@@ -10632,17 +10625,11 @@
                   ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Level 7 Boss"
-                  }
-                },
-                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Recorder",
-                      "Stepladder"
+                      "Stepladder",
+                      "Recorder"
                     ]
                   }
                 }
@@ -10673,18 +10660,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "arrows"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -10783,6 +10758,24 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "arrows"
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "arrows"
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -10812,12 +10805,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -10916,6 +10903,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10942,12 +10935,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -11046,6 +11033,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11072,12 +11065,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -11176,6 +11163,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11202,12 +11195,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -11323,6 +11310,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11349,12 +11342,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -11472,11 +11459,17 @@
                   ]
                 },
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
+                },
+                {
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Boss 8 Defeated",
-                      "Stepladder"
+                      "Stepladder",
+                      "Boss 8 Defeated"
                     ]
                   }
                 }
@@ -11496,12 +11489,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "candles"
-                  }
-                },
                 {
                   "rule": "HasGroup",
                   "args": {
@@ -11603,6 +11590,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11629,12 +11622,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -11733,6 +11720,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11759,42 +11752,8 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasGroup",
-                          "args": {
-                            "group": "arrows"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bow"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasGroup",
-                      "args": {
-                        "group": "swords"
-                      }
-                    }
-                  ]
                 },
                 {
                   "rule": "Or",
@@ -11876,6 +11835,34 @@
                   "rule": "Or",
                   "children": [
                     {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "HasGroup",
+                          "args": {
+                            "group": "arrows"
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bow"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "HasGroup",
+                      "args": {
+                        "group": "swords"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
                       "rule": "HasAll",
                       "args": {
                         "items": [
@@ -11891,6 +11878,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11917,14 +11910,84 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
+                    "group": "weapons"
                   }
                 },
                 {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "weapons"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": {
+                              "rule": "int",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Arithmetic",
+                                  "args": {
+                                    "left": 7,
+                                    "op": "/",
+                                    "right": 2
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": {
+                              "rule": "int",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Arithmetic",
+                                  "args": {
+                                    "left": 7,
+                                    "op": "/",
+                                    "right": 4
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Heart Container",
+                        "count": 7
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Or",
@@ -11958,82 +12021,6 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Heart Container",
-                            "count": {
-                              "rule": "int",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Arithmetic",
-                                  "args": {
-                                    "left": 7,
-                                    "op": "/",
-                                    "right": 2
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Heart Container",
-                            "count": {
-                              "rule": "int",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Arithmetic",
-                                  "args": {
-                                    "left": 7,
-                                    "op": "/",
-                                    "right": 4
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Red Ring"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Heart Container",
-                        "count": 7
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
                       "rule": "HasAll",
                       "args": {
                         "items": [
@@ -12049,6 +12036,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12075,12 +12068,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -12179,6 +12166,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12205,12 +12198,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -12309,6 +12296,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12335,18 +12328,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "arrows"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -12445,6 +12426,24 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "arrows"
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "arrows"
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -12474,12 +12473,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -12580,6 +12573,12 @@
                   ]
                 },
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
+                },
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Stepladder"
@@ -12604,14 +12603,84 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
+                    "group": "weapons"
                   }
                 },
                 {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "weapons"
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": {
+                              "rule": "int",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Arithmetic",
+                                  "args": {
+                                    "left": 7,
+                                    "op": "/",
+                                    "right": 2
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Heart Container",
+                            "count": {
+                              "rule": "int",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Arithmetic",
+                                  "args": {
+                                    "left": 7,
+                                    "op": "/",
+                                    "right": 4
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Red Ring"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Heart Container",
+                        "count": 7
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Or",
@@ -12645,82 +12714,6 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Heart Container",
-                            "count": {
-                              "rule": "int",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Arithmetic",
-                                  "args": {
-                                    "left": 7,
-                                    "op": "/",
-                                    "right": 2
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Heart Container",
-                            "count": {
-                              "rule": "int",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Arithmetic",
-                                  "args": {
-                                    "left": 7,
-                                    "op": "/",
-                                    "right": 4
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Red Ring"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Heart Container",
-                        "count": 7
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
                       "rule": "HasAll",
                       "args": {
                         "items": [
@@ -12736,6 +12729,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12762,12 +12761,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -12866,6 +12859,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12892,12 +12891,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -12996,6 +12989,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13022,12 +13021,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -13126,6 +13119,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "candles"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13152,13 +13151,13 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "candles"
+                    "group": "weapons"
                   }
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "CanReachLocation",
                   "args": {
-                    "group": "weapons"
+                    "location_name": "Level 8 Boss"
                   }
                 },
                 {
@@ -13258,9 +13257,9 @@
                   ]
                 },
                 {
-                  "rule": "CanReachLocation",
+                  "rule": "HasGroup",
                   "args": {
-                    "location_name": "Level 8 Boss"
+                    "group": "candles"
                   }
                 },
                 {
@@ -13296,12 +13295,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -13400,6 +13393,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13433,12 +13432,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -13537,6 +13530,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13570,12 +13569,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -13674,6 +13667,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13707,12 +13706,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -13811,6 +13804,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13844,12 +13843,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -13948,6 +13941,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13981,12 +13980,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14085,6 +14078,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14118,12 +14117,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14222,6 +14215,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14255,12 +14254,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14359,6 +14352,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14392,12 +14391,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14496,6 +14489,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14529,12 +14528,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14633,6 +14626,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14666,12 +14665,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14770,6 +14763,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14803,12 +14802,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -14907,6 +14900,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14940,12 +14939,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15044,6 +15037,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15077,12 +15076,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15181,6 +15174,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15214,12 +15213,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15318,6 +15311,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15351,12 +15350,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15455,6 +15448,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15488,12 +15487,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15592,6 +15585,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15625,12 +15624,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15729,6 +15722,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15762,12 +15761,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -15866,6 +15859,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -15899,12 +15898,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -16003,6 +15996,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -16036,12 +16035,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -16142,6 +16135,12 @@
                   ]
                 },
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
+                },
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Triforce Fragment",
@@ -16152,9 +16151,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Stepladder",
                       "Bow",
-                      "Silver Arrow",
-                      "Stepladder"
+                      "Silver Arrow"
                     ]
                   }
                 }
@@ -16179,12 +16178,6 @@
                 {
                   "rule": "HasGroup",
                   "args": {
-                    "group": "swords"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
                     "group": "weapons"
                   }
                 },
@@ -16283,6 +16276,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "swords"
+                  }
                 },
                 {
                   "rule": "Has",
@@ -16313,6 +16312,19 @@
             "show_in_spoiler": false
           }
         ]
+      },
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Begin Game",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "Overworld": {
         "name": "Overworld",

@@ -21,16 +21,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("BlackCastleVaultEntrance", player),
-        HasAny('Bridge', 'Magnet')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("CreditsToFarSide", player),
-        Has('Magnet', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("YellowCastlePort", player),
         Has('Yellow Key', 1)
     )
@@ -59,15 +49,25 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("WhiteCastlePeekPassage", player),
         HasAny('Bridge', 'Magnet')
     )
+
+    world.set_rule(
+        multiworld.get_entrance("BlackCastleVaultEntrance", player),
+        HasAny('Bridge', 'Magnet')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("CreditsToFarSide", player),
+        Has('Magnet', 1)
+    )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Slay Rhindle", player),
+        multiworld.get_location("Slay Yorgle", player),
         HasAll('Right Difficulty Switch', 'Sword')
     )
 
     world.set_rule(
-        multiworld.get_location("Slay Yorgle", player),
-        HasAll('Right Difficulty Switch', 'Sword')
+        multiworld.get_location("Chalice Home", player),
+        HasAll('Chalice', 'Yellow Key')
     )
 
     world.set_rule(
@@ -76,6 +76,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Chalice Home", player),
-        HasAll('Chalice', 'Yellow Key')
+        multiworld.get_location("Slay Rhindle", player),
+        HasAll('Right Difficulty Switch', 'Sword')
     )

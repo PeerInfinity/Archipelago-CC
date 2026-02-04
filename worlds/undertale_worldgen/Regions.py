@@ -10,13 +10,13 @@ from .Locations import location_table, UndertaleWorldGenLocation
 
 
 # Regions that were added after sphere calculation (from original export)
-DYNAMICALLY_ADDED_REGIONS = {"???", "Barrier", "News Show", "Old Home", "True Lab"}
+DYNAMICALLY_ADDED_REGIONS = {"???", "Old Home", "News Show", "True Lab", "Barrier"}
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "???", "Barrier", "Cooking Show", "Core", "Hotland", "Hub", "Last Corridor", "New Home", "News Show", "Old Home", "Papyrus\" Home", "Ruins", "Snowdin Forest", "Snowdin Town", "True Lab", "Undyne\"s Home", "Waterfall"]
+    region_names = ["Menu", "???", "Hub", "Ruins", "Old Home", "Snowdin Forest", "Snowdin Town", "Papyrus\" Home", "Waterfall", "Undyne\"s Home", "Hotland", "Cooking Show", "News Show", "True Lab", "Core", "New Home", "Last Corridor", "Barrier"]
 
     regions = {}
     for region_name in region_names:
@@ -56,21 +56,21 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create entrances
     _create_entrance(regions["Menu"], regions["Hub"], "New Game")
     _create_entrance(regions["Menu"], regions["???"], "??? Exit")
-    _create_entrance(regions["Cooking Show"], regions["News Show"], "News Show Entrance")
-    _create_entrance(regions["Core"], regions["New Home"], "Core Exit")
-    _create_entrance(regions["Hotland"], regions["Cooking Show"], "Cooking Show Entrance")
-    _create_entrance(regions["Hotland"], regions["True Lab"], "Lab Elevator")
     _create_entrance(regions["Hub"], regions["Ruins"], "Ruins Hub")
     _create_entrance(regions["Hub"], regions["Snowdin Forest"], "Snowdin Hub")
     _create_entrance(regions["Hub"], regions["Waterfall"], "Waterfall Hub")
     _create_entrance(regions["Hub"], regions["Hotland"], "Hotland Hub")
     _create_entrance(regions["Hub"], regions["Core"], "Core Hub")
-    _create_entrance(regions["Last Corridor"], regions["Barrier"], "Last Corridor Exit")
-    _create_entrance(regions["New Home"], regions["Last Corridor"], "New Home Exit")
     _create_entrance(regions["Ruins"], regions["Old Home"], "Ruins Exit")
     _create_entrance(regions["Snowdin Forest"], regions["Snowdin Town"], "Snowdin Forest Exit")
     _create_entrance(regions["Snowdin Town"], regions["Papyrus\" Home"], "Papyrus\" Home Entrance")
     _create_entrance(regions["Waterfall"], regions["Undyne\"s Home"], "Undyne\"s Home Entrance")
+    _create_entrance(regions["Hotland"], regions["Cooking Show"], "Cooking Show Entrance")
+    _create_entrance(regions["Hotland"], regions["True Lab"], "Lab Elevator")
+    _create_entrance(regions["Cooking Show"], regions["News Show"], "News Show Entrance")
+    _create_entrance(regions["Core"], regions["New Home"], "Core Exit")
+    _create_entrance(regions["New Home"], regions["Last Corridor"], "New Home Exit")
+    _create_entrance(regions["Last Corridor"], regions["Barrier"], "Last Corridor Exit")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

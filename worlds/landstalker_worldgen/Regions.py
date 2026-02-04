@@ -11,139 +11,139 @@ from .Locations import location_table, LandstalkerTheTreasuresofKingNoleWorldGen
 
 # Region display names (hint text)
 REGION_HINTS: Dict[str, str] = {
-    "Crypt": "in Mercator crypt",
-    "Destel": "in the village of Destel",
-    "Destel Well": "in Destel region",
-    "Greenmaze (Cutter hidden sector)": "among the trees",
-    "Greenmaze (post-whistle tree)": "in the infamous Greenmaze",
-    "Greenmaze (post-whistle)": "in the infamous Greenmaze",
-    "Greenmaze (pre-whistle)": "in the infamous Greenmaze",
-    "Gumi": "in a region inhabited by bears",
-    "Gumi (after Swamp Shrine)": "in a village",
-    "Kazalt": "in King Nole's domain",
-    "King Nole's Cave": "in a large cave",
-    "King Nole's Labyrinth (after door)": "in King Nole's labyrinth",
-    "King Nole's Labyrinth (before door)": "in King Nole's domain",
-    "King Nole's Labyrinth (exterior)": "in King Nole's domain",
-    "King Nole's Labyrinth (fall from exterior)": "in King Nole's domain",
-    "King Nole's Labyrinth (path to palace)": "in King Nole's labyrinth",
-    "King Nole's Labyrinth (raft entrance)": "in King Nole's labyrinth",
-    "King Nole's Labyrinth (raft)": "in King Nole's labyrinth",
-    "King Nole's Labyrinth (sacred tree)": "among the trees",
-    "King Nole's Palace": "in King Nole's palace",
-    "Lake Shrine": "near a lake",
     "Massan": "in the village of Massan",
-    "Massan (after Swamp Shrine)": "in a region inhabited by bears",
     "Massan Cave": "in a large cave",
-    "Mercator": "in the town of Mercator",
-    "Mercator (docks with repaired lighthouse)": "in the town of Mercator",
-    "Mercator special shop": "in a town",
-    "Mir Tower (post-garlic)": "inside a tower",
-    "Mir Tower (pre-garlic)": "inside a tower",
-    "Mir Tower sector": "on a route",
-    "Mir Tower sector (coast behind sacred tree)": "among the trees",
-    "Mir Tower sector (ledge behind sacred tree)": "on a route",
-    "Mountainous Area": "in a mountainous area",
-    "Mountainous Area tree": "in a mountainous area",
-    "Route after Destel": "in Destel region",
     "Route between Massan and Gumi": "between Massan and Gumi",
-    "Route between Verla and Destel": "on a route",
+    "Waterfall Shrine": "in a region inhabited by bears",
+    "Swamp Shrine": "near a swamp",
+    "Massan (after Swamp Shrine)": "in a region inhabited by bears",
+    "Gumi (after Swamp Shrine)": "in a village",
+    "Gumi": "in a region inhabited by bears",
     "Route from Gumi to Ryuma": "on a route",
-    "Route from Gumi to Ryuma (Mercator gate tree)": "on a route",
     "Route from Gumi to Ryuma (Tibor tree)": "in a region inhabited by bears",
-    "Route to Lake Shrine": "near a lake",
-    "Route to Lake Shrine cliff": "near a lake",
+    "Route from Gumi to Ryuma (Mercator gate tree)": "on a route",
+    "Tibor": "among the trees",
     "Ryuma": "in a town",
     "Ryuma (after Thieves Hideout)": "in a town",
     "Ryuma (repaired lighthouse)": "in the town of Ryuma",
-    "Swamp Shrine": "near a swamp",
-    "Thieves Hideout (after keydoor)": "in a large cave",
     "Thieves Hideout (before keydoor)": "close to a waterfall",
-    "Tibor": "among the trees",
+    "Thieves Hideout (after keydoor)": "in a large cave",
+    "Witch Helga's Hut": "near a swamp",
+    "Mercator": "in the town of Mercator",
+    "Mercator (docks with repaired lighthouse)": "in the town of Mercator",
+    "Crypt": "in Mercator crypt",
+    "Mercator special shop": "in a town",
+    "Mir Tower sector": "on a route",
+    "Mir Tower sector (ledge behind sacred tree)": "on a route",
+    "Mir Tower sector (coast behind sacred tree)": "among the trees",
     "Twinkle village": "in Twinkle village",
+    "Mir Tower (pre-garlic)": "inside a tower",
+    "Mir Tower (post-garlic)": "inside a tower",
+    "Greenmaze (pre-whistle)": "in the infamous Greenmaze",
+    "Greenmaze (Cutter hidden sector)": "among the trees",
+    "Greenmaze (post-whistle)": "in the infamous Greenmaze",
+    "Greenmaze (post-whistle tree)": "in the infamous Greenmaze",
+    "Verla shore": "near the town of Verla",
+    "Verla shore tree": "near the town of Verla",
+    "Verla shore cliff (accessible from Verla Mines)": "near the town of Verla",
     "Verla": "in a town",
     "Verla (after mines)": "in a town",
     "Verla Mines": "in Verla Mines",
     "Verla Mines (behind lava)": "in Verla Mines",
-    "Verla shore": "near the town of Verla",
-    "Verla shore cliff (accessible from Verla Mines)": "near the town of Verla",
-    "Verla shore tree": "near the town of Verla",
-    "Waterfall Shrine": "in a region inhabited by bears",
-    "Witch Helga's Hut": "near a swamp",
+    "Route between Verla and Destel": "on a route",
+    "Destel": "in the village of Destel",
+    "Route after Destel": "in Destel region",
+    "Destel Well": "in Destel region",
+    "Route to Lake Shrine": "near a lake",
+    "Route to Lake Shrine cliff": "near a lake",
+    "Lake Shrine": "near a lake",
+    "Mountainous Area": "in a mountainous area",
+    "Mountainous Area tree": "in a mountainous area",
+    "King Nole's Cave": "in a large cave",
+    "Kazalt": "in King Nole's domain",
+    "King Nole's Labyrinth (before door)": "in King Nole's domain",
+    "King Nole's Labyrinth (after door)": "in King Nole's labyrinth",
+    "King Nole's Labyrinth (exterior)": "in King Nole's domain",
+    "King Nole's Labyrinth (fall from exterior)": "in King Nole's domain",
+    "King Nole's Labyrinth (raft entrance)": "in King Nole's labyrinth",
+    "King Nole's Labyrinth (raft)": "in King Nole's labyrinth",
+    "King Nole's Labyrinth (sacred tree)": "among the trees",
+    "King Nole's Labyrinth (path to palace)": "in King Nole's labyrinth",
+    "King Nole's Palace": "in King Nole's palace",
 }
 
 # Region extra attributes (game-specific, e.g., code)
 REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {
     "Menu": {"code": "menu"},
-    "Crypt": {"code": "crypt"},
-    "Destel": {"code": "destel"},
-    "Destel Well": {"code": "destel_well"},
-    "Greenmaze (Cutter hidden sector)": {"code": "greenmaze_cutter"},
-    "Greenmaze (post-whistle tree)": {"code": "greenmaze_post_whistle_tree"},
-    "Greenmaze (post-whistle)": {"code": "greenmaze_post_whistle"},
-    "Greenmaze (pre-whistle)": {"code": "greenmaze_pre_whistle"},
-    "Gumi": {"code": "gumi"},
-    "Gumi (after Swamp Shrine)": {"code": "gumi_after_swamp_shrine"},
-    "Kazalt": {"code": "kazalt"},
-    "King Nole's Cave": {"code": "king_nole_cave"},
-    "King Nole's Labyrinth (after door)": {"code": "king_nole_labyrinth_post_door"},
-    "King Nole's Labyrinth (before door)": {"code": "king_nole_labyrinth_pre_door"},
-    "King Nole's Labyrinth (exterior)": {"code": "king_nole_labyrinth_exterior"},
-    "King Nole's Labyrinth (fall from exterior)": {"code": "king_nole_labyrinth_fall_from_exterior"},
-    "King Nole's Labyrinth (path to palace)": {"code": "king_nole_labyrinth_path_to_palace"},
-    "King Nole's Labyrinth (raft entrance)": {"code": "king_nole_labyrinth_raft_entrance"},
-    "King Nole's Labyrinth (raft)": {"code": "king_nole_labyrinth_raft"},
-    "King Nole's Labyrinth (sacred tree)": {"code": "king_nole_labyrinth_sacred_tree"},
-    "King Nole's Palace": {"code": "king_nole_palace"},
-    "Lake Shrine": {"code": "lake_shrine"},
     "Massan": {"code": "massan"},
-    "Massan (after Swamp Shrine)": {"code": "massan_after_swamp_shrine"},
     "Massan Cave": {"code": "massan_cave"},
-    "Mercator": {"code": "mercator"},
-    "Mercator (docks with repaired lighthouse)": {"code": "mercator_repaired_docks"},
-    "Mercator Dungeon": {"code": "mercator_dungeon"},
-    "Mercator casino": {"code": "mercator_casino"},
-    "Mercator special shop": {"code": "mercator_special_shop"},
-    "Mir Tower (post-garlic)": {"code": "mir_tower_post_garlic"},
-    "Mir Tower (pre-garlic)": {"code": "mir_tower_pre_garlic"},
-    "Mir Tower sector": {"code": "mir_tower_sector"},
-    "Mir Tower sector (coast behind sacred tree)": {"code": "mir_tower_sector_tree_coast"},
-    "Mir Tower sector (ledge behind sacred tree)": {"code": "mir_tower_sector_tree_ledge"},
-    "Mountainous Area": {"code": "mountainous_area"},
-    "Mountainous Area tree": {"code": "mountainous_area_tree"},
-    "Route after Destel": {"code": "route_after_destel"},
     "Route between Massan and Gumi": {"code": "route_massan_gumi"},
-    "Route between Verla and Destel": {"code": "route_verla_destel"},
+    "Waterfall Shrine": {"code": "waterfall_shrine"},
+    "Swamp Shrine": {"code": "swamp_shrine"},
+    "Massan (after Swamp Shrine)": {"code": "massan_after_swamp_shrine"},
+    "Gumi (after Swamp Shrine)": {"code": "gumi_after_swamp_shrine"},
+    "Gumi": {"code": "gumi"},
     "Route from Gumi to Ryuma": {"code": "route_gumi_ryuma"},
-    "Route from Gumi to Ryuma (Mercator gate tree)": {"code": "mercator_gate_tree"},
     "Route from Gumi to Ryuma (Tibor tree)": {"code": "tibor_tree"},
-    "Route to Lake Shrine": {"code": "route_lake_shrine"},
-    "Route to Lake Shrine cliff": {"code": "route_lake_shrine_cliff"},
+    "Route from Gumi to Ryuma (Mercator gate tree)": {"code": "mercator_gate_tree"},
+    "Tibor": {"code": "tibor"},
     "Ryuma": {"code": "ryuma"},
     "Ryuma (after Thieves Hideout)": {"code": "ryuma_after_thieves_hideout"},
     "Ryuma (repaired lighthouse)": {"code": "ryuma_lighthouse_repaired"},
-    "Swamp Shrine": {"code": "swamp_shrine"},
-    "The End": {"code": "end"},
-    "Thieves Hideout (after keydoor)": {"code": "thieves_hideout_post_key"},
     "Thieves Hideout (before keydoor)": {"code": "thieves_hideout_pre_key"},
-    "Tibor": {"code": "tibor"},
+    "Thieves Hideout (after keydoor)": {"code": "thieves_hideout_post_key"},
+    "Witch Helga's Hut": {"code": "helga_hut"},
+    "Mercator": {"code": "mercator"},
+    "Mercator (docks with repaired lighthouse)": {"code": "mercator_repaired_docks"},
+    "Mercator casino": {"code": "mercator_casino"},
+    "Mercator Dungeon": {"code": "mercator_dungeon"},
+    "Crypt": {"code": "crypt"},
+    "Mercator special shop": {"code": "mercator_special_shop"},
+    "Mir Tower sector": {"code": "mir_tower_sector"},
+    "Mir Tower sector (ledge behind sacred tree)": {"code": "mir_tower_sector_tree_ledge"},
+    "Mir Tower sector (coast behind sacred tree)": {"code": "mir_tower_sector_tree_coast"},
     "Twinkle village": {"code": "twinkle_village"},
+    "Mir Tower (pre-garlic)": {"code": "mir_tower_pre_garlic"},
+    "Mir Tower (post-garlic)": {"code": "mir_tower_post_garlic"},
+    "Greenmaze (pre-whistle)": {"code": "greenmaze_pre_whistle"},
+    "Greenmaze (Cutter hidden sector)": {"code": "greenmaze_cutter"},
+    "Greenmaze (post-whistle)": {"code": "greenmaze_post_whistle"},
+    "Greenmaze (post-whistle tree)": {"code": "greenmaze_post_whistle_tree"},
+    "Verla shore": {"code": "verla_shore"},
+    "Verla shore tree": {"code": "verla_shore_tree"},
+    "Verla shore cliff (accessible from Verla Mines)": {"code": "verla_shore_cliff"},
     "Verla": {"code": "verla"},
     "Verla (after mines)": {"code": "verla_after_mines"},
     "Verla Mines": {"code": "verla_mines"},
     "Verla Mines (behind lava)": {"code": "verla_mines_behind_lava"},
-    "Verla shore": {"code": "verla_shore"},
-    "Verla shore cliff (accessible from Verla Mines)": {"code": "verla_shore_cliff"},
-    "Verla shore tree": {"code": "verla_shore_tree"},
-    "Waterfall Shrine": {"code": "waterfall_shrine"},
-    "Witch Helga's Hut": {"code": "helga_hut"},
+    "Route between Verla and Destel": {"code": "route_verla_destel"},
+    "Destel": {"code": "destel"},
+    "Route after Destel": {"code": "route_after_destel"},
+    "Destel Well": {"code": "destel_well"},
+    "Route to Lake Shrine": {"code": "route_lake_shrine"},
+    "Route to Lake Shrine cliff": {"code": "route_lake_shrine_cliff"},
+    "Lake Shrine": {"code": "lake_shrine"},
+    "Mountainous Area": {"code": "mountainous_area"},
+    "Mountainous Area tree": {"code": "mountainous_area_tree"},
+    "King Nole's Cave": {"code": "king_nole_cave"},
+    "Kazalt": {"code": "kazalt"},
+    "King Nole's Labyrinth (before door)": {"code": "king_nole_labyrinth_pre_door"},
+    "King Nole's Labyrinth (after door)": {"code": "king_nole_labyrinth_post_door"},
+    "King Nole's Labyrinth (exterior)": {"code": "king_nole_labyrinth_exterior"},
+    "King Nole's Labyrinth (fall from exterior)": {"code": "king_nole_labyrinth_fall_from_exterior"},
+    "King Nole's Labyrinth (raft entrance)": {"code": "king_nole_labyrinth_raft_entrance"},
+    "King Nole's Labyrinth (raft)": {"code": "king_nole_labyrinth_raft"},
+    "King Nole's Labyrinth (sacred tree)": {"code": "king_nole_labyrinth_sacred_tree"},
+    "King Nole's Labyrinth (path to palace)": {"code": "king_nole_labyrinth_path_to_palace"},
+    "King Nole's Palace": {"code": "king_nole_palace"},
+    "The End": {"code": "end"},
 }
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Crypt", "Destel", "Destel Well", "Greenmaze (Cutter hidden sector)", "Greenmaze (post-whistle tree)", "Greenmaze (post-whistle)", "Greenmaze (pre-whistle)", "Gumi", "Gumi (after Swamp Shrine)", "Kazalt", "King Nole's Cave", "King Nole's Labyrinth (after door)", "King Nole's Labyrinth (before door)", "King Nole's Labyrinth (exterior)", "King Nole's Labyrinth (fall from exterior)", "King Nole's Labyrinth (path to palace)", "King Nole's Labyrinth (raft entrance)", "King Nole's Labyrinth (raft)", "King Nole's Labyrinth (sacred tree)", "King Nole's Palace", "Lake Shrine", "Massan", "Massan (after Swamp Shrine)", "Massan Cave", "Mercator", "Mercator (docks with repaired lighthouse)", "Mercator Dungeon", "Mercator casino", "Mercator special shop", "Mir Tower (post-garlic)", "Mir Tower (pre-garlic)", "Mir Tower sector", "Mir Tower sector (coast behind sacred tree)", "Mir Tower sector (ledge behind sacred tree)", "Mountainous Area", "Mountainous Area tree", "Route after Destel", "Route between Massan and Gumi", "Route between Verla and Destel", "Route from Gumi to Ryuma", "Route from Gumi to Ryuma (Mercator gate tree)", "Route from Gumi to Ryuma (Tibor tree)", "Route to Lake Shrine", "Route to Lake Shrine cliff", "Ryuma", "Ryuma (after Thieves Hideout)", "Ryuma (repaired lighthouse)", "Swamp Shrine", "The End", "Thieves Hideout (after keydoor)", "Thieves Hideout (before keydoor)", "Tibor", "Twinkle village", "Verla", "Verla (after mines)", "Verla Mines", "Verla Mines (behind lava)", "Verla shore", "Verla shore cliff (accessible from Verla Mines)", "Verla shore tree", "Waterfall Shrine", "Witch Helga's Hut"]
+    region_names = ["Menu", "Massan", "Massan Cave", "Route between Massan and Gumi", "Waterfall Shrine", "Swamp Shrine", "Massan (after Swamp Shrine)", "Gumi (after Swamp Shrine)", "Gumi", "Route from Gumi to Ryuma", "Route from Gumi to Ryuma (Tibor tree)", "Route from Gumi to Ryuma (Mercator gate tree)", "Tibor", "Ryuma", "Ryuma (after Thieves Hideout)", "Ryuma (repaired lighthouse)", "Thieves Hideout (before keydoor)", "Thieves Hideout (after keydoor)", "Witch Helga's Hut", "Mercator", "Mercator (docks with repaired lighthouse)", "Mercator casino", "Mercator Dungeon", "Crypt", "Mercator special shop", "Mir Tower sector", "Mir Tower sector (ledge behind sacred tree)", "Mir Tower sector (coast behind sacred tree)", "Twinkle village", "Mir Tower (pre-garlic)", "Mir Tower (post-garlic)", "Greenmaze (pre-whistle)", "Greenmaze (Cutter hidden sector)", "Greenmaze (post-whistle)", "Greenmaze (post-whistle tree)", "Verla shore", "Verla shore tree", "Verla shore cliff (accessible from Verla Mines)", "Verla", "Verla (after mines)", "Verla Mines", "Verla Mines (behind lava)", "Route between Verla and Destel", "Destel", "Route after Destel", "Destel Well", "Route to Lake Shrine", "Route to Lake Shrine cliff", "Lake Shrine", "Mountainous Area", "Mountainous Area tree", "King Nole's Cave", "Kazalt", "King Nole's Labyrinth (before door)", "King Nole's Labyrinth (after door)", "King Nole's Labyrinth (exterior)", "King Nole's Labyrinth (fall from exterior)", "King Nole's Labyrinth (raft entrance)", "King Nole's Labyrinth (raft)", "King Nole's Labyrinth (sacred tree)", "King Nole's Labyrinth (path to palace)", "King Nole's Palace", "The End"]
 
     regions = {}
     for region_name in region_names:
@@ -192,50 +192,37 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Massan"], "menu -> massan")
-    _create_entrance(regions["Crypt"], regions["Mercator"], "crypt -> mercator")
-    _create_entrance(regions["Destel"], regions["Route between Verla and Destel"], "destel -> route_verla_destel")
-    _create_entrance(regions["Destel"], regions["Route after Destel"], "destel -> route_after_destel")
-    _create_entrance(regions["Destel"], regions["Destel Well"], "destel -> destel_well")
-    _create_entrance(regions["Destel Well"], regions["Destel"], "destel_well -> destel")
-    _create_entrance(regions["Destel Well"], regions["Route to Lake Shrine"], "destel_well -> route_lake_shrine")
-    _create_entrance(regions["Greenmaze (Cutter hidden sector)"], regions["Greenmaze (pre-whistle)"], "greenmaze_cutter -> greenmaze_pre_whistle")
-    _create_entrance(regions["Greenmaze (post-whistle tree)"], regions["Greenmaze (post-whistle)"], "greenmaze_post_whistle_tree -> greenmaze_post_whistle")
-    _create_entrance(regions["Greenmaze (post-whistle)"], regions["Greenmaze (post-whistle tree)"], "greenmaze_post_whistle -> greenmaze_post_whistle_tree")
-    _create_entrance(regions["Greenmaze (post-whistle)"], regions["Route between Massan and Gumi"], "greenmaze_post_whistle -> route_massan_gumi")
-    _create_entrance(regions["Greenmaze (post-whistle)"], regions["Greenmaze (pre-whistle)"], "greenmaze_post_whistle -> greenmaze_pre_whistle")
-    _create_entrance(regions["Greenmaze (pre-whistle)"], regions["Greenmaze (post-whistle)"], "greenmaze_pre_whistle -> greenmaze_post_whistle")
-    _create_entrance(regions["Greenmaze (pre-whistle)"], regions["Greenmaze (Cutter hidden sector)"], "greenmaze_pre_whistle -> greenmaze_cutter")
-    _create_entrance(regions["Greenmaze (pre-whistle)"], regions["Mountainous Area"], "greenmaze_pre_whistle -> mountainous_area")
-    _create_entrance(regions["Gumi"], regions["Route between Massan and Gumi"], "gumi -> route_massan_gumi")
-    _create_entrance(regions["Gumi"], regions["Gumi (after Swamp Shrine)"], "gumi -> gumi_after_swamp_shrine")
-    _create_entrance(regions["Gumi"], regions["Route from Gumi to Ryuma"], "gumi -> route_gumi_ryuma")
-    _create_entrance(regions["Kazalt"], regions["King Nole's Cave"], "kazalt -> king_nole_cave")
-    _create_entrance(regions["Kazalt"], regions["King Nole's Labyrinth (before door)"], "kazalt -> king_nole_labyrinth_pre_door")
-    _create_entrance(regions["King Nole's Cave"], regions["Mountainous Area"], "king_nole_cave -> mountainous_area")
-    _create_entrance(regions["King Nole's Cave"], regions["Mercator"], "king_nole_cave -> mercator")
-    _create_entrance(regions["King Nole's Cave"], regions["Kazalt"], "king_nole_cave -> kazalt")
-    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (before door)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_pre_door")
-    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (raft entrance)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_raft_entrance")
-    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (path to palace)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_path_to_palace")
-    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (sacred tree)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree")
-    _create_entrance(regions["King Nole's Labyrinth (before door)"], regions["Kazalt"], "king_nole_labyrinth_pre_door -> kazalt")
-    _create_entrance(regions["King Nole's Labyrinth (before door)"], regions["King Nole's Labyrinth (after door)"], "king_nole_labyrinth_pre_door -> king_nole_labyrinth_post_door")
-    _create_entrance(regions["King Nole's Labyrinth (before door)"], regions["King Nole's Labyrinth (exterior)"], "king_nole_labyrinth_pre_door -> king_nole_labyrinth_exterior")
-    _create_entrance(regions["King Nole's Labyrinth (exterior)"], regions["King Nole's Labyrinth (fall from exterior)"], "king_nole_labyrinth_exterior -> king_nole_labyrinth_fall_from_exterior")
-    _create_entrance(regions["King Nole's Labyrinth (fall from exterior)"], regions["King Nole's Labyrinth (before door)"], "king_nole_labyrinth_fall_from_exterior -> king_nole_labyrinth_pre_door")
-    _create_entrance(regions["King Nole's Labyrinth (path to palace)"], regions["King Nole's Labyrinth (after door)"], "king_nole_labyrinth_path_to_palace -> king_nole_labyrinth_post_door")
-    _create_entrance(regions["King Nole's Labyrinth (path to palace)"], regions["King Nole's Palace"], "king_nole_labyrinth_path_to_palace -> king_nole_palace")
-    _create_entrance(regions["King Nole's Labyrinth (raft entrance)"], regions["King Nole's Labyrinth (after door)"], "king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_post_door")
-    _create_entrance(regions["King Nole's Labyrinth (raft entrance)"], regions["King Nole's Labyrinth (raft)"], "king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_raft")
-    _create_entrance(regions["King Nole's Labyrinth (raft)"], regions["King Nole's Labyrinth (raft entrance)"], "king_nole_labyrinth_raft -> king_nole_labyrinth_raft_entrance")
-    _create_entrance(regions["King Nole's Palace"], regions["King Nole's Labyrinth (path to palace)"], "king_nole_palace -> king_nole_labyrinth_path_to_palace")
-    _create_entrance(regions["King Nole's Palace"], regions["The End"], "king_nole_palace -> end")
-    _create_entrance(regions["Lake Shrine"], regions["Route to Lake Shrine"], "lake_shrine -> route_lake_shrine")
-    _create_entrance(regions["Lake Shrine"], regions["Mir Tower sector"], "lake_shrine -> mir_tower_sector")
     _create_entrance(regions["Massan"], regions["Massan Cave"], "massan -> massan_cave")
     _create_entrance(regions["Massan"], regions["Massan (after Swamp Shrine)"], "massan -> massan_after_swamp_shrine")
     _create_entrance(regions["Massan"], regions["Route between Massan and Gumi"], "massan -> route_massan_gumi")
     _create_entrance(regions["Massan Cave"], regions["Massan"], "massan_cave -> massan")
+    _create_entrance(regions["Route between Massan and Gumi"], regions["Massan"], "route_massan_gumi -> massan")
+    _create_entrance(regions["Route between Massan and Gumi"], regions["Waterfall Shrine"], "route_massan_gumi -> waterfall_shrine")
+    _create_entrance(regions["Route between Massan and Gumi"], regions["Swamp Shrine"], "route_massan_gumi -> swamp_shrine")
+    _create_entrance(regions["Route between Massan and Gumi"], regions["Gumi"], "route_massan_gumi -> gumi")
+    _create_entrance(regions["Waterfall Shrine"], regions["Route between Massan and Gumi"], "waterfall_shrine -> route_massan_gumi")
+    _create_entrance(regions["Swamp Shrine"], regions["Route between Massan and Gumi"], "swamp_shrine -> route_massan_gumi")
+    _create_entrance(regions["Gumi"], regions["Route between Massan and Gumi"], "gumi -> route_massan_gumi")
+    _create_entrance(regions["Gumi"], regions["Gumi (after Swamp Shrine)"], "gumi -> gumi_after_swamp_shrine")
+    _create_entrance(regions["Gumi"], regions["Route from Gumi to Ryuma"], "gumi -> route_gumi_ryuma")
+    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Ryuma"], "route_gumi_ryuma -> ryuma")
+    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Route from Gumi to Ryuma (Tibor tree)"], "route_gumi_ryuma -> tibor_tree")
+    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Route from Gumi to Ryuma (Mercator gate tree)"], "route_gumi_ryuma -> mercator_gate_tree")
+    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Tibor"], "route_gumi_ryuma -> tibor")
+    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Witch Helga's Hut"], "route_gumi_ryuma -> helga_hut")
+    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Mercator"], "route_gumi_ryuma -> mercator")
+    _create_entrance(regions["Route from Gumi to Ryuma (Tibor tree)"], regions["Route from Gumi to Ryuma"], "tibor_tree -> route_gumi_ryuma")
+    _create_entrance(regions["Route from Gumi to Ryuma (Mercator gate tree)"], regions["Route from Gumi to Ryuma"], "mercator_gate_tree -> route_gumi_ryuma")
+    _create_entrance(regions["Tibor"], regions["Route from Gumi to Ryuma"], "tibor -> route_gumi_ryuma")
+    _create_entrance(regions["Ryuma"], regions["Route from Gumi to Ryuma"], "ryuma -> route_gumi_ryuma")
+    _create_entrance(regions["Ryuma"], regions["Ryuma (after Thieves Hideout)"], "ryuma -> ryuma_after_thieves_hideout")
+    _create_entrance(regions["Ryuma"], regions["Ryuma (repaired lighthouse)"], "ryuma -> ryuma_lighthouse_repaired")
+    _create_entrance(regions["Ryuma"], regions["Thieves Hideout (before keydoor)"], "ryuma -> thieves_hideout_pre_key")
+    _create_entrance(regions["Ryuma (repaired lighthouse)"], regions["Ryuma"], "ryuma_lighthouse_repaired -> ryuma")
+    _create_entrance(regions["Thieves Hideout (before keydoor)"], regions["Ryuma"], "thieves_hideout_pre_key -> ryuma")
+    _create_entrance(regions["Thieves Hideout (before keydoor)"], regions["Thieves Hideout (after keydoor)"], "thieves_hideout_pre_key -> thieves_hideout_post_key")
+    _create_entrance(regions["Thieves Hideout (after keydoor)"], regions["Thieves Hideout (before keydoor)"], "thieves_hideout_post_key -> thieves_hideout_pre_key")
+    _create_entrance(regions["Witch Helga's Hut"], regions["Route from Gumi to Ryuma"], "helga_hut -> route_gumi_ryuma")
     _create_entrance(regions["Mercator"], regions["Route from Gumi to Ryuma"], "mercator -> route_gumi_ryuma")
     _create_entrance(regions["Mercator"], regions["Mercator Dungeon"], "mercator -> mercator_dungeon")
     _create_entrance(regions["Mercator"], regions["Crypt"], "mercator -> crypt")
@@ -245,55 +232,38 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Mercator"], regions["Greenmaze (pre-whistle)"], "mercator -> greenmaze_pre_whistle")
     _create_entrance(regions["Mercator"], regions["Mercator (docks with repaired lighthouse)"], "mercator -> mercator_repaired_docks")
     _create_entrance(regions["Mercator (docks with repaired lighthouse)"], regions["Verla shore"], "mercator_repaired_docks -> verla_shore")
-    _create_entrance(regions["Mercator Dungeon"], regions["Mercator"], "mercator_dungeon -> mercator")
     _create_entrance(regions["Mercator casino"], regions["Mercator"], "mercator_casino -> mercator")
+    _create_entrance(regions["Mercator Dungeon"], regions["Mercator"], "mercator_dungeon -> mercator")
+    _create_entrance(regions["Crypt"], regions["Mercator"], "crypt -> mercator")
     _create_entrance(regions["Mercator special shop"], regions["Mercator"], "mercator_special_shop -> mercator")
-    _create_entrance(regions["Mir Tower (post-garlic)"], regions["Mir Tower (pre-garlic)"], "mir_tower_post_garlic -> mir_tower_pre_garlic")
-    _create_entrance(regions["Mir Tower (post-garlic)"], regions["Mir Tower sector"], "mir_tower_post_garlic -> mir_tower_sector")
-    _create_entrance(regions["Mir Tower (pre-garlic)"], regions["Mir Tower sector"], "mir_tower_pre_garlic -> mir_tower_sector")
-    _create_entrance(regions["Mir Tower (pre-garlic)"], regions["Mir Tower (post-garlic)"], "mir_tower_pre_garlic -> mir_tower_post_garlic")
     _create_entrance(regions["Mir Tower sector"], regions["Mercator"], "mir_tower_sector -> mercator")
     _create_entrance(regions["Mir Tower sector"], regions["Twinkle village"], "mir_tower_sector -> twinkle_village")
     _create_entrance(regions["Mir Tower sector"], regions["Mir Tower sector (ledge behind sacred tree)"], "mir_tower_sector -> mir_tower_sector_tree_ledge")
     _create_entrance(regions["Mir Tower sector"], regions["Mir Tower sector (coast behind sacred tree)"], "mir_tower_sector -> mir_tower_sector_tree_coast")
     _create_entrance(regions["Mir Tower sector"], regions["Mir Tower (pre-garlic)"], "mir_tower_sector -> mir_tower_pre_garlic")
     _create_entrance(regions["Mir Tower sector"], regions["Verla shore"], "mir_tower_sector -> verla_shore")
-    _create_entrance(regions["Mir Tower sector (coast behind sacred tree)"], regions["Mir Tower sector"], "mir_tower_sector_tree_coast -> mir_tower_sector")
     _create_entrance(regions["Mir Tower sector (ledge behind sacred tree)"], regions["Mir Tower sector"], "mir_tower_sector_tree_ledge -> mir_tower_sector")
-    _create_entrance(regions["Mountainous Area"], regions["Greenmaze (pre-whistle)"], "mountainous_area -> greenmaze_pre_whistle")
-    _create_entrance(regions["Mountainous Area"], regions["Mountainous Area tree"], "mountainous_area -> mountainous_area_tree")
-    _create_entrance(regions["Mountainous Area"], regions["Route to Lake Shrine cliff"], "mountainous_area -> route_lake_shrine_cliff")
-    _create_entrance(regions["Mountainous Area"], regions["King Nole's Cave"], "mountainous_area -> king_nole_cave")
-    _create_entrance(regions["Mountainous Area tree"], regions["Mountainous Area"], "mountainous_area_tree -> mountainous_area")
-    _create_entrance(regions["Route after Destel"], regions["Destel"], "route_after_destel -> destel")
-    _create_entrance(regions["Route between Massan and Gumi"], regions["Massan"], "route_massan_gumi -> massan")
-    _create_entrance(regions["Route between Massan and Gumi"], regions["Waterfall Shrine"], "route_massan_gumi -> waterfall_shrine")
-    _create_entrance(regions["Route between Massan and Gumi"], regions["Swamp Shrine"], "route_massan_gumi -> swamp_shrine")
-    _create_entrance(regions["Route between Massan and Gumi"], regions["Gumi"], "route_massan_gumi -> gumi")
-    _create_entrance(regions["Route between Verla and Destel"], regions["Destel"], "route_verla_destel -> destel")
-    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Ryuma"], "route_gumi_ryuma -> ryuma")
-    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Route from Gumi to Ryuma (Tibor tree)"], "route_gumi_ryuma -> tibor_tree")
-    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Route from Gumi to Ryuma (Mercator gate tree)"], "route_gumi_ryuma -> mercator_gate_tree")
-    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Tibor"], "route_gumi_ryuma -> tibor")
-    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Witch Helga's Hut"], "route_gumi_ryuma -> helga_hut")
-    _create_entrance(regions["Route from Gumi to Ryuma"], regions["Mercator"], "route_gumi_ryuma -> mercator")
-    _create_entrance(regions["Route from Gumi to Ryuma (Mercator gate tree)"], regions["Route from Gumi to Ryuma"], "mercator_gate_tree -> route_gumi_ryuma")
-    _create_entrance(regions["Route from Gumi to Ryuma (Tibor tree)"], regions["Route from Gumi to Ryuma"], "tibor_tree -> route_gumi_ryuma")
-    _create_entrance(regions["Route to Lake Shrine"], regions["Destel Well"], "route_lake_shrine -> destel_well")
-    _create_entrance(regions["Route to Lake Shrine"], regions["Lake Shrine"], "route_lake_shrine -> lake_shrine")
-    _create_entrance(regions["Route to Lake Shrine cliff"], regions["Mountainous Area"], "route_lake_shrine_cliff -> mountainous_area")
-    _create_entrance(regions["Route to Lake Shrine cliff"], regions["Route to Lake Shrine"], "route_lake_shrine_cliff -> route_lake_shrine")
-    _create_entrance(regions["Ryuma"], regions["Route from Gumi to Ryuma"], "ryuma -> route_gumi_ryuma")
-    _create_entrance(regions["Ryuma"], regions["Ryuma (after Thieves Hideout)"], "ryuma -> ryuma_after_thieves_hideout")
-    _create_entrance(regions["Ryuma"], regions["Ryuma (repaired lighthouse)"], "ryuma -> ryuma_lighthouse_repaired")
-    _create_entrance(regions["Ryuma"], regions["Thieves Hideout (before keydoor)"], "ryuma -> thieves_hideout_pre_key")
-    _create_entrance(regions["Ryuma (repaired lighthouse)"], regions["Ryuma"], "ryuma_lighthouse_repaired -> ryuma")
-    _create_entrance(regions["Swamp Shrine"], regions["Route between Massan and Gumi"], "swamp_shrine -> route_massan_gumi")
-    _create_entrance(regions["Thieves Hideout (after keydoor)"], regions["Thieves Hideout (before keydoor)"], "thieves_hideout_post_key -> thieves_hideout_pre_key")
-    _create_entrance(regions["Thieves Hideout (before keydoor)"], regions["Ryuma"], "thieves_hideout_pre_key -> ryuma")
-    _create_entrance(regions["Thieves Hideout (before keydoor)"], regions["Thieves Hideout (after keydoor)"], "thieves_hideout_pre_key -> thieves_hideout_post_key")
-    _create_entrance(regions["Tibor"], regions["Route from Gumi to Ryuma"], "tibor -> route_gumi_ryuma")
+    _create_entrance(regions["Mir Tower sector (coast behind sacred tree)"], regions["Mir Tower sector"], "mir_tower_sector_tree_coast -> mir_tower_sector")
     _create_entrance(regions["Twinkle village"], regions["Mir Tower sector"], "twinkle_village -> mir_tower_sector")
+    _create_entrance(regions["Mir Tower (pre-garlic)"], regions["Mir Tower sector"], "mir_tower_pre_garlic -> mir_tower_sector")
+    _create_entrance(regions["Mir Tower (pre-garlic)"], regions["Mir Tower (post-garlic)"], "mir_tower_pre_garlic -> mir_tower_post_garlic")
+    _create_entrance(regions["Mir Tower (post-garlic)"], regions["Mir Tower (pre-garlic)"], "mir_tower_post_garlic -> mir_tower_pre_garlic")
+    _create_entrance(regions["Mir Tower (post-garlic)"], regions["Mir Tower sector"], "mir_tower_post_garlic -> mir_tower_sector")
+    _create_entrance(regions["Greenmaze (pre-whistle)"], regions["Greenmaze (post-whistle)"], "greenmaze_pre_whistle -> greenmaze_post_whistle")
+    _create_entrance(regions["Greenmaze (pre-whistle)"], regions["Greenmaze (Cutter hidden sector)"], "greenmaze_pre_whistle -> greenmaze_cutter")
+    _create_entrance(regions["Greenmaze (pre-whistle)"], regions["Mountainous Area"], "greenmaze_pre_whistle -> mountainous_area")
+    _create_entrance(regions["Greenmaze (Cutter hidden sector)"], regions["Greenmaze (pre-whistle)"], "greenmaze_cutter -> greenmaze_pre_whistle")
+    _create_entrance(regions["Greenmaze (post-whistle)"], regions["Greenmaze (post-whistle tree)"], "greenmaze_post_whistle -> greenmaze_post_whistle_tree")
+    _create_entrance(regions["Greenmaze (post-whistle)"], regions["Route between Massan and Gumi"], "greenmaze_post_whistle -> route_massan_gumi")
+    _create_entrance(regions["Greenmaze (post-whistle)"], regions["Greenmaze (pre-whistle)"], "greenmaze_post_whistle -> greenmaze_pre_whistle")
+    _create_entrance(regions["Greenmaze (post-whistle tree)"], regions["Greenmaze (post-whistle)"], "greenmaze_post_whistle_tree -> greenmaze_post_whistle")
+    _create_entrance(regions["Verla shore"], regions["Verla"], "verla_shore -> verla")
+    _create_entrance(regions["Verla shore"], regions["Verla Mines"], "verla_shore -> verla_mines")
+    _create_entrance(regions["Verla shore"], regions["Verla shore tree"], "verla_shore -> verla_shore_tree")
+    _create_entrance(regions["Verla shore"], regions["Mir Tower sector"], "verla_shore -> mir_tower_sector")
+    _create_entrance(regions["Verla shore tree"], regions["Verla shore"], "verla_shore_tree -> verla_shore")
+    _create_entrance(regions["Verla shore cliff (accessible from Verla Mines)"], regions["Verla Mines"], "verla_shore_cliff -> verla_mines")
+    _create_entrance(regions["Verla shore cliff (accessible from Verla Mines)"], regions["Verla shore"], "verla_shore_cliff -> verla_shore")
     _create_entrance(regions["Verla"], regions["Verla shore"], "verla -> verla_shore")
     _create_entrance(regions["Verla"], regions["Verla (after mines)"], "verla -> verla_after_mines")
     _create_entrance(regions["Verla (after mines)"], regions["Verla"], "verla_after_mines -> verla")
@@ -302,15 +272,45 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Verla Mines"], regions["Route between Verla and Destel"], "verla_mines -> route_verla_destel")
     _create_entrance(regions["Verla Mines"], regions["Verla Mines (behind lava)"], "verla_mines -> verla_mines_behind_lava")
     _create_entrance(regions["Verla Mines (behind lava)"], regions["Verla Mines"], "verla_mines_behind_lava -> verla_mines")
-    _create_entrance(regions["Verla shore"], regions["Verla"], "verla_shore -> verla")
-    _create_entrance(regions["Verla shore"], regions["Verla Mines"], "verla_shore -> verla_mines")
-    _create_entrance(regions["Verla shore"], regions["Verla shore tree"], "verla_shore -> verla_shore_tree")
-    _create_entrance(regions["Verla shore"], regions["Mir Tower sector"], "verla_shore -> mir_tower_sector")
-    _create_entrance(regions["Verla shore cliff (accessible from Verla Mines)"], regions["Verla Mines"], "verla_shore_cliff -> verla_mines")
-    _create_entrance(regions["Verla shore cliff (accessible from Verla Mines)"], regions["Verla shore"], "verla_shore_cliff -> verla_shore")
-    _create_entrance(regions["Verla shore tree"], regions["Verla shore"], "verla_shore_tree -> verla_shore")
-    _create_entrance(regions["Waterfall Shrine"], regions["Route between Massan and Gumi"], "waterfall_shrine -> route_massan_gumi")
-    _create_entrance(regions["Witch Helga's Hut"], regions["Route from Gumi to Ryuma"], "helga_hut -> route_gumi_ryuma")
+    _create_entrance(regions["Route between Verla and Destel"], regions["Destel"], "route_verla_destel -> destel")
+    _create_entrance(regions["Destel"], regions["Route between Verla and Destel"], "destel -> route_verla_destel")
+    _create_entrance(regions["Destel"], regions["Route after Destel"], "destel -> route_after_destel")
+    _create_entrance(regions["Destel"], regions["Destel Well"], "destel -> destel_well")
+    _create_entrance(regions["Route after Destel"], regions["Destel"], "route_after_destel -> destel")
+    _create_entrance(regions["Destel Well"], regions["Destel"], "destel_well -> destel")
+    _create_entrance(regions["Destel Well"], regions["Route to Lake Shrine"], "destel_well -> route_lake_shrine")
+    _create_entrance(regions["Route to Lake Shrine"], regions["Destel Well"], "route_lake_shrine -> destel_well")
+    _create_entrance(regions["Route to Lake Shrine"], regions["Lake Shrine"], "route_lake_shrine -> lake_shrine")
+    _create_entrance(regions["Route to Lake Shrine cliff"], regions["Mountainous Area"], "route_lake_shrine_cliff -> mountainous_area")
+    _create_entrance(regions["Route to Lake Shrine cliff"], regions["Route to Lake Shrine"], "route_lake_shrine_cliff -> route_lake_shrine")
+    _create_entrance(regions["Lake Shrine"], regions["Route to Lake Shrine"], "lake_shrine -> route_lake_shrine")
+    _create_entrance(regions["Lake Shrine"], regions["Mir Tower sector"], "lake_shrine -> mir_tower_sector")
+    _create_entrance(regions["Mountainous Area"], regions["Greenmaze (pre-whistle)"], "mountainous_area -> greenmaze_pre_whistle")
+    _create_entrance(regions["Mountainous Area"], regions["Mountainous Area tree"], "mountainous_area -> mountainous_area_tree")
+    _create_entrance(regions["Mountainous Area"], regions["Route to Lake Shrine cliff"], "mountainous_area -> route_lake_shrine_cliff")
+    _create_entrance(regions["Mountainous Area"], regions["King Nole's Cave"], "mountainous_area -> king_nole_cave")
+    _create_entrance(regions["Mountainous Area tree"], regions["Mountainous Area"], "mountainous_area_tree -> mountainous_area")
+    _create_entrance(regions["King Nole's Cave"], regions["Mountainous Area"], "king_nole_cave -> mountainous_area")
+    _create_entrance(regions["King Nole's Cave"], regions["Mercator"], "king_nole_cave -> mercator")
+    _create_entrance(regions["King Nole's Cave"], regions["Kazalt"], "king_nole_cave -> kazalt")
+    _create_entrance(regions["Kazalt"], regions["King Nole's Cave"], "kazalt -> king_nole_cave")
+    _create_entrance(regions["Kazalt"], regions["King Nole's Labyrinth (before door)"], "kazalt -> king_nole_labyrinth_pre_door")
+    _create_entrance(regions["King Nole's Labyrinth (before door)"], regions["Kazalt"], "king_nole_labyrinth_pre_door -> kazalt")
+    _create_entrance(regions["King Nole's Labyrinth (before door)"], regions["King Nole's Labyrinth (after door)"], "king_nole_labyrinth_pre_door -> king_nole_labyrinth_post_door")
+    _create_entrance(regions["King Nole's Labyrinth (before door)"], regions["King Nole's Labyrinth (exterior)"], "king_nole_labyrinth_pre_door -> king_nole_labyrinth_exterior")
+    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (before door)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_pre_door")
+    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (raft entrance)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_raft_entrance")
+    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (path to palace)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_path_to_palace")
+    _create_entrance(regions["King Nole's Labyrinth (after door)"], regions["King Nole's Labyrinth (sacred tree)"], "king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree")
+    _create_entrance(regions["King Nole's Labyrinth (exterior)"], regions["King Nole's Labyrinth (fall from exterior)"], "king_nole_labyrinth_exterior -> king_nole_labyrinth_fall_from_exterior")
+    _create_entrance(regions["King Nole's Labyrinth (fall from exterior)"], regions["King Nole's Labyrinth (before door)"], "king_nole_labyrinth_fall_from_exterior -> king_nole_labyrinth_pre_door")
+    _create_entrance(regions["King Nole's Labyrinth (raft entrance)"], regions["King Nole's Labyrinth (after door)"], "king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_post_door")
+    _create_entrance(regions["King Nole's Labyrinth (raft entrance)"], regions["King Nole's Labyrinth (raft)"], "king_nole_labyrinth_raft_entrance -> king_nole_labyrinth_raft")
+    _create_entrance(regions["King Nole's Labyrinth (raft)"], regions["King Nole's Labyrinth (raft entrance)"], "king_nole_labyrinth_raft -> king_nole_labyrinth_raft_entrance")
+    _create_entrance(regions["King Nole's Labyrinth (path to palace)"], regions["King Nole's Labyrinth (after door)"], "king_nole_labyrinth_path_to_palace -> king_nole_labyrinth_post_door")
+    _create_entrance(regions["King Nole's Labyrinth (path to palace)"], regions["King Nole's Palace"], "king_nole_labyrinth_path_to_palace -> king_nole_palace")
+    _create_entrance(regions["King Nole's Palace"], regions["King Nole's Labyrinth (path to palace)"], "king_nole_palace -> king_nole_labyrinth_path_to_palace")
+    _create_entrance(regions["King Nole's Palace"], regions["The End"], "king_nole_palace -> end")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

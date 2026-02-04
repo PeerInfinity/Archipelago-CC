@@ -116,14 +116,14 @@ class MathAdventureWorld(RuleWorldMixin, World):
     # Canonical placement advancement status - for items with mixed classifications
     # True = progression, False = useful/filler. Used to select correct item copy during placement.
     canonical_placement_advancements: ClassVar[Dict[str, bool]] = {
-        "Equality Substitution Right": True,
-        "Equality Substitution Left": True,
-        "Addition Associativity": True,
-        "1 is Complex": True,
-        "2 is Complex": True,
         "Definition of 2": True,
         "Definition of 3": True,
         "Definition of 4": True,
+        "1 is Complex": True,
+        "2 is Complex": True,
+        "Equality Substitution Right": True,
+        "Equality Substitution Left": True,
+        "Addition Associativity": True,
         "Triple Equality Transitivity": True,
         "Final Equality": True,
         "Theorem: 2+2=4": True,

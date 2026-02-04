@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Prove Statement 1", "Prove Statement 10", "Prove Statement 2", "Prove Statement 3", "Prove Statement 4", "Prove Statement 5", "Prove Statement 6", "Prove Statement 7", "Prove Statement 8", "Prove Statement 9"]
+    region_names = ["Menu", "Prove Statement 1", "Prove Statement 2", "Prove Statement 3", "Prove Statement 4", "Prove Statement 5", "Prove Statement 6", "Prove Statement 7", "Prove Statement 8", "Prove Statement 9", "Prove Statement 10"]
 
     regions = {}
     for region_name in region_names:

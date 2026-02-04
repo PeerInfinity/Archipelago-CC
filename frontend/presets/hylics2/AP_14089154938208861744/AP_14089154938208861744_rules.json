@@ -126,12 +126,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "enter_hylemxylem",
+                  "rule": "paper_cup",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "paper_cup",
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -200,12 +200,19 @@
           }
         ]
       },
-      "Airship": {
-        "name": "Airship",
+      "Waynehouse": {
+        "name": "Waynehouse",
         "exits": [
           {
-            "name": "Airship To World",
+            "name": "Waynehouse To World",
             "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Waynehouse To Afterlife",
+            "connected_region": "Afterlife",
             "access_rule": {
               "rule": "True_"
             }
@@ -213,85 +220,13 @@
         ],
         "locations": [
           {
-            "name": "Airship: Talk to Somsnosa",
-            "id": 200675,
-            "access_rule": {
-              "rule": "worm_room_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "CHARGE UP",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Arcade Island": {
-        "name": "Arcade Island",
-        "exits": [
-          {
-            "name": "Arcade Island To World",
-            "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Arcade Island: Shielded Key",
-            "id": 200676,
+            "name": "Waynehouse: Toilet",
+            "id": 200622,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "LONG GLOVES",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 2: Flying Machine Banana",
-            "id": 200677,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BANANA",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 2: Paper Cup Detour",
-            "id": 200678,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "TELEDENUDATE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 2: Peak Muscle Applique",
-            "id": 200679,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SAGE TOKEN",
+              "name": "CLICKER",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -299,22 +234,8 @@
             "locked": false
           },
           {
-            "name": "Arcade 2: Double Banana 1",
-            "id": 200680,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "VESSEL ROOM KEY",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 2: Double Banana 2",
-            "id": 200681,
+            "name": "Waynehouse: Basement Pot 1",
+            "id": 200623,
             "access_rule": {
               "rule": "True_"
             },
@@ -327,45 +248,8 @@
             "locked": false
           },
           {
-            "name": "Arcade 2: Cave Burrito",
-            "id": 200682,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BURRITO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Drill Castle": {
-        "name": "Drill Castle",
-        "exits": [
-          {
-            "name": "Drill Castle To World",
-            "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Drill Castle To Sage Labyrinth",
-            "connected_region": "Sage Labyrinth",
-            "access_rule": {
-              "rule": "skull_bomb",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Drill Castle: Ledge Banana",
-            "id": 200707,
+            "name": "Waynehouse: Basement Pot 2",
+            "id": 200624,
             "access_rule": {
               "rule": "True_"
             },
@@ -378,458 +262,8 @@
             "locked": false
           },
           {
-            "name": "Drill Castle: Island Banana",
-            "id": 200708,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "TOWER KEY",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Drill Castle: Island Pot",
-            "id": 200709,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "POROMER BLEB",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Drill Castle: Cave Sarcophagus",
-            "id": 200710,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "PSYCHIC KNUCKLE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Drill Castle: Roof Banana",
-            "id": 200711,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "COOKIE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Drill Castle: TV",
-            "id": 200712,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "LONG GLOVES",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Foglast": {
-        "name": "Foglast",
-        "exits": [
-          {
-            "name": "Foglast To World",
-            "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Foglast To Afterlife",
-            "connected_region": "Afterlife",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Foglast: West Sarcophagus",
-            "id": 200693,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PNEUMATOPHORE",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Underground Sarcophagus",
-            "id": 200694,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "MULTI SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Shielded Key",
-            "id": 200695,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "LONG GLOVES",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Buy Clicker",
-            "id": 200696,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "MULTI SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Shielded Chest",
-            "id": 200698,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "LONG GLOVES",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Cave Fridge",
-            "id": 200699,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "COOKIE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Roof Sarcophagus",
-            "id": 200700,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "STEM CELL",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Under Lair Sarcophagus 1",
-            "id": 200701,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "TIME SIGIL",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Under Lair Sarcophagus 2",
-            "id": 200702,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "MULTI SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Under Lair Sarcophagus 3",
-            "id": 200703,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "MULTI-JUICE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Sage Sarcophagus",
-            "id": 200704,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "MUSCLE APPLIQUE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Sage Item 1",
-            "id": 200705,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "CUPCAKE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: Sage Item 2",
-            "id": 200706,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "bridge_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "MULTI STEM CELL",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Foglast: TV",
-            "id": 200697,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "clicker",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "BURRITO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Hylemxylem": {
-        "name": "Hylemxylem",
-        "exits": [
-          {
-            "name": "Hylemxylem To World",
-            "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Hylemxylem To Afterlife",
-            "connected_region": "Afterlife",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Hylemxylem: Jar",
-            "id": 200736,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MUSCLE APPLIQUE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Lower Reservoir Key",
-            "id": 200737,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MULTI-COFFEE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Fountain Banana",
-            "id": 200738,
+            "name": "Waynehouse: Basement Pot 3",
+            "id": 200625,
             "access_rule": {
               "rule": "True_"
             },
@@ -842,40 +276,10 @@
             "locked": false
           },
           {
-            "name": "Hylemxylem: East Island Banana",
-            "id": 200739,
+            "name": "Waynehouse: Sarcophagus",
+            "id": 200626,
             "access_rule": {
               "rule": "True_"
-            },
-            "item": {
-              "name": "BOTTOMLESS JUICE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: East Island Chest",
-            "id": 200740,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Upper Chamber Banana",
-            "id": 200741,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
             },
             "item": {
               "name": "BANANA",
@@ -886,331 +290,202 @@
             "locked": false
           },
           {
-            "name": "Hylemxylem: Across Upper Reservoir Chest",
-            "id": 200742,
+            "name": "Waynehouse: TV",
+            "id": 200627,
             "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "True_"
             },
             "item": {
-              "name": "JUICE",
+              "name": "SINGLE GLOVE",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false
-          },
-          {
-            "name": "Hylemxylem: Drained Lower Reservoir Chest",
-            "id": 200743,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "CURSED GLOVES",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Drained Lower Reservoir Burrito 1",
-            "id": 200744,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "MUSCLE APPLIQUE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Drained Lower Reservoir Burrito 2",
-            "id": 200745,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "BURRITO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Lower Reservoir Hole Pot 1",
-            "id": 200746,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "MUSCLE APPLIQUE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Lower Reservoir Hole Pot 2",
-            "id": 200747,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "HOUSE KEY",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Lower Reservoir Hole Pot 3",
-            "id": 200748,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Lower Reservoir Hole Sarcophagus",
-            "id": 200749,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Drained Upper Reservoir Burrito 1",
-            "id": 200750,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "JUICE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Drained Upper Reservoir Burrito 2",
-            "id": 200751,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "LOOPED DOME",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Drained Upper Reservoir Burrito 3",
-            "id": 200752,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "COFFEE CHIP",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Hylemxylem: Upper Reservoir Hole Key",
-            "id": 200753,
-            "access_rule": {
-              "rule": "upper_chamber_key",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Defeat Gibby",
-            "id": null,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "UPPER CHAMBER KEY",
-                  "VESSEL ROOM KEY"
-                ]
-              }
-            },
-            "item": {
-              "name": "Victory",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "event": true
           }
         ]
       },
-      "Juice Ranch": {
-        "name": "Juice Ranch",
+      "World": {
+        "name": "World",
         "exits": [
           {
-            "name": "Juice Ranch To World",
-            "connected_region": "World",
+            "name": "World To Airship",
+            "connected_region": "Airship",
+            "access_rule": {
+              "rule": "airship",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "World To Waynehouse",
+            "connected_region": "Waynehouse",
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "World To New Muldul",
+            "connected_region": "New Muldul",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World To Drill Castle",
+            "connected_region": "Drill Castle",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "World To Viewax",
+            "connected_region": "Viewax",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "airship",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Arcade Island",
+            "connected_region": "Arcade Island",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "airship",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To TV Island",
+            "connected_region": "TV Island",
+            "access_rule": {
+              "rule": "airship",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "World To Juice Ranch",
+            "connected_region": "Juice Ranch",
+            "access_rule": {
+              "rule": "airship",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "World To Shield Facility",
+            "connected_region": "Shield Facility",
+            "access_rule": {
+              "rule": "airship",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "World To Worm Pod",
+            "connected_region": "Worm Pod",
+            "access_rule": {
+              "rule": "enter_wormpod",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "World To Foglast",
+            "connected_region": "Foglast",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "enter_foglast",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Sage Airship",
+            "connected_region": "Sage Airship",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "paper_cup",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "worm_room_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "enter_sageship",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "World To Hylemxylem",
+            "connected_region": "Hylemxylem",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "charge_up",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "paper_cup",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "enter_hylemxylem",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
           }
         ],
-        "locations": [
-          {
-            "name": "Juice Ranch: Juice 1",
-            "id": 200684,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "PEPTIDE BODKINS",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Juice Ranch: Juice 2",
-            "id": 200685,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "DUCTILE HABIT",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Juice Ranch: Juice 3",
-            "id": 200686,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Juice Ranch: Ledge Rancher",
-            "id": 200687,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BURRITO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Juice Ranch: Battle with Somsnosa",
-            "id": 200688,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BANANA",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Juice Ranch: Fridge",
-            "id": 200690,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MUSCLE APPLIQUE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Juice Ranch: TV",
-            "id": 200691,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "BANANA",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
+        "locations": []
       },
       "New Muldul": {
         "name": "New Muldul",
@@ -1596,11 +871,439 @@
           }
         ]
       },
-      "Sage Airship": {
-        "name": "Sage Airship",
+      "Viewax": {
+        "name": "Viewax",
+        "hint_text": "Viewax's Edifice",
         "exits": [
           {
-            "name": "Sage Airship To World",
+            "name": "Viewax To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Viewax To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Viewax's Edifice: Fountain Banana",
+            "id": 200650,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "DUBIOUS BERRY",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Dedusmuln's Suitcase",
+            "id": 200651,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "CUPCAKE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Dedusmuln's Campfire",
+            "id": 200652,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "LONG GLOVES",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Talk to Dedusmuln",
+            "id": 200653,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "JAIL KEY",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Canopic Jar",
+            "id": 200655,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "TARP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Cave Sarcophagus",
+            "id": 200656,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "BANANA",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Shielded Key",
+            "id": 200657,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "paddle",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "paddle",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "LINK MOLLUSC",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Tower Pot",
+            "id": 200658,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "BANANA",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Tower Jar",
+            "id": 200659,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "SOUL CRISPER",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Tower Chest",
+            "id": 200660,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "paddle",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "tower_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "BURRITO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Sage Fridge",
+            "id": 200661,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "TENDRIL HAND",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Sage Item 1",
+            "id": 200662,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "PAPER CUP",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Sage Item 2",
+            "id": 200663,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "50 Bones",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Viewax Pot",
+            "id": 200664,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: Defeat Viewax",
+            "id": 200665,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "BURRITO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Key",
+            "id": 200667,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "FADED PONCHO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Coin Dash",
+            "id": 200668,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "PAPER CUP",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Burrito Alcove 1",
+            "id": 200669,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "LOOPED DOME",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Burrito Alcove 2",
+            "id": 200670,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "PAPER CUP",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Behind Spikes Banana",
+            "id": 200671,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "ORGAN FORT",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Pyramid Banana",
+            "id": 200672,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "POOLWINE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Moving Platforms Muscle Applique",
+            "id": 200673,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "NEMATODE INTERFACE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 1: Bed Banana",
+            "id": 200674,
+            "access_rule": {
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "CONVERTER WORM",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Viewax's Edifice: TV",
+            "id": 200666,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "jail_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "paddle",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "BANANA",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Airship": {
+        "name": "Airship",
+        "exits": [
+          {
+            "name": "Airship To World",
             "connected_region": "World",
             "access_rule": {
               "rule": "True_"
@@ -1609,57 +1312,778 @@
         ],
         "locations": [
           {
-            "name": "Sage Airship: Bottom Level Pot",
-            "id": 200732,
+            "name": "Airship: Talk to Somsnosa",
+            "id": 200675,
             "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MEAT",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sage Airship: Flesh Pot",
-            "id": 200733,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "JUMPSUIT",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sage Airship: Top Jar",
-            "id": 200734,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "RANCHER PONCHO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sage Airship: TV",
-            "id": 200735,
-            "access_rule": {
-              "rule": "all_tokens",
+              "rule": "worm_room_key",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
             "item": {
+              "name": "CHARGE UP",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Arcade Island": {
+        "name": "Arcade Island",
+        "exits": [
+          {
+            "name": "Arcade Island To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Arcade Island: Shielded Key",
+            "id": 200676,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "LONG GLOVES",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 2: Flying Machine Banana",
+            "id": 200677,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
               "name": "BANANA",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 2: Paper Cup Detour",
+            "id": 200678,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "TELEDENUDATE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 2: Peak Muscle Applique",
+            "id": 200679,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SAGE TOKEN",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 2: Double Banana 1",
+            "id": 200680,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "VESSEL ROOM KEY",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 2: Double Banana 2",
+            "id": 200681,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MULTI STEM CELL",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Arcade 2: Cave Burrito",
+            "id": 200682,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BURRITO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "TV Island": {
+        "name": "TV Island",
+        "exits": [
+          {
+            "name": "TV Island To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "TV Island To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "TV Island: TV",
+            "id": 200683,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "UPPER CHAMBER KEY",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Juice Ranch": {
+        "name": "Juice Ranch",
+        "exits": [
+          {
+            "name": "Juice Ranch To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Juice Ranch: Juice 1",
+            "id": 200684,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PEPTIDE BODKINS",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Juice Ranch: Juice 2",
+            "id": 200685,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "DUCTILE HABIT",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Juice Ranch: Juice 3",
+            "id": 200686,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Juice Ranch: Ledge Rancher",
+            "id": 200687,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BURRITO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Juice Ranch: Battle with Somsnosa",
+            "id": 200688,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BANANA",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Juice Ranch: Fridge",
+            "id": 200690,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MUSCLE APPLIQUE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Juice Ranch: TV",
+            "id": 200691,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "BANANA",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shield Facility": {
+        "name": "Shield Facility",
+        "exits": [
+          {
+            "name": "Shield Facility To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Shield Facility To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Shield Facility To Worm Pod",
+            "connected_region": "Worm Pod",
+            "access_rule": {
+              "rule": "enter_wormpod",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Worm Pod": {
+        "name": "Worm Pod",
+        "exits": [
+          {
+            "name": "Worm Pod To Shield Facility",
+            "connected_region": "Shield Facility",
+            "access_rule": {
+              "rule": "airship",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "Worm Pod To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Worm Pod: Key",
+            "id": 200692,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PLEATHER GAGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Foglast": {
+        "name": "Foglast",
+        "exits": [
+          {
+            "name": "Foglast To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Foglast To Afterlife",
+            "connected_region": "Afterlife",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Foglast: West Sarcophagus",
+            "id": 200693,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "PNEUMATOPHORE",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Underground Sarcophagus",
+            "id": 200694,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "MULTI SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Shielded Key",
+            "id": 200695,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "LONG GLOVES",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Buy Clicker",
+            "id": 200696,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "MULTI SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Shielded Chest",
+            "id": 200698,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "LONG GLOVES",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Cave Fridge",
+            "id": 200699,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "COOKIE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Roof Sarcophagus",
+            "id": 200700,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "STEM CELL",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Under Lair Sarcophagus 1",
+            "id": 200701,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "TIME SIGIL",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Under Lair Sarcophagus 2",
+            "id": 200702,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "MULTI SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Under Lair Sarcophagus 3",
+            "id": 200703,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "MULTI-JUICE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Sage Sarcophagus",
+            "id": 200704,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "MUSCLE APPLIQUE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Sage Item 1",
+            "id": 200705,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "CUPCAKE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: Sage Item 2",
+            "id": 200706,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "bridge_key",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "MULTI STEM CELL",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Foglast: TV",
+            "id": 200697,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "air_dash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "clicker",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            },
+            "item": {
+              "name": "BURRITO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Drill Castle": {
+        "name": "Drill Castle",
+        "exits": [
+          {
+            "name": "Drill Castle To World",
+            "connected_region": "World",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Drill Castle To Sage Labyrinth",
+            "connected_region": "Sage Labyrinth",
+            "access_rule": {
+              "rule": "skull_bomb",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Drill Castle: Ledge Banana",
+            "id": 200707,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "MULTI SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Drill Castle: Island Banana",
+            "id": 200708,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "TOWER KEY",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Drill Castle: Island Pot",
+            "id": 200709,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "POROMER BLEB",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Drill Castle: Cave Sarcophagus",
+            "id": 200710,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "PSYCHIC KNUCKLE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Drill Castle: Roof Banana",
+            "id": 200711,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "COOKIE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Drill Castle: TV",
+            "id": 200712,
+            "access_rule": {
+              "rule": "air_dash",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "LONG GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2021,48 +2445,12 @@
           }
         ]
       },
-      "Shield Facility": {
-        "name": "Shield Facility",
+      "Sage Airship": {
+        "name": "Sage Airship",
         "exits": [
           {
-            "name": "Shield Facility To World",
+            "name": "Sage Airship To World",
             "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Shield Facility To Afterlife",
-            "connected_region": "Afterlife",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Shield Facility To Worm Pod",
-            "connected_region": "Worm Pod",
-            "access_rule": {
-              "rule": "enter_wormpod",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "TV Island": {
-        "name": "TV Island",
-        "exits": [
-          {
-            "name": "TV Island To World",
-            "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "TV Island To Afterlife",
-            "connected_region": "Afterlife",
             "access_rule": {
               "rule": "True_"
             }
@@ -2070,49 +2458,27 @@
         ],
         "locations": [
           {
-            "name": "TV Island: TV",
-            "id": 200683,
+            "name": "Sage Airship: Bottom Level Pot",
+            "id": 200732,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "UPPER CHAMBER KEY",
+              "name": "MEAT",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "Viewax": {
-        "name": "Viewax",
-        "hint_text": "Viewax's Edifice",
-        "exits": [
-          {
-            "name": "Viewax To World",
-            "connected_region": "World",
-            "access_rule": {
-              "rule": "True_"
-            }
           },
           {
-            "name": "Viewax To Afterlife",
-            "connected_region": "Afterlife",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Viewax's Edifice: Fountain Banana",
-            "id": 200650,
+            "name": "Sage Airship: Flesh Pot",
+            "id": 200733,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "DUBIOUS BERRY",
+              "name": "JUMPSUIT",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2120,13 +2486,13 @@
             "locked": false
           },
           {
-            "name": "Viewax's Edifice: Dedusmuln's Suitcase",
-            "id": 200651,
+            "name": "Sage Airship: Top Jar",
+            "id": 200734,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "CUPCAKE",
+              "name": "RANCHER PONCHO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2134,364 +2500,12 @@
             "locked": false
           },
           {
-            "name": "Viewax's Edifice: Dedusmuln's Campfire",
-            "id": 200652,
+            "name": "Sage Airship: TV",
+            "id": 200735,
             "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "LONG GLOVES",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Talk to Dedusmuln",
-            "id": 200653,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "JAIL KEY",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Canopic Jar",
-            "id": 200655,
-            "access_rule": {
-              "rule": "paddle",
+              "rule": "all_tokens",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
-            },
-            "item": {
-              "name": "TARP",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Cave Sarcophagus",
-            "id": 200656,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "BANANA",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Shielded Key",
-            "id": 200657,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "LINK MOLLUSC",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Tower Pot",
-            "id": 200658,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "BANANA",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Tower Jar",
-            "id": 200659,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "SOUL CRISPER",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Tower Chest",
-            "id": 200660,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "paddle",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "tower_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            },
-            "item": {
-              "name": "BURRITO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Sage Fridge",
-            "id": 200661,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "TENDRIL HAND",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Sage Item 1",
-            "id": 200662,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "PAPER CUP",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Sage Item 2",
-            "id": 200663,
-            "access_rule": {
-              "rule": "air_dash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "50 Bones",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Viewax Pot",
-            "id": 200664,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "SOUL SPONGE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: Defeat Viewax",
-            "id": 200665,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "BURRITO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Key",
-            "id": 200667,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "FADED PONCHO",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Coin Dash",
-            "id": 200668,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "PAPER CUP",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Burrito Alcove 1",
-            "id": 200669,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "LOOPED DOME",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Burrito Alcove 2",
-            "id": 200670,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "PAPER CUP",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Behind Spikes Banana",
-            "id": 200671,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "ORGAN FORT",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Pyramid Banana",
-            "id": 200672,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "POOLWINE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Moving Platforms Muscle Applique",
-            "id": 200673,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "NEMATODE INTERFACE",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Arcade 1: Bed Banana",
-            "id": 200674,
-            "access_rule": {
-              "rule": "paddle",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            },
-            "item": {
-              "name": "CONVERTER WORM",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Viewax's Edifice: TV",
-            "id": 200666,
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "jail_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "paddle",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
             },
             "item": {
               "name": "BANANA",
@@ -2503,18 +2517,18 @@
           }
         ]
       },
-      "Waynehouse": {
-        "name": "Waynehouse",
+      "Hylemxylem": {
+        "name": "Hylemxylem",
         "exits": [
           {
-            "name": "Waynehouse To World",
+            "name": "Hylemxylem To World",
             "connected_region": "World",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "Waynehouse To Afterlife",
+            "name": "Hylemxylem To Afterlife",
             "connected_region": "Afterlife",
             "access_rule": {
               "rule": "True_"
@@ -2523,27 +2537,13 @@
         ],
         "locations": [
           {
-            "name": "Waynehouse: Toilet",
-            "id": 200622,
+            "name": "Hylemxylem: Jar",
+            "id": 200736,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "CLICKER",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Waynehouse: Basement Pot 1",
-            "id": 200623,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "MULTI STEM CELL",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2551,13 +2551,13 @@
             "locked": false
           },
           {
-            "name": "Waynehouse: Basement Pot 2",
-            "id": 200624,
+            "name": "Hylemxylem: Lower Reservoir Key",
+            "id": 200737,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "MULTI-COFFEE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2565,8 +2565,8 @@
             "locked": false
           },
           {
-            "name": "Waynehouse: Basement Pot 3",
-            "id": 200625,
+            "name": "Hylemxylem: Fountain Banana",
+            "id": 200738,
             "access_rule": {
               "rule": "True_"
             },
@@ -2579,10 +2579,40 @@
             "locked": false
           },
           {
-            "name": "Waynehouse: Sarcophagus",
-            "id": 200626,
+            "name": "Hylemxylem: East Island Banana",
+            "id": 200739,
             "access_rule": {
               "rule": "True_"
+            },
+            "item": {
+              "name": "BOTTOMLESS JUICE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: East Island Chest",
+            "id": 200740,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Upper Chamber Banana",
+            "id": 200741,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "BANANA",
@@ -2593,237 +2623,217 @@
             "locked": false
           },
           {
-            "name": "Waynehouse: TV",
-            "id": 200627,
+            "name": "Hylemxylem: Across Upper Reservoir Chest",
+            "id": 200742,
             "access_rule": {
-              "rule": "True_"
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
-              "name": "SINGLE GLOVE",
+              "name": "JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "World": {
-        "name": "World",
-        "exits": [
+          },
           {
-            "name": "World To Airship",
-            "connected_region": "Airship",
+            "name": "Hylemxylem: Drained Lower Reservoir Chest",
+            "id": 200743,
             "access_rule": {
-              "rule": "airship",
+              "rule": "upper_chamber_key",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "World To Waynehouse",
-            "connected_region": "Waynehouse",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World To New Muldul",
-            "connected_region": "New Muldul",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World To Drill Castle",
-            "connected_region": "Drill Castle",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "World To Viewax",
-            "connected_region": "Viewax",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "airship",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          },
-          {
-            "name": "World To Arcade Island",
-            "connected_region": "Arcade Island",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "air_dash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "airship",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          },
-          {
-            "name": "World To TV Island",
-            "connected_region": "TV Island",
-            "access_rule": {
-              "rule": "airship",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "World To Juice Ranch",
-            "connected_region": "Juice Ranch",
-            "access_rule": {
-              "rule": "airship",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "World To Shield Facility",
-            "connected_region": "Shield Facility",
-            "access_rule": {
-              "rule": "airship",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "World To Worm Pod",
-            "connected_region": "Worm Pod",
-            "access_rule": {
-              "rule": "enter_wormpod",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "World To Foglast",
-            "connected_region": "Foglast",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "charge_up",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "enter_foglast",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          },
-          {
-            "name": "World To Sage Airship",
-            "connected_region": "Sage Airship",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "charge_up",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "enter_sageship",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "paper_cup",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "worm_room_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          },
-          {
-            "name": "World To Hylemxylem",
-            "connected_region": "Hylemxylem",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "charge_up",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "enter_hylemxylem",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "paper_cup",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Worm Pod": {
-        "name": "Worm Pod",
-        "exits": [
-          {
-            "name": "Worm Pod To Shield Facility",
-            "connected_region": "Shield Facility",
-            "access_rule": {
-              "rule": "airship",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "Worm Pod To Afterlife",
-            "connected_region": "Afterlife",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Worm Pod: Key",
-            "id": 200692,
-            "access_rule": {
-              "rule": "True_"
             },
             "item": {
-              "name": "PLEATHER GAGE",
+              "name": "CURSED GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false
+          },
+          {
+            "name": "Hylemxylem: Drained Lower Reservoir Burrito 1",
+            "id": 200744,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "MUSCLE APPLIQUE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Drained Lower Reservoir Burrito 2",
+            "id": 200745,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "BURRITO",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Pot 1",
+            "id": 200746,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "MUSCLE APPLIQUE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Pot 2",
+            "id": 200747,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "HOUSE KEY",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Pot 3",
+            "id": 200748,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Lower Reservoir Hole Sarcophagus",
+            "id": 200749,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Drained Upper Reservoir Burrito 1",
+            "id": 200750,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "JUICE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Drained Upper Reservoir Burrito 2",
+            "id": 200751,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "LOOPED DOME",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Drained Upper Reservoir Burrito 3",
+            "id": 200752,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "COFFEE CHIP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Hylemxylem: Upper Reservoir Hole Key",
+            "id": 200753,
+            "access_rule": {
+              "rule": "upper_chamber_key",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            },
+            "item": {
+              "name": "SOUL SPONGE",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Defeat Gibby",
+            "id": null,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "UPPER CHAMBER KEY",
+                  "VESSEL ROOM KEY"
+                ]
+              }
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       }

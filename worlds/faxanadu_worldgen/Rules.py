@@ -31,6 +31,11 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Eolis -> Path to Apolune", player),
+        HasAll('Key Jack', 'Progressive Sword')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Apolune -> Tower of Trunk", player),
         Has('Key Jack', 1)
     )
@@ -41,18 +46,33 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Dartmoor Castle -> Evil Fortress", player),
-        Has('Demons Ring', 1)
+        multiworld.get_entrance("Trunk -> Joker Spring", player),
+        Has('Key Joker', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Daybreak -> Dartmoor Castle", player),
-        Has('Ring of Dworf', 1)
+        multiworld.get_entrance("Trunk -> Tower of Fortress", player),
+        Has('Key Jack', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Eolis -> Path to Apolune", player),
-        HasAll('Key Jack', 'Progressive Sword')
+        multiworld.get_entrance("Trunk -> Path to Mascon", player),
+        And(Has('Progressive Sword', 2), HasAll('Joker Spring Flow', 'Key Queen', 'Ring of Ruby', 'Sky Spring Flow', 'Tower of Fortress Spring Flow'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Path to Mascon -> Tower of Red Potion", player),
+        And(Has('Red Potion', 4), Has('Key Queen'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Path to Victim -> Tower of Suffer", player),
+        Has('Key Queen', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Path to Victim -> Victim", player),
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
@@ -81,60 +101,15 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Path to Mascon -> Tower of Red Potion", player),
-        And(Has('Red Potion', 4), Has('Key Queen'))
+        multiworld.get_entrance("Daybreak -> Dartmoor Castle", player),
+        Has('Ring of Dworf', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Path to Victim -> Tower of Suffer", player),
-        Has('Key Queen', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Path to Victim -> Victim", player),
-        Has('Unlock Wingboots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Trunk -> Joker Spring", player),
-        Has('Key Joker', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Trunk -> Tower of Fortress", player),
-        Has('Key Jack', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Trunk -> Path to Mascon", player),
-        And(Has('Progressive Sword', 2), HasAll('Joker Spring Flow', 'Key Queen', 'Ring of Ruby', 'Sky Spring Flow', 'Tower of Fortress Spring Flow'))
+        multiworld.get_entrance("Dartmoor Castle -> Evil Fortress", player),
+        Has('Demons Ring', 1)
     )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("Apolune Key Jack", player),
-        Has('Unlock Wingboots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Branches Hidden Mattock", player),
-        Has('Unlock Wingboots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Conflate Guru", player),
-        Has('Progressive Armor', 3)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dartmoor Castle Hidden Hourglass", player),
-        Has('Unlock Wingboots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
-        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
-    )
-
     world.set_rule(
         multiworld.get_location("Eolis Key Jack", player),
         HelperCall(helper_func=can_buy_in_eolis, helper_name="can_buy_in_eolis", body_rule=HasAny('Deluge', 'Progressive Sword', 'Ring of Elf'))
@@ -161,21 +136,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player),
-        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fraternal Castle Guru", player),
-        Has('Progressive Sword', 4)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty House", player),
-        Has('Black Onyx', 1)
-    )
-
-    world.set_rule(
         multiworld.get_location("Path to Apolune Magic Shield", player),
         Has('Key King', 1)
     )
@@ -186,43 +146,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Path to Daybreak Glove", player),
+        multiworld.get_location("Apolune Key Jack", player),
         Has('Unlock Wingboots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Path to Forepaw Glove", player),
-        HasAll('Deluge', 'Unlock Wingboots')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty Shop Death", player),
-        Has('Unlock Wingboots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Misty Doctor Office", player),
-        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Guru", player),
-        Has('Sky Spring Flow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Fortress Spring", player),
-        Has('Spring Elixir', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Tower of Suffer Hidden Wingboots", player),
-        Or(Has('Progressive Sword', 2), Has('Deluge'))
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Trunk Hidden Mattock", player),
         Or(Has('Progressive Sword', 2), Has('Deluge'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Path to Forepaw Glove", player),
+        HasAll('Deluge', 'Unlock Wingboots')
     )
 
     world.set_rule(
@@ -236,6 +171,71 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Tower of Fortress Guru", player),
+        Has('Sky Spring Flow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tower of Fortress Spring", player),
+        Has('Spring Elixir', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Misty Shop Death", player),
+        Has('Unlock Wingboots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Misty Doctor Office", player),
+        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Tower of Suffer Hidden Wingboots", player),
+        Or(Has('Progressive Sword', 2), Has('Deluge'))
+    )
+
+    world.set_rule(
         multiworld.get_location("Victim Mattock", player),
         Has('Unlock Wingboots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Misty House", player),
+        Has('Black Onyx', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Conflate Guru", player),
+        Has('Progressive Armor', 3)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Branches Hidden Mattock", player),
+        Has('Unlock Wingboots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Path to Daybreak Glove", player),
+        Has('Unlock Wingboots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dartmoor Castle Hidden Hourglass", player),
+        Has('Unlock Wingboots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
+        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player),
+        HelperCall(helper_func=has_any_magic, helper_name="has_any_magic", body_rule=HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fraternal Castle Guru", player),
+        Has('Progressive Sword', 4)
     )

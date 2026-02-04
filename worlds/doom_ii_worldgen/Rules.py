@@ -21,61 +21,6 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Barrels o' Fun (MAP23) Main -> Barrels o' Fun (MAP23) Yellow", player),
-        Has("Barrels o' Fun (MAP23) - Yellow skull key", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Barrels o' Fun (MAP23) Yellow -> Barrels o' Fun (MAP23) Main", player),
-        Has("Barrels o' Fun (MAP23) - Yellow skull key", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bloodfalls (MAP25) Blue -> Bloodfalls (MAP25) Main", player),
-        Has('Bloodfalls (MAP25) - Blue skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bloodfalls (MAP25) Main -> Bloodfalls (MAP25) Blue", player),
-        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), Has('Bloodfalls (MAP25) - Blue skull key'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Bloodfalls (MAP25) Start -> Bloodfalls (MAP25) Main", player),
-        HasAll('Chaingun', 'Shotgun', 'Super Shotgun')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Circle of Death (MAP11) Main -> Circle of Death (MAP11) Blue", player),
-        Has('Circle of Death (MAP11) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Circle of Death (MAP11) Main -> Circle of Death (MAP11) Red", player),
-        Has('Circle of Death (MAP11) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Dead Simple (MAP07) Start -> Dead Simple (MAP07) Main", player),
-        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Yellow", player),
-        Has('Downtown (MAP13) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Red", player),
-        Has('Downtown (MAP13) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Blue", player),
-        Has('Downtown (MAP13) - Blue keycard', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Hub -> Entryway (MAP01) Main", player),
         Has('Entryway (MAP01)', 1)
     )
@@ -226,13 +171,228 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Icon of Sin (MAP30) Start -> Icon of Sin (MAP30) Main", player),
-        HasAll('BFG9000', 'Chaingun', 'Plasma gun', 'Rocket launcher', 'Shotgun', 'Super Shotgun')
+        multiworld.get_entrance("Underhalls (MAP02) Main -> Underhalls (MAP02) Red", player),
+        Has('Underhalls (MAP02) - Red keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Industrial Zone (MAP15) Blue -> Industrial Zone (MAP15) Yellow East", player),
-        Has('Industrial Zone (MAP15) - Blue keycard', 1)
+        multiworld.get_entrance("Underhalls (MAP02) Blue -> Underhalls (MAP02) Red", player),
+        Has('Underhalls (MAP02) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Underhalls (MAP02) Red -> Underhalls (MAP02) Blue", player),
+        Has('Underhalls (MAP02) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Gantlet (MAP03) Main -> The Gantlet (MAP03) Blue", player),
+        Has('The Gantlet (MAP03) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Gantlet (MAP03) Blue -> The Gantlet (MAP03) Red", player),
+        Has('The Gantlet (MAP03) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Focus (MAP04) Main -> The Focus (MAP04) Red", player),
+        Has('The Focus (MAP04) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Focus (MAP04) Main -> The Focus (MAP04) Blue", player),
+        Has('The Focus (MAP04) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Focus (MAP04) Yellow -> The Focus (MAP04) Red", player),
+        Has('The Focus (MAP04) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Focus (MAP04) Red -> The Focus (MAP04) Yellow", player),
+        Has('The Focus (MAP04) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Focus (MAP04) Red -> The Focus (MAP04) Main", player),
+        Has('The Focus (MAP04) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Red", player),
+        Has('The Waste Tunnels (MAP05) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Blue", player),
+        Has('The Waste Tunnels (MAP05) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Yellow", player),
+        Has('The Waste Tunnels (MAP05) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Main", player),
+        Has('The Waste Tunnels (MAP05) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Waste Tunnels (MAP05) Yellow -> The Waste Tunnels (MAP05) Blue", player),
+        Has('The Waste Tunnels (MAP05) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Waste Tunnels (MAP05) Start -> The Waste Tunnels (MAP05) Main", player),
+        And(HasAny('Chaingun', 'Plasma gun'), HasAll('Shotgun', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Crusher (MAP06) Main -> The Crusher (MAP06) Blue", player),
+        HasAll('Super Shotgun', 'The Crusher (MAP06) - Blue keycard')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Crusher (MAP06) Blue -> The Crusher (MAP06) Red", player),
+        Has('The Crusher (MAP06) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Crusher (MAP06) Blue -> The Crusher (MAP06) Main", player),
+        Has('The Crusher (MAP06) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Crusher (MAP06) Yellow -> The Crusher (MAP06) Red", player),
+        Has('The Crusher (MAP06) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Crusher (MAP06) Red -> The Crusher (MAP06) Yellow", player),
+        Has('The Crusher (MAP06) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Crusher (MAP06) Red -> The Crusher (MAP06) Blue", player),
+        Has('The Crusher (MAP06) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Dead Simple (MAP07) Start -> Dead Simple (MAP07) Main", player),
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Red", player),
+        Has('Tricks and Traps (MAP08) - Red skull key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Yellow", player),
+        Has('Tricks and Traps (MAP08) - Yellow skull key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Pit (MAP09) Main -> The Pit (MAP09) Yellow", player),
+        Has('The Pit (MAP09) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Pit (MAP09) Main -> The Pit (MAP09) Blue", player),
+        Has('The Pit (MAP09) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Pit (MAP09) Yellow -> The Pit (MAP09) Main", player),
+        Has('The Pit (MAP09) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Pit (MAP09) Start -> The Pit (MAP09) Main", player),
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Refueling Base (MAP10) Main -> Refueling Base (MAP10) Yellow", player),
+        Has('Refueling Base (MAP10) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Refueling Base (MAP10) Yellow -> Refueling Base (MAP10) Yellow Blue", player),
+        Has('Refueling Base (MAP10) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Refueling Base (MAP10) Start -> Refueling Base (MAP10) Main", player),
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Circle of Death (MAP11) Main -> Circle of Death (MAP11) Blue", player),
+        Has('Circle of Death (MAP11) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Circle of Death (MAP11) Main -> Circle of Death (MAP11) Red", player),
+        Has('Circle of Death (MAP11) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Factory (MAP12) Indoors -> The Factory (MAP12) Yellow", player),
+        Has('The Factory (MAP12) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Factory (MAP12) Indoors -> The Factory (MAP12) Blue", player),
+        Has('The Factory (MAP12) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Factory (MAP12) Outdoors -> The Factory (MAP12) Main", player),
+        HasAny('Plasma gun', 'Super Shotgun')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Factory (MAP12) Main -> The Factory (MAP12) Indoors", player),
+        And(HasAny('BFG9000', 'Plasma gun'), HasAll('Chaingun', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Yellow", player),
+        Has('Downtown (MAP13) - Yellow keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Red", player),
+        Has('Downtown (MAP13) - Red keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Blue", player),
+        Has('Downtown (MAP13) - Blue keycard', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Inmost Dens (MAP14) Main -> The Inmost Dens (MAP14) Red", player),
+        Has('The Inmost Dens (MAP14) - Red skull key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Inmost Dens (MAP14) Blue -> The Inmost Dens (MAP14) Red East", player),
+        Has('The Inmost Dens (MAP14) - Blue skull key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Inmost Dens (MAP14) Red -> The Inmost Dens (MAP14) Main", player),
+        Has('The Inmost Dens (MAP14) - Red skull key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("The Inmost Dens (MAP14) Red East -> The Inmost Dens (MAP14) Blue", player),
+        Has('The Inmost Dens (MAP14) - Blue skull key', 1)
     )
 
     world.set_rule(
@@ -246,68 +406,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Industrial Zone (MAP15) Yellow East -> Industrial Zone (MAP15) Blue", player),
+        multiworld.get_entrance("Industrial Zone (MAP15) Blue -> Industrial Zone (MAP15) Yellow East", player),
         Has('Industrial Zone (MAP15) - Blue keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Yellow", player),
-        Has('Monster Condo (MAP27) - Yellow skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Red", player),
-        Has('Monster Condo (MAP27) - Red skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Blue", player),
-        Has('Monster Condo (MAP27) - Blue skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Monster Condo (MAP27) Red -> Monster Condo (MAP27) Main", player),
-        Has('Monster Condo (MAP27) - Red skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Nirvana (MAP21) Main -> Nirvana (MAP21) Yellow", player),
-        And(HasAny('BFG9000', 'Plasma gun'), HasAll('Chaingun', 'Nirvana (MAP21) - Yellow skull key', 'Super Shotgun'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Nirvana (MAP21) Pro Magenta -> Nirvana (MAP21) Magenta", player),
-        Has('Nirvana (MAP21) - Red skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Nirvana (MAP21) Start -> Nirvana (MAP21) Main", player),
-        HasAny('Plasma gun', 'Super Shotgun')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Nirvana (MAP21) Yellow -> Nirvana (MAP21) Main", player),
-        Has('Nirvana (MAP21) - Yellow skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Nirvana (MAP21) Yellow -> Nirvana (MAP21) Magenta", player),
-        HasAll('Nirvana (MAP21) - Blue skull key', 'Nirvana (MAP21) - Red skull key')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Refueling Base (MAP10) Main -> Refueling Base (MAP10) Yellow", player),
-        Has('Refueling Base (MAP10) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Refueling Base (MAP10) Start -> Refueling Base (MAP10) Main", player),
-        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Refueling Base (MAP10) Yellow -> Refueling Base (MAP10) Yellow Blue", player),
-        Has('Refueling Base (MAP10) - Blue keycard', 1)
+        multiworld.get_entrance("Industrial Zone (MAP15) Yellow East -> Industrial Zone (MAP15) Blue", player),
+        Has('Industrial Zone (MAP15) - Blue keycard', 1)
     )
 
     world.set_rule(
@@ -336,33 +441,58 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Abandoned Mines (MAP26) Blue -> The Abandoned Mines (MAP26) Main", player),
-        Has('The Abandoned Mines (MAP26) - Blue keycard', 1)
+        multiworld.get_entrance("The Courtyard (MAP18) Main -> The Courtyard (MAP18) Yellow", player),
+        Has('The Courtyard (MAP18) - Yellow skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Yellow", player),
-        Has('The Abandoned Mines (MAP26) - Yellow keycard', 1)
+        multiworld.get_entrance("The Courtyard (MAP18) Main -> The Courtyard (MAP18) Blue", player),
+        Has('The Courtyard (MAP18) - Blue skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Red", player),
-        Has('The Abandoned Mines (MAP26) - Red keycard', 1)
+        multiworld.get_entrance("The Courtyard (MAP18) Blue -> The Courtyard (MAP18) Main", player),
+        Has('The Courtyard (MAP18) - Blue skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Blue", player),
-        Has('The Abandoned Mines (MAP26) - Blue keycard', 1)
+        multiworld.get_entrance("The Courtyard (MAP18) Yellow -> The Courtyard (MAP18) Main", player),
+        Has('The Courtyard (MAP18) - Yellow skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Abandoned Mines (MAP26) Yellow -> The Abandoned Mines (MAP26) Main", player),
-        Has('The Abandoned Mines (MAP26) - Yellow keycard', 1)
+        multiworld.get_entrance("The Citadel (MAP19) Main -> The Citadel (MAP19) Red", player),
+        And(HasAny('The Citadel (MAP19) - Blue skull key', 'The Citadel (MAP19) - Yellow skull key'), Has('The Citadel (MAP19) - Red skull key'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Catacombs (MAP22) Early -> The Catacombs (MAP22) Main", player),
-        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
+        multiworld.get_entrance("The Citadel (MAP19) Red -> The Citadel (MAP19) Main", player),
+        And(HasAny('The Citadel (MAP19) - Blue skull key', 'The Citadel (MAP19) - Yellow skull key'), Has('The Citadel (MAP19) - Red skull key'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Nirvana (MAP21) Main -> Nirvana (MAP21) Yellow", player),
+        And(HasAny('BFG9000', 'Plasma gun'), HasAll('Chaingun', 'Nirvana (MAP21) - Yellow skull key', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Nirvana (MAP21) Yellow -> Nirvana (MAP21) Main", player),
+        Has('Nirvana (MAP21) - Yellow skull key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Nirvana (MAP21) Yellow -> Nirvana (MAP21) Magenta", player),
+        HasAll('Nirvana (MAP21) - Blue skull key', 'Nirvana (MAP21) - Red skull key')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Nirvana (MAP21) Start -> Nirvana (MAP21) Main", player),
+        HasAny('Plasma gun', 'Super Shotgun')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Nirvana (MAP21) Pro Magenta -> Nirvana (MAP21) Magenta", player),
+        Has('Nirvana (MAP21) - Red skull key', 1)
     )
 
     world.set_rule(
@@ -381,8 +511,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Chasm (MAP24) Blue -> The Chasm (MAP24) Red", player),
-        Has('The Chasm (MAP24) - Red keycard', 1)
+        multiworld.get_entrance("The Catacombs (MAP22) Early -> The Catacombs (MAP22) Main", player),
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barrels o' Fun (MAP23) Main -> Barrels o' Fun (MAP23) Yellow", player),
+        Has("Barrels o' Fun (MAP23) - Yellow skull key", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Barrels o' Fun (MAP23) Yellow -> Barrels o' Fun (MAP23) Main", player),
+        Has("Barrels o' Fun (MAP23) - Yellow skull key", 1)
     )
 
     world.set_rule(
@@ -396,158 +536,68 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Citadel (MAP19) Main -> The Citadel (MAP19) Red", player),
-        And(HasAny('The Citadel (MAP19) - Blue skull key', 'The Citadel (MAP19) - Yellow skull key'), Has('The Citadel (MAP19) - Red skull key'))
+        multiworld.get_entrance("The Chasm (MAP24) Blue -> The Chasm (MAP24) Red", player),
+        Has('The Chasm (MAP24) - Red keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Citadel (MAP19) Red -> The Citadel (MAP19) Main", player),
-        And(HasAny('The Citadel (MAP19) - Blue skull key', 'The Citadel (MAP19) - Yellow skull key'), Has('The Citadel (MAP19) - Red skull key'))
+        multiworld.get_entrance("Bloodfalls (MAP25) Main -> Bloodfalls (MAP25) Blue", player),
+        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), Has('Bloodfalls (MAP25) - Blue skull key'))
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Courtyard (MAP18) Blue -> The Courtyard (MAP18) Main", player),
-        Has('The Courtyard (MAP18) - Blue skull key', 1)
+        multiworld.get_entrance("Bloodfalls (MAP25) Blue -> Bloodfalls (MAP25) Main", player),
+        Has('Bloodfalls (MAP25) - Blue skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Courtyard (MAP18) Main -> The Courtyard (MAP18) Yellow", player),
-        Has('The Courtyard (MAP18) - Yellow skull key', 1)
+        multiworld.get_entrance("Bloodfalls (MAP25) Start -> Bloodfalls (MAP25) Main", player),
+        HasAll('Chaingun', 'Shotgun', 'Super Shotgun')
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Courtyard (MAP18) Main -> The Courtyard (MAP18) Blue", player),
-        Has('The Courtyard (MAP18) - Blue skull key', 1)
+        multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Yellow", player),
+        Has('The Abandoned Mines (MAP26) - Yellow keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Courtyard (MAP18) Yellow -> The Courtyard (MAP18) Main", player),
-        Has('The Courtyard (MAP18) - Yellow skull key', 1)
+        multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Red", player),
+        Has('The Abandoned Mines (MAP26) - Red keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Crusher (MAP06) Blue -> The Crusher (MAP06) Red", player),
-        Has('The Crusher (MAP06) - Red keycard', 1)
+        multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Blue", player),
+        Has('The Abandoned Mines (MAP26) - Blue keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Crusher (MAP06) Blue -> The Crusher (MAP06) Main", player),
-        Has('The Crusher (MAP06) - Blue keycard', 1)
+        multiworld.get_entrance("The Abandoned Mines (MAP26) Blue -> The Abandoned Mines (MAP26) Main", player),
+        Has('The Abandoned Mines (MAP26) - Blue keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Crusher (MAP06) Main -> The Crusher (MAP06) Blue", player),
-        HasAll('Super Shotgun', 'The Crusher (MAP06) - Blue keycard')
+        multiworld.get_entrance("The Abandoned Mines (MAP26) Yellow -> The Abandoned Mines (MAP26) Main", player),
+        Has('The Abandoned Mines (MAP26) - Yellow keycard', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Crusher (MAP06) Red -> The Crusher (MAP06) Yellow", player),
-        Has('The Crusher (MAP06) - Yellow keycard', 1)
+        multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Yellow", player),
+        Has('Monster Condo (MAP27) - Yellow skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Crusher (MAP06) Red -> The Crusher (MAP06) Blue", player),
-        Has('The Crusher (MAP06) - Red keycard', 1)
+        multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Red", player),
+        Has('Monster Condo (MAP27) - Red skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Crusher (MAP06) Yellow -> The Crusher (MAP06) Red", player),
-        Has('The Crusher (MAP06) - Yellow keycard', 1)
+        multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Blue", player),
+        Has('Monster Condo (MAP27) - Blue skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Factory (MAP12) Indoors -> The Factory (MAP12) Yellow", player),
-        Has('The Factory (MAP12) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Factory (MAP12) Indoors -> The Factory (MAP12) Blue", player),
-        Has('The Factory (MAP12) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Factory (MAP12) Main -> The Factory (MAP12) Indoors", player),
-        And(HasAny('BFG9000', 'Plasma gun'), HasAll('Chaingun', 'Super Shotgun'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Factory (MAP12) Outdoors -> The Factory (MAP12) Main", player),
-        HasAny('Plasma gun', 'Super Shotgun')
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Focus (MAP04) Main -> The Focus (MAP04) Red", player),
-        Has('The Focus (MAP04) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Focus (MAP04) Main -> The Focus (MAP04) Blue", player),
-        Has('The Focus (MAP04) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Focus (MAP04) Red -> The Focus (MAP04) Yellow", player),
-        Has('The Focus (MAP04) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Focus (MAP04) Red -> The Focus (MAP04) Main", player),
-        Has('The Focus (MAP04) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Focus (MAP04) Yellow -> The Focus (MAP04) Red", player),
-        Has('The Focus (MAP04) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Gantlet (MAP03) Blue -> The Gantlet (MAP03) Red", player),
-        Has('The Gantlet (MAP03) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Gantlet (MAP03) Main -> The Gantlet (MAP03) Blue", player),
-        Has('The Gantlet (MAP03) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Inmost Dens (MAP14) Blue -> The Inmost Dens (MAP14) Red East", player),
-        Has('The Inmost Dens (MAP14) - Blue skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Inmost Dens (MAP14) Main -> The Inmost Dens (MAP14) Red", player),
-        Has('The Inmost Dens (MAP14) - Red skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Inmost Dens (MAP14) Red -> The Inmost Dens (MAP14) Main", player),
-        Has('The Inmost Dens (MAP14) - Red skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Inmost Dens (MAP14) Red East -> The Inmost Dens (MAP14) Blue", player),
-        Has('The Inmost Dens (MAP14) - Blue skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Pit (MAP09) Main -> The Pit (MAP09) Yellow", player),
-        Has('The Pit (MAP09) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Pit (MAP09) Main -> The Pit (MAP09) Blue", player),
-        Has('The Pit (MAP09) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Pit (MAP09) Start -> The Pit (MAP09) Main", player),
-        And(HasAny('BFG9000', 'Plasma gun', 'Rocket launcher'), HasAll('Chaingun', 'Shotgun', 'Super Shotgun'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Pit (MAP09) Yellow -> The Pit (MAP09) Main", player),
-        Has('The Pit (MAP09) - Yellow keycard', 1)
+        multiworld.get_entrance("Monster Condo (MAP27) Red -> Monster Condo (MAP27) Main", player),
+        Has('Monster Condo (MAP27) - Red skull key', 1)
     )
 
     world.set_rule(
@@ -561,66 +611,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Spirit World (MAP28) Red -> The Spirit World (MAP28) Main", player),
-        Has('The Spirit World (MAP28) - Red skull key', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("The Spirit World (MAP28) Yellow -> The Spirit World (MAP28) Main", player),
         Has('The Spirit World (MAP28) - Yellow skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Yellow", player),
-        Has('The Waste Tunnels (MAP05) - Yellow keycard', 1)
+        multiworld.get_entrance("The Spirit World (MAP28) Red -> The Spirit World (MAP28) Main", player),
+        Has('The Spirit World (MAP28) - Red skull key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Main", player),
-        Has('The Waste Tunnels (MAP05) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Red", player),
-        Has('The Waste Tunnels (MAP05) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Blue", player),
-        Has('The Waste Tunnels (MAP05) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Waste Tunnels (MAP05) Start -> The Waste Tunnels (MAP05) Main", player),
-        And(HasAny('Chaingun', 'Plasma gun'), HasAll('Shotgun', 'Super Shotgun'))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("The Waste Tunnels (MAP05) Yellow -> The Waste Tunnels (MAP05) Blue", player),
-        Has('The Waste Tunnels (MAP05) - Yellow keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Red", player),
-        Has('Tricks and Traps (MAP08) - Red skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Yellow", player),
-        Has('Tricks and Traps (MAP08) - Yellow skull key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underhalls (MAP02) Blue -> Underhalls (MAP02) Red", player),
-        Has('Underhalls (MAP02) - Blue keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underhalls (MAP02) Main -> Underhalls (MAP02) Red", player),
-        Has('Underhalls (MAP02) - Red keycard', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Underhalls (MAP02) Red -> Underhalls (MAP02) Blue", player),
-        Has('Underhalls (MAP02) - Blue keycard', 1)
+        multiworld.get_entrance("Icon of Sin (MAP30) Start -> Icon of Sin (MAP30) Main", player),
+        HasAll('BFG9000', 'Chaingun', 'Plasma gun', 'Rocket launcher', 'Shotgun', 'Super Shotgun')
     )

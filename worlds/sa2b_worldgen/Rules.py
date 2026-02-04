@@ -46,46 +46,6 @@ def set_rules(world: "World") -> None:
     )
     # Location rules
     world.set_rule(
-        multiworld.get_location("Aquatic Mine - 1", player),
-        Has('Knuckles - Shovel Claws', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Aquatic Mine - 2", player),
-        CanReachLocation('Aquatic Mine - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cannon's Core - 1", player),
-        HasAll('Eggman - Jet Engine', 'Knuckles - Air Necklace', 'Knuckles - Hammer Gloves', 'Sonic - Bounce Bracelet', 'Tails - Booster')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cannon's Core - 2", player),
-        And(CanReachLocation("Cannon's Core - 1"), HasAll('Eggman - Jet Engine', 'Tails - Booster'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cannon's Core - Chao Key 1", player),
-        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon', 'Tails - Booster')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cannon's Core - Chao Key 2", player),
-        HasAll('Eggman - Jet Engine', 'Tails - Booster')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cannon's Core - Chao Key 3", player),
-        HasAll('Eggman - Jet Engine', 'Knuckles - Air Necklace', 'Knuckles - Hammer Gloves', 'Sonic - Flame Ring', 'Tails - Booster')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cannon's Core - Gold Beetle", player),
-        HasAll('Eggman - Jet Engine', 'Knuckles - Air Necklace', 'Knuckles - Hammer Gloves', 'Tails - Booster')
-    )
-
-    world.set_rule(
         multiworld.get_location("City Escape - 2", player),
         CanReachLocation('City Escape - 1')
     )
@@ -96,38 +56,53 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - 1", player),
-        Has('Eggman - Jet Engine', 1)
+        multiworld.get_location("Metal Harbor - 1", player),
+        Has('Sonic - Light Shoes', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - 2", player),
-        And(CanReachLocation('Cosmic Wall - 1'), Has('Eggman - Jet Engine'))
+        multiworld.get_location("Metal Harbor - 2", player),
+        And(CanReachLocation('Metal Harbor - 1'), Has('Sonic - Light Shoes'))
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - Chao Key 1", player),
-        Has('Eggman - Jet Engine', 1)
+        multiworld.get_location("Metal Harbor - Chao Key 2", player),
+        Has('Sonic - Light Shoes', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - Chao Key 2", player),
-        Has('Eggman - Jet Engine', 1)
+        multiworld.get_location("Metal Harbor - Chao Key 3", player),
+        Has('Sonic - Light Shoes', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - Chao Key 3", player),
-        Has('Eggman - Jet Engine', 1)
+        multiworld.get_location("Green Forest - 2", player),
+        CanReachLocation('Green Forest - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - Gold Beetle", player),
-        Has('Eggman - Jet Engine', 1)
+        multiworld.get_location("Pyramid Cave - 1", player),
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Cosmic Wall - Upgrade", player),
-        Has('Eggman - Jet Engine', 1)
+        multiworld.get_location("Pyramid Cave - 2", player),
+        CanReachLocation('Pyramid Cave - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Cave - Chao Key 2", player),
+        Has('Sonic - Bounce Bracelet', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Cave - Chao Key 3", player),
+        HasAll('Sonic - Bounce Bracelet', 'Sonic - Light Shoes', 'Sonic - Mystic Melody')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Pyramid Cave - Gold Beetle", player),
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -166,63 +141,108 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Death Chamber - 1", player),
-        HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws')
+        multiworld.get_location("Final Rush - 1", player),
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Death Chamber - 2", player),
-        And(CanReachLocation('Death Chamber - 1'), HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws'))
+        multiworld.get_location("Final Rush - 2", player),
+        CanReachLocation('Final Rush - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Death Chamber - Chao Key 1", player),
-        Has('Knuckles - Hammer Gloves', 1)
+        multiworld.get_location("Final Rush - Chao Key 3", player),
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Death Chamber - Chao Key 2", player),
-        Has('Knuckles - Hammer Gloves', 1)
+        multiworld.get_location("Final Rush - Upgrade", player),
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Death Chamber - Chao Key 3", player),
-        HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws')
+        multiworld.get_location("Prison Lane - 2", player),
+        CanReachLocation('Prison Lane - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Death Chamber - Gold Beetle", player),
-        HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws')
+        multiworld.get_location("Prison Lane - Chao Key 1", player),
+        Has('Tails - Bazooka', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Dry Lagoon - 2", player),
-        CanReachLocation('Dry Lagoon - 1')
+        multiworld.get_location("Prison Lane - Chao Key 2", player),
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Dry Lagoon - Gold Beetle", player),
-        HasAll('Rouge - Iron Boots', 'Rouge - Mystic Melody', 'Rouge - Pick Nails')
+        multiworld.get_location("Prison Lane - Upgrade", player),
+        Has('Tails - Bazooka', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Dry Lagoon - Upgrade", player),
-        Has('Rouge - Pick Nails', 1)
+        multiworld.get_location("Mission Street - 1", player),
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Egg Quarters - 1", player),
-        Has('Rouge - Pick Nails', 1)
+        multiworld.get_location("Mission Street - 2", player),
+        And(CanReachLocation('Mission Street - 1'), Has('Tails - Booster'))
     )
 
     world.set_rule(
-        multiworld.get_location("Egg Quarters - 2", player),
-        CanReachLocation('Egg Quarters - 1')
+        multiworld.get_location("Mission Street - Chao Key 1", player),
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Egg Quarters - Chao Key 3", player),
-        Has('Rouge - Mystic Melody', 1)
+        multiworld.get_location("Mission Street - Chao Key 2", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mission Street - Chao Key 3", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mission Street - Gold Beetle", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Route 101 - 2", player),
+        CanReachLocation('Route 101 - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hidden Base - 1", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hidden Base - 2", player),
+        And(CanReachLocation('Hidden Base - 1'), Has('Tails - Booster'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hidden Base - Chao Key 1", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hidden Base - Chao Key 2", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hidden Base - Gold Beetle", player),
+        Has('Tails - Booster', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Hidden Base - Upgrade", player),
+        HasAll('Tails - Bazooka', 'Tails - Booster')
     )
 
     world.set_rule(
@@ -261,138 +281,63 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Final Chase - 2", player),
-        CanReachLocation('Final Chase - 1')
+        multiworld.get_location("Wild Canyon - 2", player),
+        CanReachLocation('Wild Canyon - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Final Rush - 1", player),
-        Has('Sonic - Bounce Bracelet', 1)
+        multiworld.get_location("Wild Canyon - Upgrade", player),
+        Has('Knuckles - Shovel Claws', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Final Rush - 2", player),
-        CanReachLocation('Final Rush - 1')
+        multiworld.get_location("Pumpkin Hill - 1", player),
+        Has('Knuckles - Shovel Claws', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Final Rush - Chao Key 3", player),
-        Has('Sonic - Bounce Bracelet', 1)
+        multiworld.get_location("Pumpkin Hill - 2", player),
+        CanReachLocation('Pumpkin Hill - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Final Rush - Upgrade", player),
-        Has('Sonic - Bounce Bracelet', 1)
+        multiworld.get_location("Aquatic Mine - 1", player),
+        Has('Knuckles - Shovel Claws', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Green Forest - 2", player),
-        CanReachLocation('Green Forest - 1')
+        multiworld.get_location("Aquatic Mine - 2", player),
+        CanReachLocation('Aquatic Mine - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Hidden Base - 1", player),
-        Has('Tails - Booster', 1)
+        multiworld.get_location("Death Chamber - 1", player),
+        HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws')
     )
 
     world.set_rule(
-        multiworld.get_location("Hidden Base - 2", player),
-        And(CanReachLocation('Hidden Base - 1'), Has('Tails - Booster'))
+        multiworld.get_location("Death Chamber - 2", player),
+        And(CanReachLocation('Death Chamber - 1'), HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws'))
     )
 
     world.set_rule(
-        multiworld.get_location("Hidden Base - Chao Key 1", player),
-        Has('Tails - Booster', 1)
+        multiworld.get_location("Death Chamber - Chao Key 1", player),
+        Has('Knuckles - Hammer Gloves', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Hidden Base - Chao Key 2", player),
-        Has('Tails - Booster', 1)
+        multiworld.get_location("Death Chamber - Chao Key 2", player),
+        Has('Knuckles - Hammer Gloves', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("Hidden Base - Gold Beetle", player),
-        Has('Tails - Booster', 1)
+        multiworld.get_location("Death Chamber - Chao Key 3", player),
+        HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws')
     )
 
     world.set_rule(
-        multiworld.get_location("Hidden Base - Upgrade", player),
-        HasAll('Tails - Bazooka', 'Tails - Booster')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Gate - 2", player),
-        CanReachLocation('Iron Gate - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Iron Gate - Upgrade", player),
-        Has('Eggman - Large Cannon', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lost Colony - 1", player),
-        Has('Eggman - Jet Engine', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lost Colony - 2", player),
-        And(CanReachLocation('Lost Colony - 1'), Has('Eggman - Jet Engine'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lost Colony - Chao Key 3", player),
-        Has('Eggman - Jet Engine', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lost Colony - Gold Beetle", player),
-        Has('Eggman - Jet Engine', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mad Space - 1", player),
-        HasAll('Rouge - Iron Boots', 'Rouge - Pick Nails')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mad Space - 2", player),
-        And(CanReachLocation('Mad Space - 1'), Has('Rouge - Iron Boots'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mad Space - Chao Key 2", player),
-        Has('Rouge - Iron Boots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mad Space - Chao Key 3", player),
-        Has('Rouge - Iron Boots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mad Space - Gold Beetle", player),
-        Has('Rouge - Iron Boots', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Harbor - 1", player),
-        Has('Sonic - Light Shoes', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Harbor - 2", player),
-        And(CanReachLocation('Metal Harbor - 1'), Has('Sonic - Light Shoes'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Harbor - Chao Key 2", player),
-        Has('Sonic - Light Shoes', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Metal Harbor - Chao Key 3", player),
-        Has('Sonic - Light Shoes', 1)
+        multiworld.get_location("Death Chamber - Gold Beetle", player),
+        HasAll('Knuckles - Hammer Gloves', 'Knuckles - Shovel Claws')
     )
 
     world.set_rule(
@@ -411,91 +356,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Mission Street - 1", player),
-        Has('Tails - Booster', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mission Street - 2", player),
-        And(CanReachLocation('Mission Street - 1'), Has('Tails - Booster'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mission Street - Chao Key 1", player),
-        Has('Tails - Booster', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mission Street - Chao Key 2", player),
-        Has('Tails - Booster', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mission Street - Chao Key 3", player),
-        Has('Tails - Booster', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Mission Street - Gold Beetle", player),
-        Has('Tails - Booster', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prison Lane - 2", player),
-        CanReachLocation('Prison Lane - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prison Lane - Chao Key 1", player),
-        Has('Tails - Bazooka', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prison Lane - Chao Key 2", player),
-        Has('Tails - Booster', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Prison Lane - Upgrade", player),
-        Has('Tails - Bazooka', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pumpkin Hill - 1", player),
-        Has('Knuckles - Shovel Claws', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pumpkin Hill - 2", player),
-        CanReachLocation('Pumpkin Hill - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Cave - 1", player),
-        Has('Sonic - Bounce Bracelet', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Cave - 2", player),
-        CanReachLocation('Pyramid Cave - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Cave - Chao Key 2", player),
-        Has('Sonic - Bounce Bracelet', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Cave - Chao Key 3", player),
-        HasAll('Sonic - Bounce Bracelet', 'Sonic - Light Shoes', 'Sonic - Mystic Melody')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Pyramid Cave - Gold Beetle", player),
-        Has('Sonic - Bounce Bracelet', 1)
-    )
-
-    world.set_rule(
         multiworld.get_location("Radical Highway - 2", player),
         CanReachLocation('Radical Highway - 1')
     )
@@ -503,71 +363,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Radical Highway - Upgrade", player),
         Has('Shadow - Air Shoes', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Route 101 - 2", player),
-        CanReachLocation('Route 101 - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Route 280 - 2", player),
-        CanReachLocation('Route 280 - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sand Ocean - 2", player),
-        CanReachLocation('Sand Ocean - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sand Ocean - Upgrade", player),
-        Has('Eggman - Jet Engine', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Security Hall - 1", player),
-        Has('Rouge - Pick Nails', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Security Hall - 2", player),
-        And(CanReachLocation('Security Hall - 1'), Has('Rouge - Pick Nails'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Security Hall - Chao Key 3", player),
-        Has('Rouge - Pick Nails', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Security Hall - Upgrade", player),
-        HasAll('Rouge - Iron Boots', 'Rouge - Mystic Melody')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Rail - 2", player),
-        CanReachLocation('Sky Rail - 1')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Weapons Bed - 1", player),
-        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Weapons Bed - 2", player),
-        And(CanReachLocation('Weapons Bed - 1'), HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Weapons Bed - Chao Key 2", player),
-        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Weapons Bed - Chao Key 3", player),
-        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon')
     )
 
     world.set_rule(
@@ -596,11 +391,216 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Wild Canyon - 2", player),
-        CanReachLocation('Wild Canyon - 1')
+        multiworld.get_location("Sky Rail - 2", player),
+        CanReachLocation('Sky Rail - 1')
     )
 
     world.set_rule(
-        multiworld.get_location("Wild Canyon - Upgrade", player),
-        Has('Knuckles - Shovel Claws', 1)
+        multiworld.get_location("Final Chase - 2", player),
+        CanReachLocation('Final Chase - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Iron Gate - 2", player),
+        CanReachLocation('Iron Gate - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Iron Gate - Upgrade", player),
+        Has('Eggman - Large Cannon', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sand Ocean - 2", player),
+        CanReachLocation('Sand Ocean - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sand Ocean - Upgrade", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lost Colony - 1", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lost Colony - 2", player),
+        And(CanReachLocation('Lost Colony - 1'), Has('Eggman - Jet Engine'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lost Colony - Chao Key 3", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lost Colony - Gold Beetle", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Weapons Bed - 1", player),
+        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Weapons Bed - 2", player),
+        And(CanReachLocation('Weapons Bed - 1'), HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Weapons Bed - Chao Key 2", player),
+        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Weapons Bed - Chao Key 3", player),
+        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - 1", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - 2", player),
+        And(CanReachLocation('Cosmic Wall - 1'), Has('Eggman - Jet Engine'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - Chao Key 1", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - Chao Key 2", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - Chao Key 3", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - Gold Beetle", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cosmic Wall - Upgrade", player),
+        Has('Eggman - Jet Engine', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dry Lagoon - 2", player),
+        CanReachLocation('Dry Lagoon - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dry Lagoon - Gold Beetle", player),
+        HasAll('Rouge - Iron Boots', 'Rouge - Mystic Melody', 'Rouge - Pick Nails')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Dry Lagoon - Upgrade", player),
+        Has('Rouge - Pick Nails', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Egg Quarters - 1", player),
+        Has('Rouge - Pick Nails', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Egg Quarters - 2", player),
+        CanReachLocation('Egg Quarters - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Egg Quarters - Chao Key 3", player),
+        Has('Rouge - Mystic Melody', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Security Hall - 1", player),
+        Has('Rouge - Pick Nails', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Security Hall - 2", player),
+        And(CanReachLocation('Security Hall - 1'), Has('Rouge - Pick Nails'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Security Hall - Chao Key 3", player),
+        Has('Rouge - Pick Nails', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Security Hall - Upgrade", player),
+        HasAll('Rouge - Iron Boots', 'Rouge - Mystic Melody')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Route 280 - 2", player),
+        CanReachLocation('Route 280 - 1')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mad Space - 1", player),
+        HasAll('Rouge - Iron Boots', 'Rouge - Pick Nails')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mad Space - 2", player),
+        And(CanReachLocation('Mad Space - 1'), Has('Rouge - Iron Boots'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mad Space - Chao Key 2", player),
+        Has('Rouge - Iron Boots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mad Space - Chao Key 3", player),
+        Has('Rouge - Iron Boots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Mad Space - Gold Beetle", player),
+        Has('Rouge - Iron Boots', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cannon's Core - 1", player),
+        HasAll('Eggman - Jet Engine', 'Knuckles - Air Necklace', 'Knuckles - Hammer Gloves', 'Sonic - Bounce Bracelet', 'Tails - Booster')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cannon's Core - 2", player),
+        And(CanReachLocation("Cannon's Core - 1"), HasAll('Eggman - Jet Engine', 'Tails - Booster'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cannon's Core - Chao Key 1", player),
+        HasAll('Eggman - Jet Engine', 'Eggman - Large Cannon', 'Tails - Booster')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cannon's Core - Chao Key 2", player),
+        HasAll('Eggman - Jet Engine', 'Tails - Booster')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cannon's Core - Chao Key 3", player),
+        HasAll('Eggman - Jet Engine', 'Knuckles - Air Necklace', 'Knuckles - Hammer Gloves', 'Sonic - Flame Ring', 'Tails - Booster')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cannon's Core - Gold Beetle", player),
+        HasAll('Eggman - Jet Engine', 'Knuckles - Air Necklace', 'Knuckles - Hammer Gloves', 'Tails - Booster')
     )

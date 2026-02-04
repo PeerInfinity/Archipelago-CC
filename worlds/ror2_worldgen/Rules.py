@@ -21,13 +21,13 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
-        multiworld.get_entrance("Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole", player),
-        HasAll('Beads of Fealty', 'Hidden Realm: A Moment, Whole')
+        multiworld.get_entrance("OrderedStage_5 -> Hidden Realm: A Moment, Fractured", player),
+        HasAll('Hidden Realm: A Moment, Fractured', 'Stage 5')
     )
 
     world.set_rule(
-        multiworld.get_entrance("Hidden Realm: Bazaar Between Time -> Void Fields", player),
-        HasAll('Hidden Realm: Bazaar Between Time', 'Void Fields')
+        multiworld.get_entrance("OrderedStage_5 -> Commencement", player),
+        HasAll('Commencement', 'Stage 5')
     )
 
     world.set_rule(
@@ -76,185 +76,15 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("OrderedStage_5 -> Hidden Realm: A Moment, Fractured", player),
-        HasAll('Hidden Realm: A Moment, Fractured', 'Stage 5')
+        multiworld.get_entrance("Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole", player),
+        HasAll('Beads of Fealty', 'Hidden Realm: A Moment, Whole')
     )
 
     world.set_rule(
-        multiworld.get_entrance("OrderedStage_5 -> Commencement", player),
-        HasAll('Commencement', 'Stage 5')
+        multiworld.get_entrance("Hidden Realm: Bazaar Between Time -> Void Fields", player),
+        HasAll('Hidden Realm: Bazaar Between Time', 'Void Fields')
     )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 1", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 2", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 3", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 4", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 5", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 6", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 7", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 8", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 9", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Chest 10", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Shrine 1", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Shrine 2", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Shrine 3", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Shrine 4", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Shrine 5", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Radio Scanner 1", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abandoned Aqueduct: Newt Altar 1", player),
-        Has('Abandoned Aqueduct', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 1", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 2", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 3", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 4", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 5", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 6", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 7", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 8", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 9", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Chest 10", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Shrine 1", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Shrine 2", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Shrine 3", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Shrine 4", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Shrine 5", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Radio Scanner 1", player),
-        Has('Abyssal Depths', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Abyssal Depths: Newt Altar 1", player),
-        Has('Abyssal Depths', 1)
-    )
-
     world.set_rule(
         multiworld.get_location("Distant Roost: Chest 1", player),
         Has('Distant Roost', 1)
@@ -423,436 +253,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Distant Roost (2): Newt Altar 1", player),
         Has('Distant Roost (2)', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stage 5", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 1", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 2", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 3", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 4", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 5", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 6", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 7", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 8", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 9", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Chest 10", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Shrine 1", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Shrine 2", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Shrine 3", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Shrine 4", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Shrine 5", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Radio Scanner 1", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Rallypoint Delta: Newt Altar 1", player),
-        Has('Rallypoint Delta', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 1", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 2", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 3", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 4", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 5", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 6", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 7", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 8", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 9", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Chest 10", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Shrine 1", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Shrine 2", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Shrine 3", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Shrine 4", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Shrine 5", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Radio Scanner 1", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scorched Acres: Newt Altar 1", player),
-        Has('Scorched Acres', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 1", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 2", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 3", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 4", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 5", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 6", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 7", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 8", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 9", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Chest 10", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Shrine 1", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Shrine 2", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Shrine 3", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Shrine 4", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Shrine 5", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Radio Scanner 1", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Siren's Call: Newt Altar 1", player),
-        Has("Siren's Call", 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 1", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 2", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 3", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 4", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 5", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 6", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 7", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 8", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 9", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Chest 10", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Shrine 1", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Shrine 2", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Shrine 3", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Shrine 4", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Shrine 5", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Radio Scanner 1", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sky Meadow: Newt Altar 1", player),
-        Has('Sky Meadow', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 1", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 2", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 3", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 4", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 5", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 6", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 7", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 8", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 9", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Chest 10", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Shrine 1", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Shrine 2", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Shrine 3", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Shrine 4", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Shrine 5", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Radio Scanner 1", player),
-        Has('Sundered Grove', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Sundered Grove: Newt Altar 1", player),
-        Has('Sundered Grove', 1)
     )
 
     world.set_rule(
@@ -1111,6 +511,91 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 1", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 2", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 3", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 4", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 5", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 6", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 7", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 8", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 9", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Chest 10", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Shrine 1", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Shrine 2", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Shrine 3", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Shrine 4", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Shrine 5", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Radio Scanner 1", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abandoned Aqueduct: Newt Altar 1", player),
+        Has('Abandoned Aqueduct', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("Wetland Aspect: Chest 1", player),
         Has('Wetland Aspect', 1)
     )
@@ -1193,4 +678,519 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Wetland Aspect: Newt Altar 1", player),
         Has('Wetland Aspect', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 1", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 2", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 3", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 4", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 5", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 6", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 7", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 8", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 9", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Chest 10", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Shrine 1", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Shrine 2", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Shrine 3", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Shrine 4", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Shrine 5", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Radio Scanner 1", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Rallypoint Delta: Newt Altar 1", player),
+        Has('Rallypoint Delta', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 1", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 2", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 3", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 4", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 5", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 6", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 7", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 8", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 9", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Chest 10", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Shrine 1", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Shrine 2", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Shrine 3", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Shrine 4", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Shrine 5", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Radio Scanner 1", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scorched Acres: Newt Altar 1", player),
+        Has('Scorched Acres', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 1", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 2", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 3", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 4", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 5", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 6", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 7", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 8", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 9", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Chest 10", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Shrine 1", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Shrine 2", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Shrine 3", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Shrine 4", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Shrine 5", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Radio Scanner 1", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Abyssal Depths: Newt Altar 1", player),
+        Has('Abyssal Depths', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 1", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 2", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 3", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 4", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 5", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 6", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 7", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 8", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 9", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Chest 10", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Shrine 1", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Shrine 2", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Shrine 3", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Shrine 4", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Shrine 5", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Radio Scanner 1", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Siren's Call: Newt Altar 1", player),
+        Has("Siren's Call", 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 1", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 2", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 3", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 4", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 5", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 6", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 7", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 8", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 9", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Chest 10", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Shrine 1", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Shrine 2", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Shrine 3", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Shrine 4", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Shrine 5", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Radio Scanner 1", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sundered Grove: Newt Altar 1", player),
+        Has('Sundered Grove', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 1", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 2", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 3", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 4", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 5", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 6", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 7", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 8", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 9", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Chest 10", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Shrine 1", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Shrine 2", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Shrine 3", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Shrine 4", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Shrine 5", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Radio Scanner 1", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Sky Meadow: Newt Altar 1", player),
+        Has('Sky Meadow', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Stage 5", player),
+        Has('Sky Meadow', 1)
     )

@@ -305,6 +305,40 @@
           }
         ]
       },
+      "The Tower": {
+        "name": "The Tower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "The Tower 1",
+            "id": 2515007,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Trinket 18",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "The Tower 2",
+            "id": 2515008,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Trinket 15",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
       "Space Station 2": {
         "name": "Space Station 2",
         "exits": [],
@@ -373,40 +407,6 @@
             },
             "item": {
               "name": "Trinket 19",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
-      "The Tower": {
-        "name": "The Tower",
-        "exits": [],
-        "locations": [
-          {
-            "name": "The Tower 1",
-            "id": 2515007,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Trinket 18",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
-          },
-          {
-            "name": "The Tower 2",
-            "id": 2515008,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Trinket 15",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -712,13 +712,13 @@
       "Overworld (Outside Entanglement Generator)": "Trinket 16",
       "The Tantalizing Trinket": "Trinket 09",
       "Purest Unobtainium": "Trinket 10",
+      "The Tower 1": "Trinket 18",
+      "The Tower 2": "Trinket 15",
       "One Way Room": "Trinket 11",
       "You Just Keep Coming Back": "Trinket 12",
       "Clarion Call": "Trinket 06",
       "Prize for the Reckless": "Trinket 05",
       "Doing things the hard way": "Trinket 19",
-      "The Tower 1": "Trinket 18",
-      "The Tower 2": "Trinket 15",
       "Edge Games": "Trinket 13"
     }
   },

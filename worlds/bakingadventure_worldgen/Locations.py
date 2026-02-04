@@ -30,13 +30,6 @@ class LocationData:
 
 
 location_table: Dict[str, LocationData] = {
-    "Bake for 9-11 Minutes": LocationData("Baking", "Bake for 9-11 Minutes", 300000015, False),
-    "Cool on Wire Rack": LocationData("Baking", "Cool on Wire Rack", None, True),
-    "Gradually Mix Dry into Wet": LocationData("Combining", "Gradually Mix Dry into Wet", 300000012, False),
-    "Fold in Chocolate Chips": LocationData("Combining", "Fold in Chocolate Chips", 300000013, False),
-    "Measure Flour": LocationData("DryIngredients", "Measure Flour", 300000010, False),
-    "Add Baking Soda and Salt": LocationData("DryIngredients", "Add Baking Soda and Salt", 300000011, False),
-    "Scoop Dough onto Sheets": LocationData("Finishing", "Scoop Dough onto Sheets", 300000014, False),
     "Gather Mixing Bowls": LocationData("Kitchen", "Gather Mixing Bowls", 300000001, False),
     "Get Electric Mixer": LocationData("Kitchen", "Get Electric Mixer", 300000002, False),
     "Find Measuring Tools": LocationData("Kitchen", "Find Measuring Tools", 300000003, False),
@@ -46,4 +39,11 @@ location_table: Dict[str, LocationData] = {
     "Cream Butter and Sugars": LocationData("WetIngredients", "Cream Butter and Sugars", 300000007, False),
     "Add Eggs": LocationData("WetIngredients", "Add Eggs", 300000008, False),
     "Add Vanilla": LocationData("WetIngredients", "Add Vanilla", 300000009, False),
+    "Measure Flour": LocationData("DryIngredients", "Measure Flour", 300000010, False),
+    "Add Baking Soda and Salt": LocationData("DryIngredients", "Add Baking Soda and Salt", 300000011, False),
+    "Gradually Mix Dry into Wet": LocationData("Combining", "Gradually Mix Dry into Wet", 300000012, False),
+    "Fold in Chocolate Chips": LocationData("Combining", "Fold in Chocolate Chips", 300000013, False),
+    "Scoop Dough onto Sheets": LocationData("Finishing", "Scoop Dough onto Sheets", 300000014, False),
+    "Bake for 9-11 Minutes": LocationData("Baking", "Bake for 9-11 Minutes", 300000015, False),
+    "Cool on Wire Rack": LocationData("Baking", "Cool on Wire Rack", None, True),
 }

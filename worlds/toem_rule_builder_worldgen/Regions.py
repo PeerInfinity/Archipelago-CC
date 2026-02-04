@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Homelanda", "Kiiruberg", "Logcity", "Mountain Top", "Oaklaville", "Stanhamn"]
+    region_names = ["Homelanda", "Oaklaville", "Stanhamn", "Logcity", "Kiiruberg", "Mountain Top"]
 
     regions = {}
     for region_name in region_names:
@@ -52,10 +52,10 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Homelanda"], regions["Oaklaville"], "Homelanda -> Oaklaville")
-    _create_entrance(regions["Kiiruberg"], regions["Mountain Top"], "Kiiruberg -> Mountain Top")
-    _create_entrance(regions["Logcity"], regions["Kiiruberg"], "Logcity -> Kiiruberg")
     _create_entrance(regions["Oaklaville"], regions["Stanhamn"], "Oaklaville -> Stanhamn")
     _create_entrance(regions["Stanhamn"], regions["Logcity"], "Stanhamn -> Logcity")
+    _create_entrance(regions["Logcity"], regions["Kiiruberg"], "Logcity -> Kiiruberg")
+    _create_entrance(regions["Kiiruberg"], regions["Mountain Top"], "Kiiruberg -> Mountain Top")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

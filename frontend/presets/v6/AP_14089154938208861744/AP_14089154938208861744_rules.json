@@ -305,6 +305,40 @@
           }
         ]
       },
+      "The Tower": {
+        "name": "The Tower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "The Tower 1",
+            "id": 2515007,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Trinket 18",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "The Tower 2",
+            "id": 2515008,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Trinket 15",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
       "Space Station 2": {
         "name": "Space Station 2",
         "exits": [],
@@ -373,40 +407,6 @@
             },
             "item": {
               "name": "Trinket 19",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "The Tower": {
-        "name": "The Tower",
-        "exits": [],
-        "locations": [
-          {
-            "name": "The Tower 1",
-            "id": 2515007,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Trinket 18",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "The Tower 2",
-            "id": 2515008,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Trinket 15",
               "player": 1,
               "advancement": false,
               "type": "None"

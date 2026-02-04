@@ -66,6 +66,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("BoB: Island", player),
+        Has('Cannon Unlock BoB', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Basement -> Dire, Dire Docks", player),
         Has('Power Star', 26)
     )
@@ -73,11 +78,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Basement -> Bowser in the Fire Sea", player),
         And(CanReachLocation("DDD: Board Bowser's Sub"), Has('Power Star', 26))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("BoB: Island", player),
-        Has('Cannon Unlock BoB', 1)
     )
 
     world.set_rule(
@@ -116,23 +116,53 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("BBH: Eye to Eye in the Secret Room", player),
-        Has('Vanish Cap', 1)
-    )
-
-    world.set_rule(
         multiworld.get_location("BoB: Mario Wings to the Sky", player),
         HasAll('Cannon Unlock BoB', 'Wing Cap')
     )
 
     world.set_rule(
-        multiworld.get_location("Cavern of the Metal Cap Red Coins", player),
+        multiworld.get_location("WF: Fall onto the Caged Island", player),
+        CanReachRegion('WF: Tower')
+    )
+
+    world.set_rule(
+        multiworld.get_location("WF: Blast Away the Wall", player),
+        Has('Cannon Unlock WF', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("JRB: Blast to the Stone Pillar", player),
+        Has('Cannon Unlock JRB', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("JRB: Through the Jet Stream", player),
         Has('Metal Cap', 1)
     )
 
     world.set_rule(
         multiworld.get_location("CCM: Wall Kicks Will Work", player),
         Has('Cannon Unlock CCM', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("BBH: Eye to Eye in the Secret Room", player),
+        Has('Vanish Cap', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("HMC: Metal-Head Mario Can Move!", player),
+        Has('Metal Cap', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("SSL: Free Flying for 8 Red Coins", player),
+        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), Has('Wing Cap'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("SSL: Stand Tall on the Four Pillars", player),
+        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), Has('Wing Cap'))
     )
 
     world.set_rule(
@@ -151,47 +181,17 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("HMC: Metal-Head Mario Can Move!", player),
-        HasAll('Metal Cap')
-    )
-
-    world.set_rule(
-        multiworld.get_location("JRB: Blast to the Stone Pillar", player),
-        HasAll('Cannon Unlock JRB')
-    )
-
-    world.set_rule(
-        multiworld.get_location("JRB: Through the Jet Stream", player),
+        multiworld.get_location("Cavern of the Metal Cap Red Coins", player),
         Has('Metal Cap', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("RR: Somewhere Over the Rainbow", player),
-        Has('Cannon Unlock RR', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("SSL: Stand Tall on the Four Pillars", player),
-        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SSL: Free Flying for 8 Red Coins", player),
-        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("SL: Into the Igloo", player),
+        multiworld.get_location("Vanish Cap Under the Moat Red Coins", player),
         Has('Vanish Cap', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("TTM: Blast to the Lonely Mushroom", player),
-        Has('Cannon Unlock TTM', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Vanish Cap Under the Moat Red Coins", player),
+        multiworld.get_location("SL: Into the Igloo", player),
         Has('Vanish Cap', 1)
     )
 
@@ -201,21 +201,21 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("WF: Fall onto the Caged Island", player),
-        CanReachRegion('WF: Tower')
+        multiworld.get_location("TTM: Blast to the Lonely Mushroom", player),
+        Has('Cannon Unlock TTM', 1)
     )
 
     world.set_rule(
-        multiworld.get_location("WF: Blast Away the Wall", player),
-        Has('Cannon Unlock WF', 1)
+        multiworld.get_location("RR: Somewhere Over the Rainbow", player),
+        Has('Cannon Unlock RR', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Wing Mario Over the Rainbow Red Coins", player),
-        HasAll('Wing Cap')
+        Has('Wing Cap', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Wing Mario Over the Rainbow 1Up Block", player),
-        HasAll('Wing Cap')
+        Has('Wing Cap', 1)
     )

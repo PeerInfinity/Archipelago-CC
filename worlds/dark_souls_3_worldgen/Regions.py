@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Anor Londo", "Archdragon Peak", "Catacombs of Carthus", "Cathedral of the Deep", "Cemetery of Ash", "Consumed King's Garden", "Farron Keep", "Firelink Shrine", "Firelink Shrine Bell Tower", "Grand Archives", "Greirat's Shop", "High Wall of Lothric", "Irithyll Dungeon", "Irithyll of the Boreal Valley", "Karla's Shop", "Kiln of the First Flame", "Lothric Castle", "Profaned Capital", "Road of Sacrifices", "Smouldering Lake", "Undead Settlement", "Untended Graves"]
+    region_names = ["Menu", "Cemetery of Ash", "Firelink Shrine", "Firelink Shrine Bell Tower", "High Wall of Lothric", "Undead Settlement", "Road of Sacrifices", "Cathedral of the Deep", "Farron Keep", "Catacombs of Carthus", "Smouldering Lake", "Irithyll of the Boreal Valley", "Irithyll Dungeon", "Profaned Capital", "Anor Londo", "Lothric Castle", "Consumed King's Garden", "Grand Archives", "Untended Graves", "Archdragon Peak", "Kiln of the First Flame", "Greirat's Shop", "Karla's Shop"]
 
     regions = {}
     for region_name in region_names:
@@ -52,27 +52,27 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
 
     # Create entrances
     _create_entrance(regions["Menu"], regions["Cemetery of Ash"], "New Game")
-    _create_entrance(regions["Catacombs of Carthus"], regions["Irithyll of the Boreal Valley"], "Go To Irithyll of the Boreal Valley")
-    _create_entrance(regions["Catacombs of Carthus"], regions["Smouldering Lake"], "Go To Smouldering Lake")
     _create_entrance(regions["Cemetery of Ash"], regions["Firelink Shrine"], "Go To Firelink Shrine")
-    _create_entrance(regions["Consumed King's Garden"], regions["Untended Graves"], "Go To Untended Graves")
-    _create_entrance(regions["Farron Keep"], regions["Catacombs of Carthus"], "Go To Catacombs of Carthus")
     _create_entrance(regions["Firelink Shrine"], regions["High Wall of Lothric"], "Go To High Wall of Lothric")
     _create_entrance(regions["Firelink Shrine"], regions["Firelink Shrine Bell Tower"], "Go To Firelink Shrine Bell Tower")
     _create_entrance(regions["Firelink Shrine"], regions["Kiln of the First Flame"], "Go To Kiln of the First Flame")
     _create_entrance(regions["High Wall of Lothric"], regions["Undead Settlement"], "Go To Undead Settlement")
     _create_entrance(regions["High Wall of Lothric"], regions["Lothric Castle"], "Go To Lothric Castle")
     _create_entrance(regions["High Wall of Lothric"], regions["Greirat's Shop"], "Go To Greirat's Shop")
+    _create_entrance(regions["Undead Settlement"], regions["Road of Sacrifices"], "Go To Road of Sacrifices")
+    _create_entrance(regions["Road of Sacrifices"], regions["Cathedral of the Deep"], "Go To Cathedral of the Deep")
+    _create_entrance(regions["Road of Sacrifices"], regions["Farron Keep"], "Go To Farron Keep")
+    _create_entrance(regions["Farron Keep"], regions["Catacombs of Carthus"], "Go To Catacombs of Carthus")
+    _create_entrance(regions["Catacombs of Carthus"], regions["Irithyll of the Boreal Valley"], "Go To Irithyll of the Boreal Valley")
+    _create_entrance(regions["Catacombs of Carthus"], regions["Smouldering Lake"], "Go To Smouldering Lake")
+    _create_entrance(regions["Irithyll of the Boreal Valley"], regions["Irithyll Dungeon"], "Go To Irithyll Dungeon")
+    _create_entrance(regions["Irithyll of the Boreal Valley"], regions["Anor Londo"], "Go To Anor Londo")
     _create_entrance(regions["Irithyll Dungeon"], regions["Archdragon Peak"], "Go To Archdragon Peak")
     _create_entrance(regions["Irithyll Dungeon"], regions["Profaned Capital"], "Go To Profaned Capital")
     _create_entrance(regions["Irithyll Dungeon"], regions["Karla's Shop"], "Go To Karla's Shop")
-    _create_entrance(regions["Irithyll of the Boreal Valley"], regions["Irithyll Dungeon"], "Go To Irithyll Dungeon")
-    _create_entrance(regions["Irithyll of the Boreal Valley"], regions["Anor Londo"], "Go To Anor Londo")
     _create_entrance(regions["Lothric Castle"], regions["Consumed King's Garden"], "Go To Consumed King's Garden")
     _create_entrance(regions["Lothric Castle"], regions["Grand Archives"], "Go To Grand Archives")
-    _create_entrance(regions["Road of Sacrifices"], regions["Cathedral of the Deep"], "Go To Cathedral of the Deep")
-    _create_entrance(regions["Road of Sacrifices"], regions["Farron Keep"], "Go To Farron Keep")
-    _create_entrance(regions["Undead Settlement"], regions["Road of Sacrifices"], "Go To Road of Sacrifices")
+    _create_entrance(regions["Consumed King's Garden"], regions["Untended Graves"], "Go To Untended Graves")
 
     # Add all regions to multiworld
     # Regions must be added even if they have no locations or exits, because:

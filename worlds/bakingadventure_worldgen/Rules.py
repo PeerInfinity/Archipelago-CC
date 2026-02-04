@@ -21,6 +21,11 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("ToCombining", player),
+        HasAll('Creamed Mixture', 'Flour Mixture')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("ToFinishing", player),
         Has('Cookie Dough', 1)
     )
@@ -29,42 +34,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("ToBaking", player),
         Has('Shaped Cookies', 1)
     )
-
-    world.set_rule(
-        multiworld.get_entrance("ToCombining", player),
-        HasAll('Creamed Mixture', 'Flour Mixture')
-    )
     # Location rules
-    world.set_rule(
-        multiworld.get_location("Bake for 9-11 Minutes", player),
-        HasAll('Preheated Oven', 'Shaped Cookies')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Cool on Wire Rack", player),
-        Has('Baked Cookies', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Fold in Chocolate Chips", player),
-        Has('Basic Dough', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Measure Flour", player),
-        Has('Measuring Tools', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Add Baking Soda and Salt", player),
-        Has('Measured Flour', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scoop Dough onto Sheets", player),
-        HasAll('Cookie Dough', 'Prepared Sheets')
-    )
-
     world.set_rule(
         multiworld.get_location("Cream Butter and Sugars", player),
         HasAll('Electric Mixer', 'Mixing Bowls', 'Softened Butter')
@@ -78,4 +48,34 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Add Vanilla", player),
         Has('Egg Mixture', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Measure Flour", player),
+        Has('Measuring Tools', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Add Baking Soda and Salt", player),
+        Has('Measured Flour', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Fold in Chocolate Chips", player),
+        Has('Basic Dough', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Scoop Dough onto Sheets", player),
+        HasAll('Cookie Dough', 'Prepared Sheets')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Bake for 9-11 Minutes", player),
+        HasAll('Preheated Oven', 'Shaped Cookies')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Cool on Wire Rack", player),
+        Has('Baked Cookies', 1)
     )

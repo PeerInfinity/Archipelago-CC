@@ -128,66 +128,13 @@
           }
         ]
       },
-      "Achievements with (double) painter": {
-        "name": "Achievements with (double) painter",
+      "Shape transportation": {
+        "name": "Shape transportation",
         "exits": [],
         "locations": [
           {
-            "name": "Painter",
-            "id": 20013206,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Blueprint Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with all main buildings": {
-        "name": "Achievements with all main buildings",
-        "exits": [
-          {
-            "name": "Delivering per second with 1.6x belt speed",
-            "connected_region": "Achievements with x1.6 belt speed",
-            "access_rule": {
-              "rule": "has_x_belt_multiplier",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 1.6
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "The logo!",
-            "id": 20013213,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "To the moon",
-            "id": 20013214,
+            "name": "I need trains",
+            "id": 20013247,
             "access_rule": {
               "rule": "True_"
             },
@@ -198,94 +145,484 @@
               "type": "None"
             },
             "locked": false
+          }
+        ]
+      },
+      "Shape extraction": {
+        "name": "Shape extraction",
+        "exits": [
+          {
+            "name": "Transporting shapes over the canvas",
+            "connected_region": "Main",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Belt",
+                  "Compact Merger",
+                  "Compact Splitter"
+                ]
+              }
+            }
           },
           {
-            "name": "It's piling up",
-            "id": 20013215,
+            "name": "Cutting with half cutter",
+            "connected_region": "Achievements with half cutter",
+            "access_rule": {
+              "rule": "can_cut_half",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "Rotating clockwise",
+            "connected_region": "Achievements with clockwise rotator",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Rotator"
+              }
+            }
+          },
+          {
+            "name": "Stacking shapes",
+            "connected_region": "Achievements with stacker",
+            "access_rule": {
+              "rule": "can_stack",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "Storing shapes",
+            "connected_region": "Achievements with storage",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Storage"
+              }
+            }
+          },
+          {
+            "name": "Trashing shapes",
+            "connected_region": "Achievements with trash",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Trash"
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Main": {
+        "name": "Main",
+        "exits": [
+          {
+            "name": "Painting with (double) painter",
+            "connected_region": "Achievements with (double) painter",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Painter",
+                  "Double Painter"
+                ]
+              }
+            }
+          },
+          {
+            "name": "Copying and placing blueprints",
+            "connected_region": "Achievements with blueprints",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_mix_colors",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_paint",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Blueprints"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Building a MAM",
+            "connected_region": "Achievements needing a MAM",
+            "access_rule": {
+              "rule": "can_build_mam",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "False_"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Using all main buildings",
+            "connected_region": "Achievements with all main buildings",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_mix_colors",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "can_paint",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "Using first level building",
+            "connected_region": "Levels with 1 building",
+            "access_rule": {
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": [
+                      "Cutter",
+                      "Rotator",
+                      "Painter",
+                      "Color Mixer",
+                      "Stacker"
+                    ]
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Using first upgrade building",
+            "connected_region": "Upgrades with 1 building",
+            "access_rule": {
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": [
+                      "Stacker",
+                      "Cutter",
+                      "Rotator",
+                      "Painter",
+                      "Color Mixer"
+                    ]
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Delivering unprocessed",
+            "connected_region": "Shapesanity Full Uncolored",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Cutting in single half",
+            "connected_region": "Shapesanity Half Uncolored",
+            "access_rule": {
+              "rule": "can_make_half_shape",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "Cutting in single piece",
+            "connected_region": "Shapesanity Piece Uncolored",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_cut_half",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "can_rotate_90",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Quad Cutter"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Cutting and stacking into two halves",
+            "connected_region": "Shapesanity Half-Half Uncolored",
+            "access_rule": {
+              "rule": "can_make_half_half_shape",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "Stitching complex shapes",
+            "connected_region": "Shapesanity Stitched Uncolored",
+            "access_rule": {
+              "rule": "can_make_stitched_shape",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "False_"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Rotating and stitching a single windmill half",
+            "connected_region": "Shapesanity East Windmill Uncolored",
+            "access_rule": {
+              "rule": "can_make_east_windmill",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          },
+          {
+            "name": "Painting with a quad painter or stitching",
+            "connected_region": "Shapesanity Colorful Full Uncolored",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_quad_painter",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "Why windmill, why?",
+            "connected_region": "Shapesanity Colorful East Windmill Uncolored",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_east_windmill",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Quad painting a half-half shape",
+            "connected_region": "Shapesanity Colorful Half-Half Uncolored",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_half_half_shape",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Quad painting a half shape",
+            "connected_region": "Shapesanity Colorful Half Uncolored",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "can_make_half_shape",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "can_use_quad_painter",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_make_stitched_shape",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "False_"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 1",
+            "id": 20010710,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "I'll use it later",
-            "id": 20013216,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Constant Signal",
+              "name": "Balancer",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true,
+            "progress_type": "PRIORITY"
           },
           {
-            "name": "I've seen that before ...",
-            "id": 20013245,
+            "name": "Level 1 Additional",
+            "id": 20010707,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Double Painter",
+              "name": "Storage",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true,
+            "progress_type": "PRIORITY"
           },
           {
-            "name": "Memories from the past",
-            "id": 20013246,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tunnel",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Preparing to launch",
-            "id": 20013218,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "SpaceY",
-            "id": 20013219,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Efficiency 1",
-            "id": 20013217,
+            "name": "Level 2",
+            "id": 20010711,
             "access_rule": {
               "rule": "True_"
             },
@@ -298,8 +635,36 @@
             "locked": false
           },
           {
-            "name": "Branding specialist 1",
-            "id": 20013236,
+            "name": "Level 3",
+            "id": 20010712,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Belt Upgrade Tier II",
+            "id": 20011209,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Miner Upgrade Tier II",
+            "id": 20011708,
             "access_rule": {
               "rule": "True_"
             },
@@ -310,124 +675,24 @@
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "Achievements with any placeable building": {
-        "name": "Achievements with any placeable building",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Perfectionist",
-            "id": 20013241,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with blueprints": {
-        "name": "Achievements with blueprints",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Now it's easy",
-            "id": 20013230,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
           },
           {
-            "name": "Copy-Pasta",
-            "id": 20013244,
+            "name": "Processors Upgrade Tier II",
+            "id": 20012207,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with clockwise rotator": {
-        "name": "Achievements with clockwise rotator",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Rotater",
-            "id": 20013208,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with half cutter": {
-        "name": "Achievements with half cutter",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Cutter",
-            "id": 20013207,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Wires",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "Achievements with stacker": {
-        "name": "Achievements with stacker",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Wait, they stack?",
-            "id": 20013209,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
           },
           {
-            "name": "Stack overflow",
-            "id": 20013220,
+            "name": "Painting Upgrade Tier II",
+            "id": 20012706,
             "access_rule": {
               "rule": "True_"
             },
@@ -438,95 +703,15 @@
               "type": "None"
             },
             "locked": false
-          }
-        ]
-      },
-      "Achievements with storage": {
-        "name": "Achievements with storage",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Storage",
-            "id": 20013211,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with trash": {
-        "name": "Achievements with trash",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Get rid of them",
-            "id": 20013224,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with wires": {
-        "name": "Achievements with wires",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Computer Guy",
-            "id": 20013231,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Color Mixer",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
           },
           {
-            "name": "The next dimension",
-            "id": 20013242,
+            "name": "It's a mess",
+            "id": 20013221,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Achievements with x1.6 belt speed": {
-        "name": "Achievements with x1.6 belt speed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Efficiency 2",
-            "id": 20013235,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Virtual Processing",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -534,15 +719,15 @@
             "locked": false
           },
           {
-            "name": "Branding specialist 2",
-            "id": 20013237,
+            "name": "Oops",
+            "id": 20013243,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Compact Splitter",
+              "name": "Item Filter",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1096,1668 +1281,6 @@
           }
         ]
       },
-      "Main": {
-        "name": "Main",
-        "exits": [
-          {
-            "name": "Painting with (double) painter",
-            "connected_region": "Achievements with (double) painter",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Painter",
-                  "Double Painter"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Copying and placing blueprints",
-            "connected_region": "Achievements with blueprints",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_make_stitched_shape",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "False_"
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_mix_colors",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "can_paint",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blueprints"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Building a MAM",
-            "connected_region": "Achievements needing a MAM",
-            "access_rule": {
-              "rule": "can_build_mam",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "False_"
-                }
-              ]
-            }
-          },
-          {
-            "name": "Using all main buildings",
-            "connected_region": "Achievements with all main buildings",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "can_make_stitched_shape",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "False_"
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_mix_colors",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "can_paint",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          },
-          {
-            "name": "Using first level building",
-            "connected_region": "Levels with 1 building",
-            "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": [
-                      "Cutter",
-                      "Rotator",
-                      "Painter",
-                      "Color Mixer",
-                      "Stacker"
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
-            }
-          },
-          {
-            "name": "Using first upgrade building",
-            "connected_region": "Upgrades with 1 building",
-            "access_rule": {
-              "rule": "has_logic_list_building",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": [
-                      "Stacker",
-                      "Cutter",
-                      "Rotator",
-                      "Painter",
-                      "Color Mixer"
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "False_"
-                },
-                {
-                  "rule": "False_"
-                }
-              ]
-            }
-          },
-          {
-            "name": "Delivering unprocessed",
-            "connected_region": "Shapesanity Full Uncolored",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Cutting in single half",
-            "connected_region": "Shapesanity Half Uncolored",
-            "access_rule": {
-              "rule": "can_make_half_shape",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "Cutting in single piece",
-            "connected_region": "Shapesanity Piece Uncolored",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "can_cut_half",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "can_rotate_90",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quad Cutter"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "Cutting and stacking into two halves",
-            "connected_region": "Shapesanity Half-Half Uncolored",
-            "access_rule": {
-              "rule": "can_make_half_half_shape",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "Stitching complex shapes",
-            "connected_region": "Shapesanity Stitched Uncolored",
-            "access_rule": {
-              "rule": "can_make_stitched_shape",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "False_"
-                }
-              ]
-            }
-          },
-          {
-            "name": "Rotating and stitching a single windmill half",
-            "connected_region": "Shapesanity East Windmill Uncolored",
-            "access_rule": {
-              "rule": "can_make_east_windmill",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "Painting with a quad painter or stitching",
-            "connected_region": "Shapesanity Colorful Full Uncolored",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "can_make_stitched_shape",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "False_"
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_use_quad_painter",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
-            }
-          },
-          {
-            "name": "Why windmill, why?",
-            "connected_region": "Shapesanity Colorful East Windmill Uncolored",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "can_make_east_windmill",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "can_use_quad_painter",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_make_stitched_shape",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "False_"
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "Quad painting a half-half shape",
-            "connected_region": "Shapesanity Colorful Half-Half Uncolored",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "can_make_half_half_shape",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "can_use_quad_painter",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_make_stitched_shape",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "False_"
-                    }
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "Quad painting a half shape",
-            "connected_region": "Shapesanity Colorful Half Uncolored",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "can_make_half_shape",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "can_use_quad_painter",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "can_make_stitched_shape",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "False_"
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Level 1",
-            "id": 20010710,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Balancer",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "progress_type": "PRIORITY"
-          },
-          {
-            "name": "Level 1 Additional",
-            "id": 20010707,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Storage",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true,
-            "progress_type": "PRIORITY"
-          },
-          {
-            "name": "Level 2",
-            "id": 20010711,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Level 3",
-            "id": 20010712,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Belt Upgrade Tier II",
-            "id": 20011209,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Miner Upgrade Tier II",
-            "id": 20011708,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Blueprint Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Processors Upgrade Tier II",
-            "id": 20012207,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Wires",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Painting Upgrade Tier II",
-            "id": 20012706,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Level Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "It's a mess",
-            "id": 20013221,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Virtual Processing",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Oops",
-            "id": 20013243,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Item Filter",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shape extraction": {
-        "name": "Shape extraction",
-        "exits": [
-          {
-            "name": "Transporting shapes over the canvas",
-            "connected_region": "Main",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Belt",
-                  "Compact Merger",
-                  "Compact Splitter"
-                ]
-              }
-            }
-          },
-          {
-            "name": "Cutting with half cutter",
-            "connected_region": "Achievements with half cutter",
-            "access_rule": {
-              "rule": "can_cut_half",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "Rotating clockwise",
-            "connected_region": "Achievements with clockwise rotator",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Rotator"
-              }
-            }
-          },
-          {
-            "name": "Stacking shapes",
-            "connected_region": "Achievements with stacker",
-            "access_rule": {
-              "rule": "can_stack",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          },
-          {
-            "name": "Storing shapes",
-            "connected_region": "Achievements with storage",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Storage"
-              }
-            }
-          },
-          {
-            "name": "Trashing shapes",
-            "connected_region": "Achievements with trash",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Trash"
-              }
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shape transportation": {
-        "name": "Shape transportation",
-        "exits": [],
-        "locations": [
-          {
-            "name": "I need trains",
-            "id": 20013247,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Colorful East Windmill Painted": {
-        "name": "Shapesanity Colorful East Windmill Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a colorful east windmill shape",
-            "connected_region": "Shapesanity Colorful East Windmill Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful East Windmill Uncolored": {
-        "name": "Shapesanity Colorful East Windmill Uncolored",
-        "exits": [
-          {
-            "name": "Painting a colorful east windmill shape",
-            "connected_region": "Shapesanity Colorful East Windmill Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful Full Mixed": {
-        "name": "Shapesanity Colorful Full Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 26",
-            "id": 20013275,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Blueprint Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 28",
-            "id": 20013277,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 39",
-            "id": 20013288,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Rotator (CCW)",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Colorful Full Painted": {
-        "name": "Shapesanity Colorful Full Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a colorful full shape",
-            "connected_region": "Shapesanity Colorful Full Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful Full Uncolored": {
-        "name": "Shapesanity Colorful Full Uncolored",
-        "exits": [
-          {
-            "name": "Painting a colorful full shape",
-            "connected_region": "Shapesanity Colorful Full Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful Half Painted": {
-        "name": "Shapesanity Colorful Half Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a colorful half shape",
-            "connected_region": "Shapesanity Colorful Half Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful Half Uncolored": {
-        "name": "Shapesanity Colorful Half Uncolored",
-        "exits": [
-          {
-            "name": "Painting a colorful half shape",
-            "connected_region": "Shapesanity Colorful Half Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful Half-Half Mixed": {
-        "name": "Shapesanity Colorful Half-Half Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 49",
-            "id": 20013298,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 50",
-            "id": 20013299,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Colorful Half-Half Painted": {
-        "name": "Shapesanity Colorful Half-Half Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a colorful half-half shape",
-            "connected_region": "Shapesanity Colorful Half-Half Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Colorful Half-Half Uncolored": {
-        "name": "Shapesanity Colorful Half-Half Uncolored",
-        "exits": [
-          {
-            "name": "Painting a colorful half-half shape",
-            "connected_region": "Shapesanity Colorful Half-Half Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity East Windmill Mixed": {
-        "name": "Shapesanity East Windmill Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 5",
-            "id": 20013254,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity East Windmill Painted": {
-        "name": "Shapesanity East Windmill Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a east windmill shape",
-            "connected_region": "Shapesanity East Windmill Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 16",
-            "id": 20013265,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity East Windmill Uncolored": {
-        "name": "Shapesanity East Windmill Uncolored",
-        "exits": [
-          {
-            "name": "Painting a east windmill shape",
-            "connected_region": "Shapesanity East Windmill Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 4",
-            "id": 20013253,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Full Mixed": {
-        "name": "Shapesanity Full Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 25",
-            "id": 20013274,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Belt Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Full Painted": {
-        "name": "Shapesanity Full Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a full shape",
-            "connected_region": "Shapesanity Full Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 22",
-            "id": 20013271,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cutter",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Full Uncolored": {
-        "name": "Shapesanity Full Uncolored",
-        "exits": [
-          {
-            "name": "Painting a full shape",
-            "connected_region": "Shapesanity Full Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 1",
-            "id": 20013250,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 2",
-            "id": 20013251,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Belt Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 3",
-            "id": 20013252,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Blueprint Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Half Mixed": {
-        "name": "Shapesanity Half Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 7",
-            "id": 20013256,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 20",
-            "id": 20013269,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Logic Gates",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Half Painted": {
-        "name": "Shapesanity Half Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a half shape",
-            "connected_region": "Shapesanity Half Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 10",
-            "id": 20013259,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Belt Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 17",
-            "id": 20013266,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Half Uncolored": {
-        "name": "Shapesanity Half Uncolored",
-        "exits": [
-          {
-            "name": "Painting a half shape",
-            "connected_region": "Shapesanity Half Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Half-Half Mixed": {
-        "name": "Shapesanity Half-Half Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 37",
-            "id": 20013286,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Upgrade Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Half-Half Painted": {
-        "name": "Shapesanity Half-Half Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a half-half shape",
-            "connected_region": "Shapesanity Half-Half Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Half-Half Uncolored": {
-        "name": "Shapesanity Half-Half Uncolored",
-        "exits": [
-          {
-            "name": "Painting a half-half shape",
-            "connected_region": "Shapesanity Half-Half Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Piece Mixed": {
-        "name": "Shapesanity Piece Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 8",
-            "id": 20013257,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 9",
-            "id": 20013258,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Belt Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 18",
-            "id": 20013267,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Piece Painted": {
-        "name": "Shapesanity Piece Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a piece shape",
-            "connected_region": "Shapesanity Piece Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 13",
-            "id": 20013262,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Quad Cutter",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 14",
-            "id": 20013263,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Upgrade Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 24",
-            "id": 20013273,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Upgrade Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Piece Uncolored": {
-        "name": "Shapesanity Piece Uncolored",
-        "exits": [
-          {
-            "name": "Painting a piece shape",
-            "connected_region": "Shapesanity Piece Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "Shapesanity Stitched Mixed": {
-        "name": "Shapesanity Stitched Mixed",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Shapesanity 6",
-            "id": 20013255,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Upgrade Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 15",
-            "id": 20013264,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 27",
-            "id": 20013276,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 30",
-            "id": 20013279,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 33",
-            "id": 20013282,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 34",
-            "id": 20013283,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Belt Reader",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 35",
-            "id": 20013284,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Rotator",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 38",
-            "id": 20013287,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Level Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 40",
-            "id": 20013289,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Belt Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 41",
-            "id": 20013290,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 42",
-            "id": 20013291,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Belt Upgrade",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 43",
-            "id": 20013292,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 44",
-            "id": 20013293,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Trash",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 45",
-            "id": 20013294,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Level Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 46",
-            "id": 20013295,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 47",
-            "id": 20013296,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 48",
-            "id": 20013297,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Painting Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Stitched Painted": {
-        "name": "Shapesanity Stitched Painted",
-        "exits": [
-          {
-            "name": "Mixing colors for a stitched shape",
-            "connected_region": "Shapesanity Stitched Mixed",
-            "access_rule": {
-              "rule": "can_mix_colors",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 11",
-            "id": 20013260,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 12",
-            "id": 20013261,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Display",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 19",
-            "id": 20013268,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 21",
-            "id": 20013270,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 23",
-            "id": 20013272,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Belt Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 29",
-            "id": 20013278,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Small Miner Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 31",
-            "id": 20013280,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Shapesanity 32",
-            "id": 20013281,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Big Processors Upgrade",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
-      "Shapesanity Stitched Uncolored": {
-        "name": "Shapesanity Stitched Uncolored",
-        "exits": [
-          {
-            "name": "Painting a stitched shape",
-            "connected_region": "Shapesanity Stitched Painted",
-            "access_rule": {
-              "rule": "can_paint",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Shapesanity 36",
-            "id": 20013285,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Blueprint Shapes Bundle",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
-      },
       "Upgrades with 1 building": {
         "name": "Upgrades with 1 building",
         "exits": [
@@ -3303,6 +1826,1483 @@
             "locked": false
           }
         ]
+      },
+      "Achievements with (double) painter": {
+        "name": "Achievements with (double) painter",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Painter",
+            "id": 20013206,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with half cutter": {
+        "name": "Achievements with half cutter",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Cutter",
+            "id": 20013207,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with clockwise rotator": {
+        "name": "Achievements with clockwise rotator",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Rotater",
+            "id": 20013208,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with stacker": {
+        "name": "Achievements with stacker",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Wait, they stack?",
+            "id": 20013209,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Stack overflow",
+            "id": 20013220,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with storage": {
+        "name": "Achievements with storage",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Storage",
+            "id": 20013211,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with trash": {
+        "name": "Achievements with trash",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Get rid of them",
+            "id": 20013224,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with blueprints": {
+        "name": "Achievements with blueprints",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Now it's easy",
+            "id": 20013230,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Copy-Pasta",
+            "id": 20013244,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with wires": {
+        "name": "Achievements with wires",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Computer Guy",
+            "id": 20013231,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Color Mixer",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "The next dimension",
+            "id": 20013242,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with any placeable building": {
+        "name": "Achievements with any placeable building",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Perfectionist",
+            "id": 20013241,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with all main buildings": {
+        "name": "Achievements with all main buildings",
+        "exits": [
+          {
+            "name": "Delivering per second with 1.6x belt speed",
+            "connected_region": "Achievements with x1.6 belt speed",
+            "access_rule": {
+              "rule": "has_x_belt_multiplier",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1.6
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "The logo!",
+            "id": 20013213,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "To the moon",
+            "id": 20013214,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "It's piling up",
+            "id": 20013215,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "I'll use it later",
+            "id": 20013216,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Constant Signal",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "I've seen that before ...",
+            "id": 20013245,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Double Painter",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Memories from the past",
+            "id": 20013246,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Tunnel",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Preparing to launch",
+            "id": 20013218,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "SpaceY",
+            "id": 20013219,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Efficiency 1",
+            "id": 20013217,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Branding specialist 1",
+            "id": 20013236,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Achievements with x1.6 belt speed": {
+        "name": "Achievements with x1.6 belt speed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Efficiency 2",
+            "id": 20013235,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Upgrade Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Branding specialist 2",
+            "id": 20013237,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Compact Splitter",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Full Uncolored": {
+        "name": "Shapesanity Full Uncolored",
+        "exits": [
+          {
+            "name": "Painting a full shape",
+            "connected_region": "Shapesanity Full Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 1",
+            "id": 20013250,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 2",
+            "id": 20013251,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Belt Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 3",
+            "id": 20013252,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Full Painted": {
+        "name": "Shapesanity Full Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a full shape",
+            "connected_region": "Shapesanity Full Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 22",
+            "id": 20013271,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Cutter",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Full Mixed": {
+        "name": "Shapesanity Full Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 25",
+            "id": 20013274,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Belt Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Half Uncolored": {
+        "name": "Shapesanity Half Uncolored",
+        "exits": [
+          {
+            "name": "Painting a half shape",
+            "connected_region": "Shapesanity Half Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Half Painted": {
+        "name": "Shapesanity Half Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a half shape",
+            "connected_region": "Shapesanity Half Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 10",
+            "id": 20013259,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Belt Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 17",
+            "id": 20013266,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Half Mixed": {
+        "name": "Shapesanity Half Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 7",
+            "id": 20013256,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 20",
+            "id": 20013269,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Logic Gates",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Piece Uncolored": {
+        "name": "Shapesanity Piece Uncolored",
+        "exits": [
+          {
+            "name": "Painting a piece shape",
+            "connected_region": "Shapesanity Piece Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Piece Painted": {
+        "name": "Shapesanity Piece Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a piece shape",
+            "connected_region": "Shapesanity Piece Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 13",
+            "id": 20013262,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Quad Cutter",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 14",
+            "id": 20013263,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Upgrade Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 24",
+            "id": 20013273,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Upgrade Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Piece Mixed": {
+        "name": "Shapesanity Piece Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 8",
+            "id": 20013257,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 9",
+            "id": 20013258,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Belt Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 18",
+            "id": 20013267,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Stitched Uncolored": {
+        "name": "Shapesanity Stitched Uncolored",
+        "exits": [
+          {
+            "name": "Painting a stitched shape",
+            "connected_region": "Shapesanity Stitched Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 36",
+            "id": 20013285,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Stitched Painted": {
+        "name": "Shapesanity Stitched Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a stitched shape",
+            "connected_region": "Shapesanity Stitched Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 11",
+            "id": 20013260,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 12",
+            "id": 20013261,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Display",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 19",
+            "id": 20013268,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 21",
+            "id": 20013270,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 23",
+            "id": 20013272,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Belt Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 29",
+            "id": 20013278,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 31",
+            "id": 20013280,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 32",
+            "id": 20013281,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Stitched Mixed": {
+        "name": "Shapesanity Stitched Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 6",
+            "id": 20013255,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Upgrade Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 15",
+            "id": 20013264,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 27",
+            "id": 20013276,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 30",
+            "id": 20013279,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 33",
+            "id": 20013282,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 34",
+            "id": 20013283,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Belt Reader",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 35",
+            "id": 20013284,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Rotator",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 38",
+            "id": 20013287,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 40",
+            "id": 20013289,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Belt Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 41",
+            "id": 20013290,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 42",
+            "id": 20013291,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 43",
+            "id": 20013292,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 44",
+            "id": 20013293,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Trash",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 45",
+            "id": 20013294,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Level Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 46",
+            "id": 20013295,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 47",
+            "id": 20013296,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 48",
+            "id": 20013297,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity East Windmill Uncolored": {
+        "name": "Shapesanity East Windmill Uncolored",
+        "exits": [
+          {
+            "name": "Painting a east windmill shape",
+            "connected_region": "Shapesanity East Windmill Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 4",
+            "id": 20013253,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity East Windmill Painted": {
+        "name": "Shapesanity East Windmill Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a east windmill shape",
+            "connected_region": "Shapesanity East Windmill Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Shapesanity 16",
+            "id": 20013265,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity East Windmill Mixed": {
+        "name": "Shapesanity East Windmill Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 5",
+            "id": 20013254,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Processors Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Half-Half Uncolored": {
+        "name": "Shapesanity Half-Half Uncolored",
+        "exits": [
+          {
+            "name": "Painting a half-half shape",
+            "connected_region": "Shapesanity Half-Half Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Half-Half Painted": {
+        "name": "Shapesanity Half-Half Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a half-half shape",
+            "connected_region": "Shapesanity Half-Half Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Half-Half Mixed": {
+        "name": "Shapesanity Half-Half Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 37",
+            "id": 20013286,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Upgrade Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Colorful East Windmill Uncolored": {
+        "name": "Shapesanity Colorful East Windmill Uncolored",
+        "exits": [
+          {
+            "name": "Painting a colorful east windmill shape",
+            "connected_region": "Shapesanity Colorful East Windmill Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful East Windmill Painted": {
+        "name": "Shapesanity Colorful East Windmill Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a colorful east windmill shape",
+            "connected_region": "Shapesanity Colorful East Windmill Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful Half-Half Uncolored": {
+        "name": "Shapesanity Colorful Half-Half Uncolored",
+        "exits": [
+          {
+            "name": "Painting a colorful half-half shape",
+            "connected_region": "Shapesanity Colorful Half-Half Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful Half-Half Painted": {
+        "name": "Shapesanity Colorful Half-Half Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a colorful half-half shape",
+            "connected_region": "Shapesanity Colorful Half-Half Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful Half-Half Mixed": {
+        "name": "Shapesanity Colorful Half-Half Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 49",
+            "id": 20013298,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Miner Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 50",
+            "id": 20013299,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Small Painting Upgrade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Colorful Full Uncolored": {
+        "name": "Shapesanity Colorful Full Uncolored",
+        "exits": [
+          {
+            "name": "Painting a colorful full shape",
+            "connected_region": "Shapesanity Colorful Full Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful Full Painted": {
+        "name": "Shapesanity Colorful Full Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a colorful full shape",
+            "connected_region": "Shapesanity Colorful Full Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful Full Mixed": {
+        "name": "Shapesanity Colorful Full Mixed",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Shapesanity 26",
+            "id": 20013275,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Blueprint Shapes Bundle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 28",
+            "id": 20013277,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Big Belt Upgrade",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Shapesanity 39",
+            "id": 20013288,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Rotator (CCW)",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
+      },
+      "Shapesanity Colorful Half Uncolored": {
+        "name": "Shapesanity Colorful Half Uncolored",
+        "exits": [
+          {
+            "name": "Painting a colorful half shape",
+            "connected_region": "Shapesanity Colorful Half Painted",
+            "access_rule": {
+              "rule": "can_paint",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Shapesanity Colorful Half Painted": {
+        "name": "Shapesanity Colorful Half Painted",
+        "exits": [
+          {
+            "name": "Mixing colors for a colorful half shape",
+            "connected_region": "Shapesanity Colorful Half Mixed",
+            "access_rule": {
+              "rule": "can_mix_colors",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
+            }
+          }
+        ],
+        "locations": []
       },
       "Achievements needing a MAM": {
         "name": "Achievements needing a MAM",
@@ -5311,28 +5311,33 @@
               "name": "has_tunnel"
             },
             {
-              "type": "item_check",
-              "item": "Belt Reader"
-            },
-            {
-              "type": "item_check",
-              "item": "Storage"
-            },
-            {
-              "type": "item_check",
-              "item": "Item Filter"
-            },
-            {
-              "type": "item_check",
-              "item": "Wires"
-            },
-            {
-              "type": "item_check",
-              "item": "Logic Gates"
-            },
-            {
-              "type": "item_check",
-              "item": "Virtual Processing"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Belt Reader"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Storage"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Item Filter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wires"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Logic Gates"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Virtual Processing"
+                }
+              ]
             }
           ]
         }

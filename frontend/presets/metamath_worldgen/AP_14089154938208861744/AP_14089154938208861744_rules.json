@@ -70,32 +70,6 @@
         ],
         "locations": []
       },
-      "Prove Statement 10": {
-        "name": "Prove Statement 10",
-        "exits": [],
-        "locations": [
-          {
-            "name": "Prove Statement 10",
-            "id": 234790010,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Statement 8",
-                  "Statement 9"
-                ]
-              }
-            },
-            "item": {
-              "name": "Statement 10",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": true
-          }
-        ]
-      },
       "Prove Statement 2": {
         "name": "Prove Statement 2",
         "exits": [
@@ -376,6 +350,32 @@
             },
             "item": {
               "name": "Statement 9",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Prove Statement 10": {
+        "name": "Prove Statement 10",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Prove Statement 10",
+            "id": 234790010,
+            "access_rule": {
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Statement 8",
+                  "Statement 9"
+                ]
+              }
+            },
+            "item": {
+              "name": "Statement 10",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1717,7 +1717,6 @@
   },
   "canonical_placements": {
     "1": {
-      "Prove Statement 10": "Statement 10",
       "Prove Statement 2": "Statement 2",
       "Prove Statement 3": "Statement 3",
       "Prove Statement 4": "Statement 4",
@@ -1725,7 +1724,8 @@
       "Prove Statement 6": "Statement 6",
       "Prove Statement 7": "Statement 7",
       "Prove Statement 8": "Statement 8",
-      "Prove Statement 9": "Statement 9"
+      "Prove Statement 9": "Statement 9",
+      "Prove Statement 10": "Statement 10"
     }
   },
   "progression_mapping": {

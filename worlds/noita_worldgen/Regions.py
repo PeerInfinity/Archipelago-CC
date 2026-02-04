@@ -16,7 +16,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Abyss Orb Room", "Ancient Laboratory", "Below Lava Lake", "Coal Pits", "Coal Pits Holy Mountain", "Collapsed Mines", "Desert", "Dragoncave", "Floating Island", "Forest", "Friend Cave", "Frozen Vault", "Fungal Caverns", "Hiisi Base", "Hiisi Base Holy Mountain", "Laboratory Holy Mountain", "Lake", "Lava Lake", "Lukki Lair", "Magical Temple", "Meat Realm", "Mines", "Overgrown Cavern", "Powerplant", "Pyramid", "Sandcave", "Secret Shop", "Snow Chasm", "Snowy Depths", "Snowy Depths Holy Mountain", "Snowy Wasteland", "Temple of the Art", "Temple of the Art Holy Mountain", "The Laboratory", "The Sky", "The Tower", "The Vault", "The Work", "The Work (Hell)", "Underground Jungle", "Underground Jungle Holy Mountain", "Vault Holy Mountain", "West Meat Realm", "Wizards' Den"]
+    region_names = ["Abyss Orb Room", "Ancient Laboratory", "Below Lava Lake", "Coal Pits", "Coal Pits Holy Mountain", "Collapsed Mines", "Desert", "Dragoncave", "Floating Island", "Forest", "Friend Cave", "Frozen Vault", "Fungal Caverns", "Hiisi Base", "Hiisi Base Holy Mountain", "Laboratory Holy Mountain", "Lake", "Lava Lake", "Lukki Lair", "Magical Temple", "Meat Realm", "Menu", "Mines", "Overgrown Cavern", "Powerplant", "Pyramid", "Sandcave", "Secret Shop", "Snow Chasm", "Snowy Depths", "Snowy Depths Holy Mountain", "Snowy Wasteland", "Temple of the Art", "Temple of the Art Holy Mountain", "The Laboratory", "The Sky", "The Tower", "The Vault", "The Work", "The Work (Hell)", "Underground Jungle", "Underground Jungle Holy Mountain", "Vault Holy Mountain", "West Meat Realm", "Wizards' Den"]
 
     regions = {}
     for region_name in region_names:
@@ -54,7 +54,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["Menu"], regions["Forest"], "Menu -> Forest")
     _create_entrance(regions["Coal Pits"], regions["Fungal Caverns"], "Coal Pits -> Fungal Caverns")
     _create_entrance(regions["Coal Pits"], regions["Snowy Depths Holy Mountain"], "Coal Pits -> Snowy Depths Holy Mountain")
     _create_entrance(regions["Coal Pits"], regions["Ancient Laboratory"], "Coal Pits -> Ancient Laboratory")
@@ -70,6 +69,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Hiisi Base Holy Mountain"], regions["Hiisi Base"], "Hiisi Base Holy Mountain -> Hiisi Base")
     _create_entrance(regions["Laboratory Holy Mountain"], regions["The Laboratory"], "Laboratory Holy Mountain -> The Laboratory")
     _create_entrance(regions["Lava Lake"], regions["Abyss Orb Room"], "Lava Lake -> Abyss Orb Room")
+    _create_entrance(regions["Menu"], regions["Forest"], "Menu -> Forest")
     _create_entrance(regions["Mines"], regions["Collapsed Mines"], "Mines -> Collapsed Mines")
     _create_entrance(regions["Mines"], regions["Coal Pits Holy Mountain"], "Mines -> Coal Pits Holy Mountain")
     _create_entrance(regions["Mines"], regions["Lava Lake"], "Mines -> Lava Lake")
