@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-04 10:10:53
+**Generated:** 2026-02-04 11:50:39
 
 **Source Data Created:** 2026-02-04T05:43:50.051248
 
@@ -28,26 +28,26 @@ This summary combines results from fuzz tests that validate game configurations 
 - **UT Fuzz Original:** 38/85 passed (44.7%)
 - **UT Fuzz Modified:** 61/85 passed (71.8%)
 - **UT Fuzz Pickle:** 75/85 passed (88.2%)
-- **UT Fuzz Hybrid:** 69/85 passed (81.2%)
+- **UT Fuzz Hybrid:** 79/85 passed (92.9%)
 
 ### Combined Results (All 5 Tests)
 
 - **Games passing all 5 fuzz tests:** 30/85 (35.3%)
 - **Games passing 4 fuzz tests:** 29/85 (34.1%)
-- **Games passing 3 fuzz tests:** 7/85 (8.2%)
-- **Games passing 2 fuzz tests:** 4/85 (4.7%)
-- **Games passing 1 fuzz test:** 9/85 (10.6%)
-- **Games passing 0 fuzz tests:** 6/85 (7.1%)
+- **Games passing 3 fuzz tests:** 8/85 (9.4%)
+- **Games passing 2 fuzz tests:** 11/85 (12.9%)
+- **Games passing 1 fuzz test:** 2/85 (2.4%)
+- **Games passing 0 fuzz tests:** 5/85 (5.9%)
 
 ### Combined Results (Excluding UT Original)
 
 This view excludes UT Original, showing results for Javascript, UT Modified, UT Pickle, and UT Hybrid.
 
 - **Games passing all 4 fuzz tests:** 56/85 (65.9%)
-- **Games passing 3 fuzz tests:** 6/85 (7.1%)
-- **Games passing 2 fuzz tests:** 7/85 (8.2%)
-- **Games passing 1 fuzz test:** 10/85 (11.8%)
-- **Games passing 0 fuzz tests:** 6/85 (7.1%)
+- **Games passing 3 fuzz tests:** 7/85 (8.2%)
+- **Games passing 2 fuzz tests:** 14/85 (16.5%)
+- **Games passing 1 fuzz test:** 3/85 (3.5%)
+- **Games passing 0 fuzz tests:** 5/85 (5.9%)
 
 ## Test Results
 
@@ -65,7 +65,7 @@ This view excludes UT Original, showing results for Javascript, UT Modified, UT 
 | Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | 50.4KB |
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ✅ | ✅ | 94.4KB |
 | Castlevania 64 | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 138.5KB |
-| Celeste (Open World) | ✅ | 🔶 51% | ❌ 0% | ✅ | ❌ 0% | 1043.4KB |
+| Celeste (Open World) | ✅ | 🔶 51% | ❌ 0% | ✅ | ✅ | 1043.4KB |
 | Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | 53.8KB |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | 16.2KB |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | 282.3KB |
@@ -79,14 +79,14 @@ This view excludes UT Original, showing results for Javascript, UT Modified, UT 
 | Factorio | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 295.0KB |
 | Faxanadu | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | 🔶 50% | ❌ 1% | 🔶 80% | 🔶 70% | 🔶 70% | 549.5KB |
+| Final Fantasy Mystic Quest | 🔶 50% | ❌ 1% | 🔶 80% | 🔶 70% | ❌ 0% | 549.5KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | 367.5KB |
-| Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ❌ 0% | N/A |
+| Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 101.9KB |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | 84.2KB |
-| Jak and Daxter: The Precursor Legacy | — | 🔶 62% | ❌ 1% | ✅ | ❌ 0% | 298.6KB |
-| Kingdom Hearts | 🔶 80% | ❌ 18% | ❌ 15% | ✅ | ❌ 10% | 753.6KB |
-| Kingdom Hearts 2 | ✅ | ❌ 37% | ❌ 0% | ❌ 10% | ❌ 0% | 1641.1KB |
+| Jak and Daxter: The Precursor Legacy | — | 🔶 62% | ❌ 1% | ✅ | ✅ | 298.6KB |
+| Kingdom Hearts | 🔶 80% | ❌ 18% | ❌ 15% | ✅ | ✅ | 753.6KB |
+| Kingdom Hearts 2 | ✅ | ❌ 37% | ❌ 0% | ❌ 10% | ❌ 10% | 1641.1KB |
 | Kirby's Dream Land 3 | 🔶 50% | ❌ 3% | 🔶 87% | ✅ | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 210.5KB |
 | Lingo | ❌ 20% | ❌ 21% | ❌ 2% | ✅ | ✅ | 946.3KB |
@@ -104,17 +104,17 @@ This view excludes UT Original, showing results for Javascript, UT Modified, UT 
 | Old School Runescape | ✅ | ✅ | ✅ | ✅ | ✅ | 307.1KB |
 | Overcooked! 2 | ✅ | ❌ 12% | ✅ | ✅ | ✅ | 489.2KB |
 | Paint | ✅ | ✅ | ✅ | ✅ | ✅ | 123.7KB |
-| Pokemon Emerald | — | 🔶 59% | ❌ 29% | ✅ | ❌ 20% | 1390.9KB |
-| Pokemon Red and Blue | — | ❌ 0% | ❌ 0% | ✅ | ❌ 0% | 1029.2KB |
+| Pokemon Emerald | — | 🔶 59% | ❌ 29% | ✅ | ✅ | 1390.9KB |
+| Pokemon Red and Blue | — | ❌ 0% | ❌ 0% | ✅ | ✅ | 1029.2KB |
 | Raft | ✅ | ✅ | ❌ 0% | ✅ | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 146.1KB |
-| SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ❌ 0% | 1044.7KB |
+| SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | 1044.7KB |
 | Saving Princess | ✅ | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | 🔶 70% | ✅ | ❌ 0% | ❌ 0% | ✅ | 418.7KB |
 | Shivers | ✅ | ❌ 0% | ✅ | ⚠️ 90% | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | ❌ 8% | ✅ | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.8KB |
-| Stardew Valley | ❌ 20% | ❌ 4% | ❌ 0% | 🔶 80% | ❌ 0% | 2430.2KB |
+| Stardew Valley | ❌ 20% | ❌ 4% | ❌ 0% | 🔶 80% | ✅ | 2430.2KB |
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 93.2KB |
@@ -133,9 +133,9 @@ This view excludes UT Original, showing results for Javascript, UT Modified, UT 
 | Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ | 🔶 67% | ✅ | ✅ | ✅ | 22.8KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | 44.7KB |
-| Yacht Dice | — | ❌ 5% | ❌ 0% | ✅ | ❌ 0% | 249.5KB |
+| Yacht Dice | — | ❌ 5% | ❌ 0% | ✅ | ✅ | 249.5KB |
 | Yoshi's Island | ✅ | ❌ 22% | ✅ | ✅ | ✅ | 296.7KB |
-| Yu-Gi-Oh! 2006 | — | ❌ 33% | ❌ 0% | ✅ | ❌ 0% | 628.0KB |
+| Yu-Gi-Oh! 2006 | — | ❌ 33% | ❌ 0% | ✅ | ✅ | 628.0KB |
 | Zillion | — | ❌ 0% | ❌ 0% | 🔶 80% | ❌ 0% | N/A |
 | shapez | ✅ | ❌ 42% | ✅ | ✅ | ✅ | 155.3KB |
 
