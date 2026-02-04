@@ -37,20 +37,16 @@ on:
         type: boolean
         default: false
 
-      test_original_ut:
-        description: 'Test original Universal Tracker (from FarisTheAncient) instead of modified version'
-        type: boolean
-        default: false
-
-      test_pickle_mode:
-        description: 'Test pickle-based Universal Tracker mode (faster, preserves exact lambdas)'
-        type: boolean
-        default: false
-
-      prefer_native_ut:
-        description: 'Prefer native UT support for compatible worlds (skips rule export). Only applies to modified UT.'
-        type: boolean
-        default: false
+      ut_mode:
+        description: 'Universal Tracker mode to test'
+        required: true
+        type: choice
+        default: 'modified'
+        options:
+          - 'original'
+          - 'modified'
+          - 'pickle'
+          - 'hybrid'
 
       test_apworlds:
         description: 'Test stable APWorlds from community index instead of bundled worlds'
@@ -310,7 +306,7 @@ jobs:
           python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Swap to original Universal Tracker
-        if: inputs.test_original_ut
+        if: inputs.ut_mode == 'original'
         run: |
           echo "Replacing modified tracker with original tracker from FarisTheAncient..."
           rm -rf worlds/tracker
@@ -324,8 +320,7 @@ jobs:
         run: |
           source .venv/bin/activate
           echo "Using seed: ${{ inputs.seed || 'random' }}"
-          echo "UT version: ${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }}"
-          echo "Prefer native UT: ${{ inputs.prefer_native_ut }}"
+          echo "UT mode: ${{ inputs.ut_mode }}"
           echo "World source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}"
 
           # Determine debug mode include list
@@ -339,6 +334,16 @@ jobs:
             fi
           fi
 
+          # Map ut_mode to command line arguments
+          UT_VERSION="${{ inputs.ut_mode }}"
+          PREFER_NATIVE=""
+          if [ "$UT_VERSION" = "hybrid" ]; then
+            UT_VERSION="modified"
+            PREFER_NATIVE="--prefer-native-ut"
+          else
+            PREFER_NATIVE="--no-prefer-native-ut"
+          fi
+
           python scripts/test/test-all-ut-fuzz.py \
             --runs ${{ inputs.runs_per_game }} \
             ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }} \
@@ -346,8 +351,8 @@ jobs:
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --ut-version ${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || 'modified') }} \
-            ${{ inputs.prefer_native_ut && '--prefer-native-ut' || '--no-prefer-native-ut' }} \
+            --ut-version $UT_VERSION \
+            $PREFER_NATIVE \
             ${{ inputs.test_apworlds && '--custom-worlds-only --world-source apworlds' || '' }} \
             $DEBUG_INCLUDE
 
@@ -355,7 +360,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }}-ut-fuzz-split-${{ matrix.split_num }}
+          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-ut-fuzz-split-${{ matrix.split_num }}
           path: scripts/output/ut-fuzz/test-results-*-split-${{ matrix.split_num }}.json
           retention-days: 7
 
@@ -363,7 +368,7 @@ jobs:
         if: ${{ !cancelled() && failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }}-split-${{ matrix.split_num }}
+          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-split-${{ matrix.split_num }}
           path: fuzz_output/
           retention-days: 7
 
@@ -402,7 +407,7 @@ jobs:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }}-ut-fuzz-split-*
+          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-ut-fuzz-split-*
           path: artifacts
 
       - name: Download world mapping for apworlds
@@ -414,7 +419,7 @@ jobs:
 
       - name: Combine test results
         env:
-          UT_VERSION: ${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }}
+          UT_VERSION: ${{ inputs.ut_mode }}
           WORLD_SOURCE: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
         run: |
           mkdir -p scripts/output/ut-fuzz
@@ -505,12 +510,11 @@ jobs:
           fi
 
           if ! git diff --staged --quiet; then
-            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }} UT)
+            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.ut_mode }} UT)
 
             Generated by workflow run: ${{ github.run_id }}
             World Source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
-            UT Version: ${{ inputs.test_original_ut && 'original' || (inputs.test_pickle_mode && 'pickle' || (inputs.prefer_native_ut && 'hybrid' || 'modified')) }}
-            Prefer Native UT: ${{ inputs.prefer_native_ut }}
+            UT Mode: ${{ inputs.ut_mode }}
             Seed: ${{ inputs.seed || 'random' }}
             Runs per game: ${{ inputs.runs_per_game }}
             Jobs: ${{ inputs.jobs }}

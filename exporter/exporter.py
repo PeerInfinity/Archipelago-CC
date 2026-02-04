@@ -148,10 +148,153 @@ def _load_skip_export_games_list() -> Set[str]:
         except (json.JSONDecodeError, IOError) as e:
             logger.warning(f"Failed to load skip-export-games.json: {e}")
     else:
-        logger.warning(f"skip-export-games.json not found at {skip_list_path}")
+        logger.debug(f"skip-export-games.json not found at {skip_list_path}")
 
     _skip_export_games_cache = games
     return games
+
+
+# Cache for tracking-mode-config to avoid repeated file reads
+_tracking_mode_config_cache: Optional[Dict[str, Any]] = None
+
+
+def _load_tracking_mode_config() -> Optional[Dict[str, Any]]:
+    """Load the tracking mode configuration from tracking-mode-config.json.
+
+    The file is expected to be in the same directory as this module.
+    Returns the config dict or None if not found/invalid.
+    """
+    global _tracking_mode_config_cache
+    if _tracking_mode_config_cache is not None:
+        return _tracking_mode_config_cache
+
+    config_path = os.path.join(os.path.dirname(__file__), 'tracking-mode-config.json')
+
+    if not os.path.exists(config_path):
+        logger.debug(f"tracking-mode-config.json not found at {config_path}")
+        return None
+
+    try:
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        logger.debug(f"Loaded tracking mode config with {len(config.get('game_results', {}).get('bundled', {}))} bundled games")
+        _tracking_mode_config_cache = config
+        return config
+    except (json.JSONDecodeError, IOError) as e:
+        logger.warning(f"Failed to load tracking-mode-config.json: {e}")
+        return None
+
+
+def _get_game_category(game_name: str) -> str:
+    """Determine whether a game is bundled or from apworlds.
+
+    Returns 'bundled' or 'apworlds' based on game's world location.
+    """
+    try:
+        from worlds.AutoWorld import AutoWorldRegister
+        if game_name in AutoWorldRegister.world_types:
+            world_cls = AutoWorldRegister.world_types[game_name]
+            module_path = world_cls.__module__
+            # APWorlds are typically in custom_worlds directory
+            if 'custom_worlds' in module_path or module_path.startswith('custom_worlds'):
+                return 'apworlds'
+    except Exception as e:
+        logger.debug(f"Could not determine category for {game_name}: {e}")
+    return 'bundled'
+
+
+def _get_passing_modes(game_name: str, config: Dict[str, Any]) -> List[str]:
+    """Get the list of passing tracking modes for a game from the config.
+
+    Args:
+        game_name: Name of the game
+        config: The loaded tracking mode config
+
+    Returns:
+        List of passing mode names (e.g., ['modified', 'pickle']) or empty list
+    """
+    if not config:
+        return []
+
+    game_results = config.get('game_results', {})
+    category = _get_game_category(game_name)
+
+    # Check in the appropriate category
+    category_results = game_results.get(category, {})
+    if game_name in category_results:
+        return category_results[game_name]
+
+    # Check both categories as fallback
+    for cat in ['bundled', 'apworlds']:
+        cat_results = game_results.get(cat, {})
+        if game_name in cat_results:
+            return cat_results[game_name]
+
+    # Game not in config - return empty list (no passing modes)
+    return []
+
+
+def _get_first_passing_mode(game_name: str, config: Dict[str, Any]) -> Optional[str]:
+    """Get the first tracking mode in fallback_order that passes for this game.
+
+    Args:
+        game_name: Name of the game
+        config: The loaded tracking mode config
+
+    Returns:
+        First passing mode name or None if no modes pass
+    """
+    if not config:
+        return None
+
+    fallback_order = config.get('fallback_order', ['modified', 'pickle', 'original'])
+    passing_modes = _get_passing_modes(game_name, config)
+
+    for mode in fallback_order:
+        if mode in passing_modes:
+            return mode
+
+    return None
+
+
+def _should_export_rules_json_from_config(game_name: str) -> bool:
+    """Determine if rules.json should be exported based on tracking mode config.
+
+    Rules.json should be exported if the first passing mode is 'modified'.
+
+    Args:
+        game_name: Name of the game
+
+    Returns:
+        True if rules.json should be exported
+    """
+    config = _load_tracking_mode_config()
+    if not config:
+        # No config - fall back to always export
+        return True
+
+    first_mode = _get_first_passing_mode(game_name, config)
+    return first_mode == 'modified'
+
+
+def _should_export_pickle_from_config(game_name: str) -> bool:
+    """Determine if pickle should be exported based on tracking mode config.
+
+    Pickle should be exported if the first passing mode is 'pickle'.
+
+    Args:
+        game_name: Name of the game
+
+    Returns:
+        True if pickle should be exported
+    """
+    config = _load_tracking_mode_config()
+    if not config:
+        # No config - don't export pickle by default
+        return False
+
+    first_mode = _get_first_passing_mode(game_name, config)
+    return first_mode == 'pickle'
 
 
 def _insert_hint_text(item_data: dict, hint_text: str) -> None:
@@ -2392,26 +2535,41 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         Dict containing paths to generated files
     """
 
-    # For single-world multiworlds, optionally skip rule export.
-    # This is controlled by the skip_export_for_native_ut setting (default: False).
-    # When skip_export_from_list is also True, use a list of games from skip-export-games.json
-    # instead of checking ut_can_gen_without_yaml.
+    # Determine whether to export rules.json based on settings mode.
     from settings import get_settings
     settings = get_settings()
-    if getattr(settings.general_options, 'skip_export_for_native_ut', False):
+
+    if getattr(settings.general_options, 'use_tracking_mode_config', False):
+        # New config-based logic: use tracking-mode-config.json
         if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
             world = list(multiworld.worlds.values())[0]
-
-            if getattr(settings.general_options, 'skip_export_from_list', False):
-                # Use the skip list instead of checking ut_can_gen_without_yaml
-                skip_list = _load_skip_export_games_list()
-                if world.game in skip_list:
-                    logger.info(f"Skipping rule export for {world.game}: game is in skip-export-games.json list")
-                    return {}
-            elif getattr(world.__class__, "ut_can_gen_without_yaml", False):
-                # Fall back to checking ut_can_gen_without_yaml
-                logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
+            if not _should_export_rules_json_from_config(world.game):
+                logger.info(f"Skipping rules export for {world.game} (config-based: first passing mode is not 'modified')")
                 return {}
+    else:
+        # Legacy flag-based logic
+        if not getattr(settings.general_options, 'save_rules_json', False):
+            # save_rules_json is False - don't export
+            return {}
+
+        # For single-world multiworlds, optionally skip rule export.
+        # This is controlled by the skip_export_for_native_ut setting (default: False).
+        # When skip_export_from_list is also True, use a list of games from skip-export-games.json
+        # instead of checking ut_can_gen_without_yaml.
+        if getattr(settings.general_options, 'skip_export_for_native_ut', False):
+            if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
+                world = list(multiworld.worlds.values())[0]
+
+                if getattr(settings.general_options, 'skip_export_from_list', False):
+                    # Use the skip list instead of checking ut_can_gen_without_yaml
+                    skip_list = _load_skip_export_games_list()
+                    if world.game in skip_list:
+                        logger.info(f"Skipping rule export for {world.game}: game is in skip-export-games.json list")
+                        return {}
+                elif getattr(world.__class__, "ut_can_gen_without_yaml", False):
+                    # Fall back to checking ut_can_gen_without_yaml
+                    logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
+                    return {}
 
     os.makedirs(output_dir, exist_ok=True)
 

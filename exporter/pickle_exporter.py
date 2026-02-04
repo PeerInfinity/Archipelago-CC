@@ -55,6 +55,24 @@ def export_multiworld_pickle(
         - 'preset_pickle': Path to preset copy (if save_presets=True)
         - 'preset_metadata': Path to preset metadata copy (if save_presets=True)
     """
+    # Determine whether to export pickle based on settings mode.
+    from settings import get_settings
+    settings = get_settings()
+
+    if getattr(settings.general_options, 'use_tracking_mode_config', False):
+        # New config-based logic: use tracking-mode-config.json
+        from .exporter import _should_export_pickle_from_config
+        if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
+            world = list(multiworld.worlds.values())[0]
+            if not _should_export_pickle_from_config(world.game):
+                logger.info(f"Skipping pickle export for {world.game} (config-based: first passing mode is not 'pickle')")
+                return {}
+    else:
+        # Legacy flag-based logic
+        if not getattr(settings.general_options, 'save_tracker_pickle', False):
+            # save_tracker_pickle is False - don't export
+            return {}
+
     os.makedirs(output_dir, exist_ok=True)
 
     result_paths = {}

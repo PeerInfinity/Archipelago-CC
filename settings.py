@@ -543,6 +543,7 @@ class GeneralOptions(Group):
     skip_export_for_native_ut: bool = False  # Skip rule export for worlds with native UT support (ut_can_gen_without_yaml)
     skip_export_from_list: bool = False  # When combined with skip_export_for_native_ut, use a list of games instead of checking ut_can_gen_without_yaml
     resolve_options_to_constants: bool = True  # Resolve world.options.X.value to constants at export time (default: True)
+    use_tracking_mode_config: bool = False  # Use tracking-mode-config.json for export decisions (ignores legacy flags when True)
 
 
 class ServerOptions(Group):

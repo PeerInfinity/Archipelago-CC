@@ -7,6 +7,7 @@ This module provides TrackerCore, an extended version of TrackerCoreBase that ad
 - Direct AST rule explanation from JSON rules files
 - Testing mode with lenient error handling
 - Debug logging support
+- Config-driven tracking mode fallback order
 
 For upstream compatibility, TrackerCoreBase contains the original TrackerCore code
 (matching upstream FarisTheAncient/Archipelago). This extended version adds our
@@ -18,9 +19,11 @@ Usage:
     from worlds.tracker import TrackerCore
 """
 
+import json
 import logging
+import os
 from collections import Counter
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 from BaseClasses import CollectionState, LocationProgressType, ItemClassification
 from . import CurrentTrackerState, UT_VERSION, DeferredEntranceMode
@@ -32,6 +35,10 @@ from Utils import __version__
 
 if TYPE_CHECKING:
     from BaseClasses import MultiWorld
+
+
+# Cache for tracking-mode-config to avoid repeated file reads
+_tracker_mode_config_cache: Optional[Dict[str, Any]] = None
 
 
 class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
@@ -72,12 +79,129 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
         # Call base disconnect
         super().disconnect()
 
+    def _load_tracking_mode_config(self) -> Optional[Dict[str, Any]]:
+        """Load the tracking mode configuration from tracking-mode-config.json.
+
+        Returns the config dict or None if not found/invalid.
+        """
+        global _tracker_mode_config_cache
+        if _tracker_mode_config_cache is not None:
+            return _tracker_mode_config_cache
+
+        # Try multiple possible locations for the config file
+        possible_paths = [
+            # Relative to exporter module
+            os.path.join(os.path.dirname(__file__), '..', '..', 'exporter', 'tracking-mode-config.json'),
+            # Relative to current working directory
+            os.path.join('exporter', 'tracking-mode-config.json'),
+        ]
+
+        for config_path in possible_paths:
+            if os.path.exists(config_path):
+                try:
+                    with open(config_path, 'r') as f:
+                        config = json.load(f)
+                    self.logger.debug(f"Loaded tracking mode config from {config_path}")
+                    _tracker_mode_config_cache = config
+                    return config
+                except (json.JSONDecodeError, IOError) as e:
+                    self.logger.debug(f"Failed to load tracking-mode-config.json from {config_path}: {e}")
+
+        self.logger.debug("tracking-mode-config.json not found")
+        return None
+
+    def _get_passing_modes_for_game(self, game_name: str, config: Dict[str, Any]) -> List[str]:
+        """Get the list of passing tracking modes for a game from the config.
+
+        Args:
+            game_name: Name of the game
+            config: The loaded tracking mode config
+
+        Returns:
+            List of passing mode names (e.g., ['modified', 'pickle']) or empty list
+        """
+        if not config:
+            return []
+
+        game_results = config.get('game_results', {})
+
+        # Check bundled first, then apworlds
+        for category in ['bundled', 'apworlds']:
+            category_results = game_results.get(category, {})
+            if game_name in category_results:
+                return category_results[game_name]
+
+        # Game not in config - return empty list (no passing modes known)
+        return []
+
+    def _try_pickle_tracking(self) -> bool:
+        """Attempt to initialize pickle-based tracking.
+
+        Returns True if successful, False otherwise.
+        """
+        if not self.pickle_path:
+            return False
+
+        self.logger.info(f"Attempting pickle-based tracking from {self.pickle_path}")
+        self._log_debug("attempting_pickle_tracking", {"pickle_path": self.pickle_path})
+
+        pickle_result = self.load_multiworld_from_pickle(self.pickle_path)
+        self._log_debug("load_pickle_result", {"success": pickle_result})
+
+        if pickle_result:
+            tracking_result = self.initialize_tracking_from_pickle()
+            self._log_debug("initialize_pickle_tracking_result", {"success": tracking_result})
+            if tracking_result:
+                self.logger.info("Using pickle-based tracking")
+                self._log_debug("using_pickle_tracking", {"success": True})
+                return True
+            else:
+                self.logger.warning("Failed to initialize tracking from pickle")
+        else:
+            self.logger.warning("Failed to load pickle")
+
+        return False
+
+    def _try_worldgen_tracking(self) -> bool:
+        """Attempt to initialize worldgen-based tracking.
+
+        Returns True if successful, False otherwise.
+        """
+        if not self.rules_json_path:
+            return False
+
+        self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
+        self._log_debug("attempting_worldgen_tracking", {"rules_json_path": self.rules_json_path})
+
+        worldgen_result = self.generate_and_load_worldgen_world(self.rules_json_path)
+        self._log_debug("generate_worldgen_result", {"success": worldgen_result})
+
+        if worldgen_result:
+            tracking_result = self.initialize_tracking_from_worldgen()
+            self._log_debug("initialize_tracking_result", {"success": tracking_result})
+            if tracking_result:
+                self.logger.info("Using worldgen-based tracking")
+                self._log_debug("using_worldgen_tracking", {"success": True})
+                return True
+            else:
+                self.logger.warning("Failed to initialize tracking from worldgen")
+        else:
+            self.logger.warning("Failed to generate worldgen world")
+
+        return False
+
     def initalize_tracker_core(self, connected_cls, raw_slot_data):
         """
         Initialize tracker core with pickle and worldgen support.
 
         This overrides the base initalize_tracker_core to try different tracking
-        modes in order of preference:
+        modes based on the tracking-mode-config.json configuration.
+
+        When config is available:
+        - Uses fallback_order to determine mode priority
+        - Only tries modes that pass for this game (from game_results)
+
+        When config is not available (legacy behavior):
         1. Pickle mode - fastest, preserves exact lambdas
         2. Worldgen mode - generates world from JSON rules
         3. YAML mode - original UT behavior
@@ -93,47 +217,49 @@ class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBa
             "rules_json_path": self.rules_json_path
         })
 
-        # Try pickle-based tracking first (fastest mode).
-        # If a pickle path is set (via auto-discovery or manual setting), use it.
-        if self.pickle_path:
-            self.logger.info(f"Attempting pickle-based tracking from {self.pickle_path}")
-            self._log_debug("attempting_pickle_tracking", {"pickle_path": self.pickle_path})
-            # Load the pickled multiworld
-            pickle_result = self.load_multiworld_from_pickle(self.pickle_path)
-            self._log_debug("load_pickle_result", {"success": pickle_result})
-            if pickle_result:
-                tracking_result = self.initialize_tracking_from_pickle()
-                self._log_debug("initialize_pickle_tracking_result", {"success": tracking_result})
-                if tracking_result:
-                    self.logger.info("Using pickle-based tracking")
-                    self._log_debug("using_pickle_tracking", {"success": True})
+        # Load tracking mode config
+        config = self._load_tracking_mode_config()
+
+        if config:
+            # Config-based fallback order
+            fallback_order = config.get('fallback_order', ['modified', 'pickle', 'original'])
+            passing_modes = self._get_passing_modes_for_game(self.game, config)
+
+            self._log_debug("config_based_tracking", {
+                "fallback_order": fallback_order,
+                "passing_modes": passing_modes,
+                "game": self.game
+            })
+
+            # Try modes in fallback order, but only if they pass for this game
+            for mode in fallback_order:
+                if passing_modes and mode not in passing_modes:
+                    self.logger.debug(f"Skipping {mode} mode for {self.game}: not in passing modes {passing_modes}")
+                    continue
+
+                if mode == 'pickle' and self.pickle_path:
+                    if self._try_pickle_tracking():
+                        return
+                elif mode == 'modified' and self.rules_json_path:
+                    if self._try_worldgen_tracking():
+                        return
+                elif mode == 'original':
+                    # Fall through to base class YAML-based tracking
+                    self.logger.info(f"Using original YAML-based tracking for {self.game}")
+                    break
+
+        else:
+            # Legacy behavior: pickle -> worldgen -> yaml
+            # Try pickle-based tracking first (fastest mode).
+            if self.pickle_path:
+                if self._try_pickle_tracking():
                     return
-                else:
-                    self.logger.warning("Failed to initialize tracking from pickle, falling back")
-            else:
                 self.logger.warning("Failed to load pickle, falling back to worldgen tracking")
 
-        # Try worldgen-based tracking if rules.json is available.
-        # The presence of rules.json indicates the exporter ran and produced rules.
-        # In "hybrid" mode (skip_export_for_native_ut=True), the exporter skips rule
-        # generation for worlds with native UT support, so rules.json won't exist.
-        if self.rules_json_path:
-            self.logger.info(f"Attempting worldgen-based tracking from {self.rules_json_path}")
-            self._log_debug("attempting_worldgen_tracking", {"rules_json_path": self.rules_json_path})
-            # Generate a fresh worldgen world from the rules.json file
-            # This ensures the worldgen world matches the specific seed we're connecting to
-            worldgen_result = self.generate_and_load_worldgen_world(self.rules_json_path)
-            self._log_debug("generate_worldgen_result", {"success": worldgen_result})
-            if worldgen_result:
-                tracking_result = self.initialize_tracking_from_worldgen()
-                self._log_debug("initialize_tracking_result", {"success": tracking_result})
-                if tracking_result:
-                    self.logger.info("Using worldgen-based tracking")
-                    self._log_debug("using_worldgen_tracking", {"success": True})
+            # Try worldgen-based tracking if rules.json is available.
+            if self.rules_json_path:
+                if self._try_worldgen_tracking():
                     return
-                else:
-                    self.logger.warning("Failed to initialize tracking from worldgen, falling back")
-            else:
                 self.logger.warning("Failed to generate worldgen world, falling back to standard tracking")
 
         # Fall back to base class YAML-based tracking
