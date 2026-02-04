@@ -200,12 +200,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Shop Mom Piranha Flag", player),
-        Or(HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")), HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
+        Or(HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown_shop, helper_name="fungitown_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")))
     )
 
     world.set_rule(
         multiworld.get_entrance("Shop Enter Fungitown Flag", player),
-        Or(HelperCall(helper_func=fungitown, helper_name="fungitown"), HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
+        Or(HelperCall(helper_func=birdo_shop, helper_name="birdo_shop"), HelperCall(helper_func=fungitown, helper_name="fungitown"), HelperCall(helper_func=star_shop, helper_name="star_shop"))
     )
 
     world.set_rule(
@@ -479,7 +479,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beanbean Outskirts S Room 1 Digspot 2", player),
-        And(HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")), HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3)), HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))))
+        And(HelperCall(helper_func=canDig, helper_name="canDig", body_rule=(Has("Green Goblet")) & (Has("Hammers"))), HelperCall(helper_func=thunder, helper_name="thunder", body_rule=Has("Thunderhand")), HelperCall(helper_func=ultra, helper_name="ultra", body_rule=Has("Hammers", 3)))
     )
 
     world.set_rule(

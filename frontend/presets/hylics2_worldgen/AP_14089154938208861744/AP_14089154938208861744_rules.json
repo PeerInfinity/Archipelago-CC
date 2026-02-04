@@ -117,11 +117,11 @@
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "paper_cup",
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "enter_hylemxylem",
+                  "rule": "paper_cup",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -419,15 +419,15 @@
                   "_original_ast_type": "helper"
                 },
                 {
+                  "rule": "enter_sageship",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "paper_cup",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "worm_room_key",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "enter_sageship",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -444,11 +444,11 @@
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "paper_cup",
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "enter_hylemxylem",
+                  "rule": "paper_cup",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -933,17 +933,8 @@
             "name": "Viewax's Edifice: Shielded Key",
             "id": 200657,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "paddle",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "paddle",
-                  "_original_ast_type": "helper"
-                }
-              ]
+              "rule": "paddle",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "LINK MOLLUSC",

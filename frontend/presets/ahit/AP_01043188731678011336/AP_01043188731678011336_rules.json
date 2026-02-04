@@ -1252,6 +1252,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1275,11 +1280,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1340,18 +1340,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Barrel Battle)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Down with the Mafia!"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1534,18 +1534,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Dead Bird Studio)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1621,6 +1621,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1644,11 +1649,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1689,18 +1689,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Dead Bird Studio)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -3156,6 +3156,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3169,13 +3176,6 @@
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Crayon",
-                    "count": 4
-                  }
                 }
               ]
             }
@@ -3498,11 +3498,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hookshot",

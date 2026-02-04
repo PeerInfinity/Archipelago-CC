@@ -107,7 +107,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mabe Village -> Sword Beach", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword', 'Magic Powder', 'Progressive Power Bracelet')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Power Bracelet', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -172,7 +172,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sword Beach -> Mabe Village", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword', 'Magic Powder', 'Progressive Power Bracelet')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Power Bracelet', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -417,7 +417,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 5 -> Nightmare", player),
-        HasAll('Ballad of the Wind Fish', 'Ocarina', 'Conch Horn', 'Coral Triangle', 'Full Moon Cello', 'Organ of Evening Calm', "Sea Lily's Bell", 'Surf Harp', 'Thunder Drum', 'Wind Marimba')
+        HasAll('Ballad of the Wind Fish', 'Conch Horn', 'Coral Triangle', 'Full Moon Cello', 'Ocarina', 'Organ of Evening Calm', "Sea Lily's Bell", 'Surf Harp', 'Thunder Drum', 'Wind Marimba')
     )
 
     world.set_rule(
@@ -567,7 +567,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 2 -> Mask-Mimic Chest (Bottle Grotto)", player),
-        And(HasAny('Bomb', 'Progressive Sword', 'Bow', 'Magic Rod'), Has('Small Key (Bottle Grotto)', 5), Has('Small Key (Bottle Grotto)'))
+        And(HasAny('Bomb', 'Bow', 'Magic Rod', 'Progressive Sword'), Has('Small Key (Bottle Grotto)', 5), Has('Small Key (Bottle Grotto)'))
     )
 
     world.set_rule(
@@ -672,12 +672,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 7 -> D2 Room 8", player),
-        And(HasAny('Magic Rod', 'Progressive Sword'), HasAll('Progressive Power Bracelet', 'Nightmare Key (Bottle Grotto)'))
+        And(HasAny('Magic Rod', 'Progressive Sword'), HasAll('Nightmare Key (Bottle Grotto)', 'Progressive Power Bracelet'))
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 8 -> D2 Room 7", player),
-        And(HasAny('Magic Rod', 'Progressive Sword'), HasAll('Progressive Power Bracelet', 'Nightmare Key (Bottle Grotto)'))
+        And(HasAny('Magic Rod', 'Progressive Sword'), HasAll('Nightmare Key (Bottle Grotto)', 'Progressive Power Bracelet'))
     )
 
     world.set_rule(
@@ -702,7 +702,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mask-Mimic Chest (Bottle Grotto) -> D2 Room 2", player),
-        And(HasAny('Bomb', 'Progressive Sword', 'Bow', 'Magic Rod'), Has('Small Key (Bottle Grotto)', 5), Has('Small Key (Bottle Grotto)'))
+        And(HasAny('Bomb', 'Bow', 'Magic Rod', 'Progressive Sword'), Has('Small Key (Bottle Grotto)', 5), Has('Small Key (Bottle Grotto)'))
     )
 
     world.set_rule(
@@ -1217,22 +1217,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Armos Maze -> Outside Armos Maze Cave", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
         multiworld.get_entrance("Armos Maze -> Outside Southern Shrine", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
         multiworld.get_entrance("Outside Armos Maze Cave -> Armos Maze", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
         multiworld.get_entrance("Outside Southern Shrine -> Armos Maze", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -1497,7 +1497,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Left of Hinox Zamboni Chest (Turtle Rock) -> Vacuum Mouth Chest (Turtle Rock)", player),
-        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), HasAny('Boomerang', 'Bow', 'Magic Rod', 'Bomb', 'Hookshot', 'Progressive Sword'))
+        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1517,7 +1517,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Vacuum Mouth Chest (Turtle Rock) -> Left of Hinox Zamboni Chest (Turtle Rock)", player),
-        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), HasAny('Boomerang', 'Bow', 'Magic Rod', 'Bomb', 'Hookshot', 'Progressive Sword'))
+        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1572,7 +1572,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 3 -> Beamos Blocked Chest (Turtle Rock)", player),
-        And(Has('Small Key (Turtle Rock)', 4), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Small Key (Turtle Rock)'))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Small Key (Turtle Rock)', 4), Has('Small Key (Turtle Rock)'))
     )
 
     world.set_rule(
@@ -1917,7 +1917,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nightmare -> No Name 5", player),
-        HasAll('Ballad of the Wind Fish', 'Ocarina', 'Conch Horn', 'Coral Triangle', 'Full Moon Cello', 'Organ of Evening Calm', "Sea Lily's Bell", 'Surf Harp', 'Thunder Drum', 'Wind Marimba')
+        HasAll('Ballad of the Wind Fish', 'Conch Horn', 'Coral Triangle', 'Full Moon Cello', 'Ocarina', 'Organ of Evening Calm', "Sea Lily's Bell", 'Surf Harp', 'Thunder Drum', 'Wind Marimba')
     )
 
     world.set_rule(
@@ -1997,7 +1997,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lower Small Key (Color Dungeon) -> D9 Room 2", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2017,7 +2017,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D9 Room 2 -> Lower Small Key (Color Dungeon)", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2047,7 +2047,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Zol Chest (Color Dungeon) -> D9 Room 4", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2057,7 +2057,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D9 Room 4 -> Zol Chest (Color Dungeon)", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2142,7 +2142,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Four Zol Chest (Key Cavern) -> D3 Room 2", player),
-        HasAny('Pegasus Boots', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Pegasus Boots', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2152,7 +2152,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D3 Room 2 -> Four Zol Chest (Key Cavern)", player),
-        HasAny('Pegasus Boots', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Pegasus Boots', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2632,12 +2632,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 6 -> D5 Room 7", player),
-        HasAll("Nightmare Key (Catfish's Maw)", 'Hookshot', 'Progressive Sword')
+        HasAll('Hookshot', "Nightmare Key (Catfish's Maw)", 'Progressive Sword')
     )
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 7 -> D5 Room 6", player),
-        HasAll("Nightmare Key (Catfish's Maw)", 'Hookshot', 'Progressive Sword')
+        HasAll('Hookshot', "Nightmare Key (Catfish's Maw)", 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2802,7 +2802,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D6 Room 2 -> Two Wizzrobe Key (Face Shrine)", player),
-        HasAny('Bow', 'Bomb', 'Magic Rod')
+        HasAny('Bomb', 'Bow', 'Magic Rod')
     )
 
     world.set_rule(
@@ -2812,7 +2812,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Two Wizzrobe Key (Face Shrine) -> D6 Room 2", player),
-        HasAny('Bow', 'Bomb', 'Magic Rod')
+        HasAny('Bomb', 'Bow', 'Magic Rod')
     )
 
     world.set_rule(
@@ -2962,7 +2962,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dream Hut -> Dream Hut East (Mabe Village)", player),
-        HasAny('Progressive Sword', 'Boomerang', 'Feather', 'Hookshot')
+        HasAny('Boomerang', 'Feather', 'Hookshot', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -2972,7 +2972,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dream Hut East (Mabe Village) -> Dream Hut", player),
-        HasAny('Progressive Sword', 'Boomerang', 'Feather', 'Hookshot')
+        HasAny('Boomerang', 'Feather', 'Hookshot', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -3057,12 +3057,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D1 Room -> Mini-Moldorm Spawn Chest (Tail Cave)", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
         multiworld.get_entrance("D1 Room -> Two Stalfos, Two Keese Chest (Tail Cave)", player),
-        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Progressive Sword'))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Progressive Shield', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -3092,12 +3092,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mini-Moldorm Spawn Chest (Tail Cave) -> D1 Room", player),
-        HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword')
+        HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
         multiworld.get_entrance("Two Stalfos, Two Keese Chest (Tail Cave) -> D1 Room", player),
-        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), HasAny('Progressive Shield', 'Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Progressive Sword'))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Progressive Shield', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -3127,7 +3127,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D1 Room 3 -> Three of a Kind Chest (Tail Cave)", player),
-        HasAny('Progressive Shield', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(
@@ -3142,7 +3142,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Three of a Kind Chest (Tail Cave) -> D1 Room 3", player),
-        HasAny('Progressive Shield', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword')
+        HasAny('Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Shield', 'Progressive Sword')
     )
 
     world.set_rule(

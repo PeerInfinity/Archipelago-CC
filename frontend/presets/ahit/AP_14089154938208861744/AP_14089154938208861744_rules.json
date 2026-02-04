@@ -1273,18 +1273,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Mail Delivery Service)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1429,6 +1429,12 @@
                 {
                   "rule": "CanReachRegion",
                   "args": {
+                    "region_name": "Alpine Free Roam"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
                     "region_name": "Heating Up Mafia Town"
                   }
                 },
@@ -1439,12 +1445,6 @@
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Alpine Free Roam"
-                  }
                 }
               ]
             }
@@ -1541,11 +1541,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -1558,6 +1553,11 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1569,11 +1569,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -1586,6 +1581,11 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1622,6 +1622,12 @@
                 {
                   "rule": "CanReachRegion",
                   "args": {
+                    "region_name": "Alpine Free Roam"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
                     "region_name": "Heating Up Mafia Town"
                   }
                 },
@@ -1632,12 +1638,6 @@
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Alpine Free Roam"
-                  }
                 }
               ]
             }
@@ -3062,11 +3062,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3079,6 +3074,11 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3090,11 +3090,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3107,6 +3102,11 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3236,6 +3236,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3249,13 +3256,6 @@
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Crayon",
-                    "count": 4
-                  }
                 }
               ]
             }
@@ -3551,11 +3551,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hookshot",

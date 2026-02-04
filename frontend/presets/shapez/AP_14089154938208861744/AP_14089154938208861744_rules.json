@@ -5311,33 +5311,28 @@
               "name": "has_tunnel"
             },
             {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Belt Reader"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Storage"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Item Filter"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Wires"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Logic Gates"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Virtual Processing"
-                }
-              ]
+              "type": "item_check",
+              "item": "Belt Reader"
+            },
+            {
+              "type": "item_check",
+              "item": "Storage"
+            },
+            {
+              "type": "item_check",
+              "item": "Item Filter"
+            },
+            {
+              "type": "item_check",
+              "item": "Wires"
+            },
+            {
+              "type": "item_check",
+              "item": "Logic Gates"
+            },
+            {
+              "type": "item_check",
+              "item": "Virtual Processing"
             }
           ]
         }

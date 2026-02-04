@@ -6961,10 +6961,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -6978,10 +6974,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -6999,10 +6991,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7016,10 +7004,6 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7063,10 +7047,6 @@
             "name": "raft_can_access_temperance"
           },
           {
-            "type": "constant",
-            "value": true
-          },
-          {
             "type": "helper",
             "name": "raft_can_craft_shovel"
           }
@@ -7082,25 +7062,12 @@
           {
             "type": "helper",
             "name": "raft_can_drive"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_access_vasagatan": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_navigate"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_navigate"
       },
       "raft_can_capture_animals": {
         "type": "and",
@@ -7133,55 +7100,24 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_battery": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_birdNest": {
         "type": "constant",
         "value": true
       },
       "raft_can_craft_bolt": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_circuitBoard": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_engine": {
         "type": "and",
@@ -7193,38 +7129,16 @@
           {
             "type": "helper",
             "name": "raft_can_craft_circuitBoard"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_grassPlot": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_get_dirt"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_get_dirt"
       },
       "raft_can_craft_hinge": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_machete": {
         "type": "and",
@@ -7236,25 +7150,12 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_netCanister": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_netLauncher": {
         "type": "and",
@@ -7266,25 +7167,12 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
       "raft_can_craft_plasticBottle": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
-          }
-        ]
+        "type": "helper",
+        "name": "raft_can_smelt_items"
       },
       "raft_can_craft_reciever": {
         "type": "and",
@@ -7296,10 +7184,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_hinge"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7313,10 +7197,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_hinge"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7326,10 +7206,6 @@
           {
             "type": "helper",
             "name": "raft_can_smelt_items"
-          },
-          {
-            "type": "constant",
-            "value": true
           },
           {
             "type": "helper",
@@ -7351,10 +7227,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_hinge"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7368,10 +7240,6 @@
           {
             "type": "helper",
             "name": "raft_can_craft_bolt"
-          },
-          {
-            "type": "constant",
-            "value": true
           }
         ]
       },
@@ -7400,10 +7268,6 @@
       "raft_can_find_titanium": {
         "type": "and",
         "conditions": [
-          {
-            "type": "constant",
-            "value": true
-          },
           {
             "type": "helper",
             "name": "raft_can_craft_battery"

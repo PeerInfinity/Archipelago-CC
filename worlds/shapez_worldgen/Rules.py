@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def can_build_mam(state: "CollectionState", player: int, floating = None) -> bool:
-    return (can_make_stitched_shape(state, player, floating)) and (can_paint(state, player)) and (can_mix_colors(state, player)) and (has_balancer(state, player)) and (has_tunnel(state, player)) and ((state.has('Belt Reader', player)) and (state.has('Storage', player)) and (state.has('Item Filter', player)) and (state.has('Wires', player)) and (state.has('Logic Gates', player)) and (state.has('Virtual Processing', player)))
+    return (can_make_stitched_shape(state, player, floating)) and (can_paint(state, player)) and (can_mix_colors(state, player)) and (has_balancer(state, player)) and (has_tunnel(state, player)) and (state.has('Belt Reader', player)) and (state.has('Storage', player)) and (state.has('Item Filter', player)) and (state.has('Wires', player)) and (state.has('Logic Gates', player)) and (state.has('Virtual Processing', player))
 
 
 def can_cut_half(state: "CollectionState", player: int) -> bool:

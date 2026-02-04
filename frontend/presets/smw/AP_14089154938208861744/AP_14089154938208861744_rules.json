@@ -1700,9 +1700,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Climb",
                   "Blue Switch Palace",
-                  "Carry"
+                  "Carry",
+                  "Climb"
                 ]
               }
             }

@@ -162,17 +162,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Robbed: Victory", player),
-        And(CanReachRegion('Robbed'), HasAll('Thief', 'Rifleman'))
+        And(CanReachRegion('Robbed'), HasAll('Rifleman', 'Thief'))
     )
 
     world.set_rule(
         multiworld.get_location("Open Season: Caesar", player),
-        And(CanReachRegion('Open Season'), HasAll('Mage', 'Knight'))
+        And(CanReachRegion('Open Season'), HasAll('Knight', 'Mage'))
     )
 
     world.set_rule(
         multiworld.get_location("Open Season: Victory", player),
-        And(CanReachRegion('Open Season'), HasAll('Mage', 'Knight'))
+        And(CanReachRegion('Open Season'), HasAll('Knight', 'Mage'))
     )
 
     world.set_rule(

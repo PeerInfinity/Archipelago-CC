@@ -596,9 +596,11 @@
             "name": "JRB: Blast to the Stone Pillar",
             "id": 3626018,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Cannon Unlock JRB"
+                "items": [
+                  "Cannon Unlock JRB"
+                ]
               }
             },
             "item": {
@@ -1207,9 +1209,11 @@
             "name": "HMC: Metal-Head Mario Can Move!",
             "id": 3626037,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Metal Cap"
+                "items": [
+                  "Metal Cap"
+                ]
               }
             },
             "item": {
@@ -1478,9 +1482,11 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wing Cap"
+                    "items": [
+                      "Wing Cap"
+                    ]
                   }
                 }
               ]
@@ -1585,9 +1591,11 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wing Cap"
+                    "items": [
+                      "Wing Cap"
+                    ]
                   }
                 }
               ]
@@ -2973,9 +2981,11 @@
             "name": "Wing Mario Over the Rainbow Red Coins",
             "id": 3626154,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Wing Cap"
+                "items": [
+                  "Wing Cap"
+                ]
               }
             },
             "item": {
@@ -2990,9 +3000,11 @@
             "name": "Wing Mario Over the Rainbow 1Up Block",
             "id": 3626243,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Wing Cap"
+                "items": [
+                  "Wing Cap"
+                ]
               }
             },
             "item": {
