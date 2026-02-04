@@ -41,6 +41,7 @@ on:
           - modified
           - hybrid
           - original
+          - pickle
         default: modified
 
       default_options:
@@ -174,6 +175,8 @@ jobs:
             UT_FLAGS="--ut-version original"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
             UT_FLAGS="--ut-version modified --prefer-native-ut"
+          elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
+            UT_FLAGS="--ut-version pickle --no-prefer-native-ut"
           else
             UT_FLAGS="--ut-version modified --no-prefer-native-ut"
           fi
@@ -304,6 +307,8 @@ jobs:
             UT_LABEL="original"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
             UT_LABEL="hybrid"
+          elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
+            UT_LABEL="pickle"
           else
             UT_LABEL="modified"
           fi
@@ -431,9 +436,9 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}
+          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}
           SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
           SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 'random' }}.json
           RUNS: ${{ inputs.runs }}
 
@@ -559,6 +564,8 @@ jobs:
             UT_FLAGS="--ut-version original"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
             UT_FLAGS="--ut-version modified --prefer-native-ut"
+          elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
+            UT_FLAGS="--ut-version pickle --no-prefer-native-ut"
           else
             UT_FLAGS="--ut-version modified --no-prefer-native-ut"
           fi
@@ -847,6 +854,8 @@ jobs:
             UT_LABEL="original"
           elif [ "${{ inputs.ut_version }}" = "hybrid" ]; then
             UT_LABEL="hybrid"
+          elif [ "${{ inputs.ut_version }}" = "pickle" ]; then
+            UT_LABEL="pickle"
           else
             UT_LABEL="modified"
           fi
@@ -973,8 +982,8 @@ jobs:
           cd -
           git worktree remove "${WORKTREE_DIR}" --force
         env:
-          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}
+          UT_LABEL: ${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}
           SEED_MODE: ${{ inputs.seed && 'fixed' || 'random' }}
-          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || 'modified') }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
+          MAIN_RESULTS_FILE: scripts/output/ut-fuzz/test-results-${{ inputs.ut_version == 'original' && 'original' || (inputs.ut_version == 'hybrid' && 'hybrid' || (inputs.ut_version == 'pickle' && 'pickle' || 'modified')) }}-${{ inputs.seed && 'fixed' || 'random' }}-seed.json
           SINGLE_GAME_FILE: scripts/output/ut-fuzz/test-results-single-game-${{ inputs.ut_version }}-seed-${{ inputs.seed || 1 }}.json
           RUNS: ${{ inputs.runs }}
