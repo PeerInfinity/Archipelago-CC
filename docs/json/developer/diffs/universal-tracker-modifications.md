@@ -432,6 +432,24 @@ elif tracker.auto_discover_rules_json():
 
 ---
 
+## Fixes to Original Copy
+
+The original copy in `scripts/test/fixtures/tracker_original/` has been modified to fix issues that prevent linting or testing:
+
+### `TrackerClient.py`
+
+**F-string quote syntax (lines 478, 480, 482):** Changed double quotes to single quotes inside f-string expressions for Python < 3.12 compatibility.
+
+```python
+# Original (syntax error in Python < 3.12)
+f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"
+
+# Fixed
+f"Go mode: [color={get_ut_color('in_logic')}]Yes[/color]"
+```
+
+---
+
 ## Related Files
 
 - **Original repository:** https://github.com/FarisTheAncient/Archipelago (tracker branch)
