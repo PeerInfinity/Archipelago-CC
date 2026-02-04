@@ -473,7 +473,33 @@ async function loadConfigKey(params) {
         `${configKey} for "${currentActiveMode}" is missing or invalid in baseCombinedData. Attempting to load from files.`
       );
 
-      const fetchedData = await loadConfigFiles(pathsToLoad, configKey, fetchJson, logger);
+      let fetchedData = await loadConfigFiles(pathsToLoad, configKey, fetchJson, logger);
+
+      // For rulesConfig, try alphabetical preset fallback if primary load fails
+      if (!fetchedData && configKey === 'rulesConfig' && !rulesOverride) {
+        logger.info(
+          'init',
+          `Primary rulesConfig load failed for "${pathsToLoad.join(', ')}". Attempting alphabetical preset fallback.`
+        );
+
+        const alphabeticalPresetPath = await findFirstAlphabeticalPreset(fetchJson, logger);
+        if (alphabeticalPresetPath) {
+          fetchedData = await loadConfigFiles([alphabeticalPresetPath], configKey, fetchJson, logger);
+          if (fetchedData) {
+            baseCombinedData[configKey] = fetchedData;
+            dataSources[configKey] = {
+              source: 'alphabeticalFallback',
+              timestamp: new Date().toISOString(),
+              details: `Loaded from first alphabetical preset (default not found): ${alphabeticalPresetPath}`,
+            };
+            logger.info(
+              'init',
+              `Loaded rulesConfig from first alphabetical preset: ${alphabeticalPresetPath}`
+            );
+            return; // Successfully loaded, skip further fallback attempts
+          }
+        }
+      }
 
       if (fetchedData) {
         baseCombinedData[configKey] = fetchedData;
@@ -692,6 +718,11 @@ function prepareStateManagerConfig(baseCombinedData, dataSources, log) {
       if (match) {
         sourcePath = match[1];
       }
+    } else if (dataSources.rulesConfig.source === 'alphabeticalFallback') {
+      const match = dataSources.rulesConfig.details.match(/^Loaded from first alphabetical preset \(default not found\): (.+)$/);
+      if (match) {
+        sourcePath = match[1];
+      }
     }
 
     // Set up StateManager config if we have a valid source path
@@ -740,5 +771,90 @@ function prepareStateManagerConfig(baseCombinedData, dataSources, log) {
         `[Init] Could not extract source path from rulesConfig dataSources details: ${dataSources.rulesConfig.details}`
       );
     }
+  }
+}
+
+/**
+ * Finds the first available preset alphabetically from preset_files.json
+ * Used as a fallback when the default Adventure preset doesn't exist
+ *
+ * @param {Function} fetchJson - Function to fetch JSON files
+ * @param {Object} logger - Logger instance
+ * @returns {Promise<string|null>} Path to rules file, or null if none found
+ */
+async function findFirstAlphabeticalPreset(fetchJson, logger) {
+  try {
+    const presetFiles = await fetchJson(
+      './presets/preset_files.json',
+      'Loading preset_files.json for alphabetical fallback'
+    );
+
+    if (!presetFiles) {
+      logger.warn('init', 'Could not load preset_files.json for alphabetical fallback');
+      return null;
+    }
+
+    // Filter out non-game keys (metadata, etc.) and find games with folders
+    const gameKeys = Object.keys(presetFiles).filter(key => {
+      // Skip metadata and any key without folders
+      if (key === 'metadata') return false;
+      const entry = presetFiles[key];
+      return entry && entry.folders && Object.keys(entry.folders).length > 0;
+    });
+
+    if (gameKeys.length === 0) {
+      logger.warn('init', 'No game presets found in preset_files.json for alphabetical fallback');
+      return null;
+    }
+
+    // Sort alphabetically (case-insensitive)
+    gameKeys.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+
+    // Get the first game alphabetically
+    const firstGameKey = gameKeys[0];
+    const gameEntry = presetFiles[firstGameKey];
+    const folders = gameEntry.folders;
+    const folderNames = Object.keys(folders);
+
+    if (folderNames.length === 0) {
+      logger.warn('init', `No folders found for first alphabetical game "${firstGameKey}"`);
+      return null;
+    }
+
+    // Get the first folder (prefer seed 1 if available)
+    let targetFolder = null;
+    let targetFolderName = null;
+
+    for (const folderName of folderNames) {
+      const folderData = folders[folderName];
+      if (folderData.seed === 1) {
+        targetFolder = folderData;
+        targetFolderName = folderName;
+        break;
+      }
+    }
+
+    // If no seed 1, use the first folder
+    if (!targetFolder) {
+      targetFolderName = folderNames[0];
+      targetFolder = folders[targetFolderName];
+    }
+
+    // Find the rules file (standard, not player-specific)
+    const files = targetFolder.files || [];
+    const rulesFile = files.find(f => f.endsWith('_rules.json') && !f.includes('_P'));
+
+    if (!rulesFile) {
+      logger.warn('init', `No rules file found in first alphabetical preset "${firstGameKey}/${targetFolderName}"`);
+      return null;
+    }
+
+    const rulesPath = `./presets/${firstGameKey}/${targetFolderName}/${rulesFile}`;
+    logger.info('init', `Found first alphabetical preset: ${rulesPath} (game: ${gameEntry.name || firstGameKey})`);
+    return rulesPath;
+
+  } catch (error) {
+    logger.error('init', 'Error during alphabetical preset fallback lookup:', error);
+    return null;
   }
 }

@@ -2377,7 +2377,7 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 
 
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2391,6 +2391,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         rules_json_format: Output format - "rule_builder" (default), "ast", or "both"
         cleanup_multiworld: If True, clear multiworld references after export to help garbage
             collection. Disabled by default as it invalidates the multiworld object.
+        clear_game_presets: If True, delete all existing presets for the current game before generating
+        clear_all_presets: If True, delete all existing presets for ALL games before generating
 
     Returns:
         Dict containing paths to generated files
@@ -2710,9 +2712,66 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Determine preset directories
         presets_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'presets')
         os.makedirs(presets_dir, exist_ok=True)
-        
+
+        # Clear all presets if requested (must be done before creating game directory)
+        if clear_all_presets:
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            for item in os.listdir(presets_dir):
+                item_path = os.path.join(presets_dir, item)
+                # Only remove game directories, preserve preset_files.json (will be rebuilt)
+                if os.path.isdir(item_path):
+                    try:
+                        shutil.rmtree(item_path)
+                        logger.info(f"Cleared preset directory: {item_path}")
+                    except Exception as e:
+                        logger.error(f"Error removing preset directory {item_path}: {e}")
+            # Clear the preset index since all presets are gone
+            if os.path.exists(preset_index_path):
+                try:
+                    # Keep only metadata key if present
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                    metadata = preset_index.get('metadata', {})
+                    with open(preset_index_path, 'w', encoding='utf-8') as f:
+                        json.dump({'metadata': metadata} if metadata else {}, f, indent=2)
+                    logger.info("Cleared preset_files.json (preserving metadata)")
+                except Exception as e:
+                    logger.error(f"Error clearing preset_files.json: {e}")
+
         # Create game-specific directory
         game_dir = os.path.join(presets_dir, clean_game_name)
+
+        # Clear current game's presets if requested (and not already cleared by clear_all_presets)
+        if clear_game_presets and not clear_all_presets and os.path.exists(game_dir):
+            for item in os.listdir(game_dir):
+                item_path = os.path.join(game_dir, item)
+                try:
+                    if os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
+                    elif os.path.isfile(item_path):
+                        os.remove(item_path)
+                except Exception as e:
+                    logger.error(f"Error removing item {item_path}: {e}")
+            logger.info(f"Cleared existing presets for game: {clean_game_name}")
+
+            # Also clear the game entry from preset_files.json
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            if os.path.exists(preset_index_path):
+                try:
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                    if clean_game_name in preset_index:
+                        # Keep the game name but clear folders
+                        preset_index[clean_game_name] = {
+                            "name": game_name,
+                            "folders": {}
+                        }
+                        with open(preset_index_path, 'w', encoding='utf-8') as f:
+                            json.dump(preset_index, f, indent=2)
+                        logger.info(f"Cleared {clean_game_name} entry in preset_files.json")
+                except Exception as e:
+                    logger.error(f"Error updating preset_files.json after clearing game presets: {e}")
+
         os.makedirs(game_dir, exist_ok=True)
         
         # Create a folder for this specific preset
