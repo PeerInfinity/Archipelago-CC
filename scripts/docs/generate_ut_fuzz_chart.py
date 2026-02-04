@@ -22,7 +22,7 @@ from typing import Dict, Any, List
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from chart_generators.utils import format_file_size, get_rules_json_size
-from lib.test_utils import load_template_exclude_list
+from lib.test_utils import get_expected_failures_for_mode, get_games_passing_mode, load_template_exclude_list
 
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
@@ -149,7 +149,7 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         world_mapping: Full world mapping dict with game info
         project_root: Project root path for looking up rules.json sizes
         world_source: Source of worlds (bundled or apworlds)
-        excluded_games: Dict mapping game names to exclusion reasons (for apworlds)
+        excluded_games: Dict mapping game names to exclusion reasons (from template-exclude-list.json)
     """
     # Determine seed info and UT version
     seed = metadata.get('seed', 'random')
@@ -211,6 +211,23 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     unexpected_fail_games = []  # Games with actual logic failures
     unexpected_fail_timeout_only_games = []  # Games that only failed due to timeouts
 
+    # Load expected failures from tracking-mode-config.json based on UT version
+    # This is for the "Expected Failures" section at the bottom of the doc
+    expected_failure_list = get_expected_failures_for_mode(
+        ut_mode=ut_version,
+        category=world_source,
+        project_root=project_root,
+        include_reasons=True
+    )
+
+    # Build set of game names expected to PASS (games in config that pass this mode)
+    # Games NOT in this set are expected to fail (either not in config, or don't pass the mode)
+    expected_to_pass_games = set(get_games_passing_mode(
+        ut_mode=ut_version,
+        category=world_source,
+        project_root=project_root
+    ))
+
     if chart_data:
         total_games = len(chart_data)
         passed = sum(1 for d in chart_data if d['passed'])
@@ -234,47 +251,48 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         md_content += f"- **Timed Out Runs:** {total_timeout}\n"
         md_content += f"- **Ignored Runs:** {total_ignored}\n\n"
 
-        # Add expected/unexpected pass/fail categorization (only for worldgen UT)
-        if excluded_games and ut_version == 'worldgen':
-            # Build set of excluded template names for matching
-            excluded_templates = set(excluded_games.keys())
+        # Add expected/unexpected pass/fail categorization
+        # Always show this section when we have test results (even if no games are expected to fail)
+        # Track both counts and game data for breakdown tables
+        expected_pass_data = []
+        unexpected_pass_data = []
+        expected_fail_data = []
+        unexpected_fail_logic_data = []
+        unexpected_fail_timeout_data = []
 
-            expected_passes = 0
-            unexpected_passes = 0
-            expected_failures = 0
-            unexpected_failures_logic = 0  # Actual logic failures
-            unexpected_failures_timeout_only = 0  # Only timeouts, no logic failures
+        for d in chart_data:
+            game_name = d['game_name']
+            # A game is expected to pass only if it's in the config AND passes this mode
+            # Compare using game_name (not template_file) since config uses official game names
+            is_expected_to_pass = game_name in expected_to_pass_games
+            is_passing = d['passed']
+            has_logic_failures = d.get('failure', 0) > 0
 
-            for d in chart_data:
-                game_name = d['game_name']
-                template_file = d.get('template_file', '')
-                is_excluded = template_file in excluded_templates
-                is_passing = d['passed']
-                has_logic_failures = d.get('failure', 0) > 0
-
-                if is_excluded:
-                    if is_passing:
-                        unexpected_passes += 1
-                        unexpected_pass_games.append(game_name)
-                    else:
-                        expected_failures += 1
+            if is_expected_to_pass:
+                if is_passing:
+                    expected_pass_data.append(d)
                 else:
-                    if is_passing:
-                        expected_passes += 1
+                    # Expected to pass but failed
+                    if has_logic_failures:
+                        unexpected_fail_logic_data.append(d)
+                        unexpected_fail_games.append(game_name)
                     else:
-                        if has_logic_failures:
-                            unexpected_failures_logic += 1
-                            unexpected_fail_games.append(game_name)
-                        else:
-                            unexpected_failures_timeout_only += 1
-                            unexpected_fail_timeout_only_games.append(game_name)
+                        unexpected_fail_timeout_data.append(d)
+                        unexpected_fail_timeout_only_games.append(game_name)
+            else:
+                # Expected to fail (not in config, or doesn't pass this mode)
+                if is_passing:
+                    unexpected_pass_data.append(d)
+                    unexpected_pass_games.append(game_name)
+                else:
+                    expected_fail_data.append(d)
 
-            md_content += "### Expected vs Unexpected Results\n\n"
-            md_content += f"- **Expected Passes:** {expected_passes} (not excluded, passed)\n"
-            md_content += f"- **Unexpected Passes:** {unexpected_passes} (excluded, but passed)\n"
-            md_content += f"- **Expected Failures:** {expected_failures} (excluded, failed as expected)\n"
-            md_content += f"- **Unexpected Failures (logic):** {unexpected_failures_logic} (not excluded, logic mismatch)\n"
-            md_content += f"- **Unexpected Failures (timeout only):** {unexpected_failures_timeout_only} (not excluded, only timeouts)\n\n"
+        md_content += f"### Expected vs Unexpected Results (based on tracking-mode-config.json)\n\n"
+        md_content += f"- **Expected Passes:** {len(expected_pass_data)} (passes {ut_version} mode per config)\n"
+        md_content += f"- **Unexpected Passes:** {len(unexpected_pass_data)} (expected to fail but passed)\n"
+        md_content += f"- **Expected Failures:** {len(expected_fail_data)} (doesn't pass {ut_version} mode per config)\n"
+        md_content += f"- **Unexpected Failures (logic):** {len(unexpected_fail_logic_data)} (expected to pass but had logic mismatch)\n"
+        md_content += f"- **Unexpected Failures (timeout only):** {len(unexpected_fail_timeout_data)} (expected to pass but timed out)\n\n"
 
         # Add explain stats summary if available
         games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
@@ -411,6 +429,59 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
         else:
             md_content += "| No data available | - | - | - | - | - | - | - |\n"
 
+    # Helper function to generate a simple results table
+    def generate_breakdown_table(data_list: List[Dict], title: str, description: str) -> str:
+        if not data_list:
+            return ""
+        content = f"\n### {title} ({len(data_list)})\n\n"
+        content += f"{description}\n\n"
+        content += "| Game Name | Total | Success | Failure | Timeout | Success Rate |\n"
+        content += "|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|\n"
+        for d in sorted(data_list, key=lambda x: x['game_name']):
+            gname = d['game_name']
+            gtotal = d['total']
+            gsuccess = d['success']
+            gfailure = d['failure']
+            gtimeout = d['timeout']
+            grate = d['success_rate']
+            rate_str = f"{grate:.1f}%"
+            content += f"| {gname} | {gtotal} | {gsuccess} | {gfailure} | {gtimeout} | {rate_str} |\n"
+        return content
+
+    # Add breakdown tables for expected/unexpected results
+    if chart_data:
+        md_content += "\n## Results Breakdown\n"
+
+        md_content += generate_breakdown_table(
+            expected_pass_data,
+            "Expected Passes",
+            f"Games that pass {ut_version} mode per tracking-mode-config.json and passed the test."
+        )
+
+        md_content += generate_breakdown_table(
+            unexpected_pass_data,
+            "Unexpected Passes",
+            f"Games NOT expected to pass {ut_version} mode (not in config or mode not listed) but passed anyway."
+        )
+
+        md_content += generate_breakdown_table(
+            expected_fail_data,
+            "Expected Failures",
+            f"Games NOT expected to pass {ut_version} mode and failed as expected."
+        )
+
+        md_content += generate_breakdown_table(
+            unexpected_fail_logic_data,
+            "Unexpected Failures (Logic Mismatch)",
+            f"Games expected to pass {ut_version} mode but failed due to logic mismatches."
+        )
+
+        md_content += generate_breakdown_table(
+            unexpected_fail_timeout_data,
+            "Unexpected Failures (Timeout Only)",
+            f"Games expected to pass {ut_version} mode but failed only due to timeouts."
+        )
+
     # Add explain support section if data is available
     games_with_explain_stats = [d for d in chart_data if d.get('explain_stats')]
     if games_with_explain_stats:
@@ -477,10 +548,10 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "Failures indicate that for certain option combinations, UT's logic "
     md_content += "differs from Python's logic. This helps identify edge cases that need fixing.\n"
 
-    # Add Excluded Templates section (only for worldgen UT)
-    if excluded_games and ut_version == 'worldgen':
+    # Add Excluded Templates section (from template-exclude-list.json)
+    if excluded_games:
         if world_source == "apworlds":
-            md_content += "\n## Excluded APWorlds\n\n"
+            md_content += "\n## Excluded Templates (APWorlds)\n\n"
             md_content += "These community APWorlds are excluded from UT fuzz testing due to incompatible rule patterns or APWorld bugs:\n\n"
             md_content += "| APWorld | Reason |\n"
             md_content += "|---------|--------|\n"
@@ -491,24 +562,6 @@ def generate_ut_fuzz_markdown(chart_data: List[Dict[str, Any]],
             md_content += "|----------|--------|\n"
         for game, reason in sorted(excluded_games.items()):
             md_content += f"| {game} | {reason} |\n"
-
-        # Add lists of unexpected passes and failures
-        if unexpected_pass_games:
-            md_content += "\n### Unexpected Passes\n\n"
-            for game in sorted(unexpected_pass_games):
-                md_content += f"- {game}\n"
-
-        if unexpected_fail_games:
-            md_content += "\n### Unexpected Failures (Logic Mismatch)\n\n"
-            md_content += "These games have actual logic mismatches between UT and Python:\n\n"
-            for game in sorted(unexpected_fail_games):
-                md_content += f"- {game}\n"
-
-        if unexpected_fail_timeout_only_games:
-            md_content += "\n### Unexpected Failures (Timeout Only)\n\n"
-            md_content += "These games failed only due to timeouts, not logic mismatches:\n\n"
-            for game in sorted(unexpected_fail_timeout_only_games):
-                md_content += f"- {game}\n"
 
     return md_content
 
@@ -858,14 +911,6 @@ def main():
     # Load world mapping for creating game links
     world_mapping = load_world_mapping(project_root)
 
-    # Load exclude lists for different world sources
-    # For bundled worlds: use main + worldgen exclude lists (UT fuzz uses worldgen to regenerate)
-    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='all', skip_worldgen_variants=True)
-    excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
-    # For apworlds: use UT fuzz apworld exclude list
-    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld')
-    excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
-
     # Output directory
     output_dir = os.path.join(project_root, 'docs/json/developer/test-results')
     os.makedirs(output_dir, exist_ok=True)
@@ -884,6 +929,14 @@ def main():
     if not result_files:
         print(f"Error: No result files found in {results_dir}")
         return 1
+
+    # Load exclude lists for Excluded Templates section
+    # For bundled: use worldgen test exclusions (skip WorldGen variants to avoid duplicates)
+    excluded_list_bundled = load_template_exclude_list(project_root, include_reasons=True, test_type='worldgen', skip_worldgen_variants=True)
+    excluded_games_bundled = {item['name']: item['reason'] for item in excluded_list_bundled}
+    # For apworlds: use UT fuzz apworld exclusions (no WorldGen variants needed)
+    excluded_list_apworld = load_template_exclude_list(project_root, include_reasons=True, test_type='ut_fuzz_apworld', skip_worldgen_variants=True)
+    excluded_games_apworld = {item['name']: item['reason'] for item in excluded_list_apworld}
 
     # Track chart data and metadata for comparisons
     # Keys: 'bundled-original', 'bundled-worldgen', 'bundled-hybrid',
@@ -924,7 +977,7 @@ def main():
         chart_data_by_type[key] = chart_data
         metadata_by_type[key] = metadata
 
-        # Generate markdown with appropriate exclude list based on world source
+        # Generate markdown
         excluded_games = excluded_games_apworld if world_source == "apworlds" else excluded_games_bundled
         md_content = generate_ut_fuzz_markdown(chart_data, metadata, world_mapping, project_root, world_source, excluded_games)
 

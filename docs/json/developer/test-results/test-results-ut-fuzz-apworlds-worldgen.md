@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 14:05:32
+**Generated:** 2026-02-04 15:04:33
 
 **Source Data Created:** 2026-01-24T05:05:20.633697
 
@@ -33,13 +33,13 @@
 - **Timed Out Runs:** 14
 - **Ignored Runs:** 129
 
-### Expected vs Unexpected Results
+### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 49 (not excluded, passed)
-- **Unexpected Passes:** 1 (excluded, but passed)
-- **Expected Failures:** 74 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 0 (not excluded, logic mismatch)
-- **Unexpected Failures (timeout only):** 0 (not excluded, only timeouts)
+- **Expected Passes:** 50 (passes worldgen mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 74 (doesn't pass worldgen mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
 
@@ -194,6 +194,146 @@ Of the 50 games with 100% pass rate:
 | osu! | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | N/A |
 | plateup | ❌ | 10 | 8 | 1 | 1 | 0 | ⚠️ 80.0% | ✅ | ✅ | N/A |
 
+## Results Breakdown
+
+### Expected Passes (50)
+
+Games that pass worldgen mode per tracking-mode-config.json and passed the test.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| A Dance of Fire and Ice | 10 | 10 | 0 | 0 | 100.0% |
+| A Difficult Game About Climbing | 10 | 9 | 0 | 0 | 90.0% |
+| Actraiser | 10 | 8 | 0 | 0 | 80.0% |
+| An Untitled Story | 10 | 10 | 0 | 0 | 100.0% |
+| Another Crabs Treasure | 10 | 10 | 0 | 0 | 100.0% |
+| Autopelago | 10 | 10 | 0 | 0 | 100.0% |
+| Brotato | 10 | 7 | 0 | 0 | 70.0% |
+| Castlevania: Dawn of Sorrow | 10 | 10 | 0 | 0 | 100.0% |
+| Cuphead | 10 | 0 | 0 | 0 | 0.0% |
+| DORONKO WANKO | 10 | 10 | 0 | 0 | 100.0% |
+| Diddy Kong Racing | 10 | 10 | 0 | 0 | 100.0% |
+| Dome Keeper | 10 | 10 | 0 | 0 | 100.0% |
+| Golden Sun The Lost Age | 10 | 10 | 0 | 0 | 100.0% |
+| Hatsune Miku Project Diva Mega Mix+ | 10 | 10 | 0 | 0 | 100.0% |
+| Here Comes Niko! | 10 | 10 | 0 | 0 | 100.0% |
+| Isles Of Sea And Sky | 10 | 10 | 0 | 0 | 100.0% |
+| Ittle Dew 2 | 10 | 9 | 0 | 0 | 90.0% |
+| Jigsaw | 10 | 10 | 0 | 0 | 100.0% |
+| K-On! After School Live!! | 10 | 10 | 0 | 0 | 100.0% |
+| Kingdom Hearts Birth by Sleep | 10 | 10 | 0 | 0 | 100.0% |
+| Kingdom Hearts Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
+| Kingdom Hearts RE Chain of Memories | 10 | 10 | 0 | 0 | 100.0% |
+| Kirby Super Star | 10 | 0 | 0 | 0 | 0.0% |
+| League of Legends | 10 | 10 | 0 | 0 | 100.0% |
+| Lil Gator Game | 10 | 10 | 0 | 0 | 100.0% |
+| Little Witch Nobeta | 10 | 10 | 0 | 0 | 100.0% |
+| Luigi's Mansion | 10 | 7 | 0 | 0 | 70.0% |
+| MetroCUBEvania | 10 | 10 | 0 | 0 | 100.0% |
+| Metroid Fusion | 10 | 10 | 0 | 0 | 100.0% |
+| Rain World | 10 | 3 | 0 | 0 | 30.0% |
+| Ratchet & Clank 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Rift Wizard | 10 | 10 | 0 | 0 | 100.0% |
+| Simon Tatham's Portable Puzzle Collection | 10 | 10 | 0 | 0 | 100.0% |
+| Sonic Heroes | 10 | 0 | 0 | 0 | 0.0% |
+| Sonic the Hedgehog 1 | 10 | 10 | 0 | 0 | 100.0% |
+| Spinball | 10 | 10 | 0 | 0 | 100.0% |
+| Star Fox 64 | 10 | 10 | 0 | 0 | 100.0% |
+| Star Wars Episode I Racer | 10 | 9 | 0 | 0 | 90.0% |
+| Super Cat Planet | 10 | 10 | 0 | 0 | 100.0% |
+| Symphony of the Night | 10 | 10 | 0 | 0 | 100.0% |
+| TOEM: A Photo Adventure | 10 | 10 | 0 | 0 | 100.0% |
+| Tevi | 10 | 10 | 0 | 0 | 100.0% |
+| The Sims 4 | 10 | 10 | 0 | 0 | 100.0% |
+| TurnipBoy | 10 | 10 | 0 | 0 | 100.0% |
+| Vampire Survivors | 10 | 4 | 0 | 0 | 40.0% |
+| Watery Words | 10 | 10 | 0 | 0 | 100.0% |
+| Wordipelago | 10 | 8 | 0 | 0 | 80.0% |
+| Yu-Gi-Oh! Dungeon Dice Monsters | 10 | 10 | 0 | 0 | 100.0% |
+| Zelda II: The Adventure of Link | 10 | 10 | 0 | 0 | 100.0% |
+| osu! | 10 | 10 | 0 | 0 | 100.0% |
+
+### Expected Failures (74)
+
+Games NOT expected to pass worldgen mode and failed as expected.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| A Link Between Worlds | 10 | 0 | 10 | 0 | 0.0% |
+| ANIMAL WELL | 10 | 3 | 6 | 0 | 30.0% |
+| Against the Storm | 10 | 0 | 10 | 0 | 0.0% |
+| Air Delivery | 10 | 4 | 6 | 0 | 40.0% |
+| Anodyne | 10 | 1 | 9 | 0 | 10.0% |
+| Ape Escape | 10 | 6 | 4 | 0 | 60.0% |
+| Ape Escape 3 | 10 | 0 | 10 | 0 | 0.0% |
+| Astalon | 10 | 0 | 8 | 0 | 0.0% |
+| Axiom Verge | 10 | 0 | 10 | 0 | 0.0% |
+| Balatro | 10 | 0 | 6 | 0 | 0.0% |
+| Cavern of Dreams | 10 | 0 | 8 | 0 | 0.0% |
+| ChecksMate | 10 | 0 | 10 | 0 | 0.0% |
+| Chrono Trigger Jets of Time | 10 | 0 | 10 | 0 | 0.0% |
+| ClusterTruck | 10 | 3 | 7 | 0 | 30.0% |
+| Corn Kidz 64 | 10 | 0 | 10 | 0 | 0.0% |
+| CrossCode | 10 | 0 | 10 | 0 | 0.0% |
+| Crystal Project | 10 | 0 | 10 | 0 | 0.0% |
+| Crystalis | 10 | 0 | 7 | 0 | 0.0% |
+| Deep Rock Galactic | 10 | 5 | 5 | 0 | 50.0% |
+| Digimon World | 10 | 0 | 6 | 0 | 0.0% |
+| Duke Nukem 3D | 10 | 1 | 8 | 0 | 10.0% |
+| Final Fantasy Tactics A2 | 10 | 0 | 7 | 0 | 0.0% |
+| Final Fantasy Tactics Advance | 10 | 9 | 1 | 0 | 90.0% |
+| Fire Emblem Sacred Stones | 10 | 0 | 10 | 0 | 0.0% |
+| Frogmonster | 10 | 0 | 10 | 0 | 0.0% |
+| GZDoom | 10 | 0 | 10 | 0 | 0.0% |
+| Garfield Kart - Furious Racing | 10 | 0 | 10 | 0 | 0.0% |
+| Grim Dawn | 10 | 6 | 3 | 0 | 60.0% |
+| Hammerwatch | 10 | 5 | 4 | 0 | 50.0% |
+| Iji | 10 | 0 | 10 | 0 | 0.0% |
+| Into the Breach | 10 | 0 | 10 | 0 | 0.0% |
+| Keep Talking and Nobody Explodes | 10 | 0 | 7 | 0 | 0.0% |
+| Lego Star Wars: The Complete Saga | 10 | 8 | 1 | 0 | 80.0% |
+| Lingo 2 | 10 | 0 | 9 | 1 | 0.0% |
+| Lunacid | 10 | 3 | 7 | 0 | 30.0% |
+| Majora's Mask Recompiled | 10 | 4 | 6 | 0 | 40.0% |
+| Mario Kart Double Dash | 10 | 0 | 10 | 0 | 0.0% |
+| Metroid Zero Mission | 10 | 0 | 10 | 0 | 0.0% |
+| Minishoot Adventures | 10 | 4 | 6 | 0 | 40.0% |
+| Minit | 10 | 6 | 4 | 0 | 60.0% |
+| Monster Sanctuary | 10 | 0 | 10 | 0 | 0.0% |
+| Nine Sols | 10 | 0 | 8 | 0 | 0.0% |
+| Ori and the Blind Forest | 10 | 6 | 4 | 0 | 60.0% |
+| Ori and the Will of the Wisps | 10 | 0 | 1 | 7 | 0.0% |
+| Oxygen Not Included | 10 | 8 | 1 | 0 | 80.0% |
+| Pizza Tower | 10 | 7 | 0 | 3 | 70.0% |
+| Pokemon FireRed and LeafGreen | 10 | 0 | 10 | 0 | 0.0% |
+| Pokemon Mystery Dungeon Explorers of Sky | 10 | 0 | 10 | 0 | 0.0% |
+| Pseudoregalia | 10 | 0 | 10 | 0 | 0.0% |
+| Rabi-Ribi | 10 | 0 | 1 | 0 | 0.0% |
+| Reventure | 10 | 0 | 10 | 0 | 0.0% |
+| Rift of the Necrodancer | 10 | 3 | 3 | 0 | 30.0% |
+| Rusted Moss | 10 | 0 | 10 | 0 | 0.0% |
+| Sentinels of the Multiverse | 10 | 0 | 8 | 2 | 0.0% |
+| Shadow The Hedgehog | 10 | 0 | 3 | 0 | 0.0% |
+| Ship of Harkinian | 10 | 0 | 10 | 0 | 0.0% |
+| Sly 2: Band of Thieves | 10 | 0 | 8 | 0 | 0.0% |
+| Sly Cooper and the Thievius Raccoonus | 10 | 8 | 2 | 0 | 80.0% |
+| Sonic Adventure DX | 10 | 0 | 4 | 0 | 0.0% |
+| Sonic Rush | 10 | 4 | 6 | 0 | 40.0% |
+| Soul Blazer | 10 | 8 | 2 | 0 | 80.0% |
+| Spyro 3 | 10 | 0 | 8 | 0 | 0.0% |
+| Stacklands | 10 | 0 | 10 | 0 | 0.0% |
+| System Shock 2 | 10 | 0 | 9 | 0 | 0.0% |
+| TCG Card Shop Simulator | 10 | 0 | 10 | 0 | 0.0% |
+| Tetris Attack | 10 | 0 | 8 | 0 | 0.0% |
+| The Legend of Zelda - Oracle of Seasons | 10 | 0 | 10 | 0 | 0.0% |
+| The Legend of Zelda - Phantom Hourglass | 10 | 0 | 10 | 0 | 0.0% |
+| ToeJam and Earl | 10 | 0 | 5 | 0 | 0.0% |
+| Tyrian | 10 | 3 | 3 | 0 | 30.0% |
+| Wario Land | 10 | 0 | 10 | 0 | 0.0% |
+| XCOM 2 War of the Chosen | 10 | 0 | 10 | 0 | 0.0% |
+| Yu-Gi-Oh! Forbidden Memories | 10 | 0 | 10 | 0 | 0.0% |
+| plateup | 10 | 8 | 1 | 1 | 80.0% |
+
 ## Explain Support Details
 
 This section shows which games have rules that support the `explain_json()` method, which provides human-readable explanations of access rule logic.
@@ -347,7 +487,7 @@ The UT fuzzer tests Universal Tracker compatibility by:
 
 Failures indicate that for certain option combinations, UT's logic differs from Python's logic. This helps identify edge cases that need fixing.
 
-## Excluded APWorlds
+## Excluded Templates (APWorlds)
 
 These community APWorlds are excluded from UT fuzz testing due to incompatible rule patterns or APWorld bugs:
 
@@ -428,7 +568,3 @@ These community APWorlds are excluded from UT fuzz testing due to incompatible r
 | XCOM 2 War of the Chosen.yaml | Uses custom RuleManager class with power-based access rules. Pattern incompatible with exporter/worldgen pipeline. |
 | Yu-Gi-Oh! Forbidden Memories.yaml | Uses instance-level state (duelist_unlock_order, final_6_order) set randomly in generate_early() based on options. Access rules call is_card_location_accessible() which depends on this state and cannot be exported to static rules. |
 | plateup.yaml | Temporarily excluded. Fixing this is currently not a priority. |
-
-### Unexpected Passes
-
-- The Sims 4
