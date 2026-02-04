@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
 
-**Generated:** 2026-02-02 00:18:50
+**Generated:** 2026-02-04 03:04:58
 
 **Source Data Last Updated:** 2026-01-31T19:51:11
 
@@ -55,7 +55,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 | Factorio | ✅ 100.0% | ✅ 100.0% | 8.8KB | ✅ | 497.8KB |
 | Faxanadu | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ⚠️ 80.0% | ⚠️ 70.0% | 13.4KB | ✅ | 549.0KB |
+| Final Fantasy Mystic Quest | ⚠️ 82.0% | ⚠️ 70.0% | 13.4KB | ✅ | 549.0KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.2KB |
