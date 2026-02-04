@@ -31,13 +31,59 @@ The following bug fixes and features were backported from upstream v0.2.26:
 
 ---
 
+## Architecture
+
+The modified Universal Tracker uses a **mixin-based architecture** to separate our extensions from the upstream code, making it easier to merge upstream updates.
+
+```
+worlds/tracker/
+├── __init__.py              # Exports (matches upstream)
+├── TrackerCoreBase.py       # Original UT TrackerCore (close to upstream v0.2.26)
+├── TrackerCore.py           # Extended TrackerCore (combines base + mixins)
+├── worldgen_mixin.py        # Worldgen and AST explain methods
+├── tracker_extensions.py    # Testing mode extensions
+├── TrackerClient.py         # Client code (minor modifications)
+└── fuzzer_hook.py           # Fuzzer hook for UT comparison testing
+```
+
+### Class Hierarchy
+
+```python
+class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
+    """Extended TrackerCore with worldgen and testing support."""
+```
+
+### Benefits
+
+1. **Easy upstream merging**: Update `TrackerCoreBase.py` directly from upstream
+2. **Clear separation**: Extensions are in separate mixin files
+3. **Testability**: Can test base vs. extended separately
+4. **Documentation**: Extensions are obviously separate from upstream code
+
+---
+
 ## File-by-File Changes
 
-### `TrackerCore.py`
+### `TrackerCoreBase.py` (formerly TrackerCore.py)
 
-**Lines:** 513 → 1055 (~542 lines added)
+**Lines:** 513 (matches upstream v0.2.26)
 
-This file received the most significant modifications, adding worldgen and AST explain integration.
+This file contains the original TrackerCore code from upstream, with minimal changes:
+- Class renamed to `TrackerCoreBase` for inheritance
+- Backported `glitches_state` fix from v0.2.26
+- Backported "Nothing items" fix from v0.2.26
+
+### `TrackerCore.py` (Extended Version)
+
+**Lines:** ~280
+
+This file extends TrackerCoreBase with our modifications via mixins.
+
+### `worldgen_mixin.py`
+
+**Lines:** ~400
+
+Contains worldgen world integration and AST explain support.
 
 #### New Instance Variables
 
