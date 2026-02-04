@@ -253,6 +253,40 @@ def extract_multiworld_test_status(template_data: Dict[str, Any]) -> Dict[str, A
     }
 
 
+def extract_spoiler_fuzz_test_status(template_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract pass/fail status from spoiler fuzz test results."""
+    fuzz_result = template_data.get('spoiler_fuzz', {})
+
+    if not fuzz_result:
+        return None
+
+    passed = fuzz_result.get('passed', False)
+    total_runs = fuzz_result.get('total', 0)
+    successful_runs = fuzz_result.get('success', 0)
+    generation_failures = fuzz_result.get('generation_failure', 0)
+    test_failures = fuzz_result.get('test_failure', 0)
+    timeouts = fuzz_result.get('timeout', 0)
+    failed_runs = generation_failures + test_failures + timeouts
+
+    # Build failure types string for tooltip
+    failure_parts = []
+    if generation_failures > 0:
+        failure_parts.append(f"{generation_failures} gen")
+    if test_failures > 0:
+        failure_parts.append(f"{test_failures} test")
+    if timeouts > 0:
+        failure_parts.append(f"{timeouts} timeout")
+    failure_types = ", ".join(failure_parts) if failure_parts else None
+
+    return {
+        'passed': passed,
+        'total_runs': total_runs,
+        'runs_passed': successful_runs,
+        'runs_failed': failed_runs,
+        'failure_types': failure_types,
+    }
+
+
 def update_preset_files_with_all_test_data(preset_files: Dict[str, Any], all_test_results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     """Update preset_files with test result data from all test types."""
     updated_preset_files = preset_files
@@ -285,6 +319,8 @@ def update_preset_files_with_all_test_data(preset_files: Dict[str, Any], all_tes
                     status = extract_multiclient_test_status(template_data)
                 elif test_type == 'multiworld':
                     status = extract_multiworld_test_status(template_data)
+                elif test_type == 'spoiler_fuzz':
+                    status = extract_spoiler_fuzz_test_status(template_data)
                 else:
                     status = None
 
@@ -512,6 +548,12 @@ def main():
         help='Multiworld test results JSON file (default: scripts/output/multiworld/test-results.json)'
     )
     parser.add_argument(
+        '--test-results-fuzz',
+        type=str,
+        default='scripts/output/spoiler-fuzz/test-results-fixed-seed.json',
+        help='Spoiler fuzz test results JSON file (default: scripts/output/spoiler-fuzz/test-results-fixed-seed.json)'
+    )
+    parser.add_argument(
         '--preset-files',
         type=str,
         default='frontend/presets/preset_files.json',
@@ -540,6 +582,7 @@ def main():
         'full_spoiler': os.path.join(project_root, args.test_results_full),
         'multiclient': os.path.join(project_root, args.test_results_multiclient),
         'multiworld': os.path.join(project_root, args.test_results_multiworld),
+        'spoiler_fuzz': os.path.join(project_root, args.test_results_fuzz),
     }
 
     preset_files_path = os.path.join(project_root, args.preset_files)

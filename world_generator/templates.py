@@ -12,28 +12,12 @@ from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
+from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
-def sanitize_class_name(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
-
-
-def sanitize_option_name(name: str) -> str:
-    """Sanitize an option name to be a valid Python identifier.
-
-    Replaces non-alphanumeric characters (except underscores) with underscores.
-    Collapses multiple consecutive underscores into one.
-    """
-    # Replace any non-alphanumeric character (except underscore) with underscore
-    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
-    # Collapse multiple underscores into one
-    sanitized = re.sub(r'_+', '_', sanitized)
-    # Remove leading/trailing underscores
-    return sanitized.strip('_')
+# Backwards-compatible aliases
+sanitize_class_name = sanitize_for_class_name
+sanitize_option_name = sanitize_for_identifier
 
 
 def is_valid_identifier(name: str) -> bool:

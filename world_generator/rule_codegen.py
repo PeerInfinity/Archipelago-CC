@@ -11,6 +11,16 @@ import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
 from rule_builder import BOOLEAN_RULE_TYPES
+from ._codegen_utils import (
+    is_placement_lookup,
+    extract_placement_location,
+    extract_items_from_list,
+    check_placement_comparison,
+    escape_string,
+    generate_world_attribute_expr,
+    extract_constant,
+    get_helper_function_name,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -879,13 +889,8 @@ class RuleCodeGenerator:
         return result
 
     def get_function_name(self, helper_name: str) -> str:
-        """Get the Python function name for a helper.
-
-        Returns the helper name as-is, without any prefix. The helpers are
-        defined in the world's Rules.py module, so they're already namespaced
-        and don't need a game-specific prefix.
-        """
-        return helper_name
+        """Get the Python function name for a helper."""
+        return get_helper_function_name(helper_name)
 
     def _contains_dynamic_reference(self, value: Any, depth: int = 0) -> bool:
         """
@@ -2156,76 +2161,16 @@ class RuleCodeGenerator:
         return value if value is not None else default
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
-        """Extract constant value from complex expressions.
-
-        Handles constants, binary operations (like 'Axe' + 's' -> 'Axes'),
-        and subscript operations (like item_groups["Axes"]).
-        """
-        if isinstance(value, dict):
-            if value.get('type') == 'constant':
-                return value.get('value', default)
-            if value.get('type') == 'value':
-                return value.get('value', default)
-            if value.get('type') == 'set':
-                elements = value.get('elements', [])
-                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
-
-            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
-            if value.get('type') in ('binary_op', 'binop'):
-                left = self._extract_constant(value.get('left', {}), None)
-                right = self._extract_constant(value.get('right', {}), None)
-                op = value.get('op', '+')
-                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
-                op = op_map.get(op, op)
-                if left is not None and right is not None:
-                    try:
-                        if op == '+':
-                            return left + right
-                        elif op == '-':
-                            return left - right
-                        elif op == '*':
-                            return left * right
-                        elif op == '/':
-                            return left / right
-                        elif op == '//':
-                            return left // right
-                    except TypeError:
-                        pass
-                return default
-
-            # Handle subscript (e.g., item_groups["Axes"])
-            if value.get('type') == 'subscript':
-                base_value = self._extract_constant(value.get('value', {}), None)
-                index = self._extract_constant(value.get('index', {}), None)
-                if base_value is not None and index is not None:
-                    try:
-                        return base_value[index]
-                    except (IndexError, KeyError, TypeError):
-                        pass
-                return default
-
-            return default
-        return value if value is not None else default
+        """Extract constant value from complex expressions."""
+        return extract_constant(value, default)  # No settings for RuleCodeGenerator
 
     # =========================================================================
     # Helper methods to reduce code duplication
     # =========================================================================
 
     def _escape_string(self, s: str, quote_char: str = '"') -> str:
-        """Escape a string for use in generated Python code.
-
-        Args:
-            s: The string to escape
-            quote_char: The quote character to escape (" or ')
-
-        Returns:
-            The escaped string (without surrounding quotes)
-        """
-        escaped = s.replace('\\', '\\\\')
-        if quote_char == '"':
-            return escaped.replace('"', '\\"')
-        else:
-            return escaped.replace("'", "\\'")
+        """Escape a string for use in generated Python code."""
+        return escape_string(s, quote_char)
 
     def _make_count_item(self, item_name: str) -> str:
         """Generate CountItem expression for the given item name.
@@ -2966,194 +2911,21 @@ class RuleCodeGenerator:
         return f'Compare({left_code}, "{op}", {right_code})'
 
     def _is_placement_lookup(self, operand: Any) -> bool:
-        """
-        Check if an operand is a placement_lookup rule.
-
-        Placement lookups (location_item_name checks) depend on actual item placements
-        which are not available during tracking. These checks should be treated as False
-        during code generation so that tracking works correctly.
-
-        This is used to fix self-locking rules like:
-            OR(location_item_name(state, loc, player) == (item, 1), state.has(item, player))
-        Which should simplify to just Has(item) for tracking purposes.
-        """
-        if not isinstance(operand, dict):
-            return False
-
-        # Check for placement_lookup type
-        if operand.get('type') == 'placement_lookup':
-            return True
-
-        # Check for Rule Builder format AST_placement_lookup
-        if operand.get('rule') == 'AST_placement_lookup':
-            return True
-
-        return False
+        """Check if an operand is a placement_lookup rule."""
+        return is_placement_lookup(operand)
 
     def _extract_placement_location(self, operand: Any) -> Optional[str]:
-        """
-        Extract the location name from a placement_lookup expression.
-        Returns the location name as a string, or None if it cannot be extracted.
-        """
-        if not isinstance(operand, dict):
-            return None
-
-        # Handle placement_lookup type
-        if operand.get('type') == 'placement_lookup':
-            location_rule = operand.get('location', {})
-            if isinstance(location_rule, dict):
-                if location_rule.get('type') == 'constant':
-                    return location_rule.get('value', '')
-            elif isinstance(location_rule, str):
-                return location_rule
-            return None
-
-        # Handle Rule Builder format AST_placement_lookup
-        if operand.get('rule') == 'AST_placement_lookup':
-            args = operand.get('args', {})
-            return args.get('location', None)
-
-        return None
+        """Extract the location name from a placement_lookup expression."""
+        return extract_placement_location(operand)
 
     def _check_placement_comparison(self, left: Any, right: Any, op: str) -> Optional[bool]:
-        """
-        Check if a placement comparison can be resolved to a boolean using actual placements.
-
-        For self-locking rules like:
-            location_item_name(state, "Location A", player) == ("Left Tower Key", 1)
-
-        We check if the actual item placed at "Location A" matches the expected item.
-        Returns True/False if the comparison can be resolved, None otherwise.
-        """
-        # Determine which side is the placement_lookup
-        placement_operand = None
-        expected_operand = None
-
-        if self._is_placement_lookup(left):
-            placement_operand = left
-            expected_operand = right
-        elif self._is_placement_lookup(right):
-            placement_operand = right
-            expected_operand = left
-        else:
-            return None
-
-        # Extract the location name from the placement_lookup
-        location_name = self._extract_placement_location(placement_operand)
-        if not location_name:
-            return None
-
-        # Get the actual item placed at this location
-        actual_item = self.placements.get(location_name) if hasattr(self, 'placements') else None
-
-        # Extract the expected item from the comparison value
-        # Expected format is typically [item_name, player] or (item_name, player)
-        expected_item = None
-        if isinstance(expected_operand, list) and len(expected_operand) >= 1:
-            expected_item = expected_operand[0]
-        elif isinstance(expected_operand, dict):
-            # Could be a Tuple or list type in AST format
-            if expected_operand.get('type') == 'list':
-                values = expected_operand.get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('rule') == 'Tuple':
-                values = expected_operand.get('args', {}).get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('type') == 'tuple':
-                # Handle tuple type with 'elements' key: {"type": "tuple", "elements": [...]}
-                elements = expected_operand.get('elements', [])
-                if elements and len(elements) >= 1:
-                    first_val = elements[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-
-        if expected_item is None:
-            return None
-
-        # Now compare actual vs expected
-        if op in ('==', 'eq'):
-            if actual_item is None:
-                return False  # No item placed means comparison fails
-            return actual_item == expected_item
-        elif op in ('!=', 'ne'):
-            if actual_item is None:
-                return True  # No item placed means inequality succeeds
-            return actual_item != expected_item
-        elif op in ('in', 'In'):
-            # For 'in' operator, expected_operand is a list of tuples like [('Item', player), ...]
-            # We need to extract all item names and check if actual_item is in that set
-            expected_items = self._extract_items_from_list(expected_operand)
-            if expected_items is None:
-                return None
-            if actual_item is None:
-                return False  # No item placed means not in the list
-            return actual_item in expected_items
-        elif op in ('not in', 'NotIn'):
-            # For 'not in' operator, check if actual_item is NOT in the expected list
-            expected_items = self._extract_items_from_list(expected_operand)
-            if expected_items is None:
-                return None
-            if actual_item is None:
-                return True  # No item placed means not in the list
-            return actual_item not in expected_items
-
-        return None
+        """Check if a placement comparison can be resolved using actual placements."""
+        placements = self.placements if hasattr(self, 'placements') else {}
+        return check_placement_comparison(left, right, op, placements)
 
     def _extract_items_from_list(self, operand: Any) -> Optional[set]:
-        """
-        Extract item names from a list of tuples for 'in' operator comparisons.
-
-        Expected formats:
-        - [('Item1', player), ('Item2', player), ...]
-        - {"type": "list", "value": [{"type": "tuple", "elements": [...]}, ...]}
-
-        Returns a set of item names, or None if the format is unrecognized.
-        """
-        if not isinstance(operand, dict):
-            return None
-
-        if operand.get('type') != 'list':
-            return None
-
-        values = operand.get('value', [])
-        items = set()
-
-        for item in values:
-            if isinstance(item, dict):
-                item_type = item.get('type', '')
-                if item_type == 'tuple':
-                    # {"type": "tuple", "elements": [{"type": "constant", "value": "ItemName"}, ...]}
-                    elements = item.get('elements', [])
-                    if elements and len(elements) >= 1:
-                        first_elem = elements[0]
-                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
-                            items.add(first_elem.get('value'))
-                        elif isinstance(first_elem, str):
-                            items.add(first_elem)
-                elif item_type == 'list':
-                    # Nested list format
-                    nested_values = item.get('value', [])
-                    if nested_values and len(nested_values) >= 1:
-                        first_val = nested_values[0]
-                        if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                            items.add(first_val.get('value'))
-                        elif isinstance(first_val, str):
-                            items.add(first_val)
-            elif isinstance(item, (list, tuple)) and len(item) >= 1:
-                # Direct tuple/list: ('ItemName', player)
-                items.add(item[0])
-
-        return items if items else None
+        """Extract item names from a list of tuples for 'in' operator comparisons."""
+        return extract_items_from_list(operand)
 
     def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
@@ -3739,27 +3511,8 @@ class RuleCodeGenerator:
         return 'False_()'
 
     def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access a world attribute at runtime.
-
-        World attributes are properties on the world object that are set
-        during game generation. Examples include logic settings like
-        'logic_obscure_1' in The Wind Waker.
-
-        Always generates: state.multiworld.worlds[player].<name>
-        This pattern is recognized by the exporter's pattern detection.
-        """
-        attribute = expr.get('attribute', '')
-        base_path = f'state.multiworld.worlds[player].{attribute}'
-
-        # Handle indexed access (e.g., required_medallions[0])
-        if 'index' in expr:
-            index = expr['index']
-            if isinstance(index, int):
-                return f'{base_path}[{index}]'
-            elif isinstance(index, str):
-                return f'{base_path}[{repr(index)}]'
-
-        return base_path
+        """Generate code to access a world attribute at runtime."""
+        return generate_world_attribute_expr(expr)
 
     def _expr_option_value(self, expr: Dict[str, Any]) -> str:
         """Generate code to access an option at runtime.
@@ -5978,71 +5731,145 @@ class RuleCodeGenerator:
     def _convert_helper_arg(self, arg: Any) -> str:
         """Convert a single helper argument to Python code string.
 
+        This is the unified method for converting helper arguments from both
+        AST format and Rule Builder format. It handles all argument types
+        including constants, settings, options, world attributes, nested helpers,
+        and special references.
+
         Args:
             arg: The argument value (can be a dict with type info or a raw value)
 
         Returns:
             Python code string representation of the argument, or None if it should be skipped
         """
-        if isinstance(arg, dict) and arg.get('type') == 'constant':
+        if not isinstance(arg, dict):
+            return repr(arg)
+
+        # Get rule type (Rule Builder format) and ast type (AST format)
+        rule_type = arg.get('rule', '')
+        ast_type = arg.get('type', '')
+
+        # ===== Constants =====
+        if ast_type == 'constant':
             return repr(arg.get('value'))
-        elif isinstance(arg, dict) and arg.get('rule') == 'Constant':
-            # Rule Builder format constant
+        if rule_type == 'Constant':
             return repr(arg.get('args', {}).get('value'))
-        elif isinstance(arg, dict) and arg.get('type') == 'setting_value':
-            # Resolve setting_value args to their actual values
+
+        # ===== Boolean Constants =====
+        if rule_type == 'True_':
+            return 'True'
+        if rule_type == 'False_':
+            return 'False'
+
+        # ===== Setting/Option/WorldAttribute Values =====
+        # AST format
+        if ast_type == 'setting_value':
             setting = arg.get('setting', '')
             if setting in self.settings:
                 return repr(self.settings[setting])
-            else:
-                return 'None'
-        elif isinstance(arg, dict) and arg.get('rule') == 'AST_setting_value':
-            # Rule Builder format setting value (from CC converter)
+            return 'None'
+        if ast_type == 'option_value':
+            option = arg.get('option', '')
+            if option in self.settings:
+                return repr(self.settings[option])
+            return 'None'
+        if ast_type == 'world_attribute':
+            attribute = arg.get('attribute', '')
+            if attribute in self.world_attributes:
+                return repr(self.world_attributes[attribute])
+            return 'None'
+
+        # Rule Builder format
+        if rule_type == 'SettingValue':
             setting = arg.get('args', {}).get('setting', '')
             if setting in self.settings:
                 return repr(self.settings[setting])
-            else:
-                return 'None'
-        elif isinstance(arg, dict) and arg.get('rule') == 'Arithmetic':
+            return 'None'
+        if rule_type == 'AST_setting_value':
+            setting = arg.get('args', {}).get('setting', '')
+            if setting in self.settings:
+                return repr(self.settings[setting])
+            return 'None'
+        if rule_type == 'OptionValue':
+            option = arg.get('args', {}).get('option', '')
+            if option in self.settings:
+                return repr(self.settings[option])
+            return 'None'
+        if rule_type == 'WorldAttribute':
+            attribute = arg.get('args', {}).get('attribute', '')
+            if attribute in self.world_attributes:
+                return repr(self.world_attributes[attribute])
+            return 'None'
+
+        # ===== Arithmetic Expressions =====
+        if rule_type == 'Arithmetic':
             arith_result = self._evaluate_arithmetic_constant(arg)
             return arith_result if arith_result else 'None'
-        elif isinstance(arg, dict) and arg.get('type') == 'binary_op':
-            # Handle AST format binary operations (used after parameter substitution)
+        if ast_type == 'binary_op':
             binop_result = self._evaluate_binary_op_constant(arg)
             return binop_result if binop_result else 'None'
-        elif isinstance(arg, dict) and arg.get('type') == 'attribute':
-            # Handle attribute access on setting_value (e.g., world.options.goal.value)
+
+        # ===== Compare Expressions =====
+        if rule_type == 'Compare' or ast_type == 'compare':
+            compare_result = self._evaluate_compare_rule(arg)
+            return compare_result if compare_result is not None else 'None'
+
+        # ===== Name References =====
+        if ast_type == 'name':
+            name = arg.get('name', '')
+            if name in ('self', 'world'):
+                return None  # Signal to skip this argument
+            return 'None'
+        if rule_type == 'Name':
+            name = arg.get('args', {}).get('name', '')
+            if name == 'location' and self._current_location:
+                escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
+                return f'multiworld.get_location("{escaped}", player)'
+            if name == 'entrance' and self._current_entrance:
+                escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
+                return f'multiworld.get_entrance("{escaped}", player)'
+            if name in ('self', 'world'):
+                return None  # Signal to skip this argument
+            return 'None'
+
+        # ===== Attribute Access =====
+        if ast_type == 'attribute':
             obj = arg.get('object', {})
             if obj.get('type') == 'setting_value' and arg.get('attr') == 'value':
                 setting = obj.get('setting', '')
                 if setting in self.settings:
                     return repr(self.settings[setting])
+                return 'None'
+            return 'None'
+        if rule_type == 'Attribute':
+            obj_info = arg.get('args', {}).get('object', {})
+            attr_name = arg.get('args', {}).get('attr', '')
+            if obj_info.get('rule') == 'Name' and attr_name == 'parent_region':
+                entrance_var = obj_info.get('args', {}).get('name', '')
+                entrance_key = entrance_var.lower().replace(' ', '')
+                if entrance_key in self.entrance_regions:
+                    region_name = self.entrance_regions[entrance_key]
+                    return repr(region_name)
+                return 'None'
+            return 'None'
+
+        # ===== Nested Helper Calls =====
+        if arg.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
+            nested_helper = rule_type
+            if nested_helper in self.known_helpers:
+                helper_body = self.helper_bodies.get(nested_helper, {})
+                if isinstance(helper_body, dict) and helper_body.get('type') == 'constant':
+                    const_val = helper_body.get('value')
+                    return repr(const_val)
                 else:
-                    return 'None'
+                    # Complex helper - evaluate to True as approximation
+                    return 'True'
             else:
-                return 'None'
-        elif isinstance(arg, dict) and arg.get('type') == 'name':
-            # Handle name references from AST format
-            name = arg.get('name', '')
-            if name in ('self', 'world'):
-                # 'self' or 'world' references represent the game world object in the
-                # original rule lambda. For worldgen helpers, this is implicitly available
-                # via state.multiworld.worlds[player], so we skip this argument entirely.
-                return None  # Signal to skip this argument
-            else:
-                # Unknown name reference - default to None
-                return 'None'
-        elif isinstance(arg, dict) and (arg.get('type') == 'compare' or arg.get('rule') == 'Compare'):
-            # Handle Compare rules - evaluate at generation time if possible
-            # This is common for option comparisons like: options.logic == "glitched"
-            compare_result = self._evaluate_compare_rule(arg)
-            if compare_result is not None:
-                return compare_result
-            else:
-                return 'None'
-        else:
-            # For complex args, try to convert
-            return repr(arg) if not isinstance(arg, dict) else 'None'
+                # Unknown nested helper - assume True
+                return 'True'
+
+        # ===== Fallback =====
+        return 'None'
 
     def _convert_weighted_sum(self, rule: Dict[str, Any]) -> str:
         """Convert weighted_sum helper to WeightedSum rule.
@@ -6176,145 +6003,17 @@ class RuleCodeGenerator:
             self.required_imports.add('HelperCall')
             func_name = self.get_function_name(helper_name)
 
-            # Convert arguments to Python code
+            # Convert arguments to Python code using the shared method
             arg_strs = []
             for arg in args:
-                if isinstance(arg, dict):
-                    # Handle Rule Builder format args (SettingValue, Constant, etc.)
-                    arg_rule = arg.get('rule', '')
-                    if arg_rule == 'SettingValue':
-                        # Resolve setting_value args to their actual values (legacy)
-                        setting = arg.get('args', {}).get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'OptionValue':
-                        # Resolve option_value args to their actual values
-                        option = arg.get('args', {}).get('option', '')
-                        if option in self.settings:
-                            arg_strs.append(repr(self.settings[option]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'WorldAttribute':
-                        # Resolve world_attribute args to their actual values
-                        attribute = arg.get('args', {}).get('attribute', '')
-                        if attribute in self.world_attributes:
-                            arg_strs.append(repr(self.world_attributes[attribute]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'AST_setting_value':
-                        # Rule Builder format setting value from CC converter
-                        setting = arg.get('args', {}).get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'Constant':
-                        # Handle Rule Builder format Constant: {'rule': 'Constant', 'args': {'value': ...}}
-                        value = arg.get('args', {}).get('value')
-                        arg_strs.append(repr(value))
-                    elif arg.get('type') == 'constant':
-                        # Handle AST format constant: {'type': 'constant', 'value': ...}
-                        arg_strs.append(repr(arg.get('value')))
-                    elif arg.get('type') == 'setting_value':
-                        setting = arg.get('setting', '')
-                        if setting in self.settings:
-                            arg_strs.append(repr(self.settings[setting]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg.get('type') == 'option_value':
-                        option = arg.get('option', '')
-                        if option in self.settings:
-                            arg_strs.append(repr(self.settings[option]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg.get('type') == 'world_attribute':
-                        attribute = arg.get('attribute', '')
-                        if attribute in self.world_attributes:
-                            arg_strs.append(repr(self.world_attributes[attribute]))
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'False_':
-                        # Handle Rule Builder format boolean False: {'rule': 'False_'}
-                        arg_strs.append('False')
-                    elif arg_rule == 'True_':
-                        # Handle Rule Builder format boolean True: {'rule': 'True_'}
-                        arg_strs.append('True')
-                    elif arg.get('_original_ast_type') == 'helper' or arg_rule in self.known_helpers:
-                        # Nested helper call - check if we know about it
-                        nested_helper = arg_rule
-                        if nested_helper in self.known_helpers:
-                            # Check helper body - if it returns constant True/False, inline it
-                            helper_body = self.helper_bodies.get(nested_helper, {})
-                            if isinstance(helper_body, dict) and helper_body.get('type') == 'constant':
-                                const_val = helper_body.get('value')
-                                arg_strs.append(repr(const_val))
-                            else:
-                                # Complex helper - evaluate to True as approximation
-                                # (Most SM canXXX/knowsXXX helpers are simplified to True)
-                                arg_strs.append('True')
-                        else:
-                            # Unknown nested helper - assume True (optimistic approximation)
-                            arg_strs.append('True')
-                    elif arg_rule == 'Name':
-                        # Handle Name references - check for location/entrance context
-                        name = arg.get('args', {}).get('name', '')
-                        if name == 'location' and self._current_location:
-                            escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
-                            arg_strs.append(f'multiworld.get_location("{escaped}", player)')
-                        elif name == 'entrance' and self._current_entrance:
-                            escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
-                            arg_strs.append(f'multiworld.get_entrance("{escaped}", player)')
-                        elif name in ('self', 'world'):
-                            # 'self' or 'world' references represent the game world object in the
-                            # original rule lambda. For worldgen helpers, this is implicitly available
-                            # via state.multiworld.worlds[player], so we skip this argument entirely.
-                            # The helper function handles world access internally.
-                            pass  # Skip this argument - don't add to arg_strs
-                        else:
-                            # Unknown name reference - default to None
-                            arg_strs.append('None')
-                    elif arg_rule == 'Arithmetic':
-                        arith_result = self._evaluate_arithmetic_constant(arg)
-                        arg_strs.append(arith_result if arith_result else 'None')
-                    elif arg_rule == 'Compare' or arg.get('type') == 'compare':
-                        # Handle Compare rules - evaluate at generation time if possible
-                        # This is common for option comparisons like: options.logic == "glitched"
-                        compare_result = self._evaluate_compare_rule(arg)
-                        if compare_result is not None:
-                            arg_strs.append(compare_result)
-                        else:
-                            arg_strs.append('None')
-                    elif arg_rule == 'Attribute':
-                        # Handle Attribute rules like entrance.parent_region
-                        # This is used by ALttP glitch rules (e.g., can_bomb_clip(kikiskip.parent_region))
-                        obj_info = arg.get('args', {}).get('object', {})
-                        attr_name = arg.get('args', {}).get('attr', '')
-                        if obj_info.get('rule') == 'Name' and attr_name == 'parent_region':
-                            # This is entrance_name.parent_region - resolve to actual region
-                            entrance_var = obj_info.get('args', {}).get('name', '')
-                            # Normalize the entrance name (lowercase, no spaces)
-                            entrance_key = entrance_var.lower().replace(' ', '')
-                            if entrance_key in self.entrance_regions:
-                                region_name = self.entrance_regions[entrance_key]
-                                arg_strs.append(repr(region_name))
-                            else:
-                                # Unknown entrance - fall back to None
-                                arg_strs.append('None')
-                        else:
-                            # Other Attribute patterns - fall back to None
-                            arg_strs.append('None')
-                    else:
-                        # For complex args, try to convert
-                        arg_strs.append('None')
-                else:
-                    arg_strs.append(repr(arg))
+                arg_str = self._convert_helper_arg(arg)
+                if arg_str is not None:  # None means skip this argument
+                    arg_strs.append(arg_str)
 
-            # Convert keyword arguments using the same logic
+            # Convert keyword arguments using the same shared method
             kwarg_strs = []
             for kw_name, kw_value in kwargs.items():
-                kw_value_str = self._convert_helper_kwarg_value(kw_value)
+                kw_value_str = self._convert_helper_arg(kw_value)
                 if kw_value_str is not None:
                     kwarg_strs.append(f'"{kw_name}": {kw_value_str}')
 
@@ -6391,37 +6090,6 @@ class RuleCodeGenerator:
         )
         self.required_imports.add('True_')
         return 'True_()'
-
-    def _convert_helper_kwarg_value(self, value: Any) -> str:
-        """Convert a single helper keyword argument value to Python code string.
-
-        This uses the same logic as positional arguments but returns the code string.
-        """
-        if isinstance(value, dict):
-            rule_type = value.get('rule', '')
-            if rule_type == 'Constant':
-                return repr(value.get('args', {}).get('value'))
-            elif rule_type == 'True_':
-                return 'True'
-            elif rule_type == 'False_':
-                return 'False'
-            elif value.get('type') == 'constant':
-                return repr(value.get('value'))
-            elif rule_type == 'SettingValue' or rule_type == 'AST_setting_value':
-                setting = value.get('args', {}).get('setting', '')
-                if setting in self.settings:
-                    return repr(self.settings[setting])
-                return 'None'
-            elif rule_type == 'OptionValue':
-                option = value.get('args', {}).get('option', '')
-                if option in self.settings:
-                    return repr(self.settings[option])
-                return 'None'
-            else:
-                # For complex values, try to return as repr
-                return 'None'
-        else:
-            return repr(value)
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
         """Convert placement_lookup to a location_item_name() call.
@@ -7017,20 +6685,8 @@ class HelperCodeGenerator:
         self._current_entrance = entrance
 
     def _escape_string(self, s: str, quote_char: str = '"') -> str:
-        """Escape a string for use in generated Python code.
-
-        Args:
-            s: The string to escape
-            quote_char: The quote character to escape (" or ')
-
-        Returns:
-            The escaped string (without surrounding quotes)
-        """
-        escaped = s.replace('\\', '\\\\')
-        if quote_char == '"':
-            return escaped.replace('"', '\\"')
-        else:
-            return escaped.replace("'", "\\'")
+        """Escape a string for use in generated Python code."""
+        return escape_string(s, quote_char)
 
     def _get_namedtuple_class_name(self, fields: tuple) -> str:
         """
@@ -7103,14 +6759,8 @@ class HelperCodeGenerator:
                         self.prescan_for_namedtuples(item)
 
     def get_function_name(self, helper_name: str) -> str:
-        """
-        Get the Python function name for a helper.
-
-        Returns the helper name as-is, without any prefix. The helpers are
-        defined in the world's Rules.py module, so they're already namespaced
-        and don't need a game-specific prefix.
-        """
-        return helper_name
+        """Get the Python function name for a helper."""
+        return get_helper_function_name(helper_name)
 
     def generate_helper_function(
         self,
@@ -8030,23 +7680,8 @@ class HelperCodeGenerator:
         return base_path
 
     def _expr_world_attribute(self, expr: Dict[str, Any]) -> str:
-        """Generate code to access a world attribute at runtime.
-
-        Always generates: state.multiworld.worlds[player].<name>
-        This pattern is recognized by the exporter's pattern detection.
-        """
-        attribute = expr.get('attribute', '')
-        base_path = f'state.multiworld.worlds[player].{attribute}'
-
-        # Handle indexed access (e.g., required_medallions[0])
-        if 'index' in expr:
-            index = expr['index']
-            if isinstance(index, int):
-                return f'{base_path}[{index}]'
-            elif isinstance(index, str):
-                return f'{base_path}[{repr(index)}]'
-
-        return base_path
+        """Generate code to access a world attribute at runtime."""
+        return generate_world_attribute_expr(expr)
 
     def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
         """Generate code to look up what item is placed at a location.
@@ -8640,188 +8275,21 @@ class HelperCodeGenerator:
         return f"({left} {op} {right})"
 
     def _is_placement_lookup(self, expr: Any) -> bool:
-        """Check if an expression is a placement_lookup type.
-
-        Placement lookups depend on actual item placements which are not available
-        during tracking. These should be treated as False in comparisons.
-        """
-        if not isinstance(expr, dict):
-            return False
-
-        # Check for placement_lookup type
-        if expr.get('type') == 'placement_lookup':
-            return True
-
-        # Check for Rule Builder format AST_placement_lookup
-        if expr.get('rule') == 'AST_placement_lookup':
-            return True
-
-        return False
+        """Check if an expression is a placement_lookup type."""
+        return is_placement_lookup(expr)
 
     def _extract_placement_location(self, operand: Any) -> Optional[str]:
-        """
-        Extract the location name from a placement_lookup expression.
-        Returns the location name as a string, or None if it cannot be extracted.
-        """
-        if not isinstance(operand, dict):
-            return None
-
-        # Handle placement_lookup type
-        if operand.get('type') == 'placement_lookup':
-            location_rule = operand.get('location', {})
-            if isinstance(location_rule, dict):
-                if location_rule.get('type') == 'constant':
-                    return location_rule.get('value', '')
-            elif isinstance(location_rule, str):
-                return location_rule
-            return None
-
-        # Handle Rule Builder format AST_placement_lookup
-        if operand.get('rule') == 'AST_placement_lookup':
-            args = operand.get('args', {})
-            return args.get('location', None)
-
-        return None
+        """Extract the location name from a placement_lookup expression."""
+        return extract_placement_location(operand)
 
     def _check_placement_comparison(self, left: Any, right: Any, op: str) -> Optional[bool]:
-        """
-        Check if a placement comparison can be resolved to a boolean using actual placements.
-
-        For self-locking rules like:
-            location_item_name(state, "Location A", player) == ("Left Tower Key", 1)
-
-        We check if the actual item placed at "Location A" matches the expected item.
-        Returns True/False if the comparison can be resolved, None otherwise.
-        """
-        # Determine which side is the placement_lookup
-        placement_operand = None
-        expected_operand = None
-
-        if self._is_placement_lookup(left):
-            placement_operand = left
-            expected_operand = right
-        elif self._is_placement_lookup(right):
-            placement_operand = right
-            expected_operand = left
-        else:
-            return None
-
-        # Extract the location name from the placement_lookup
-        location_name = self._extract_placement_location(placement_operand)
-        if not location_name:
-            return None
-
-        # Get the actual item placed at this location
-        actual_item = self.placements.get(location_name) if hasattr(self, 'placements') else None
-
-        # Extract the expected item from the comparison value
-        # Expected format is typically [item_name, player] or (item_name, player)
-        expected_item = None
-        if isinstance(expected_operand, list) and len(expected_operand) >= 1:
-            expected_item = expected_operand[0]
-        elif isinstance(expected_operand, dict):
-            # Could be a Tuple or list type in AST format
-            if expected_operand.get('type') == 'list':
-                values = expected_operand.get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('rule') == 'Tuple':
-                values = expected_operand.get('args', {}).get('value', [])
-                if values and len(values) >= 1:
-                    first_val = values[0]
-                    if isinstance(first_val, str):
-                        expected_item = first_val
-            elif expected_operand.get('type') == 'tuple':
-                # Handle tuple type with 'elements' key: {"type": "tuple", "elements": [...]}
-                elements = expected_operand.get('elements', [])
-                if elements and len(elements) >= 1:
-                    first_val = elements[0]
-                    if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                        expected_item = first_val.get('value')
-                    elif isinstance(first_val, str):
-                        expected_item = first_val
-
-        if expected_item is None:
-            return None
-
-        # Now compare actual vs expected
-        if op in ('==', 'eq'):
-            if actual_item is None:
-                return False  # No item placed means comparison fails
-            return actual_item == expected_item
-        elif op in ('!=', 'ne'):
-            if actual_item is None:
-                return True  # No item placed means inequality succeeds
-            return actual_item != expected_item
-        elif op in ('in', 'In'):
-            # For 'in' operator, expected_operand is a list of tuples like [('Item', player), ...]
-            # We need to extract all item names and check if actual_item is in that set
-            expected_items = self._extract_items_from_list(expected_operand)
-            if expected_items is None:
-                return None
-            if actual_item is None:
-                return False  # No item placed means not in the list
-            return actual_item in expected_items
-        elif op in ('not in', 'NotIn'):
-            # For 'not in' operator, check if actual_item is NOT in the expected list
-            expected_items = self._extract_items_from_list(expected_operand)
-            if expected_items is None:
-                return None
-            if actual_item is None:
-                return True  # No item placed means not in the list
-            return actual_item not in expected_items
-
-        return None
+        """Check if a placement comparison can be resolved using actual placements."""
+        placements = self.placements if hasattr(self, 'placements') else {}
+        return check_placement_comparison(left, right, op, placements)
 
     def _extract_items_from_list(self, operand: Any) -> Optional[set]:
-        """
-        Extract item names from a list of tuples for 'in' operator comparisons.
-
-        Expected formats:
-        - [('Item1', player), ('Item2', player), ...]
-        - {"type": "list", "value": [{"type": "tuple", "elements": [...]}, ...]}
-
-        Returns a set of item names, or None if the format is unrecognized.
-        """
-        if not isinstance(operand, dict):
-            return None
-
-        if operand.get('type') != 'list':
-            return None
-
-        values = operand.get('value', [])
-        items = set()
-
-        for item in values:
-            if isinstance(item, dict):
-                item_type = item.get('type', '')
-                if item_type == 'tuple':
-                    # {"type": "tuple", "elements": [{"type": "constant", "value": "ItemName"}, ...]}
-                    elements = item.get('elements', [])
-                    if elements and len(elements) >= 1:
-                        first_elem = elements[0]
-                        if isinstance(first_elem, dict) and first_elem.get('type') == 'constant':
-                            items.add(first_elem.get('value'))
-                        elif isinstance(first_elem, str):
-                            items.add(first_elem)
-                elif item_type == 'list':
-                    # Nested list format
-                    nested_values = item.get('value', [])
-                    if nested_values and len(nested_values) >= 1:
-                        first_val = nested_values[0]
-                        if isinstance(first_val, dict) and first_val.get('type') == 'constant':
-                            items.add(first_val.get('value'))
-                        elif isinstance(first_val, str):
-                            items.add(first_val)
-            elif isinstance(item, (list, tuple)) and len(item) >= 1:
-                # Direct tuple/list: ('ItemName', player)
-                items.add(item[0])
-
-        return items if items else None
+        """Extract item names from a list of tuples for 'in' operator comparisons."""
+        return extract_items_from_list(operand)
 
     def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
         """Generate binary operation expression."""
@@ -9560,67 +9028,8 @@ class HelperCodeGenerator:
         return f"sum({iterable_expr})"
 
     def _extract_constant(self, value: Any, default: Any = None) -> Any:
-        """Extract constant value from a potential constant wrapper.
-
-        Also handles self.<setting> attribute access and subscript operations
-        on settings (e.g., self.boss_order[0]).
-        """
-        if isinstance(value, dict):
-            if value.get('type') == 'constant':
-                return value.get('value', default)
-            if value.get('type') == 'value':
-                return value.get('value', default)
-            if value.get('type') == 'set':
-                # Extract all elements from the set
-                elements = value.get('elements', [])
-                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
-
-            # Handle binary operations on constants (e.g., 'Axe' + 's' -> 'Axes')
-            if value.get('type') in ('binary_op', 'binop'):
-                left = self._extract_constant(value.get('left', {}), None)
-                right = self._extract_constant(value.get('right', {}), None)
-                op = value.get('op', '+')
-                # Map operator names to actual operators
-                op_map = {'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/', 'FloorDiv': '//'}
-                op = op_map.get(op, op)
-                if left is not None and right is not None:
-                    try:
-                        if op == '+':
-                            return left + right
-                        elif op == '-':
-                            return left - right
-                        elif op == '*':
-                            return left * right
-                        elif op == '/':
-                            return left / right
-                        elif op == '//':
-                            return left // right
-                    except TypeError:
-                        pass
-                return default
-
-            # Handle subscript on settings (e.g., self.boss_order[0])
-            if value.get('type') == 'subscript':
-                base_value = self._extract_constant(value.get('value', {}), None)
-                index = self._extract_constant(value.get('index', {}), None)
-                if base_value is not None and index is not None:
-                    try:
-                        return base_value[index]
-                    except (IndexError, KeyError, TypeError):
-                        pass
-                return default
-
-            # Handle attribute access on self (e.g., self.boss_order)
-            if value.get('type') == 'attribute':
-                obj = value.get('object', {})
-                attr = value.get('attr', '')
-                if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
-                    if attr in self.settings:
-                        return self.settings[attr]
-                return default
-
-            return default
-        return value if value is not None else default
+        """Extract constant value from a potential constant wrapper."""
+        return extract_constant(value, default, self.settings)  # With settings for attribute lookups
 
     def _expr_f_string(self, expr: Dict[str, Any]) -> str:
         """Generate Python f-string expression.

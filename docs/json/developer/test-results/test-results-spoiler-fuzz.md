@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-03 03:19:01
+**Generated:** 2026-02-03 19:55:58
 
 **Source Data Created:** 2026-02-03T03:19:01.480259
 
-**Source Data Last Updated:** 2026-02-03T03:19:01.480265
+**Source Data Last Updated:** 2026-02-03T19:55:55.629929
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -23,8 +23,8 @@
 - **Total Games:** 73
 - **Games with 100% Pass Rate:** 61 (83.6%)
 - **Games with Failures:** 12 (16.4%)
-- **Total Fuzz Runs:** 730
-- **Successful Runs:** 639 (87.5%)
+- **Total Fuzz Runs:** 1720
+- **Successful Runs:** 1584 (92.1%)
 - **Generation Failures:** 14
 - **Test Failures:** 45
 - **Timed Out Runs:** 0
@@ -34,7 +34,7 @@
 | Game Name | Result | Total | Success | Gen Fail | Test Fail | Timeout | Success Rate | Rules Size |
 |-----------|:------:|:-----:|:-------:|:--------:|:---------:|:-------:|:------------:|:----------:|
 | A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 231.3KB |
-| A Link to the Past | ✅ | 10 | 9 | 0 | 0 | 0 | 90.0% | 665.3KB |
+| A Link to the Past | ✅ | 1000 | 954 | 0 | 0 | 0 | 95.4% | 665.3KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 410.7KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 26.0KB |

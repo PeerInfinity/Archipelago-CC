@@ -375,6 +375,9 @@ jobs:
           print(f"Updated {main_file} with {len(single_data.get('results', {}))} game results")
           PYTHON_SCRIPT
 
+          # Install pyyaml for doc generation scripts
+          pip install pyyaml
+
           # Regenerate documentation
           python scripts/docs/generate_spoiler_fuzz_chart.py || true
           python scripts/docs/generate_fuzz_summary_chart.py || true
@@ -717,12 +720,14 @@ jobs:
               for failure_type in fs:
                   fs[failure_type] = sorted(fs[failure_type])
 
-                  # Update total stats
-                  total_stats["total"] += spoiler_fuzz.get("total", 0)
-                  total_stats["success"] += spoiler_fuzz.get("success", 0)
-                  total_stats["generation_failure"] += spoiler_fuzz.get("generation_failure", 0)
-                  total_stats["test_failure"] += spoiler_fuzz.get("test_failure", 0)
-                  total_stats["timeout"] += spoiler_fuzz.get("timeout", 0)
+          # Compute total stats from combined results
+          for template_name in combined["results"]:
+              sf = combined["results"][template_name]["spoiler_fuzz"]
+              total_stats["total"] += sf.get("total", 0)
+              total_stats["success"] += sf.get("success", 0)
+              total_stats["generation_failure"] += sf.get("generation_failure", 0)
+              total_stats["test_failure"] += sf.get("test_failure", 0)
+              total_stats["timeout"] += sf.get("timeout", 0)
 
           combined["metadata"]["total_runs"] = total_stats["total"]
           combined["metadata"]["total_templates"] = len(combined["results"])
@@ -914,6 +919,9 @@ jobs:
 
           print(f"Updated {main_file} with {len(single_data.get('results', {}))} game results")
           PYTHON_SCRIPT
+
+          # Install pyyaml for doc generation scripts
+          pip install pyyaml
 
           # Regenerate documentation
           python scripts/docs/generate_spoiler_fuzz_chart.py || true
