@@ -31,6 +31,12 @@ on:
         type: boolean
         default: false
 
+      max_gen_retries:
+        description: 'Max consecutive generation failures before counting as test failure'
+        required: false
+        type: number
+        default: 10
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -138,6 +144,7 @@ jobs:
           echo "Using seed: ${{ inputs.seed || 'random' }}"
           echo "Runs per test: ${{ inputs.runs_per_test }}"
           echo "Max players: ${{ inputs.max_players }}"
+          echo "Max gen retries: ${{ inputs.max_gen_retries }}"
 
           # Determine debug mode include list
           DEBUG_INCLUDE=""
@@ -149,6 +156,7 @@ jobs:
           CMD="python scripts/test/test-multiworld-ut-fuzz.py"
           CMD="$CMD --runs ${{ inputs.runs_per_test }}"
           CMD="$CMD --max-players ${{ inputs.max_players }}"
+          CMD="$CMD --max-consecutive-gen-failures ${{ inputs.max_gen_retries }}"
 
           if [ "${{ inputs.seed }}" != "" ]; then
             CMD="$CMD --seed ${{ inputs.seed }}"
@@ -200,6 +208,7 @@ jobs:
             Seed: ${{ inputs.seed || 'random' }}
             Runs per test: ${{ inputs.runs_per_test }}
             Max players: ${{ inputs.max_players }}
+            Max gen retries: ${{ inputs.max_gen_retries }}
             Clean start: ${{ inputs.clean_start }}
             Debug mode: ${{ inputs.debug_mode }}
 
