@@ -387,6 +387,18 @@ scripts/
 │   ├── spoiler-full/
 │   ├── multiplayer/
 │   └── multiworld/
+│
+├── test/fixtures/                # Test fixture data
+│   ├── fuzzer_original/          # Original fuzzer test data
+│   │   └── README.md             # Fuzzer fixture documentation
+│   └── tracker_original/         # Universal Tracker test data
+│       └── docs/                 # Tracker integration docs
+│           ├── setup.md          # Setup instructions
+│           ├── apworld-integration.md  # APWorld integration
+│           ├── client-integration.md   # Client integration
+│           ├── map-integration.md      # Map integration
+│           └── re-gen-passthrough.md   # Re-generation passthrough
+│
 └── README.md                     # This file
 ```
 
@@ -396,6 +408,24 @@ scripts/
 - Prevents accidental execution of library modules
 - Scalable as the number of scripts grows
 - Easier to maintain and document
+
+## Test Fixtures
+
+The `test/fixtures/` directory contains test data and documentation for integration testing:
+
+### Fuzzer Fixtures
+
+- **[Fuzzer Original README](test/fixtures/fuzzer_original/README.md)** - Documentation for the original fuzzer test data
+
+### Universal Tracker Fixtures
+
+Documentation for Universal Tracker integration testing:
+
+- **[Setup](test/fixtures/tracker_original/docs/setup.md)** - Initial setup instructions
+- **[APWorld Integration](test/fixtures/tracker_original/docs/apworld-integration.md)** - APWorld packaging integration
+- **[Client Integration](test/fixtures/tracker_original/docs/client-integration.md)** - Client connection integration
+- **[Map Integration](test/fixtures/tracker_original/docs/map-integration.md)** - Map display integration
+- **[Re-Gen Passthrough](test/fixtures/tracker_original/docs/re-gen-passthrough.md)** - Re-generation passthrough behavior
 
 ## Contributing
 

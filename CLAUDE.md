@@ -165,14 +165,15 @@ python scripts/setup/update_host_settings.py full-spoilers
 
 | Topic | Location |
 |-------|----------|
-| Main documentation portal | `docs/json/README.md` |
-| Developer documentation | `docs/json/developer/README.md` |
-| Frontend modules reference | `docs/json/modules/README.md` |
-| Exporter module | `exporter/README.md` |
-| World generator module | `world_generator/README.md` |
-| Rule Builder module | `rule_builder/README.md` |
-| Frontend overview | `frontend/README.md` |
-| Planning documents | `CC/docs/plans/README.md` |
+| Main documentation portal | [docs/json/README.md](docs/json/README.md) |
+| Developer documentation | [docs/json/developer/README.md](docs/json/developer/README.md) |
+| Frontend modules reference | [docs/json/modules/README.md](docs/json/modules/README.md) |
+| Exporter module | [exporter/README.md](exporter/README.md) |
+| World generator module | [world_generator/README.md](world_generator/README.md) |
+| Rule Builder module | [rule_builder/README.md](rule_builder/README.md) |
+| Frontend overview | [frontend/README.md](frontend/README.md) |
+| Claude Code instructions | [CC/README.md](CC/README.md) |
+| Planning documents | [CC/docs/plans/README.md](CC/docs/plans/README.md) |
 
 ## Notes
 - For frontend debugging, `console.log` is easier than configuring the logging system
