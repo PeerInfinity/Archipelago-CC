@@ -4442,9 +4442,17 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         result = false;
 
         // Search through locations
-        for (const locPair of locations) {
-          if (!Array.isArray(locPair) || locPair.length < 2) continue;
-          const [locName, locPlayer] = locPair;
+        // Locations can be either strings or [locationName, player] pairs
+        for (const locEntry of locations) {
+          let locName, locPlayer;
+          if (Array.isArray(locEntry) && locEntry.length >= 2) {
+            [locName, locPlayer] = locEntry;
+          } else if (typeof locEntry === 'string') {
+            locName = locEntry;
+            locPlayer = searchPlayer; // Use the rule's player parameter
+          } else {
+            continue;
+          }
           if (typeof locName !== 'string') continue;
 
           // Look up item at this location

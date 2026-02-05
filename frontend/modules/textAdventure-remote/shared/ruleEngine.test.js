@@ -41,6 +41,8 @@ class MockContext {
     entrances = {},
     worldAttributes = {},
     checkedLocationsCount = 0,
+    locationRules = {},
+    regionAttributes = {},
   } = {}) {
     // Mark as a valid snapshot interface for ruleEngine validation
     this._isSnapshotInterface = true;
@@ -57,6 +59,8 @@ class MockContext {
     this.entrances = entrances; // Entrance access states: { entranceName: boolean }
     this.worldAttributes = worldAttributes; // World attributes: { attrName: value }
     this.checkedLocationsCount = checkedLocationsCount; // Number of checked locations
+    this.locationRules = locationRules; // Location rule results: { locationName: boolean }
+    this.regionAttributes = regionAttributes; // Region attributes: { regionName: { attr: value } }
   }
 
   /**
@@ -186,6 +190,53 @@ class MockContext {
    */
   getStaticData() {
     const playerId = this.playerId;
+
+    // Build regions map from test context data
+    const regions = new Map();
+
+    // Add regions from regionAttributes (for region_attribute tests)
+    // Format: { "LightWorld": { "is_light_world": true } }
+    for (const [regionName, attributes] of Object.entries(this.regionAttributes)) {
+      const existingRegion = regions.get(regionName) || { name: regionName, locations: [], exits: [] };
+      Object.assign(existingRegion, attributes);
+      regions.set(regionName, existingRegion);
+    }
+
+    // Add locations from locationRules (for location_rule_ref tests)
+    // Format: { "Chest in Cave": true }
+    // Creates a "TestRegion" with locations that have access_rule returning the boolean
+    if (Object.keys(this.locationRules).length > 0) {
+      const testRegion = regions.get('TestRegion') || { name: 'TestRegion', locations: [], exits: [] };
+      for (const [locationName, result] of Object.entries(this.locationRules)) {
+        testRegion.locations.push({
+          name: locationName,
+          access_rule: { type: 'constant', value: result }
+        });
+      }
+      regions.set('TestRegion', testRegion);
+    }
+
+    // Add entrances from entrances (for EntranceAccessRule tests)
+    // Format: { "Cave Entrance": true }
+    // Creates a "TestRegion" with exits that have access_rule returning the boolean
+    if (Object.keys(this.entrances).length > 0) {
+      const testRegion = regions.get('TestRegion') || { name: 'TestRegion', locations: [], exits: [] };
+      for (const [entranceName, result] of Object.entries(this.entrances)) {
+        testRegion.exits.push({
+          name: entranceName,
+          access_rule: { type: 'constant', value: result }
+        });
+      }
+      regions.set('TestRegion', testRegion);
+    }
+
+    // Build locationItems from placements (for placement_lookup tests)
+    // Format: { "Chest A": ["Sword", 1] } -> { "Chest A": { name: "Sword", player: 1 } }
+    const locationItems = {};
+    for (const [locationName, [itemName, player]] of Object.entries(this.placements)) {
+      locationItems[locationName] = { name: itemName, player: player || 1 };
+    }
+
     return {
       world: {
         [playerId]: {
@@ -196,8 +247,9 @@ class MockContext {
       placements: {
         [playerId]: this.placements,
       },
+      locationItems: locationItems,
       helpers: {},
-      regions: new Map(),
+      regions: regions,
     };
   }
 
@@ -288,6 +340,8 @@ class MockContext {
       worldAttributes: contextDict.worldAttributes || {},
       // Support both field names for checked locations count
       checkedLocationsCount: contextDict.checkedLocationsCount ?? contextDict.checkedLocations ?? 0,
+      locationRules: contextDict.locationRules || {},
+      regionAttributes: contextDict.regionAttributes || {},
     });
   }
 }
@@ -297,14 +351,6 @@ class MockContext {
  * These will be skipped until the features are added to ruleEngine.js.
  */
 const SKIP_TESTS = new Set([
-  // Rules requiring complex staticData setup
-  'location_rule_ref:location_rule_ref_accessible', // Requires location rules in staticData.regions
-  'location_rule_ref:location_rule_ref_inaccessible', // Requires location rules in staticData.regions
-  'region_attribute:region_attribute_access', // Requires region attributes in staticData.regions
-  'EntranceAccessRule:entrance_accessible', // Requires entrance rules in staticData.regions
-  'EntranceAccessRule:entrance_blocked', // Requires entrance rules in staticData.regions
-  'placement_lookup:placement_lookup_found', // Requires placements in staticData
-  'placement_search:placement_search_found', // Requires placements in staticData
   // Rules requiring features not yet implemented
   'method_call:list_append', // List method append not implemented
   'while_loop:while_countdown', // While loop not fully implemented
