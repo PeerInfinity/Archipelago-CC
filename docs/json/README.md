@@ -26,7 +26,7 @@ This section is for anyone who wants to use the JSON Web Client to play or track
 
 ### 2. Developer Documentation
 
-This section is for developers who want to understand, modify, or contribute to the project. It covers the project's architecture, development setup, and core concepts.
+This section is for developers who want to understand, modify, or contribute to the project. It covers the project's architecture, development setup, and core concepts. See the **[Developer Documentation Index](./developer/README.md)** for a complete overview.
 
 - **[Getting Started for Developers](./developer/getting-started.md)**: Your first stop for setting up a local development environment.
 - **[System Architecture](./developer/architecture.md)**: A high-level overview of the modular frontend and Python backend systems.
