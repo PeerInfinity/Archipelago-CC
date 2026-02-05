@@ -191,6 +191,7 @@ The fuzz tests complement the standard tests by covering the option space that d
 
 ## Related Documentation
 
+- [Fuzzer Debugging Guide](../guides/fuzzer-debugging.md) - Hands-on guide for running and debugging the fuzzer
 - [Spoiler Tests](./test-spoilers.md) - Standard spoiler tests with default options
 - [Fuzzer Modifications](../diffs/fuzzer-modifications.md) - Changes to the fuzzer for this fork
 - [Universal Tracker Modifications](../diffs/universal-tracker-modifications.md) - UT changes for this fork
