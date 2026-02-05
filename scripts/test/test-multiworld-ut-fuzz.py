@@ -693,15 +693,21 @@ def run_multiple_tests(
     world_dirs: List[str],
     use_sphere_validation: bool = False,
     test_iteration: int = 0,
-    ignore_generation_errors: bool = True
+    ignore_generation_errors: bool = True,
+    max_consecutive_gen_failures: int = 10
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
     For each run, regenerates random YAMLs for all games.
 
+    When generation fails, retries with the next seed instead of counting it as
+    a test failure. Only counts as a failure after max_consecutive_gen_failures
+    consecutive generation failures, or if validation fails after successful
+    generation.
+
     Args:
         multiworld_dir: Directory containing player YAML files
-        runs: Number of test runs
+        runs: Number of successful test runs to complete
         base_seed: Base random seed (None for random)
         project_root: Path to project root
         world_dirs: List of world directory names in the multiworld
@@ -711,6 +717,8 @@ def run_multiple_tests(
             composition changes (even with the same base_seed)
         ignore_generation_errors: If True, treat option-related generation errors
             as "ignored" rather than failures.
+        max_consecutive_gen_failures: Maximum consecutive generation failures before
+            counting as a test failure (default: 10)
 
     Returns aggregated results.
     """
@@ -724,6 +732,7 @@ def run_multiple_tests(
             "success": 0,
             "failure": 0,
             "ignored": 0,
+            "generation_failures": 0,
             "error": f"Need at least 2 templates (have {num_players})"
         }
 
@@ -733,18 +742,25 @@ def run_multiple_tests(
         "success": 0,
         "failure": 0,
         "ignored": 0,  # Track ignored generation errors
+        "generation_failures": 0,  # Track total generation failures (retried)
         "run_results": []
     }
 
-    for i in range(runs):
-        # Determine seed for this run
+    successful_runs = 0
+    seed_offset = 0
+    consecutive_gen_failures = 0
+
+    while successful_runs < runs:
+        # Determine seed for this attempt
         # Include test_iteration to ensure different YAMLs when multiworld composition changes
         if base_seed is not None:
-            seed = base_seed + i + (test_iteration * 100000)
+            seed = base_seed + seed_offset + (test_iteration * 100000)
         else:
             seed = random.randint(1, 999999999)
 
-        print(f"    Run {i + 1}/{runs} (seed {seed})...", end=" ", flush=True)
+        seed_offset += 1
+
+        print(f"    Run {successful_runs + 1}/{runs} (seed {seed})...", end=" ", flush=True)
 
         # Clean up all YAML files before regenerating
         # This ensures no stale files from previous iterations with different player numbers
@@ -766,23 +782,54 @@ def run_multiple_tests(
         test_result = run_multiworld_test(
             multiworld_dir, seed, project_root, use_sphere_validation, ignore_generation_errors
         )
-        results["run_results"].append({
-            "seed": seed,
-            "result": test_result
-        })
 
-        if test_result.get("generation_ignored"):
-            results["ignored"] += 1
-            results["success"] += 1  # Ignored counts as success
-            print("IGNORED (option error)")
-        elif test_result["passed"]:
-            results["success"] += 1
-            print("PASS")
+        # Check if this was a generation failure (not a validation failure)
+        is_generation_failure = (
+            not test_result.get("generation_success", False) and
+            not test_result.get("generation_ignored", False)
+        )
+
+        if is_generation_failure:
+            # Generation failed - retry with next seed
+            consecutive_gen_failures += 1
+            results["generation_failures"] += 1
+            error = test_result.get("error") or "Unknown generation error"
+            print(f"GEN FAIL ({consecutive_gen_failures}/{max_consecutive_gen_failures}): {error[:40]}...")
+
+            if consecutive_gen_failures >= max_consecutive_gen_failures:
+                # Too many consecutive failures - count as a real failure
+                print(f"    Exceeded {max_consecutive_gen_failures} consecutive generation failures")
+                results["run_results"].append({
+                    "seed": seed,
+                    "result": test_result
+                })
+                results["failure"] += 1
+                results["passed"] = False
+                successful_runs += 1  # Count this as a completed (failed) run
+                consecutive_gen_failures = 0  # Reset for next run
         else:
-            results["failure"] += 1
-            results["passed"] = False
-            error = test_result.get("error") or "Unknown error"
-            print(f"FAIL: {error[:50]}...")
+            # Generation succeeded (or was ignored) - this counts as a run
+            consecutive_gen_failures = 0  # Reset consecutive failure counter
+            results["run_results"].append({
+                "seed": seed,
+                "result": test_result
+            })
+
+            if test_result.get("generation_ignored"):
+                results["ignored"] += 1
+                results["success"] += 1  # Ignored counts as success
+                print("IGNORED (option error)")
+            elif test_result["passed"]:
+                results["success"] += 1
+                print("PASS")
+            else:
+                # Validation failed (generation succeeded but validation didn't)
+                results["failure"] += 1
+                results["passed"] = False
+                error = test_result.get("error") or "Unknown error"
+                print(f"FAIL: {error[:50]}...")
+
+            successful_runs += 1
 
     return results
 
@@ -895,6 +942,14 @@ def main():
         action='store_true',
         help='Count all generation errors as failures, even option-related ones.'
     )
+    parser.add_argument(
+        '--max-consecutive-gen-failures',
+        type=int,
+        default=10,
+        help='Maximum consecutive generation failures before counting as a test failure. '
+             'When generation fails, the test retries with the next seed. After this many '
+             'consecutive failures, it counts as a real failure. (default: 10)'
+    )
 
     args = parser.parse_args()
 
@@ -954,6 +1009,7 @@ def main():
     print(f"Max players: {args.max_players}")
     print(f"Validation mode: {'sphere (in-process)' if args.sphere_validation and not args.ut_validation else 'UT (subprocess)'}")
     print(f"Ignore generation errors: {ignore_generation_errors}")
+    print(f"Max consecutive generation failures: {args.max_consecutive_gen_failures}")
     print()
 
     # Compute output filename
@@ -1107,7 +1163,8 @@ def main():
             world_dirs=games_in_multiworld,
             use_sphere_validation=args.sphere_validation and not args.ut_validation,
             test_iteration=test_iteration,
-            ignore_generation_errors=ignore_generation_errors
+            ignore_generation_errors=ignore_generation_errors,
+            max_consecutive_gen_failures=args.max_consecutive_gen_failures
         )
         test_iteration += 1  # Increment for next test to get different YAMLs
 

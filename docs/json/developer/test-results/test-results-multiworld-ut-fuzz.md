@@ -4,7 +4,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-05 02:49:35
+**Generated:** 2026-02-04 19:00:09
 
 **Source Data Created:** 2026-02-05T02:22:06.097018
 
@@ -21,27 +21,10 @@
 ## Summary
 
 - **Total Games Tested:** 59
-- **Games in Final Multiworld:** 9
 - **Games Passed:** 42
 - **Games Failed:** 17
 - **Games Pending (< 2 players):** 0
 - **Rejected Games:** 17
-
-## Final Multiworld Composition
-
-The following 9 games successfully integrate into a multiworld:
-
-| # | World Directory | Game Name |
-|:-:|-----------------|----------|
-| 1 | noita | Noita |
-| 2 | osrs | Old School Runescape |
-| 3 | paint | Paint |
-| 4 | ror2 | Risk of Rain 2 |
-| 5 | sa2b | Sonic Adventure 2 Battle |
-| 6 | subnautica | Subnautica |
-| 7 | smw | Super Mario World |
-| 8 | wargroove | Wargroove |
-| 9 | yoshisisland | Yoshi's Island |
 
 ## Test Results
 
@@ -106,6 +89,56 @@ The following 9 games successfully integrate into a multiworld:
 | Wargroove | wargroove | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Yoshi's Island | yoshisisland | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | shapez | shapez | 10 | 10 | ❌ Failed | ❌ 33% (1/3) |
+
+## Successfully Integrated Games
+
+The following 42 games successfully integrate into a multiworld:
+
+| # | World Directory | Game Name |
+|:-:|-----------------|----------|
+| 1 | ahit | A Hat in Time |
+| 2 | alttp | A Link to the Past |
+| 3 | shorthike | A Short Hike |
+| 4 | apquest | APQuest |
+| 5 | adventure | Adventure |
+| 6 | aquaria | Aquaria |
+| 7 | bakingadventure | Baking Adventure |
+| 8 | bumpstik | Bumper Stickers |
+| 9 | cvcotm | Castlevania - Circle of the Moon |
+| 10 | cv64 | Castlevania 64 |
+| 11 | checksfinder | ChecksFinder |
+| 12 | cccharles | Choo-Choo Charles |
+| 13 | civ_6 | Civilization VI |
+| 14 | codingadventure | Coding Adventure |
+| 15 | dlcquest | DLCQuest |
+| 16 | doom_1993 | DOOM 1993 |
+| 17 | doom_ii | DOOM II |
+| 18 | dark_souls_3 | Dark Souls III |
+| 19 | dkc3 | Donkey Kong Country 3 |
+| 20 | factorio | Factorio |
+| 21 | faxanadu | Faxanadu |
+| 22 | heretic | Heretic |
+| 23 | hylics2 | Hylics 2 |
+| 24 | inscryption | Inscryption |
+| 25 | landstalker | Landstalker - The Treasures of King Nole |
+| 26 | lufia2ac | Lufia II Ancient Cave |
+| 27 | mlss | Mario & Luigi Superstar Saga |
+| 28 | mathadventure | Math Adventure |
+| 29 | mm2 | Mega Man 2 |
+| 30 | mmbn3 | MegaMan Battle Network 3 |
+| 31 | meritous | Meritous |
+| 32 | metamath | Metamath |
+| 33 | musedash | Muse Dash |
+| 34 | noita | Noita |
+| 35 | osrs | Old School Runescape |
+| 36 | paint | Paint |
+| 37 | ror2 | Risk of Rain 2 |
+| 38 | sa2b | Sonic Adventure 2 Battle |
+| 39 | subnautica | Subnautica |
+| 40 | smw | Super Mario World |
+| 41 | wargroove | Wargroove |
+| 42 | yoshisisland | Yoshi's Island |
+
 
 ## Rejected Games
 

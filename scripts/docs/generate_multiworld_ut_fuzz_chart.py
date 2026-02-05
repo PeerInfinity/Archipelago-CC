@@ -75,7 +75,6 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     second_pass_count = sum(1 for r in test_results.values() if r.get('second_pass'))
 
     md_content += f"- **Total Games Tested:** {total_tested}\n"
-    md_content += f"- **Games in Final Multiworld:** {len(final_multiworld)}\n"
     md_content += f"- **Games Passed:** {passed_count}\n"
     md_content += f"- **Games Failed:** {failed_count}\n"
     md_content += f"- **Games Pending (< 2 players):** {pending_count}\n"
@@ -84,23 +83,6 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     if second_pass_count > 0:
         md_content += f"- **Games Tested in Second Pass:** {second_pass_count}\n"
     md_content += f"- **Rejected Games:** {len(rejected_games)}\n\n"
-
-    # Final Multiworld Composition
-    if final_multiworld:
-        md_content += "## Final Multiworld Composition\n\n"
-        md_content += f"The following {len(final_multiworld)} games successfully integrate into a multiworld:\n\n"
-        md_content += "| # | World Directory | Game Name |\n"
-        md_content += "|:-:|-----------------|----------|\n"
-
-        for i, world_dir in enumerate(final_multiworld, 1):
-            # Find game name from results
-            game_name = world_dir
-            for template, data in test_results.items():
-                if data.get('world_dir') == world_dir:
-                    game_name = data.get('game', world_dir)
-                    break
-            md_content += f"| {i} | {world_dir} | {game_name} |\n"
-        md_content += "\n"
 
     # Test Results Table
     md_content += "## Test Results\n\n"
@@ -161,6 +143,23 @@ def generate_markdown(results: Dict[str, Any]) -> str:
             rate_display = "N/A"
 
         md_content += f"| {game_name} | {world_dir} | {player_num} | {mw_size} | {status_display} | {rate_display} |\n"
+
+    # Successfully Integrated Games
+    if assembly_order:
+        md_content += "\n## Successfully Integrated Games\n\n"
+        md_content += f"The following {len(assembly_order)} games successfully integrate into a multiworld:\n\n"
+        md_content += "| # | World Directory | Game Name |\n"
+        md_content += "|:-:|-----------------|----------|\n"
+
+        for i, world_dir in enumerate(assembly_order, 1):
+            # Find game name from results
+            game_name = world_dir
+            for template, data in test_results.items():
+                if data.get('world_dir') == world_dir:
+                    game_name = data.get('game', world_dir)
+                    break
+            md_content += f"| {i} | {world_dir} | {game_name} |\n"
+        md_content += "\n"
 
     # Rejected Games
     if rejected_games:
