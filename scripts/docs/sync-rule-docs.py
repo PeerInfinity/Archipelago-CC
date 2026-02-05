@@ -76,6 +76,8 @@ INTERNAL_TYPES = {
     'lambda', 'map', 'is',
     # Example/placeholder types in docs
     'some_unknown_type', 'rule', 'body_data', 'in',
+    # Function names supported by 'call' type (not independent rule types)
+    'all', 'any', 'bool', 'int', 'len', 'sum', 'abs', 'max', 'min',
 }
 
 # Types that are documented as "proposed" but not yet implemented
@@ -273,7 +275,8 @@ def extract_documented_types(filepath: Path) -> dict[str, RuleTypeInfo]:
                                  'function', 'player', 'locations', 'setting', 'option',
                                  'index', 'lower', 'upper', 'step', 'var', 'weight',
                                  'weights', 'default', 'key', 'keys', 'values',
-                                 'elements', 'parts', 'statements', 'orelse'}:
+                                 'elements', 'parts', 'statements', 'orelse',
+                                 'entrance_name', 'fake_pearl', 'func', 'item_names'}:
                     continue
                 if type_name not in rule_types:
                     rule_types[type_name] = RuleTypeInfo(
