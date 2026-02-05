@@ -48,7 +48,7 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     # Navigation
     md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
 
-    md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
+    md_content += "[📖 Learn about this test](../tests/test-multiworld-ut-fuzz.md)\n\n"
 
     # Metadata
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
