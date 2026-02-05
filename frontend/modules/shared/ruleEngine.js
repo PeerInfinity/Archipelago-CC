@@ -2687,9 +2687,13 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
         } else if (Array.isArray(list)) {
-          result = list[index]; // Access array index
+          // Python-style negative indexing: -1 = last element, -2 = second to last, etc.
+          const idx = index < 0 ? list.length + index : index;
+          result = list[idx]; // Access array index
         } else if (typeof list === 'string') {
-          result = list[index]; // String character access
+          // Python-style negative indexing for strings
+          const idx = index < 0 ? list.length + index : index;
+          result = list[idx]; // String character access
         } else if (list && typeof list === 'object') {
           result = list[index]; // Access object property
           // If list[index] itself is undefined (property doesn't exist), result remains undefined.
@@ -5802,11 +5806,12 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       // Evaluate an entrance's access_rule, optionally with a fake Moon Pearl state.
       // This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
       // is called with a fake pearl state, simulating having Moon Pearl.
-      const entranceName = args.entrance_name;
+      // Accept both 'entrance_name' (from Python export) and 'entrance' (simpler form)
+      const entranceName = args.entrance_name || args.entrance;
       const fakePearl = args.fake_pearl || false;
 
       if (!entranceName) {
-        log('warn', '[evaluateRuleBuilderRule] EntranceAccessRule missing entrance_name');
+        log('warn', '[evaluateRuleBuilderRule] EntranceAccessRule missing entrance_name/entrance');
         return undefined;
       }
 
@@ -6177,6 +6182,50 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       }
       // Fallback: delegate to AST evaluator
       return evaluateRule({ type: 'state_method', method: 'count_group_unique', args: [{ type: 'constant', value: groupName }] }, context, depth + 1, localScope);
+    }
+
+    // CountFromList: get cumulative count of items from a list
+    // Rule Builder: {"rule": "CountFromList", "args": {"item_names": ["Key", "Door"]}}
+    // Returns total count of all listed items (duplicates in list are counted separately)
+    case 'CountFromList': {
+      const itemNames = args.item_names || args.items || [];
+      if (!Array.isArray(itemNames) || itemNames.length === 0) {
+        return 0;
+      }
+      let total = 0;
+      for (const itemName of itemNames) {
+        if (typeof context?.countItem === 'function') {
+          total += context.countItem(itemName) || 0;
+        } else {
+          // Fallback: delegate to AST evaluator
+          const count = evaluateRule({ type: 'count_item', item: itemName }, context, depth + 1, localScope);
+          total += count || 0;
+        }
+      }
+      return total;
+    }
+
+    // UniqueCount: check if enough unique item types are present
+    // Rule Builder: {"rule": "UniqueCount", "args": {"threshold": 3, "items": [["ItemA", 1.0], ["ItemB", 1.0]]}}
+    // Returns true if the number of unique item types present >= threshold
+    case 'UniqueCount': {
+      const threshold = args.threshold || 0;
+      const items = args.items || [];
+      if (!Array.isArray(items)) {
+        return threshold <= 0;
+      }
+      let uniqueCount = 0;
+      for (const itemEntry of items) {
+        // Items can be either strings or [itemName, weight] tuples
+        const itemName = Array.isArray(itemEntry) ? itemEntry[0] : itemEntry;
+        const hasItem = typeof context?.hasItem === 'function'
+          ? context.hasItem(itemName)
+          : evaluateRule({ type: 'item_check', item: itemName }, context, depth + 1, localScope);
+        if (hasItem) {
+          uniqueCount++;
+        }
+      }
+      return uniqueCount >= threshold;
     }
 
     // SettingValue: get a game setting value

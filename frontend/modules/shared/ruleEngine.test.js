@@ -41,6 +41,8 @@ class MockContext {
     entrances = {},
     worldAttributes = {},
     checkedLocationsCount = 0,
+    locationRules = {},
+    regionAttributes = {},
   } = {}) {
     // Mark as a valid snapshot interface for ruleEngine validation
     this._isSnapshotInterface = true;
@@ -57,6 +59,8 @@ class MockContext {
     this.entrances = entrances; // Entrance access states: { entranceName: boolean }
     this.worldAttributes = worldAttributes; // World attributes: { attrName: value }
     this.checkedLocationsCount = checkedLocationsCount; // Number of checked locations
+    this.locationRules = locationRules; // Location rule results: { locationName: boolean }
+    this.regionAttributes = regionAttributes; // Region attributes: { regionName: { attr: value } }
   }
 
   /**
@@ -286,7 +290,10 @@ class MockContext {
       placements: contextDict.placements || {},
       entrances: contextDict.entrances || {},
       worldAttributes: contextDict.worldAttributes || {},
-      checkedLocationsCount: contextDict.checkedLocationsCount || 0,
+      // Support both field names for checked locations count
+      checkedLocationsCount: contextDict.checkedLocationsCount ?? contextDict.checkedLocations ?? 0,
+      locationRules: contextDict.locationRules || {},
+      regionAttributes: contextDict.regionAttributes || {},
     });
   }
 }
@@ -296,27 +303,19 @@ class MockContext {
  * These will be skipped until the features are added to ruleEngine.js.
  */
 const SKIP_TESTS = new Set([
-  // Rules requiring features not yet implemented
-  'CountFromList:count_from_list_basic', // CountFromList not implemented
-  'CountFromList:count_from_list_duplicates', // CountFromList not implemented
-  'UniqueCount:unique_count_all_present', // UniqueCount Rule Builder not implemented
-  'UniqueCount:unique_count_below_threshold', // UniqueCount Rule Builder not implemented
-  'location_rule_ref:location_rule_ref_accessible', // Requires location rules in context
-  'location_rule_ref:location_rule_ref_inaccessible', // Requires location rules in context
-  'region_attribute:region_attribute_access', // Requires region attributes in context
-  'method_call:list_append', // List method append not implemented
-  'while_loop:while_countdown', // While loop not fully implemented
-  'subscript:array_negative_index', // Negative array indexing not supported
+  // Rules requiring complex staticData setup
+  'location_rule_ref:location_rule_ref_accessible', // Requires location rules in staticData.regions
+  'location_rule_ref:location_rule_ref_inaccessible', // Requires location rules in staticData.regions
+  'region_attribute:region_attribute_access', // Requires region attributes in staticData.regions
   'EntranceAccessRule:entrance_accessible', // Requires entrance rules in staticData.regions
   'EntranceAccessRule:entrance_blocked', // Requires entrance rules in staticData.regions
   'placement_lookup:placement_lookup_found', // Requires placements in staticData
   'placement_search:placement_search_found', // Requires placements in staticData
+  // Rules requiring features not yet implemented
+  'method_call:list_append', // List method append not implemented
+  'while_loop:while_countdown', // While loop not fully implemented
   'function_call:state_method_via_function_call', // Requires state method function calls
   'unique_count:unique_count_check', // unique_count AST format with list args not fully implemented
-  'locations_checked:enough_locations_checked', // locations_checked needs fix for context
-  'locations_checked:not_enough_locations_checked', // locations_checked needs fix for context
-  'total_items_count:has_enough_total_items', // total_items_count comparison issue
-  'total_items_count:not_enough_total_items', // total_items_count comparison issue
 ]);
 
 /**
