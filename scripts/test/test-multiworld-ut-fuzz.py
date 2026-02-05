@@ -33,10 +33,12 @@ import json
 import logging
 import os
 import random
+import signal
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 from datetime import datetime
 from io import StringIO
@@ -231,7 +233,12 @@ def should_ignore_generation_output(error_output: str) -> bool:
     return False
 
 
-def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple[bool, str, Optional[Path], bool]:
+def run_generation(
+    multiworld_dir: Path,
+    seed: int,
+    project_root: Path,
+    timeout_seconds: int = 60
+) -> Tuple[bool, str, Optional[Path], bool]:
     """
     Run Generate.py with templates in multiworld directory.
 
@@ -258,7 +265,7 @@ def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple
             cmd,
             capture_output=True,
             text=True,
-            timeout=600,
+            timeout=timeout_seconds,
             cwd=str(project_root)
         )
 
@@ -284,10 +291,21 @@ def run_generation(multiworld_dir: Path, seed: int, project_root: Path) -> Tuple
         return False, str(e), None, False
 
 
+class GenerationTimeoutError(Exception):
+    """Raised when generation exceeds the timeout."""
+    pass
+
+
+def _timeout_handler(signum, frame):
+    """Signal handler for generation timeout."""
+    raise GenerationTimeoutError("Generation timed out")
+
+
 def run_generation_inprocess(
     multiworld_dir: Path,
     seed: int,
-    project_root: Path
+    project_root: Path,
+    timeout_seconds: int = 60
 ) -> Tuple[bool, str, Optional["MultiWorld"], Optional[Path], bool]:
     """
     Run generation in-process, keeping the MultiWorld object alive.
@@ -303,6 +321,10 @@ def run_generation_inprocess(
         return False, f"Need at least 2 templates (have {len(templates)})", None, None, False
 
     print(f"    Running in-process generation with {len(templates)} players, seed {seed}")
+
+    # Set up timeout using signal.alarm (Unix only)
+    old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
+    signal.alarm(timeout_seconds)
 
     try:
         # Import generation modules
@@ -324,6 +346,9 @@ def run_generation_inprocess(
         # Run the main generation - this returns the MultiWorld object!
         multiworld = ERmain(args, actual_seed)
 
+        # Cancel the alarm
+        signal.alarm(0)
+
         # Find the output archive
         output_dir = project_root / "output"
         archive_path = None
@@ -334,6 +359,9 @@ def run_generation_inprocess(
 
         return True, "", multiworld, archive_path, False
 
+    except GenerationTimeoutError:
+        return False, f"Generation timed out after {timeout_seconds} seconds", None, None, False
+
     except Exception as e:
         import traceback
         # Check if this is an error that should be ignored
@@ -341,6 +369,11 @@ def run_generation_inprocess(
         error_msg = f"Generation {'ignored' if is_ignored else 'failed'}: {str(e)[:300]}"
         traceback.print_exc()
         return False, error_msg, None, None, is_ignored
+
+    finally:
+        # Always restore the old handler and cancel any pending alarm
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, old_handler)
 
 
 def validate_multiworld_with_spheres(
@@ -566,7 +599,8 @@ def run_multiworld_test(
     seed: int,
     project_root: Path,
     use_sphere_validation: bool = False,
-    ignore_generation_errors: bool = True
+    ignore_generation_errors: bool = True,
+    timeout_seconds: int = 60
 ) -> Dict:
     """
     Run a complete multiworld test: generate and validate.
@@ -580,22 +614,26 @@ def run_multiworld_test(
             If False, use the original subprocess + UT validation approach.
         ignore_generation_errors: If True, treat option-related generation errors
             as "ignored" rather than failures.
+        timeout_seconds: Maximum time in seconds for generation (default: 60)
 
     Returns a dict with test results.
     """
+    start_time = time.perf_counter()
+
     result = {
         "passed": False,
         "generation_success": False,
         "generation_ignored": False,  # True if generation failed but was ignored
         "player_results": {},
         "error": None,
-        "validation_mode": "sphere" if use_sphere_validation else "ut"
+        "validation_mode": "sphere" if use_sphere_validation else "ut",
+        "elapsed_seconds": 0.0
     }
 
     if use_sphere_validation:
         # New approach: run generation in-process, validate with live MultiWorld
         gen_success, gen_error, multiworld, archive_path, was_ignored = run_generation_inprocess(
-            multiworld_dir, seed, project_root
+            multiworld_dir, seed, project_root, timeout_seconds
         )
 
         if not gen_success:
@@ -603,6 +641,7 @@ def run_multiworld_test(
             if was_ignored and ignore_generation_errors:
                 result["generation_ignored"] = True
                 result["passed"] = True  # Ignored errors count as passed
+            result["elapsed_seconds"] = time.perf_counter() - start_time
             return result
 
         result["generation_success"] = True
@@ -649,13 +688,16 @@ def run_multiworld_test(
 
     else:
         # Original approach: subprocess + UT validation
-        gen_success, gen_error, archive_path, was_ignored = run_generation(multiworld_dir, seed, project_root)
+        gen_success, gen_error, archive_path, was_ignored = run_generation(
+            multiworld_dir, seed, project_root, timeout_seconds
+        )
 
         if not gen_success:
             result["error"] = gen_error
             if was_ignored and ignore_generation_errors:
                 result["generation_ignored"] = True
                 result["passed"] = True  # Ignored errors count as passed
+            result["elapsed_seconds"] = time.perf_counter() - start_time
             return result
 
         result["generation_success"] = True
@@ -682,6 +724,7 @@ def run_multiworld_test(
         except Exception as e:
             result["error"] = f"Validation error: {e}"
 
+    result["elapsed_seconds"] = time.perf_counter() - start_time
     return result
 
 
@@ -694,7 +737,8 @@ def run_multiple_tests(
     use_sphere_validation: bool = False,
     test_iteration: int = 0,
     ignore_generation_errors: bool = True,
-    max_consecutive_gen_failures: int = 10
+    max_consecutive_gen_failures: int = 10,
+    timeout_seconds: int = 60
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
@@ -719,6 +763,7 @@ def run_multiple_tests(
             as "ignored" rather than failures.
         max_consecutive_gen_failures: Maximum consecutive generation failures before
             counting as a test failure (default: 10)
+        timeout_seconds: Maximum time in seconds for each generation (default: 600)
 
     Returns aggregated results.
     """
@@ -780,7 +825,8 @@ def run_multiple_tests(
                     f.write(yaml_content)
 
         test_result = run_multiworld_test(
-            multiworld_dir, seed, project_root, use_sphere_validation, ignore_generation_errors
+            multiworld_dir, seed, project_root, use_sphere_validation,
+            ignore_generation_errors, timeout_seconds
         )
 
         # Check if this was a generation failure (not a validation failure)
@@ -950,6 +996,12 @@ def main():
              'When generation fails, the test retries with the next seed. After this many '
              'consecutive failures, it counts as a real failure. (default: 10)'
     )
+    parser.add_argument(
+        '-t', '--timeout',
+        type=int,
+        default=600,
+        help='Timeout per generation in seconds (default: 60)'
+    )
 
     args = parser.parse_args()
 
@@ -1010,6 +1062,7 @@ def main():
     print(f"Validation mode: {'sphere (in-process)' if args.sphere_validation and not args.ut_validation else 'UT (subprocess)'}")
     print(f"Ignore generation errors: {ignore_generation_errors}")
     print(f"Max consecutive generation failures: {args.max_consecutive_gen_failures}")
+    print(f"Timeout per generation: {args.timeout}s")
     print()
 
     # Compute output filename
@@ -1164,7 +1217,8 @@ def main():
             use_sphere_validation=args.sphere_validation and not args.ut_validation,
             test_iteration=test_iteration,
             ignore_generation_errors=ignore_generation_errors,
-            max_consecutive_gen_failures=args.max_consecutive_gen_failures
+            max_consecutive_gen_failures=args.max_consecutive_gen_failures,
+            timeout_seconds=args.timeout
         )
         test_iteration += 1  # Increment for next test to get different YAMLs
 
