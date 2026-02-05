@@ -42,6 +42,11 @@ Both layers must support a rule type for it to work end-to-end.
 | `count_item` | Get item count as number | `item` | `{"type": "count_item", "item": "Rupee"}` |
 | `total_items_count` | Check total items collected | `count` | `{"type": "total_items_count", "count": 50}` |
 | `locations_checked` | Check locations checked count | `count` | `{"type": "locations_checked", "count": 10}` |
+| `CountFromList` | Get cumulative count of items from a list (Rule Builder) | `item_names: []` | `{"rule": "CountFromList", "args": {"item_names": ["Key", "Door"]}}` |
+| `WeightedSum` | Check if weighted sum of items meets threshold (Rule Builder) | `threshold`, `items: [[name, weight], ...]` | `{"rule": "WeightedSum", "args": [1.0, [["Sword", 0.5], ["Shield", 0.5]]]}` |
+| `UniqueCount` | Check if count of unique item types meets threshold (Rule Builder) | `threshold`, `items: [[name, weight], ...]` | `{"rule": "UniqueCount", "args": [12, [["Enemy1", 1], ["Enemy2", 1]]]}` |
+| `unique_count` | Check if weighted count of unique items >= threshold | `args: [threshold, [[item, weight], ...]]` | `{"rule": "unique_count", "args": [12.0, [["Item", 1.0], ...]]}` |
+| `prog_item_count` | Get count of progression item from accumulator | `key` | `{"type": "prog_item_count", "key": " coins"}` |
 
 ### Access & Reachability
 
@@ -57,6 +62,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `capability` | Check player capability | `capability` | `{"type": "capability", "capability": "can_swim"}` |
 | `state_method` | Call StateManager methods | `method`, `args: []` | `{"type": "state_method", "method": "can_reach", "args": [...]}` |
 | `player_id` | Get the current player's ID | (none) | `{"type": "player_id"}` |
+| `EntranceAccessRule` | Evaluate entrance access rule with optional fake state (Rule Builder) | `entrance_name`, `fake_pearl` | `{"rule": "EntranceAccessRule", "args": {"entrance_name": "Cave", "fake_pearl": true}}` |
 
 ### Placement Lookups
 
@@ -70,16 +76,23 @@ Both layers must support a rule type for it to work end-to-end.
 | Type | Description | Fields | Example |
 |------|-------------|--------|---------|
 | `constant` / `value` | Literal constant values | `value` | `{"type": "constant", "value": 5}` |
+| `Constant` | Literal constant value (Rule Builder) | `value` | `{"rule": "Constant", "args": {"value": 5}}` |
 | `name` | Variable/name reference | `name` | `{"type": "name", "name": "player"}` |
+| `Name` | Variable/name reference (Rule Builder) | `name` | `{"rule": "Name", "args": {"name": "player"}}` |
 | `attribute` | Property access (obj.attr) | `object`, `attr` | `{"type": "attribute", "object": {...}, "attr": "name"}` |
+| `Attribute` | Property access (Rule Builder) | `object`, `attr` | `{"rule": "Attribute", "args": {"object": {...}, "attr": "name"}}` |
 | `subscript` / `index` | Array/dict indexing | `value`/`object`, `index` | `{"type": "subscript", "value": {...}, "index": {...}}` |
 | `slice` | Array/string slicing | `value`, `lower`, `upper`, `step` | `{"type": "slice", "value": {...}, "lower": {...}, "upper": {...}}` |
 | `list` | Array literal | `value: []` | `{"type": "list", "value": [...]}` |
+| `List` | Array literal (Rule Builder) | `value: []` | `{"rule": "List", "args": {"value": [...]}}` |
 | `set` | Set literal (unique values) | `elements: []` | `{"type": "set", "elements": [...]}` |
 | `tuple` | Fixed array | `elements: []` | `{"type": "tuple", "elements": [...]}` |
+| `Tuple` | Fixed array (Rule Builder) | `value: []` | `{"rule": "Tuple", "args": {"value": [...]}}` |
 | `world_reference` | Reference to world object | (none) | `{"type": "world_reference"}` |
 | `option_value` | Get user-configurable option value | `option` | `{"type": "option_value", "option": "difficulty"}` |
+| `OptionValue` | Get user-configurable option value (Rule Builder) | `option` | `{"rule": "OptionValue", "args": {"option": "difficulty"}}` |
 | `world_attribute` | Get runtime world attribute | `attribute`, `index` (optional) | `{"type": "world_attribute", "attribute": "required_medallions", "index": 0}` |
+| `WorldAttribute` | Get runtime world attribute (Rule Builder) | `attribute`, `index` (optional) | `{"rule": "WorldAttribute", "args": {"attribute": "shop_items", "index": 0}}` |
 | `setting_value` | Get setting value (legacy) | `setting` | `{"type": "setting_value", "setting": "difficulty"}` |
 | `setting_check` | Check if setting equals value | `setting`, `value` | `{"type": "setting_check", "setting": "mode", "value": "hard"}` |
 | `f_string` | String formatting | `parts: [{type, value}]` | `{"type": "f_string", "parts": [...]}` |
@@ -92,6 +105,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `generic_helper` | Unconverted helper call | `name`, `args: []` | `{"type": "generic_helper", "name": "complex_check", "args": [...]}` |
 | `function_call` | Generic function call | `function`, `args: []` | `{"type": "function_call", "function": {...}, "args": [...]}` |
 | `method_call` | Method call on object | `object`, `method`, `args: []` | `{"type": "method_call", "object": {...}, "method": "check", "args": [...]}` |
+| `call` | Simple function call (world generator format) | `func`, `args: []` | `{"type": "call", "func": "max", "args": [...]}` |
 
 **Built-in math functions** (handled via `function_call` with `math.*` prefix):
 - `sqrt(x)` - Square root
@@ -100,7 +114,7 @@ Both layers must support a rule type for it to work end-to-end.
 - `ceil(x)` - Round up to nearest integer
 - `abs(x)` - Absolute value
 
-**Python built-in functions** (handled via `helper` type):
+**Python built-in functions** (handled via `helper` type or `call` type):
 - `any(iterable)` - True if any element is truthy
 - `all(iterable)` - True if all elements are truthy
 - `len(collection)` - Get length of collection
@@ -108,6 +122,8 @@ Both layers must support a rule type for it to work end-to-end.
 - `sorted(iterable)` - Return sorted list
 - `iter(iterable)` - Create stateful iterator from iterable (returns iterator object)
 - `next(iterator, default)` - Get next item from iterator and advance position (returns element or default)
+- `bool(value)` - Convert value to boolean
+- `int(value)` - Convert value to integer (truncates floats, parses strings)
 
 **Note on iter/next**: The frontend implements stateful iterators. `iter()` returns an iterator object `{__isIterator: true, items: [...], position: 0}`. Each call to `next()` returns the item at the current position and advances it, enabling patterns like `while target != None: ... target = next(iterator, None)`.
 
@@ -149,7 +165,9 @@ Both layers must support a rule type for it to work end-to-end.
 | Type | Description | Fields | Example |
 |------|-------------|--------|---------|
 | `all_of` | Apply rule to all items (AND) | `element_rule`, `iterator_info` | All items in a list must satisfy condition |
+| `AST_all_of` | Apply rule to all items (Rule Builder wrapper) | `element_rule`, `iterator_info` | `{"rule": "AST_all_of", "args": {"element_rule": {...}, "iterator_info": {...}}}` |
 | `any_of` | Apply rule to any item (OR) | `element_rule`, `iterator_info` | At least one item must satisfy condition |
+| `AST_any_of` | Apply rule to any item (Rule Builder wrapper) | `element_rule`, `iterator_info` | `{"rule": "AST_any_of", "args": {"element_rule": {...}, "iterator_info": {...}}}` |
 | `sum_of` | Sum numeric results over items | `element_rule`, `iterator_info` | `sum([state.count(x) for x in items])` |
 | `generator_expression` | Python generator expression | `element`, `comprehension` | Complex iteration patterns |
 | `weighted_sum` | Check weighted sum meets threshold | `args: [threshold, items]` | `{"rule": "weighted_sum", "args": [1.0, [["Item", 0.5], ...]]}` |
@@ -232,6 +250,7 @@ These types are used internally or as supporting structures:
 |------|-------------|-------|
 | `comprehension_details` | Iterator details for comprehensions | Used in `iterator_info` field of `all_of`/`any_of`/`sum_of` |
 | `dict_lambda_lookup` | Dict-based conditional evaluation | ALttP glitch rules: `rule_map.get(key, default)(state)` pattern |
+| `AST_dict_lambda_lookup` | Dict-based conditional (Rule Builder wrapper) | `{"rule": "AST_dict_lambda_lookup", "args": {"key": {...}, "cases": {...}, "default": {...}}}` |
 | `Filtered` | Wrapper rule with option-based filtering (Rule Builder) | Wraps child rule, evaluates child directly |
 | `formatted_value` | Individual formatted part of an f-string | Used internally within `f_string` parts |
 | `unknown` | Placeholder for unhandled expressions | Generated when AST node cannot be converted |
