@@ -1441,6 +1441,70 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'unique_count': {
+        // AST format: { type: 'unique_count', args: [threshold, items_list] }
+        // Counts unique items owned and returns true if count >= threshold
+        // Items can be [itemName, weight] pairs or simple strings (weight=1)
+        const argsArray = rule.args || [];
+        if (argsArray.length < 2) {
+          log('warn', '[evaluateRule] unique_count: missing args');
+          result = undefined;
+          break;
+        }
+
+        const threshold = evaluateRule(argsArray[0], context, depth + 1, localScope);
+        const items = evaluateRule(argsArray[1], context, depth + 1, localScope);
+
+        if (typeof threshold !== 'number') {
+          log('warn', '[evaluateRule] unique_count: invalid threshold', { threshold });
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(items)) {
+          log('warn', '[evaluateRule] unique_count: invalid items array', { items });
+          result = undefined;
+          break;
+        }
+
+        // Count unique items owned (each item adds weight if owned)
+        let total = 0;
+        for (const item of items) {
+          let itemName, weight;
+          if (Array.isArray(item) && item.length >= 2) {
+            [itemName, weight] = item;
+          } else if (typeof item === 'string') {
+            itemName = item;
+            weight = 1;
+          } else {
+            continue;
+          }
+
+          // Check if player has this item
+          let hasItem = false;
+          if (typeof context.hasItem === 'function') {
+            hasItem = context.hasItem(itemName);
+          } else if (typeof context.countItem === 'function') {
+            hasItem = (context.countItem(itemName) || 0) > 0;
+          }
+
+          if (hasItem) {
+            total += weight;
+          }
+
+          // Early exit if threshold met
+          if (total >= threshold) {
+            result = true;
+            break;
+          }
+        }
+
+        if (result !== true) {
+          result = total >= threshold;
+        }
+        break;
+      }
+
       case 'weighted_count_true': {
         // Weighted version of count_true for compact representation
         // Each condition has an associated weight (multiplicity)
@@ -1865,7 +1929,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       }
 
       case 'function_call': {
-        // Special handling for state method calls like state.CanAcquireAtLeast()
+        // Special handling for state method calls like state.has(), state.count(), etc.
         // In the exported rules, these appear as: {type: 'function_call', function: {type: 'attribute', object: {type: 'constant', value: true}, attr: 'MethodName'}}
         // The constant 'true' is a placeholder for the state/world object
         if (rule.function?.type === 'attribute' &&
@@ -1873,24 +1937,67 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             rule.function.object.value === true) {
 
           const methodName = rule.function.attr;
-          const args = (rule.args || []).map(
+          const methodArgs = (rule.args || []).map(
             (arg) => evaluateRule(arg, context, depth + 1, localScope)
           );
 
           // If any argument evaluation results in undefined, return undefined
-          if (args.some((arg) => arg === undefined)) {
+          if (methodArgs.some((arg) => arg === undefined)) {
             result = undefined;
             break;
           }
 
-          // For SMZ3, prepend 'smz3_' to the method name to get the helper function name
+          // First, try common state methods mapped directly to context methods
+          let handled = true;
+          switch (methodName) {
+            case 'has':
+              // state.has(item) -> context.hasItem(item)
+              if (typeof context.hasItem === 'function') {
+                result = context.hasItem(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'item_check', item: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'count':
+              // state.count(item) -> context.countItem(item)
+              if (typeof context.countItem === 'function') {
+                result = context.countItem(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'count_item', item: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'can_reach':
+              // state.can_reach(region) -> context.canReach(region)
+              if (typeof context.canReach === 'function') {
+                result = context.canReach(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'can_reach', region: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'has_group':
+              // state.has_group(group, count) -> context.hasGroup(group, count)
+              if (typeof context.hasGroup === 'function') {
+                result = context.hasGroup(methodArgs[0], methodArgs[1] || 1);
+              } else {
+                result = evaluateRule({ type: 'group_check', group: methodArgs[0], count: methodArgs[1] || 1 }, context, depth + 1, localScope);
+              }
+              break;
+            default:
+              handled = false;
+          }
+
+          if (handled) {
+            break;
+          }
+
+          // For SMZ3 and other game-specific methods, prepend 'smz3_' to the method name
           // This handles methods like CanAcquireAtLeast, CanAcquireAll, etc.
           const helperName = `smz3_${methodName}`;
 
           // Call the helper function through context.executeHelper
           if (context.executeHelper) {
             try {
-              result = context.executeHelper(helperName, ...args);
+              result = context.executeHelper(helperName, ...methodArgs);
               break;
             } catch (error) {
               logError(
@@ -4853,10 +4960,19 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       case 'while_loop': {
         // Execute a loop body while condition is true
         // Similar to for_iter but with a condition check instead of iteration
+        // Accepts both 'condition' and 'test' property names for the loop condition
 
         // Ensure we have a scope
         if (localScope === null) {
           log('warn', '[evaluateRule] while_loop used without local scope');
+          result = undefined;
+          break;
+        }
+
+        // Get the condition rule (support both 'condition' and 'test' property names)
+        const conditionRule = rule.condition || rule.test;
+        if (!conditionRule) {
+          log('warn', '[evaluateRule] while_loop missing condition/test');
           result = undefined;
           break;
         }
@@ -4868,7 +4984,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
 
         while (!breakWhileLoop && whileIterCount < maxWhileIterations) {
           // Evaluate condition each iteration
-          const conditionResult = evaluateRule(rule.condition, context, depth + 1, localScope);
+          const conditionResult = evaluateRule(conditionRule, context, depth + 1, localScope);
 
           // If condition is false or undefined, exit loop
           if (!conditionResult) {
@@ -4999,6 +5115,28 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             case '__contains__':
               // value in list
               result = obj.includes(args[0]);
+              break;
+            case 'append':
+              // list.append(value) - add value to end of list (mutates in place)
+              // Returns undefined like Python, but the array is mutated
+              obj.push(args[0]);
+              result = undefined;
+              break;
+            case 'extend':
+              // list.extend(iterable) - add all items from iterable to list
+              if (Array.isArray(args[0])) {
+                obj.push(...args[0]);
+              }
+              result = undefined;
+              break;
+            case 'pop':
+              // list.pop() - remove and return last element
+              result = obj.pop();
+              break;
+            case 'clear':
+              // list.clear() - remove all elements
+              obj.length = 0;
+              result = undefined;
               break;
             default:
               log('warn', `[evaluateRule] Unknown array method: ${rule.method}`);

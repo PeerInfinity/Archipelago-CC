@@ -351,11 +351,7 @@ class MockContext {
  * These will be skipped until the features are added to ruleEngine.js.
  */
 const SKIP_TESTS = new Set([
-  // Rules requiring features not yet implemented
-  'method_call:list_append', // List method append not implemented
-  'while_loop:while_countdown', // While loop not fully implemented
-  'function_call:state_method_via_function_call', // Requires state method function calls
-  'unique_count:unique_count_check', // unique_count AST format with list args not fully implemented
+  // All rule type tests are now implemented!
 ]);
 
 /**
