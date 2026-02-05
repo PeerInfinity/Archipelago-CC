@@ -35,7 +35,7 @@ GENERATORS: List[Tuple[str, str, str, List[str], bool]] = [
     (
         "ut-fuzz",
         "generate_ut_fuzz_chart.py",
-        "UT fuzz charts and comparisons (original/modified/hybrid, bundled/apworlds)",
+        "UT fuzz charts and comparisons (original/worldgen/hybrid, bundled/apworlds)",
         ["ut", "fuzz"],
         False
     ),

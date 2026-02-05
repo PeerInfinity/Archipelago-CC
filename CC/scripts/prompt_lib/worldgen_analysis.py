@@ -301,12 +301,12 @@ def load_spoiler_fuzz_test_results(project_root, seed_mode='fixed'):
         return {}
 
 
-def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fixed', world_source='bundled'):
+def load_ut_fuzz_test_results(project_root, ut_version='worldgen', seed_mode='fixed', world_source='bundled'):
     """Load the UT fuzz test results JSON file.
 
     Args:
         project_root: Path to the project root
-        ut_version: 'original' or 'modified'
+        ut_version: 'original' or 'worldgen'
         seed_mode: 'fixed' or 'random'
         world_source: 'bundled' or 'apworlds'
 
@@ -333,7 +333,7 @@ def load_ut_fuzz_test_results(project_root, ut_version='modified', seed_mode='fi
         return {}
 
 
-def load_ut_fuzz_single_game_results(project_root, ut_version='modified', seed=None):
+def load_ut_fuzz_single_game_results(project_root, ut_version='worldgen', seed=None):
     """Load the single-game UT fuzz test results JSON file.
 
     These are results from the test-ut-fuzz-single-game.yml workflow, which tests
@@ -341,7 +341,7 @@ def load_ut_fuzz_single_game_results(project_root, ut_version='modified', seed=N
 
     Args:
         project_root: Path to the project root
-        ut_version: 'original', 'modified', or 'hybrid'
+        ut_version: 'original', 'worldgen', or 'hybrid'
         seed: Specific seed number to load results for, or None to auto-detect
 
     Returns:
@@ -393,7 +393,7 @@ def load_ut_fuzz_single_game_results(project_root, ut_version='modified', seed=N
         return {}
 
 
-def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed=None):
+def get_ut_fuzz_single_failure(project_root, ut_version='worldgen', seed=None):
     """Get the lowest-numbered failing seed from single-game UT fuzz results.
 
     Returns a dict with failure details if a failure is found, None otherwise.
@@ -413,7 +413,7 @@ def get_ut_fuzz_single_failure(project_root, ut_version='modified', seed=None):
     return all_failures[0] if all_failures else None
 
 
-def get_ut_fuzz_all_single_failures(project_root, ut_version='modified', seed=None):
+def get_ut_fuzz_all_single_failures(project_root, ut_version='worldgen', seed=None):
     """Get all failing seeds from single-game UT fuzz results.
 
     Returns a list of dicts, one for each failing seed. Each dict includes:
@@ -551,7 +551,7 @@ def load_worldgen_exclude_list(project_root, include_all_excludes=False):
         return set()
 
 
-def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='modified', worldgen_test_mode='canonical'):
+def get_ut_fuzz_worldgen_pass_failures(project_root, ut_version='worldgen', worldgen_test_mode='canonical'):
     """Get games that fail UT fuzz test, excluding those in exclude lists.
 
     This identifies games where:
@@ -650,7 +650,7 @@ def load_ut_fuzz_apworld_exclude_list(project_root):
         return set()
 
 
-def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode='fixed'):
+def get_ut_fuzz_apworld_failures(project_root, ut_version='worldgen', seed_mode='fixed'):
     """Get apworlds that fail the UT fuzz test.
 
     This identifies apworlds (community-built .apworld files) that fail the
@@ -658,7 +658,7 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
 
     Args:
         project_root: Path to the project root
-        ut_version: 'original' or 'modified' (default: 'modified')
+        ut_version: 'original' or 'worldgen' (default: 'worldgen')
         seed_mode: 'fixed' or 'random' (default: 'fixed')
 
     Returns:
@@ -722,7 +722,7 @@ def get_ut_fuzz_apworld_failures(project_root, ut_version='modified', seed_mode=
     return failures
 
 
-def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_mode='fixed'):
+def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='worldgen', seed_mode='fixed'):
     """Get games that pass UT fuzz testing but fail spoiler fuzz testing.
 
     This identifies games where:
@@ -735,7 +735,7 @@ def get_spoiler_fuzz_ut_pass_failures(project_root, ut_version='modified', seed_
 
     Args:
         project_root: Path to the project root
-        ut_version: 'original' or 'modified' for UT fuzz results
+        ut_version: 'original' or 'worldgen' for UT fuzz results
         seed_mode: 'fixed' or 'random' for both tests
 
     Returns:

@@ -177,9 +177,9 @@ REGENERATION_COMMANDS: Dict[str, Tuple[str, str, Optional[str], Optional[str]]] 
     ),
 
     # UT fuzz charts
-    r'test-results-ut-fuzz-modified\.md$': (
-        'python scripts/docs/generate_ut_fuzz_chart.py --modified',
-        'Generate UT fuzz chart (modified)',
+    r'test-results-ut-fuzz-worldgen\.md$': (
+        'python scripts/docs/generate_ut_fuzz_chart.py --worldgen',
+        'Generate UT fuzz chart (worldgen)',
         'Test UT Fuzzer',
         'test-ut-fuzz.yml'
     ),
@@ -195,9 +195,9 @@ REGENERATION_COMMANDS: Dict[str, Tuple[str, str, Optional[str], Optional[str]]] 
         'Test UT Fuzzer',
         'test-ut-fuzz.yml'
     ),
-    r'test-results-ut-fuzz-apworlds-modified\.md$': (
-        'python scripts/docs/generate_ut_fuzz_chart.py --apworld --modified',
-        'Generate UT fuzz chart (apworld modified)',
+    r'test-results-ut-fuzz-apworlds-worldgen\.md$': (
+        'python scripts/docs/generate_ut_fuzz_chart.py --apworld --worldgen',
+        'Generate UT fuzz chart (apworld worldgen)',
         'Test UT Fuzzer',
         'test-ut-fuzz.yml'
     ),

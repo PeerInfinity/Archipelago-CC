@@ -4,7 +4,7 @@
     "last_updated": "2026-01-24T05:05:20.633704",
     "script_version": "1.0.0",
     "combined_from": 10,
-    "ut_version": "modified",
+    "ut_version": "worldgen",
     "world_source": "apworlds",
     "seed_mode": "fixed",
     "seed": 1,

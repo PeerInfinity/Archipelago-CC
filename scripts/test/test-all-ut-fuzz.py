@@ -27,6 +27,8 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -285,7 +287,8 @@ def run_fuzzer_test(
     disallow_options: Optional[str] = None,
     fractional_spheres: bool = False,
     stop_on_first_failure: bool = False,
-    number_by_seed: bool = False
+    number_by_seed: bool = False,
+    process_timeout: Optional[int] = None
 ) -> Dict:
     """
     Run fuzzer test for a single game.
@@ -301,6 +304,8 @@ def run_fuzzer_test(
         fractional_spheres: Enable fractional sphere logic for UT comparison
         stop_on_first_failure: Stop fuzzing after the first failure
         number_by_seed: Number output files by actual seed instead of iteration index
+        process_timeout: Total timeout for the entire fuzz.py subprocess in seconds.
+                        If None, calculated as (runs * timeout) + 300.
 
     Returns a dict with:
         - passed: bool (True if no failures)
@@ -322,8 +327,17 @@ def run_fuzzer_test(
         "ignored": 0,
         "error": None,
         "errors": {},
-        "explain_stats": None
+        "explain_stats": None,
+        "elapsed_seconds": 0.0
     }
+
+    # Track elapsed time
+    start_time = time.perf_counter()
+
+    # Calculate process timeout if not specified
+    # Default: per-generation timeout * runs + 5 min buffer for UT verification
+    if process_timeout is None:
+        process_timeout = (runs * timeout) + 300
 
     # Clean up any previous fuzz output
     if FUZZ_OUTPUT_DIR.exists():
@@ -359,6 +373,7 @@ def run_fuzzer_test(
         cmd.append("--number-by-seed")
 
     print(f"  Running: {' '.join(cmd[:10])}...")
+    print(f"  Process timeout: {process_timeout}s")
 
     try:
         # Stream output in real-time for progress visibility
@@ -371,24 +386,44 @@ def run_fuzzer_test(
             cwd=str(PROJECT_ROOT)
         )
 
-        # Read and print stdout in real-time
-        stdout_lines = []
-        while True:
-            line = proc.stdout.readline()
-            if line:
-                print(f"    {line.rstrip()}")
-                stdout_lines.append(line)
-                sys.stdout.flush()
-            elif proc.poll() is not None:
-                # Process finished, read any remaining output
-                for remaining_line in proc.stdout:
-                    print(f"    {remaining_line.rstrip()}")
-                    stdout_lines.append(remaining_line)
-                break
+        # Set up a timer to kill the process if it exceeds the timeout
+        process_timed_out = [False]  # Use list to allow modification in nested function
 
-        # Get stderr after process completes
-        stderr_output = proc.stderr.read()
-        returncode = proc.returncode
+        def kill_on_timeout():
+            process_timed_out[0] = True
+            print(f"    Process timeout ({process_timeout}s) exceeded, killing...")
+            proc.kill()
+
+        timer = threading.Timer(process_timeout, kill_on_timeout)
+        timer.start()
+
+        try:
+            # Read and print stdout in real-time
+            stdout_lines = []
+            while True:
+                line = proc.stdout.readline()
+                if line:
+                    print(f"    {line.rstrip()}")
+                    stdout_lines.append(line)
+                    sys.stdout.flush()
+                elif proc.poll() is not None:
+                    # Process finished, read any remaining output
+                    for remaining_line in proc.stdout:
+                        print(f"    {remaining_line.rstrip()}")
+                        stdout_lines.append(remaining_line)
+                    break
+
+            # Get stderr after process completes
+            stderr_output = proc.stderr.read()
+            returncode = proc.returncode
+        finally:
+            timer.cancel()
+
+        # Check if we timed out
+        if process_timed_out[0]:
+            result["error"] = f"Process timed out after {process_timeout} seconds"
+            result["elapsed_seconds"] = time.perf_counter() - start_time
+            return result
 
         # Check for report.json
         report_file = FUZZ_OUTPUT_DIR / "report.json"
@@ -436,6 +471,8 @@ def run_fuzzer_test(
     except Exception as e:
         result["error"] = str(e)
 
+    # Record elapsed time
+    result["elapsed_seconds"] = time.perf_counter() - start_time
     return result
 
 
@@ -488,6 +525,13 @@ def main():
         help='Timeout per generation in seconds (default: 60)'
     )
     parser.add_argument(
+        '--process-timeout',
+        type=int,
+        default=None,
+        help='Total timeout for the entire fuzz subprocess in seconds. '
+             'If not specified, calculated as (runs * timeout) + 300'
+    )
+    parser.add_argument(
         '--seed',
         type=int,
         default=None,
@@ -508,9 +552,10 @@ def main():
     parser.add_argument(
         '--ut-version',
         type=str,
-        choices=['modified', 'original'],
-        default='modified',
-        help='Which version of Universal Tracker to test (default: modified)'
+        choices=['worldgen', 'original', 'pickle'],
+        default='worldgen',
+        help='Which version of Universal Tracker to test: worldgen (rules.json-based), '
+             'original (YAML-based), or pickle (pickle-based, fastest) (default: worldgen)'
     )
     parser.add_argument(
         '--custom-worlds-only',
@@ -525,20 +570,20 @@ def main():
         help='World source for output filename: bundled (default) or apworlds'
     )
 
-    # Add mutually exclusive group for native UT preference
-    native_ut_group = parser.add_mutually_exclusive_group()
-    native_ut_group.add_argument(
-        '--prefer-native-ut',
-        dest='prefer_native_ut',
+    # Add mutually exclusive group for tracking config
+    tracking_config_group = parser.add_mutually_exclusive_group()
+    tracking_config_group.add_argument(
+        '--use-tracking-config',
+        dest='use_tracking_config',
         action='store_true',
         default=True,
-        help='Prefer native UT support for compatible worlds (default: enabled)'
+        help='Use tracking-mode-config.json for per-game mode selection (default: enabled)'
     )
-    native_ut_group.add_argument(
-        '--no-prefer-native-ut',
-        dest='prefer_native_ut',
+    tracking_config_group.add_argument(
+        '--no-use-tracking-config',
+        dest='use_tracking_config',
         action='store_false',
-        help='Disable native UT preference, use worldgen-based tracking for all worlds'
+        help='Disable config-based mode selection, use same mode for all worlds'
     )
 
     # Fuzzer options passed through to fuzz.py
@@ -580,17 +625,32 @@ def main():
     args = parser.parse_args()
 
     # Configure host settings for UT fuzz testing
-    # Set skip_export_for_native_ut and skip_export_from_list based on --prefer-native-ut flag
-    # When prefer_native_ut is True, we use the skip-export-games.json list to determine
-    # which games should skip rule export (games that pass Original UT but fail Modified UT)
+    # When use_tracking_config is True (hybrid mode), use the tracking-mode-config.json system
+    # which determines the best export format (rules.json vs pickle) per-game based on test results.
+    # Otherwise, use the legacy flag-based system.
     print("Configuring host settings for UT fuzz testing...")
-    print(f"  prefer_native_ut: {args.prefer_native_ut}")
-    print(f"  skip_export_for_native_ut: {args.prefer_native_ut}")
-    print(f"  skip_export_from_list: {args.prefer_native_ut}")
-    update_host_yaml({
-        'skip_export_for_native_ut': args.prefer_native_ut,
-        'skip_export_from_list': args.prefer_native_ut
-    })
+    print(f"  ut_version: {args.ut_version}")
+    print(f"  use_tracking_config: {args.use_tracking_config}")
+
+    use_pickle_mode = args.ut_version == "pickle"
+
+    if args.use_tracking_config and args.ut_version not in ("original", "pickle"):
+        # Hybrid mode: use tracking-mode-config.json for per-game export decisions
+        print(f"  use_tracking_mode_config: True")
+        print(f"  (Config determines export format per-game based on test results)")
+        update_host_yaml({
+            'use_tracking_mode_config': True,
+            'save_rules_json': False,  # Config decides
+            'save_tracker_pickle': False,  # Config decides
+        })
+    else:
+        # Flag-based system (worldgen, original, pickle modes)
+        print(f"  use_tracking_mode_config: False")
+        print(f"  save_tracker_pickle: {use_pickle_mode}")
+        update_host_yaml({
+            'use_tracking_mode_config': False,
+            'save_tracker_pickle': use_pickle_mode,
+        })
 
     # Clean up empty worldgen directories before loading worlds
     cleanup_empty_worldgen_dirs()
@@ -601,14 +661,17 @@ def main():
 
     # Determine UT version label for output files
     # - "original" = original UT from FarisTheAncient
-    # - "modified" = modified UT using worldgen-based tracking for all worlds
-    # - "hybrid" = modified UT with native support (prefers native UT for compatible worlds)
+    # - "worldgen" = UT using worldgen-based tracking (regenerates world from rules.json)
+    # - "hybrid" = UT with config-based per-game mode selection
+    # - "pickle" = UT using pickle-based tracking (fastest, preserves exact lambdas)
     if args.ut_version == "original":
         ut_version = "original"
-    elif args.prefer_native_ut:
+    elif args.ut_version == "pickle":
+        ut_version = "pickle"
+    elif args.use_tracking_config:
         ut_version = "hybrid"
     else:
-        ut_version = "modified"
+        ut_version = "worldgen"
 
     # Determine world source (for output filename)
     # If --world-source is specified, use it; otherwise infer from --custom-worlds-only
@@ -648,8 +711,8 @@ def main():
         print(f"Error: Templates directory not found: {templates_dir}")
         return 1
 
-    # Get skip list (use only permanent exclusions - not main_test_exclude_list)
-    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='permanent')
+    # Get skip list (permanent + ut_fuzz exclusions for games that hang/timeout)
+    skip_list = args.skip_list if args.skip_list else load_template_exclude_list(test_type='ut_fuzz')
 
     # Get template files
     template_files = get_template_files(templates_dir, skip_list, args.include_list)
@@ -721,7 +784,7 @@ def main():
             "last_updated": datetime.now().isoformat(),
             "script_version": "1.0.0",
             "ut_version": ut_version,
-            "prefer_native_ut": args.prefer_native_ut if args.ut_version != "original" else None,
+            "use_tracking_config": args.use_tracking_config if args.ut_version != "original" else None,
             "world_source": world_source,
             "seed_mode": seed_type,
             "seed": args.seed if not is_random_seed_mode else "random",
@@ -787,7 +850,8 @@ def main():
             disallow_options=effective_disallow_options,
             fractional_spheres=args.fractional_spheres,
             stop_on_first_failure=args.stop_on_first_failure,
-            number_by_seed=args.number_by_seed
+            number_by_seed=args.number_by_seed,
+            process_timeout=args.process_timeout
         )
 
         # Store result
@@ -799,7 +863,8 @@ def main():
                 "failure": test_result["failure"],
                 "timeout": test_result["timeout"],
                 "ignored": test_result["ignored"],
-                "errors": test_result["errors"]
+                "errors": test_result["errors"],
+                "elapsed_seconds": round(test_result["elapsed_seconds"], 2)
             },
             "world_info": {
                 "game_name": game_name,
@@ -835,8 +900,10 @@ def main():
             status = "FAIL"
 
         # Print summary
+        elapsed = test_result['elapsed_seconds']
         print(f"  {status}: {test_result['success']}/{test_result['total']} success, "
-              f"{test_result['failure']} failures, {test_result['timeout']} timeouts")
+              f"{test_result['failure']} failures, {test_result['timeout']} timeouts "
+              f"({elapsed:.1f}s)")
 
         if test_result["error"]:
             error_msg = test_result["error"]

@@ -11,15 +11,16 @@ This document describes the modifications made to the Universal Tracker compared
 ## Summary of Changes
 
 The modifications extend Universal Tracker with:
-1. **Worldgen world integration** for rule explain support
-2. **Direct AST rule explanation** from JSON rules files
-3. **UT comparison testing infrastructure** for automated verification
-4. **Debug logging and sphere log output** for test analysis
-5. **Multiworld fuzz testing** via `MultiworldHook` class
-6. **ALttP entrance shuffle seed handling** for deterministic regeneration
-7. **Fractional sphere logic** option for finer-grained sphere comparison
+1. **Pickle-based multiworld loading** for fast tracking without regeneration
+2. **Worldgen world integration** for rule explain support
+3. **Direct AST rule explanation** from JSON rules files
+4. **UT comparison testing infrastructure** for automated verification
+5. **Debug logging and sphere log output** for test analysis
+6. **Multiworld fuzz testing** via `MultiworldHook` class
+7. **ALttP entrance shuffle seed handling** for deterministic regeneration
+8. **Fractional sphere logic** option for finer-grained sphere comparison
 
-These changes integrate UT with the JSON Export system, allowing it to explain rules for any world that has exported rules, not just worlds with native Rule Builder support.
+These changes integrate UT with the JSON Export system, allowing it to explain rules for any world that has exported rules, not just worlds with native Rule Builder support. The pickle mode provides the fastest tracking by loading a serialized multiworld directly.
 
 ### Backported from v0.2.26
 
@@ -40,6 +41,7 @@ worlds/tracker/
 ├── __init__.py              # Exports (matches upstream)
 ├── TrackerCoreBase.py       # Original UT TrackerCore (close to upstream v0.2.26)
 ├── TrackerCore.py           # Extended TrackerCore (combines base + mixins)
+├── pickle_mixin.py          # Pickle-based multiworld loading
 ├── worldgen_mixin.py        # Worldgen and AST explain methods
 ├── tracker_extensions.py    # Testing mode extensions
 ├── TrackerClient.py         # Client code (minor modifications)
@@ -49,9 +51,16 @@ worlds/tracker/
 ### Class Hierarchy
 
 ```python
-class TrackerCore(WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
-    """Extended TrackerCore with worldgen and testing support."""
+class TrackerCore(PickleMixin, WorldgenMixin, TrackerTestingMixin, TrackerCoreBase):
+    """Extended TrackerCore with pickle, worldgen, and testing support."""
 ```
+
+### Tracking Mode Priority
+
+TrackerCore tries tracking modes in order:
+1. **Pickle mode** - Fastest, loads serialized multiworld with exact lambdas
+2. **Worldgen mode** - Generates world from JSON rules
+3. **YAML mode** - Original UT behavior (native game integration)
 
 ### Benefits
 
@@ -139,6 +148,52 @@ def explain_location_rule(self, location_name: str, state: CollectionState) -> O
     Uses worldgen world if available, otherwise falls back to direct AST explain.
     """
 ```
+
+---
+
+### `pickle_mixin.py`
+
+**Lines:** ~286 (new file)
+
+Contains pickle-based multiworld loading for fast tracking without regeneration.
+
+#### New Instance Variables
+
+```python
+# Pickle mode support
+self.pickle_multiworld: Optional[MultiWorld] = None
+self.pickle_path: Optional[str] = None
+self.pickle_metadata: Optional[dict] = None
+self._tracking_from_pickle: bool = False
+```
+
+#### New Methods
+
+| Method | Purpose |
+|--------|---------|
+| `_init_pickle_mixin()` | Initialize pickle mixin attributes |
+| `_disconnect_pickle_mixin()` | Clear pickle mixin state on disconnect |
+| `load_multiworld_from_pickle()` | Load multiworld from gzip-compressed dill pickle file |
+| `initialize_tracking_from_pickle()` | Initialize tracking using the pickled multiworld |
+| `auto_discover_pickle()` | Auto-discover pickle file based on game/seed name |
+
+#### Key Feature: Fast Tracking
+
+Pickle mode loads a pre-generated multiworld directly, preserving exact lambdas and closures:
+
+```python
+def load_multiworld_from_pickle(self, pickle_path: str) -> bool:
+    """
+    Load a multiworld from a gzip-compressed dill pickle file.
+
+    Returns True if multiworld was loaded successfully.
+    """
+```
+
+Benefits over worldgen mode:
+- **Faster**: No world generation step needed
+- **Exact rules**: Preserves original lambdas without AST conversion
+- **Simpler**: No Rule Builder evaluation required
 
 ---
 
@@ -263,17 +318,28 @@ class CurrentTrackerState(NamedTuple):
 
 The key integration points are:
 
-### 1. Auto-Discovery of Rules JSON
+### 1. Auto-Discovery of Pickle/JSON
 
-When a seed name is set (from server connection), UT can auto-discover the corresponding rules JSON:
+When a seed name is set (from server connection), UT auto-discovers tracking files in order:
 
 ```python
 # In TrackerCore
 self.seed_name = "14089154938208861744"  # From RoomInfo
-self.auto_discover_rules_json()  # Finds frontend/presets/{game}/AP_{seed}/AP_{seed}_rules.json
+self.auto_discover_pickle()     # Tries frontend/presets/{game}/AP_{seed}/AP_{seed}.pkl.gz first
+self.auto_discover_rules_json() # Falls back to AP_{seed}_rules.json
 ```
 
-### 2. Worldgen World Loading
+### 2. Pickle Loading (Fastest)
+
+For fastest tracking, load the multiworld directly from pickle:
+
+```python
+tracker.load_multiworld_from_pickle("path/to/AP_seed.pkl.gz")
+tracker.initialize_tracking_from_pickle()
+# Tracking uses exact original rules - no conversion needed
+```
+
+### 3. Worldgen World Loading
 
 For full rule explain support, a worldgen world can be loaded:
 
@@ -282,7 +348,7 @@ tracker.load_worldgen_world("path/to/rules.json")
 # Now explain_location_rule() uses Rule Builder's explain system
 ```
 
-### 3. Direct AST Explain Fallback
+### 4. Direct AST Explain Fallback
 
 Even without a worldgen world, rules can be explained directly from JSON:
 
@@ -314,6 +380,18 @@ The extended `fuzzer_hook.py` enables:
 
 ## Usage Examples
 
+### Loading from pickle (fastest)
+
+```python
+from worlds.tracker import TrackerCore
+
+tracker = TrackerCore.TrackerCore(logger, False, False)
+tracker.load_multiworld_from_pickle("frontend/presets/tunic/AP_123/AP_123.pkl.gz")
+tracker.initialize_tracking_from_pickle()
+
+# Tracking uses exact original rules
+```
+
 ### Loading worldgen for explain support
 
 ```python
@@ -326,11 +404,15 @@ tracker.load_worldgen_world("frontend/presets/tunic/AP_123/AP_123_rules.json")
 explanation = tracker.explain_location_rule("Fortress - East Shortcut", state)
 ```
 
-### Auto-discovering rules JSON
+### Auto-discovering pickle/JSON
 
 ```python
 tracker.seed_name = "14089154938208861744"
-if tracker.auto_discover_rules_json():
+# Try pickle first (fastest), then JSON
+if tracker.auto_discover_pickle():
+    # Pickle loaded, fast tracking available
+    pass
+elif tracker.auto_discover_rules_json():
     # Rules JSON loaded, explain available
     pass
 ```
@@ -342,10 +424,29 @@ if tracker.auto_discover_rules_json():
 | File | Original Lines | Modified Lines | Lines Added |
 |------|---------------|----------------|-------------|
 | `TrackerCore.py` | 513 | 1055 | ~542 |
+| `pickle_mixin.py` | 0 | 286 | ~286 |
 | `TrackerClient.py` | 1613 | 1970 | ~357 |
 | `fuzzer_hook.py` | 98 | 667 | ~569 |
 | `__init__.py` | 191 | 190 | -1 |
-| **Total** | 2415 | 3882 | **~1467** |
+| **Total** | 2415 | 4168 | **~1753** |
+
+---
+
+## Fixes to Original Copy
+
+The original copy in `scripts/test/fixtures/tracker_original/` has been modified to fix issues that prevent linting or testing:
+
+### `TrackerClient.py`
+
+**F-string quote syntax (lines 478, 480, 482):** Changed double quotes to single quotes inside f-string expressions for Python < 3.12 compatibility.
+
+```python
+# Original (syntax error in Python < 3.12)
+f"Go mode: [color={get_ut_color("in_logic")}]Yes[/color]"
+
+# Fixed
+f"Go mode: [color={get_ut_color('in_logic')}]Yes[/color]"
+```
 
 ---
 
@@ -354,3 +455,4 @@ if tracker.auto_discover_rules_json():
 - **Original repository:** https://github.com/FarisTheAncient/Archipelago (tracker branch)
 - **Original copy for comparison:** `scripts/test/fixtures/tracker_original/`
 - **World generator:** `world_generator/`
+- **Pickle exporter:** `exporter/pickle_exporter.py`

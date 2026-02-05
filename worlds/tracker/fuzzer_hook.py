@@ -123,10 +123,12 @@ class Hook(BaseHook):
                 self._fix_alttp_entrance_shuffle_seed(er_seed)
 
         self.ut_core.set_slot_params(mw.worlds[1].game,1,mw.player_name[1],1)
-        # Set seed_name to enable auto-discovery of rules.json for worldgen tracking
+        # Set seed_name to enable auto-discovery of pickle/rules.json for tracking
         self.ut_core.seed_name = mw.seed_name
+        # Try pickle first (fastest), then fall back to rules.json
+        self.ut_core.auto_discover_pickle()
         self.ut_core.auto_discover_rules_json()
-        # initalize_tracker_core will use worldgen-based tracking if rules_json_path is set
+        # initalize_tracker_core will use pickle/worldgen-based tracking if paths are set
         self.ut_core.initalize_tracker_core(mw.worlds[1].__class__,slot_data)
         assert self.ut_core.multiworld, self.ut_core.gen_error
 

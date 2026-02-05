@@ -86,8 +86,7 @@ class ExportSettings:
     auto_collect_events: bool = False
     filter_event_items: bool = False
     update_frontend_presets: bool = False
-    skip_export_for_native_ut: bool = False
-    skip_export_from_list: bool = False
+    use_tracking_mode_config: bool = False
 
 
 @dataclass
@@ -174,8 +173,7 @@ class InstallerConfig:
             auto_collect_events=export_settings.get("auto_collect_events", False),
             filter_event_items=export_settings.get("filter_event_items", False),
             update_frontend_presets=export_settings.get("update_frontend_presets", False),
-            skip_export_for_native_ut=export_settings.get("skip_export_for_native_ut", False),
-            skip_export_from_list=export_settings.get("skip_export_from_list", False),
+            use_tracking_mode_config=export_settings.get("use_tracking_mode_config", False),
         )
 
         return config
@@ -278,8 +276,7 @@ EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
         "auto_collect_events": False,
         "filter_event_items": False,
         "update_frontend_presets": False,
-        "skip_export_for_native_ut": False,
-        "skip_export_from_list": False,
+        "use_tracking_mode_config": False,
     },
     "minimal-spoilers": {
         "skip_required_files": True,
@@ -294,8 +291,7 @@ EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
         "auto_collect_events": False,
         "filter_event_items": False,
         "update_frontend_presets": True,
-        "skip_export_for_native_ut": False,
-        "skip_export_from_list": False,
+        "use_tracking_mode_config": False,
     },
 }
 
