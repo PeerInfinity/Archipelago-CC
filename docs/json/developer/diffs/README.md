@@ -4,11 +4,11 @@ This directory contains diff files showing changes made to this repository compa
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (178 lines)
+### 1. `core-files.diff` (194 lines)
 Changes to the main Archipelago core files:
 - **BaseClasses.py** - Core data structures and sphere logging modifications
-- **Main.py** - Main generation logic, vanilla placement trigger, JSON export, and workflow changes
-- **settings.py** - Configuration settings for JSON export, sphere logging, and skip_required_files
+- **Main.py** - Main generation logic, vanilla placement trigger, JSON export, pickle export, and workflow changes
+- **settings.py** - Configuration settings for JSON export, sphere logging, pickle export, preset clearing, tracking mode config, and skip_required_files
 
 These are the most significant changes that affect core Archipelago functionality.
 
@@ -74,8 +74,8 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 
 ## Notes
 
-- These diffs were last updated on 2026-01-14 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
-- Total lines changed across all diffs: 849 lines (178 + 151 + 26 + 494)
+- These diffs were last updated on 2026-02-05 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
+- Total lines changed across all diffs: 865 lines (194 + 151 + 26 + 494)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
