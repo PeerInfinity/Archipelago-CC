@@ -2,7 +2,7 @@
 
 [<- Back to Test Results Summary](./test-results-summary.md)
 
-[📖 Learn about fuzz tests](../tests/test-fuzz.md)
+[📖 Learn about this test](../tests/test-multiworld-ut-fuzz.md)
 
 **Generated:** 2026-02-05 21:37:53
 

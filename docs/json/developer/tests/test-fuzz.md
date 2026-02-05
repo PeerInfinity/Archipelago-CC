@@ -21,7 +21,7 @@ Unlike the regular spoiler tests (which use default template settings), fuzz tes
 | **UT Fuzz (Hybrid)** | Worldgen UT preferring native support | [View](../test-results/test-results-ut-fuzz-hybrid.md) |
 | **UT Fuzz (Pickle)** | Pickle-based UT (loads serialized multiworld) | [View](../test-results/test-results-ut-fuzz-pickle.md) |
 | **Spoiler Fuzz** | Frontend spoiler playthrough | [View](../test-results/test-results-spoiler-fuzz.md) |
-| **Multiworld UT Fuzz** | Multiworld assembly with UT validation | [View](../test-results/test-results-multiworld-ut-fuzz.md) |
+| **Multiworld UT Fuzz** | Multiworld assembly with UT validation | [Details](./test-multiworld-ut-fuzz.md) / [Results](../test-results/test-results-multiworld-ut-fuzz.md) |
 
 ## UT Fuzz Tests
 
