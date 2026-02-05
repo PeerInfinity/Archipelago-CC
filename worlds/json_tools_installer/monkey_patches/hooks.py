@@ -23,7 +23,11 @@ Usage:
 
 import functools
 import logging
-from typing import Callable, Optional, Any
+import tempfile
+from typing import Callable, Optional, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from BaseClasses import MultiWorld
 
 logger = logging.getLogger(__name__)
 
@@ -110,14 +114,19 @@ def _install_export_hook() -> bool:
 
         @functools.wraps(original_main)
         def hooked_main(*args, **kwargs):
-            """Wrapped Main.main that exports rules after generation."""
+            """Wrapped Main.main that exports rules and/or pickle after generation."""
             result = original_main(*args, **kwargs)
 
-            # Try to export rules after successful generation
-            try:
-                _post_generation_export()
-            except Exception as e:
-                logger.warning(f"Post-generation export failed: {e}")
+            # result is the multiworld object
+            multiworld = result
+
+            # Try to export after successful generation
+            # The export functions handle their own decision logic internally
+            if multiworld is not None:
+                try:
+                    _post_generation_export(multiworld)
+                except Exception as e:
+                    logger.warning(f"Post-generation export failed: {e}")
 
             return result
 
@@ -183,29 +192,79 @@ def _install_sphere_logging_hook() -> bool:
         return False
 
 
-def _post_generation_export():
+def _post_generation_export(multiworld: "MultiWorld"):
     """
-    Called after generation to export rules JSON.
+    Called after generation to export rules JSON and/or pickle.
 
-    This is a simplified version that attempts to call the exporter
-    if it's available.
+    This mirrors the export calls in Main.py but works via monkey patching.
+    The export functions handle their own decision logic internally based
+    on settings, so we just call them and let them decide whether to export.
+
+    Args:
+        multiworld: The MultiWorld object from generation
     """
-    try:
-        from ..config import get_export_setting
+    from ..config import get_export_setting
 
-        if not get_export_setting('save_rules_json', False):
-            return
+    # Build the filename base from seed_name
+    seed_name = getattr(multiworld, 'seed_name', None)
+    if not seed_name:
+        logger.warning("Cannot export: multiworld has no seed_name")
+        return
 
-        # Try to import and call the exporter
+    filename_base = f"AP_{seed_name}"
+
+    # Get export settings (falls back to installer config if host.yaml doesn't have them)
+    update_presets = get_export_setting('update_frontend_presets', False)
+    skip_if_identical = get_export_setting('skip_preset_copy_if_rules_identical', False)
+    rules_format = get_export_setting('rules_json_format', 'rule_builder')
+    clear_game_presets = get_export_setting('clear_game_presets', False)
+    clear_all_presets = get_export_setting('clear_all_presets', False)
+
+    # Create a temporary directory for exports
+    # The exporters will copy to presets if save_presets=True
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Export rules JSON
+        # The exporter handles its own decision logic based on settings
         try:
-            from exporter import export_game_rules
-            logger.info("Exporter available, rules will be exported via normal flow")
-        except ImportError:
-            logger.warning(
-                "Exporter module not found. Install JSON Tools to enable rule export."
+            from exporter import export_game_rules, clear_rule_cache
+            from exporter.games import clear_handler_cache
+
+            logger.info("Exporting rules via monkey patch hook")
+            export_game_rules(
+                multiworld,
+                temp_dir,
+                filename_base,
+                save_presets=update_presets,
+                skip_preset_copy_if_rules_identical=skip_if_identical,
+                rules_json_format=rules_format,
+                clear_game_presets=clear_game_presets,
+                clear_all_presets=clear_all_presets,
             )
-    except Exception as e:
-        logger.debug(f"Post-generation export check failed: {e}")
+            # Clear exporter caches to allow GC
+            clear_rule_cache()
+            clear_handler_cache()
+        except ImportError:
+            logger.debug("Exporter module not found, skipping rules export")
+        except Exception as e:
+            logger.warning(f"Rules export failed: {e}")
+
+        # Export pickle
+        # The exporter handles its own decision logic based on settings
+        try:
+            from exporter.pickle_exporter import export_multiworld_pickle
+
+            logger.info("Exporting pickle via monkey patch hook")
+            export_multiworld_pickle(
+                multiworld,
+                temp_dir,
+                filename_base,
+                save_presets=update_presets,
+                skip_preset_copy_if_rules_identical=skip_if_identical,
+            )
+        except ImportError:
+            logger.debug("Pickle exporter module not found, skipping pickle export")
+        except Exception as e:
+            logger.warning(f"Pickle export failed: {e}")
 
 
 def _create_playthrough_with_logging(
