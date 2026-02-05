@@ -27,6 +27,9 @@ from .hooks import (
     is_hook_installed,
     get_installed_hooks,
     auto_install,
+    is_main_patched,
+    is_baseclasses_patched,
+    are_file_patches_applied,
 )
 
 __all__ = [
@@ -35,4 +38,7 @@ __all__ = [
     "is_hook_installed",
     "get_installed_hooks",
     "auto_install",
+    "is_main_patched",
+    "is_baseclasses_patched",
+    "are_file_patches_applied",
 ]
