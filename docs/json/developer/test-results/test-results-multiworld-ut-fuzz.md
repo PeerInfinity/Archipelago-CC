@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 19:00:09
+**Generated:** 2026-02-05 19:52:55
 
-**Source Data Created:** 2026-02-05T02:22:06.097018
+**Source Data Created:** 2026-02-05T19:10:04.186437
 
-**Source Data Last Updated:** 2026-02-05T02:49:20.118704
+**Source Data Last Updated:** 2026-02-05T19:52:40.078275
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,17 +21,18 @@
 ## Summary
 
 - **Total Games Tested:** 59
-- **Games Passed:** 42
-- **Games Failed:** 17
+- **Games Passed:** 50
+- **Games Failed:** 4
+- **Games with All Generations Failed:** 5
 - **Games Pending (< 2 players):** 0
-- **Rejected Games:** 17
+- **Rejected Games:** 4
 
 ## Test Results
 
 | Game Name | World Dir | Player # | MW Size | Status | Success Rate |
 |-----------|-----------|:--------:|:-------:|:------:|:------------:|
 | A Hat in Time | ahit | 1 | 10 | ✅ Passed | **100%** (3/3) |
-| A Link to the Past | alttp | 2 | 10 | ✅ Passed | **100%** (3/3) |
+| A Link to the Past | alttp | 2 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
 | A Short Hike | shorthike | 3 | 10 | ✅ Passed | **100%** (3/3) |
 | APQuest | apquest | 4 | 10 | ✅ Passed | **100%** (3/3) |
 | Adventure | adventure | 5 | 10 | ✅ Passed | **100%** (3/3) |
@@ -40,7 +41,7 @@
 | Bumper Stickers | bumpstik | 8 | 10 | ✅ Passed | **100%** (3/3) |
 | Castlevania - Circle of the Moon | cvcotm | 9 | 10 | ✅ Passed | **100%** (3/3) |
 | Castlevania 64 | cv64 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Celeste 64 | celeste64 | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
+| Celeste 64 | celeste64 | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | ChecksFinder | checksfinder | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Choo-Choo Charles | cccharles | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Civilization VI | civ_6 | 10 | 10 | ✅ Passed | **100%** (3/3) |
@@ -58,41 +59,41 @@
 | Landstalker - The Treasures of King Nole | landstalker | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Links Awakening DX | ladx | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
 | Lufia II Ancient Cave | lufia2ac | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Mario & Luigi Superstar Saga | mlss | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Mario & Luigi Superstar Saga | mlss | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
 | Math Adventure | mathadventure | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Mega Man 2 | mm2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| MegaMan Battle Network 3 | mmbn3 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Meritous | meritous | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Mega Man 2 | mm2 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| MegaMan Battle Network 3 | mmbn3 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Meritous | meritous | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
 | Metamath | metamath | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Muse Dash | musedash | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Noita | noita | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Old School Runescape | osrs | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Overcooked! 2 | overcooked2 | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Paint | paint | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Risk of Rain 2 | ror2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Saving Princess | saving_princess | 10 | 10 | ❌ Failed | ❌ 33% (1/3) |
-| Shivers | shivers | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Sonic Adventure 2 Battle | sa2b | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Muse Dash | musedash | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Noita | noita | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Old School Runescape | osrs | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Overcooked! 2 | overcooked2 | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| Paint | paint | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| Risk of Rain 2 | ror2 | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| Saving Princess | saving_princess | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| Shivers | shivers | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| Sonic Adventure 2 Battle | sa2b | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
 | Subnautica | subnautica | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Super Mario 64 | sm64ex | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Super Mario Land 2 | marioland2 | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Super Mario World | smw | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| TOEM original | toem_original | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| TOEM rule builder | toem_rule_builder | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Terraria | terraria | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| The Legend of Zelda | tloz | 10 | 10 | ❌ Failed | ❌ 33% (1/3) |
-| The Messenger | messenger | 10 | 10 | ❌ Failed | ❌ 0% (0/3) |
-| The Wind Waker | tww | 10 | 10 | ❌ Failed | ❌ 33% (1/3) |
-| Timespinner | timespinner | 10 | 10 | ❌ Failed | ❌ 33% (1/3) |
-| Undertale | undertale | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| VVVVVV | v6 | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Wargroove | wargroove | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Yoshi's Island | yoshisisland | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| shapez | shapez | 10 | 10 | ❌ Failed | ❌ 33% (1/3) |
+| Super Mario 64 | sm64ex | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Super Mario Land 2 | marioland2 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Super Mario World | smw | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| TOEM original | toem_original | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| TOEM rule builder | toem_rule_builder | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Terraria | terraria | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| The Legend of Zelda | tloz | 10 | 10 | ❌ Failed | 0% (0/3, 2 gen fail) |
+| The Messenger | messenger | 10 | 10 | ❌ Failed | 0% (0/3, 2 gen fail) |
+| The Wind Waker | tww | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Timespinner | timespinner | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Undertale | undertale | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| VVVVVV | v6 | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Wargroove | wargroove | 10 | 10 | ❌ Failed | 33% (1/3, 1 gen fail) |
+| Yoshi's Island | yoshisisland | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| shapez | shapez | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
 
 ## Successfully Integrated Games
 
-The following 42 games successfully integrate into a multiworld:
+The following 55 games successfully integrate into a multiworld:
 
 | # | World Directory | Game Name |
 |:-:|-----------------|----------|
@@ -106,38 +107,51 @@ The following 42 games successfully integrate into a multiworld:
 | 8 | bumpstik | Bumper Stickers |
 | 9 | cvcotm | Castlevania - Circle of the Moon |
 | 10 | cv64 | Castlevania 64 |
-| 11 | checksfinder | ChecksFinder |
-| 12 | cccharles | Choo-Choo Charles |
-| 13 | civ_6 | Civilization VI |
-| 14 | codingadventure | Coding Adventure |
-| 15 | dlcquest | DLCQuest |
-| 16 | doom_1993 | DOOM 1993 |
-| 17 | doom_ii | DOOM II |
-| 18 | dark_souls_3 | Dark Souls III |
-| 19 | dkc3 | Donkey Kong Country 3 |
-| 20 | factorio | Factorio |
-| 21 | faxanadu | Faxanadu |
-| 22 | heretic | Heretic |
-| 23 | hylics2 | Hylics 2 |
-| 24 | inscryption | Inscryption |
-| 25 | landstalker | Landstalker - The Treasures of King Nole |
-| 26 | lufia2ac | Lufia II Ancient Cave |
-| 27 | mlss | Mario & Luigi Superstar Saga |
-| 28 | mathadventure | Math Adventure |
-| 29 | mm2 | Mega Man 2 |
-| 30 | mmbn3 | MegaMan Battle Network 3 |
-| 31 | meritous | Meritous |
-| 32 | metamath | Metamath |
-| 33 | musedash | Muse Dash |
-| 34 | noita | Noita |
-| 35 | osrs | Old School Runescape |
-| 36 | paint | Paint |
-| 37 | ror2 | Risk of Rain 2 |
-| 38 | sa2b | Sonic Adventure 2 Battle |
-| 39 | subnautica | Subnautica |
-| 40 | smw | Super Mario World |
-| 41 | wargroove | Wargroove |
-| 42 | yoshisisland | Yoshi's Island |
+| 11 | celeste64 | Celeste 64 |
+| 12 | checksfinder | ChecksFinder |
+| 13 | cccharles | Choo-Choo Charles |
+| 14 | civ_6 | Civilization VI |
+| 15 | codingadventure | Coding Adventure |
+| 16 | dlcquest | DLCQuest |
+| 17 | doom_1993 | DOOM 1993 |
+| 18 | doom_ii | DOOM II |
+| 19 | dark_souls_3 | Dark Souls III |
+| 20 | dkc3 | Donkey Kong Country 3 |
+| 21 | factorio | Factorio |
+| 22 | faxanadu | Faxanadu |
+| 23 | heretic | Heretic |
+| 24 | hylics2 | Hylics 2 |
+| 25 | inscryption | Inscryption |
+| 26 | landstalker | Landstalker - The Treasures of King Nole |
+| 27 | lufia2ac | Lufia II Ancient Cave |
+| 28 | mlss | Mario & Luigi Superstar Saga |
+| 29 | mathadventure | Math Adventure |
+| 30 | mm2 | Mega Man 2 |
+| 31 | mmbn3 | MegaMan Battle Network 3 |
+| 32 | meritous | Meritous |
+| 33 | metamath | Metamath |
+| 34 | musedash | Muse Dash |
+| 35 | noita | Noita |
+| 36 | osrs | Old School Runescape |
+| 37 | overcooked2 | Overcooked! 2 |
+| 38 | paint | Paint |
+| 39 | ror2 | Risk of Rain 2 |
+| 40 | saving_princess | Saving Princess |
+| 41 | shivers | Shivers |
+| 42 | sa2b | Sonic Adventure 2 Battle |
+| 43 | subnautica | Subnautica |
+| 44 | sm64ex | Super Mario 64 |
+| 45 | marioland2 | Super Mario Land 2 |
+| 46 | smw | Super Mario World |
+| 47 | toem_original | TOEM original |
+| 48 | toem_rule_builder | TOEM rule builder |
+| 49 | terraria | Terraria |
+| 50 | tww | The Wind Waker |
+| 51 | timespinner | Timespinner |
+| 52 | undertale | Undertale |
+| 53 | v6 | VVVVVV |
+| 54 | yoshisisland | Yoshi's Island |
+| 55 | shapez | shapez |
 
 
 ## Rejected Games
@@ -146,105 +160,38 @@ These games failed to integrate into the multiworld:
 
 | Game Name | World Directory | Reason | Details |
 |-----------|-----------------|--------|--------|
-| Celeste 64 | celeste64 | Multiworld test failed | 1/3 failures |
 | Links Awakening DX | ladx | Multiworld test failed | 1/3 failures |
-| Overcooked! 2 | overcooked2 | Multiworld test failed | 1/3 failures |
-| Saving Princess | saving_princess | Multiworld test failed | 2/3 failures |
-| Shivers | shivers | Multiworld test failed | 1/3 failures |
-| Super Mario 64 | sm64ex | Multiworld test failed | 1/3 failures |
-| Super Mario Land 2 | marioland2 | Multiworld test failed | 1/3 failures |
-| TOEM original | toem_original | Multiworld test failed | 1/3 failures |
-| TOEM rule builder | toem_rule_builder | Multiworld test failed | 1/3 failures |
-| Terraria | terraria | Multiworld test failed | 1/3 failures |
-| The Legend of Zelda | tloz | Multiworld test failed | 2/3 failures |
-| The Messenger | messenger | Multiworld test failed | 3/3 failures |
-| The Wind Waker | tww | Multiworld test failed | 2/3 failures |
-| Timespinner | timespinner | Multiworld test failed | 2/3 failures |
-| Undertale | undertale | Multiworld test failed | 1/3 failures |
-| VVVVVV | v6 | Multiworld test failed | 1/3 failures |
-| shapez | shapez | Multiworld test failed | 2/3 failures |
+| The Legend of Zelda | tloz | Multiworld test failed | 1/3 failures |
+| The Messenger | messenger | Multiworld test failed | 1/3 failures |
+| Wargroove | wargroove | Multiworld test failed | 1/3 failures |
 
 
 ## Failed Test Details
-
-### Celeste 64
-
-**Seed 900001:** Error - Generation failed: Failed to limit item pool size for player 2
 
 ### Links Awakening DX
 
 **Seed 2500002:** Players failed: 9
   - Player 9: Player 9 (Links Awakening DX): 8 unreachable locations
 
-### Overcooked! 2
-
-**Seed 3600003:** Error - Generation failed: Too many locations created for osrs_9, lower the minimum general tasks
-
-### Saving Princess
-
-**Seed 3900002:** Error - Generation failed: There are not enough available tasks to fill the remaining pool for OSRS Please a
-**Seed 3900003:** Error - Generation failed: Too many locations created for osrs_7, lower the minimum general tasks
-
-### Shivers
-
-**Seed 4000002:** Error - Generation failed: There are not enough available tasks to fill the remaining pool for OSRS Please a
-
-### Super Mario 64
-
-**Seed 4300001:** Error - Generation failed: list index out of range
-
-### Super Mario Land 2
-
-**Seed 4400001:** Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 89 unreachable locations
-
-### TOEM original
-
-**Seed 4600003:** Error - Generation failed: list index out of range
-
-### TOEM rule builder
-
-**Seed 4700001:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
-
-### Terraria
-
-**Seed 4800001:** Error - Generation failed: There are not enough available tasks to fill the remaining pool for OSRS Please a
-
 ### The Legend of Zelda
 
-**Seed 4900001:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
-**Seed 4900002:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
+**Seed 4900001:** Error - Generation timed out after 60 seconds
+**Seed 4900002:** Error - Generation timed out after 60 seconds
+**Seed 4900003:** Players failed: 1
+  - Player 1: Player 1 (Super Mario Land 2): 9 unreachable locations
 
 ### The Messenger
 
-**Seed 5000001:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
-**Seed 5000002:** Players failed: 1
-  - Player 1: Player 1 (The Messenger): 7 unreachable locations
-**Seed 5000003:** Players failed: 1
-  - Player 1: Player 1 (The Messenger): 10 unreachable locations
+**Seed 5000001:** Error - Generation timed out after 60 seconds
+**Seed 5000002:** Error - Generation timed out after 60 seconds
+**Seed 5000003:** Players failed: 2
+  - Player 2: Player 2 (The Messenger): 10 unreachable locations
 
-### The Wind Waker
+### Wargroove
 
-**Seed 5100001:** Error - Generation failed: Could not select required bosses to satisfy options set by the user. After removi
-**Seed 5100002:** Error - Generation failed: You cannot make bosses required when progression dungeons are disabled.
-
-### Timespinner
-
-**Seed 5200002:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
-**Seed 5200003:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
-
-### Undertale
-
-**Seed 5300003:** Error - Generation failed: Too many locations created for osrs_4, lower the minimum general tasks
-
-### VVVVVV
-
-**Seed 5400001:** Error - Generation failed: There are not enough available tasks to fill the remaining pool for OSRS Please a
-
-### shapez
-
-**Seed 5700001:** Error - Generation failed: Too many locations created for osrs_2, lower the minimum general tasks
-**Seed 5700003:** Error - Generation failed: shapez_10: Achievements must be included when belt and extractor are locked
+**Seed 5500001:** Players failed: 1
+  - Player 1: Player 1 (Super Mario Land 2): 559 unreachable locations
+**Seed 5500002:** Error - Generation failed: A conflict was found in the lists of required and banned dungeons for required bo
 
 ## Notes
 
@@ -253,8 +200,9 @@ These games failed to integrate into the multiworld:
 - **Status:**
   - ✅ Passed: All test runs succeeded
   - ✅ Passed (2nd): Passed in second pass (tested with full multiworld)
-  - ❌ Failed: One or more test runs failed, game was removed from multiworld
+  - ❌ Failed: One or more validation failures (generation succeeded but validation failed)
   - ❌ Failed (2nd): Failed in second pass
+  - 🔴 All Gen Failed: All generation attempts failed (could not generate multiworld)
   - ⏳ Pending: Game added but not tested yet (need 2+ players)
   - ⚠️ Error: Infrastructure error during testing
 - **Success Rate:** Percentage of test runs that passed
