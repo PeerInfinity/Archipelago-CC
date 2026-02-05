@@ -1199,10 +1199,40 @@ def main():
             results["assembly_order"].append(world_dir)
             continue
 
-        if test_result["passed"]:
+        # Check if ALL generation attempts failed
+        # This is different from validation failures - we couldn't even test the game
+        total_runs = test_result.get("total", 0)
+        gen_failures = test_result.get("generation_failures", 0)
+        all_gen_failed = total_runs > 0 and gen_failures == total_runs
+
+        if all_gen_failed:
+            # All generation attempts failed - remove the game from multiworld
+            print(f"  ALL GEN FAILED: {gen_failures}/{total_runs} runs could not generate")
+            game_result["status"] = "all_gen_failed"
+
+            # Remove the game from multiworld
+            try:
+                yaml_path.unlink()
+                print(f"  Removed {yaml_filename} from multiworld directory")
+                games_in_multiworld.remove(world_dir)
+            except (OSError, ValueError) as e:
+                print(f"  Warning: Could not remove {yaml_filename}: {e}")
+
+            rejected_games.append({
+                "template": template_name,
+                "game": game_name,
+                "world_dir": world_dir,
+                "reason": "All generation attempts failed",
+                "generation_failures": gen_failures,
+                "total": total_runs
+            })
+        elif test_result["passed"]:
             ignored_count = test_result.get("ignored", 0)
+            gen_fail_count = test_result.get("generation_failures", 0)
             if ignored_count > 0:
                 print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded ({ignored_count} ignored)")
+            elif gen_fail_count > 0:
+                print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded ({gen_fail_count} gen failed)")
             else:
                 print(f"  PASSED: {test_result['success']}/{test_result['total']} runs succeeded")
             game_result["status"] = "passed"

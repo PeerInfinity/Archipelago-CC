@@ -81,9 +81,13 @@ def generate_markdown(results: Dict[str, Any]) -> str:
         test_result = r.get('test_result', {})
 
         # Check if all runs were generation failures
+        # This can be indicated by the status or by checking the test_result data
         total_runs = test_result.get('total', 0)
         gen_failures = test_result.get('generation_failures', 0)
-        all_gen_failed = total_runs > 0 and gen_failures == total_runs
+        all_gen_failed = (
+            status == 'all_gen_failed' or
+            (total_runs > 0 and gen_failures == total_runs)
+        )
 
         if all_gen_failed:
             all_gen_failed_count += 1
@@ -137,9 +141,13 @@ def generate_markdown(results: Dict[str, Any]) -> str:
             tested_in_second_pass = False
 
         # Check if all runs were generation failures
+        # This can be indicated by the status or by checking the test_result data
         total_runs = test_result.get('total', 0)
         gen_failures = test_result.get('generation_failures', 0)
-        all_gen_failed = total_runs > 0 and gen_failures == total_runs
+        all_gen_failed = (
+            status == 'all_gen_failed' or
+            (total_runs > 0 and gen_failures == total_runs)
+        )
 
         # Status display
         if all_gen_failed:
