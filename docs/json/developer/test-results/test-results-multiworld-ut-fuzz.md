@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-05 19:52:55
+**Generated:** 2026-02-05 21:37:53
 
-**Source Data Created:** 2026-02-05T19:10:04.186437
+**Source Data Created:** 2026-02-05T20:51:45.565962
 
-**Source Data Last Updated:** 2026-02-05T19:52:40.078275
+**Source Data Last Updated:** 2026-02-05T21:37:39.271533
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,18 +21,18 @@
 ## Summary
 
 - **Total Games Tested:** 59
-- **Games Passed:** 50
-- **Games Failed:** 4
-- **Games with All Generations Failed:** 5
+- **Games Passed:** 53
+- **Games Failed:** 3
+- **Games with All Generations Failed:** 3
 - **Games Pending (< 2 players):** 0
-- **Rejected Games:** 4
+- **Rejected Games:** 6
 
 ## Test Results
 
 | Game Name | World Dir | Player # | MW Size | Status | Success Rate |
 |-----------|-----------|:--------:|:-------:|:------:|:------------:|
 | A Hat in Time | ahit | 1 | 10 | ✅ Passed | **100%** (3/3) |
-| A Link to the Past | alttp | 2 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| A Link to the Past | alttp | 2 | 10 | ✅ Passed | **100%** (3/3) |
 | A Short Hike | shorthike | 3 | 10 | ✅ Passed | **100%** (3/3) |
 | APQuest | apquest | 4 | 10 | ✅ Passed | **100%** (3/3) |
 | Adventure | adventure | 5 | 10 | ✅ Passed | **100%** (3/3) |
@@ -59,41 +59,41 @@
 | Landstalker - The Treasures of King Nole | landstalker | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Links Awakening DX | ladx | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
 | Lufia II Ancient Cave | lufia2ac | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Mario & Luigi Superstar Saga | mlss | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Mario & Luigi Superstar Saga | mlss | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Math Adventure | mathadventure | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Mega Man 2 | mm2 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| MegaMan Battle Network 3 | mmbn3 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Mega Man 2 | mm2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| MegaMan Battle Network 3 | mmbn3 | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Meritous | meritous | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
 | Metamath | metamath | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Muse Dash | musedash | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| Noita | noita | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Noita | noita | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Old School Runescape | osrs | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Overcooked! 2 | overcooked2 | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| Paint | paint | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| Risk of Rain 2 | ror2 | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| Saving Princess | saving_princess | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| Shivers | shivers | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| Sonic Adventure 2 Battle | sa2b | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Overcooked! 2 | overcooked2 | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Paint | paint | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Risk of Rain 2 | ror2 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Saving Princess | saving_princess | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Shivers | shivers | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
+| Sonic Adventure 2 Battle | sa2b | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Subnautica | subnautica | 10 | 10 | ✅ Passed | **100%** (3/3) |
 | Super Mario 64 | sm64ex | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Super Mario Land 2 | marioland2 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| Super Mario World | smw | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| TOEM original | toem_original | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| TOEM rule builder | toem_rule_builder | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Terraria | terraria | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| The Legend of Zelda | tloz | 10 | 10 | ❌ Failed | 0% (0/3, 2 gen fail) |
-| The Messenger | messenger | 10 | 10 | ❌ Failed | 0% (0/3, 2 gen fail) |
-| The Wind Waker | tww | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Timespinner | timespinner | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Undertale | undertale | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| VVVVVV | v6 | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Wargroove | wargroove | 10 | 10 | ❌ Failed | 33% (1/3, 1 gen fail) |
-| Yoshi's Island | yoshisisland | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| shapez | shapez | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
+| Super Mario Land 2 | marioland2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Super Mario World | smw | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| TOEM original | toem_original | 10 | 10 | ❌ Failed | 0% (0/3, 1 gen fail) |
+| TOEM rule builder | toem_rule_builder | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| Terraria | terraria | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| The Legend of Zelda | tloz | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| The Messenger | messenger | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
+| The Wind Waker | tww | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Timespinner | timespinner | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Undertale | undertale | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| VVVVVV | v6 | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
+| Wargroove | wargroove | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| Yoshi's Island | yoshisisland | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| shapez | shapez | 10 | 10 | ✅ Passed | **100%** (3/3) |
 
 ## Successfully Integrated Games
 
-The following 55 games successfully integrate into a multiworld:
+The following 53 games successfully integrate into a multiworld:
 
 | # | World Directory | Game Name |
 |:-:|-----------------|----------|
@@ -143,15 +143,13 @@ The following 55 games successfully integrate into a multiworld:
 | 44 | sm64ex | Super Mario 64 |
 | 45 | marioland2 | Super Mario Land 2 |
 | 46 | smw | Super Mario World |
-| 47 | toem_original | TOEM original |
-| 48 | toem_rule_builder | TOEM rule builder |
-| 49 | terraria | Terraria |
-| 50 | tww | The Wind Waker |
-| 51 | timespinner | Timespinner |
-| 52 | undertale | Undertale |
-| 53 | v6 | VVVVVV |
-| 54 | yoshisisland | Yoshi's Island |
-| 55 | shapez | shapez |
+| 47 | tloz | The Legend of Zelda |
+| 48 | tww | The Wind Waker |
+| 49 | timespinner | Timespinner |
+| 50 | undertale | Undertale |
+| 51 | wargroove | Wargroove |
+| 52 | yoshisisland | Yoshi's Island |
+| 53 | shapez | shapez |
 
 
 ## Rejected Games
@@ -161,9 +159,11 @@ These games failed to integrate into the multiworld:
 | Game Name | World Directory | Reason | Details |
 |-----------|-----------------|--------|--------|
 | Links Awakening DX | ladx | Multiworld test failed | 1/3 failures |
-| The Legend of Zelda | tloz | Multiworld test failed | 1/3 failures |
-| The Messenger | messenger | Multiworld test failed | 1/3 failures |
-| Wargroove | wargroove | Multiworld test failed | 1/3 failures |
+| TOEM original | toem_original | Multiworld test failed | 2/3 failures |
+| TOEM rule builder | toem_rule_builder | All generation attempts failed | - |
+| Terraria | terraria | All generation attempts failed | - |
+| The Messenger | messenger | All generation attempts failed | - |
+| VVVVVV | v6 | Multiworld test failed | 1/3 failures |
 
 
 ## Failed Test Details
@@ -173,25 +173,18 @@ These games failed to integrate into the multiworld:
 **Seed 2500002:** Players failed: 9
   - Player 9: Player 9 (Links Awakening DX): 8 unreachable locations
 
-### The Legend of Zelda
+### TOEM original
 
-**Seed 4900001:** Error - Generation timed out after 60 seconds
-**Seed 4900002:** Error - Generation timed out after 60 seconds
-**Seed 4900003:** Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 9 unreachable locations
+**Seed 4600001:** Error - Generation timed out after 60 seconds
+**Seed 4600002:** Players failed: 1
+  - Player 1: Player 1 (Super Mario Land 2): 101 unreachable locations
+**Seed 4600003:** Players failed: 1
+  - Player 1: Player 1 (Super Mario Land 2): 1 unreachable locations
 
-### The Messenger
+### VVVVVV
 
-**Seed 5000001:** Error - Generation timed out after 60 seconds
-**Seed 5000002:** Error - Generation timed out after 60 seconds
-**Seed 5000003:** Players failed: 2
-  - Player 2: Player 2 (The Messenger): 10 unreachable locations
-
-### Wargroove
-
-**Seed 5500001:** Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 559 unreachable locations
-**Seed 5500002:** Error - Generation failed: A conflict was found in the lists of required and banned dungeons for required bo
+**Seed 5400003:** Players failed: 1
+  - Player 1: Player 1 (Super Mario Land 2): 1 unreachable locations
 
 ## Notes
 
