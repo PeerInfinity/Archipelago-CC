@@ -489,6 +489,137 @@ def validate_multiworld_with_spheres(
     return results
 
 
+def validate_multiworld_with_ut_spheres(
+    multiworld: "MultiWorld",
+    multiworld_dir: Path,
+    project_root: Path
+) -> Dict[int, Tuple[bool, str, Dict]]:
+    """
+    Validate a multiworld using Universal Tracker sphere-by-sphere comparison.
+
+    This compares UT's logic calculations against Python's sphere calculations
+    for each player in the multiworld. It's similar to how the single-player
+    UT fuzz test works, but for each player in a multiworld.
+
+    Returns dict of player_id -> (passed, error_message, details)
+    """
+    import logging
+    from BaseClasses import ItemClassification
+    from NetUtils import NetworkItem
+    from worlds.tracker import TrackerCore, DeferredEntranceMode
+
+    logger = logging.getLogger("MultiworldUTFuzz")
+    results = {}
+    num_players = multiworld.players
+
+    print(f"    Validating multiworld with {num_players} players using UT sphere comparison...")
+
+    # Get templates for player mapping
+    templates = get_templates_in_multiworld(multiworld_dir)
+
+    for player_id in range(1, num_players + 1):
+        game_name = multiworld.game[player_id]
+        world = multiworld.worlds[player_id]
+
+        details = {
+            "game": game_name,
+            "validation_type": "ut_spheres",
+            "spheres_checked": 0,
+            "locations_validated": 0,
+        }
+
+        try:
+            # Create TrackerCore for this player
+            ut_core = TrackerCore.TrackerCore(logger, False, False)
+            ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
+
+            # Run generator for this player's YAML
+            ut_core.run_generator(None, None, str(multiworld_dir))
+
+            # Set up slot params
+            ut_core.set_slot_params(game_name, player_id, multiworld.player_name[player_id], num_players)
+            ut_core.seed_name = multiworld.seed_name
+            ut_core.auto_discover_rules_json()
+
+            # Get slot data from the multiworld
+            slot_data = world.fill_slot_data() if hasattr(world, 'fill_slot_data') else {}
+
+            # Initialize tracker core
+            ut_core.initalize_tracker_core(world.__class__, slot_data)
+
+            if not ut_core.multiworld:
+                results[player_id] = (False, f"TrackerCore init failed: {ut_core.gen_error}", details)
+                continue
+
+            # Now do sphere-by-sphere comparison
+            # Filter to only hashable addresses for this player
+            remaining_locations = [
+                loc.address for loc in world.get_locations()
+                if loc.address is not None and not isinstance(loc.address, list)
+            ]
+            current_inventory = [
+                NetworkItem(item.code, -2, item.player, item.classification)
+                for item in multiworld.precollected_items[player_id]
+                if item.code is not None
+            ]
+            new_items = []
+
+            # Iterate through spheres
+            sphere_errors = []
+            for sphere_number, sphere in enumerate(multiworld.get_sendable_spheres()):
+                # Filter to this player's locations in this sphere
+                current_sphere = {}
+                for loc in sphere:
+                    if loc.player == player_id and loc.address is not None:
+                        current_sphere[loc.name] = loc
+
+                current_inventory.extend(new_items)
+                new_items.clear()
+
+                if current_sphere:
+                    details["spheres_checked"] = sphere_number + 1
+
+                    # Update UT with current state
+                    ut_core.set_missing_locations(set(remaining_locations))
+                    ut_core.set_items_received(current_inventory)
+                    update_ret = ut_core.updateTracker()
+
+                    # Check each location in the sphere
+                    locations_not_in_ut = []
+                    for loc_name, location in list(current_sphere.items()):
+                        if loc_name in update_ret.in_logic_locations:
+                            # Location is in logic - collect it
+                            true_item = location.item
+                            new_items.append(NetworkItem(
+                                true_item.code, location.address,
+                                true_item.player, true_item.classification
+                            ))
+                            remaining_locations.remove(location.address)
+                            details["locations_validated"] += 1
+                        else:
+                            locations_not_in_ut.append(loc_name)
+
+                    if locations_not_in_ut:
+                        sphere_errors.append(
+                            f"Sphere {sphere_number}: {len(locations_not_in_ut)} locations in Python but not UT: "
+                            f"{locations_not_in_ut[:3]}{'...' if len(locations_not_in_ut) > 3 else ''}"
+                        )
+
+            if sphere_errors:
+                error_msg = f"UT mismatch for {game_name}: {sphere_errors[0]}"
+                details["sphere_errors"] = sphere_errors[:5]
+                results[player_id] = (False, error_msg, details)
+            else:
+                results[player_id] = (True, "", details)
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            results[player_id] = (False, f"UT validation error: {str(e)[:200]}", details)
+
+    return results
+
+
 def validate_multiworld_with_ut(
     archive_path: Path,
     multiworld_dir: Path,
@@ -598,20 +729,20 @@ def run_multiworld_test(
     multiworld_dir: Path,
     seed: int,
     project_root: Path,
-    use_sphere_validation: bool = False,
     ignore_generation_errors: bool = True,
     timeout_seconds: int = 60
 ) -> Dict:
     """
-    Run a complete multiworld test: generate and validate.
+    Run a complete multiworld test: generate and validate with both methods.
+
+    This runs generation in-process to get a live MultiWorld object, then
+    validates using BOTH sphere validation AND UT validation. The test fails
+    if either validation fails.
 
     Args:
         multiworld_dir: Directory containing player YAML files
         seed: Random seed for generation
         project_root: Path to project root
-        use_sphere_validation: If True, run generation in-process and validate
-            using the live MultiWorld object with full sphere analysis.
-            If False, use the original subprocess + UT validation approach.
         ignore_generation_errors: If True, treat option-related generation errors
             as "ignored" rather than failures.
         timeout_seconds: Maximum time in seconds for generation (default: 60)
@@ -625,104 +756,111 @@ def run_multiworld_test(
         "generation_success": False,
         "generation_ignored": False,  # True if generation failed but was ignored
         "player_results": {},
+        "sphere_validation": {},  # Results from sphere validation
+        "ut_validation": {},  # Results from UT validation
         "error": None,
-        "validation_mode": "sphere" if use_sphere_validation else "ut",
+        "validation_mode": "both",
         "elapsed_seconds": 0.0
     }
 
-    if use_sphere_validation:
-        # New approach: run generation in-process, validate with live MultiWorld
-        gen_success, gen_error, multiworld, archive_path, was_ignored = run_generation_inprocess(
-            multiworld_dir, seed, project_root, timeout_seconds
-        )
+    # Run generation in-process to get live MultiWorld object
+    gen_success, gen_error, multiworld, archive_path, was_ignored = run_generation_inprocess(
+        multiworld_dir, seed, project_root, timeout_seconds
+    )
 
-        if not gen_success:
-            result["error"] = gen_error
-            if was_ignored and ignore_generation_errors:
-                result["generation_ignored"] = True
-                result["passed"] = True  # Ignored errors count as passed
-            result["elapsed_seconds"] = time.perf_counter() - start_time
-            return result
+    if not gen_success:
+        result["error"] = gen_error
+        if was_ignored and ignore_generation_errors:
+            result["generation_ignored"] = True
+            result["passed"] = True  # Ignored errors count as passed
+        result["elapsed_seconds"] = time.perf_counter() - start_time
+        return result
 
-        result["generation_success"] = True
-        if archive_path:
-            result["archive_path"] = str(archive_path)
-
-        # Validate with sphere analysis using live MultiWorld object
-        try:
-            player_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
-            result["player_results"] = {
-                str(pid): {
-                    "passed": passed,
-                    "error": error,
-                    "details": details
-                }
-                for pid, (passed, error, details) in player_results.items()
-            }
-
-            # Aggregate cross-world statistics
-            total_cross_world_items = sum(
-                details.get("items_from_other_players", 0)
-                for _, _, details in player_results.values()
-            )
-            result["cross_world_items_total"] = total_cross_world_items
-
-            # Check if all players passed
-            all_passed = all(passed for passed, _, _ in player_results.values())
-            result["passed"] = all_passed
-
-            # Clean up archive
-            if archive_path:
-                try:
-                    archive_path.unlink()
-                except OSError:
-                    pass
-
-            # Clean up the multiworld object
-            del multiworld
-
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            result["error"] = f"Validation error: {e}"
-
-    else:
-        # Original approach: subprocess + UT validation
-        gen_success, gen_error, archive_path, was_ignored = run_generation(
-            multiworld_dir, seed, project_root, timeout_seconds
-        )
-
-        if not gen_success:
-            result["error"] = gen_error
-            if was_ignored and ignore_generation_errors:
-                result["generation_ignored"] = True
-                result["passed"] = True  # Ignored errors count as passed
-            result["elapsed_seconds"] = time.perf_counter() - start_time
-            return result
-
-        result["generation_success"] = True
+    result["generation_success"] = True
+    if archive_path:
         result["archive_path"] = str(archive_path)
 
-        # Validate with UT
-        try:
-            player_results = validate_multiworld_with_ut(archive_path, multiworld_dir, project_root)
-            result["player_results"] = {
-                str(pid): {"passed": passed, "error": error}
-                for pid, (passed, error) in player_results.items()
+    try:
+        # === SPHERE VALIDATION ===
+        sphere_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
+        result["sphere_validation"] = {
+            str(pid): {
+                "passed": passed,
+                "error": error,
+                "details": details
+            }
+            for pid, (passed, error, details) in sphere_results.items()
+        }
+
+        # Aggregate cross-world statistics
+        total_cross_world_items = sum(
+            details.get("items_from_other_players", 0)
+            for _, _, details in sphere_results.values()
+        )
+        result["cross_world_items_total"] = total_cross_world_items
+
+        sphere_all_passed = all(passed for passed, _, _ in sphere_results.values())
+
+        # === UT VALIDATION ===
+        ut_results = validate_multiworld_with_ut_spheres(multiworld, multiworld_dir, project_root)
+        result["ut_validation"] = {
+            str(pid): {
+                "passed": passed,
+                "error": error,
+                "details": details
+            }
+            for pid, (passed, error, details) in ut_results.items()
+        }
+
+        ut_all_passed = all(passed for passed, _, _ in ut_results.values())
+
+        # === COMBINE RESULTS ===
+        # Build combined player_results - fail if EITHER validation failed
+        for pid in sphere_results.keys():
+            sphere_passed, sphere_error, sphere_details = sphere_results[pid]
+            ut_passed, ut_error, ut_details = ut_results.get(pid, (True, "", {}))
+
+            combined_passed = sphere_passed and ut_passed
+            combined_error = ""
+            if not sphere_passed:
+                combined_error = f"[Sphere] {sphere_error}"
+            if not ut_passed:
+                if combined_error:
+                    combined_error += f"; [UT] {ut_error}"
+                else:
+                    combined_error = f"[UT] {ut_error}"
+
+            # Merge details from both validations
+            combined_details = {**sphere_details}
+            if ut_details:
+                combined_details["ut_spheres_checked"] = ut_details.get("spheres_checked", 0)
+                combined_details["ut_locations_validated"] = ut_details.get("locations_validated", 0)
+                if "sphere_errors" in ut_details:
+                    combined_details["ut_sphere_errors"] = ut_details["sphere_errors"]
+
+            result["player_results"][str(pid)] = {
+                "passed": combined_passed,
+                "error": combined_error,
+                "details": combined_details
             }
 
-            # Check if all players passed
-            all_passed = all(passed for passed, _ in player_results.values())
-            result["passed"] = all_passed
+        # Overall pass: both validations must pass for all players
+        result["passed"] = sphere_all_passed and ut_all_passed
 
-            # Clean up archive
+        # Clean up archive
+        if archive_path:
             try:
                 archive_path.unlink()
             except OSError:
                 pass
 
-        except Exception as e:
-            result["error"] = f"Validation error: {e}"
+        # Clean up the multiworld object
+        del multiworld
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        result["error"] = f"Validation error: {e}"
 
     result["elapsed_seconds"] = time.perf_counter() - start_time
     return result
@@ -734,7 +872,6 @@ def run_multiple_tests(
     base_seed: Optional[int],
     project_root: Path,
     world_dirs: List[str],
-    use_sphere_validation: bool = False,
     test_iteration: int = 0,
     ignore_generation_errors: bool = True,
     timeout_seconds: int = 60
@@ -742,6 +879,9 @@ def run_multiple_tests(
     """
     Run multiple multiworld tests with different seeds.
     For each run, regenerates random YAMLs for all games.
+
+    Each test runs BOTH sphere validation AND UT validation. The test fails
+    if either validation fails for any player.
 
     Generation failures are recorded separately from validation failures.
     A generation failure does not count as a test failure - only validation
@@ -756,7 +896,6 @@ def run_multiple_tests(
         base_seed: Base random seed (None for random)
         project_root: Path to project root
         world_dirs: List of world directory names in the multiworld
-        use_sphere_validation: If True, use in-process generation with sphere validation
         test_iteration: Counter for how many times this function has been called,
             used to ensure different YAMLs are generated each time the multiworld
             composition changes (even with the same base_seed)
@@ -818,7 +957,7 @@ def run_multiple_tests(
                     f.write(yaml_content)
 
         test_result = run_multiworld_test(
-            multiworld_dir, seed, project_root, use_sphere_validation,
+            multiworld_dir, seed, project_root,
             ignore_generation_errors, timeout_seconds
         )
 
@@ -939,19 +1078,8 @@ def main():
         default=0,
         help='Skip the first N templates before applying every-nth filter'
     )
-    parser.add_argument(
-        '--sphere-validation',
-        action='store_true',
-        default=True,
-        help='Use in-process generation with full sphere validation (default). '
-             'This keeps the MultiWorld object alive to validate cross-world item dependencies.'
-    )
-    parser.add_argument(
-        '--ut-validation',
-        action='store_true',
-        help='Use subprocess generation with UT-based validation instead of sphere validation. '
-             'Faster but less thorough - does not validate cross-world item dependencies.'
-    )
+    # Note: We always run both sphere validation AND UT validation now.
+    # The test fails if either validation fails for any player.
     parser.add_argument(
         '--ignore-generation-errors',
         action='store_true',
@@ -1028,7 +1156,7 @@ def main():
     print(f"Runs per test: {args.runs}")
     print(f"Seed: {args.seed if args.seed is not None else 'random'}")
     print(f"Max players: {args.max_players}")
-    print(f"Validation mode: {'sphere (in-process)' if args.sphere_validation and not args.ut_validation else 'UT (subprocess)'}")
+    print(f"Validation mode: both (sphere + UT)")
     print(f"Ignore generation errors: {ignore_generation_errors}")
     print(f"Timeout per generation: {args.timeout}s")
     print()
@@ -1051,13 +1179,13 @@ def main():
         "metadata": {
             "created": datetime.now().isoformat(),
             "last_updated": datetime.now().isoformat(),
-            "script_version": "1.2.0",
+            "script_version": "1.3.0",
             "seed_mode": seed_type,
             "seed": args.seed if args.seed is not None else "random",
             "runs_per_test": args.runs,
             "max_players": args.max_players,
             "total_templates_considered": len(template_files),
-            "validation_mode": "sphere" if args.sphere_validation and not args.ut_validation else "ut",
+            "validation_mode": "both",
             "ignore_generation_errors": ignore_generation_errors
         },
         "assembly_order": [],  # Order in which games were added
@@ -1182,7 +1310,6 @@ def main():
             base_seed=args.seed,
             project_root=PROJECT_ROOT,
             world_dirs=games_in_multiworld,
-            use_sphere_validation=args.sphere_validation and not args.ut_validation,
             test_iteration=test_iteration,
             ignore_generation_errors=ignore_generation_errors,
             timeout_seconds=args.timeout
