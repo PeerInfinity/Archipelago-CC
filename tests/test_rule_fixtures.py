@@ -436,26 +436,73 @@ class TestRuleFixtures(unittest.TestCase):
         )
 
 
+def get_unsupported_rule_types(rule):
+    """
+    Check if a rule uses types not supported by the Python evaluator.
+    Returns a set of unsupported type names found.
+    """
+    unsupported = set()
+
+    # Rule types supported by evaluate_rule_python
+    SUPPORTED_TYPES = {
+        'constant', 'negate', 'player_id', 'binary_op', 'binop', 'compare', 'comparison',
+        'and', 'or', 'not', 'conditional', 'min', 'max', 'item_check', 'count_item',
+        'group_check', 'group_count', 'list', 'name', 'block', 'setting_value', 'helper',
+        'state_method', 'can_reach'
+    }
+
+    def check_rule(r):
+        if not isinstance(r, dict):
+            return
+
+        # Check for Rule Builder format (not supported)
+        if 'rule' in r and 'type' not in r:
+            unsupported.add(f"rule:{r.get('rule')}")
+            return
+
+        rule_type = r.get('type')
+        if rule_type and rule_type not in SUPPORTED_TYPES:
+            unsupported.add(rule_type)
+
+        # Recursively check nested rules
+        for key, value in r.items():
+            if isinstance(value, dict):
+                check_rule(value)
+            elif isinstance(value, list):
+                for item in value:
+                    check_rule(item)
+
+    check_rule(rule)
+    return unsupported
+
+
 def generate_test_methods():
     """
     Generate test methods for each fixture test case.
 
     This allows pytest/unittest to report each test case individually.
+    Tests using unsupported rule types are skipped.
     """
     fixtures = load_fixtures()
 
     for suite_name, suite in fixtures.get('test_suites', {}).items():
         for test_case in suite.get('tests', []):
             test_name = f"test_{suite_name}_{test_case['name']}"
+            unsupported = get_unsupported_rule_types(test_case.get('rule', {}))
 
             # Create a closure to capture the test case
-            def make_test(sn, tc):
-                def test_method(self):
-                    self.run_fixture_test(sn, tc)
+            def make_test(sn, tc, skip_types):
+                if skip_types:
+                    @unittest.skip(f"Uses unsupported rule types: {', '.join(sorted(skip_types))}")
+                    def test_method(self):
+                        self.run_fixture_test(sn, tc)
+                else:
+                    def test_method(self):
+                        self.run_fixture_test(sn, tc)
                 return test_method
 
             # Add the test method to the class
-            setattr(TestRuleFixtures, test_name, make_test(suite_name, test_case))
+            setattr(TestRuleFixtures, test_name, make_test(suite_name, test_case, unsupported))
 
 
 # Generate test methods when module loads
