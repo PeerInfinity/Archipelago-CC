@@ -26,6 +26,8 @@ This directory contains automation scripts for testing, building, and managing t
 
 ### Testing Scripts (scripts/test/)
 
+See [Testing Pipeline Guide](../docs/json/developer/guides/testing-pipeline.md) for an overview of the complete testing workflow.
+
 #### Main Test Runner
 
 - **`test/test-all-templates.py`** - Comprehensive template testing framework ([detailed documentation](test/test-all-templates-README.md))
@@ -78,6 +80,8 @@ This directory contains automation scripts for testing, building, and managing t
 
 #### Fuzzer Test Scripts
 
+See [Fuzz Testing Guide](../docs/json/developer/tests/test-fuzz.md) and [Fuzzer Debugging Guide](../docs/json/developer/guides/fuzzer-debugging.md) for detailed documentation.
+
 - **`test/test-all-ut-fuzz.py`** - Batch Universal Tracker fuzz test runner
   ```bash
   python scripts/test/test-all-ut-fuzz.py --runs 10                        # Test all games
@@ -98,6 +102,8 @@ This directory contains automation scripts for testing, building, and managing t
   ```
 
 #### World Generator Tests
+
+See [World Generator Test Guide](../docs/json/developer/tests/test-world-generator.md) and [World Generator Guide](../docs/json/developer/guides/world-generator.md) for detailed documentation.
 
 - **`test/test-world-generator.py`** - World generator round-trip testing
   ```bash
@@ -373,7 +379,7 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   python scripts/setup/update_host_settings.py full-spoilers
   ```
 
-- **`setup/setup_dev_environment_cc.py`** - Setup script for cloud/container environments (Claude Code)
+- **`setup/setup_dev_environment_cc.py`** - Setup script for cloud/container environments (Claude Code). See [Cloud Setup Guide](../CC/cloud-setup.md) for detailed instructions.
   ```bash
   python scripts/setup/setup_dev_environment_cc.py
   ```
