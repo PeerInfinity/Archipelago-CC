@@ -1,10 +1,10 @@
-# Universal Tracker Fuzz Test Comparison: Modified vs Hybrid (APWorlds)
+# Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid (APWorlds)
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 15:04:33
 
 **Source Data Last Updated:** 2026-01-24T05:05:20
 
-This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
+This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary-apworlds.md) | [Main Test Results](./test-results-summary.md)
 
@@ -12,20 +12,20 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 ### Individual Test Results
 
-- [Modified UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-modified.md)
+- [Worldgen UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-worldgen.md)
 - [Hybrid UT Results (APWorlds)](./test-results-ut-fuzz-apworlds-hybrid.md)
 
 ## Summary
 
 - **Total Games Tested:** 124
 - **Passing Both:** 49 (39.5%)
-- **Passing Modified Only:** 1 (0.8%)
+- **Passing Worldgen Only:** 1 (0.8%)
 - **Passing Hybrid Only:** 25 (20.2%)
 - **Passing Neither:** 49 (39.5%)
 
 ## Full Comparison
 
-| Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
+| Game Name | Worldgen Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Dance of Fire and Ice | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | A Difficult Game About Climbing | ✅ 90.0% | ✅ 90.0% | ✅ | ✅ | N/A |
@@ -208,9 +208,9 @@ These games have 100% success rate in both Universal Tracker versions.
 | Zelda II: The Adventure of Link | ✅ | ✅ | N/A |
 | osu! | ✅ | ✅ | N/A |
 
-## Games Passing Modified Only (1)
+## Games Passing Worldgen Only (1)
 
-These games pass in the Modified UT but fail in the Hybrid UT.
+These games pass in the Worldgen UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -218,7 +218,7 @@ These games pass in the Modified UT but fail in the Hybrid UT.
 
 ## Games Passing Hybrid Only (25)
 
-These games pass in the Hybrid UT but fail in the Modified UT.
+These games pass in the Hybrid UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -306,7 +306,7 @@ These games fail in both Universal Tracker versions.
 
 ## Notes
 
-- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker
+- **Worldgen Success Rate:** Percentage of fuzz runs that passed in the Worldgen Universal Tracker
 - **Hybrid Success Rate:** Percentage of fuzz runs that passed in the Hybrid Universal Tracker
 - **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
 - **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files

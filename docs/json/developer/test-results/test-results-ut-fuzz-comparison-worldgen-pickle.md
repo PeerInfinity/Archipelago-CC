@@ -1,10 +1,10 @@
-# Universal Tracker Fuzz Test Comparison: Modified vs Pickle
+# Universal Tracker Fuzz Test Comparison: Worldgen vs Pickle
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 15:04:33
 
 **Source Data Last Updated:** 2026-02-04T05:43:50
 
-This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Pickle-based Universal Tracker (loads serialized multiworld).
+This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Pickle-based Universal Tracker (loads serialized multiworld).
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
@@ -12,14 +12,14 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 ### Individual Test Results
 
-- [Modified UT Results](./test-results-ut-fuzz-modified.md)
+- [Worldgen UT Results](./test-results-ut-fuzz-worldgen.md)
 - [Pickle UT Results](./test-results-ut-fuzz-pickle.md)
 
 ## Summary
 
 - **Total Games Tested:** 85
 - **Passing Both:** 59 (69.4%)
-- **Passing Modified Only:** 2 (2.4%)
+- **Passing Worldgen Only:** 2 (2.4%)
 - **Passing Pickle Only:** 16 (18.8%)
 - **Passing Neither:** 8 (9.4%)
 - **Passing Pickle with no custom code:** 43 (50.6%)
@@ -27,7 +27,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 ## Full Comparison
 
-| Game Name | Modified Success Rate | Pickle Success Rate | Exporter | GameLogic | Rules Size |
+| Game Name | Worldgen Success Rate | Pickle Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ 99.0% | ✅ 100.0% | 18.2KB | ✅ | 231.1KB |
 | A Link to the Past | ✅ 97.0% | ✅ 80.0% | 12.6KB | ✅ | 667.7KB |
@@ -181,9 +181,9 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 296.7KB |
 | shapez | ✅ | ✅ | 155.3KB |
 
-## Games Passing Modified Only (2)
+## Games Passing Worldgen Only (2)
 
-These games pass in the Modified UT but fail in the Pickle UT.
+These games pass in the Worldgen UT but fail in the Pickle UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -192,7 +192,7 @@ These games pass in the Modified UT but fail in the Pickle UT.
 
 ## Games Passing Pickle Only (16)
 
-These games pass in the Pickle UT but fail in the Modified UT.
+These games pass in the Pickle UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -230,7 +230,7 @@ These games fail in both Universal Tracker versions.
 
 ## Notes
 
-- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker
+- **Worldgen Success Rate:** Percentage of fuzz runs that passed in the Worldgen Universal Tracker
 - **Pickle Success Rate:** Percentage of fuzz runs that passed in the Pickle Universal Tracker
 - **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
 - **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files

@@ -1,10 +1,10 @@
-# Universal Tracker Fuzz Test Comparison: Original vs Modified
+# Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 15:04:33
 
 **Source Data Last Updated:** 2026-01-26T04:45:29
 
-This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Modified Universal Tracker (worldgen-based tracking).
+This report compares fuzz test results between the Original Universal Tracker (FarisTheAncient) and the Worldgen Universal Tracker (regenerates world from rules.json).
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
@@ -13,21 +13,21 @@ This report compares fuzz test results between the Original Universal Tracker (F
 ### Individual Test Results
 
 - [Original UT Results](./test-results-ut-fuzz-original.md)
-- [Modified UT Results](./test-results-ut-fuzz-modified.md)
+- [Worldgen UT Results](./test-results-ut-fuzz-worldgen.md)
 
 ## Summary
 
 - **Total Games Tested:** 85
 - **Passing Both:** 32 (37.6%)
 - **Passing Original Only:** 6 (7.1%)
-- **Passing Modified Only:** 29 (34.1%)
+- **Passing Worldgen Only:** 29 (34.1%)
 - **Passing Neither:** 18 (21.2%)
-- **Passing Modified with no custom code:** 40 (47.1%)
-- **Passing Modified Only with no custom code:** 14 (16.5%)
+- **Passing Worldgen with no custom code:** 40 (47.1%)
+- **Passing Worldgen Only with no custom code:** 14 (16.5%)
 
 ## Full Comparison
 
-| Game Name | Original Success Rate | Modified Success Rate | Exporter | GameLogic | Rules Size |
+| Game Name | Original Success Rate | Worldgen Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ❌ 17.0% | ✅ 99.0% | 18.2KB | ✅ | 231.1KB |
 | A Link to the Past | ❌ 0.0% | ✅ 97.0% | 12.6KB | ✅ | 667.7KB |
@@ -156,7 +156,7 @@ These games have 100% success rate in both Universal Tracker versions.
 
 ## Games Passing Original Only (6)
 
-These games pass in the Original UT but fail in the Modified UT.
+These games pass in the Original UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -167,9 +167,9 @@ These games pass in the Original UT but fail in the Modified UT.
 | TUNIC | 3.1KB | ✅ | 653.3KB |
 | The Witness | 14.1KB | ✅ | 398.4KB |
 
-## Games Passing Modified Only (29)
+## Games Passing Worldgen Only (29)
 
-These games pass in the Modified UT but fail in the Original UT.
+These games pass in the Worldgen UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -231,7 +231,7 @@ These games fail in both Universal Tracker versions.
 ## Notes
 
 - **Original Success Rate:** Percentage of fuzz runs that passed in the Original Universal Tracker
-- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker
+- **Worldgen Success Rate:** Percentage of fuzz runs that passed in the Worldgen Universal Tracker
 - **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
 - **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files
 - **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)

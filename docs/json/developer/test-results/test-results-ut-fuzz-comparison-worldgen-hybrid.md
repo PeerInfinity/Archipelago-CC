@@ -1,10 +1,10 @@
-# Universal Tracker Fuzz Test Comparison: Modified vs Hybrid
+# Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 15:04:33
 
 **Source Data Last Updated:** 2026-02-04T05:43:50
 
-This report compares fuzz test results between the Modified Universal Tracker (worldgen-based tracking) and the Hybrid Universal Tracker (modified with native UT preference).
+This report compares fuzz test results between the Worldgen Universal Tracker (regenerates world from rules.json) and the Hybrid Universal Tracker (worldgen with native UT preference).
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
@@ -12,14 +12,14 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 ### Individual Test Results
 
-- [Modified UT Results](./test-results-ut-fuzz-modified.md)
+- [Worldgen UT Results](./test-results-ut-fuzz-worldgen.md)
 - [Hybrid UT Results](./test-results-ut-fuzz-hybrid.md)
 
 ## Summary
 
 - **Total Games Tested:** 85
 - **Passing Both:** 61 (71.8%)
-- **Passing Modified Only:** 0 (0.0%)
+- **Passing Worldgen Only:** 0 (0.0%)
 - **Passing Hybrid Only:** 18 (21.2%)
 - **Passing Neither:** 6 (7.1%)
 - **Passing Hybrid with no custom code:** 44 (51.8%)
@@ -27,7 +27,7 @@ This report compares fuzz test results between the Modified Universal Tracker (w
 
 ## Full Comparison
 
-| Game Name | Modified Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
+| Game Name | Worldgen Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
 | A Hat in Time | ✅ 99.0% | ✅ 100.0% | 18.2KB | ✅ | 231.1KB |
 | A Link to the Past | ✅ 97.0% | ✅ 80.0% | 12.6KB | ✅ | 667.7KB |
@@ -185,7 +185,7 @@ These games have 100% success rate in both Universal Tracker versions.
 
 ## Games Passing Hybrid Only (18)
 
-These games pass in the Hybrid UT but fail in the Modified UT.
+These games pass in the Hybrid UT but fail in the Worldgen UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
@@ -223,7 +223,7 @@ These games fail in both Universal Tracker versions.
 
 ## Notes
 
-- **Modified Success Rate:** Percentage of fuzz runs that passed in the Modified Universal Tracker
+- **Worldgen Success Rate:** Percentage of fuzz runs that passed in the Worldgen Universal Tracker
 - **Hybrid Success Rate:** Percentage of fuzz runs that passed in the Hybrid Universal Tracker
 - **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
 - **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files

@@ -22,9 +22,8 @@ BOOLEAN_SETTINGS = [
     'update_frontend_presets',
     'clear_game_presets',
     'clear_all_presets',
-    'skip_export_for_native_ut',
-    'skip_export_from_list',
     'resolve_options_to_constants',
+    'use_tracking_mode_config',
 ]
 
 STRING_SETTINGS = {
@@ -49,9 +48,8 @@ PRESETS = {
         'update_frontend_presets': False,
         'clear_game_presets': False,
         'clear_all_presets': False,
-        'skip_export_for_native_ut': False,
-        'skip_export_from_list': False,
         'resolve_options_to_constants': True,
+        'use_tracking_mode_config': False,
     },
     'minimal-spoilers': {
         'skip_required_files': True,
@@ -69,9 +67,8 @@ PRESETS = {
         'update_frontend_presets': True,
         'clear_game_presets': False,
         'clear_all_presets': False,
-        'skip_export_for_native_ut': False,
-        'skip_export_from_list': False,
         'resolve_options_to_constants': True,
+        'use_tracking_mode_config': False,
     },
     'full-spoilers': {
         'skip_required_files': True,
@@ -89,9 +86,8 @@ PRESETS = {
         'update_frontend_presets': True,
         'clear_game_presets': False,
         'clear_all_presets': False,
-        'skip_export_for_native_ut': False,
-        'skip_export_from_list': False,
         'resolve_options_to_constants': True,
+        'use_tracking_mode_config': False,
     },
     'ut-fuzz': {
         'skip_required_files': True,
@@ -109,9 +105,8 @@ PRESETS = {
         'update_frontend_presets': True,
         'clear_game_presets': False,
         'clear_all_presets': False,
-        'skip_export_for_native_ut': True,  # Skip rule export for games in the skip list
-        'skip_export_from_list': True,  # Use skip-export-games.json instead of checking ut_can_gen_without_yaml
         'resolve_options_to_constants': True,
+        'use_tracking_mode_config': True,  # Use tracking-mode-config.json for per-game export decisions
     },
     'pickle-mode': {
         'skip_required_files': True,
@@ -129,9 +124,8 @@ PRESETS = {
         'update_frontend_presets': True,
         'clear_game_presets': False,
         'clear_all_presets': False,
-        'skip_export_for_native_ut': False,
-        'skip_export_from_list': False,
         'resolve_options_to_constants': True,
+        'use_tracking_mode_config': False,
     },
 }
 

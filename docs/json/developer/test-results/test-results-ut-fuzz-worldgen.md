@@ -2,17 +2,17 @@
 
 [<- Back to Fuzz Summary](./test-results-fuzz-summary.md) | [Main Test Results](./test-results-summary.md)
 
-[View Comparison (Original vs Modified)](./test-results-ut-fuzz-comparison-original-modified.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | [View Comparison (Modified vs Hybrid)](./test-results-ut-fuzz-comparison-modified-hybrid.md) | [View Comparison (Modified vs Pickle)](./test-results-ut-fuzz-comparison-modified-pickle.md)
+[View Comparison (Original vs Worldgen)](./test-results-ut-fuzz-comparison-original-worldgen.md) | [View Comparison (Original vs Hybrid)](./test-results-ut-fuzz-comparison-original-hybrid.md) | [View Comparison (Original vs Pickle)](./test-results-ut-fuzz-comparison-original-pickle.md) | [View Comparison (Worldgen vs Hybrid)](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | [View Comparison (Worldgen vs Pickle)](./test-results-ut-fuzz-comparison-worldgen-pickle.md)
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 21:03:09
+**Generated:** 2026-02-04 15:04:33
 
 **Source Data Created:** 2026-02-04T05:43:50.051248
 
 **Source Data Last Updated:** 2026-02-04T05:43:50.051254
 
-**Universal Tracker Version:** Modified (worldgen-based tracking)
+**Universal Tracker Version:** Worldgen (regenerates world from rules.json)
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -33,13 +33,13 @@
 - **Timed Out Runs:** 22
 - **Ignored Runs:** 310
 
-### Expected vs Unexpected Results
+### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 59 (not excluded, passed)
-- **Unexpected Passes:** 2 (excluded, but passed)
-- **Expected Failures:** 23 (excluded, failed as expected)
-- **Unexpected Failures (logic):** 0 (not excluded, logic mismatch)
-- **Unexpected Failures (timeout only):** 1 (not excluded, only timeouts)
+- **Expected Passes:** 61 (passes worldgen mode per config)
+- **Unexpected Passes:** 0 (expected to fail but passed)
+- **Expected Failures:** 24 (doesn't pass worldgen mode per config)
+- **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
+- **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
 ### Explain Support Summary
 
@@ -154,6 +154,107 @@ Of the 61 games with 100% pass rate:
 | Yu-Gi-Oh! 2006 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ | 100 | 0 | 74 | 18 | 8 | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 155.3KB |
+
+## Results Breakdown
+
+### Expected Passes (61)
+
+Games that pass worldgen mode per tracking-mode-config.json and passed the test.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| A Hat in Time | 100 | 99 | 0 | 0 | 99.0% |
+| A Link to the Past | 100 | 97 | 0 | 0 | 97.0% |
+| A Short Hike | 100 | 100 | 0 | 0 | 100.0% |
+| APQuest | 100 | 100 | 0 | 0 | 100.0% |
+| Adventure | 100 | 100 | 0 | 0 | 100.0% |
+| Aquaria | 100 | 100 | 0 | 0 | 100.0% |
+| Baking Adventure | 100 | 100 | 0 | 0 | 100.0% |
+| Bumper Stickers | 100 | 100 | 0 | 0 | 100.0% |
+| Castlevania - Circle of the Moon | 100 | 100 | 0 | 0 | 100.0% |
+| Castlevania 64 | 100 | 100 | 0 | 0 | 100.0% |
+| Celeste 64 | 100 | 100 | 0 | 0 | 100.0% |
+| ChecksFinder | 100 | 100 | 0 | 0 | 100.0% |
+| Choo-Choo Charles | 100 | 100 | 0 | 0 | 100.0% |
+| Civilization VI | 100 | 100 | 0 | 0 | 100.0% |
+| Coding Adventure | 100 | 100 | 0 | 0 | 100.0% |
+| DLCQuest | 100 | 100 | 0 | 0 | 100.0% |
+| DOOM 1993 | 100 | 100 | 0 | 0 | 100.0% |
+| DOOM II | 100 | 100 | 0 | 0 | 100.0% |
+| Dark Souls III | 100 | 100 | 0 | 0 | 100.0% |
+| Donkey Kong Country 3 | 100 | 100 | 0 | 0 | 100.0% |
+| Factorio | 100 | 100 | 0 | 0 | 100.0% |
+| Faxanadu | 100 | 100 | 0 | 0 | 100.0% |
+| Final Fantasy | 100 | 100 | 0 | 0 | 100.0% |
+| Heretic | 100 | 100 | 0 | 0 | 100.0% |
+| Hylics 2 | 100 | 100 | 0 | 0 | 100.0% |
+| Inscryption | 100 | 100 | 0 | 0 | 100.0% |
+| Landstalker - The Treasures of King Nole | 100 | 100 | 0 | 0 | 100.0% |
+| Links Awakening DX | 100 | 100 | 0 | 0 | 100.0% |
+| Lufia II Ancient Cave | 100 | 100 | 0 | 0 | 100.0% |
+| Mario & Luigi Superstar Saga | 100 | 100 | 0 | 0 | 100.0% |
+| Math Adventure | 100 | 100 | 0 | 0 | 100.0% |
+| Mega Man 2 | 100 | 99 | 0 | 0 | 99.0% |
+| MegaMan Battle Network 3 | 100 | 100 | 0 | 0 | 100.0% |
+| Meritous | 100 | 100 | 0 | 0 | 100.0% |
+| Metamath | 100 | 100 | 0 | 0 | 100.0% |
+| Muse Dash | 100 | 97 | 0 | 0 | 97.0% |
+| Noita | 100 | 100 | 0 | 0 | 100.0% |
+| Old School Runescape | 100 | 91 | 0 | 0 | 91.0% |
+| Overcooked! 2 | 100 | 67 | 0 | 0 | 67.0% |
+| Paint | 100 | 98 | 0 | 0 | 98.0% |
+| Risk of Rain 2 | 100 | 100 | 0 | 0 | 100.0% |
+| Saving Princess | 100 | 100 | 0 | 0 | 100.0% |
+| Shivers | 100 | 100 | 0 | 0 | 100.0% |
+| Sonic Adventure 2 Battle | 100 | 100 | 0 | 0 | 100.0% |
+| Subnautica | 100 | 100 | 0 | 0 | 100.0% |
+| Sudoku | 100 | 100 | 0 | 0 | 100.0% |
+| Super Mario 64 | 100 | 100 | 0 | 0 | 100.0% |
+| Super Mario Land 2 | 100 | 98 | 0 | 0 | 98.0% |
+| Super Mario World | 100 | 98 | 0 | 0 | 98.0% |
+| TOEM original | 100 | 100 | 0 | 0 | 100.0% |
+| TOEM rule builder | 100 | 100 | 0 | 0 | 100.0% |
+| Terraria | 100 | 98 | 0 | 0 | 98.0% |
+| The Legend of Zelda | 100 | 100 | 0 | 0 | 100.0% |
+| The Messenger | 100 | 100 | 0 | 0 | 100.0% |
+| The Wind Waker | 100 | 54 | 0 | 0 | 54.0% |
+| Timespinner | 100 | 99 | 0 | 0 | 99.0% |
+| Undertale | 100 | 100 | 0 | 0 | 100.0% |
+| VVVVVV | 100 | 100 | 0 | 0 | 100.0% |
+| Wargroove | 100 | 100 | 0 | 0 | 100.0% |
+| Yoshi's Island | 100 | 100 | 0 | 0 | 100.0% |
+| shapez | 100 | 100 | 0 | 0 | 100.0% |
+
+### Expected Failures (24)
+
+Games NOT expected to pass worldgen mode and failed as expected.
+
+| Game Name | Total | Success | Failure | Timeout | Success Rate |
+|-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
+| Blasphemous | 100 | 0 | 56 | 0 | 0.0% |
+| Bomb Rush Cyberfunk | 100 | 0 | 100 | 0 | 0.0% |
+| Celeste (Open World) | 100 | 0 | 100 | 0 | 0.0% |
+| Final Fantasy Mystic Quest | 100 | 80 | 0 | 3 | 80.0% |
+| Hollow Knight | 100 | 0 | 100 | 0 | 0.0% |
+| Jak and Daxter: The Precursor Legacy | 100 | 1 | 99 | 0 | 1.0% |
+| Kingdom Hearts | 100 | 15 | 85 | 0 | 15.0% |
+| Kingdom Hearts 2 | 100 | 0 | 97 | 0 | 0.0% |
+| Kirby's Dream Land 3 | 100 | 87 | 10 | 0 | 87.0% |
+| Lingo | 100 | 2 | 43 | 0 | 2.0% |
+| Ocarina of Time | 100 | 0 | 99 | 0 | 0.0% |
+| Pokemon Emerald | 100 | 29 | 49 | 0 | 29.0% |
+| Pokemon Red and Blue | 100 | 0 | 93 | 0 | 0.0% |
+| Raft | 100 | 0 | 100 | 0 | 0.0% |
+| SMZ3 | 100 | 0 | 100 | 0 | 0.0% |
+| Secret of Evermore | 100 | 0 | 100 | 0 | 0.0% |
+| Starcraft 2 | 100 | 0 | 97 | 1 | 0.0% |
+| Stardew Valley | 100 | 0 | 100 | 0 | 0.0% |
+| Super Metroid | 100 | 0 | 57 | 0 | 0.0% |
+| TUNIC | 100 | 56 | 44 | 0 | 56.0% |
+| The Witness | 100 | 11 | 89 | 0 | 11.0% |
+| Yacht Dice | 100 | 0 | 100 | 0 | 0.0% |
+| Yu-Gi-Oh! 2006 | 100 | 0 | 100 | 0 | 0.0% |
+| Zillion | 100 | 0 | 74 | 18 | 0.0% |
 
 ## Explain Support Details
 
@@ -284,42 +385,19 @@ These templates are excluded from testing:
 |----------|--------|
 | APWorld Manager.yaml | Not a game. |
 | Archipelago.yaml | Not a game. |
-| Blasphemous.yaml | The spoiler test currently freezes. |
 | Bomb Rush Cyberfunk.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Celeste (Open World).yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Final Fantasy.yaml | Requires manual configuration and is not compatible with the spoiler test. |
-| Hollow Knight.yaml | The spoiler test currently freezes. |
 | JSON Tools Installer.yaml | Not a game. |
-| Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
 | Kingdom Hearts 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Ocarina of Time.yaml | The default yaml file fails to generate. |
-| Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
-| Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
 | Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
-| SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
 | Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Sudoku.yaml | Cannot be used for generating worlds. |
 | Super Metroid.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | TUNIC.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | The Witness.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
 | Universal Tracker.yaml | Not a game. |
-| XCOM 2 War of the Chosen.yaml | UT fuzz test hangs during verification. |
 | Yacht Dice.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Yu-Gi-Oh! 2006.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
-| Zillion.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
-
-### Unexpected Passes
-
-- Final Fantasy
-- Sudoku
-
-### Unexpected Failures (Timeout Only)
-
-These games failed only due to timeouts, not logic mismatches:
-
-- Final Fantasy Mystic Quest

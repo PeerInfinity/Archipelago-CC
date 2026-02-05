@@ -552,10 +552,10 @@ def main():
     parser.add_argument(
         '--ut-version',
         type=str,
-        choices=['modified', 'original', 'pickle'],
-        default='modified',
-        help='Which version of Universal Tracker to test: modified (worldgen-based), '
-             'original (YAML-based), or pickle (pickle-based, fastest) (default: modified)'
+        choices=['worldgen', 'original', 'pickle'],
+        default='worldgen',
+        help='Which version of Universal Tracker to test: worldgen (rules.json-based), '
+             'original (YAML-based), or pickle (pickle-based, fastest) (default: worldgen)'
     )
     parser.add_argument(
         '--custom-worlds-only',
@@ -640,19 +640,15 @@ def main():
         print(f"  (Config determines export format per-game based on test results)")
         update_host_yaml({
             'use_tracking_mode_config': True,
-            'skip_export_for_native_ut': False,
-            'skip_export_from_list': False,
             'save_rules_json': False,  # Config decides
             'save_tracker_pickle': False,  # Config decides
         })
     else:
-        # Legacy flag-based system (modified, original, pickle modes)
+        # Flag-based system (worldgen, original, pickle modes)
         print(f"  use_tracking_mode_config: False")
         print(f"  save_tracker_pickle: {use_pickle_mode}")
         update_host_yaml({
             'use_tracking_mode_config': False,
-            'skip_export_for_native_ut': False,
-            'skip_export_from_list': False,
             'save_tracker_pickle': use_pickle_mode,
         })
 
@@ -665,9 +661,9 @@ def main():
 
     # Determine UT version label for output files
     # - "original" = original UT from FarisTheAncient
-    # - "modified" = modified UT using worldgen-based tracking for all worlds
-    # - "hybrid" = modified UT with config-based per-game mode selection
-    # - "pickle" = modified UT using pickle-based tracking (fastest, preserves exact lambdas)
+    # - "worldgen" = UT using worldgen-based tracking (regenerates world from rules.json)
+    # - "hybrid" = UT with config-based per-game mode selection
+    # - "pickle" = UT using pickle-based tracking (fastest, preserves exact lambdas)
     if args.ut_version == "original":
         ut_version = "original"
     elif args.ut_version == "pickle":
@@ -675,7 +671,7 @@ def main():
     elif args.use_tracking_config:
         ut_version = "hybrid"
     else:
-        ut_version = "modified"
+        ut_version = "worldgen"
 
     # Determine world source (for output filename)
     # If --world-source is specified, use it; otherwise infer from --custom-worlds-only
