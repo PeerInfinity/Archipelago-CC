@@ -35,6 +35,64 @@ logger = logging.getLogger(__name__)
 _installed_hooks = {}
 _original_functions = {}
 
+# Module-level state for communication between hooks
+_module_state = {}
+
+
+def is_main_patched() -> bool:
+    """
+    Check if Main.py has been file-patched with exporter functionality.
+
+    The file patch adds 'from exporter import export_game_rules' to Main.py.
+    If this import exists in the Main module, the file patch has been applied
+    and monkey patching is not needed.
+
+    Returns:
+        True if Main.py has the file patch applied, False otherwise.
+    """
+    try:
+        import Main
+        # Check if export_game_rules was imported into Main module
+        return hasattr(Main, 'export_game_rules')
+    except ImportError:
+        return False
+
+
+def is_baseclasses_patched() -> bool:
+    """
+    Check if BaseClasses.py has been file-patched with sphere logging.
+
+    The file patch adds a check for save_sphere_log at the start of
+    Spoiler.create_playthrough(). We detect this by inspecting the
+    source code of the method.
+
+    Returns:
+        True if BaseClasses.py has the file patch applied, False otherwise.
+    """
+    try:
+        import BaseClasses
+        import inspect
+
+        # Get the source code of create_playthrough
+        source = inspect.getsource(BaseClasses.Spoiler.create_playthrough)
+
+        # The file patch adds this import within create_playthrough
+        return 'create_playthrough_with_logging' in source
+    except (ImportError, OSError, TypeError):
+        # OSError can occur if source is not available
+        # TypeError can occur if it's a built-in
+        return False
+
+
+def are_file_patches_applied() -> bool:
+    """
+    Check if file patches have been applied to core Archipelago files.
+
+    Returns:
+        True if both Main.py and BaseClasses.py have been patched.
+    """
+    return is_main_patched() and is_baseclasses_patched()
+
 
 def install_hooks(
     export_rules: bool = True,
@@ -99,11 +157,17 @@ def _install_export_hook() -> bool:
     Install hook to export rules JSON after seed generation.
 
     This wraps Main.main() to call the exporter after generation completes.
+    Skips installation if Main.py already has file patches applied.
     """
     hook_name = "export_rules"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
+        return True
+
+    # Check if file patch is already applied
+    if is_main_patched():
+        logger.info(f"Skipping {hook_name} hook: Main.py already has file patch applied")
         return True
 
     try:
@@ -115,6 +179,22 @@ def _install_export_hook() -> bool:
         @functools.wraps(original_main)
         def hooked_main(*args, **kwargs):
             """Wrapped Main.main that exports rules and/or pickle after generation."""
+            import os
+
+            # Set up output directory for sphere logging before generation runs
+            # This ensures sphere_log.jsonl goes to a consistent location
+            # The file patch normally sets multiworld.temp_dir_for_sphere_log,
+            # but we need to set it via a different mechanism since we don't
+            # have the multiworld object until after main() returns.
+            # We use the 'output' directory as a fallback location.
+            output_dir = 'output'
+            if args and hasattr(args[0], 'outputpath') and args[0].outputpath:
+                output_dir = args[0].outputpath
+            os.makedirs(output_dir, exist_ok=True)
+
+            # Store the output directory for _post_generation_export to find
+            _module_state['output_dir'] = output_dir
+
             result = original_main(*args, **kwargs)
 
             # result is the multiworld object
@@ -148,11 +228,17 @@ def _install_sphere_logging_hook() -> bool:
     Install hook for sphere log generation during playthrough creation.
 
     This wraps Spoiler.create_playthrough() to log sphere information.
+    Skips installation if BaseClasses.py already has file patches applied.
     """
     hook_name = "sphere_logging"
 
     if hook_name in _installed_hooks:
         logger.warning(f"Hook {hook_name} already installed")
+        return True
+
+    # Check if file patch is already applied
+    if is_baseclasses_patched():
+        logger.info(f"Skipping {hook_name} hook: BaseClasses.py already has file patch applied")
         return True
 
     try:
@@ -203,6 +289,8 @@ def _post_generation_export(multiworld: "MultiWorld"):
     Args:
         multiworld: The MultiWorld object from generation
     """
+    import os
+    import shutil
     from ..config import get_export_setting
 
     # Build the filename base from seed_name
@@ -220,9 +308,38 @@ def _post_generation_export(multiworld: "MultiWorld"):
     clear_game_presets = get_export_setting('clear_game_presets', False)
     clear_all_presets = get_export_setting('clear_all_presets', False)
 
+    # Find where the sphere_log was written by the sphere_logging hook
+    # It writes to temp_dir_for_sphere_log, output_path, or 'output' directory
+    sphere_log_filename = f"{filename_base}_sphere_log.jsonl"
+    sphere_log_source = None
+
+    # Check possible locations in order of preference
+    # Include the output_dir stored by hooked_main if available
+    possible_dirs = [
+        getattr(multiworld, 'temp_dir_for_sphere_log', None),
+        _module_state.get('output_dir'),
+        getattr(multiworld, 'output_path', None),
+        'output',
+    ]
+    for check_dir in possible_dirs:
+        if check_dir and os.path.isdir(check_dir):
+            check_path = os.path.join(check_dir, sphere_log_filename)
+            if os.path.exists(check_path):
+                sphere_log_source = check_path
+                logger.debug(f"Found sphere_log at: {sphere_log_source}")
+                break
+
     # Create a temporary directory for exports
     # The exporters will copy to presets if save_presets=True
     with tempfile.TemporaryDirectory() as temp_dir:
+        # Copy sphere_log into temp_dir if it exists elsewhere
+        if sphere_log_source:
+            dest_path = os.path.join(temp_dir, sphere_log_filename)
+            try:
+                shutil.copy2(sphere_log_source, dest_path)
+                logger.debug(f"Copied sphere_log to temp_dir: {dest_path}")
+            except Exception as e:
+                logger.warning(f"Failed to copy sphere_log: {e}")
         # Export rules JSON
         # The exporter handles its own decision logic based on settings
         try:

@@ -5,7 +5,7 @@ This document tracks the differences between this repository and the upstream Ar
 **Upstream commit:** `886cc68051f23d6049f8d846379b193aa0415e24` (Timespinner: Exclude Removed Location from Web Tracker #5701)
 **Upstream date:** November 29, 2025 11:13:43 -0700
 **Upstream version:** 0.6.5-rc1
-**Last updated:** 2026-01-14
+**Last updated:** 2026-02-05
 
 ## Summary
 
@@ -142,8 +142,8 @@ worlds/yoshisisland/__init__.py
 
 ### Core Files
 - **BaseClasses.py** - Modified for JSON export functionality and sphere logging
-- **Main.py** - Enhanced with JSON export, vanilla placement trigger, and workflow changes
-- **settings.py** - Configuration changes for JSON export, sphere logging, and skip_required_files
+- **Main.py** - Enhanced with JSON export, pickle export, vanilla placement trigger, preset clearing, and workflow changes
+- **settings.py** - Configuration changes for JSON export, sphere logging, pickle export, preset clearing, tracking mode config, and skip_required_files
 
 ### World Implementations (skip_required_files support)
 Modified world implementations to support generation without ROM files:
@@ -194,6 +194,19 @@ Allows world generation without ROM files for JSON export purposes. Enables:
 - CI/CD testing without proprietary files
 - Development and debugging workflows
 
+### Pickle Export Mode (`exporter/pickle_exporter.py`)
+An alternative to JSON export that pickles the multiworld directly using dill:
+- Preserves exact lambdas and functions in access rules
+- Faster tracker loading (no world regeneration needed)
+- Gzip-compressed for smaller file sizes
+- Supports per-game tracking mode configuration
+
+### Tracking Mode Configuration (`scripts/data/tracking-mode-config.json`)
+Per-game configuration for Universal Tracker modes:
+- Specifies which modes (worldgen, pickle, original) pass for each game
+- Generated from automated UT fuzz test results
+- Supports both bundled worlds and APWorlds
+
 ---
 
 ## External Components
@@ -218,7 +231,7 @@ This repository includes several components based on or taken from other communi
 ### Original to This Project
 
 The following major components were developed specifically for this project:
-- `exporter/` - JSON rule export system
+- `exporter/` - JSON rule export system and pickle exporter
 - `world_generator/` - JSON-to-Python world generator
 - `frontend/` - Web client application
 - `worlds/json_tools_installer/` - APWorld installer for JSON Tools
@@ -249,6 +262,6 @@ The following major components were developed specifically for this project:
 
 ---
 
-**Last updated:** 2026-01-14
+**Last updated:** 2026-02-05
 **Base commit:** 886cc68051f23d6049f8d846379b193aa0415e24
 **Upstream version:** 0.6.5-rc1

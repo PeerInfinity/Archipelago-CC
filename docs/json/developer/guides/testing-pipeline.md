@@ -173,7 +173,7 @@ python scripts/test/test-all-templates.py --include-list "Adventure.yaml"
 python scripts/test/test-all-templates.py --export-only
 
 # Only run spoiler tests, skip generation (requires existing rules files)
-python scripts/test/test-all-templates.py --spoiler-only
+python scripts/test/test-all-templates.py --test-only
 
 # Start processing from a specific template file (alphabetically ordered)
 python scripts/test/test-all-templates.py --start-from "Adventure.yaml"
@@ -193,7 +193,7 @@ The script now supports partial execution and resumption options for more flexib
 - **No HTTP server required**: Can run without the development server
 - **Fast bulk processing**: Ideal for generating data files for later analysis
 
-**`--spoiler-only`**: Only runs spoiler tests, skipping the generation step  
+**`--test-only`**: Only runs spoiler tests, skipping the generation step
 - **Use case**: Re-test games after fixing JavaScript rule engine issues without regenerating data
 - **Requires existing files**: Rules and sphere log files must already exist from a previous run
 - **Efficient debugging**: Test logic fixes without waiting for generation
@@ -206,7 +206,7 @@ The script now supports partial execution and resumption options for more flexib
 The automation script (`scripts/test/test-all-templates.py`) provides:
 
 - **Complete Pipeline Automation**: Runs Generate.py, spoiler tests, and analysis for each template
-- **Partial Execution Modes**: Use `--export-only` or `--spoiler-only` to run specific pipeline stages
+- **Partial Execution Modes**: Use `--export-only` or `--test-only` to run specific pipeline stages
 - **Resume from Point**: Use `--start-from` to continue processing from a specific template file  
 - **Comprehensive Metrics**: Captures error/warning counts, sphere progression, and pass/fail status
 - **Smart Filtering**: Automatically skips non-game templates by default, with options for custom skip/include lists
@@ -215,7 +215,7 @@ The automation script (`scripts/test/test-all-templates.py`) provides:
 - **Detailed JSON Output**: Structured results with timestamps and diagnostic information
 - **Progress Tracking**: Real-time feedback and summary statistics
 
-**Output Location**: Results are saved to `scripts/output/template-test-results.json` with complete metrics for each game including:
+**Output Location**: Results are saved to `scripts/output/spoiler-minimal/test-results.json` (or the appropriate subdirectory based on test type) with complete metrics for each game including:
 - Generation success/failure with error and warning counts
 - Spoiler test results with sphere progression details  
 - First error/warning lines for quick debugging
@@ -228,14 +228,17 @@ This automated approach is ideal for regression testing, validating multiple gam
 After running the automation script, generate a visual chart of the test results:
 
 ```bash
-# Generate chart with default settings (outputs to docs/json/developer/guides/test-results.md)
+# Generate all charts (processes all test types and generates summary)
 python scripts/docs/generate-test-chart.py
 
-# Use custom input/output locations
-python scripts/docs/generate-test-chart.py --input-file custom-results.json --output-file custom-chart.md
+# Generate a single chart for a specific test type (all three options required)
+python scripts/docs/generate-test-chart.py \
+    --input-file scripts/output/spoiler-minimal/test-results.json \
+    --output-file docs/json/developer/guides/test-results-minimal.md \
+    --test-type minimal
 ```
 
-The chart generation script (`scripts/docs/generate-test-chart.py`) creates a comprehensive markdown table showing:
+The chart generation script (`scripts/docs/generate-test-chart.py`) creates comprehensive markdown tables showing:
 
 - **Game Name**: Human-readable game names
 - **Test Result**: Pass/fail status with visual indicators (✅ ❌ ❓)
@@ -302,7 +305,12 @@ If you skip the getting-started setup, you may encounter dependency errors or ot
    - Template file name (e.g., "A Hat in Time.yaml")
    - Python directory (e.g., "worlds/ahit")
 
-2. **Create Game-Specific Exporter (if needed):** In `exporter/games/`, create a new file for your game if it doesn't exist (e.g., `exporter/games/ahit.py`). Base it on `exporter/games/generic.py`.
+2. **Create Game-Specific Exporter (if needed):** In `exporter/games/`, create a new file for your game if it doesn't exist. The exporter uses a tiered structure:
+   - `exporter/games/base/generic.py` - Base generic handler (use as template)
+   - `exporter/games/official/` - Official Archipelago games (e.g., `ahit.py`)
+   - `exporter/games/unofficial/` - Unofficial/community games
+
+   Create your game handler in the appropriate subdirectory based on whether it's an official or unofficial world.
 
 3. **Generate Test Data:** Run Generate.py for your chosen game:
    ```bash
@@ -332,7 +340,7 @@ If you skip the getting-started setup, you may encounter dependency errors or ot
    **Important:** Use `"Templates/[GameName].yaml"` as the path, **not** `"Players/Templates/[GameName].yaml"`. The `--weights_file_path` is relative to the `player_files_path` setting in `host.yaml` (which defaults to "Players"), so the full path becomes `Players/Templates/[GameName].yaml` automatically.
    
    **Check for Export Errors:** Examine `generate_output.txt` for error messages or parsing failures. If errors exist:
-   - Fix game-specific issues in your `exporter/games/[game].py` file
+   - Fix game-specific issues in your game's exporter file (e.g., `exporter/games/official/[game].py`)
    - Fix general exporter bugs in the main exporter code
    
    This creates files in `frontend/presets/[game]/AP_[seed]/`:
@@ -557,7 +565,7 @@ This indicates you're systematically resolving issues from major to minor.
 |------------|---------------|--------------|
 | 8+ locations failing | Variable resolution | `exporter/analyzer.py` |
 | 1-2 locations failing | Rule engine logic | `frontend/modules/shared/ruleEngine.js` |
-| Helper function errors | Missing game helpers | `exporter/games/[game].py` |
+| Helper function errors | Missing game helpers | `exporter/games/{official,unofficial}/[game].py` |
 | Region mismatches | Area access logic | Game-specific helpers |
 
 ### Common Anti-Patterns to Avoid

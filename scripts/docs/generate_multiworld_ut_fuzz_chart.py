@@ -68,15 +68,41 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "## Summary\n\n"
 
     total_tested = len(test_results)
-    passed_count = sum(1 for r in test_results.values() if r.get('status') == 'passed')
-    failed_count = sum(1 for r in test_results.values() if r.get('status') == 'failed')
-    pending_count = sum(1 for r in test_results.values() if r.get('status') == 'pending')
-    error_count = sum(1 for r in test_results.values() if r.get('status') == 'error')
+
+    # Count statuses, but also check for all-generation-failures case
+    passed_count = 0
+    failed_count = 0
+    pending_count = 0
+    error_count = 0
+    all_gen_failed_count = 0
+
+    for r in test_results.values():
+        status = r.get('status', 'unknown')
+        test_result = r.get('test_result', {})
+
+        # Check if all runs were generation failures
+        total_runs = test_result.get('total', 0)
+        gen_failures = test_result.get('generation_failures', 0)
+        all_gen_failed = total_runs > 0 and gen_failures == total_runs
+
+        if all_gen_failed:
+            all_gen_failed_count += 1
+        elif status == 'passed':
+            passed_count += 1
+        elif status == 'failed':
+            failed_count += 1
+        elif status == 'pending':
+            pending_count += 1
+        elif status == 'error':
+            error_count += 1
+
     second_pass_count = sum(1 for r in test_results.values() if r.get('second_pass'))
 
     md_content += f"- **Total Games Tested:** {total_tested}\n"
     md_content += f"- **Games Passed:** {passed_count}\n"
     md_content += f"- **Games Failed:** {failed_count}\n"
+    if all_gen_failed_count > 0:
+        md_content += f"- **Games with All Generations Failed:** {all_gen_failed_count}\n"
     md_content += f"- **Games Pending (< 2 players):** {pending_count}\n"
     if error_count > 0:
         md_content += f"- **Games with Errors:** {error_count}\n"
@@ -110,8 +136,15 @@ def generate_markdown(results: Dict[str, Any]) -> str:
             test_result = data.get('test_result', {})
             tested_in_second_pass = False
 
+        # Check if all runs were generation failures
+        total_runs = test_result.get('total', 0)
+        gen_failures = test_result.get('generation_failures', 0)
+        all_gen_failed = total_runs > 0 and gen_failures == total_runs
+
         # Status display
-        if status == 'passed':
+        if all_gen_failed:
+            status_display = "🔴 All Gen Failed"
+        elif status == 'passed':
             status_display = "✅ Passed"
             if tested_in_second_pass:
                 status_display += " (2nd)"
@@ -130,13 +163,22 @@ def generate_markdown(results: Dict[str, Any]) -> str:
         if test_result and test_result.get('total', 0) > 0:
             total = test_result['total']
             success = test_result.get('success', 0)
-            rate = (success / total) * 100
-            if rate == 100:
-                rate_display = f"**{rate:.0f}%** ({success}/{total})"
-            elif rate >= 50:
-                rate_display = f"⚠️ {rate:.0f}% ({success}/{total})"
+            gen_fail = test_result.get('generation_failures', 0)
+
+            if all_gen_failed:
+                rate_display = f"🔴 0% (0/{total}, {gen_fail} gen fail)"
+            elif gen_fail > 0:
+                # Some generation failures
+                rate = (success / total) * 100
+                rate_display = f"{rate:.0f}% ({success}/{total}, {gen_fail} gen fail)"
             else:
-                rate_display = f"❌ {rate:.0f}% ({success}/{total})"
+                rate = (success / total) * 100
+                if rate == 100:
+                    rate_display = f"**{rate:.0f}%** ({success}/{total})"
+                elif rate >= 50:
+                    rate_display = f"⚠️ {rate:.0f}% ({success}/{total})"
+                else:
+                    rate_display = f"❌ {rate:.0f}% ({success}/{total})"
         elif status == 'pending':
             rate_display = "N/A"
         else:
@@ -228,8 +270,9 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "- **Status:**\n"
     md_content += "  - ✅ Passed: All test runs succeeded\n"
     md_content += "  - ✅ Passed (2nd): Passed in second pass (tested with full multiworld)\n"
-    md_content += "  - ❌ Failed: One or more test runs failed, game was removed from multiworld\n"
+    md_content += "  - ❌ Failed: One or more validation failures (generation succeeded but validation failed)\n"
     md_content += "  - ❌ Failed (2nd): Failed in second pass\n"
+    md_content += "  - 🔴 All Gen Failed: All generation attempts failed (could not generate multiworld)\n"
     md_content += "  - ⏳ Pending: Game added but not tested yet (need 2+ players)\n"
     md_content += "  - ⚠️ Error: Infrastructure error during testing\n"
     md_content += "- **Success Rate:** Percentage of test runs that passed\n\n"
