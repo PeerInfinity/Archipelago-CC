@@ -991,7 +991,10 @@
           "name": "all_of_true",
           "rule": {
             "type": "all_of",
-            "iterator_info": {"iterator": {"type": "list", "value": [{"type": "constant", "value": true}, {"type": "constant", "value": true}]}},
+            "iterator_info": {
+              "target": {"type": "name", "name": "item"},
+              "iterator": {"type": "list", "value": [{"type": "constant", "value": true}, {"type": "constant", "value": true}]}
+            },
             "element_rule": {"type": "name", "name": "item"}
           },
           "expected": true
@@ -1000,7 +1003,10 @@
           "name": "all_of_false",
           "rule": {
             "type": "all_of",
-            "iterator_info": {"iterator": {"type": "list", "value": [{"type": "constant", "value": true}, {"type": "constant", "value": false}]}},
+            "iterator_info": {
+              "target": {"type": "name", "name": "item"},
+              "iterator": {"type": "list", "value": [{"type": "constant", "value": true}, {"type": "constant", "value": false}]}
+            },
             "element_rule": {"type": "name", "name": "item"}
           },
           "expected": false
@@ -1014,7 +1020,10 @@
           "name": "any_of_true",
           "rule": {
             "type": "any_of",
-            "iterator_info": {"iterator": {"type": "list", "value": [{"type": "constant", "value": false}, {"type": "constant", "value": true}]}},
+            "iterator_info": {
+              "target": {"type": "name", "name": "item"},
+              "iterator": {"type": "list", "value": [{"type": "constant", "value": false}, {"type": "constant", "value": true}]}
+            },
             "element_rule": {"type": "name", "name": "item"}
           },
           "expected": true
@@ -1023,7 +1032,10 @@
           "name": "any_of_false",
           "rule": {
             "type": "any_of",
-            "iterator_info": {"iterator": {"type": "list", "value": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]}},
+            "iterator_info": {
+              "target": {"type": "name", "name": "item"},
+              "iterator": {"type": "list", "value": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]}
+            },
             "element_rule": {"type": "name", "name": "item"}
           },
           "expected": false
@@ -1038,7 +1050,7 @@
           "rule": {
             "type": "sum_of",
             "iterator_info": {
-              "var": "n",
+              "target": {"type": "name", "name": "n"},
               "iterator": {"type": "list", "value": [{"type": "constant", "value": 1}, {"type": "constant", "value": 2}, {"type": "constant", "value": 3}]}
             },
             "element_rule": {"type": "name", "name": "n"}
@@ -1492,26 +1504,44 @@
       ]
     },
     "WeightedSum": {
-      "description": "Weighted sum tests",
+      "description": "Weighted sum tests (Rule Builder format)",
       "tests": [
         {
           "name": "weighted_sum_calculation",
-          "rule": {"rule": "WeightedSum", "args": {"weights": {"Sword": 10, "Shield": 5}}},
+          "rule": {
+            "rule": "weighted_sum",
+            "args": [
+              {"type": "constant", "value": 25},
+              {"type": "list", "value": [
+                {"type": "list", "value": [{"type": "constant", "value": "Sword"}, {"type": "constant", "value": 10}]},
+                {"type": "list", "value": [{"type": "constant", "value": "Shield"}, {"type": "constant", "value": 5}]}
+              ]}
+            ]
+          },
           "context": {"inventory": {"Sword": 2, "Shield": 1}},
-          "expected": 25,
-          "note": "2*10 + 1*5 = 25"
+          "expected": true,
+          "note": "2*10 + 1*5 = 25, which meets threshold of 25"
         }
       ]
     },
     "weighted_sum": {
-      "description": "Weighted sum AST format tests",
+      "description": "Weighted sum tests (checks if weighted sum meets threshold)",
       "tests": [
         {
           "name": "weighted_sum_ast",
-          "rule": {"type": "weighted_sum", "weights": {"Key": 1, "BossKey": 5}},
+          "rule": {
+            "rule": "weighted_sum",
+            "args": [
+              {"type": "constant", "value": 5},
+              {"type": "list", "value": [
+                {"type": "list", "value": [{"type": "constant", "value": "Key"}, {"type": "constant", "value": 1}]},
+                {"type": "list", "value": [{"type": "constant", "value": "BossKey"}, {"type": "constant", "value": 5}]}
+              ]}
+            ]
+          },
           "context": {"inventory": {"Key": 3, "BossKey": 1}},
-          "expected": 8,
-          "note": "3*1 + 1*5 = 8"
+          "expected": true,
+          "note": "3*1 + 1*5 = 8, which meets threshold of 5"
         }
       ]
     },
@@ -1562,7 +1592,7 @@
       "tests": [
         {
           "name": "tuple_values",
-          "rule": {"rule": "Tuple", "args": {"elements": [{"type": "constant", "value": 1}, {"type": "constant", "value": 2}]}},
+          "rule": {"rule": "Tuple", "args": {"value": [{"type": "constant", "value": 1}, {"type": "constant", "value": 2}]}},
           "expected": [1, 2]
         }
       ]
@@ -1572,7 +1602,7 @@
       "tests": [
         {
           "name": "option_value_lookup",
-          "rule": {"rule": "OptionValue", "args": {"setting": "mode"}},
+          "rule": {"rule": "OptionValue", "args": {"option": "mode"}},
           "context": {"settings": {"mode": "standard"}},
           "expected": "standard"
         }
@@ -1583,38 +1613,74 @@
       "tests": [
         {
           "name": "world_attribute_lookup",
-          "rule": {"rule": "WorldAttribute", "args": {"setting": "difficulty"}},
+          "rule": {"rule": "WorldAttribute", "args": {"attribute": "difficulty"}},
           "context": {"settings": {"difficulty": "hard"}},
           "expected": "hard"
         }
       ]
     },
     "AST_all_of": {
-      "description": "AST all_of tests",
+      "description": "AST all_of tests via Rule Builder format",
       "tests": [
         {
           "name": "ast_all_of_true",
-          "rule": {"rule": "AST_all_of", "args": {"iterable": [true, true, true]}},
+          "rule": {
+            "rule": "AST_all_of",
+            "args": {
+              "element_rule": {"type": "name", "name": "item"},
+              "iterator_info": {
+                "target": {"type": "name", "name": "item"},
+                "iterator": {"type": "list", "value": [{"type": "constant", "value": true}, {"type": "constant", "value": true}]}
+              }
+            }
+          },
           "expected": true
         },
         {
           "name": "ast_all_of_false",
-          "rule": {"rule": "AST_all_of", "args": {"iterable": [true, false, true]}},
+          "rule": {
+            "rule": "AST_all_of",
+            "args": {
+              "element_rule": {"type": "name", "name": "item"},
+              "iterator_info": {
+                "target": {"type": "name", "name": "item"},
+                "iterator": {"type": "list", "value": [{"type": "constant", "value": true}, {"type": "constant", "value": false}]}
+              }
+            }
+          },
           "expected": false
         }
       ]
     },
     "AST_any_of": {
-      "description": "AST any_of tests",
+      "description": "AST any_of tests via Rule Builder format",
       "tests": [
         {
           "name": "ast_any_of_true",
-          "rule": {"rule": "AST_any_of", "args": {"iterable": [false, true, false]}},
+          "rule": {
+            "rule": "AST_any_of",
+            "args": {
+              "element_rule": {"type": "name", "name": "item"},
+              "iterator_info": {
+                "target": {"type": "name", "name": "item"},
+                "iterator": {"type": "list", "value": [{"type": "constant", "value": false}, {"type": "constant", "value": true}]}
+              }
+            }
+          },
           "expected": true
         },
         {
           "name": "ast_any_of_false",
-          "rule": {"rule": "AST_any_of", "args": {"iterable": [false, false, false]}},
+          "rule": {
+            "rule": "AST_any_of",
+            "args": {
+              "element_rule": {"type": "name", "name": "item"},
+              "iterator_info": {
+                "target": {"type": "name", "name": "item"},
+                "iterator": {"type": "list", "value": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]}
+              }
+            }
+          },
           "expected": false
         }
       ]
