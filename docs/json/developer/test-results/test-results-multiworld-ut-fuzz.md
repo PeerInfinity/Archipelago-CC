@@ -4,11 +4,11 @@
 
 [📖 Learn about this test](../tests/test-multiworld-ut-fuzz.md)
 
-**Generated:** 2026-02-05 21:37:53
+**Generated:** 2026-02-05 22:30:05
 
-**Source Data Created:** 2026-02-05T20:51:45.565962
+**Source Data Created:** 2026-02-05T22:22:27.814175
 
-**Source Data Last Updated:** 2026-02-05T21:37:39.271533
+**Source Data Last Updated:** 2026-02-05T22:29:48.382620
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,135 +21,82 @@
 ## Summary
 
 - **Total Games Tested:** 59
-- **Games Passed:** 53
-- **Games Failed:** 3
-- **Games with All Generations Failed:** 3
-- **Games Pending (< 2 players):** 0
-- **Rejected Games:** 6
+- **Games Passed:** 0
+- **Games Failed:** 58
+- **Games Pending (< 2 players):** 1
+- **Rejected Games:** 58
 
 ## Test Results
 
 | Game Name | World Dir | Player # | MW Size | Status | Success Rate |
 |-----------|-----------|:--------:|:-------:|:------:|:------------:|
-| A Hat in Time | ahit | 1 | 10 | ✅ Passed | **100%** (3/3) |
-| A Link to the Past | alttp | 2 | 10 | ✅ Passed | **100%** (3/3) |
-| A Short Hike | shorthike | 3 | 10 | ✅ Passed | **100%** (3/3) |
-| APQuest | apquest | 4 | 10 | ✅ Passed | **100%** (3/3) |
-| Adventure | adventure | 5 | 10 | ✅ Passed | **100%** (3/3) |
-| Aquaria | aquaria | 6 | 10 | ✅ Passed | **100%** (3/3) |
-| Baking Adventure | bakingadventure | 7 | 10 | ✅ Passed | **100%** (3/3) |
-| Bumper Stickers | bumpstik | 8 | 10 | ✅ Passed | **100%** (3/3) |
-| Castlevania - Circle of the Moon | cvcotm | 9 | 10 | ✅ Passed | **100%** (3/3) |
-| Castlevania 64 | cv64 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Celeste 64 | celeste64 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| ChecksFinder | checksfinder | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Choo-Choo Charles | cccharles | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Civilization VI | civ_6 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Coding Adventure | codingadventure | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| DLCQuest | dlcquest | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| DOOM 1993 | doom_1993 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| DOOM II | doom_ii | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Dark Souls III | dark_souls_3 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Donkey Kong Country 3 | dkc3 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Factorio | factorio | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Faxanadu | faxanadu | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Heretic | heretic | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Hylics 2 | hylics2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Inscryption | inscryption | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Landstalker - The Treasures of King Nole | landstalker | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Links Awakening DX | ladx | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Lufia II Ancient Cave | lufia2ac | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Mario & Luigi Superstar Saga | mlss | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Math Adventure | mathadventure | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Mega Man 2 | mm2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| MegaMan Battle Network 3 | mmbn3 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Meritous | meritous | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Metamath | metamath | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Muse Dash | musedash | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| Noita | noita | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Old School Runescape | osrs | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Overcooked! 2 | overcooked2 | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Paint | paint | 10 | 10 | ✅ Passed | 33% (1/3, 2 gen fail) |
-| Risk of Rain 2 | ror2 | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| Saving Princess | saving_princess | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| Shivers | shivers | 10 | 10 | ✅ Passed | 67% (2/3, 1 gen fail) |
-| Sonic Adventure 2 Battle | sa2b | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Subnautica | subnautica | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Super Mario 64 | sm64ex | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Super Mario Land 2 | marioland2 | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Super Mario World | smw | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| TOEM original | toem_original | 10 | 10 | ❌ Failed | 0% (0/3, 1 gen fail) |
-| TOEM rule builder | toem_rule_builder | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| Terraria | terraria | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| The Legend of Zelda | tloz | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| The Messenger | messenger | 10 | 10 | 🔴 All Gen Failed | 🔴 0% (0/3, 3 gen fail) |
-| The Wind Waker | tww | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Timespinner | timespinner | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Undertale | undertale | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| VVVVVV | v6 | 10 | 10 | ❌ Failed | ⚠️ 67% (2/3) |
-| Wargroove | wargroove | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| Yoshi's Island | yoshisisland | 10 | 10 | ✅ Passed | **100%** (3/3) |
-| shapez | shapez | 10 | 10 | ✅ Passed | **100%** (3/3) |
+| A Hat in Time | ahit | 1 | 1 | ⏳ Pending | N/A |
+| A Link to the Past | alttp | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| A Short Hike | shorthike | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| APQuest | apquest | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Adventure | adventure | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Aquaria | aquaria | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Baking Adventure | bakingadventure | 2 | 2 | ❌ Failed | ❌ 33% (1/3) |
+| Bumper Stickers | bumpstik | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Castlevania - Circle of the Moon | cvcotm | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Castlevania 64 | cv64 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Celeste 64 | celeste64 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| ChecksFinder | checksfinder | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Choo-Choo Charles | cccharles | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Civilization VI | civ_6 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Coding Adventure | codingadventure | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| DLCQuest | dlcquest | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| DOOM 1993 | doom_1993 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| DOOM II | doom_ii | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Dark Souls III | dark_souls_3 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Donkey Kong Country 3 | dkc3 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Factorio | factorio | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Faxanadu | faxanadu | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Heretic | heretic | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Hylics 2 | hylics2 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Inscryption | inscryption | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Landstalker - The Treasures of King Nole | landstalker | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Links Awakening DX | ladx | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Lufia II Ancient Cave | lufia2ac | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Mario & Luigi Superstar Saga | mlss | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Math Adventure | mathadventure | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Mega Man 2 | mm2 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| MegaMan Battle Network 3 | mmbn3 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Meritous | meritous | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Metamath | metamath | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Muse Dash | musedash | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Noita | noita | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Old School Runescape | osrs | 2 | 2 | ❌ Failed | ❌ 33% (1/3) |
+| Overcooked! 2 | overcooked2 | 2 | 2 | ❌ Failed | ❌ 33% (1/3) |
+| Paint | paint | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Risk of Rain 2 | ror2 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Saving Princess | saving_princess | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Shivers | shivers | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Sonic Adventure 2 Battle | sa2b | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Subnautica | subnautica | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Super Mario 64 | sm64ex | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Super Mario Land 2 | marioland2 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Super Mario World | smw | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| TOEM original | toem_original | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| TOEM rule builder | toem_rule_builder | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Terraria | terraria | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| The Legend of Zelda | tloz | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| The Messenger | messenger | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| The Wind Waker | tww | 2 | 2 | ❌ Failed | ❌ 33% (1/3) |
+| Timespinner | timespinner | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Undertale | undertale | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| VVVVVV | v6 | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Wargroove | wargroove | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| Yoshi's Island | yoshisisland | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
+| shapez | shapez | 2 | 2 | ❌ Failed | ❌ 0% (0/3) |
 
 ## Successfully Integrated Games
 
-The following 53 games successfully integrate into a multiworld:
+The following 1 games successfully integrate into a multiworld:
 
 | # | World Directory | Game Name |
 |:-:|-----------------|----------|
 | 1 | ahit | A Hat in Time |
-| 2 | alttp | A Link to the Past |
-| 3 | shorthike | A Short Hike |
-| 4 | apquest | APQuest |
-| 5 | adventure | Adventure |
-| 6 | aquaria | Aquaria |
-| 7 | bakingadventure | Baking Adventure |
-| 8 | bumpstik | Bumper Stickers |
-| 9 | cvcotm | Castlevania - Circle of the Moon |
-| 10 | cv64 | Castlevania 64 |
-| 11 | celeste64 | Celeste 64 |
-| 12 | checksfinder | ChecksFinder |
-| 13 | cccharles | Choo-Choo Charles |
-| 14 | civ_6 | Civilization VI |
-| 15 | codingadventure | Coding Adventure |
-| 16 | dlcquest | DLCQuest |
-| 17 | doom_1993 | DOOM 1993 |
-| 18 | doom_ii | DOOM II |
-| 19 | dark_souls_3 | Dark Souls III |
-| 20 | dkc3 | Donkey Kong Country 3 |
-| 21 | factorio | Factorio |
-| 22 | faxanadu | Faxanadu |
-| 23 | heretic | Heretic |
-| 24 | hylics2 | Hylics 2 |
-| 25 | inscryption | Inscryption |
-| 26 | landstalker | Landstalker - The Treasures of King Nole |
-| 27 | lufia2ac | Lufia II Ancient Cave |
-| 28 | mlss | Mario & Luigi Superstar Saga |
-| 29 | mathadventure | Math Adventure |
-| 30 | mm2 | Mega Man 2 |
-| 31 | mmbn3 | MegaMan Battle Network 3 |
-| 32 | meritous | Meritous |
-| 33 | metamath | Metamath |
-| 34 | musedash | Muse Dash |
-| 35 | noita | Noita |
-| 36 | osrs | Old School Runescape |
-| 37 | overcooked2 | Overcooked! 2 |
-| 38 | paint | Paint |
-| 39 | ror2 | Risk of Rain 2 |
-| 40 | saving_princess | Saving Princess |
-| 41 | shivers | Shivers |
-| 42 | sa2b | Sonic Adventure 2 Battle |
-| 43 | subnautica | Subnautica |
-| 44 | sm64ex | Super Mario 64 |
-| 45 | marioland2 | Super Mario Land 2 |
-| 46 | smw | Super Mario World |
-| 47 | tloz | The Legend of Zelda |
-| 48 | tww | The Wind Waker |
-| 49 | timespinner | Timespinner |
-| 50 | undertale | Undertale |
-| 51 | wargroove | Wargroove |
-| 52 | yoshisisland | Yoshi's Island |
-| 53 | shapez | shapez |
 
 
 ## Rejected Games
@@ -158,33 +105,717 @@ These games failed to integrate into the multiworld:
 
 | Game Name | World Directory | Reason | Details |
 |-----------|-----------------|--------|--------|
-| Links Awakening DX | ladx | Multiworld test failed | 1/3 failures |
-| TOEM original | toem_original | Multiworld test failed | 2/3 failures |
-| TOEM rule builder | toem_rule_builder | All generation attempts failed | - |
-| Terraria | terraria | All generation attempts failed | - |
-| The Messenger | messenger | All generation attempts failed | - |
-| VVVVVV | v6 | Multiworld test failed | 1/3 failures |
+| A Link to the Past | alttp | Multiworld test failed | 3/3 failures |
+| A Short Hike | shorthike | Multiworld test failed | 3/3 failures |
+| APQuest | apquest | Multiworld test failed | 3/3 failures |
+| Adventure | adventure | Multiworld test failed | 3/3 failures |
+| Aquaria | aquaria | Multiworld test failed | 3/3 failures |
+| Baking Adventure | bakingadventure | Multiworld test failed | 2/3 failures |
+| Bumper Stickers | bumpstik | Multiworld test failed | 3/3 failures |
+| Castlevania - Circle of the Moon | cvcotm | Multiworld test failed | 3/3 failures |
+| Castlevania 64 | cv64 | Multiworld test failed | 3/3 failures |
+| Celeste 64 | celeste64 | Multiworld test failed | 3/3 failures |
+| ChecksFinder | checksfinder | Multiworld test failed | 3/3 failures |
+| Choo-Choo Charles | cccharles | Multiworld test failed | 3/3 failures |
+| Civilization VI | civ_6 | Multiworld test failed | 3/3 failures |
+| Coding Adventure | codingadventure | Multiworld test failed | 3/3 failures |
+| DLCQuest | dlcquest | Multiworld test failed | 3/3 failures |
+| DOOM 1993 | doom_1993 | Multiworld test failed | 3/3 failures |
+| DOOM II | doom_ii | Multiworld test failed | 3/3 failures |
+| Dark Souls III | dark_souls_3 | Multiworld test failed | 3/3 failures |
+| Donkey Kong Country 3 | dkc3 | Multiworld test failed | 3/3 failures |
+| Factorio | factorio | Multiworld test failed | 3/3 failures |
+| Faxanadu | faxanadu | Multiworld test failed | 3/3 failures |
+| Heretic | heretic | Multiworld test failed | 3/3 failures |
+| Hylics 2 | hylics2 | Multiworld test failed | 3/3 failures |
+| Inscryption | inscryption | Multiworld test failed | 3/3 failures |
+| Landstalker - The Treasures of King Nole | landstalker | Multiworld test failed | 3/3 failures |
+| Links Awakening DX | ladx | Multiworld test failed | 3/3 failures |
+| Lufia II Ancient Cave | lufia2ac | Multiworld test failed | 3/3 failures |
+| Mario & Luigi Superstar Saga | mlss | Multiworld test failed | 3/3 failures |
+| Math Adventure | mathadventure | Multiworld test failed | 3/3 failures |
+| Mega Man 2 | mm2 | Multiworld test failed | 3/3 failures |
+| MegaMan Battle Network 3 | mmbn3 | Multiworld test failed | 3/3 failures |
+| Meritous | meritous | Multiworld test failed | 3/3 failures |
+| Metamath | metamath | Multiworld test failed | 3/3 failures |
+| Muse Dash | musedash | Multiworld test failed | 3/3 failures |
+| Noita | noita | Multiworld test failed | 3/3 failures |
+| Old School Runescape | osrs | Multiworld test failed | 2/3 failures |
+| Overcooked! 2 | overcooked2 | Multiworld test failed | 2/3 failures |
+| Paint | paint | Multiworld test failed | 3/3 failures |
+| Risk of Rain 2 | ror2 | Multiworld test failed | 3/3 failures |
+| Saving Princess | saving_princess | Multiworld test failed | 3/3 failures |
+| Shivers | shivers | Multiworld test failed | 3/3 failures |
+| Sonic Adventure 2 Battle | sa2b | Multiworld test failed | 3/3 failures |
+| Subnautica | subnautica | Multiworld test failed | 3/3 failures |
+| Super Mario 64 | sm64ex | Multiworld test failed | 3/3 failures |
+| Super Mario Land 2 | marioland2 | Multiworld test failed | 3/3 failures |
+| Super Mario World | smw | Multiworld test failed | 3/3 failures |
+| TOEM original | toem_original | Multiworld test failed | 3/3 failures |
+| TOEM rule builder | toem_rule_builder | Multiworld test failed | 3/3 failures |
+| Terraria | terraria | Multiworld test failed | 3/3 failures |
+| The Legend of Zelda | tloz | Multiworld test failed | 3/3 failures |
+| The Messenger | messenger | Multiworld test failed | 3/3 failures |
+| The Wind Waker | tww | Multiworld test failed | 2/3 failures |
+| Timespinner | timespinner | Multiworld test failed | 3/3 failures |
+| Undertale | undertale | Multiworld test failed | 3/3 failures |
+| VVVVVV | v6 | Multiworld test failed | 3/3 failures |
+| Wargroove | wargroove | Multiworld test failed | 3/3 failures |
+| Yoshi's Island | yoshisisland | Multiworld test failed | 3/3 failures |
+| shapez | shapez | Multiworld test failed | 3/3 failures |
 
 
 ## Failed Test Details
 
+### A Link to the Past
+
+**Seed 1:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### A Short Hike
+
+**Seed 100001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 100002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 100003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### APQuest
+
+**Seed 200001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 200002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 200003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Adventure
+
+**Seed 300001:** Players failed: 1
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 300002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 300003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Aquaria
+
+**Seed 400001:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 400002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 400003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Baking Adventure
+
+**Seed 500001:** Players failed: 1
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 28 locations in Python but not UT:
+**Seed 500003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Bumper Stickers
+
+**Seed 600001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 600002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 600003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Castlevania - Circle of the Moon
+
+**Seed 700001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 7 locations in Python but not UT: 
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 700002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 700003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Castlevania 64
+
+**Seed 800001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 800002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 800003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Celeste 64
+
+**Seed 900001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 900002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 900003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### ChecksFinder
+
+**Seed 1000001:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1000002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1000003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Choo-Choo Charles
+
+**Seed 1100001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1100002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1100003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Civilization VI
+
+**Seed 1200001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1200002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1200003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Coding Adventure
+
+**Seed 1300001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 8 locations in Python but not UT: 
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1300002:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 2 locations in Python but not UT: 
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1300003:** Players failed: 1
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 29 locations in Python but not UT:
+
+### DLCQuest
+
+**Seed 1400001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1400002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1400003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### DOOM 1993
+
+**Seed 1500001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1500002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1500003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### DOOM II
+
+**Seed 1600001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1600002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1600003:** Players failed: 2
+  - Player 2: [UT] UT mismatch for DOOM II: Sphere 1: 12 locations in Python but not UT: ['Cir
+
+### Dark Souls III
+
+**Seed 1700001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1700002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1700003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Donkey Kong Country 3
+
+**Seed 1800001:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1800002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1800003:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 12 locations in Python but not UT:
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Factorio
+
+**Seed 1900001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 6 locations in Python but not UT: 
+  - Player 2: [UT] UT mismatch for Factorio: Sphere 0: 85 locations in Python but not UT: ['AP
+**Seed 1900002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 1900003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Faxanadu
+
+**Seed 2000001:** Players failed: 2
+  - Player 2: [UT] UT mismatch for Faxanadu: Sphere 1: 32 locations in Python but not UT: ['Fo
+**Seed 2000002:** Players failed: 2
+  - Player 2: [UT] UT mismatch for Faxanadu: Sphere 1: 15 locations in Python but not UT: ['Eo
+**Seed 2000003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT mismatch for Faxanadu: Sphere 1: 13 locations in Python but not UT: ['To
+
+### Heretic
+
+**Seed 2100001:** Players failed: 2
+  - Player 2: [UT] UT mismatch for Heretic: Sphere 1: 41 locations in Python but not UT: ['Qua
+**Seed 2100002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2100003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Hylics 2
+
+**Seed 2200001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2200002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT mismatch for Hylics 2: Sphere 1: 1 locations in Python but not UT: ['Aft
+**Seed 2200003:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Inscryption
+
+**Seed 2300001:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2300002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2300003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Landstalker - The Treasures of King Nole
+
+**Seed 2400001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2400002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2400003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
 ### Links Awakening DX
 
-**Seed 2500002:** Players failed: 9
-  - Player 9: Player 9 (Links Awakening DX): 8 unreachable locations
+**Seed 2500001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2500002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2500003:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 8 locations in Python but not UT: 
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Lufia II Ancient Cave
+
+**Seed 2600001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2600002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2600003:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Mario & Luigi Superstar Saga
+
+**Seed 2700001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2700002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2700003:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Math Adventure
+
+**Seed 2800001:** Players failed: 1
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 5 locations in Python but not UT: 
+**Seed 2800002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2800003:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Mega Man 2
+
+**Seed 2900001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2900002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 2900003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### MegaMan Battle Network 3
+
+**Seed 3000001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3000002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3000003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Meritous
+
+**Seed 3100001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 16 locations in Python but not UT:
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3100002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3100003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Metamath
+
+**Seed 3200001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 2 locations in Python but not UT: 
+  - Player 2: [UT] UT mismatch for Metamath: Sphere 1: 1 locations in Python but not UT: ['Pro
+**Seed 3200002:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 2 locations in Python but not UT: 
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3200003:** Players failed: 1
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 34 locations in Python but not UT:
+
+### Muse Dash
+
+**Seed 3300001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3300002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3300003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Noita
+
+**Seed 3400001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3400002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3400003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Old School Runescape
+
+**Seed 3500001:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3500003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Overcooked! 2
+
+**Seed 3600001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3600003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Paint
+
+**Seed 3700001:** Players failed: 2
+  - Player 2: [UT] UT mismatch for Paint: Sphere 1: 11 locations in Python but not UT: ['Simil
+**Seed 3700002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3700003:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Risk of Rain 2
+
+**Seed 3800001:** Players failed: 1
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3800002:** Players failed: 1
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3800003:** Players failed: 1
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 8 locations in Python but not UT: 
+
+### Saving Princess
+
+**Seed 3900001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3900002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 3900003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Shivers
+
+**Seed 4000001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4000002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4000003:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Sonic Adventure 2 Battle
+
+**Seed 4100001:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4100002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4100003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Subnautica
+
+**Seed 4200001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4200002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4200003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Super Mario 64
+
+**Seed 4300001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT mismatch for Super Mario 64: Sphere 0: 9 locations in Python but not UT:
+**Seed 4300002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4300003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Super Mario Land 2
+
+**Seed 4400001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [Sphere] Player 2 (Super Mario Land 2): 5 unreachable locations; [UT] UT validat
+**Seed 4400002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [Sphere] Player 2 (Super Mario Land 2): 9 unreachable locations; [UT] UT validat
+**Seed 4400003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [Sphere] Player 2 (Super Mario Land 2): 5 unreachable locations; [UT] UT validat
+
+### Super Mario World
+
+**Seed 4500001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4500002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4500003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
 
 ### TOEM original
 
-**Seed 4600001:** Error - Generation timed out after 60 seconds
-**Seed 4600002:** Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 101 unreachable locations
-**Seed 4600003:** Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 1 unreachable locations
+**Seed 4600001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4600002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4600003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### TOEM rule builder
+
+**Seed 4700001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 18 locations in Python but not UT:
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4700002:** Players failed: 2
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4700003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Terraria
+
+**Seed 4800001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 12 locations in Python but not UT:
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4800002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4800003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### The Legend of Zelda
+
+**Seed 4900001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 4900002:** Players failed: 2
+  - Player 2: [UT] UT mismatch for The Legend of Zelda: Sphere 1: 51 locations in Python but n
+**Seed 4900003:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 6 locations in Python but not UT: 
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### The Messenger
+
+**Seed 5000001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [Sphere] Player 2 (The Messenger): 9 unreachable locations; [UT] UT validation e
+**Seed 5000002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5000003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [Sphere] Player 2 (The Messenger): 52 unreachable locations; [UT] UT validation 
+
+### The Wind Waker
+
+**Seed 5100001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5100003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Timespinner
+
+**Seed 5200001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5200002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5200003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Undertale
+
+**Seed 5300001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT mismatch for Undertale: Sphere 1: 11 locations in Python but not UT: ['B
+**Seed 5300002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5300003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
 
 ### VVVVVV
 
-**Seed 5400003:** Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 1 unreachable locations
+**Seed 5400001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5400002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5400003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Wargroove
+
+**Seed 5500001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5500002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5500003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### Yoshi's Island
+
+**Seed 5600001:** Players failed: 1, 2
+  - Player 1: [UT] UT mismatch for A Hat in Time: Sphere 0: 7 locations in Python but not UT: 
+  - Player 2: [UT] UT mismatch for Yoshi's Island: Sphere 0: 5 locations in Python but not UT:
+**Seed 5600002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5600003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+
+### shapez
+
+**Seed 5700001:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5700002:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+**Seed 5700003:** Players failed: 1, 2
+  - Player 1: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
+  - Player 2: [UT] UT validation error: Your datapackage is incorrect, please correct the apwo
 
 ## Notes
 

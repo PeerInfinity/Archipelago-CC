@@ -19,38 +19,32 @@ The Multiworld UT Fuzz test validates that games can work together in a **multiw
    - If validation passes, keep the game; if it fails, remove it
 3. **Track results** for each game tested
 
-### Dual Validation
+### Sphere Validation
 
-The test runs **both** validation methods for every test run:
+The test validates each generated multiworld using **sphere validation**:
 
-| Mode | What It Checks |
-|------|----------------|
-| **Sphere Validation** | All locations are reachable with all items collected |
-| **UT Validation** | Universal Tracker's logic matches Python's sphere calculations |
+| What It Checks | How |
+|----------------|-----|
+| All locations reachable | Collects all items, verifies every location is accessible |
+| Cross-world item flow | Items from other players can unlock expected locations |
+| Multiworld compatibility | Games work correctly together |
 
-A test only passes if **both** validations pass for all players. This catches both:
-- Logic bugs where locations are unreachable (sphere validation)
-- Mismatches between UT's worldgen-based tracking and Python's logic (UT validation)
+A test passes if all players pass sphere validation. This catches:
+- Logic bugs where locations are unreachable
+- Option combinations that create impossible configurations
+- Cross-world interactions that break accessibility
+
+**Note:** Unlike single-player UT fuzz tests, multiworld tests do not include UT validation. UT validation requires per-player rules.json files in a specific format that multiworld exports don't provide. Sphere validation is sufficient for validating multiworld correctness.
 
 ## Understanding "Unreachable Locations"
 
-When a test fails with "X unreachable locations" (sphere validation), it means:
+When a test fails with "X unreachable locations", it means:
 
 1. The multiworld was **successfully generated** (generation succeeded)
 2. The validation then collected **all items** in the game
 3. Even with all items, **some locations could not be reached**
 
 This is determined by calling `full_state.can_reach(location)` for every location after collecting all items via `multiworld.get_all_state()`.
-
-## Understanding UT Validation Failures
-
-When a test fails with "UT mismatch" or "locations in Python but not UT", it means:
-
-1. The multiworld was **successfully generated**
-2. Universal Tracker's worldgen-based logic disagrees with Python's sphere calculations
-3. Locations that Python says are in logic are **not in logic according to UT**
-
-This typically indicates issues with rule export/import or differences in how the Rule Builder evaluates conditions.
 
 ### What Causes Unreachable Locations?
 
