@@ -489,6 +489,343 @@ def validate_multiworld_with_spheres(
     return results
 
 
+def extract_files_from_archive(
+    archive_path: Path,
+    patterns: List[str],
+    extract_dir: Path
+) -> Dict[str, Path]:
+    """
+    Extract files matching patterns from an archive.
+
+    Args:
+        archive_path: Path to the ZIP archive
+        patterns: List of filename patterns to extract (e.g., ["_rules.json", ".pkl.gz"])
+        extract_dir: Directory to extract files to
+
+    Returns:
+        Dict mapping pattern to extracted file path
+    """
+    extract_dir.mkdir(parents=True, exist_ok=True)
+    extracted = {}
+
+    with zipfile.ZipFile(archive_path) as zf:
+        for file in zf.namelist():
+            for pattern in patterns:
+                if pattern in file:
+                    # Extract the file
+                    zf.extract(file, extract_dir)
+                    extracted[file] = extract_dir / file
+                    break
+
+    return extracted
+
+
+def validate_multiworld_with_ut_pickle(
+    multiworld: "MultiWorld",
+    archive_path: Path,
+    project_root: Path
+) -> Dict[int, Tuple[bool, str, Dict]]:
+    """
+    Validate a multiworld using pickle-based Universal Tracker.
+
+    This extracts the pickle from the archive and uses TrackerCore's pickle
+    tracking mode to compare sphere-by-sphere with Python's calculations.
+
+    Args:
+        multiworld: The live MultiWorld object
+        archive_path: Path to the generated archive
+        project_root: Path to project root
+
+    Returns:
+        Dict of player_id -> (passed, error_message, details)
+    """
+    import logging
+    from NetUtils import NetworkItem
+    from worlds.tracker import TrackerCore, DeferredEntranceMode
+
+    logger = logging.getLogger("MultiworldUTFuzz")
+    results = {}
+    num_players = multiworld.players
+
+    print(f"    Validating multiworld with {num_players} players using UT pickle mode...")
+
+    # Extract pickle from archive to temp directory
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        extracted = extract_files_from_archive(archive_path, [".pkl.gz", "_pickle_metadata.json"], temp_path)
+
+        pickle_file = None
+        for filename, path in extracted.items():
+            if filename.endswith(".pkl.gz"):
+                pickle_file = path
+                break
+
+        if not pickle_file:
+            return {0: (False, "No pickle file found in archive", {})}
+
+        # Get slot data from archive
+        with zipfile.ZipFile(archive_path) as zf:
+            archipelago_data = None
+            for file in zf.namelist():
+                if file.endswith(".archipelago"):
+                    archipelago_data = zf.read(file)
+                    break
+
+        if not archipelago_data:
+            return {0: (False, "No .archipelago file in archive", {})}
+
+        from MultiServer import Context
+        temp_data = Context.decompress(archipelago_data)
+        slot_data_all = temp_data.get("slot_data", {})
+
+        for player_id in range(1, num_players + 1):
+            game_name = multiworld.game[player_id]
+            world = multiworld.worlds[player_id]
+
+            details = {
+                "game": game_name,
+                "validation_type": "ut_pickle",
+                "spheres_checked": 0,
+                "locations_validated": 0,
+            }
+
+            try:
+                # Create TrackerCore for this player
+                ut_core = TrackerCore.TrackerCore(logger, False, False)
+                ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
+
+                # Set up slot params BEFORE loading pickle
+                ut_core.set_slot_params(game_name, player_id, multiworld.player_name[player_id], num_players)
+                ut_core.seed_name = multiworld.seed_name
+
+                # Load pickle directly
+                if not ut_core.load_multiworld_from_pickle(str(pickle_file)):
+                    results[player_id] = (False, f"Failed to load pickle for {game_name}", details)
+                    continue
+
+                # Initialize tracking from pickle (uses self.slot for player_id)
+                if not ut_core.initialize_tracking_from_pickle():
+                    results[player_id] = (False, f"Failed to init pickle tracking for {game_name}", details)
+                    continue
+
+                # Get slot data
+                slot_data = slot_data_all.get(player_id, {})
+
+                # Do sphere-by-sphere comparison
+                result = _run_ut_sphere_comparison(
+                    ut_core, multiworld, player_id, game_name, details
+                )
+                results[player_id] = result
+
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                results[player_id] = (False, f"UT pickle error: {str(e)[:200]}", details)
+
+    return results
+
+
+def validate_multiworld_with_ut_worldgen(
+    multiworld: "MultiWorld",
+    archive_path: Path,
+    multiworld_dir: Path,
+    project_root: Path
+) -> Dict[int, Tuple[bool, str, Dict]]:
+    """
+    Validate a multiworld using worldgen-based Universal Tracker.
+
+    This extracts per-player rules.json files from the archive and uses
+    TrackerCore's worldgen tracking mode to compare sphere-by-sphere.
+
+    Args:
+        multiworld: The live MultiWorld object
+        archive_path: Path to the generated archive
+        multiworld_dir: Directory containing player YAML files
+        project_root: Path to project root
+
+    Returns:
+        Dict of player_id -> (passed, error_message, details)
+    """
+    import logging
+    from NetUtils import NetworkItem
+    from worlds.tracker import TrackerCore, DeferredEntranceMode
+    from Utils import output_path
+
+    logger = logging.getLogger("MultiworldUTFuzz")
+    results = {}
+    num_players = multiworld.players
+
+    print(f"    Validating multiworld with {num_players} players using UT worldgen mode...")
+
+    # Extract per-player rules.json files from archive to output directory
+    # This is where auto_discover_rules_json will look for them
+    output_dir = Path(output_path())
+    extracted = extract_files_from_archive(archive_path, ["_rules.json"], output_dir)
+
+    if not extracted:
+        return {0: (False, "No rules.json files found in archive", {})}
+
+    # Get slot data from archive
+    with zipfile.ZipFile(archive_path) as zf:
+        archipelago_data = None
+        for file in zf.namelist():
+            if file.endswith(".archipelago"):
+                archipelago_data = zf.read(file)
+                break
+
+    if not archipelago_data:
+        return {0: (False, "No .archipelago file in archive", {})}
+
+    from MultiServer import Context
+    temp_data = Context.decompress(archipelago_data)
+    slot_data_all = temp_data.get("slot_data", {})
+
+    try:
+        for player_id in range(1, num_players + 1):
+            game_name = multiworld.game[player_id]
+            world = multiworld.worlds[player_id]
+
+            details = {
+                "game": game_name,
+                "validation_type": "ut_worldgen",
+                "spheres_checked": 0,
+                "locations_validated": 0,
+            }
+
+            try:
+                # Create TrackerCore for this player
+                ut_core = TrackerCore.TrackerCore(logger, False, False)
+                ut_core.enforce_deferred_connections = DeferredEntranceMode.disabled
+
+                # Run generator for this player's YAML
+                ut_core.run_generator(None, None, str(multiworld_dir))
+
+                # Set up slot params - this sets self.slot for per-player rules.json discovery
+                ut_core.set_slot_params(game_name, player_id, multiworld.player_name[player_id], num_players)
+                ut_core.seed_name = multiworld.seed_name
+
+                # Try to discover per-player rules.json
+                if not ut_core.auto_discover_rules_json():
+                    results[player_id] = (False, f"No rules.json found for player {player_id} ({game_name})", details)
+                    continue
+
+                # Get slot data from the archive
+                slot_data = slot_data_all.get(player_id, {})
+
+                # Initialize tracker core (will use worldgen mode since rules_json_path is set)
+                ut_core.initalize_tracker_core(world.__class__, slot_data)
+
+                if not ut_core.multiworld:
+                    results[player_id] = (False, f"TrackerCore init failed: {ut_core.gen_error}", details)
+                    continue
+
+                # Do sphere-by-sphere comparison
+                result = _run_ut_sphere_comparison(
+                    ut_core, multiworld, player_id, game_name, details
+                )
+                results[player_id] = result
+
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                results[player_id] = (False, f"UT worldgen error: {str(e)[:200]}", details)
+
+    finally:
+        # Clean up extracted rules.json files
+        for filename, path in extracted.items():
+            try:
+                path.unlink()
+            except OSError:
+                pass
+
+    return results
+
+
+def _run_ut_sphere_comparison(
+    ut_core,
+    multiworld: "MultiWorld",
+    player_id: int,
+    game_name: str,
+    details: Dict
+) -> Tuple[bool, str, Dict]:
+    """
+    Run sphere-by-sphere comparison between UT and Python multiworld.
+
+    Args:
+        ut_core: Initialized TrackerCore
+        multiworld: Live MultiWorld object
+        player_id: Player ID to validate
+        game_name: Name of the game
+        details: Dict to update with validation details
+
+    Returns:
+        Tuple of (passed, error_message, details)
+    """
+    from NetUtils import NetworkItem
+
+    world = multiworld.worlds[player_id]
+
+    # Filter to only hashable addresses for this player
+    remaining_locations = [
+        loc.address for loc in world.get_locations()
+        if loc.address is not None and not isinstance(loc.address, list)
+    ]
+    current_inventory = [
+        NetworkItem(item.code, -2, item.player, item.classification)
+        for item in multiworld.precollected_items[player_id]
+        if item.code is not None
+    ]
+    new_items = []
+
+    # Iterate through spheres
+    sphere_errors = []
+    for sphere_number, sphere in enumerate(multiworld.get_sendable_spheres()):
+        # Filter to this player's locations in this sphere
+        current_sphere = {}
+        for loc in sphere:
+            if loc.player == player_id and loc.address is not None:
+                current_sphere[loc.name] = loc
+
+        current_inventory.extend(new_items)
+        new_items.clear()
+
+        if current_sphere:
+            details["spheres_checked"] = sphere_number + 1
+
+            # Update UT with current state
+            ut_core.set_missing_locations(set(remaining_locations))
+            ut_core.set_items_received(current_inventory)
+            update_ret = ut_core.updateTracker()
+
+            # Check each location in the sphere
+            locations_not_in_ut = []
+            for loc_name, location in list(current_sphere.items()):
+                if loc_name in update_ret.in_logic_locations:
+                    # Location is in logic - collect it
+                    true_item = location.item
+                    new_items.append(NetworkItem(
+                        true_item.code, location.address,
+                        true_item.player, true_item.classification
+                    ))
+                    remaining_locations.remove(location.address)
+                    details["locations_validated"] += 1
+                else:
+                    locations_not_in_ut.append(loc_name)
+
+            if locations_not_in_ut:
+                sphere_errors.append(
+                    f"Sphere {sphere_number}: {len(locations_not_in_ut)} locations in Python but not UT: "
+                    f"{locations_not_in_ut[:3]}{'...' if len(locations_not_in_ut) > 3 else ''}"
+                )
+
+    if sphere_errors:
+        error_msg = f"UT mismatch for {game_name}: {sphere_errors[0]}"
+        details["sphere_errors"] = sphere_errors[:5]
+        return (False, error_msg, details)
+    else:
+        return (True, "", details)
+
+
 def validate_multiworld_with_ut_spheres(
     multiworld: "MultiWorld",
     multiworld_dir: Path,
@@ -730,14 +1067,15 @@ def run_multiworld_test(
     seed: int,
     project_root: Path,
     ignore_generation_errors: bool = True,
-    timeout_seconds: int = 60
+    timeout_seconds: int = 60,
+    ut_mode: str = "none",
+    skip_sphere_validation: bool = False
 ) -> Dict:
     """
-    Run a complete multiworld test: generate and validate with both methods.
+    Run a complete multiworld test: generate and validate.
 
     This runs generation in-process to get a live MultiWorld object, then
-    validates using BOTH sphere validation AND UT validation. The test fails
-    if either validation fails.
+    validates using sphere validation and/or UT validation based on settings.
 
     Args:
         multiworld_dir: Directory containing player YAML files
@@ -746,20 +1084,32 @@ def run_multiworld_test(
         ignore_generation_errors: If True, treat option-related generation errors
             as "ignored" rather than failures.
         timeout_seconds: Maximum time in seconds for generation (default: 60)
+        ut_mode: UT validation mode - "none", "pickle", or "worldgen"
+        skip_sphere_validation: If True, skip sphere validation (only valid if ut_mode is set)
 
     Returns a dict with test results.
     """
     start_time = time.perf_counter()
 
+    # Determine validation mode string for results
+    run_sphere = not skip_sphere_validation
+    run_ut = ut_mode != "none"
+
+    if run_sphere and run_ut:
+        validation_mode = f"sphere+ut_{ut_mode}"
+    elif run_sphere:
+        validation_mode = "sphere"
+    elif run_ut:
+        validation_mode = f"ut_{ut_mode}"
+    else:
+        validation_mode = "none"
     result = {
         "passed": False,
         "generation_success": False,
         "generation_ignored": False,  # True if generation failed but was ignored
         "player_results": {},
-        "sphere_validation": {},  # Results from sphere validation
-        "ut_validation": {},  # Results from UT validation
         "error": None,
-        "validation_mode": "both",
+        "validation_mode": validation_mode,
         "elapsed_seconds": 0.0
     }
 
@@ -781,62 +1131,85 @@ def run_multiworld_test(
         result["archive_path"] = str(archive_path)
 
     try:
-        # === SPHERE VALIDATION ===
-        sphere_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
-        result["sphere_validation"] = {
-            str(pid): {
-                "passed": passed,
-                "error": error,
-                "details": details
-            }
-            for pid, (passed, error, details) in sphere_results.items()
-        }
+        # === SPHERE VALIDATION (if enabled) ===
+        sphere_results = None
+        sphere_all_passed = True
 
-        # Aggregate cross-world statistics
-        total_cross_world_items = sum(
-            details.get("items_from_other_players", 0)
-            for _, _, details in sphere_results.values()
-        )
-        result["cross_world_items_total"] = total_cross_world_items
+        if run_sphere:
+            sphere_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
 
-        sphere_all_passed = all(passed for passed, _, _ in sphere_results.values())
+            # Aggregate cross-world statistics
+            total_cross_world_items = sum(
+                details.get("items_from_other_players", 0)
+                for _, _, details in sphere_results.values()
+            )
+            result["cross_world_items_total"] = total_cross_world_items
 
-        # === UT VALIDATION ===
-        ut_results = validate_multiworld_with_ut_spheres(multiworld, multiworld_dir, project_root)
-        result["ut_validation"] = {
-            str(pid): {
-                "passed": passed,
-                "error": error,
-                "details": details
-            }
-            for pid, (passed, error, details) in ut_results.items()
-        }
+            sphere_all_passed = all(passed for passed, _, _ in sphere_results.values())
 
-        ut_all_passed = all(passed for passed, _, _ in ut_results.values())
+        # === UT VALIDATION (if enabled) ===
+        ut_results = None
+        ut_all_passed = True
 
-        # === COMBINE RESULTS ===
-        # Build combined player_results - fail if EITHER validation failed
-        for pid in sphere_results.keys():
-            sphere_passed, sphere_error, sphere_details = sphere_results[pid]
-            ut_passed, ut_error, ut_details = ut_results.get(pid, (True, "", {}))
+        if run_ut and archive_path:
+            if ut_mode == "pickle":
+                ut_results = validate_multiworld_with_ut_pickle(
+                    multiworld, archive_path, project_root
+                )
+            elif ut_mode == "worldgen":
+                ut_results = validate_multiworld_with_ut_worldgen(
+                    multiworld, archive_path, multiworld_dir, project_root
+                )
 
-            combined_passed = sphere_passed and ut_passed
+            if ut_results:
+                ut_all_passed = all(passed for passed, _, _ in ut_results.values())
+
+        # === BUILD COMBINED RESULTS ===
+        # Determine which results to iterate over
+        if sphere_results:
+            base_results = sphere_results
+        elif ut_results:
+            base_results = ut_results
+        else:
+            # No validation was run - this shouldn't happen but handle gracefully
+            result["passed"] = True
+            result["error"] = "No validation mode selected"
+            return result
+
+        for pid in base_results.keys():
+            combined_passed = True
             combined_error = ""
-            if not sphere_passed:
-                combined_error = f"[Sphere] {sphere_error}"
-            if not ut_passed:
-                if combined_error:
-                    combined_error += f"; [UT] {ut_error}"
-                else:
-                    combined_error = f"[UT] {ut_error}"
+            combined_details = {}
 
-            # Merge details from both validations
-            combined_details = {**sphere_details}
-            if ut_details:
+            # Add sphere validation results
+            if sphere_results and pid in sphere_results:
+                sphere_passed, sphere_error, sphere_details = sphere_results[pid]
+                combined_passed = combined_passed and sphere_passed
+                combined_details = {**sphere_details}
+
+                if not sphere_passed:
+                    combined_error = f"[Sphere] {sphere_error}"
+
+            # Add UT results if available
+            if ut_results and pid in ut_results:
+                ut_passed, ut_error, ut_details = ut_results[pid]
+                combined_passed = combined_passed and ut_passed
+
+                if not ut_passed:
+                    if combined_error:
+                        combined_error += f"; [UT] {ut_error}"
+                    else:
+                        combined_error = f"[UT] {ut_error}"
+
+                # Merge UT details
+                combined_details["ut_validation_type"] = ut_details.get("validation_type", ut_mode)
                 combined_details["ut_spheres_checked"] = ut_details.get("spheres_checked", 0)
                 combined_details["ut_locations_validated"] = ut_details.get("locations_validated", 0)
                 if "sphere_errors" in ut_details:
                     combined_details["ut_sphere_errors"] = ut_details["sphere_errors"]
+                # If only UT validation, include game name from UT details
+                if not sphere_results:
+                    combined_details["game"] = ut_details.get("game", "Unknown")
 
             result["player_results"][str(pid)] = {
                 "passed": combined_passed,
@@ -844,7 +1217,7 @@ def run_multiworld_test(
                 "details": combined_details
             }
 
-        # Overall pass: both validations must pass for all players
+        # Overall pass: all enabled validations must pass
         result["passed"] = sphere_all_passed and ut_all_passed
 
         # Clean up archive
@@ -874,14 +1247,17 @@ def run_multiple_tests(
     world_dirs: List[str],
     test_iteration: int = 0,
     ignore_generation_errors: bool = True,
-    timeout_seconds: int = 60
+    timeout_seconds: int = 60,
+    ut_mode: str = "none",
+    skip_sphere_validation: bool = False
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
     For each run, regenerates random YAMLs for all games.
 
-    Each test runs BOTH sphere validation AND UT validation. The test fails
-    if either validation fails for any player.
+    Sphere validation runs by default unless skip_sphere_validation is True.
+    UT validation is run based on ut_mode.
+    The test fails if any enabled validation fails for any player.
 
     Generation failures are recorded separately from validation failures.
     A generation failure does not count as a test failure - only validation
@@ -902,6 +1278,7 @@ def run_multiple_tests(
         ignore_generation_errors: If True, treat option-related generation errors
             as "ignored" rather than failures.
         timeout_seconds: Maximum time in seconds for each generation (default: 60)
+        ut_mode: UT validation mode - "none" (sphere only), "pickle", or "worldgen"
 
     Returns aggregated results.
     """
@@ -958,7 +1335,7 @@ def run_multiple_tests(
 
         test_result = run_multiworld_test(
             multiworld_dir, seed, project_root,
-            ignore_generation_errors, timeout_seconds
+            ignore_generation_errors, timeout_seconds, ut_mode, skip_sphere_validation
         )
 
         results["run_results"].append({
@@ -1078,8 +1455,22 @@ def main():
         default=0,
         help='Skip the first N templates before applying every-nth filter'
     )
-    # Note: We always run both sphere validation AND UT validation now.
-    # The test fails if either validation fails for any player.
+    parser.add_argument(
+        '--ut-mode',
+        type=str,
+        choices=['none', 'pickle', 'worldgen'],
+        default='none',
+        help='UT validation mode: "none" (no UT validation), '
+             '"pickle" (use pickle-based UT tracking), or '
+             '"worldgen" (use worldgen-based UT with per-player rules.json). '
+             '(default: none)'
+    )
+    parser.add_argument(
+        '--no-sphere-validation',
+        action='store_true',
+        help='Skip sphere validation (only run UT validation if --ut-mode is set). '
+             'Requires --ut-mode to be pickle or worldgen.'
+    )
     parser.add_argument(
         '--ignore-generation-errors',
         action='store_true',
@@ -1101,6 +1492,10 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Validate argument combinations
+    if args.no_sphere_validation and args.ut_mode == "none":
+        parser.error("--no-sphere-validation requires --ut-mode to be 'pickle' or 'worldgen'")
 
     # Handle the ignore generation errors flags
     ignore_generation_errors = args.ignore_generation_errors and not args.no_ignore_generation_errors
@@ -1312,7 +1707,9 @@ def main():
             world_dirs=games_in_multiworld,
             test_iteration=test_iteration,
             ignore_generation_errors=ignore_generation_errors,
-            timeout_seconds=args.timeout
+            timeout_seconds=args.timeout,
+            ut_mode=args.ut_mode,
+            skip_sphere_validation=args.no_sphere_validation
         )
         test_iteration += 1  # Increment for next test to get different YAMLs
 

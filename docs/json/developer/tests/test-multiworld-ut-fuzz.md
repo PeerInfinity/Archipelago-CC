@@ -19,38 +19,52 @@ The Multiworld UT Fuzz test validates that games can work together in a **multiw
    - If validation passes, keep the game; if it fails, remove it
 3. **Track results** for each game tested
 
-### Dual Validation
+### Validation Modes
 
-The test runs **both** validation methods for every test run:
+The test supports multiple validation modes controlled by the `--ut-mode` option:
 
-| Mode | What It Checks |
-|------|----------------|
-| **Sphere Validation** | All locations are reachable with all items collected |
-| **UT Validation** | Universal Tracker's logic matches Python's sphere calculations |
+| Mode | Description |
+|------|-------------|
+| `none` (default) | Sphere validation only - fastest, checks all locations are reachable |
+| `pickle` | Sphere + UT pickle validation - uses pickled multiworld for exact rule matching |
+| `worldgen` | Sphere + UT worldgen validation - uses per-player rules.json files |
 
-A test only passes if **both** validations pass for all players. This catches both:
-- Logic bugs where locations are unreachable (sphere validation)
-- Mismatches between UT's worldgen-based tracking and Python's logic (UT validation)
+#### Sphere Validation (always runs)
+
+| What It Checks | How |
+|----------------|-----|
+| All locations reachable | Collects all items, verifies every location is accessible |
+| Cross-world item flow | Items from other players can unlock expected locations |
+| Multiworld compatibility | Games work correctly together |
+
+Sphere validation catches:
+- Logic bugs where locations are unreachable
+- Option combinations that create impossible configurations
+- Cross-world interactions that break accessibility
+
+#### UT Validation (optional)
+
+When `--ut-mode pickle` or `--ut-mode worldgen` is specified, the test also runs UT validation:
+
+| UT Mode | How It Works |
+|---------|--------------|
+| `pickle` | Extracts the pickled multiworld from the archive and uses TrackerCore's pickle tracking |
+| `worldgen` | Extracts per-player rules.json files (`AP_*_P{player}_rules.json`) and uses worldgen tracking |
+
+UT validation compares TrackerCore's logic calculations against Python's sphere calculations, catching:
+- Rule export/import issues
+- Differences in how Rule Builder evaluates conditions
+- Game-specific tracking problems
 
 ## Understanding "Unreachable Locations"
 
-When a test fails with "X unreachable locations" (sphere validation), it means:
+When a test fails with "X unreachable locations", it means:
 
 1. The multiworld was **successfully generated** (generation succeeded)
 2. The validation then collected **all items** in the game
 3. Even with all items, **some locations could not be reached**
 
 This is determined by calling `full_state.can_reach(location)` for every location after collecting all items via `multiworld.get_all_state()`.
-
-## Understanding UT Validation Failures
-
-When a test fails with "UT mismatch" or "locations in Python but not UT", it means:
-
-1. The multiworld was **successfully generated**
-2. Universal Tracker's worldgen-based logic disagrees with Python's sphere calculations
-3. Locations that Python says are in logic are **not in logic according to UT**
-
-This typically indicates issues with rule export/import or differences in how the Rule Builder evaluates conditions.
 
 ### What Causes Unreachable Locations?
 
@@ -136,7 +150,7 @@ This happens because:
 ### Basic Usage
 
 ```bash
-# Run with default settings (3 runs per game, seed=1)
+# Run with default settings (3 runs per game, seed=1, sphere validation only)
 python scripts/test/test-multiworld-ut-fuzz.py
 
 # Custom number of runs
@@ -148,6 +162,37 @@ python scripts/test/test-multiworld-ut-fuzz.py --seed 42
 # Longer timeout for slow games
 python scripts/test/test-multiworld-ut-fuzz.py --timeout 120
 ```
+
+### UT Validation Modes
+
+```bash
+# Sphere validation only (default, fastest)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode none
+
+# Sphere + UT pickle validation (uses pickled multiworld)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle
+
+# Sphere + UT worldgen validation (uses per-player rules.json)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen
+
+# UT pickle validation only (no sphere validation)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle --no-sphere-validation
+
+# UT worldgen validation only (no sphere validation)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen --no-sphere-validation
+```
+
+### GitHub Workflow
+
+The workflow (`test-multiworld-ut-fuzz.yml`) provides a `validation_mode` input with these options:
+
+| Mode | Description |
+|------|-------------|
+| `sphere` | Sphere validation only (default) |
+| `ut_pickle` | UT pickle validation only |
+| `ut_worldgen` | UT worldgen validation only |
+| `sphere_ut_pickle` | Both sphere and UT pickle |
+| `sphere_ut_worldgen` | Both sphere and UT worldgen |
 
 ### Output
 
