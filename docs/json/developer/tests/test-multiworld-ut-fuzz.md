@@ -6,6 +6,8 @@
 
 The Multiworld Sphere Fuzz test validates that games can work together in a **multiworld** configuration with **randomized options**. Unlike single-player fuzz tests that test one game at a time, this test builds an increasingly large multiworld by adding games one-by-one and validating the entire multiworld after each addition.
 
+**Note:** Despite the filename (`test-multiworld-ut-fuzz.py`), this test does **not** use Universal Tracker. It validates purely through Python-side sphere analysis, checking that each player's victory condition can be met. The "UT" in the name is historical — the original intent was to run UT validation against multiworld seeds, but UT creates single-player worlds internally, so cross-world item dependencies are lost. Proper multiworld UT support would require extensive changes to how UT tracks state across players. This may be revisited in the future.
+
 ## How It Works
 
 ### Assembly Process
