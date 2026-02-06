@@ -86,24 +86,23 @@ The Spoiler Fuzz test runs the **frontend spoiler playthrough** with randomized 
 
 ## Multiworld Sphere Fuzz Test
 
-Tests multiworld assembly by incrementally adding games that passed single-player UT fuzz tests.
+Tests multiworld assembly by incrementally adding games with randomized options and validating using Python's sphere analysis. This test does **not** use Universal Tracker — it validates purely through Python-side victory condition checks.
 
 ### How It Works
 
-1. Start with games that passed single-player UT fuzz
-2. For each game:
+1. For each game:
    - Generate a random YAML configuration
    - Add it to the multiworld
    - Generate the combined seed
-   - Validate using sphere analysis (reachability checks)
+   - Validate each player's victory condition using sphere analysis
    - Keep the game if it passes, remove if it fails
-3. Track which games successfully integrated
+2. Track which games successfully integrated
 
 ### What It Tests
 
 - Games work correctly in **multiworld** with random options
 - Random option combinations are **compatible** across games
-- All locations are **reachable** in multi-player seeds
+- Each player's **victory condition** can be met in multi-player seeds
 
 ## Understanding Results
 
@@ -157,10 +156,10 @@ python scripts/test/test-all-spoiler-fuzz.py --runs 10
 python scripts/test/test-all-spoiler-fuzz.py --runs 10 --include-list Adventure.yaml
 ```
 
-### Multiworld UT Fuzz Test
+### Multiworld Sphere Fuzz Test
 
 ```bash
-# Test multiworld assembly
+# Test multiworld assembly (sphere validation only, no UT)
 python scripts/test/test-multiworld-ut-fuzz.py --runs 5
 ```
 
@@ -170,7 +169,7 @@ python scripts/test/test-multiworld-ut-fuzz.py --runs 5
 |------|------|
 | UT Fuzz test script | `scripts/test/test-all-ut-fuzz.py` |
 | Spoiler Fuzz test script | `scripts/test/test-all-spoiler-fuzz.py` |
-| Multiworld UT Fuzz script | `scripts/test/test-multiworld-ut-fuzz.py` |
+| Multiworld Sphere Fuzz script | `scripts/test/test-multiworld-ut-fuzz.py` |
 | Fuzzer core | `fuzz.py` |
 | UT Fuzzer hook | `worlds/tracker/fuzzer_hook.py` |
 | UT Fuzz results | `scripts/output/ut-fuzz/` |
