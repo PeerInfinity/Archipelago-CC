@@ -37,18 +37,6 @@ on:
         type: number
         default: 60
 
-      validation_mode:
-        description: 'Validation mode'
-        required: true
-        type: choice
-        options:
-          - sphere
-          - ut_pickle
-          - ut_worldgen
-          - sphere_ut_pickle
-          - sphere_ut_worldgen
-        default: sphere
-
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -157,7 +145,6 @@ jobs:
           echo "Runs per test: ${{ inputs.runs_per_test }}"
           echo "Max players: ${{ inputs.max_players }}"
           echo "Timeout: ${{ inputs.timeout }}s"
-          echo "Validation mode: ${{ inputs.validation_mode }}"
 
           # Build command
           CMD="python scripts/test/test-multiworld-ut-fuzz.py"
@@ -176,30 +163,6 @@ jobs:
           if [ "${{ inputs.debug_mode }}" = "true" ]; then
             CMD="$CMD --include-list 'Adventure.yaml' 'Dark Souls III.yaml'"
           fi
-
-          # Set validation mode flags based on selection
-          case "${{ inputs.validation_mode }}" in
-            sphere)
-              # Default: sphere validation only, no UT
-              CMD="$CMD --ut-mode none"
-              ;;
-            ut_pickle)
-              # UT pickle only, no sphere
-              CMD="$CMD --ut-mode pickle --no-sphere-validation"
-              ;;
-            ut_worldgen)
-              # UT worldgen only, no sphere
-              CMD="$CMD --ut-mode worldgen --no-sphere-validation"
-              ;;
-            sphere_ut_pickle)
-              # Both sphere and UT pickle
-              CMD="$CMD --ut-mode pickle"
-              ;;
-            sphere_ut_worldgen)
-              # Both sphere and UT worldgen
-              CMD="$CMD --ut-mode worldgen"
-              ;;
-          esac
 
           echo "Running: $CMD"
           eval $CMD
@@ -240,7 +203,6 @@ jobs:
             Runs per test: ${{ inputs.runs_per_test }}
             Max players: ${{ inputs.max_players }}
             Timeout: ${{ inputs.timeout }}s
-            Validation mode: ${{ inputs.validation_mode }}
             Clean start: ${{ inputs.clean_start }}
             Debug mode: ${{ inputs.debug_mode }}
 

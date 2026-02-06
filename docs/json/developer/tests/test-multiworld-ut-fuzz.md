@@ -1,10 +1,10 @@
-# Multiworld UT Fuzz Test
+# Multiworld Sphere Fuzz Test
 
-[← Back to Fuzz Tests Overview](./test-fuzz.md) | [View Test Results](../test-results/test-results-multiworld-ut-fuzz.md)
+[<- Back to Fuzz Tests Overview](./test-fuzz.md) | [View Test Results](../test-results/test-results-multiworld-ut-fuzz.md)
 
 ## Overview
 
-The Multiworld UT Fuzz test validates that games can work together in a **multiworld** configuration with **randomized options**. Unlike single-player fuzz tests that test one game at a time, this test builds an increasingly large multiworld by adding games one-by-one and validating the entire multiworld after each addition.
+The Multiworld Sphere Fuzz test validates that games can work together in a **multiworld** configuration with **randomized options**. Unlike single-player fuzz tests that test one game at a time, this test builds an increasingly large multiworld by adding games one-by-one and validating the entire multiworld after each addition.
 
 ## How It Works
 
@@ -15,73 +15,46 @@ The Multiworld UT Fuzz test validates that games can work together in a **multiw
    - Generate a random YAML configuration using `fuzz.py`
    - Add the YAML to the multiworld directory
    - Attempt to generate a combined seed with all games
-   - Run validation on the generated multiworld
+   - Run sphere validation on the generated multiworld
    - If validation passes, keep the game; if it fails, remove it
 3. **Track results** for each game tested
 
-### Validation Modes
-
-The test supports multiple validation modes controlled by the `--ut-mode` option:
-
-| Mode | Description |
-|------|-------------|
-| `none` (default) | Sphere validation only - fastest, checks all locations are reachable |
-| `pickle` | Sphere + UT pickle validation - uses pickled multiworld for exact rule matching |
-| `worldgen` | Sphere + UT worldgen validation - uses per-player rules.json files |
-
-#### Sphere Validation (always runs)
+### Sphere Validation
 
 | What It Checks | How |
 |----------------|-----|
-| All locations reachable | Collects all items, verifies every location is accessible |
+| Victory condition | Collects all items, verifies each player's completion condition is met |
 | Cross-world item flow | Items from other players can unlock expected locations |
 | Multiworld compatibility | Games work correctly together |
 
 Sphere validation catches:
-- Logic bugs where locations are unreachable
+- Victory conditions that cannot be met with certain option combinations
+- Cross-world interactions that break game completion
 - Option combinations that create impossible configurations
-- Cross-world interactions that break accessibility
 
-#### UT Validation (optional)
+### Victory vs Reachability
 
-When `--ut-mode pickle` or `--ut-mode worldgen` is specified, the test also runs UT validation:
+The test uses **victory condition** as the pass/fail criterion, not full location reachability. This is important because some games have **self-locking items** — locations that are intentionally unreachable because the item needed to access them is placed at that location. These games are designed so that not all locations need to be checkable for the game to be completable.
 
-| UT Mode | How It Works |
-|---------|--------------|
-| `pickle` | Extracts the pickled multiworld from the archive and uses TrackerCore's pickle tracking |
-| `worldgen` | Extracts per-player rules.json files (`AP_*_P{player}_rules.json`) and uses worldgen tracking |
+When unreachable locations are detected but the victory condition is met, the test **passes** and logs the unreachable count as informational.
 
-UT validation compares TrackerCore's logic calculations against Python's sphere calculations, catching:
-- Rule export/import issues
-- Differences in how Rule Builder evaluates conditions
-- Game-specific tracking problems
-
-## Understanding "Unreachable Locations"
-
-When a test fails with "X unreachable locations", it means:
-
-1. The multiworld was **successfully generated** (generation succeeded)
-2. The validation then collected **all items** in the game
-3. Even with all items, **some locations could not be reached**
-
-This is determined by calling `full_state.can_reach(location)` for every location after collecting all items via `multiworld.get_all_state()`.
-
-### What Causes Unreachable Locations?
-
-| Cause | Description |
-|-------|-------------|
-| **Logic Bug** | Access rules are too restrictive or incorrect |
-| **Entrance Randomizer Issues** | Shuffled entrances create unreachable areas |
-| **Option Conflicts** | Certain option combinations create impossible configurations |
-| **Cross-World Interactions** | Items from other players affect accessibility unexpectedly |
-
-### Example Error
+### Example Output
 
 ```
-Player 1 (Super Mario Land 2): 101 unreachable locations
+Player 3 (Game Name): Victory OK, but 12 unreachable locations (self-locking items?)
 ```
 
-This means Player 1's game (Super Mario Land 2) has 101 locations that cannot be reached even with all items. The validation is checking the Python multiworld's logic, not Universal Tracker.
+This means the game can be completed (victory condition met) even though 12 locations can't be reached. This is expected behavior for some games.
+
+### Validation Failure
+
+A test fails when the victory condition **cannot be met** even with all items collected:
+
+```
+Player 1 (Super Mario Land 2): Victory condition not met (101 unreachable locations)
+```
+
+This indicates a real problem — the game cannot be completed with the given option combination in this multiworld configuration.
 
 ## Test Results Interpretation
 
@@ -89,11 +62,11 @@ This means Player 1's game (Super Mario Land 2) has 101 locations that cannot be
 
 | Status | Meaning |
 |--------|---------|
-| **✅ Passed** | All validation runs succeeded |
-| **❌ Failed** | One or more validation failures occurred |
-| **🔴 All Gen Failed** | All generation attempts failed (couldn't even generate the multiworld) |
-| **⏳ Pending** | Game added but not yet tested (need 2+ players) |
-| **⚠️ Error** | Infrastructure error during testing |
+| **Passed** | All validation runs succeeded |
+| **Failed** | One or more validation failures occurred |
+| **All Gen Failed** | All generation attempts failed (couldn't even generate the multiworld) |
+| **Pending** | Game added but not yet tested (need 2+ players) |
+| **Error** | Infrastructure error during testing |
 
 ### Success Rate Breakdown
 
@@ -115,7 +88,7 @@ Example: `67% (2/3, 1 gen fail)` means:
 | Type | When It Occurs | Counted As |
 |------|----------------|------------|
 | **Generation Failure** | Seed couldn't be generated (timeout, option conflict, fill error) | Tracked separately, doesn't count as test failure |
-| **Validation Failure** | Seed generated but locations are unreachable | Counts as test failure |
+| **Validation Failure** | Seed generated but victory condition not met | Counts as test failure |
 
 Generation failures are often caused by:
 - Option combinations that create impossible fills
@@ -130,10 +103,10 @@ When a validation failure occurs, the error shows which **player** failed:
 
 ```
 Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 9 unreachable locations
+  - Player 1: Player 1 (Super Mario Land 2): Victory condition not met (9 unreachable locations)
 ```
 
-**Important:** The failure is attributed to the **newly added game**, even if a different player in the multiworld actually failed. This is because adding a new game changes the item distribution and can affect other games' accessibility.
+**Important:** The failure is attributed to the **newly added game**, even if a different player in the multiworld actually failed. This is because adding a new game changes the item distribution and can affect other games' completion.
 
 For example:
 - Testing "TOEM original" (newly added as Player 10)
@@ -150,7 +123,7 @@ This happens because:
 ### Basic Usage
 
 ```bash
-# Run with default settings (3 runs per game, seed=1, sphere validation only)
+# Run with default settings (3 runs per game, seed=1, sphere validation)
 python scripts/test/test-multiworld-ut-fuzz.py
 
 # Custom number of runs
@@ -161,38 +134,18 @@ python scripts/test/test-multiworld-ut-fuzz.py --seed 42
 
 # Longer timeout for slow games
 python scripts/test/test-multiworld-ut-fuzz.py --timeout 120
-```
 
-### UT Validation Modes
-
-```bash
-# Sphere validation only (default, fastest)
-python scripts/test/test-multiworld-ut-fuzz.py --ut-mode none
-
-# Sphere + UT pickle validation (uses pickled multiworld)
-python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle
-
-# Sphere + UT worldgen validation (uses per-player rules.json)
-python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen
-
-# UT pickle validation only (no sphere validation)
-python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle --no-sphere-validation
-
-# UT worldgen validation only (no sphere validation)
-python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen --no-sphere-validation
+# Test specific games
+python scripts/test/test-multiworld-ut-fuzz.py --include-list "Adventure.yaml" "Dark Souls III.yaml"
 ```
 
 ### GitHub Workflow
 
-The workflow (`test-multiworld-ut-fuzz.yml`) provides a `validation_mode` input with these options:
-
-| Mode | Description |
-|------|-------------|
-| `sphere` | Sphere validation only (default) |
-| `ut_pickle` | UT pickle validation only |
-| `ut_worldgen` | UT worldgen validation only |
-| `sphere_ut_pickle` | Both sphere and UT pickle |
-| `sphere_ut_worldgen` | Both sphere and UT worldgen |
+The workflow (`test-multiworld-ut-fuzz.yml`) runs sphere validation with configurable parameters:
+- `runs_per_test`: Number of test runs per game addition
+- `seed`: Base random seed for reproducibility
+- `max_players`: Maximum number of players in multiworld
+- `timeout`: Timeout per generation in seconds
 
 ### Output
 
@@ -228,15 +181,14 @@ See `IGNORED_ERROR_PATTERNS` in `worlds/tracker/fuzzer_hook.py` for the full lis
 
 | Test | Single-Player | Multi-Player | Random Options |
 |------|:-------------:|:------------:|:--------------:|
-| Spoiler Test | ✅ | ❌ | ❌ |
-| UT Fuzz Test | ✅ | ❌ | ✅ |
-| **Multiworld UT Fuzz** | ❌ | ✅ | ✅ |
-| Multiclient Test | ❌ | ✅ | ❌ |
+| Spoiler Test | Yes | No | No |
+| UT Fuzz Test | Yes | No | Yes |
+| **Multiworld Sphere Fuzz** | No | Yes | Yes |
+| Multiclient Test | No | Yes | No |
 
-The Multiworld UT Fuzz test is unique in testing both multiworld compatibility AND random option combinations together.
+The Multiworld Sphere Fuzz test is unique in testing both multiworld compatibility AND random option combinations together.
 
 ## Related Documentation
 
 - [Fuzz Tests Overview](./test-fuzz.md) - General fuzz testing concepts
-- [Universal Tracker Modifications](../diffs/universal-tracker-modifications.md) - UT implementation details
 - [Fuzzer Debugging Guide](../guides/fuzzer-debugging.md) - Debugging fuzz test failures

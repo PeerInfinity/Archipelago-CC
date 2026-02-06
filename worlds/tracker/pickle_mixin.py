@@ -106,9 +106,6 @@ class PickleMixin:
         The pickled multiworld already has all regions, rules, and items set up,
         so no generation steps are needed.
 
-        For multiworld pickles, the player_id is determined by self.slot (set via
-        set_slot_params). If slot is not set, defaults to player 1.
-
         Returns:
             True if tracking was initialized from pickle, False otherwise
         """
@@ -119,8 +116,7 @@ class PickleMixin:
         try:
             # Use pickle multiworld for tracking
             self.multiworld = self.pickle_multiworld
-            # Use slot from set_slot_params if available, otherwise default to 1
-            self.player_id = self.slot if self.slot is not None else 1
+            self.player_id = 1
             self._tracking_from_pickle = True
 
             # Clear precollected items with codes from the pickle multiworld.
@@ -151,7 +147,7 @@ class PickleMixin:
                 )
 
             self.logger.info(
-                f"Initialized tracking from pickle multiworld for player {self.player_id}"
+                f"Initialized tracking from pickle multiworld"
             )
             return True
 
