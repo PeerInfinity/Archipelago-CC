@@ -1068,13 +1068,14 @@ def run_multiworld_test(
     project_root: Path,
     ignore_generation_errors: bool = True,
     timeout_seconds: int = 60,
-    ut_mode: str = "none"
+    ut_mode: str = "none",
+    skip_sphere_validation: bool = False
 ) -> Dict:
     """
     Run a complete multiworld test: generate and validate.
 
     This runs generation in-process to get a live MultiWorld object, then
-    validates using sphere validation (always) and optionally UT validation.
+    validates using sphere validation and/or UT validation based on settings.
 
     Args:
         multiworld_dir: Directory containing player YAML files
@@ -1083,13 +1084,25 @@ def run_multiworld_test(
         ignore_generation_errors: If True, treat option-related generation errors
             as "ignored" rather than failures.
         timeout_seconds: Maximum time in seconds for generation (default: 60)
-        ut_mode: UT validation mode - "none" (sphere only), "pickle", or "worldgen"
+        ut_mode: UT validation mode - "none", "pickle", or "worldgen"
+        skip_sphere_validation: If True, skip sphere validation (only valid if ut_mode is set)
 
     Returns a dict with test results.
     """
     start_time = time.perf_counter()
 
-    validation_mode = "sphere" if ut_mode == "none" else f"sphere+ut_{ut_mode}"
+    # Determine validation mode string for results
+    run_sphere = not skip_sphere_validation
+    run_ut = ut_mode != "none"
+
+    if run_sphere and run_ut:
+        validation_mode = f"sphere+ut_{ut_mode}"
+    elif run_sphere:
+        validation_mode = "sphere"
+    elif run_ut:
+        validation_mode = f"ut_{ut_mode}"
+    else:
+        validation_mode = "none"
     result = {
         "passed": False,
         "generation_success": False,
@@ -1118,24 +1131,27 @@ def run_multiworld_test(
         result["archive_path"] = str(archive_path)
 
     try:
-        # === SPHERE VALIDATION ===
-        # Validates that all locations are reachable with all items collected
-        sphere_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
+        # === SPHERE VALIDATION (if enabled) ===
+        sphere_results = None
+        sphere_all_passed = True
 
-        # Aggregate cross-world statistics
-        total_cross_world_items = sum(
-            details.get("items_from_other_players", 0)
-            for _, _, details in sphere_results.values()
-        )
-        result["cross_world_items_total"] = total_cross_world_items
+        if run_sphere:
+            sphere_results = validate_multiworld_with_spheres(multiworld, multiworld_dir)
 
-        sphere_all_passed = all(passed for passed, _, _ in sphere_results.values())
+            # Aggregate cross-world statistics
+            total_cross_world_items = sum(
+                details.get("items_from_other_players", 0)
+                for _, _, details in sphere_results.values()
+            )
+            result["cross_world_items_total"] = total_cross_world_items
+
+            sphere_all_passed = all(passed for passed, _, _ in sphere_results.values())
 
         # === UT VALIDATION (if enabled) ===
         ut_results = None
         ut_all_passed = True
 
-        if ut_mode != "none" and archive_path:
+        if run_ut and archive_path:
             if ut_mode == "pickle":
                 ut_results = validate_multiworld_with_ut_pickle(
                     multiworld, archive_path, project_root
@@ -1149,13 +1165,30 @@ def run_multiworld_test(
                 ut_all_passed = all(passed for passed, _, _ in ut_results.values())
 
         # === BUILD COMBINED RESULTS ===
-        for pid, (sphere_passed, sphere_error, sphere_details) in sphere_results.items():
-            combined_passed = sphere_passed
-            combined_error = ""
-            combined_details = {**sphere_details}
+        # Determine which results to iterate over
+        if sphere_results:
+            base_results = sphere_results
+        elif ut_results:
+            base_results = ut_results
+        else:
+            # No validation was run - this shouldn't happen but handle gracefully
+            result["passed"] = True
+            result["error"] = "No validation mode selected"
+            return result
 
-            if not sphere_passed:
-                combined_error = f"[Sphere] {sphere_error}"
+        for pid in base_results.keys():
+            combined_passed = True
+            combined_error = ""
+            combined_details = {}
+
+            # Add sphere validation results
+            if sphere_results and pid in sphere_results:
+                sphere_passed, sphere_error, sphere_details = sphere_results[pid]
+                combined_passed = combined_passed and sphere_passed
+                combined_details = {**sphere_details}
+
+                if not sphere_passed:
+                    combined_error = f"[Sphere] {sphere_error}"
 
             # Add UT results if available
             if ut_results and pid in ut_results:
@@ -1174,6 +1207,9 @@ def run_multiworld_test(
                 combined_details["ut_locations_validated"] = ut_details.get("locations_validated", 0)
                 if "sphere_errors" in ut_details:
                     combined_details["ut_sphere_errors"] = ut_details["sphere_errors"]
+                # If only UT validation, include game name from UT details
+                if not sphere_results:
+                    combined_details["game"] = ut_details.get("game", "Unknown")
 
             result["player_results"][str(pid)] = {
                 "passed": combined_passed,
@@ -1181,7 +1217,7 @@ def run_multiworld_test(
                 "details": combined_details
             }
 
-        # Overall pass: sphere validation AND UT validation (if enabled) must pass
+        # Overall pass: all enabled validations must pass
         result["passed"] = sphere_all_passed and ut_all_passed
 
         # Clean up archive
@@ -1212,13 +1248,15 @@ def run_multiple_tests(
     test_iteration: int = 0,
     ignore_generation_errors: bool = True,
     timeout_seconds: int = 60,
-    ut_mode: str = "none"
+    ut_mode: str = "none",
+    skip_sphere_validation: bool = False
 ) -> Dict:
     """
     Run multiple multiworld tests with different seeds.
     For each run, regenerates random YAMLs for all games.
 
-    Sphere validation is always run. UT validation is run based on ut_mode.
+    Sphere validation runs by default unless skip_sphere_validation is True.
+    UT validation is run based on ut_mode.
     The test fails if any enabled validation fails for any player.
 
     Generation failures are recorded separately from validation failures.
@@ -1297,7 +1335,7 @@ def run_multiple_tests(
 
         test_result = run_multiworld_test(
             multiworld_dir, seed, project_root,
-            ignore_generation_errors, timeout_seconds, ut_mode
+            ignore_generation_errors, timeout_seconds, ut_mode, skip_sphere_validation
         )
 
         results["run_results"].append({
@@ -1422,10 +1460,16 @@ def main():
         type=str,
         choices=['none', 'pickle', 'worldgen'],
         default='none',
-        help='UT validation mode: "none" (sphere validation only), '
+        help='UT validation mode: "none" (no UT validation), '
              '"pickle" (use pickle-based UT tracking), or '
              '"worldgen" (use worldgen-based UT with per-player rules.json). '
              '(default: none)'
+    )
+    parser.add_argument(
+        '--no-sphere-validation',
+        action='store_true',
+        help='Skip sphere validation (only run UT validation if --ut-mode is set). '
+             'Requires --ut-mode to be pickle or worldgen.'
     )
     parser.add_argument(
         '--ignore-generation-errors',
@@ -1448,6 +1492,10 @@ def main():
     )
 
     args = parser.parse_args()
+
+    # Validate argument combinations
+    if args.no_sphere_validation and args.ut_mode == "none":
+        parser.error("--no-sphere-validation requires --ut-mode to be 'pickle' or 'worldgen'")
 
     # Handle the ignore generation errors flags
     ignore_generation_errors = args.ignore_generation_errors and not args.no_ignore_generation_errors
@@ -1660,7 +1708,8 @@ def main():
             test_iteration=test_iteration,
             ignore_generation_errors=ignore_generation_errors,
             timeout_seconds=args.timeout,
-            ut_mode=args.ut_mode
+            ut_mode=args.ut_mode,
+            skip_sphere_validation=args.no_sphere_validation
         )
         test_iteration += 1  # Increment for next test to get different YAMLs
 

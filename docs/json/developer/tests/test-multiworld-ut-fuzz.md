@@ -174,7 +174,25 @@ python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle
 
 # Sphere + UT worldgen validation (uses per-player rules.json)
 python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen
+
+# UT pickle validation only (no sphere validation)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle --no-sphere-validation
+
+# UT worldgen validation only (no sphere validation)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen --no-sphere-validation
 ```
+
+### GitHub Workflow
+
+The workflow (`test-multiworld-ut-fuzz.yml`) provides a `validation_mode` input with these options:
+
+| Mode | Description |
+|------|-------------|
+| `sphere` | Sphere validation only (default) |
+| `ut_pickle` | UT pickle validation only |
+| `ut_worldgen` | UT worldgen validation only |
+| `sphere_ut_pickle` | Both sphere and UT pickle |
+| `sphere_ut_worldgen` | Both sphere and UT worldgen |
 
 ### Output
 
