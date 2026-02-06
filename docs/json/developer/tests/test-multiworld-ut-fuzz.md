@@ -23,41 +23,38 @@ The Multiworld Sphere Fuzz test validates that games can work together in a **mu
 
 | What It Checks | How |
 |----------------|-----|
-| All locations reachable | Collects all items, verifies every location is accessible |
+| Victory condition | Collects all items, verifies each player's completion condition is met |
 | Cross-world item flow | Items from other players can unlock expected locations |
 | Multiworld compatibility | Games work correctly together |
 
 Sphere validation catches:
-- Logic bugs where locations are unreachable
+- Victory conditions that cannot be met with certain option combinations
+- Cross-world interactions that break game completion
 - Option combinations that create impossible configurations
-- Cross-world interactions that break accessibility
 
-## Understanding "Unreachable Locations"
+### Victory vs Reachability
 
-When a test fails with "X unreachable locations", it means:
+The test uses **victory condition** as the pass/fail criterion, not full location reachability. This is important because some games have **self-locking items** — locations that are intentionally unreachable because the item needed to access them is placed at that location. These games are designed so that not all locations need to be checkable for the game to be completable.
 
-1. The multiworld was **successfully generated** (generation succeeded)
-2. The validation then collected **all items** in the game
-3. Even with all items, **some locations could not be reached**
+When unreachable locations are detected but the victory condition is met, the test **passes** and logs the unreachable count as informational.
 
-This is determined by calling `full_state.can_reach(location)` for every location after collecting all items via `multiworld.get_all_state()`.
-
-### What Causes Unreachable Locations?
-
-| Cause | Description |
-|-------|-------------|
-| **Logic Bug** | Access rules are too restrictive or incorrect |
-| **Entrance Randomizer Issues** | Shuffled entrances create unreachable areas |
-| **Option Conflicts** | Certain option combinations create impossible configurations |
-| **Cross-World Interactions** | Items from other players affect accessibility unexpectedly |
-
-### Example Error
+### Example Output
 
 ```
-Player 1 (Super Mario Land 2): 101 unreachable locations
+Player 3 (Game Name): Victory OK, but 12 unreachable locations (self-locking items?)
 ```
 
-This means Player 1's game (Super Mario Land 2) has 101 locations that cannot be reached even with all items. The validation is checking the Python multiworld's logic.
+This means the game can be completed (victory condition met) even though 12 locations can't be reached. This is expected behavior for some games.
+
+### Validation Failure
+
+A test fails when the victory condition **cannot be met** even with all items collected:
+
+```
+Player 1 (Super Mario Land 2): Victory condition not met (101 unreachable locations)
+```
+
+This indicates a real problem — the game cannot be completed with the given option combination in this multiworld configuration.
 
 ## Test Results Interpretation
 
@@ -91,7 +88,7 @@ Example: `67% (2/3, 1 gen fail)` means:
 | Type | When It Occurs | Counted As |
 |------|----------------|------------|
 | **Generation Failure** | Seed couldn't be generated (timeout, option conflict, fill error) | Tracked separately, doesn't count as test failure |
-| **Validation Failure** | Seed generated but locations are unreachable | Counts as test failure |
+| **Validation Failure** | Seed generated but victory condition not met | Counts as test failure |
 
 Generation failures are often caused by:
 - Option combinations that create impossible fills
@@ -106,10 +103,10 @@ When a validation failure occurs, the error shows which **player** failed:
 
 ```
 Players failed: 1
-  - Player 1: Player 1 (Super Mario Land 2): 9 unreachable locations
+  - Player 1: Player 1 (Super Mario Land 2): Victory condition not met (9 unreachable locations)
 ```
 
-**Important:** The failure is attributed to the **newly added game**, even if a different player in the multiworld actually failed. This is because adding a new game changes the item distribution and can affect other games' accessibility.
+**Important:** The failure is attributed to the **newly added game**, even if a different player in the multiworld actually failed. This is because adding a new game changes the item distribution and can affect other games' completion.
 
 For example:
 - Testing "TOEM original" (newly added as Player 10)

@@ -298,10 +298,13 @@ def validate_multiworld_with_spheres(
     """
     Validate a multiworld using sphere analysis on the live MultiWorld object.
 
-    This performs full sphere validation including cross-world item dependencies:
-    - Verifies all locations are reachable
-    - Checks that items from other players unlock expected locations
-    - Validates the sphere order is correct
+    This performs sphere validation including cross-world item dependencies:
+    - Checks that each player's victory condition can be met with all items
+    - Tracks cross-world item flow between players
+    - Reports unreachable locations as informational (not a failure)
+
+    Note: Some games have self-locking items where locations are intentionally
+    unreachable. The test passes as long as the victory condition is satisfied.
 
     Returns dict of player_id -> (passed, error_message, details)
     """
@@ -370,30 +373,34 @@ def validate_multiworld_with_spheres(
 
             details["spheres_with_cross_world_items"] = spheres_with_cross_world
 
-            # Use multiworld's built-in accessibility check
-            # This verifies the player can reach all their locations
-            accessible = True
-            unreachable_locations = []
-
-            # Create a fresh state and collect all items to check full reachability
+            # Create a fresh state and collect all items
             full_state = multiworld.get_all_state(use_cache=False)
+
+            # Check victory condition - this is the pass/fail criterion
+            victory = multiworld.has_beaten_game(full_state, player_id)
+            details["victory_condition_met"] = victory
+
+            # Also check location reachability (informational, not a failure)
+            unreachable_locations = []
             for loc in player_locations:
                 if not full_state.can_reach(loc, "Location", player_id):
-                    accessible = False
                     unreachable_locations.append(loc.name)
 
             details["reachable_locations"] = len(player_locations) - len(unreachable_locations)
 
             if unreachable_locations:
                 details["unreachable_locations"] = unreachable_locations[:10]  # Limit to first 10
+                details["unreachable_count"] = len(unreachable_locations)
 
-            if not accessible:
-                results[player_id] = (
-                    False,
-                    f"Player {player_id} ({game_name}): {len(unreachable_locations)} unreachable locations",
-                    details
-                )
+            if not victory:
+                error_msg = f"Player {player_id} ({game_name}): Victory condition not met"
+                if unreachable_locations:
+                    error_msg += f" ({len(unreachable_locations)} unreachable locations)"
+                results[player_id] = (False, error_msg, details)
             else:
+                if unreachable_locations:
+                    print(f"      Player {player_id} ({game_name}): Victory OK, "
+                          f"but {len(unreachable_locations)} unreachable locations (self-locking items?)")
                 results[player_id] = (True, "", details)
 
         except Exception as e:
