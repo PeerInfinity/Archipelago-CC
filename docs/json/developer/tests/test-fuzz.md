@@ -21,7 +21,7 @@ Unlike the regular spoiler tests (which use default template settings), fuzz tes
 | **UT Fuzz (Hybrid)** | Worldgen UT preferring native support | [View](../test-results/test-results-ut-fuzz-hybrid.md) |
 | **UT Fuzz (Pickle)** | Pickle-based UT (loads serialized multiworld) | [View](../test-results/test-results-ut-fuzz-pickle.md) |
 | **Spoiler Fuzz** | Frontend spoiler playthrough | [View](../test-results/test-results-spoiler-fuzz.md) |
-| **Multiworld UT Fuzz** | Multiworld assembly with UT validation | [Details](./test-multiworld-ut-fuzz.md) / [Results](../test-results/test-results-multiworld-ut-fuzz.md) |
+| **Multiworld Sphere Fuzz** | Multiworld assembly with sphere validation | [Details](./test-multiworld-ut-fuzz.md) / [Results](../test-results/test-results-multiworld-ut-fuzz.md) |
 
 ## UT Fuzz Tests
 
@@ -84,7 +84,7 @@ The Spoiler Fuzz test runs the **frontend spoiler playthrough** with randomized 
 - The **frontend Rule Builder** evaluates rules correctly with different options
 - Games are **completable** regardless of option settings
 
-## Multiworld UT Fuzz Test
+## Multiworld Sphere Fuzz Test
 
 Tests multiworld assembly by incrementally adding games that passed single-player UT fuzz tests.
 
@@ -95,7 +95,7 @@ Tests multiworld assembly by incrementally adding games that passed single-playe
    - Generate a random YAML configuration
    - Add it to the multiworld
    - Generate the combined seed
-   - Validate using UT
+   - Validate using sphere analysis (reachability checks)
    - Keep the game if it passes, remove if it fails
 3. Track which games successfully integrated
 
@@ -103,7 +103,7 @@ Tests multiworld assembly by incrementally adding games that passed single-playe
 
 - Games work correctly in **multiworld** with random options
 - Random option combinations are **compatible** across games
-- UT validation works for **multi-player** seeds
+- All locations are **reachable** in multi-player seeds
 
 ## Understanding Results
 

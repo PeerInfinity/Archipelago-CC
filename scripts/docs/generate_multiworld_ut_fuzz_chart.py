@@ -290,11 +290,11 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "1. Games are added one-by-one to a growing multiworld\n"
     md_content += "2. Each game uses randomly generated options (via fuzz.py)\n"
     md_content += "3. After adding a game, the full multiworld is generated multiple times\n"
-    md_content += "4. Each player in the multiworld is validated using Universal Tracker\n"
+    md_content += "4. Each player in the multiworld is validated using sphere analysis\n"
     md_content += "5. If validation fails, the game is removed from the multiworld\n"
     md_content += "6. **Second Pass:** Games added when there were fewer than 2 players are retested with the full multiworld\n\n"
     md_content += "This test catches issues where certain game combinations or option combinations "
-    md_content += "cause problems in multiworld generation or UT validation.\n"
+    md_content += "cause problems in multiworld generation or sphere validation.\n"
 
     return md_content
 
