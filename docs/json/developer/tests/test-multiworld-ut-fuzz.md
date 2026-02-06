@@ -19,9 +19,17 @@ The Multiworld UT Fuzz test validates that games can work together in a **multiw
    - If validation passes, keep the game; if it fails, remove it
 3. **Track results** for each game tested
 
-### Sphere Validation
+### Validation Modes
 
-The test validates each generated multiworld using **sphere validation**:
+The test supports multiple validation modes controlled by the `--ut-mode` option:
+
+| Mode | Description |
+|------|-------------|
+| `none` (default) | Sphere validation only - fastest, checks all locations are reachable |
+| `pickle` | Sphere + UT pickle validation - uses pickled multiworld for exact rule matching |
+| `worldgen` | Sphere + UT worldgen validation - uses per-player rules.json files |
+
+#### Sphere Validation (always runs)
 
 | What It Checks | How |
 |----------------|-----|
@@ -29,12 +37,24 @@ The test validates each generated multiworld using **sphere validation**:
 | Cross-world item flow | Items from other players can unlock expected locations |
 | Multiworld compatibility | Games work correctly together |
 
-A test passes if all players pass sphere validation. This catches:
+Sphere validation catches:
 - Logic bugs where locations are unreachable
 - Option combinations that create impossible configurations
 - Cross-world interactions that break accessibility
 
-**Note:** Unlike single-player UT fuzz tests, multiworld tests do not include UT validation. UT validation requires per-player rules.json files in a specific format that multiworld exports don't provide. Sphere validation is sufficient for validating multiworld correctness.
+#### UT Validation (optional)
+
+When `--ut-mode pickle` or `--ut-mode worldgen` is specified, the test also runs UT validation:
+
+| UT Mode | How It Works |
+|---------|--------------|
+| `pickle` | Extracts the pickled multiworld from the archive and uses TrackerCore's pickle tracking |
+| `worldgen` | Extracts per-player rules.json files (`AP_*_P{player}_rules.json`) and uses worldgen tracking |
+
+UT validation compares TrackerCore's logic calculations against Python's sphere calculations, catching:
+- Rule export/import issues
+- Differences in how Rule Builder evaluates conditions
+- Game-specific tracking problems
 
 ## Understanding "Unreachable Locations"
 
@@ -130,7 +150,7 @@ This happens because:
 ### Basic Usage
 
 ```bash
-# Run with default settings (3 runs per game, seed=1)
+# Run with default settings (3 runs per game, seed=1, sphere validation only)
 python scripts/test/test-multiworld-ut-fuzz.py
 
 # Custom number of runs
@@ -141,6 +161,19 @@ python scripts/test/test-multiworld-ut-fuzz.py --seed 42
 
 # Longer timeout for slow games
 python scripts/test/test-multiworld-ut-fuzz.py --timeout 120
+```
+
+### UT Validation Modes
+
+```bash
+# Sphere validation only (default, fastest)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode none
+
+# Sphere + UT pickle validation (uses pickled multiworld)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode pickle
+
+# Sphere + UT worldgen validation (uses per-player rules.json)
+python scripts/test/test-multiworld-ut-fuzz.py --ut-mode worldgen
 ```
 
 ### Output

@@ -363,11 +363,16 @@ class WorldgenMixin:
         """
         Auto-discover and load the rules JSON file based on game name and seed name.
 
+        For multiworld seeds (when self.slot is set), also searches for per-player
+        rules files with the format AP_{seed_name}_P{player}_rules.json.
+
         Searches for rules files in multiple locations (in order):
-        1. frontend/presets/{world_directory}_worldgen/AP_{seed_name}/ - worldgen presets
-        2. frontend/presets/{world_directory}/AP_{seed_name}/ - original presets
-        3. output/ directory - default generation output (extracted ZIP)
-        4. User data directory (~/.local/share/Archipelago/ on Linux)
+        1. Per-player rules in output/ directory (if slot is set)
+        2. Per-player rules in user data directory (if slot is set)
+        3. frontend/presets/{world_directory}_worldgen/AP_{seed_name}/ - worldgen presets
+        4. frontend/presets/{world_directory}/AP_{seed_name}/ - original presets
+        5. output/ directory - default generation output (extracted ZIP)
+        6. User data directory (~/.local/share/Archipelago/ on Linux)
 
         Each candidate file is validated to ensure game_name and seed_name match
         before being accepted. If validation fails, the search continues.
@@ -406,7 +411,23 @@ class WorldgenMixin:
         seed_dir_name = f"AP_{self.seed_name}"
         rules_filename = f"AP_{self.seed_name}_rules.json"
 
+        # For multiworld, also look for per-player rules files
+        # Format: AP_{seed}_P{player}_rules.json
+        player_rules_filename = None
+        if self.slot is not None:
+            player_rules_filename = f"AP_{self.seed_name}_P{self.slot}_rules.json"
+
         candidates = []
+
+        # For multiworld (slot is set), prioritize per-player rules files
+        if player_rules_filename:
+            # 1a. Per-player rules in output directory (most common for multiworld)
+            output_player_path = Path(output_path()) / player_rules_filename
+            candidates.append(output_player_path)
+
+            # 1b. Per-player rules in user data directory
+            user_player_path = Path(user_path()) / player_rules_filename
+            candidates.append(user_player_path)
 
         # 1. WorldGen preset directory
         worldgen_preset_path = project_root / "frontend" / "presets" / f"{world_directory}_worldgen" / seed_dir_name / rules_filename
