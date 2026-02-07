@@ -6122,6 +6122,17 @@ class RuleCodeGenerator:
         args = rule.get('args', {})
         function = args.get('function', {})
 
+        # Check if function is a state_method or item_check type (has 'type' key)
+        # These produce complete boolean expressions and should be converted directly
+        # to Rule Builder format without wrapping in an additional function call.
+        # This happens when the analyzer wraps state.has_all(), state.has_any(), etc.
+        # in AST_function_call.
+        if isinstance(function, dict) and function.get('type') in (
+            'state_method', 'item_check', 'item_check_any', 'item_check_all',
+            'count_check', 'group_check'
+        ):
+            return self._convert_rule(function)
+
         # Check if function is a Rule Builder rule (has 'rule' key with known rule types)
         # This happens when bunny rules are analyzed and the inner rule is a valid
         # Rule Builder expression (e.g., And(CanReachEntrance(...), Has(...)))
@@ -7467,7 +7478,9 @@ class HelperCodeGenerator:
                     func_type = function.get('type', '')
                     # Also handle analyzer types (lowercase) - these are AST analyzer output types
                     analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
-                                          'can_reach', 'region_check', 'location_check')
+                                          'count_check', 'group_check', 'state_method',
+                                          'can_reach', 'region_check', 'location_check',
+                                          'can_reach_entrance')
                     # Check for Rule Builder types, 'helper' AST marker, or analyzer types
                     if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper' or func_type in analyzer_bool_types:
                         # These types already produce complete boolean expressions
