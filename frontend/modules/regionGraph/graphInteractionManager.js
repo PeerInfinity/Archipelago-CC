@@ -4,7 +4,6 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
-import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -287,14 +286,6 @@ export class GraphInteractionManager {
     this.ui.selectedNode = regionName;
 
     logger.debug(`Node clicked: ${regionName}`);
-
-    // Discovery mode: discover region on click if enabled
-    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.clickDiscoversRegion) {
-      if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
-        logger.debug(`Discovering region via click: ${regionName}`);
-        discoveryStateSingleton.discoverRegion(regionName);
-      }
-    }
 
     // Update visual selection
     this.ui.cy.$('node').removeClass('selected');

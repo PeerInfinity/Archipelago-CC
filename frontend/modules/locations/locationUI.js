@@ -608,20 +608,13 @@ export class LocationUI {
     }
 
     const locationName = locationData.name;
+    const regionName = locationData.region || locationData.parent_region;
 
-    // Handle discovery mode: if clickDiscoversLocation is enabled, discover the location
-    if (this.isDiscoveryModeActive && this.discoverySettings.clickDiscoversLocation) {
-      const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
-      if (!isLocationDiscovered) {
-        log('info', `[LocationUI] Discovering location via click: ${locationName}`);
-        discoveryStateSingleton.discoverLocation(locationName);
-        // Also discover the region if not already discovered
-        const regionName = locationData.region || locationData.parent_region;
-        if (regionName && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
-          discoveryStateSingleton.discoverRegion(regionName);
-        }
-      }
-    }
+    // Publish click event for Discovery module to handle
+    eventBus.publish('ui:locationClicked', {
+      locationName,
+      regionName
+    }, 'locations');
 
     // Discovery mode: if location checks are disabled, don't perform the check
     if (this.isDiscoveryModeActive && this.discoverySettings.disableLocationCheckUI) {

@@ -6,6 +6,7 @@ import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -192,7 +193,7 @@ export class RegionBlockBuilder {
     regionBlock.appendChild(contentEl);
 
     // Add event listeners
-    this.attachEventListeners(headerEl, uid, regionName, isDiscoveryModeActive, isRegionDiscovered, settings);
+    this.attachEventListeners(headerEl, uid, regionName);
 
     return regionBlock;
   }
@@ -1200,20 +1201,15 @@ export class RegionBlockBuilder {
   /**
    * Attaches event listeners to the header element
    */
-  attachEventListeners(headerEl, uid, regionName, isDiscoveryModeActive = false, isRegionDiscovered = true, discoverySettings = {}) {
+  attachEventListeners(headerEl, uid, regionName) {
     // Header click listener
     headerEl.addEventListener('click', (e) => {
       if (e.target.classList.contains('collapse-btn')) {
         e.stopPropagation();
       }
 
-      // Discovery mode: discover region on click if enabled
-      if (isDiscoveryModeActive && discoverySettings.clickDiscoversRegion && !isRegionDiscovered) {
-        if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
-          log('info', `[RegionBlockBuilder] Discovering region via click: ${regionName}`);
-          discoveryStateSingleton.discoverRegion(regionName);
-        }
-      }
+      // Publish click event for Discovery module to handle
+      eventBus.publish('ui:regionHeaderClicked', { regionName }, 'regions');
 
       this.regionUI.toggleRegionByUID(uid);
     });
