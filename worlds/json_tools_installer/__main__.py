@@ -23,16 +23,38 @@ def main():
     install_parser = subparsers.add_parser("install", help="Install or update JSON Tools")
     install_parser.add_argument("--version", "-v", choices=["stable", "dev"], default="stable")
     install_parser.add_argument("--all", "-a", action="store_true", help="Install all components")
-    install_parser.add_argument("--frontend", action="store_true", help="Include frontend")
+    # Individual component flags
+    install_parser.add_argument("--exporter", action="store_true", help="Include exporter module")
+    install_parser.add_argument("--rule-builder", action="store_true", help="Include rule builder module")
+    install_parser.add_argument("--world-generator", action="store_true", help="Include world generator module")
+    install_parser.add_argument("--scripts", action="store_true", help="Include utility scripts")
+    install_parser.add_argument("--frontend", action="store_true", help="Include frontend web UI")
     install_parser.add_argument("--presets", action="store_true", help="Include presets")
     install_parser.add_argument("--docs", action="store_true", help="Include documentation")
-    install_parser.add_argument("--worldgen-worlds", action="store_true", help="Include worldgen worlds")
+    install_parser.add_argument("--main-patches", action="store_true", help="Include main patches")
+    install_parser.add_argument("--romless-patches", action="store_true", help="Include romless patches")
     install_parser.add_argument("--demo-worlds", action="store_true", help="Include demo worlds")
+    install_parser.add_argument("--worldgen-worlds", action="store_true", help="Include worldgen worlds")
     install_parser.add_argument("--tracker", action="store_true", help="Include tracker")
     install_parser.add_argument("--testing", action="store_true", help="Include testing infrastructure")
-    install_parser.add_argument("--romless-patches", action="store_true", help="Include romless patches")
-    install_parser.add_argument("--monkey-patch", action="store_true", help="Use runtime patching")
+    # Actions
+    install_parser.add_argument("--update", "-u", action="store_true", help="Update existing installation")
     install_parser.add_argument("--uninstall", action="store_true", help="Uninstall")
+    install_parser.add_argument("--revert-patches", action="store_true", help="Revert patches only")
+    # Patch mode (mutually exclusive)
+    patch_group = install_parser.add_mutually_exclusive_group()
+    patch_group.add_argument("--no-patch", action="store_true", help="Do not apply any patches")
+    patch_group.add_argument("--file-patch", action="store_true", help="Use file-based patching")
+    # Note: monkey patching is the default, no flag needed
+    # Export settings
+    export_group = install_parser.add_mutually_exclusive_group()
+    export_group.add_argument("--configure-export", action="store_true", default=True,
+                              help="Configure export settings in host.yaml (default)")
+    export_group.add_argument("--no-configure-export", action="store_true",
+                              help="Skip configuring export settings")
+    install_parser.add_argument("--export-preset", choices=["normal", "minimal-spoilers"],
+                                default="normal", help="Export settings preset")
+    # Other options
     install_parser.add_argument("--yes", "-y", action="store_true", help="Skip confirmation prompts")
     install_parser.add_argument("--dry-run", "-n", action="store_true")
 
@@ -59,26 +81,51 @@ def main():
             install_args.extend(["--version", args.version])
         if args.all:
             install_args.append("--all")
+        # Individual component flags
+        if args.exporter:
+            install_args.append("--exporter")
+        if args.rule_builder:
+            install_args.append("--rule-builder")
+        if args.world_generator:
+            install_args.append("--world-generator")
+        if args.scripts:
+            install_args.append("--scripts")
         if args.frontend:
             install_args.append("--frontend")
         if args.presets:
             install_args.append("--presets")
         if args.docs:
             install_args.append("--docs")
-        if args.worldgen_worlds:
-            install_args.append("--worldgen-worlds")
+        if args.main_patches:
+            install_args.append("--main-patches")
+        if args.romless_patches:
+            install_args.append("--romless-patches")
         if args.demo_worlds:
             install_args.append("--demo-worlds")
+        if args.worldgen_worlds:
+            install_args.append("--worldgen-worlds")
         if args.tracker:
             install_args.append("--tracker")
         if args.testing:
             install_args.append("--testing")
-        if args.romless_patches:
-            install_args.append("--romless-patches")
-        if args.monkey_patch:
-            install_args.append("--monkey-patch")
+        # Actions
+        if args.update:
+            install_args.append("--update")
         if args.uninstall:
             install_args.append("--uninstall")
+        if args.revert_patches:
+            install_args.append("--revert-patches")
+        # Patch mode
+        if args.no_patch:
+            install_args.append("--no-patch")
+        if args.file_patch:
+            install_args.append("--file-patch")
+        # Export settings
+        if args.no_configure_export:
+            install_args.append("--no-configure-export")
+        if args.export_preset and args.export_preset != "normal":
+            install_args.extend(["--export-preset", args.export_preset])
+        # Other options
         if args.yes:
             install_args.append("--yes")
         if args.dry_run:

@@ -49,6 +49,7 @@ from ..installer.extractor import (
     list_installed_components,
     remove_component,
     COMPONENTS,
+    DEFAULT_COMPONENTS,
 )
 from ..installer.patcher import (
     apply_bundled_patches,
@@ -350,21 +351,29 @@ def main(args=None):
         help="Install all components",
     )
     parser.add_argument(
-        "--core",
+        "--exporter",
         action="store_true",
-        default=True,
-        help="Install core tools (default: True)",
+        help="Install exporter module (default component)",
+    )
+    parser.add_argument(
+        "--rule-builder",
+        action="store_true",
+        help="Install rule builder module (default component)",
+    )
+    parser.add_argument(
+        "--world-generator",
+        action="store_true",
+        help="Install world generator module (default component)",
     )
     parser.add_argument(
         "--scripts",
         action="store_true",
-        default=True,
-        help="Install scripts (default: True)",
+        help="Install utility scripts (default component)",
     )
     parser.add_argument(
         "--frontend",
         action="store_true",
-        help="Install frontend web UI",
+        help="Install frontend web UI (default component)",
     )
     parser.add_argument(
         "--presets",
@@ -374,17 +383,27 @@ def main(args=None):
     parser.add_argument(
         "--docs",
         action="store_true",
-        help="Install documentation",
+        help="Install documentation (default component)",
+    )
+    parser.add_argument(
+        "--main-patches",
+        action="store_true",
+        help="Install patched core files for JSON export support (default component)",
+    )
+    parser.add_argument(
+        "--romless-patches",
+        action="store_true",
+        help="Install ROM-less generation patches (default component)",
+    )
+    parser.add_argument(
+        "--demo-worlds",
+        action="store_true",
+        help="Install example/demo worlds (default component)",
     )
     parser.add_argument(
         "--worldgen-worlds",
         action="store_true",
         help="Install auto-generated world packages from JSON rules",
-    )
-    parser.add_argument(
-        "--demo-worlds",
-        action="store_true",
-        help="Install example/demo worlds (bakingadventure, etc.)",
     )
     parser.add_argument(
         "--tracker",
@@ -395,11 +414,6 @@ def main(args=None):
         "--testing",
         action="store_true",
         help="Install testing infrastructure (package.json, playwright, vitest)",
-    )
-    parser.add_argument(
-        "--romless-patches",
-        action="store_true",
-        help="Install ROM-less generation patches (for testing without ROMs)",
     )
 
     # Actions
@@ -510,31 +524,32 @@ def main(args=None):
     if parsed.all:
         components = list(COMPONENTS.keys())
     else:
-        if parsed.core:
-            components.append("core")
-        if parsed.scripts:
-            components.append("scripts")
-        if parsed.frontend:
+        # Map CLI flags to component names
+        flag_to_component = {
+            "exporter": "exporter",
+            "rule_builder": "rule_builder",
+            "world_generator": "world_generator",
+            "scripts": "scripts",
+            "frontend": "frontend",
+            "presets": "presets",
+            "docs": "docs",
+            "main_patches": "main_patches",
+            "romless_patches": "romless_patches",
+            "demo_worlds": "demo_worlds",
+            "worldgen_worlds": "worldgen_worlds",
+            "tracker": "tracker",
+            "testing": "testing",
+        }
+        for flag, comp_name in flag_to_component.items():
+            if getattr(parsed, flag, False):
+                components.append(comp_name)
+
+        # If presets selected, ensure frontend is also included
+        if "presets" in components and "frontend" not in components:
             components.append("frontend")
-        if parsed.presets:
-            components.append("presets")
-            if "frontend" not in components:
-                components.append("frontend")
-        if parsed.docs:
-            components.append("docs")
-        if parsed.worldgen_worlds:
-            components.append("worldgen_worlds")
-        if parsed.demo_worlds:
-            components.append("demo_worlds")
-        if parsed.tracker:
-            components.append("tracker")
-        if parsed.testing:
-            components.append("testing")
-        if parsed.romless_patches:
-            components.append("romless_patches")
 
     if not components:
-        components = ["core", "scripts"]
+        components = list(DEFAULT_COMPONENTS)
 
     # For update, use existing config's version if not specified
     version = parsed.version
