@@ -9,7 +9,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
@@ -64,6 +64,8 @@ export class RegionUI {
     this.discoverySettings = {
       undiscoveredDisplay: 'hidden',
       clickDiscoversLocation: true,
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
       showUndiscoveredDetails: false
     };
 
@@ -726,7 +728,7 @@ export class RegionUI {
     resetUnknownEvaluationCounter();
 
     // Create snapshot interface
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) {
       log('error', '[RegionUI] Failed to create snapshot interface. Rendering may be incomplete.');
       return;
@@ -1054,6 +1056,12 @@ export class RegionUI {
       );
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
         'moduleSettings.discovery.clickDiscoversLocation', true
+      );
+      this.discoverySettings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false
+      );
+      this.discoverySettings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false
       );
       this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredDetails', false

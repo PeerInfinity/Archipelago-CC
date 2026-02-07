@@ -100,3 +100,7 @@ export function register(registrationApi) {
 }```
 
 This `componentType` string (`'myModulePanel'`) is the same string used in `layout_presets.json` to define where this panel should appear in the default layout.
+
+## See Also
+
+- **[Desktop and Mobile Layout](./desktop-and-mobile-layout.md)** - Device detection, desktop vs mobile layout modes, responsive breakpoints, and column navigation

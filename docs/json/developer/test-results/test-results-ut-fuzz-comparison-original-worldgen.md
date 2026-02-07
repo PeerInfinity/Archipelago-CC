@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-02-07 05:13:22
+**Generated:** 2026-02-07 14:01:39
 
 **Source Data Last Updated:** 2026-01-26T04:45:29
 
@@ -86,7 +86,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Raft | ✅ 100.0% | ✅ 100.0% | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.4KB | 51.3KB | 1044.7KB |
-| Satisfactory | N/A | ❌ 0.0% | ✅ | ✅ | 1183.8KB |
+| Satisfactory | N/A | ❌ 0.0% | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ❌ 28.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ 100.0% | ✅ 100.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
@@ -216,7 +216,7 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.4KB | 51.3KB | 1044.7KB |
-| Satisfactory | ✅ | ✅ | 1183.8KB |
+| Satisfactory | 35.2KB | ✅ | 1703.4KB |
 | Starcraft 2 | 28.7KB | 90.1KB | 1126.8KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Super Mario 64 | ✅ | ✅ | 101.9KB |

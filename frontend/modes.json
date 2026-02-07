@@ -71,6 +71,15 @@
       "enabled": true
     }
   },
+  "discovery-entrance": {
+    "userSettings": {
+      "paths": [
+        "./settings.json",
+        "./settings-discovery-entrance.json"
+      ],
+      "enabled": true
+    }
+  },
   "loops": {
     "userSettings": {
       "paths": [

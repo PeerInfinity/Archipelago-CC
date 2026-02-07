@@ -92,7 +92,7 @@ For a full breakdown, see the [State Snapshots Documentation](./reference/state-
 
 While the worker handles the primary state computation, UI components often need to evaluate simple rules for display purposes (e.g., showing the logic tree for a location). To do this without asking the worker and waiting for a response, they use a **State Snapshot Interface**.
 
--   **`createStateSnapshotInterface()`**: A function in `frontend/modules/shared/stateInterface.js` that takes the latest snapshot and static data to create a temporary interface object.
+-   **`createSnapshotInterface()`**: A function in `frontend/modules/shared/snapshotInterface.js` that takes the latest snapshot and static data to create a temporary interface object.
 -   This interface has methods similar to the real `StateManager` (e.g., `hasItem`, `countGroup`, `executeHelper`) but operates _synchronously_ on the cached snapshot data.
 -   This allows `commonUI.renderLogicTree()` to instantly evaluate and display a rule's status on the main thread.
 

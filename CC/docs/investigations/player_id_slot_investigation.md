@@ -160,9 +160,9 @@ return this.clientSlot;
 
 **Primary Usage**: Snapshot data and rule evaluation context
 **Type**: Mixed (string or number depending on source)
-**Files**: stateInterface.js, statePersistence.js
+**Files**: snapshotInterface.js, statePersistence.js
 
-**Key Locations** (`shared/stateInterface.js`):
+**Key Locations** (`shared/snapshotInterface.js`):
 ```javascript
 // Line 306: Getting player ID with fallbacks
 const selfPlayerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1'; // ⚠️ HARDCODED FALLBACK
@@ -209,12 +209,12 @@ if (name === 'player') return snapshot?.player?.slot;
 
 | File | Line | Code | Context |
 |------|------|------|---------|
-| `stateInterface.js` | 306 | `\|\| '1'` | selfPlayerId fallback chain |
-| `stateInterface.js` | 320 | `\|\| '1'` | Player slot getter fallback |
-| `stateInterface.js` | 323 | `\|\| '1'` | playerId variable fallback |
-| `stateInterface.js` | 346 | `\|\| '1'` | currentPlayerId fallback |
-| `stateInterface.js` | 412 | `\|\| '1'` | playerSlot in countGroup |
-| `stateInterface.js` | 731 | `\|\| '1'` | playerSlot in has_from_list_unique |
+| `snapshotInterface.js` | 306 | `\|\| '1'` | selfPlayerId fallback chain |
+| `snapshotInterface.js` | 320 | `\|\| '1'` | Player slot getter fallback |
+| `snapshotInterface.js` | 323 | `\|\| '1'` | playerId variable fallback |
+| `snapshotInterface.js` | 346 | `\|\| '1'` | currentPlayerId fallback |
+| `snapshotInterface.js` | 412 | `\|\| '1'` | playerSlot in countGroup |
+| `snapshotInterface.js` | 731 | `\|\| '1'` | playerSlot in has_from_list_unique |
 | `ruleEngine.js` | 659 | `\|\| '1'` | playerId in state.self evaluation |
 | `ruleEngine.js` | 684 | `\|\| '1'` | playerId in state access |
 | `statePersistence.js` | 535 | `\|\| '1'` | currentPlayerId in variables |
@@ -313,7 +313,7 @@ const gameInfo = sm.gameInfo?.[String(sm.playerSlot)]; // ⚠️ Must convert to
 const playerId = sm.playerSlot; // ⚠️ Numeric value works due to coercion
 ```
 
-**File**: `shared/stateInterface.js:415,420`
+**File**: `shared/snapshotInterface.js:415,420`
 
 ```javascript
 // Line 412-415: Mixed key types
@@ -638,7 +638,7 @@ const player = String(args[2] || DEFAULT_PLAYER_ID);
 3. Migrate StateManager properties
 4. Update all internal references
 5. Update snapshot structure
-6. Update stateInterface references
+6. Update snapshotInterface references
 7. Update game logic helpers
 
 **Estimated Impact**: ~80 file changes
@@ -833,7 +833,7 @@ export function can_reach(sm, target, type = 'Region', playerId = null) {
 
 #### Step 5: Update State Interface
 
-**File**: `frontend/modules/shared/stateInterface.js`
+**File**: `frontend/modules/shared/snapshotInterface.js`
 
 ```javascript
 // BEFORE
@@ -980,7 +980,7 @@ Focus areas for testing:
 | File | Lines | Player Variables | Hardcoded Values | Priority |
 |------|-------|------------------|------------------|----------|
 | `shared/ruleEngine.js` | 2213 | `playerId` (4) | `\|\| '1'` (lines 659, 684) | 🟡 High |
-| `shared/stateInterface.js` | 822 | `playerSlot` (6), `playerId` (4) | `\|\| '1'` (5 times) | 🟡 High |
+| `shared/snapshotInterface.js` | 822 | `playerSlot` (6), `playerId` (4) | `\|\| '1'` (5 times) | 🟡 High |
 
 ### Client Connection Files (Medium Priority)
 

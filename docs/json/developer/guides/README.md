@@ -10,6 +10,7 @@ These guides explain the fundamental systems that power the web client:
 - **[Event System](./event-system.md)**: How modules communicate using the Event Bus and Event Dispatcher
 - **[State Management](./state-management.md)**: The StateManager, Web Workers, and how game state flows through the application
 - **[UI and Layout System](./ui-and-layout.md)**: Golden Layout integration and how to create UI panels
+- **[Desktop and Mobile Layout](./desktop-and-mobile-layout.md)**: Device detection, desktop vs mobile layout modes, responsive breakpoints, and column navigation
 
 ## Development Guides
 

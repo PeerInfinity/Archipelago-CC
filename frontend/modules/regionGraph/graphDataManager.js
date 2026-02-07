@@ -1,6 +1,6 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -18,6 +18,9 @@ export class GraphDataManager {
   async loadGraphData() {
     logger.debug('loadGraphData called');
     try {
+      // Refresh discovery settings to avoid race conditions with mode-specific settings loading
+      await this.ui.loadDiscoverySettings();
+
       logger.debug('Getting state data...');
       const staticData = stateManager.getStaticData();
       const snapshot = stateManager.getLatestStateSnapshot();
@@ -86,7 +89,7 @@ export class GraphDataManager {
       return { checked: 0, accessible: 0, inaccessible: 0, total: 0 };
     }
 
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     const locations = regionData.locations || [];
     const checkedLocations = new Set(snapshot.checkedLocations || []);
 
@@ -229,8 +232,10 @@ export class GraphDataManager {
           displayText = '???';
           nodeClasses += ' undiscovered-placeholder';
         } else {
-          // Has entrance and should be shown as undiscovered
-          displayText = '???';
+          // Has entrance and should be shown as undiscovered placeholder
+          displayText = discoverySettings.showUndiscoveredRegionNames
+            ? this.ui.getRegionDisplayText(regionData)
+            : '???';
           nodeClasses += ' undiscovered-placeholder';
         }
       } else {
@@ -413,6 +418,19 @@ export class GraphDataManager {
       processedEdges.add(reverseEdgeId); // Mark both directions as processed
     }
 
+    // Increment layout generation to invalidate any pending layoutstop timeouts
+    // from a previous layout. This prevents stale timeouts from saving wrong
+    // positions or positioning the player before the new layout settles.
+    this.ui.layoutGeneration++;
+
+    // Stop any running layout before rebuilding the graph
+    // This prevents a race condition where isLayoutRunning stays true
+    // after elements are removed, blocking subsequent layout attempts
+    if (this.ui.currentLayout && this.ui.isLayoutRunning) {
+      this.ui.currentLayout.stop();
+      this.ui.isLayoutRunning = false;
+    }
+
     this.ui.cy.elements().remove();
     this.ui.cy.add(elements);
 
@@ -510,7 +528,7 @@ export class GraphDataManager {
     if (!staticData) return;
 
     // Create snapshot interface for rule evaluation
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) return;
 
     // Get discovery mode state
@@ -603,8 +621,11 @@ export class GraphDataManager {
       // Determine display text based on discovery state
       let displayText;
       if (isDiscoveryModeActive && !isRegionDiscovered) {
-        // Undiscovered region - always show ???
-        displayText = '???';
+        // Undiscovered region - show name if setting enabled and has entrance, otherwise ???
+        const hasEntrance = this.hasEntranceFromDiscoveredRegion(regionName, staticData.regions);
+        displayText = (discoverySettings.showUndiscoveredRegionNames && hasEntrance)
+          ? this.ui.getRegionDisplayText(regionData)
+          : '???';
       } else {
         displayText = this.ui.getRegionDisplayText(regionData);
       }
@@ -612,7 +633,7 @@ export class GraphDataManager {
       // Add location counts if there are locations (only for discovered regions)
       let fullLabel;
       if (isDiscoveryModeActive && !isRegionDiscovered) {
-        fullLabel = displayText; // Just "???" for undiscovered regions
+        fullLabel = displayText; // Just the placeholder text for undiscovered regions
       } else {
         const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
         fullLabel = locationCounts.total > 0 ? `${displayText}\n${countLabel}` : displayText;
@@ -1070,7 +1091,7 @@ export class GraphDataManager {
     }
 
     // Evaluate location accessibility using existing rule engine
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     let locationAccessible = true;
 
     if (location.access_rule) {
