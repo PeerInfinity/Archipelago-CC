@@ -259,12 +259,20 @@ def _rule_needs_lambda(rule: dict) -> bool:
     if rule_name == 'AST_function_call':
         args = rule.get('args', {})
         function = args.get('function', {})
-        if isinstance(function, dict) and function.get('rule'):
-            func_rule = function.get('rule')
-            if func_rule in BOOLEAN_RULE_TYPES:
-                # Function is a Rule Builder rule - check if IT needs lambda
-                # (it might have nested dynamic references)
-                return _rule_needs_lambda(function)
+        if isinstance(function, dict):
+            if function.get('rule'):
+                func_rule = function.get('rule')
+                if func_rule in BOOLEAN_RULE_TYPES:
+                    # Function is a Rule Builder rule - check if IT needs lambda
+                    # (it might have nested dynamic references)
+                    return _rule_needs_lambda(function)
+            # state_method and item_check types produce complete expressions
+            # (e.g., has_all, has_any, has, can_reach) that can be converted
+            # to Rule Builder format without needing a lambda wrapper
+            func_type = function.get('type', '')
+            if func_type in ('state_method', 'item_check', 'item_check_any',
+                             'item_check_all', 'count_check', 'group_check'):
+                return False
         # Unknown function call structure - needs lambda
         return True
 
