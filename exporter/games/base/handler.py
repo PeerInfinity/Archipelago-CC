@@ -118,6 +118,16 @@ class BaseGameExportHandler(
     #   - Ordered comparisons will use JavaScript string ordering (alphabetical, not semantic)
     EXPORT_CHOICE_OPTIONS_AS_NUMERIC: bool = True
 
+    # Whether to resolve world.options.X.value patterns to constants at export time
+    # When True (default), option values are resolved to their current numeric/string value
+    #   - Results in smaller, faster rules with pre-computed option values
+    #   - Rules are baked for the specific option configuration used during export
+    # When False, option values are kept as option_value references
+    #   - Rules remain generic and can work with different option configurations
+    #   - Requires runtime option resolution in the frontend
+    # This can be overridden by the host.yaml setting: general_options.resolve_options_to_constants
+    RESOLVE_OPTIONS_TO_CONSTANTS: bool = True
+
     # Set of helper function names to export as definitions (manual whitelist)
     # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
@@ -930,6 +940,36 @@ class BaseGameExportHandler(
             True if closure variables should be recursively analyzed, False otherwise
         """
         return self.RECURSIVELY_ANALYZE_CLOSURES
+
+    def should_resolve_options_to_constants(self) -> bool:
+        """
+        Check if the analyzer should resolve world.options.X.value patterns to constants.
+
+        When True (default), option values like world.options.Difficulty.value are
+        resolved to their actual values (e.g., 2) at export time. This results in
+        smaller, faster rules but bakes in the specific option configuration.
+
+        When False, option values are kept as option_value references that are
+        resolved at runtime by the frontend. This allows rules to work with
+        different option configurations.
+
+        The host.yaml setting (general_options.resolve_options_to_constants) takes
+        precedence over the class variable RESOLVE_OPTIONS_TO_CONSTANTS.
+
+        Returns:
+            True if options should be resolved to constants, False otherwise
+        """
+        # Check host.yaml setting first (takes precedence)
+        try:
+            from settings import get_settings
+            settings = get_settings()
+            host_setting = getattr(settings.general_options, 'resolve_options_to_constants', None)
+            if host_setting is not None:
+                return host_setting
+        except Exception:
+            pass  # Fall back to class variable if settings unavailable
+
+        return self.RESOLVE_OPTIONS_TO_CONSTANTS
 
     # ==========================================================================
     # Unanalyzable rule handling hooks

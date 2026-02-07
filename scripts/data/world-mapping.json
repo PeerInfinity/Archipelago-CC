@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/official/ahit.py",
-    "exporter_size": 18402,
+    "exporter_size": 18674,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -28,7 +28,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/official/alttp.py",
-    "exporter_size": 12810,
+    "exporter_size": 12905,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -54,11 +54,11 @@
     "world_directory": "alttp_worldgen2"
   },
   "A Short Hike": {
-    "exporter_path": "exporter/games/unofficial/shorthike.py",
-    "exporter_size": 16628,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "shorthike"
   },
@@ -449,9 +449,27 @@
     "has_custom_game_logic": false,
     "world_directory": "dkc3_worldgen"
   },
+  "EarthBound": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "earthbound"
+  },
+  "EarthBound WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "earthbound_worldgen"
+  },
   "Factorio": {
     "exporter_path": "exporter/games/official/factorio.py",
-    "exporter_size": 8812,
+    "exporter_size": 9040,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -982,7 +1000,7 @@
   },
   "SMZ3": {
     "exporter_path": "exporter/games/official/smz3.py",
-    "exporter_size": 62766,
+    "exporter_size": 62832,
     "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
     "game_logic_size": 52544,
     "has_custom_exporter": true,
@@ -997,6 +1015,24 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "smz3_worldgen"
+  },
+  "Satisfactory": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "satisfactory"
+  },
+  "Satisfactory WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "satisfactory_worldgen"
   },
   "Saving Princess": {
     "exporter_path": null,
@@ -1134,11 +1170,11 @@
     "world_directory": "apsudoku"
   },
   "Super Mario 64": {
-    "exporter_path": "exporter/games/official/sm64ex.py",
-    "exporter_size": 21912,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "sm64ex"
   },
@@ -1153,7 +1189,7 @@
   },
   "Super Mario Land 2": {
     "exporter_path": "exporter/games/official/marioland2.py",
-    "exporter_size": 94682,
+    "exporter_size": 98626,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1297,7 +1333,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/official/messenger.py",
-    "exporter_size": 15206,
+    "exporter_size": 15541,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

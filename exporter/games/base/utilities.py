@@ -7,6 +7,8 @@ handler instance state.
 import re
 from typing import Any, Callable, Dict
 
+from world_generator._sanitization import sanitize_for_helper_name
+
 
 def extract_closure_vars(rule_func: Callable) -> Dict[str, Any]:
     """Extract closure variables from a function.
@@ -79,27 +81,5 @@ def count_rule_nodes(rule: Dict[str, Any]) -> int:
     return count
 
 
-def sanitize_helper_name(name: str) -> str:
-    """
-    Convert a name to a valid helper function identifier.
-
-    Replaces spaces and special characters with underscores, removes
-    consecutive underscores, strips leading/trailing underscores, and
-    ensures the result starts with a letter.
-
-    Args:
-        name: The name to sanitize (e.g., "Gold Bar (Logic event)")
-
-    Returns:
-        A sanitized name suitable for use as a helper name (e.g., "gold_bar_logic_event")
-    """
-    # Replace spaces and special characters with underscores
-    result = re.sub(r'[^a-zA-Z0-9]', '_', name)
-    # Remove consecutive underscores
-    result = re.sub(r'_+', '_', result)
-    # Remove leading/trailing underscores
-    result = result.strip('_')
-    # Ensure it starts with a letter (prepend 'item_' if needed)
-    if result and not result[0].isalpha():
-        result = 'item_' + result
-    return result.lower()
+# Use the shared sanitization function
+sanitize_helper_name = sanitize_for_helper_name

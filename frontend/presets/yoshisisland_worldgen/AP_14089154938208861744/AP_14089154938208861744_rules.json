@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Yoshi's Island WorldGen",
   "game_directory": "yoshisisland_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3521,7 +3521,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
+                  "! Switch",
                   "Chomp Rock",
+                  "Dashed Platform",
                   "Large Spring Ball"
                 ]
               }
@@ -4051,10 +4053,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "cansee_clouds",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -4068,6 +4066,10 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "cansee_clouds",
+                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -8910,17 +8912,8 @@
         "value": false
       },
       "has_midring": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "constant",
-            "value": true
-          },
-          {
-            "type": "item_check",
-            "item": "Middle Ring"
-          }
-        ]
+        "type": "constant",
+        "value": true
       },
       "item_bonus": {
         "type": "item_check",

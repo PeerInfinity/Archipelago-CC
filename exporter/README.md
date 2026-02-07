@@ -16,11 +16,81 @@ export_game_rules(
 )
 ```
 
+## Pickle Export
+
+The pickle exporter provides an alternative export format that preserves the multiworld object directly, including lambdas and closures in access rules. This is faster than JSON-based worldgen tracking since no regeneration is needed.
+
+```python
+from exporter import export_multiworld_pickle
+
+# Export multiworld as pickle for tracker use
+export_multiworld_pickle(
+    multiworld,
+    output_dir="frontend/presets/game/AP_seed/",
+    filename_base="AP_seed",
+    save_presets=True
+)
+```
+
+### Output Files
+
+| File | Description |
+|------|-------------|
+| `{filename_base}.pkl.gz` | Gzip-compressed dill pickle of the multiworld |
+| `{filename_base}_pickle_meta.json` | JSON metadata for discovery and validation |
+
+### Metadata Format
+
+The metadata JSON contains:
+- `schema_version`: Metadata format version
+- `archipelago_version`: Archipelago version used for generation
+- `generation_seed`: Numeric seed value
+- `seed_name`: Seed name string (e.g., "14089154938208861744")
+- `players`: Per-player info (name, game, world_directory)
+
+### Settings
+
+Enable pickle export in `host.yaml`:
+
+```yaml
+general_options:
+  save_tracker_pickle: true
+```
+
+Or use the `pickle-mode` preset:
+
+```bash
+python scripts/setup/update_host_settings.py pickle-mode
+```
+
+### Loading Pickles
+
+```python
+from exporter import load_multiworld_pickle, find_pickle_for_seed
+
+# Load directly from path
+multiworld = load_multiworld_pickle("path/to/AP_seed.pkl.gz")
+
+# Find and load by seed name
+pickle_path = find_pickle_for_seed("14089154938208861744", game_directory="adventure")
+if pickle_path:
+    multiworld = load_multiworld_pickle(pickle_path)
+```
+
+### Requirements
+
+Pickle export requires the `dill` library for serializing lambdas:
+
+```
+dill>=0.3.8
+```
+
 ## Directory Structure
 
 ```
 exporter/
 ├── exporter.py              # Main export orchestrator
+├── pickle_exporter.py       # Pickle-based multiworld export
 ├── constants.py             # Safety limits & configuration
 ├── sphere_logger.py         # Sphere tracking during generation
 ├── profiling.py             # Performance profiling

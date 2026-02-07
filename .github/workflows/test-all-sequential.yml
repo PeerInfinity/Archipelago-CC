@@ -38,15 +38,15 @@ on:
           - '3-times'
         default: '2-times'
 
-      spoiler_tests:
-        description: 'Spoiler tests'
-        type: choice
-        options:
-          - 'skip'
-          - 'minimal-only'
-          - 'full-only'
-          - 'both'
-        default: 'both'
+      enable_minimal_spoilers:
+        description: 'Run minimal spoiler tests'
+        type: boolean
+        default: true
+
+      enable_full_spoilers:
+        description: 'Run full spoiler tests'
+        type: boolean
+        default: true
 
       enable_multiclient:
         description: 'Run multiclient tests'
@@ -244,7 +244,7 @@ jobs:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: setup-branch
-    if: inputs.spoiler_tests == 'minimal-only' || inputs.spoiler_tests == 'both'
+    if: inputs.enable_minimal_spoilers
     timeout-minutes: 180
 
     strategy:
@@ -487,7 +487,7 @@ jobs:
     name: Combine Minimal Spoiler Results (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-minimal-spoiler
-    if: ${{ !cancelled() && (inputs.spoiler_tests == 'minimal-only' || inputs.spoiler_tests == 'both') }}
+    if: ${{ !cancelled() && inputs.enable_minimal_spoilers }}
 
     steps:
       - name: Checkout test-results-update branch
@@ -566,7 +566,7 @@ jobs:
     name: Test Full Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-spoiler]
-    if: ${{ !cancelled() && (inputs.spoiler_tests == 'full-only' || inputs.spoiler_tests == 'both') && (needs.setup-branch.result == 'success') }}
+    if: ${{ !cancelled() && inputs.enable_full_spoilers && (needs.setup-branch.result == 'success') }}
     timeout-minutes: 180
 
     strategy:
@@ -777,7 +777,7 @@ jobs:
     name: Combine Full Spoiler Results (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-full-spoiler
-    if: ${{ !cancelled() && (inputs.spoiler_tests == 'full-only' || inputs.spoiler_tests == 'both') }}
+    if: ${{ !cancelled() && inputs.enable_full_spoilers }}
 
     steps:
       - name: Checkout test-results-update branch

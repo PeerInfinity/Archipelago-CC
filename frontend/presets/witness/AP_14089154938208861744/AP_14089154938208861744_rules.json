@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "The Witness",
   "game_directory": "witness",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -176,90 +176,10 @@
             "name": "Keep Laser Activated",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Keep Tower"
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep 2nd Maze"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep 3rd Maze"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep 4th Maze"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep Tower"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep 2nd Pressure Plate"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep 3rd Pressure Plate"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep 4th Pressure Plate"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep Tower"
-                          }
-                        },
-                        {
-                          "rule": "CanReachRegion",
-                          "args": {
-                            "region_name": "Keep"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "rule": "CanReachRegion",
+              "args": {
+                "region_name": "Keep Tower"
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -1507,32 +1427,7 @@
             "name": "Quarry Elevator to Outside Quarry",
             "connected_region": "Outside Quarry",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Main Island"
-                      }
-                    },
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "Quarry"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Quarry Stoneworks Upper Floor"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
@@ -3524,47 +3419,57 @@
             "name": "Theater to Town",
             "connected_region": "Town",
             "access_rule": {
-              "rule": "AST_any_of",
-              "args": {
-                "element_rule": {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition"
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "AST_all_of",
+                  "args": {
+                    "element_rule": {
+                      "type": "helper",
                       "name": "condition"
                     },
-                    "iterator": {
-                      "type": "name",
-                      "name": "sub_requirement"
-                    }
-                  }
-                },
-                "iterator_info": {
-                  "type": "comprehension_details",
-                  "target": {
-                    "type": "name",
-                    "name": "sub_requirement"
+                    "iterator_info": {
+                      "type": "comprehension_details",
+                      "target": {
+                        "type": "name",
+                        "name": "condition"
+                      },
+                      "iterator": {
+                        "type": "constant",
+                        "value": [
+                          "<function convert_requirement_option.<locals>.<lambda>>"
+                        ]
+                      }
+                    },
+                    "_original_ast_type": "all_of"
                   },
-                  "iterator": {
-                    "type": "constant",
-                    "value": [
-                      [
-                        "<function convert_requirement_option.<locals>.<lambda>>"
-                      ],
-                      [
-                        "<function convert_requirement_option.<locals>.<lambda>>"
-                      ]
-                    ]
-                  }
+                  "_converted_from_ast": true
                 },
-                "_original_ast_type": "any_of"
-              },
-              "_converted_from_ast": true
+                {
+                  "rule": "AST_all_of",
+                  "args": {
+                    "element_rule": {
+                      "type": "helper",
+                      "name": "condition"
+                    },
+                    "iterator_info": {
+                      "type": "comprehension_details",
+                      "target": {
+                        "type": "name",
+                        "name": "condition"
+                      },
+                      "iterator": {
+                        "type": "constant",
+                        "value": [
+                          "<function convert_requirement_option.<locals>.<lambda>>"
+                        ]
+                      }
+                    },
+                    "_original_ast_type": "all_of"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -3957,33 +3862,7 @@
             "name": "Bunker Elevator Section to Bunker Under Elevator",
             "connected_region": "Bunker Under Elevator",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Cyan Room"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Elevator"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Green Room"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Laser Platform"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           }
         ],
@@ -3996,33 +3875,7 @@
             "name": "Bunker Under Elevator to Bunker Elevator Section",
             "connected_region": "Bunker Elevator Section",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Cyan Room"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Elevator"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Green Room"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Bunker Laser Platform"
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           }
         ],
@@ -5925,16 +5778,46 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Mountain Floor 2 Light Bridge Room Far"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Mountain Floor 2 Light Bridge Room Far"
+                      }
+                    },
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Eraser": 1,
+                          "Progressive Stars": 2,
+                          "Rotated Shapers": 1
+                        }
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Mountain Floor 2 Light Bridge Room Near"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Mountain Floor 2 Light Bridge Room Near"
+                      }
+                    },
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Eraser": 1,
+                          "Progressive Stars": 2,
+                          "Rotated Shapers": 1
+                        }
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -6118,16 +6001,46 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Mountain Floor 2 Light Bridge Room Far"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Mountain Floor 2 Light Bridge Room Far"
+                      }
+                    },
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Eraser": 1,
+                          "Progressive Stars": 2,
+                          "Rotated Shapers": 1
+                        }
+                      }
+                    }
+                  ]
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Mountain Floor 2 Light Bridge Room Near"
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "CanReachRegion",
+                      "args": {
+                        "region_name": "Mountain Floor 2 Light Bridge Room Near"
+                      }
+                    },
+                    {
+                      "rule": "HasAllCounts",
+                      "args": {
+                        "items": {
+                          "Eraser": 1,
+                          "Progressive Stars": 2,
+                          "Rotated Shapers": 1
+                        }
+                      }
+                    }
+                  ]
                 }
               ]
             }

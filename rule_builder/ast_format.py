@@ -21,22 +21,16 @@ import logging
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
+from ._ast_utils import extract_constant_value, get_arg_from_list
+
 if TYPE_CHECKING:
     from rule_builder.rules import Rule, RuleWorldMixin
 
 logger = logging.getLogger(__name__)
 
 
-def _extract_value(value: Any, default: Any = None) -> Any:
-    """
-    Extract a value from a potential constant wrapper.
-
-    AST format sometimes wraps simple values in {"type": "constant", "value": X}.
-    This helper unwraps them to get the actual value.
-    """
-    if isinstance(value, dict) and value.get('type') == 'constant':
-        return value.get('value', default)
-    return value if value is not None else default
+# Alias for backwards compatibility within this module
+_extract_value = extract_constant_value
 
 
 def is_ast_format(data: Mapping[str, Any]) -> bool:
@@ -200,72 +194,63 @@ def _parse_state_method(data: Mapping[str, Any], world_cls: type["RuleWorldMixin
     method = data.get('method', '')
     args = data.get('args', [])
 
-    def get_arg_value(index: int, default=None):
-        """Extract value from argument, handling constant wrappers."""
-        if index < len(args):
-            arg = args[index]
-            if isinstance(arg, dict) and arg.get('type') == 'constant':
-                return arg.get('value', default)
-            return arg
-        return default
-
     if method == 'has':
-        item = get_arg_value(0, '')
-        count = get_arg_value(1, 1)
+        item = get_arg_from_list(args, 0, '')
+        count = get_arg_from_list(args, 1, 1)
         return Has(item_name=item, count=count)
 
     elif method == 'has_all':
-        items = get_arg_value(0, [])
+        items = get_arg_from_list(args, 0, [])
         if isinstance(items, list):
             return HasAll(*items)
         return ASTRule(rule_data=dict(data))
 
     elif method == 'has_any':
-        items = get_arg_value(0, [])
+        items = get_arg_from_list(args, 0, [])
         if isinstance(items, list):
             return HasAny(*items)
         return ASTRule(rule_data=dict(data))
 
     elif method == 'has_all_counts':
-        items = get_arg_value(0, {})
+        items = get_arg_from_list(args, 0, {})
         if isinstance(items, dict):
             return HasAllCounts(item_counts=items)
         return ASTRule(rule_data=dict(data))
 
     elif method == 'has_from_list':
-        items = get_arg_value(0, [])
-        count = get_arg_value(1, 1)
+        items = get_arg_from_list(args, 0, [])
+        count = get_arg_from_list(args, 1, 1)
         if isinstance(items, list):
             return HasFromList(*items, count=count)
         return ASTRule(rule_data=dict(data))
 
     elif method == 'has_from_list_unique':
-        items = get_arg_value(0, [])
-        count = get_arg_value(1, 1)
+        items = get_arg_from_list(args, 0, [])
+        count = get_arg_from_list(args, 1, 1)
         if isinstance(items, list):
             return HasFromListUnique(*items, count=count)
         return ASTRule(rule_data=dict(data))
 
     elif method == 'has_group':
-        group = get_arg_value(0, '')
-        count = get_arg_value(1, 1)
+        group = get_arg_from_list(args, 0, '')
+        count = get_arg_from_list(args, 1, 1)
         return HasGroup(item_name_group=group, count=count)
 
     elif method == 'has_group_unique':
-        group = get_arg_value(0, '')
-        count = get_arg_value(1, 1)
+        group = get_arg_from_list(args, 0, '')
+        count = get_arg_from_list(args, 1, 1)
         return HasGroupUnique(item_name_group=group, count=count)
 
     elif method == 'can_reach' or method == 'can_reach_region':
-        name = get_arg_value(0, '')
-        reach_type = get_arg_value(1, 'Region')
+        name = get_arg_from_list(args, 0, '')
+        reach_type = get_arg_from_list(args, 1, 'Region')
         if reach_type == 'Location':
             return CanReachLocation(location_name=name)
         else:
             return CanReachRegion(region_name=name)
 
     elif method == 'count':
-        item = get_arg_value(0, '')
+        item = get_arg_from_list(args, 0, '')
         return CountItem(item_name=item)
 
     else:

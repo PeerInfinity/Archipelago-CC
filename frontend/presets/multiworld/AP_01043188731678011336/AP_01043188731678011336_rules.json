@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Multiworld",
   "game_directory": "multiworld",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 2,
   "seed_name": "01043188731678011336",
   "player_names": {
@@ -1255,6 +1255,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1278,11 +1283,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1343,18 +1343,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Down with the Mafia!"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Barrel Battle)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Down with the Mafia!"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1537,18 +1537,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Dead Bird Studio)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1624,6 +1624,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1647,11 +1652,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1692,18 +1692,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Dead Bird Studio)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -3159,6 +3159,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3172,13 +3179,6 @@
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Crayon",
-                    "count": 4
-                  }
                 }
               ]
             }
@@ -3501,11 +3501,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hookshot",
@@ -9657,11 +9652,6 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_fire_source",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "AST_function_call",
                   "args": {
                     "function": {
@@ -9674,6 +9664,11 @@
                     },
                     "_original_ast_type": "function_call"
                   },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_fire_source",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
@@ -12462,18 +12457,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Big Bomb Shop"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "East Dark World"
-                  }
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -12491,6 +12474,18 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Bomb Shop"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "East Dark World"
+                  }
                 },
                 {
                   "rule": "HasAll",
@@ -14789,20 +14784,6 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "has_hearts",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 4
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
                               "rule": "can_extend_magic",
                               "_original_ast_type": "helper",
                               "_converted_from_ast": true,
@@ -14816,6 +14797,20 @@
                                 },
                                 {
                                   "rule": "True_"
+                                }
+                              ]
+                            },
+                            {
+                              "rule": "has_hearts",
+                              "_original_ast_type": "helper",
+                              "_converted_from_ast": true,
+                              "args": [
+                                {
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": 4
+                                  },
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -14907,8 +14902,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Hookshot"
+                  "Hookshot",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -14930,8 +14925,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Hookshot"
+                  "Hookshot",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -14987,8 +14982,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Hookshot"
+                  "Hookshot",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -15232,8 +15227,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Magic Mirror",
                   "Flippers",
+                  "Magic Mirror",
                   "Open Floodgate"
                 ]
               }
@@ -17020,11 +17015,52 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "Conditional",
                   "args": {
-                    "item_name": "Small Key (Ice Palace)",
-                    "count": 4
-                  }
+                    "test": {
+                      "rule": "AST_placement_search",
+                      "args": {
+                        "item": "Big Key (Ice Palace)",
+                        "player": 1,
+                        "locations": [
+                          [
+                            "Ice Palace - Spike Room",
+                            2
+                          ],
+                          [
+                            "Ice Palace - Hammer Block Key Drop",
+                            2
+                          ],
+                          [
+                            "Ice Palace - Big Key Chest",
+                            2
+                          ],
+                          [
+                            "Ice Palace - Map Chest",
+                            2
+                          ]
+                        ],
+                        "_original_ast_type": "placement_search"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ice Palace)",
+                        "count": 4
+                      }
+                    },
+                    "if_false": {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Ice Palace)",
+                        "count": 6
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17487,11 +17523,74 @@
             "name": "Misery Mire (West)",
             "connected_region": "Misery Mire (West)",
             "access_rule": {
-              "rule": "Has",
+              "rule": "Conditional",
               "args": {
-                "item_name": "Small Key (Misery Mire)",
-                "count": 6
-              }
+                "test": {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "AST_placement_lookup",
+                          "args": {
+                            "location": "Misery Mire - Big Key Chest",
+                            "_original_ast_type": "placement_lookup"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "in",
+                        "right": [
+                          [
+                            "Big Key (Misery Mire)",
+                            2
+                          ]
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": {
+                          "rule": "AST_placement_lookup",
+                          "args": {
+                            "location": "Misery Mire - Compass Chest",
+                            "_original_ast_type": "placement_lookup"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        "op": "in",
+                        "right": [
+                          [
+                            "Big Key (Misery Mire)",
+                            2
+                          ]
+                        ],
+                        "_original_ast_type": "compare"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 5
+                  }
+                },
+                "if_false": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Misery Mire)",
+                    "count": 6
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -17780,11 +17879,90 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "Conditional",
                   "args": {
-                    "item_name": "Small Key (Misery Mire)",
-                    "count": 5
-                  }
+                    "test": {
+                      "rule": "Or",
+                      "children": [
+                        {
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "AST_placement_lookup",
+                              "args": {
+                                "location": "Misery Mire - Big Key Chest",
+                                "_original_ast_type": "placement_lookup"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": [
+                              "Big Key (Misery Mire)",
+                              2
+                            ],
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "AST_placement_lookup",
+                              "args": {
+                                "location": "Misery Mire - Compass Chest",
+                                "_original_ast_type": "placement_lookup"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": [
+                              "Big Key (Misery Mire)",
+                              2
+                            ],
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Compare",
+                          "args": {
+                            "left": {
+                              "rule": "AST_placement_lookup",
+                              "args": {
+                                "location": "Misery Mire - Conveyor Crystal Key Drop",
+                                "_original_ast_type": "placement_lookup"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            "op": "==",
+                            "right": [
+                              "Big Key (Misery Mire)",
+                              2
+                            ],
+                            "_original_ast_type": "compare"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    "if_true": {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 4
+                      }
+                    },
+                    "if_false": {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Small Key (Misery Mire)",
+                        "count": 5
+                      }
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -18099,8 +18277,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Cane of Somaria"
+                  "Cane of Somaria",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -18122,9 +18300,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
                   "Cane of Somaria",
-                  "Fire Rod"
+                  "Fire Rod",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -18146,9 +18324,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
                   "Cane of Somaria",
-                  "Fire Rod"
+                  "Fire Rod",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -18188,11 +18366,48 @@
             "name": "Turtle Rock (Pokey Room) (South)",
             "connected_region": "Turtle Rock (First Section)",
             "access_rule": {
-              "rule": "Has",
+              "rule": "Conditional",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 6
-              }
+                "test": {
+                  "rule": "AST_placement_search",
+                  "args": {
+                    "item": "Big Key (Turtle Rock)",
+                    "player": 1,
+                    "locations": [
+                      [
+                        "Turtle Rock - Compass Chest",
+                        2
+                      ],
+                      [
+                        "Turtle Rock - Roller Room - Left",
+                        2
+                      ],
+                      [
+                        "Turtle Rock - Roller Room - Right",
+                        2
+                      ]
+                    ],
+                    "_original_ast_type": "placement_search"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 4
+                  }
+                },
+                "if_false": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 6
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18261,11 +18476,52 @@
             "name": "Turtle Rock (Chain Chomp Room) (South)",
             "connected_region": "Turtle Rock (Pokey Room)",
             "access_rule": {
-              "rule": "Has",
+              "rule": "Conditional",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 5
-              }
+                "test": {
+                  "rule": "AST_placement_search",
+                  "args": {
+                    "item": "Big Key (Turtle Rock)",
+                    "player": 1,
+                    "locations": [
+                      [
+                        "Turtle Rock - Compass Chest",
+                        2
+                      ],
+                      [
+                        "Turtle Rock - Pokey 1 Key Drop",
+                        2
+                      ],
+                      [
+                        "Turtle Rock - Roller Room - Left",
+                        2
+                      ],
+                      [
+                        "Turtle Rock - Roller Room - Right",
+                        2
+                      ]
+                    ],
+                    "_original_ast_type": "placement_search"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 3
+                  }
+                },
+                "if_false": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 5
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -18755,9 +19011,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
                       "Big Key (Turtle Rock)",
-                      "Cane of Somaria"
+                      "Cane of Somaria",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -19213,9 +19469,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Lamp",
                       "Big Key (Palace of Darkness)",
-                      "Hammer"
+                      "Hammer",
+                      "Lamp"
                     ]
                   }
                 }
@@ -21383,8 +21639,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Moon Pearl",
-                  "Big Key (Ganons Tower)"
+                  "Big Key (Ganons Tower)",
+                  "Moon Pearl"
                 ]
               }
             },
@@ -31469,6 +31725,7 @@
         "ShipShapeCustomTaskGoal": 0,
         "ShuffleActContracts": true,
         "ShuffleAlpineZiplines": false,
+        "ShuffleDirectorTokens": false,
         "ShuffleStorybookPages": true,
         "ShuffleSubconPaintings": false,
         "StartWithCompassBadge": true,
@@ -31818,6 +32075,11 @@
           "default": 0,
           "display_name": "Shuffle Alpine Ziplines"
         },
+        "ShuffleDirectorTokens": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Director Tokens"
+        },
         "ShuffleStorybookPages": {
           "type": "default_on_toggle",
           "default": 1,
@@ -32107,6 +32369,7 @@
         "StartWithCompassBadge": 1,
         "CompassBadgeMode": 1,
         "ShuffleStorybookPages": 1,
+        "ShuffleDirectorTokens": 0,
         "ShuffleActContracts": 1,
         "ShuffleSubconPaintings": 0,
         "NoPaintingSkips": 0,
@@ -32196,7 +32459,7 @@
         "local_items": [],
         "map_shuffle": 0,
         "menuspeed": 0,
-        "misery_mire_medallion": 1,
+        "misery_mire_medallion": 2,
         "mode": 1,
         "music": true,
         "non_local_items": [],
@@ -32924,8 +33187,490 @@
           "display_name": "Underworld Palette"
         }
       },
-      "logical_heart_containers": 10,
-      "logical_heart_pieces": 24,
+      "shops": [
+        {
+          "region": "Cave Shop (Dark Death Mountain)",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 274,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 0
+        },
+        {
+          "region": "Red Shield Shop",
+          "unlimited_items": [
+            "Red Shield",
+            "Bee",
+            "Arrows (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Shield",
+              "price": 500,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bee",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Arrows (10)",
+              "price": 30,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 272,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 3
+        },
+        {
+          "region": "Dark Lake Hylia Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 6
+        },
+        {
+          "region": "Dark World Lumberjack Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 9
+        },
+        {
+          "region": "Village of Outcasts Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 12
+        },
+        {
+          "region": "Dark World Potion Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Blue Shield",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Shield",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 271,
+          "shopkeeper_config": 193,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 15
+        },
+        {
+          "region": "Light World Death Mountain Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 255,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 18
+        },
+        {
+          "region": "Kakariko Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 287,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 21
+        },
+        {
+          "region": "Cave Shop (Lake Hylia)",
+          "unlimited_items": [
+            "Red Potion",
+            "Small Heart",
+            "Bombs (10)"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 150,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Small Heart",
+              "price": 10,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Bombs (10)",
+              "price": 50,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 274,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": false,
+          "sram_offset": 24
+        },
+        {
+          "region": "Potion Shop",
+          "unlimited_items": [
+            "Red Potion",
+            "Green Potion",
+            "Blue Potion"
+          ],
+          "inventory": [
+            {
+              "item": "Red Potion",
+              "price": 120,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Green Potion",
+              "price": 60,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Blue Potion",
+              "price": 160,
+              "price_type": 0,
+              "max": 0,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            }
+          ],
+          "room_id": 265,
+          "shopkeeper_config": 160,
+          "custom": true,
+          "locked": true,
+          "sram_offset": 27
+        },
+        {
+          "region": "Capacity Upgrade",
+          "unlimited_items": [],
+          "inventory": [
+            {
+              "item": "Bomb Upgrade (+5)",
+              "price": 100,
+              "price_type": 0,
+              "max": 7,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            {
+              "item": "Arrow Upgrade (+5)",
+              "price": 100,
+              "price_type": 0,
+              "max": 7,
+              "replacement": null,
+              "replacement_price": 0,
+              "replacement_price_type": 0,
+              "player": 0
+            },
+            null
+          ],
+          "room_id": 277,
+          "shopkeeper_config": 4,
+          "custom": true,
+          "locked": true,
+          "sram_offset": 30
+        }
+      ],
       "has_progressive_bows": true,
       "dungeons": {
         "Hyrule Castle": "Hyrule Castle",
@@ -32949,411 +33694,12 @@
       "fix_palaceofdarkness_exit": false,
       "fix_trock_exit": false,
       "required_medallions": [
-        "Bombos",
+        "Quake",
         "Quake"
       ],
       "escape_assist": [],
-      "shops": [
-        {
-          "region": "Cave Shop (Dark Death Mountain)",
-          "room_id": 274,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 0
-        },
-        {
-          "region": "Red Shield Shop",
-          "room_id": 272,
-          "inventory": [
-            {
-              "item": "Red Shield",
-              "price": 500,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bee",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Arrows (10)",
-              "price": 30,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 3
-        },
-        {
-          "region": "Dark Lake Hylia Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 6
-        },
-        {
-          "region": "Dark World Lumberjack Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 9
-        },
-        {
-          "region": "Village of Outcasts Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 12
-        },
-        {
-          "region": "Dark World Potion Shop",
-          "room_id": 271,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Shield",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 193,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 15
-        },
-        {
-          "region": "Light World Death Mountain Shop",
-          "room_id": 255,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 18
-        },
-        {
-          "region": "Kakariko Shop",
-          "room_id": 287,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 21
-        },
-        {
-          "region": "Cave Shop (Lake Hylia)",
-          "room_id": 274,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 150,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Small Heart",
-              "price": 10,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Bombs (10)",
-              "price": 50,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": false,
-          "sram_offset": 24
-        },
-        {
-          "region": "Potion Shop",
-          "room_id": 265,
-          "inventory": [
-            {
-              "item": "Red Potion",
-              "price": 120,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Green Potion",
-              "price": 60,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Blue Potion",
-              "price": 160,
-              "price_type": 0,
-              "max": 0,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            }
-          ],
-          "shopkeeper_config": 160,
-          "custom": true,
-          "locked": true,
-          "sram_offset": 27
-        },
-        {
-          "region": "Capacity Upgrade",
-          "room_id": 277,
-          "inventory": [
-            {
-              "item": "Bomb Upgrade (+5)",
-              "price": 100,
-              "price_type": 0,
-              "max": 7,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            {
-              "item": "Arrow Upgrade (+5)",
-              "price": 100,
-              "price_type": 0,
-              "max": 7,
-              "replacement_price": 0,
-              "replacement_price_type": 0,
-              "player": 0
-            },
-            null
-          ],
-          "shopkeeper_config": 4,
-          "custom": true,
-          "locked": true,
-          "sram_offset": 30
-        }
-      ],
+      "logical_heart_containers": 10,
+      "logical_heart_pieces": 24,
       "er_seed": "vanilla",
       "difficulty_requirements": {
         "baseitems": [
@@ -33732,7 +34078,7 @@
         "triforce_pieces_required": 20,
         "triforce_pieces_available": 30,
         "triforce_pieces_extra": 10,
-        "mm_medalion": "Bombos",
+        "mm_medalion": "Quake",
         "tr_medalion": "Quake"
       },
       "web": {
@@ -34256,7 +34602,11 @@
       "world_directory": "adventure"
     }
   },
-  "exporter": {},
+  "exporter": {
+    "2": {
+      "use_auto_indirect_conditions": true
+    }
+  },
   "game_info": {
     "1": {
       "chapter_costs": {
@@ -34361,172 +34711,7 @@
         ]
       }
     },
-    "2": {
-      "glitches_required": "no_glitches",
-      "bunny_rules": {
-        "bunny_impassable_caves": [
-          "Bumper Cave",
-          "Desert Palace Main (Inner)",
-          "Fairy Ascension Cave (Drop)",
-          "Hookshot Cave",
-          "Pyramid",
-          "Sewers",
-          "Skull Woods First Section (Left)",
-          "Skull Woods First Section (Right)",
-          "Skull Woods First Section (Top)",
-          "Skull Woods Second Section (Drop)",
-          "Spiral Cave (Top)",
-          "Turtle Rock (Big Chest)",
-          "Turtle Rock (Entrance)",
-          "Turtle Rock (Eye Bridge)",
-          "Turtle Rock (Second Section)",
-          "Two Brothers House"
-        ],
-        "bunny_accessible_locations": [
-          "Blacksmith",
-          "Bombos Tablet",
-          "Bottle Merchant",
-          "Bumper Cave Ledge",
-          "Checkerboard Cave",
-          "Dark Blacksmith Ruins",
-          "Desert Ledge",
-          "Ether Tablet",
-          "Hype Cave - Generous Guy",
-          "Link's Uncle",
-          "Lost Woods Hideout",
-          "Lumberjack Tree",
-          "Master Sword Pedestal",
-          "Missing Smith",
-          "Peg Cave",
-          "Potion Shop",
-          "Purple Chest",
-          "Pyramid",
-          "Sahasrahla",
-          "Sick Kid",
-          "Spectacle Rock",
-          "Spectacle Rock Cave",
-          "Sunken Treasure"
-        ],
-        "mandatory_superbunny_locations": [
-          "Kakariko Well - Bottom",
-          "Kakariko Well - Left",
-          "Kakariko Well - Middle",
-          "Kakariko Well - Right",
-          "Superbunny Cave - Bottom",
-          "Superbunny Cave - Top"
-        ],
-        "mirror_superbunny_locations": [
-          "Blind's Hideout - Far Left",
-          "Blind's Hideout - Far Right",
-          "Blind's Hideout - Left",
-          "Blind's Hideout - Right",
-          "Bonk Rock Cave",
-          "Brewery",
-          "C-Shaped House",
-          "Cave 45",
-          "Chest Game",
-          "Floodgate",
-          "Floodgate Chest",
-          "Ice Rod Cave",
-          "Kakariko Tavern",
-          "King's Tomb",
-          "Library",
-          "Mire Shed - Left",
-          "Mire Shed - Right",
-          "Pyramid Fairy - Left",
-          "Pyramid Fairy - Right",
-          "Sahasrahla's Hut - Left",
-          "Sahasrahla's Hut - Middle",
-          "Sahasrahla's Hut - Right",
-          "Secret Passage",
-          "Spiral Cave",
-          "Waterfall of Wishing - Left",
-          "Waterfall of Wishing - Right"
-        ]
-      },
-      "shops": [
-        {
-          "region": "Cave Shop (Dark Death Mountain)",
-          "unlimited_items": [
-            "Red Potion",
-            "Small Heart",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Red Shield Shop",
-          "unlimited_items": [
-            "Red Shield",
-            "Bee",
-            "Arrows (10)"
-          ]
-        },
-        {
-          "region": "Dark Lake Hylia Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Blue Shield",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Dark World Lumberjack Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Blue Shield",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Village of Outcasts Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Blue Shield",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Dark World Potion Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Blue Shield",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Light World Death Mountain Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Small Heart",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Kakariko Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Small Heart",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Cave Shop (Lake Hylia)",
-          "unlimited_items": [
-            "Red Potion",
-            "Small Heart",
-            "Bombs (10)"
-          ]
-        },
-        {
-          "region": "Potion Shop",
-          "unlimited_items": [
-            "Red Potion",
-            "Green Potion",
-            "Blue Potion"
-          ]
-        }
-      ]
-    },
+    "2": {},
     "3": {},
     "4": {}
   },
@@ -35028,11 +35213,46 @@
         ]
       },
       "basement_key_rule": {
-        "type": "count_check",
-        "item": "Small Key (Hyrule Castle)",
-        "count": {
-          "type": "constant",
-          "value": 3
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "placement_lookup",
+            "location": {
+              "type": "constant",
+              "value": "Sewers - Key Rat Key Drop"
+            }
+          },
+          "op": "==",
+          "right": {
+            "type": "tuple",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Small Key (Hyrule Castle)"
+              },
+              {
+                "type": "constant",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "if_true": {
+          "type": "count_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_false": {
+          "type": "count_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 3
+          }
         }
       },
       "bottle_count": {
@@ -35068,24 +35288,62 @@
             "name": "can_shoot_arrows"
           },
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Blue Boomerang",
-                  "Cane of Byrna",
-                  "Cane of Somaria",
-                  "Fire Rod",
-                  "Hookshot",
-                  "Ice Rod",
-                  "Red Boomerang"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Blue Boomerang"
+          },
+          {
+            "type": "item_check",
+            "item": "Cane of Byrna"
+          },
+          {
+            "type": "item_check",
+            "item": "Cane of Somaria"
+          },
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Hookshot"
+          },
+          {
+            "type": "item_check",
+            "item": "Ice Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Red Boomerang"
           }
         ]
+      },
+      "can_bomb_clip": {
+        "params": [
+          "region"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_use_bombs"
+            },
+            {
+              "type": "helper",
+              "name": "is_not_bunny",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "region"
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Pegasus Boots"
+            }
+          ]
+        }
       },
       "can_bomb_or_bonk": {
         "type": "or",
@@ -35099,6 +35357,70 @@
             "name": "can_use_bombs"
           }
         ]
+      },
+      "can_boots_clip_dw": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "option_value",
+            "option": "mode"
+          },
+          "op": "!=",
+          "right": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Pegasus Boots"
+            },
+            {
+              "type": "item_check",
+              "item": "Moon Pearl"
+            }
+          ]
+        },
+        "if_false": {
+          "type": "item_check",
+          "item": "Pegasus Boots"
+        }
+      },
+      "can_boots_clip_lw": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "option_value",
+            "option": "mode"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Pegasus Boots"
+            },
+            {
+              "type": "item_check",
+              "item": "Moon Pearl"
+            }
+          ]
+        },
+        "if_false": {
+          "type": "item_check",
+          "item": "Pegasus Boots"
+        }
       },
       "can_buy": {
         "params": [
@@ -35457,6 +35779,90 @@
           "smallmagic": 16,
           "fullrefill": false
         }
+      },
+      "can_get_glitched_speed_dw": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "rules",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                },
+                {
+                  "type": "helper",
+                  "name": "any",
+                  "args": [
+                    {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot"
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_sword"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "option_value",
+                "option": "mode"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            "body": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "rules"
+                  },
+                  "attr": "append"
+                },
+                "args": [
+                  {
+                    "type": "item_check",
+                    "item": "Moon Pearl"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "helper",
+              "name": "all",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "rules"
+                }
+              ]
+            }
+          }
+        ]
       },
       "can_get_good_bee": {
         "type": "block",
@@ -35889,6 +36295,79 @@
           "enemies": 5
         }
       },
+      "can_kill_standard_start": {
+        "params": [
+          "enemies"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "has_melee_weapon"
+            },
+            {
+              "type": "item_check",
+              "item": "Cane of Somaria"
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Cane of Byrna"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "name",
+                        "name": "enemies"
+                      },
+                      "op": "<",
+                      "right": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_extend_magic"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Bow"
+            },
+            {
+              "type": "item_check",
+              "item": "Progressive Bow"
+            },
+            {
+              "type": "item_check",
+              "item": "Fire Rod"
+            },
+            {
+              "type": "helper",
+              "name": "can_use_bombs",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "enemies"
+                }
+              ]
+            }
+          ]
+        },
+        "defaults": {
+          "enemies": 5
+        }
+      },
       "can_lift_heavy_rocks": {
         "type": "item_check",
         "item": "Titans Mitts"
@@ -36293,9 +36772,6 @@
               }
             }
           ]
-        },
-        "param_mappings": {
-          "count": "crystals_needed_for_gt"
         }
       },
       "has_fire_source": {
@@ -36367,6 +36843,54 @@
           {
             "type": "item_check",
             "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_triforce_pieces": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "count",
+            "value": {
+              "type": "world_attribute",
+              "attribute": "treasure_hunt_required"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Triforce Piece"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Power Star"
+                    }
+                  ]
+                }
+              },
+              "op": ">=",
+              "right": {
+                "type": "name",
+                "name": "count"
+              }
+            }
           }
         ]
       },
@@ -36517,6 +37041,127 @@
                 "name": "region"
               },
               "attr": "is_dark_world"
+            }
+          }
+        }
+      },
+      "shop_price_rules": {
+        "params": [
+          "location"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "location"
+              },
+              "attr": "shop_price_type"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 1
+            }
+          },
+          "if_true": {
+            "type": "helper",
+            "name": "has_hearts",
+            "args": [
+              {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "attr": "shop_price"
+                  },
+                  "op": "//",
+                  "right": {
+                    "type": "constant",
+                    "value": 8
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "location"
+                },
+                "attr": "shop_price_type"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            "if_true": {
+              "type": "helper",
+              "name": "can_use_bombs",
+              "args": [
+                {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "shop_price"
+                }
+              ]
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "shop_price_type"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 4
+                }
+              },
+              "if_true": {
+                "type": "helper",
+                "name": "can_hold_arrows",
+                "args": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "location"
+                    },
+                    "attr": "shop_price"
+                  }
+                ]
+              },
+              "if_false": null
             }
           }
         }

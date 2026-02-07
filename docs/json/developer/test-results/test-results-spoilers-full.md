@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-01-31 04:30:19
+**Generated:** 2026-02-04 14:05:32
 
 **Source Data Created:** 2026-01-31T04:15:03.561351
 
@@ -34,9 +34,9 @@
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.0KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.5KB | ✅ |
-| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 16.2KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 18.2KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.6KB | ✅ |
+| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 1.8KB | ✅ |
@@ -56,7 +56,7 @@
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.6KB | ✅ |
+| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 13.4KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
@@ -89,8 +89,8 @@
 | Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 28.7KB | 90.1KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 18.8KB | 8.0KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
-| Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 21.4KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 92.5KB | ✅ |
+| Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 96.3KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
@@ -98,7 +98,7 @@
 | TUNIC | ✅ Passed | 0 | 5.12 | 5.12 | 🟢 Complete | 3.1KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 14.8KB | ✅ |
+| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 7.0KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 14.1KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 2.2KB | ✅ |

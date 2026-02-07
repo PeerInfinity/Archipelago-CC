@@ -306,6 +306,17 @@ class ClosureFunctionAnalyzer:
                     combine_mode = 'and'  # Default to AND if detection disabled
                 return self._analyze_add_rule_pattern(rule_func, old_rule_func, depth, combine_mode)
 
+        # Pattern: locality_rules item_rule wrapper
+        # lambda i, sending_blockers=..., old_rule=location.item_rule: \
+        #     i.name not in sending_blockers[i.player] and old_rule(i)
+        # Created by worlds/generic/Rules.py locality_rules() function
+        # We analyze just old_rule since sending_blockers is a multiworld locality concern
+        if 'old_rule' in closure_vars and 'sending_blockers' in closure_vars:
+            old_rule_func = closure_vars['old_rule']
+            if callable(old_rule_func):
+                logger.debug(f"ClosureFunctionAnalyzer: Detected locality_rules item_rule pattern")
+                return self._analyze_locality_item_rule_pattern(old_rule_func, depth)
+
         # Pattern: Simple item check with 'player' captured
         # lambda state: state.has('Moon Pearl', player)
         if 'player' in closure_vars and len(closure_vars) <= 2:
@@ -445,6 +456,12 @@ class ClosureFunctionAnalyzer:
 
         Returns:
             Analyzed rule combining can_reach and path requirements
+
+        Note:
+            In ALttP's bunny rule BFS, path is built as: new_path = path + [entrance.access_rule]
+            This means the LAST element of path is always the entrance's own access rule.
+            Since CanReachEntrance already checks the entrance's access_rule via Entrance.can_reach(),
+            we skip the last element to avoid double-counting the entrance rule.
         """
         # Feature flag: Limit closure analysis depth
         if self.ENABLE_CLOSURE_DEPTH_LIMIT and depth > self.MAX_CLOSURE_DEPTH:
@@ -474,9 +491,15 @@ class ClosureFunctionAnalyzer:
             'args': {'entrance_name': entrance_name}
         }
 
-        # Analyze each rule in path
+        # Skip the last element of path - it's the entrance's access_rule which is already
+        # checked by CanReachEntrance via Entrance.can_reach(). Including it would double-count
+        # the entrance rule, causing incorrect logic (e.g., requiring Beat Agahnim 2 when
+        # the entrance rule is "open_pyramid OR Beat Agahnim 2").
+        path_to_analyze = path[:-1] if path else []
+
+        # Analyze each rule in path (excluding the last element)
         path_conditions = []
-        for i, rule_func in enumerate(path):
+        for i, rule_func in enumerate(path_to_analyze):
             if callable(rule_func):
                 result = self.analyze_function(rule_func, depth + 1)
                 if result is not None:
@@ -598,6 +621,49 @@ class ClosureFunctionAnalyzer:
             logger.debug(f"ClosureFunctionAnalyzer: add_rule AND pattern combined: {simplified}")
             return {'rule': 'And', 'children': simplified}
 
+    def _analyze_locality_item_rule_pattern(self, old_rule_func: Callable,
+                                             depth: int) -> Optional[Dict[str, Any]]:
+        """Analyze locality_rules item_rule wrapper pattern.
+
+        This pattern is created by worlds/generic/Rules.py locality_rules() function:
+        lambda i, sending_blockers=..., old_rule=location.item_rule: \
+            i.name not in sending_blockers[i.player] and old_rule(i)
+
+        The sending_blockers check is a multiworld locality concern (local_items,
+        non_local_items options) that we don't need to export for single-world tracking.
+        We just analyze and return the old_rule.
+
+        Args:
+            old_rule_func: The original item_rule function
+            depth: Current recursion depth
+
+        Returns:
+            Analyzed rule from old_rule, or True_ if old_rule can't be analyzed
+        """
+        logger.debug(f"ClosureFunctionAnalyzer: Analyzing locality_rules item_rule at depth {depth}")
+
+        # Check if old_rule is the default Location.item_rule (always returns True)
+        # In this case, we can just return True_
+        from BaseClasses import Location
+        if old_rule_func is Location.item_rule:
+            logger.debug(f"ClosureFunctionAnalyzer: old_rule is default Location.item_rule, returning True_")
+            return {'rule': 'True_'}
+
+        # Try to analyze the old_rule
+        old_rule_result = self.analyze_function(old_rule_func, depth + 1)
+
+        # If analysis failed, try bytecode
+        if old_rule_result is None:
+            old_rule_result = self._analyze_via_bytecode(old_rule_func)
+
+        if old_rule_result is None:
+            # Couldn't analyze old_rule - return True_ as fallback
+            # This is more permissive but avoids losing the rule entirely
+            logger.debug(f"ClosureFunctionAnalyzer: Could not analyze locality item_rule old_rule, using True_")
+            return {'rule': 'True_'}
+
+        return old_rule_result
+
     def _analyze_via_bytecode(self, func: Callable) -> Optional[Dict[str, Any]]:
         """Analyze a function by examining its bytecode constants and names.
 
@@ -713,10 +779,22 @@ class ClosureFunctionAnalyzer:
 
             # If we have an OR pattern with has() and option access, combine them
             if is_or_pattern and option_name and len(item_names) >= 1:
-                option_rule = {'rule': 'OptionValue', 'args': {'option': option_name}}
-                item_rule = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
-                logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern: has('{item_names[0]}') or option '{option_name}'")
-                return {'rule': 'Or', 'children': [option_rule, item_rule]}
+                # Try to evaluate the option at export time
+                option_value = self._try_evaluate_option(option_name, closure_vars)
+                if option_value is True:
+                    # Option evaluates to True, so the OR is always True
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode OR pattern with option '{option_name}' = True -> True_")
+                    return {'rule': 'True_'}
+                elif option_value is False:
+                    # Option evaluates to False, so only the item check matters
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode OR pattern with option '{option_name}' = False -> Has('{item_names[0]}')")
+                    return {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+                else:
+                    # Could not evaluate option, return full OR rule
+                    option_rule = {'rule': 'OptionValue', 'args': {'option': option_name}}
+                    item_rule = {'rule': 'Has', 'args': {'item_name': item_names[0]}}
+                    logger.debug(f"ClosureFunctionAnalyzer: Bytecode found OR pattern: has('{item_names[0]}') or option '{option_name}'")
+                    return {'rule': 'Or', 'children': [option_rule, item_rule]}
 
             if len(item_names) == 1:
                 logger.debug(f"ClosureFunctionAnalyzer: Bytecode found has('{item_names[0]}')")
@@ -774,6 +852,88 @@ class ClosureFunctionAnalyzer:
 
         return None
 
+    def _try_evaluate_option(self, option_name: str, closure_vars: Dict[str, Any]) -> Optional[bool]:
+        """Try to evaluate an option value at export time.
+
+        This is used to simplify rules like `has(X) or option.to_bool()` when we can
+        determine the option's value from the world context.
+
+        Controlled by the resolve_options_to_constants setting - when False, this
+        method always returns None to keep options as references.
+
+        Args:
+            option_name: Name of the option to evaluate (e.g., 'open_pyramid')
+            closure_vars: Closure variables that might contain world context
+
+        Returns:
+            True if option evaluates to True
+            False if option evaluates to False
+            None if we cannot determine the value or resolve_options_to_constants is False
+        """
+        # Check if we should resolve options to constants
+        if self.game_handler and hasattr(self.game_handler, 'should_resolve_options_to_constants'):
+            if not self.game_handler.should_resolve_options_to_constants():
+                logger.debug(f"_try_evaluate_option: Skipping evaluation of '{option_name}' (resolve_options_to_constants=False)")
+                return None
+
+        # Try to get world from closure vars or game handler
+        world = closure_vars.get('world')
+
+        # If world is not in closure, try to get it from game handler
+        if world is None and self.game_handler:
+            world = getattr(self.game_handler, 'world', None)
+
+        if world is None:
+            logger.debug(f"_try_evaluate_option: No world context available for '{option_name}'")
+            return None
+
+        try:
+            # Get player from closure or default to 1
+            player = closure_vars.get('player', 1)
+
+            # Determine if we have the player's world or the multiworld
+            if hasattr(world, 'options'):
+                # We have the player's world directly
+                player_world = world
+                multiworld = getattr(world, 'multiworld', None)
+            elif hasattr(world, 'worlds'):
+                # We have the multiworld - get player's world
+                multiworld = world
+                player_world = multiworld.worlds.get(player)
+                if player_world is None:
+                    logger.debug(f"_try_evaluate_option: Could not get player world for player {player}")
+                    return None
+            else:
+                logger.debug(f"_try_evaluate_option: World object has no 'options' or 'worlds' attribute")
+                return None
+
+            # Get the option object
+            if not hasattr(player_world, 'options'):
+                logger.debug(f"_try_evaluate_option: Player world has no 'options' attribute")
+                return None
+
+            option_obj = getattr(player_world.options, option_name, None)
+            if option_obj is None:
+                logger.debug(f"_try_evaluate_option: Option '{option_name}' not found")
+                return None
+
+            # Use direct value truthiness, NOT to_bool()
+            # The bytecode pattern detection recognizes direct option access like:
+            #   world.worlds[player].options.open_pyramid
+            # NOT:
+            #   world.worlds[player].options.open_pyramid.to_bool(world, player)
+            # So we must evaluate the option the same way the original code does.
+            # For Choice options, bool(option) uses bool(option.value).
+            # to_bool() may have different semantics (e.g., OpenPyramid.to_bool()
+            # checks goal and entrance_shuffle, not just the value).
+            result = bool(getattr(option_obj, 'value', False))
+            logger.debug(f"_try_evaluate_option: bool({option_name}.value) = {result}")
+            return result
+
+        except Exception as e:
+            logger.debug(f"_try_evaluate_option: Failed to evaluate '{option_name}': {e}")
+            return None
+
     def _analyze_simple_check_pattern(self, func: Callable,
                                       closure_vars: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Analyze simple state.has() patterns by examining bytecode.
@@ -820,6 +980,12 @@ class ClosureFunctionAnalyzer:
             logger.debug(f"ClosureFunctionAnalyzer: Multiple items found, using bytecode analysis")
             return self._analyze_via_bytecode(func)
 
+        # If this pattern includes option access (world.worlds[player].options.X),
+        # delegate to bytecode analysis which handles has() OR option patterns
+        if 'options' in names and 'worlds' in names:
+            logger.debug(f"ClosureFunctionAnalyzer: Pattern includes option access, using bytecode analysis")
+            return self._analyze_via_bytecode(func)
+
         if len(item_candidates) == 1:
             item_name = item_candidates[0]
             logger.debug(f"ClosureFunctionAnalyzer: Detected has() check for '{item_name}'")
@@ -828,7 +994,11 @@ class ClosureFunctionAnalyzer:
         return None
 
     def _extract_closure_vars(self, func: Callable) -> Dict[str, Any]:
-        """Extract closure variables from a function.
+        """Extract closure variables and default argument values from a function.
+
+        This extracts both:
+        1. Closure variables (freevars) - captured from enclosing scope
+        2. Default argument values - often used to capture values at definition time
 
         Args:
             func: The function to extract closure variables from
@@ -837,19 +1007,36 @@ class ClosureFunctionAnalyzer:
             Dictionary mapping variable names to their values
         """
         result = {}
-        if not hasattr(func, '__closure__') or func.__closure__ is None:
-            return result
 
-        if not hasattr(func, '__code__'):
-            return result
+        # Extract closure variables (freevars)
+        if hasattr(func, '__closure__') and func.__closure__ is not None:
+            if hasattr(func, '__code__'):
+                freevars = func.__code__.co_freevars
+                for name, cell in zip(freevars, func.__closure__):
+                    try:
+                        result[name] = cell.cell_contents
+                    except ValueError:
+                        # Empty cell
+                        pass
 
-        freevars = func.__code__.co_freevars
-        for name, cell in zip(freevars, func.__closure__):
-            try:
-                result[name] = cell.cell_contents
-            except ValueError:
-                # Empty cell
-                pass
+        # Extract default argument values
+        # These are often used in patterns like:
+        #   lambda i, old_rule=location.item_rule: ... and old_rule(i)
+        if hasattr(func, '__defaults__') and func.__defaults__ is not None:
+            if hasattr(func, '__code__'):
+                code = func.__code__
+                # co_varnames starts with positional args, then *args, **kwargs, then locals
+                # Defaults apply to the last N positional args (where N = len(__defaults__))
+                arg_count = code.co_argcount
+                defaults = func.__defaults__
+                # Match defaults to their parameter names
+                # Default values are right-aligned to parameters
+                first_default_idx = arg_count - len(defaults)
+                for i, default_value in enumerate(defaults):
+                    param_idx = first_default_idx + i
+                    if param_idx < len(code.co_varnames):
+                        param_name = code.co_varnames[param_idx]
+                        result[param_name] = default_value
 
         return result
 

@@ -121,7 +121,8 @@ class FactorioGameExportHandler(GenericGameExportHandler):
             args = rule.get('args', {})
             item = args.get('item', {})
 
-            if item.get('rule') == 'Attribute':
+            # item could be a string if already simplified, so check it's a dict first
+            if isinstance(item, dict) and item.get('rule') == 'Attribute':
                 attr_args = item.get('args', {})
                 if attr_args.get('attr') == 'name':
                     obj = attr_args.get('object', {})
@@ -143,7 +144,8 @@ class FactorioGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'item_check':
             item = rule.get('item', {})
 
-            if item.get('type') == 'attribute' and item.get('attr') == 'name':
+            # item could be a string if already simplified, so check it's a dict first
+            if isinstance(item, dict) and item.get('type') == 'attribute' and item.get('attr') == 'name':
                 obj = item.get('object', {})
                 if obj.get('type') == 'constant':
                     value = obj.get('value')

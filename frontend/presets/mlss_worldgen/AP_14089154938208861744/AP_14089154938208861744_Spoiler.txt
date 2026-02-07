@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Item Block Visibility:           Disabled
 Skip Bowser's Castle:            No
 Chuckle Beans:                   All
@@ -39,6 +40,7 @@ Randomize Enemies:               Disabled
 Randomize Sounds:                No
 Scale Enemy Stats:               No
 Skip Minecart Minigame:          No
+Start Inventory from Pool:       
 Tattle HP:                       No
 XP Multiplier:                   1
 

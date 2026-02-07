@@ -1,5 +1,5 @@
 {
-  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'ut_fuzz_apworld_exclude_list' contains community apworlds excluded from UT fuzz testing due to incompatible rule patterns or apworld bugs. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
+  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'ut_fuzz_exclude_list' contains games excluded from UT fuzz testing (hangs or timeouts). 'ut_fuzz_apworld_exclude_list' contains community apworlds excluded from UT fuzz testing due to incompatible rule patterns or apworld bugs. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
@@ -16,6 +16,16 @@
     {
       "name": "Universal Tracker.yaml",
       "reason": "Not a game."
+    }
+  ],
+  "ut_fuzz_exclude_list": [
+    {
+      "name": "XCOM 2 War of the Chosen.yaml",
+      "reason": "UT fuzz test hangs during verification."
+    },
+    {
+      "name": "Yu-Gi-Oh! Dungeon Dice Monsters.yaml",
+      "reason": "UT fuzz test hangs during verification."
     }
   ],
   "main_test_exclude_list": [

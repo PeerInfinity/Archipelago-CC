@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -16,7 +16,8 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 Yes
+Randomize Items:                 No
+Use Canonical Options:           Yes
 Bat Logic:                       Can Break
 Connector Multi-Slot:            No
 Death Link:                      No
@@ -36,31 +37,31 @@ Yorgle MaxSpeed:                 2
 
 Locations:
 
-Blue Labyrinth 0: Freeincarnate
-Blue Labyrinth 1: Chalice
+Blue Labyrinth 0: Left Difficulty Switch
+Blue Labyrinth 1: Slow Yorgle
 Catacombs: Sword
-Adjacent to Catacombs: Freeincarnate
-Southwest of Catacombs: Slow Grundle
-White Castle Gate: Magnet
-Black Castle Gate: Left Difficulty Switch
-Yellow Castle Gate: Black Key
+Adjacent to Catacombs: Slow Grundle
+Southwest of Catacombs: Freeincarnate
+White Castle Gate: Freeincarnate
+Black Castle Gate: Black Key
+Yellow Castle Gate: Freeincarnate
 Northeast of Catacombs: Freeincarnate
 Southeast of Catacombs: Freeincarnate
-Slay Yorgle: Slow Yorgle
-Inside Yellow Castle: White Key
+Slay Yorgle: Freeincarnate
+Inside Yellow Castle: Magnet
 Chalice Home: Victory
 RedMaze0: Freeincarnate
-RedMaze1: Slow Rhindle
+RedMaze1: Freeincarnate
 Red Maze Vault Entrance: Freeincarnate
 Red Maze Vault: Freeincarnate
-Slay Grundle: Freeincarnate
+Slay Grundle: Yellow Key
 Dungeon0: Freeincarnate
 Dungeon1: Right Difficulty Switch
 Black Castle Foyer: Bridge
-Slay Rhindle: Yellow Key
-Dungeon Vault: Freeincarnate
+Slay Rhindle: Slow Rhindle
+Dungeon Vault: White Key
 Credits Left Side: Freeincarnate
-Credits Right Side: Freeincarnate
+Credits Right Side: Chalice
 
 Playthrough:
 
@@ -68,19 +69,25 @@ Playthrough:
 
 }
 1: {
-  Blue Labyrinth 1: Chalice
+  Black Castle Gate: Black Key
   Catacombs: Sword
-  White Castle Gate: Magnet
-  Yellow Castle Gate: Black Key
 }
 2: {
   Black Castle Foyer: Bridge
   Dungeon1: Right Difficulty Switch
 }
 3: {
-  Slay Rhindle: Yellow Key
+  Dungeon Vault: White Key
 }
 4: {
+  Slay Grundle: Yellow Key
+}
+5: {
+  Inside Yellow Castle: Magnet
+}
+6: {
+  Credits Right Side: Chalice
+}
+7: {
   Chalice Home: Victory
-  Inside Yellow Castle: White Key
 }

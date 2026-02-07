@@ -31,6 +31,12 @@ on:
         type: boolean
         default: false
 
+      timeout:
+        description: 'Timeout per generation in seconds'
+        required: false
+        type: number
+        default: 60
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -138,17 +144,13 @@ jobs:
           echo "Using seed: ${{ inputs.seed || 'random' }}"
           echo "Runs per test: ${{ inputs.runs_per_test }}"
           echo "Max players: ${{ inputs.max_players }}"
-
-          # Determine debug mode include list
-          DEBUG_INCLUDE=""
-          if [ "${{ inputs.debug_mode }}" = "true" ]; then
-            DEBUG_INCLUDE="--include-list 'Adventure.yaml' 'Dark Souls III.yaml'"
-          fi
+          echo "Timeout: ${{ inputs.timeout }}s"
 
           # Build command
           CMD="python scripts/test/test-multiworld-ut-fuzz.py"
           CMD="$CMD --runs ${{ inputs.runs_per_test }}"
           CMD="$CMD --max-players ${{ inputs.max_players }}"
+          CMD="$CMD --timeout ${{ inputs.timeout }}"
 
           if [ "${{ inputs.seed }}" != "" ]; then
             CMD="$CMD --seed ${{ inputs.seed }}"
@@ -200,6 +202,7 @@ jobs:
             Seed: ${{ inputs.seed || 'random' }}
             Runs per test: ${{ inputs.runs_per_test }}
             Max players: ${{ inputs.max_players }}
+            Timeout: ${{ inputs.timeout }}s
             Clean start: ${{ inputs.clean_start }}
             Debug mode: ${{ inputs.debug_mode }}
 

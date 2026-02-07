@@ -3808,6 +3808,126 @@ class WeightedSum(Rule[TWorld], game="Archipelago"):
 
 
 @dataclasses.dataclass()
+class UniqueCount(Rule[TWorld], game="Archipelago"):
+    """
+    Check if the count of unique items collected meets or exceeds a threshold.
+
+    Unlike WeightedSum which counts total items (count * weight), this counts
+    unique item types only (1 * weight if count > 0, else 0).
+
+    This is used for rules like A Hat in Time's Enemy counter which only
+    increments once per enemy type, regardless of how many of that enemy
+    are collected.
+
+    Usage:
+        rule = UniqueCount(
+            threshold=12,
+            items=[("Mafia Goon", 1.0), ("Crow", 1.0), ...]
+        )
+    """
+    threshold: float = 1.0
+    items: list[tuple[str, float]] = dataclasses.field(default_factory=list)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.threshold,
+            tuple(self.items),
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        item_strs = [f"{name}:{weight}" for name, weight in self.items]
+        return f"UniqueCount({self.threshold}, [{', '.join(item_strs)}])"
+
+    class Resolved(Rule.Resolved):
+        threshold: float
+        items: tuple[tuple[str, float], ...]
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            total = 0.0
+            for item_name, weight in self.items:
+                count = state.count(item_name, self.player)
+                if count > 0:
+                    total += weight
+                    # Early exit optimization
+                    if total >= self.threshold - 0.001:
+                        return True
+            return total >= self.threshold - 0.001
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            return {item_name: {id(self)} for item_name, _ in self.items}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = []
+            if state is not None:
+                total = 0.0
+                for item_name, weight in self.items:
+                    count = state.count(item_name, self.player)
+                    if count > 0:
+                        total += weight
+                messages.append({
+                    "type": "text",
+                    "text": f"Unique count: {total:.0f}/{self.threshold:.0f}"
+                })
+            else:
+                messages.append({
+                    "type": "text",
+                    "text": f"Unique count >= {self.threshold}"
+                })
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is not None:
+                total = 0.0
+                for item_name, weight in self.items:
+                    count = state.count(item_name, self.player)
+                    if count > 0:
+                        total += weight
+                return f"Unique count: {total:.0f}/{self.threshold:.0f}"
+            return f"Unique count >= {self.threshold}"
+
+        @override
+        def __str__(self) -> str:
+            return f"UniqueCount({self.threshold})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"threshold": self.threshold, "items": list(self.items)}
+
+        @override
+        def to_dict(self) -> dict[str, Any]:
+            """Returns a JSON compatible dict that matches the unique_count helper format.
+
+            This outputs the format expected by the frontend JavaScript evaluator.
+            """
+            return {
+                "rule": "unique_count",
+                "_original_ast_type": "helper",
+                "_converted_from_ast": True,
+                "args": [
+                    {
+                        "rule": "Constant",
+                        "args": {"value": self.threshold},
+                        "_converted_from_ast": True,
+                    },
+                    {
+                        "rule": "Constant",
+                        "args": {"value": list(self.items)},
+                        "_converted_from_ast": True,
+                    }
+                ]
+            }
+
+
+@dataclasses.dataclass()
 class OptionValue(Rule[TWorld], game="Archipelago"):
     """A rule that evaluates to the truthiness of a world option at runtime.
 
@@ -3899,3 +4019,25 @@ DEFAULT_RULES = {
     for rule_name, rule_class in locals().items()
     if isinstance(rule_class, type) and issubclass(rule_class, Rule) and rule_class is not Rule
 }
+
+# Rule types that produce boolean expressions (as opposed to numeric values).
+# Used by world_generator to identify rules that can be used directly in boolean contexts.
+# Excludes numeric rules like CountItem, CountFromList, CountGroup, Arithmetic,
+# MinValue, MaxValue, WeightedSum, UniqueCount, and OptionValue.
+BOOLEAN_RULE_TYPES: frozenset[str] = frozenset({
+    # Reachability rules
+    'CanReachEntrance', 'CanReachRegion', 'CanReachLocation', 'EntranceAccessRuleCall',
+    # Item rules
+    'Has', 'HasAll', 'HasAny', 'HasAllCounts', 'HasAnyCount',
+    'HasFromList', 'HasFromListUnique', 'HasGroup', 'HasGroupUnique',
+    # Logic rules
+    'And', 'Or', 'Not',
+    # Boolean constants
+    'True_', 'False_',
+    # Comparison and conditional (produce booleans)
+    'Compare', 'Conditional',
+    # Helper calls
+    'HelperCall',
+    # Wrapper rules
+    'Filtered', 'ASTRule',
+})

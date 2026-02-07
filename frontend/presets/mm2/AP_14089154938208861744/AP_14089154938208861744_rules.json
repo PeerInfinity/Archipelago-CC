@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Mega Man 2",
   "game_directory": "mm2",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -1014,30 +1014,6 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
-                "helper_args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "option_value",
-                      "option": "wily_5_requirement"
-                    },
-                    "attr": "value"
-                  },
-                  {
-                    "type": "constant",
-                    "value": {
-                      "0": [],
-                      "1": [],
-                      "2": [],
-                      "3": [],
-                      "4": [],
-                      "5": [],
-                      "6": [],
-                      "7": [],
-                      "12": []
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1059,30 +1035,6 @@
                 "capability": "defeat_enough_rbms",
                 "inferred": true,
                 "description": "Requires ability to defeat enough rbms",
-                "helper_args": [
-                  {
-                    "type": "attribute",
-                    "object": {
-                      "type": "option_value",
-                      "option": "wily_5_requirement"
-                    },
-                    "attr": "value"
-                  },
-                  {
-                    "type": "constant",
-                    "value": {
-                      "0": [],
-                      "1": [],
-                      "2": [],
-                      "3": [],
-                      "4": [],
-                      "5": [],
-                      "6": [],
-                      "7": [],
-                      "12": []
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true

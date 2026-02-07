@@ -17,7 +17,12 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB_BASE, MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+from .constants import (
+    MAX_RULE_SIZE_KB,
+    MAX_INTERIM_EXPORT_SIZE_MB_BASE, MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME,
+    MAX_FINAL_EXPORT_SIZE_MB_BASE, MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME,
+    SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
+)
 from .profiling import profiler, auto_enable_from_env
 from BaseClasses import ItemClassification
 
@@ -105,48 +110,147 @@ def clear_rule_cache():
     _rule_analysis_cache.clear()
 
 
-# Cache for skip-export-games list to avoid repeated file reads
-_skip_export_games_cache: Optional[Set[str]] = None
+# Cache for tracking-mode-config to avoid repeated file reads
+_tracking_mode_config_cache: Optional[Dict[str, Any]] = None
 
 
-def _load_skip_export_games_list() -> Set[str]:
-    """Load the list of games to skip export for from skip-export-games.json.
+def _load_tracking_mode_config() -> Optional[Dict[str, Any]]:
+    """Load the tracking mode configuration from tracking-mode-config.json.
 
     The file is expected to be in the same directory as this module.
-    Returns a set of game names that should skip rule export.
+    Returns the config dict or None if not found/invalid.
     """
-    global _skip_export_games_cache
-    if _skip_export_games_cache is not None:
-        return _skip_export_games_cache
+    global _tracking_mode_config_cache
+    if _tracking_mode_config_cache is not None:
+        return _tracking_mode_config_cache
 
-    skip_list_path = os.path.join(os.path.dirname(__file__), 'skip-export-games.json')
-    games = set()
+    config_path = os.path.join(os.path.dirname(__file__), 'tracking-mode-config.json')
 
-    if os.path.exists(skip_list_path):
-        try:
-            with open(skip_list_path, 'r') as f:
-                data = json.load(f)
-                # Support both flat list and categorized format
-                if isinstance(data, list):
-                    games = set(data)
-                elif isinstance(data, dict):
-                    # Combine all categories (bundled, apworlds, etc.)
-                    if 'games' in data:
-                        for category_games in data['games'].values():
-                            games.update(category_games)
-                    else:
-                        # Direct category keys
-                        for key, value in data.items():
-                            if isinstance(value, list):
-                                games.update(value)
-            logger.debug(f"Loaded {len(games)} games from skip-export-games.json")
-        except (json.JSONDecodeError, IOError) as e:
-            logger.warning(f"Failed to load skip-export-games.json: {e}")
-    else:
-        logger.warning(f"skip-export-games.json not found at {skip_list_path}")
+    if not os.path.exists(config_path):
+        logger.debug(f"tracking-mode-config.json not found at {config_path}")
+        return None
 
-    _skip_export_games_cache = games
-    return games
+    try:
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        logger.debug(f"Loaded tracking mode config with {len(config.get('game_results', {}).get('bundled', {}))} bundled games")
+        _tracking_mode_config_cache = config
+        return config
+    except (json.JSONDecodeError, IOError) as e:
+        logger.warning(f"Failed to load tracking-mode-config.json: {e}")
+        return None
+
+
+def _get_game_category(game_name: str) -> str:
+    """Determine whether a game is bundled or from apworlds.
+
+    Returns 'bundled' or 'apworlds' based on game's world location.
+    """
+    try:
+        from worlds.AutoWorld import AutoWorldRegister
+        if game_name in AutoWorldRegister.world_types:
+            world_cls = AutoWorldRegister.world_types[game_name]
+            module_path = world_cls.__module__
+            # APWorlds are typically in custom_worlds directory
+            if 'custom_worlds' in module_path or module_path.startswith('custom_worlds'):
+                return 'apworlds'
+    except Exception as e:
+        logger.debug(f"Could not determine category for {game_name}: {e}")
+    return 'bundled'
+
+
+def _get_passing_modes(game_name: str, config: Dict[str, Any]) -> List[str]:
+    """Get the list of passing tracking modes for a game from the config.
+
+    Args:
+        game_name: Name of the game
+        config: The loaded tracking mode config
+
+    Returns:
+        List of passing mode names (e.g., ['worldgen', 'pickle']) or empty list
+    """
+    if not config:
+        return []
+
+    game_results = config.get('game_results', {})
+    category = _get_game_category(game_name)
+
+    # Check in the appropriate category
+    category_results = game_results.get(category, {})
+    if game_name in category_results:
+        return category_results[game_name]
+
+    # Check both categories as fallback
+    for cat in ['bundled', 'apworlds']:
+        cat_results = game_results.get(cat, {})
+        if game_name in cat_results:
+            return cat_results[game_name]
+
+    # Game not in config - return empty list (no passing modes)
+    return []
+
+
+def _get_first_passing_mode(game_name: str, config: Dict[str, Any]) -> Optional[str]:
+    """Get the first tracking mode in fallback_order that passes for this game.
+
+    Args:
+        game_name: Name of the game
+        config: The loaded tracking mode config
+
+    Returns:
+        First passing mode name or None if no modes pass
+    """
+    if not config:
+        return None
+
+    fallback_order = config.get('fallback_order', ['worldgen', 'pickle', 'original'])
+    passing_modes = _get_passing_modes(game_name, config)
+
+    for mode in fallback_order:
+        if mode in passing_modes:
+            return mode
+
+    return None
+
+
+def _should_export_rules_json_from_config(game_name: str) -> bool:
+    """Determine if rules.json should be exported based on tracking mode config.
+
+    Rules.json should be exported if the first passing mode is 'worldgen'.
+
+    Args:
+        game_name: Name of the game
+
+    Returns:
+        True if rules.json should be exported
+    """
+    config = _load_tracking_mode_config()
+    if not config:
+        # No config - fall back to always export
+        return True
+
+    first_mode = _get_first_passing_mode(game_name, config)
+    return first_mode == 'worldgen'
+
+
+def _should_export_pickle_from_config(game_name: str) -> bool:
+    """Determine if pickle should be exported based on tracking mode config.
+
+    Pickle should be exported if the first passing mode is 'pickle'.
+
+    Args:
+        game_name: Name of the game
+
+    Returns:
+        True if pickle should be exported
+    """
+    config = _load_tracking_mode_config()
+    if not config:
+        # No config - don't export pickle by default
+        return False
+
+    first_mode = _get_first_passing_mode(game_name, config)
+    return first_mode == 'pickle'
 
 
 def _insert_hint_text(item_data: dict, hint_text: str) -> None:
@@ -1819,7 +1923,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                 # Allow game handler to post-process location data before adding to region
                                 if game_handler and hasattr(game_handler, 'post_process_location_data'):
-                                    location_data = game_handler.post_process_location_data(location_data, location_name)
+                                    location_data = game_handler.post_process_location_data(
+                                        location_data, location_name,
+                                        region_name=region.name, world=world
+                                    )
 
                                 region_data['locations'].append(location_data)
                             except Exception as e:
@@ -1858,9 +1965,9 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         serializable_data = make_serializable(regions_data)
                         current_size = len(json.dumps(serializable_data))
                         current_size_mb = current_size / (1024 * 1024)
-                        # Dynamic limit: 10 MB base + 1 MB per additional game in multiworld
+                        # Dynamic interim limit (higher than final due to Python object overhead)
                         num_players = getattr(multiworld, 'players', 1)
-                        max_size_mb = MAX_EXPORT_SIZE_MB_BASE + (MAX_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+                        max_size_mb = MAX_INTERIM_EXPORT_SIZE_MB_BASE + (MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
                         if current_size_mb > max_size_mb:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
                                         f"({max_size_mb} MB) after processing region '{region_name}'. "
@@ -2363,7 +2470,7 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 
 
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2377,31 +2484,29 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         rules_json_format: Output format - "rule_builder" (default), "ast", or "both"
         cleanup_multiworld: If True, clear multiworld references after export to help garbage
             collection. Disabled by default as it invalidates the multiworld object.
+        clear_game_presets: If True, delete all existing presets for the current game before generating
+        clear_all_presets: If True, delete all existing presets for ALL games before generating
 
     Returns:
         Dict containing paths to generated files
     """
 
-    # For single-world multiworlds, optionally skip rule export.
-    # This is controlled by the skip_export_for_native_ut setting (default: False).
-    # When skip_export_from_list is also True, use a list of games from skip-export-games.json
-    # instead of checking ut_can_gen_without_yaml.
+    # Determine whether to export rules.json based on settings mode.
     from settings import get_settings
     settings = get_settings()
-    if getattr(settings.general_options, 'skip_export_for_native_ut', False):
+
+    if getattr(settings.general_options, 'use_tracking_mode_config', False):
+        # Config-based logic: use tracking-mode-config.json
         if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
             world = list(multiworld.worlds.values())[0]
-
-            if getattr(settings.general_options, 'skip_export_from_list', False):
-                # Use the skip list instead of checking ut_can_gen_without_yaml
-                skip_list = _load_skip_export_games_list()
-                if world.game in skip_list:
-                    logger.info(f"Skipping rule export for {world.game}: game is in skip-export-games.json list")
-                    return {}
-            elif getattr(world.__class__, "ut_can_gen_without_yaml", False):
-                # Fall back to checking ut_can_gen_without_yaml
-                logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
+            if not _should_export_rules_json_from_config(world.game):
+                logger.info(f"Skipping rules export for {world.game} (config-based: first passing mode is not 'worldgen')")
                 return {}
+    else:
+        # Simple flag-based logic
+        if not getattr(settings.general_options, 'save_rules_json', False):
+            # save_rules_json is False - don't export
+            return {}
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -2555,18 +2660,18 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     def write_export_data(data, filepath):
         """
         Apply exclusions and write data to a JSON file.
-        
+
         Args:
             data: The data to write
             filepath: The output file path
-            
+
         Returns:
             Boolean indicating success
         """
         try:
             # Apply field exclusions
             filtered_data = remove_excluded_fields(data, EXCLUDED_FIELDS)
-            
+
             # Apply context-specific exclusions
             if CONTEXT_EXCLUDED_FIELDS:
                 filtered_data = process_field_exclusions(
@@ -2578,7 +2683,20 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Write to file
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(filtered_data, f, indent=2)
-            logger.info(f"Successfully wrote rules to {filepath}")
+
+            # Check final file size against limit
+            file_size_bytes = os.path.getsize(filepath)
+            file_size_mb = file_size_bytes / (1024 * 1024)
+            num_players = getattr(multiworld, 'players', 1)
+            max_final_size_mb = MAX_FINAL_EXPORT_SIZE_MB_BASE + (MAX_FINAL_EXPORT_SIZE_MB_PER_EXTRA_GAME * max(0, num_players - 1))
+
+            if file_size_mb > max_final_size_mb:
+                logger.error(f"Final export file size ({file_size_mb:.2f} MB) exceeds limit ({max_final_size_mb} MB): {filepath}")
+                # Don't delete the file - it may still be useful, but warn about it
+                logger.warning(f"Export file exceeds size limit but was written anyway. Consider reducing game complexity.")
+            else:
+                logger.info(f"Successfully wrote rules to {filepath} ({file_size_mb:.2f} MB)")
+
             return True
         except Exception as e:
             logger.error(f"Error writing rules export file {filepath}: {e}")
@@ -2683,9 +2801,66 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Determine preset directories
         presets_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'presets')
         os.makedirs(presets_dir, exist_ok=True)
-        
+
+        # Clear all presets if requested (must be done before creating game directory)
+        if clear_all_presets:
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            for item in os.listdir(presets_dir):
+                item_path = os.path.join(presets_dir, item)
+                # Only remove game directories, preserve preset_files.json (will be rebuilt)
+                if os.path.isdir(item_path):
+                    try:
+                        shutil.rmtree(item_path)
+                        logger.info(f"Cleared preset directory: {item_path}")
+                    except Exception as e:
+                        logger.error(f"Error removing preset directory {item_path}: {e}")
+            # Clear the preset index since all presets are gone
+            if os.path.exists(preset_index_path):
+                try:
+                    # Keep only metadata key if present
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                    metadata = preset_index.get('metadata', {})
+                    with open(preset_index_path, 'w', encoding='utf-8') as f:
+                        json.dump({'metadata': metadata} if metadata else {}, f, indent=2)
+                    logger.info("Cleared preset_files.json (preserving metadata)")
+                except Exception as e:
+                    logger.error(f"Error clearing preset_files.json: {e}")
+
         # Create game-specific directory
         game_dir = os.path.join(presets_dir, clean_game_name)
+
+        # Clear current game's presets if requested (and not already cleared by clear_all_presets)
+        if clear_game_presets and not clear_all_presets and os.path.exists(game_dir):
+            for item in os.listdir(game_dir):
+                item_path = os.path.join(game_dir, item)
+                try:
+                    if os.path.isdir(item_path):
+                        shutil.rmtree(item_path)
+                    elif os.path.isfile(item_path):
+                        os.remove(item_path)
+                except Exception as e:
+                    logger.error(f"Error removing item {item_path}: {e}")
+            logger.info(f"Cleared existing presets for game: {clean_game_name}")
+
+            # Also clear the game entry from preset_files.json
+            preset_index_path = os.path.join(presets_dir, 'preset_files.json')
+            if os.path.exists(preset_index_path):
+                try:
+                    with open(preset_index_path, 'r', encoding='utf-8') as f:
+                        preset_index = json.load(f)
+                    if clean_game_name in preset_index:
+                        # Keep the game name but clear folders
+                        preset_index[clean_game_name] = {
+                            "name": game_name,
+                            "folders": {}
+                        }
+                        with open(preset_index_path, 'w', encoding='utf-8') as f:
+                            json.dump(preset_index, f, indent=2)
+                        logger.info(f"Cleared {clean_game_name} entry in preset_files.json")
+                except Exception as e:
+                    logger.error(f"Error updating preset_files.json after clearing game presets: {e}")
+
         os.makedirs(game_dir, exist_ok=True)
         
         # Create a folder for this specific preset

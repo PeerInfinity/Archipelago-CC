@@ -146,6 +146,12 @@ export class WorkerSpoilerTest {
       this.sm.setAutoCollectEventsConfig(true);
       this.sm.setSpoilerTestMode(false);
 
+      // Clean up the shared helper cache
+      if (this.sm._spoilerTestHelperCache) {
+        this.sm._spoilerTestHelperCache.clear();
+        delete this.sm._spoilerTestHelperCache;
+      }
+
       profiler.end('workerSpoilerTest');
       results.profilingData = profiler.getData();
     }
@@ -173,6 +179,13 @@ export class WorkerSpoilerTest {
 
     this.log('info', `[WorkerSpoilerTest] Processing sphere ${sphereIndex}`);
 
+    // Clear the shared helper cache at the start of each sphere.
+    // This ensures that when items are added or state changes during the sphere,
+    // helper results are re-evaluated with the new state.
+    if (this.sm._spoilerTestHelperCache) {
+      this.sm._spoilerTestHelperCache.clear();
+    }
+
     try {
       // Clear state at sphere 0
       if (sphereNumberInt === 0 && index === 0) {
@@ -180,14 +193,25 @@ export class WorkerSpoilerTest {
         this.log('debug', '[WorkerSpoilerTest] Cleared state for sphere 0');
 
         // Add starting items - use sm.rules, not sm.staticData
+        // Consolidate items into counts first for efficiency (fuzz tests can generate
+        // hundreds of thousands of items when start_inventory has large counts)
         const startingItems = this.sm.rules?.starting_items?.[this.playerIdKey] || [];
         this.log('info', `[WorkerSpoilerTest] Starting items for player ${this.playerIdKey}: ${startingItems.length} items`);
         if (startingItems.length > 0) {
+          // Consolidate duplicate items into counts
+          const itemCounts = {};
           for (const itemName of startingItems) {
-            this.sm.addItemToInventory(itemName, 1);
-            result.itemsAdded++;
+            itemCounts[itemName] = (itemCounts[itemName] || 0) + 1;
           }
-          this.log('info', `[WorkerSpoilerTest] Added ${startingItems.length} starting items`);
+          const uniqueItemCount = Object.keys(itemCounts).length;
+          this.log('debug', `[WorkerSpoilerTest] Consolidated into ${uniqueItemCount} unique items`);
+
+          // Add each unique item with its total count
+          for (const [itemName, count] of Object.entries(itemCounts)) {
+            this.sm.addItemToInventory(itemName, count);
+            result.itemsAdded += count;
+          }
+          this.log('info', `[WorkerSpoilerTest] Added ${startingItems.length} starting items (${uniqueItemCount} unique)`);
         }
       }
 
@@ -414,6 +438,13 @@ export class WorkerSpoilerTest {
     if (locations) {
       const locationEntries = locations.entries ? [...locations.entries()] : Object.entries(locations);
 
+      // Get the shared helper cache from StateManager (created if not exists).
+      // This cache is shared across all location rule evaluations within the same
+      // sphere, significantly improving performance for games with many locations
+      // that use shared helpers (e.g., coinsanity in Mario Land 2 with is_auto_scroll
+      // helper called 406+ times with the same arguments).
+      const sharedHelperCache = this.sm._spoilerTestHelperCache || (this.sm._spoilerTestHelperCache = new Map());
+
       for (const [locName, locDef] of locationEntries) {
         // Skip checked locations
         if (snapshot.flags?.includes(locName)) continue;
@@ -430,11 +461,13 @@ export class WorkerSpoilerTest {
         if (locDef.access_rule) {
           try {
             // Create location-specific snapshotInterface for rule evaluation
-            // (same as comparisonEngine.js does)
             const locationSnapshotInterface = this.sm._createSelfSnapshotInterface({
               location: locDef,
               playerId: this.playerId
             });
+            // Inject the shared helper cache into this context
+            // This allows helper results to be cached and reused across locations
+            locationSnapshotInterface._helperCache = sharedHelperCache;
             ruleResult = evaluateRule(locDef.access_rule, locationSnapshotInterface);
           } catch (e) {
             this.log('warn', `[WorkerSpoilerTest] Error evaluating rule for ${locName}: ${e.message}`);

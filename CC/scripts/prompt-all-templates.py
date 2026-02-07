@@ -49,6 +49,7 @@ from prompt_lib import (
     get_ut_fuzz_apworld_failures,
     get_ut_fuzz_single_failure,
     get_ut_fuzz_all_single_failures,
+    get_spoiler_fuzz_ut_pass_failures,
     # prompt_generators.standard
     generate_helper_export_prompt,
     generate_exporter_simplify_prompt,
@@ -68,6 +69,8 @@ from prompt_lib import (
     generate_ut_fuzz_single_failure_prompt,
     # prompt_generators.worldgen (apworld)
     generate_ut_fuzz_apworld_failure_prompt,
+    # prompt_generators.worldgen (spoiler fuzz)
+    generate_spoiler_fuzz_failure_prompt,
     # execution
     run_template_test,
     run_prompt_for_game,
@@ -344,7 +347,7 @@ def main():
         if not quiet_mode:
             print(f"Found {len(failures)} apworlds that fail UT fuzz ({args.ut_version} UT, {args.ut_seed_mode} seed)")
 
-        for i, failure in enumerate(failures):  # Already sorted by success rate (worst first)
+        for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
             game_name = failure['game_name']
             template_file = failure['template']
             world_dir = failure['world_directory']
@@ -444,6 +447,58 @@ def main():
             if args.max_files and (i + 1) >= args.max_files:
                 if not quiet_mode:
                     print(f"\nReached maximum file limit ({args.max_files}), stopping...")
+                break
+
+        # Write collected prompts to file if in --promptfile mode
+        if args.promptfile and collected_prompts:
+            output_file = Path(project_root) / 'CC' / 'scripts' / 'prompts.txt'
+            write_collected_prompts(collected_prompts, output_file)
+
+        return 0
+
+    # Handle spoiler fuzz failures mode - games that pass UT fuzz but fail spoiler fuzz
+    if args.spoiler_fuzz_failures:
+        quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
+        collected_prompts = [] if args.promptfile else None
+
+        failures = get_spoiler_fuzz_ut_pass_failures(
+            project_root,
+            ut_version=args.ut_version,
+            seed_mode=args.spoiler_seed_mode
+        )
+
+        if not quiet_mode:
+            print(f"Found {len(failures)} games that pass UT fuzz but fail spoiler fuzz ({args.ut_version} UT, {args.spoiler_seed_mode} seed)")
+
+        for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
+            game_name = failure['game_name']
+            template_file = failure['template']
+            world_dir = failure['world_directory']
+            ut_fuzz_info = failure['ut_fuzz']
+            spoiler_fuzz_info = failure['spoiler_fuzz']
+
+            if not quiet_mode:
+                print(f"\n{'='*60}")
+                print(f"[{i+1}/{len(failures)}] {game_name}")
+                print(f"UT Fuzz: {ut_fuzz_info['success']}/{ut_fuzz_info['total']} passed ({ut_fuzz_info['success_rate']:.1f}%) ✅")
+                print(f"Spoiler Fuzz: {spoiler_fuzz_info['success']}/{spoiler_fuzz_info['total']} passed ({spoiler_fuzz_info['success_rate']:.1f}%) ❌")
+                print('='*60)
+
+            base_seed = failure.get('base_seed')  # For reproduction instructions
+            prompt = generate_spoiler_fuzz_failure_prompt(
+                game_name, template_file, world_dir, ut_fuzz_info, spoiler_fuzz_info, world_mapping, args.seed, base_seed
+            )
+
+            if args.promptfile:
+                collected_prompts.append(prompt)
+            else:
+                print(prompt)
+                if args.text or args.prompt:
+                    return 0
+
+            if args.max_files and (i + 1) >= args.max_files:
+                if not quiet_mode:
+                    print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
                 break
 
         # Write collected prompts to file if in --promptfile mode

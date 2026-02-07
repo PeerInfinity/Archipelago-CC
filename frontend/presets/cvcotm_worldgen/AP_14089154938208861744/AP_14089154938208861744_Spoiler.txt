@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Always Allow Speed Dash:         No
 Auto Run:                        No
 Available Last Keys:             1
@@ -40,6 +41,7 @@ Required Last Keys:              1
 Required Skirmishes:             None
 Skip Cutscene Dialogue:          No
 Skip Magic Item Tutorials:       No
+Start Inventory from Pool:       
 Sub-weapon Shuffle:              No
 
 

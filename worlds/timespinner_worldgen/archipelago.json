@@ -3,7 +3,7 @@
     "authors": [
         "World Generator"
     ],
-    "minimum_ap_version": "0.6.5",
+    "minimum_ap_version": "0.6.7",
     "world_version": "1.0.0",
     "version": 7,
     "compatible_version": 7

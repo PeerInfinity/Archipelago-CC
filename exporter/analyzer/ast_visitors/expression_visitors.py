@@ -33,6 +33,7 @@ class ExpressionVisitorMixin:
             # Special handling for self.world.options.<setting>.value pattern
             # This resolves option values to constants at export time instead of runtime lookup
             # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            # Controlled by the resolve_options_to_constants setting
             if attr_name == 'value' and 'self' in self.closure_vars:
                 self_obj = self.closure_vars['self']
                 try:
@@ -44,6 +45,28 @@ class ExpressionVisitorMixin:
                         current = current.value
                     if isinstance(current, ast.Name) and current.id == 'self':
                         # We have self.X.Y.Z.value pattern
+                        # Check if this is a world.options pattern (chain includes 'options')
+                        is_options_pattern = 'options' in chain and len(chain) >= 3
+
+                        # Check if we should resolve options to constants
+                        should_resolve = True
+                        if is_options_pattern and hasattr(self, 'game_handler') and self.game_handler is not None:
+                            if hasattr(self.game_handler, 'should_resolve_options_to_constants'):
+                                should_resolve = self.game_handler.should_resolve_options_to_constants()
+
+                        if is_options_pattern and not should_resolve:
+                            # Return option_value reference instead of resolving to constant
+                            # Chain is like ['world', 'options', 'SettingName', 'value']
+                            # Find the setting name (element after 'options')
+                            try:
+                                options_idx = chain.index('options')
+                                if options_idx + 1 < len(chain) - 1:  # -1 to skip 'value' at the end
+                                    setting_name = chain[options_idx + 1]
+                                    logging.debug(f"visit_Attribute: Keeping self.world.options.{setting_name}.value as option_value (resolve_options_to_constants=False)")
+                                    return {'type': 'option_value', 'option': setting_name}
+                            except (ValueError, IndexError):
+                                pass  # Fall through to normal resolution
+
                         # Try to resolve the full chain via closure_vars
                         resolved = self_obj
                         for attr in chain:
@@ -741,9 +764,55 @@ class ExpressionVisitorMixin:
                 logging.debug(f"Unknown boolean operator: {type(node.op).__name__}")
                 return None
 
+            # Simplify boolean expressions with constant values
+            # This is critical for properly handling options like open_pyramid.to_bool()
+            # which evaluate to True/False at analysis time
+            simplified_conditions = []
+            for cond in conditions:
+                if cond.get('type') == 'constant':
+                    const_val = cond.get('value')
+                    if op_type == 'or' and const_val is True:
+                        # OR with True -> True (short-circuit)
+                        logging.debug(f"Boolean simplification: OR with True -> True")
+                        return {'type': 'constant', 'value': True}
+                    elif op_type == 'and' and const_val is False:
+                        # AND with False -> False (short-circuit)
+                        logging.debug(f"Boolean simplification: AND with False -> False")
+                        return {'type': 'constant', 'value': False}
+                    elif op_type == 'or' and const_val is False:
+                        # OR with False -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: OR skipping False condition")
+                        continue
+                    elif op_type == 'and' and const_val is True:
+                        # AND with True -> skip this condition (identity element)
+                        logging.debug(f"Boolean simplification: AND skipping True condition")
+                        continue
+                    else:
+                        # Non-boolean constant (shouldn't happen in boolean context)
+                        simplified_conditions.append(cond)
+                else:
+                    simplified_conditions.append(cond)
+
+            # Handle cases where all conditions were filtered out
+            if len(simplified_conditions) == 0:
+                # All conditions were identity elements
+                if op_type == 'or':
+                    # All False conditions -> False
+                    logging.debug(f"Boolean simplification: All OR conditions were False -> False")
+                    return {'type': 'constant', 'value': False}
+                else:
+                    # All True conditions -> True
+                    logging.debug(f"Boolean simplification: All AND conditions were True -> True")
+                    return {'type': 'constant', 'value': True}
+
+            # If only one condition remains, return it directly
+            if len(simplified_conditions) == 1:
+                logging.debug(f"Boolean simplification: Single condition remaining -> {simplified_conditions[0]}")
+                return simplified_conditions[0]
+
             result = {
                 'type': op_type,
-                'conditions': conditions
+                'conditions': simplified_conditions
             }
             logging.debug(f"Boolean operation result: {result}")
             return result # Return the result

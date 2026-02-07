@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Mario & Luigi Superstar Saga WorldGen",
   "game_directory": "mlss_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -1502,15 +1502,15 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "canDig",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "thunder",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "ultra",
-                  "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "canDig",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -4232,10 +4232,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "thunder",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "birdo_shop",
                   "_original_ast_type": "helper"
                 },
@@ -4245,6 +4241,10 @@
                 },
                 {
                   "rule": "star_shop",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "thunder",
                   "_original_ast_type": "helper"
                 }
               ]
@@ -4257,11 +4257,11 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "fungitown",
+                  "rule": "birdo_shop",
                   "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "birdo_shop",
+                  "rule": "fungitown",
                   "_original_ast_type": "helper"
                 },
                 {
@@ -13741,6 +13741,16 @@
             "link": "setup/en",
             "authors": [
               "jamesbrq"
+            ]
+          },
+          {
+            "name": "Setup Guide",
+            "description": "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
+            "language": "Espa\u00f1ol",
+            "file_name": "setup_es.md",
+            "link": "setup/es",
+            "authors": [
+              "GreenMarco"
             ]
           }
         ]

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Final Fantasy Mystic Quest",
   "game_directory": "ffmq",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -9095,10 +9095,26 @@
             "name": "Dullahan",
             "id": null,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "And",
               "args": {
-                "items": [
-                  "Dragon Claw"
+                "rules": [
+                  {
+                    "rule": "HasAll",
+                    "args": {
+                      "items": [
+                        "Dragon Claw"
+                      ]
+                    }
+                  },
+                  {
+                    "rule": "HasAll",
+                    "args": {
+                      "items": [
+                        "River Coin",
+                        "Sand Coin"
+                      ]
+                    }
+                  }
                 ]
               }
             },

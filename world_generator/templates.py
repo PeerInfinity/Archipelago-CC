@@ -8,31 +8,16 @@ for that file.
 import json
 import re
 from typing import Any, Dict, List, Optional, Set
+from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
+from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
-def sanitize_class_name(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
-
-
-def sanitize_option_name(name: str) -> str:
-    """Sanitize an option name to be a valid Python identifier.
-
-    Replaces non-alphanumeric characters (except underscores) with underscores.
-    Collapses multiple consecutive underscores into one.
-    """
-    # Replace any non-alphanumeric character (except underscore) with underscore
-    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
-    # Collapse multiple underscores into one
-    sanitized = re.sub(r'_+', '_', sanitized)
-    # Remove leading/trailing underscores
-    return sanitized.strip('_')
+# Backwards-compatible aliases
+sanitize_class_name = sanitize_for_class_name
+sanitize_option_name = sanitize_for_identifier
 
 
 def is_valid_identifier(name: str) -> bool:
@@ -259,15 +244,28 @@ def _rule_needs_lambda(rule: dict) -> bool:
         return True
 
     # AST format dynamic references also need lambda
-    # AST_function_call is included because it may reference 'location' or 'entrance'
-    # variables that are substituted at generation time via set_context(), and
-    # dungeon.boss patterns are now supported via _Dungeon/_Boss wrapper classes.
     # WorldAttribute and OptionValue need lambda because they generate
     # state.multiworld.worlds[player].attr/options.xxx which requires 'state'
     # to be defined (only available in lambda context).
     # AST_capability needs lambda because it calls helper functions with runtime arguments
     # from options/world attributes.
-    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'AST_function_call', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+    if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search', 'WorldAttribute', 'OptionValue', 'AST_capability'):
+        return True
+
+    # AST_function_call may need lambda, but not if the function is a Rule Builder rule
+    # (e.g., And, Or, Has, CanReachEntrance) - those can be converted directly.
+    # This happens when bunny rules are analyzed and path_to_access_rule returns
+    # nested Rule Builder expressions wrapped in AST_function_call.
+    if rule_name == 'AST_function_call':
+        args = rule.get('args', {})
+        function = args.get('function', {})
+        if isinstance(function, dict) and function.get('rule'):
+            func_rule = function.get('rule')
+            if func_rule in BOOLEAN_RULE_TYPES:
+                # Function is a Rule Builder rule - check if IT needs lambda
+                # (it might have nested dynamic references)
+                return _rule_needs_lambda(function)
+        # Unknown function call structure - needs lambda
         return True
 
     # HasFromList/HasFromListUnique with dynamic count (dict instead of int) need lambda
@@ -854,6 +852,15 @@ def generate_rules_py(data: ExtractedData) -> str:
         normalized_name = exit_name.lower().replace(' ', '')
         entrance_regions[normalized_name] = exit_data.source_region
     rule_builder_generator.set_entrance_regions(entrance_regions)
+
+    # Build entrance-to-connected-region mapping for resolving dict_lambda_lookup patterns
+    # like rule_map.get(world.get_entrance('X').connected_region.name, default)
+    # With vanilla entrance shuffle, we can resolve the key to return just the matching case
+    entrance_connections = {}
+    for exit_name, exit_data in data.exits.items():
+        if exit_data.target_region:
+            entrance_connections[exit_name] = exit_data.target_region
+    rule_builder_generator.set_entrance_connections(entrance_connections)
 
     helper_generator = HelperCodeGenerator(
         game_name,
@@ -1620,19 +1627,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     CANONICAL_SEED: ClassVar[int] = {canonical_seed}
 
     def generate_early(self) -> None:
-        """Push starting items and load canonical options.
-
-        Options are always loaded from _worldgen_options.json to ensure consistency
-        between the original world's rules and the worldgen world's helper functions.
-        This is critical for UT fuzzer testing where option-dependent helpers
-        (like has_paintings) need to evaluate identically to the original world.
-        """
+        """Push starting items and load canonical options for canonical seed."""
         self._push_starting_items()
-        # Always load canonical options to match the original world's behavior
-        # This is essential for helpers that check options (like has_paintings)
-        self._load_canonical_options()
         if self.multiworld.seed == self.CANONICAL_SEED:
             self.options.randomize_items.value = False
+            if self.options.use_canonical_options.value:
+                self._load_canonical_options()
 
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.

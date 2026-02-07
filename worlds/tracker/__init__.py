@@ -20,7 +20,7 @@ def launch_client(*args):
     from .TrackerClient import launch as TCMain
     launch(TCMain, name="Universal Tracker client", args=args)
 
-UT_VERSION = "v0.2.23"
+UT_VERSION = "v0.2.23-modified"
 
 class CurrentTrackerState(NamedTuple):
     all_items: Counter
@@ -34,10 +34,11 @@ class CurrentTrackerState(NamedTuple):
     readable_locations: list[str]
     hinted_locations: list
     state: Optional[CollectionState]
+    glitches_state: Optional[CollectionState]
 
     @staticmethod
     def init_empty_state() -> "CurrentTrackerState":
-        return CurrentTrackerState(Counter(),Counter(),[],[],[],[],[],[],[],[],None)
+        return CurrentTrackerState(Counter(),Counter(),[],[],[],[],[],[],[],[],None,None)
 
 class DeferredEntranceMode(Enum):
     """Determines how worlds should be allowed to use deferred entrances

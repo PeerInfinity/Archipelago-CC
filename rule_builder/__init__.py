@@ -74,7 +74,10 @@ from .rules import (
     Conditional,
     HelperCall,
     WeightedSum,
+    UniqueCount,
     OptionValue,
+    # Rule type collections
+    BOOLEAN_RULE_TYPES,
 )
 
 from .ast_format import (
@@ -143,7 +146,10 @@ __all__ = [
     'Conditional',
     'HelperCall',
     'WeightedSum',
+    'UniqueCount',
     'OptionValue',
+    # Rule type collections
+    'BOOLEAN_RULE_TYPES',
     # AST format support functions
     'is_ast_format',
     'parse_ast_rule',

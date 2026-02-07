@@ -53,6 +53,12 @@ python -m worlds.json_tools_installer install --version dev --all
 # Install specific components
 python -m worlds.json_tools_installer install --frontend --presets
 
+# Install with JSON export enabled (minimal-spoilers preset)
+python -m worlds.json_tools_installer install --export-preset minimal-spoilers
+
+# Install without configuring host.yaml export settings
+python -m worlds.json_tools_installer install --no-configure-export
+
 # Check installation status
 python -m worlds.json_tools_installer status
 
@@ -116,6 +122,15 @@ Runtime patching that hooks into Archipelago's core functions without modifying 
 python -m worlds.json_tools_installer install
 ```
 
+For technical details on how monkey patching works internally, see [docs/monkey-patching.md](docs/monkey-patching.md).
+
+**Limitations of monkey patching:**
+- Exported files are not included in the output `.zip` archive (they go directly to `frontend/presets/`)
+- Requires either configured `host.yaml` export settings or installer config for settings
+- The exporter module must be installed separately for actual export functionality
+
+For full integration without these limitations, use file-based patching or the Archipelago-CC fork.
+
 ### 2. File-Based Patching
 Replaces core Archipelago files with patched versions. Original files are backed up and can be restored. Requires confirmation before applying:
 ```bash
@@ -141,6 +156,36 @@ In the installer GUI, you'll see three checkboxes under "Apply patches after dow
 - **Monkey patch** (checked by default) - Runtime hooks
 - **Main patches** - File-based patching (mutually exclusive with monkey patch)
 - **ROM-less patches** - Additional patches for testing without ROM files
+
+## Export Settings Configuration
+
+The installer can automatically configure export settings in your `host.yaml` file. This eliminates the need to manually run setup scripts after installation.
+
+### Export Presets
+
+| Preset | Description |
+|--------|-------------|
+| `normal` | Export features disabled (default) |
+| `minimal-spoilers` | Enables JSON export and sphere logging for the frontend UI |
+
+### CLI Options
+
+```bash
+# Configure with minimal-spoilers preset (enables JSON export)
+python -m worlds.json_tools_installer install --export-preset minimal-spoilers
+
+# Skip export settings configuration entirely
+python -m worlds.json_tools_installer install --no-configure-export
+```
+
+By default, the installer configures `host.yaml` with the `normal` preset. Use `--export-preset minimal-spoilers` if you want JSON rules files and sphere logs to be generated automatically when creating seeds.
+
+### GUI Options
+
+In the installer GUI, you'll see options under "Configure export settings in host.yaml:":
+- **Configure host.yaml** (checked by default) - Whether to update export settings
+- **Normal** - Standard settings with export disabled
+- **Minimal spoilers** - Enables JSON export and sphere logging
 
 ## Backup and Restore
 
@@ -176,9 +221,17 @@ Configuration is stored in `json_tools_config.json`:
     "backups": [],
     "applied_at": null,
     "romless_applied": false
+  },
+  "export_settings": {
+    "save_rules_json": false,
+    "rules_json_format": "rule_builder",
+    "save_sphere_log": false,
+    "update_frontend_presets": false
   }
 }
 ```
+
+The `export_settings` section mirrors the settings written to `host.yaml` and serves as a fallback when running with monkey patching on vanilla Archipelago installations that don't have these options in their settings.
 
 ## Supported AP Versions
 

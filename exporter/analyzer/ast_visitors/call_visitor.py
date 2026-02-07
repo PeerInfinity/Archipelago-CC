@@ -550,10 +550,12 @@ class CallVisitorMixin:
                          self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                          return self._make_helper_rule(closure_func_name, filtered_args, filtered_kwargs)
 
-                     # Check if 'state' is passed as an argument (directly or indirectly)
+                     # Check if 'state' or 'item' is passed as an argument (directly or indirectly)
+                     # Access rules use 'state', item rules use 'item' (or 'i')
                      has_state_arg = any(references_state(arg) for arg in node.args)
-                     # Attempt recursion if state arg is present
-                     if has_state_arg:
+                     has_item_arg = any(isinstance(arg, ast.Name) and arg.id in ('item', 'i') for arg in node.args)
+                     # Attempt recursion if state or item arg is present
+                     if has_state_arg or has_item_arg:
                           # Import analyze_rule locally to avoid forward reference issues
                           from ..analysis import analyze_rule
                           # actual_func and closure_func_name already set above
@@ -1404,9 +1406,10 @@ class CallVisitorMixin:
             # - 'path_to_access_rule': Used by bunny rule generation to capture path traversal rules
             closure_var_blacklist = {'old_rule', 'path_to_access_rule'}
             if func_name in closure_var_blacklist:
+                target_name = getattr(self, 'rule_target_name', None) or 'unknown'
                 print(
-                    f"LOSSY FALLBACK: Closure variable '{func_name}' could not be analyzed, "
-                    f"using True_ (always accessible) as fallback",
+                    f"LOSSY FALLBACK: Closure variable '{func_name}' could not be analyzed "
+                    f"for target '{target_name}', using True_ (always accessible) as fallback",
                     file=sys.stderr
                 )
                 return {'rule': 'True_'}
@@ -1919,7 +1922,15 @@ class CallVisitorMixin:
                                     return {'type': 'constant', 'value': bool(option_obj.value)}
                         except Exception as e:
                             logging.warning(f"Failed to evaluate {setting_name}.to_bool(): {e}")
-                            # Fall through to let ast_to_rule_builder handle it
+                            # Return OptionValue so the option check is preserved in export
+                            # This is better than losing the option check entirely
+                            logging.debug(f"Returning OptionValue fallback for {setting_name}")
+                            return {'type': 'option_value', 'option': setting_name}
+
+                    # If we have a setting name but couldn't evaluate, return OptionValue
+                    if setting_name:
+                        logging.debug(f"Could not evaluate to_bool, returning OptionValue for {setting_name}")
+                        return {'type': 'option_value', 'option': setting_name}
 
                 # If we can't resolve to_bool at analysis time, let the converter handle it
                 logging.debug(f"Could not evaluate to_bool at analysis time, falling through")
@@ -2042,6 +2053,57 @@ class CallVisitorMixin:
                     'args': args
                 }
                 logging.debug(f"Created method_call result: {result}")
+                return result
+
+            # Handle dictionary method calls (e.g., some_dict.keys(), some_dict.values())
+            # When the object is a constant dict, evaluate the method at analysis time
+            # This can be disabled via evaluate_dict_methods=False on the RuleAnalyzer
+            elif (getattr(self, 'evaluate_dict_methods', True) and
+                  func_info['object'].get('type') == 'constant' and
+                  isinstance(func_info['object'].get('value'), dict)):
+                dict_value = func_info['object']['value']
+                logging.debug(f"Processing dict method call: dict.{method_name} on dict with {len(dict_value)} keys")
+
+                if method_name == 'keys':
+                    # Evaluate dict.keys() at analysis time - return sorted list of keys
+                    keys_list = sorted(list(dict_value.keys()), key=lambda x: str(x))
+                    logging.debug(f"Evaluated dict.keys() = {keys_list}")
+                    return {'type': 'constant', 'value': keys_list}
+
+                elif method_name == 'values':
+                    # Evaluate dict.values() at analysis time - return list of values
+                    values_list = list(dict_value.values())
+                    logging.debug(f"Evaluated dict.values() = {values_list}")
+                    return {'type': 'constant', 'value': values_list}
+
+                elif method_name == 'items':
+                    # Evaluate dict.items() at analysis time - return list of [key, value] pairs
+                    items_list = [[k, v] for k, v in sorted(dict_value.items(), key=lambda x: str(x[0]))]
+                    logging.debug(f"Evaluated dict.items() = {items_list}")
+                    return {'type': 'constant', 'value': items_list}
+
+                elif method_name == 'get' and len(args) >= 1:
+                    # Evaluate dict.get(key) or dict.get(key, default) at analysis time
+                    key_arg = args[0]
+                    if key_arg.get('type') == 'constant':
+                        key = key_arg['value']
+                        default = None
+                        if len(args) >= 2 and args[1].get('type') == 'constant':
+                            default = args[1]['value']
+                        result_value = dict_value.get(key, default)
+                        logging.debug(f"Evaluated dict.get({key}, {default}) = {result_value}")
+                        return {'type': 'constant', 'value': result_value}
+                    else:
+                        logging.debug(f"dict.get key argument is not a constant, keeping as method_call")
+
+                # For other dict methods or when we can't evaluate, create a method_call structure
+                result = {
+                    'type': 'method_call',
+                    'object': func_info['object'],
+                    'method': method_name,
+                    'args': args
+                }
+                logging.debug(f"Created method_call result for dict: {result}")
                 return result
 
             # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)

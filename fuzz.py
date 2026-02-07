@@ -1,4 +1,4 @@
-__version__ = "0.4.2"
+__version__ = "0.5.1-modified"
 
 import sys
 import os
@@ -174,9 +174,166 @@ def world_from_apworld_name(apworld_name):
 # See https://github.com/yaml/pyyaml/issues/103
 yaml.SafeDumper.ignore_aliases = lambda *args: True
 
+
+def _ensure_list(values):
+    return values if isinstance(values, list) else [values]
+
+
+def apply_constraints(game_options, constraints, option_defs):
+    # Collect mutually_exclusive info for requires_any filtering
+    mutual_exclusions = [
+        {"option": c.get("option"), "values": c["mutually_exclusive"]}
+        for c in constraints if "mutually_exclusive" in c
+    ]
+
+    other_constraints = [c for c in constraints if "mutually_exclusive" not in c]
+
+    # Run other constraints twice: once for initial processing, once for dependencies
+    for _ in range(2):
+        for constraint in other_constraints:
+            _apply_single_constraint(game_options, constraint, mutual_exclusions, option_defs)
+
+    # Run mutually_exclusive last to resolve any conflicts created by additions
+    for excl in mutual_exclusions:
+        _apply_single_constraint(game_options, {"option": excl["option"], "mutually_exclusive": excl["values"]}, mutual_exclusions, option_defs)
+
+    # Run other constraints once more to fix any requirements broken by mutually_exclusive
+    for constraint in other_constraints:
+        _apply_single_constraint(game_options, constraint, mutual_exclusions, option_defs)
+
+    return game_options
+
+
+def _apply_single_constraint(game_options, constraint, mutual_exclusions, option_defs):
+    option_name = constraint.get("option")
+    if option_name not in game_options:
+        return
+
+    option_value = game_options[option_name]
+
+    if "if_selected" in constraint:
+        _handle_if_selected(option_value, constraint)
+
+    elif "if_value" in constraint:
+        _handle_if_value(game_options, option_value, constraint)
+
+    elif "mutually_exclusive" in constraint:
+        _handle_mutually_exclusive(option_value, constraint)
+
+    elif "if_any_selected" in constraint and "requires_any" in constraint:
+        _handle_requires_any(option_name, option_value, constraint, mutual_exclusions)
+
+    elif "max_count_of" in constraint:
+        _handle_max_count_of(game_options, option_name, option_value, constraint, option_defs)
+
+    elif "max_remaining_from" in constraint:
+        _handle_max_remaining_from(game_options, option_name, option_value, constraint, option_defs)
+
+    elif "ensure_any" in constraint:
+        _handle_ensure_any(option_value, constraint)
+
+
+def _handle_if_selected(option_value, constraint):
+    if constraint["if_selected"] not in option_value:
+        return
+
+    for val in _ensure_list(constraint.get("must_include", [])):
+        if val not in option_value:
+            option_value.append(val)
+
+    for val in _ensure_list(constraint.get("must_exclude", [])):
+        if val in option_value:
+            option_value.remove(val)
+
+
+def _handle_if_value(game_options, option_value, constraint):
+    if option_value != constraint["if_value"]:
+        return
+
+    for target_option, target_value in constraint.get("then", {}).items():
+        game_options[target_option] = target_value
+
+    for target_option, excluded in constraint.get("then_exclude", {}).items():
+        target = game_options[target_option]
+        for val in _ensure_list(excluded):
+            if val in target:
+                target.remove(val)
+
+    for target_option, included in constraint.get("then_include", {}).items():
+        target = game_options[target_option]
+        for val in _ensure_list(included):
+            if val not in target:
+                target.append(val)
+
+
+def _handle_mutually_exclusive(option_value, constraint):
+    present = [val for val in constraint["mutually_exclusive"] if val in option_value]
+    if len(present) > 1:
+        keep = random.choice(present)
+        for val in present:
+            if val != keep:
+                option_value.remove(val)
+
+
+def _handle_requires_any(option_name, option_value, constraint, mutual_exclusions):
+    trigger_values = constraint["if_any_selected"]
+    required_values = constraint["requires_any"]
+
+    if not any(val in option_value for val in trigger_values):
+        return
+    if any(val in option_value for val in required_values):
+        return
+
+    # Filter candidates that would conflict with mutually_exclusive constraints
+    candidates = list(required_values)
+    for excl in mutual_exclusions:
+        if excl["option"] == option_name:
+            present_excl = [v for v in excl["values"] if v in option_value]
+            if present_excl:
+                candidates = [c for c in candidates if c not in excl["values"]]
+
+    if not candidates:
+        candidates = list(required_values)
+
+    choice = random.choice(candidates)
+    if choice not in option_value:
+        option_value.append(choice)
+
+
+def _handle_max_count_of(game_options, option_name, option_value, constraint, option_defs):
+    other_value = game_options[constraint["max_count_of"]]
+    cap = len(other_value)
+    if option_value > cap:
+        option_def = option_defs[option_name]
+        if cap < option_def.range_start:
+            game_options[option_name] = cap
+        else:
+            game_options[option_name] = random.randint(option_def.range_start, cap)
+
+
+def _handle_max_remaining_from(game_options, option_name, option_value, constraint, option_defs):
+    other_value = game_options[constraint["max_remaining_from"]]
+    max_capacity = int(constraint["max_capacity"])
+    cap = max_capacity - len(other_value)
+    if option_value > cap:
+        option_def = option_defs[option_name]
+        if cap < option_def.range_start:
+            game_options[option_name] = cap
+        else:
+            game_options[option_name] = random.randint(option_def.range_start, cap)
+
+
+def _handle_ensure_any(option_value, constraint):
+    required_values = constraint["ensure_any"]
+    if not any(val in option_value for val in required_values):
+        choice = random.choice(required_values)
+        if choice not in option_value:
+            option_value.append(choice)
+
+
 # Adapted from archipelago'd generate_yaml_templates
 # https://github.com/ArchipelagoMW/Archipelago/blob/f75a1ae1174fb467e5c5bd5568d7de3c806d5b1c/Options.py#L1504
-def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None):
+def generate_random_yaml(world_name, meta, default_options=None, disallow_options=None, max_item_dict_value=None):
     """Generate a random YAML for the given world.
 
     Args:
@@ -184,6 +341,7 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
         meta: Dictionary of option overrides
         default_options: Set of option names to leave at their defaults instead of randomizing
         disallow_options: Dict mapping option names to sets of values to disallow
+        max_item_dict_value: Max value for OptionCounter items (e.g., start_inventory). Default 1000.
     """
     def dictify_range(option):
         data = {option.default: 50}
@@ -239,8 +397,10 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     game_meta = meta.get(game_name, {})
 
     game_options = {}
+    option_defs = {}
     option_groups = get_option_groups(world)
     for group, options in option_groups.items():
+        option_defs.update(options)
         for option_name, option_value in options.items():
             # Check if this option should be left at default
             if option_name in default_options:
@@ -258,11 +418,16 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
             # Get disallowed values for this option (if any)
             disallowed = disallow_options.get(option_name, set())
             game_options[option_name] = sanitize(
-                get_random_value(option_name, option_value, disallowed)
+                get_random_value(option_name, option_value, disallowed, max_item_dict_value)
             )
 
     if "triggers" in game_meta:
         game_options["triggers"] = game_meta["triggers"]
+
+    # Apply fuzz_constraints from meta file if present
+    fuzz_constraints = game_meta.get("fuzz_constraints", [])
+    if fuzz_constraints:
+        apply_constraints(game_options, fuzz_constraints, option_defs)
 
     yaml_content = {
         "description": f"{game_name} Template, generated with https://github.com/Eijebong/Archipelago-fuzzer/tree/{__version__}",
@@ -281,16 +446,19 @@ def generate_random_yaml(world_name, meta, default_options=None, disallow_option
     return res
 
 
-def get_random_value(name, option, disallowed=None):
+def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
     """Get a random value for the given option.
 
     Args:
         name: The option name
         option: The option class
         disallowed: Set of values to exclude from randomization
+        max_item_dict_value: Max value for OptionCounter items. Default 1000.
     """
     if disallowed is None:
         disallowed = set()
+    if max_item_dict_value is None:
+        max_item_dict_value = 1000
 
     if name == "item_links":
         # Let's not fuck with item links right now, I'm scared
@@ -326,7 +494,7 @@ def get_random_value(name, option, disallowed=None):
             k=random.randint(0, len(option.valid_keys))
         )
         min_val = option.min if option.min is not None else 0
-        max_val = option.max if option.max is not None else 1000
+        max_val = option.max if option.max is not None else max_item_dict_value
         return {key: random.randint(min_val, max_val) for key in selected_keys}
 
     if issubclass(option, OptionDict):
@@ -394,15 +562,6 @@ def get_random_value(name, option, disallowed=None):
 
 def call_generate(yaml_path, args, output_path):
     from settings import get_settings
-
-    # Clear any cached state from previous generations
-    # Some worlds (like Landstalker) use class-level caches that persist
-    # across generations and can cause issues with stale player IDs
-    try:
-        from worlds.landstalker import LandstalkerWorld
-        LandstalkerWorld.cached_spheres = []
-    except ImportError:
-        pass
 
     settings = get_settings()
 

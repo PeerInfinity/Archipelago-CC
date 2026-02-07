@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -6,7 +6,7 @@ Plando Options:                  connections, texts, bosses
 Game:                            Final Fantasy Mystic Quest WorldGen
 Location Count:                  251
 Progression Balancing:           50
-Accessibility:                   Full
+Accessibility:                   Items
 Local Items:                     
 Non-local Items:                 
 Start Inventory:                 
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Available Companions:            4
 Battlefields Battles Quantity:   Ten
 Bosses Scaling Lower:            Quarter
@@ -37,15 +38,16 @@ Kaeli's Mom Fights Minotaur:     No
 Leveling Curve:                  Double And Half
 Logic:                           Standard
 Map Shuffle:                     None
+Map Shuffle Seed:                random
 Progressive Formations:          Disabled
 Progressive Gear:                No
 Shattered Sky Coin:              Mid 24
 Shuffle Battlefield Rewards:     No
-Shuffle Enemies' Positions:      No
+Shuffle Enemies' Positions:      Yes
 Shuffle Resistance/Weakness Types:No
 Sky Coin Mode:                   Standard
 Starting Companion:              None
-Starting Weapon:                 Steel Sword
+Starting Weapon:                 Bomb
 Tweak Frustrating Dungeons:      No
 
 

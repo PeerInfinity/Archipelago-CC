@@ -48,7 +48,7 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     # Navigation
     md_content += "[<- Back to Test Results Summary](./test-results-summary.md)\n\n"
 
-    md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
+    md_content += "[📖 Learn about this test](../tests/test-multiworld-ut-fuzz.md)\n\n"
 
     # Metadata
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -68,39 +68,51 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "## Summary\n\n"
 
     total_tested = len(test_results)
-    passed_count = sum(1 for r in test_results.values() if r.get('status') == 'passed')
-    failed_count = sum(1 for r in test_results.values() if r.get('status') == 'failed')
-    pending_count = sum(1 for r in test_results.values() if r.get('status') == 'pending')
-    error_count = sum(1 for r in test_results.values() if r.get('status') == 'error')
+
+    # Count statuses, but also check for all-generation-failures case
+    passed_count = 0
+    failed_count = 0
+    pending_count = 0
+    error_count = 0
+    all_gen_failed_count = 0
+
+    for r in test_results.values():
+        status = r.get('status', 'unknown')
+        test_result = r.get('test_result', {})
+
+        # Check if all runs were generation failures
+        # This can be indicated by the status or by checking the test_result data
+        total_runs = test_result.get('total', 0)
+        gen_failures = test_result.get('generation_failures', 0)
+        all_gen_failed = (
+            status == 'all_gen_failed' or
+            (total_runs > 0 and gen_failures == total_runs)
+        )
+
+        if all_gen_failed:
+            all_gen_failed_count += 1
+        elif status == 'passed':
+            passed_count += 1
+        elif status == 'failed':
+            failed_count += 1
+        elif status == 'pending':
+            pending_count += 1
+        elif status == 'error':
+            error_count += 1
+
     second_pass_count = sum(1 for r in test_results.values() if r.get('second_pass'))
 
     md_content += f"- **Total Games Tested:** {total_tested}\n"
-    md_content += f"- **Games in Final Multiworld:** {len(final_multiworld)}\n"
     md_content += f"- **Games Passed:** {passed_count}\n"
     md_content += f"- **Games Failed:** {failed_count}\n"
+    if all_gen_failed_count > 0:
+        md_content += f"- **Games with All Generations Failed:** {all_gen_failed_count}\n"
     md_content += f"- **Games Pending (< 2 players):** {pending_count}\n"
     if error_count > 0:
         md_content += f"- **Games with Errors:** {error_count}\n"
     if second_pass_count > 0:
         md_content += f"- **Games Tested in Second Pass:** {second_pass_count}\n"
     md_content += f"- **Rejected Games:** {len(rejected_games)}\n\n"
-
-    # Final Multiworld Composition
-    if final_multiworld:
-        md_content += "## Final Multiworld Composition\n\n"
-        md_content += f"The following {len(final_multiworld)} games successfully integrate into a multiworld:\n\n"
-        md_content += "| # | World Directory | Game Name |\n"
-        md_content += "|:-:|-----------------|----------|\n"
-
-        for i, world_dir in enumerate(final_multiworld, 1):
-            # Find game name from results
-            game_name = world_dir
-            for template, data in test_results.items():
-                if data.get('world_dir') == world_dir:
-                    game_name = data.get('game', world_dir)
-                    break
-            md_content += f"| {i} | {world_dir} | {game_name} |\n"
-        md_content += "\n"
 
     # Test Results Table
     md_content += "## Test Results\n\n"
@@ -128,8 +140,19 @@ def generate_markdown(results: Dict[str, Any]) -> str:
             test_result = data.get('test_result', {})
             tested_in_second_pass = False
 
+        # Check if all runs were generation failures
+        # This can be indicated by the status or by checking the test_result data
+        total_runs = test_result.get('total', 0)
+        gen_failures = test_result.get('generation_failures', 0)
+        all_gen_failed = (
+            status == 'all_gen_failed' or
+            (total_runs > 0 and gen_failures == total_runs)
+        )
+
         # Status display
-        if status == 'passed':
+        if all_gen_failed:
+            status_display = "🔴 All Gen Failed"
+        elif status == 'passed':
             status_display = "✅ Passed"
             if tested_in_second_pass:
                 status_display += " (2nd)"
@@ -148,19 +171,45 @@ def generate_markdown(results: Dict[str, Any]) -> str:
         if test_result and test_result.get('total', 0) > 0:
             total = test_result['total']
             success = test_result.get('success', 0)
-            rate = (success / total) * 100
-            if rate == 100:
-                rate_display = f"**{rate:.0f}%** ({success}/{total})"
-            elif rate >= 50:
-                rate_display = f"⚠️ {rate:.0f}% ({success}/{total})"
+            gen_fail = test_result.get('generation_failures', 0)
+
+            if all_gen_failed:
+                rate_display = f"🔴 0% (0/{total}, {gen_fail} gen fail)"
+            elif gen_fail > 0:
+                # Some generation failures
+                rate = (success / total) * 100
+                rate_display = f"{rate:.0f}% ({success}/{total}, {gen_fail} gen fail)"
             else:
-                rate_display = f"❌ {rate:.0f}% ({success}/{total})"
+                rate = (success / total) * 100
+                if rate == 100:
+                    rate_display = f"**{rate:.0f}%** ({success}/{total})"
+                elif rate >= 50:
+                    rate_display = f"⚠️ {rate:.0f}% ({success}/{total})"
+                else:
+                    rate_display = f"❌ {rate:.0f}% ({success}/{total})"
         elif status == 'pending':
             rate_display = "N/A"
         else:
             rate_display = "N/A"
 
         md_content += f"| {game_name} | {world_dir} | {player_num} | {mw_size} | {status_display} | {rate_display} |\n"
+
+    # Successfully Integrated Games
+    if assembly_order:
+        md_content += "\n## Successfully Integrated Games\n\n"
+        md_content += f"The following {len(assembly_order)} games successfully integrate into a multiworld:\n\n"
+        md_content += "| # | World Directory | Game Name |\n"
+        md_content += "|:-:|-----------------|----------|\n"
+
+        for i, world_dir in enumerate(assembly_order, 1):
+            # Find game name from results
+            game_name = world_dir
+            for template, data in test_results.items():
+                if data.get('world_dir') == world_dir:
+                    game_name = data.get('game', world_dir)
+                    break
+            md_content += f"| {i} | {world_dir} | {game_name} |\n"
+        md_content += "\n"
 
     # Rejected Games
     if rejected_games:
@@ -229,8 +278,9 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "- **Status:**\n"
     md_content += "  - ✅ Passed: All test runs succeeded\n"
     md_content += "  - ✅ Passed (2nd): Passed in second pass (tested with full multiworld)\n"
-    md_content += "  - ❌ Failed: One or more test runs failed, game was removed from multiworld\n"
+    md_content += "  - ❌ Failed: One or more validation failures (generation succeeded but validation failed)\n"
     md_content += "  - ❌ Failed (2nd): Failed in second pass\n"
+    md_content += "  - 🔴 All Gen Failed: All generation attempts failed (could not generate multiworld)\n"
     md_content += "  - ⏳ Pending: Game added but not tested yet (need 2+ players)\n"
     md_content += "  - ⚠️ Error: Infrastructure error during testing\n"
     md_content += "- **Success Rate:** Percentage of test runs that passed\n\n"
@@ -240,11 +290,11 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "1. Games are added one-by-one to a growing multiworld\n"
     md_content += "2. Each game uses randomly generated options (via fuzz.py)\n"
     md_content += "3. After adding a game, the full multiworld is generated multiple times\n"
-    md_content += "4. Each player in the multiworld is validated using Universal Tracker\n"
-    md_content += "5. If validation fails, the game is removed from the multiworld\n"
+    md_content += "4. Each player's victory condition is validated (can the game be completed?)\n"
+    md_content += "5. If a player's victory condition fails, the game is removed from the multiworld\n"
     md_content += "6. **Second Pass:** Games added when there were fewer than 2 players are retested with the full multiworld\n\n"
     md_content += "This test catches issues where certain game combinations or option combinations "
-    md_content += "cause problems in multiworld generation or UT validation.\n"
+    md_content += "cause problems in multiworld generation or sphere validation.\n"
 
     return md_content
 

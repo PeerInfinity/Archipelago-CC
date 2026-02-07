@@ -89,7 +89,7 @@ def mario_zone_4_boss(state: "CollectionState", player: int) -> bool:
 
 
 def marios_castle_wario(state: "CollectionState", player: int) -> bool:
-    return ((has_pipe_right(state, player)) and (has_pipe_left(state, player))) or (state.has("Mario's Castle Midway Bell", player))
+    return (has_pipe_right(state, player)) and ((has_pipe_left(state, player)) or (state.has("Mario's Castle Midway Bell", player)))
 
 
 def not_blocked_by_sharks(state: "CollectionState", player: int) -> bool:
@@ -266,23 +266,31 @@ def tree_zone_3_coins(state: "CollectionState", player: int, coins = None) -> bo
 
 def tree_zone_4_coins(state: "CollectionState", player: int, coins = None) -> bool:
     auto_scroll = is_auto_scroll(state, player, 'Tree Zone 4')
-    reachable_coins = 0
+    reachable_coins_from_start = 0
+    reachable_coins_from_bell = 0
     if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
-        reachable_coins += 14
+        reachable_coins_from_start += 14
         if state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player):
-            reachable_coins += 4
+            reachable_coins_from_start += 4
             if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
                 if auto_scroll:
-                    reachable_coins += 12
+                    reachable_coins_from_start += 12
                 else:
-                    reachable_coins += 56
+                    reachable_coins_from_start += 56
     if state.has('Tree Zone 4 Midway Bell', player):
-        bell_coins = 10
-        if not (auto_scroll):
-            bell_coins += 46
-        if (bell_coins > reachable_coins):
-            reachable_coins = bell_coins
-    return (coins <= reachable_coins)
+        if (state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player)) and ((auto_scroll) or (not (state.has_any(['Pipe Traversal - Left', 'Pipe Traversal'], player)))):
+            reachable_coins_from_bell += 10
+        else:
+            if (state.has_any(['Pipe Traversal - Left', 'Pipe Traversal'], player)) and (not (auto_scroll)):
+                if state.has_any(['Pipe Traversal - Down', 'Pipe Traversal'], player):
+                    reachable_coins_from_bell += 31
+                    if state.has_any(['Pipe Traversal - Right', 'Pipe Traversal'], player):
+                        reachable_coins_from_bell += 18
+                        if state.has_any(['Pipe Traversal - Up', 'Pipe Traversal'], player):
+                            reachable_coins_from_bell += 25
+                else:
+                    reachable_coins_from_bell += 18
+    return (coins <= max(reachable_coins_from_start, reachable_coins_from_bell))
 
 
 def tree_zone_5_coins(state: "CollectionState", player: int, coins = None) -> bool:

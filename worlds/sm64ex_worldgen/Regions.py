@@ -18,7 +18,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Menu", "Bob-omb Battlefield", "BoB: Island", "Whomp's Fortress", "WF: Tower", "Jolly Roger Bay", "JRB: Upper", "Cool, Cool Mountain", "Big Boo's Haunt", "BBH: Third Floor", "BBH: Roof", "The Princess's Secret Slide", "The Secret Aquarium", "Tower of the Wing Cap", "Bowser in the Dark World", "Basement", "Hazy Maze Cave", "HMC: Red Coin Area", "HMC: Pit Islands", "Lethal Lava Land", "LLL: Upper Volcano", "Shifting Sand Land", "SSL: Upper Pyramid", "Dire, Dire Docks", "Cavern of the Metal Cap", "Vanish Cap under the Moat", "Bowser in the Fire Sea", "BitFS: Upper", "Second Floor", "Snowman's Land", "Wet-Dry World", "WDW: Top", "WDW: Downtown", "Tall, Tall Mountain", "TTM: Middle", "TTM: Top", "Tiny-Huge Island (Huge)", "Tiny-Huge Island (Tiny)", "Tiny-Huge Island", "THI: Pipes", "THI: Large Top", "Third Floor", "Tick Tock Clock", "TTC: Lower", "TTC: Upper", "TTC: Top", "Rainbow Ride", "RR: Maze", "RR: Cruiser", "RR: House", "Wing Mario over the Rainbow", "Bowser in the Sky", "BitS: Top"]
+    region_names = ["Menu", "Bob-omb Battlefield", "BoB: Island", "Whomp's Fortress", "WF: Tower", "Jolly Roger Bay Door", "Jolly Roger Bay", "JRB: Upper", "Cool, Cool Mountain", "Big Boo's Haunt", "BBH: Third Floor", "BBH: Roof", "The Princess's Secret Slide", "The Secret Aquarium", "Tower of the Wing Cap", "Bowser in the Dark World", "Basement", "Hazy Maze Cave", "HMC: Red Coin Area", "HMC: Pit Islands", "Lethal Lava Land", "LLL: Upper Volcano", "Shifting Sand Land", "SSL: Upper Pyramid", "Dire, Dire Docks", "Cavern of the Metal Cap", "Vanish Cap under the Moat", "Bowser in the Fire Sea", "BitFS: Upper", "Second Floor", "Snowman's Land", "Wet-Dry World", "WDW: Top", "WDW: Downtown", "Tall, Tall Mountain", "TTM: Middle", "TTM: Top", "Tiny-Huge Island (Huge)", "Tiny-Huge Island (Tiny)", "Tiny-Huge Island", "THI: Pipes", "THI: Large Top", "Third Floor", "Tick Tock Clock", "TTC: Lower", "TTC: Upper", "TTC: Top", "Rainbow Ride", "RR: Maze", "RR: Cruiser", "RR: House", "Wing Mario over the Rainbow", "Bowser in the Sky", "BitS: Top"]
 
     regions = {}
     for region_name in region_names:
@@ -58,7 +58,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create entrances
     _create_entrance(regions["Menu"], regions["Bob-omb Battlefield"], "Menu -> Bob-omb Battlefield")
     _create_entrance(regions["Menu"], regions["Whomp's Fortress"], "Menu -> Whomp's Fortress")
-    _create_entrance(regions["Menu"], regions["Jolly Roger Bay"], "Menu -> Jolly Roger Bay")
+    _create_entrance(regions["Menu"], regions["Jolly Roger Bay Door"], "Menu -> Jolly Roger Bay Door")
     _create_entrance(regions["Menu"], regions["Cool, Cool Mountain"], "Menu -> Cool, Cool Mountain")
     _create_entrance(regions["Menu"], regions["Big Boo's Haunt"], "Menu -> Big Boo's Haunt")
     _create_entrance(regions["Menu"], regions["The Princess's Secret Slide"], "Menu -> The Princess's Secret Slide")
@@ -68,8 +68,9 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Menu"], regions["Second Floor"], "Menu -> Second Floor")
     _create_entrance(regions["Bob-omb Battlefield"], regions["BoB: Island"], "BoB: Island")
     _create_entrance(regions["Whomp's Fortress"], regions["WF: Tower"], "WF: Tower")
+    _create_entrance(regions["Jolly Roger Bay Door"], regions["Jolly Roger Bay"], "Jolly Roger Bay Door -> Jolly Roger Bay")
+    _create_entrance(regions["Jolly Roger Bay Door"], regions["The Secret Aquarium"], "Jolly Roger Bay Door -> The Secret Aquarium")
     _create_entrance(regions["Jolly Roger Bay"], regions["JRB: Upper"], "JRB: Upper")
-    _create_entrance(regions["Jolly Roger Bay"], regions["The Secret Aquarium"], "Jolly Roger Bay -> The Secret Aquarium")
     _create_entrance(regions["Big Boo's Haunt"], regions["BBH: Third Floor"], "BBH: Third Floor")
     _create_entrance(regions["BBH: Third Floor"], regions["BBH: Roof"], "BBH: Roof")
     _create_entrance(regions["Basement"], regions["Hazy Maze Cave"], "Basement -> Hazy Maze Cave")

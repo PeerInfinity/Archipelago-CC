@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Terraria WorldGen",
   "game_directory": "terraria_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -10077,8 +10077,8 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Twins": "The Twins",
         "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Twins": "The Twins",
         "Post-The Destroyer": "The Destroyer"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",

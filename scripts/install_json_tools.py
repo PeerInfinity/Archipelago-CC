@@ -66,8 +66,8 @@ STABLE_BRANCH = "JSONExport"
 DEV_REPO = "PeerInfinity/Archipelago-CC"
 DEV_BRANCH = "main"
 
-# Expected failures file path (relative to project root)
-EXPECTED_FAILURES_DOC = "docs/json/developer/test-results/test-results-ut-fuzz-modified.md"
+# Tracking mode config path (relative to project root)
+TRACKING_MODE_CONFIG = "exporter/tracking-mode-config.json"
 
 # Default target directory
 DEFAULT_TARGET_DIR = "archipelago-json-tools"
@@ -516,51 +516,64 @@ def run_fuzzer_test(target_dir: Path, dry_run: bool = False) -> Optional[dict]:
     return {"success": success}
 
 
-def parse_expected_failures(doc_path: Path) -> set:
-    """Parse the expected failures documentation to get the list of excluded games."""
-    excluded_games = set()
+def load_expected_failures_from_config(config_path: Path, ut_mode: str = "worldgen") -> set:
+    """Load expected failures from tracking-mode-config.json.
 
-    if not doc_path.exists():
-        print(f"  [WARN] Expected failures doc not found: {doc_path}")
-        return excluded_games
+    For regular modes (worldgen, pickle, original):
+        A game is expected to fail if that mode is NOT in its list of passing modes.
+
+    For hybrid mode:
+        A game is expected to fail only if it has NO passing modes (empty list).
+
+    Args:
+        config_path: Path to tracking-mode-config.json
+        ut_mode: The UT mode to check ('worldgen', 'pickle', 'original', 'hybrid')
+
+    Returns:
+        Set of template filenames expected to fail the given mode.
+    """
+    expected_failures = set()
+
+    if not config_path.exists():
+        print(f"  [WARN] Tracking mode config not found: {config_path}")
+        return expected_failures
 
     try:
-        content = doc_path.read_text()
+        import json
+        with open(config_path, 'r') as f:
+            config = json.load(f)
 
-        # Look for the "Excluded Templates" section
-        in_excluded_section = False
-        for line in content.split('\n'):
-            if '## Excluded Templates' in line:
-                in_excluded_section = True
-                continue
+        game_results = config.get('game_results', {})
 
-            if in_excluded_section:
-                # Stop at next section
-                if line.startswith('## ') or line.startswith('### '):
-                    if 'Unexpected' not in line:
-                        break
+        # Check both bundled and apworlds categories
+        for category in ['bundled', 'apworlds']:
+            category_results = game_results.get(category, {})
+            for game_name, passing_modes in category_results.items():
+                # Determine if this game is expected to fail
+                if ut_mode == 'hybrid':
+                    # For hybrid mode, expect failure only if NO modes pass
+                    is_expected_failure = len(passing_modes) == 0
+                else:
+                    # For specific modes, expect failure if that mode is not in passing list
+                    is_expected_failure = ut_mode not in passing_modes
 
-                # Parse table rows like: | Template Name.yaml | Reason |
-                if line.startswith('|') and '.yaml' in line:
-                    parts = line.split('|')
-                    if len(parts) >= 2:
-                        template = parts[1].strip()
-                        if template and not template.startswith('-'):
-                            excluded_games.add(template)
+                if is_expected_failure:
+                    expected_failures.add(f"{game_name}.yaml")
 
-        return excluded_games
+        return expected_failures
 
     except Exception as e:
-        print(f"  [WARN] Could not parse expected failures: {e}")
-        return excluded_games
+        print(f"  [WARN] Could not load tracking mode config: {e}")
+        return expected_failures
 
 
 def compare_results(
     target_dir: Path,
     test_results: Optional[dict],
     dry_run: bool = False,
+    ut_mode: str = "worldgen",
 ) -> bool:
-    """Compare test results to expected failures."""
+    """Compare test results to expected failures from tracking-mode-config.json."""
     print_header("Comparing Results to Expected Failures")
 
     if dry_run:
@@ -571,10 +584,10 @@ def compare_results(
         print("  [WARN] No test results available for comparison")
         return False
 
-    expected_failures_path = target_dir / EXPECTED_FAILURES_DOC
-    expected_excluded = parse_expected_failures(expected_failures_path)
+    config_path = target_dir / TRACKING_MODE_CONFIG
+    expected_excluded = load_expected_failures_from_config(config_path, ut_mode)
 
-    print(f"  Expected excluded templates: {len(expected_excluded)}")
+    print(f"  Expected failures for {ut_mode} mode: {len(expected_excluded)}")
 
     # Get actual failures from results
     actual_failures = set()

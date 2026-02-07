@@ -209,7 +209,10 @@ async function fetchJson(url, errorMessage) {
   const fileName = url.split('/').pop() || url;
 
   try {
-    const response = await fetch(url);
+    // Use cache: 'reload' to validate with server (allows 304 Not Modified)
+    // Use cache: 'no-store' when ?nocache=1 is in URL (completely bypasses cache for testing)
+    const noCache = new URLSearchParams(window.location.search).has('nocache');
+    const response = await fetch(url, { cache: noCache ? 'no-store' : 'reload' });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
