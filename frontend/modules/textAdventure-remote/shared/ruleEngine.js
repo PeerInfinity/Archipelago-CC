@@ -2433,6 +2433,71 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           }
         }
 
+        // Special handling for true.method(...) calls (state method placeholder pattern)
+        // In exported Python rules, state.has(...) becomes true.has(...) where true
+        // is used as a placeholder for the state/context object.
+        // Common state methods: has, count, can_reach, etc.
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'constant' &&
+          rule.function.object.value === true
+        ) {
+          const methodName = rule.function.attr;
+          const methodArgs = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
+          );
+
+          // Map method names to context methods
+          switch (methodName) {
+            case 'has':
+              // state.has(item) -> context.hasItem(item)
+              if (typeof context.hasItem === 'function') {
+                result = context.hasItem(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'item_check', item: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'count':
+              // state.count(item) -> context.countItem(item)
+              if (typeof context.countItem === 'function') {
+                result = context.countItem(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'count_item', item: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'can_reach':
+              // state.can_reach(region) -> context.canReach(region)
+              if (typeof context.canReach === 'function') {
+                result = context.canReach(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'can_reach', region: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'has_group':
+              // state.has_group(group, count) -> context.hasGroup(group, count)
+              if (typeof context.hasGroup === 'function') {
+                result = context.hasGroup(methodArgs[0], methodArgs[1] || 1);
+              } else {
+                result = evaluateRule({ type: 'group_check', group: methodArgs[0], count: methodArgs[1] || 1 }, context, depth + 1, localScope);
+              }
+              break;
+            default:
+              // Try as a helper function
+              if (typeof context.executeHelper === 'function') {
+                try {
+                  result = context.executeHelper(methodName, ...methodArgs);
+                } catch (error) {
+                  log('warn', `[evaluateRule] State method '${methodName}' not recognized, trying as helper`);
+                  result = undefined;
+                }
+              } else {
+                log('warn', `[evaluateRule] Unknown state method: ${methodName}`);
+                result = undefined;
+              }
+          }
+          break;
+        }
+
         // Special handling for dict.get(key, default) pattern
         // Python dicts have a .get() method, but JavaScript plain objects don't
         // This converts obj.get(key, default) to obj[key] ?? default
@@ -6680,11 +6745,20 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       let total = 0;
       let hasUndefined = false;
 
-      for (const pair of items) {
-        if (!Array.isArray(pair) || pair.length < 2) continue;
-
-        const [itemName, weight] = pair;
-        if (typeof itemName !== 'string' || typeof weight !== 'number') continue;
+      for (const item of items) {
+        // Handle both formats:
+        // 1. [itemName, weight] pairs (weighted format)
+        // 2. Simple string item names (implicit weight of 1)
+        let itemName, weight;
+        if (Array.isArray(item) && item.length >= 2) {
+          [itemName, weight] = item;
+          if (typeof itemName !== 'string' || typeof weight !== 'number') continue;
+        } else if (typeof item === 'string') {
+          itemName = item;
+          weight = 1; // Default weight for simple string format
+        } else {
+          continue;
+        }
 
         // Get count of this item from context
         let itemCount;
