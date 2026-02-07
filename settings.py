@@ -23,7 +23,6 @@ __all__ = [
 ]
 
 no_gui = False
-skip_required_files = False
 skip_autosave = False
 _world_settings_name_cache: dict[str, str] = {}  # TODO: cache on disk and update when worlds change
 _world_settings_name_cache_updated = False
@@ -90,12 +89,6 @@ class Group:
             if attr.required and not attr.exists() and not super().__getattribute__("_has_attr"):
                 # if a file is required, and the one from settings does not exist, ask the user to provide it
                 # unless we are dumping the settings, because that would ask for each entry
-                # or skip_required_files is True
-                if skip_required_files:
-                    import warnings
-                    warnings.warn(f"{attr} does not exist, but {self.__class__.__name__}.{item} is required. "
-                                  f"Continuing anyway as skip_required_files is set.")
-                    return attr
                 with _lock:  # lock to avoid opening multiple
                     new = None if no_gui else attr.browse()
                     if new is None:
@@ -525,23 +518,6 @@ class GeneralOptions(Group):
         # created on demand, so marked as optional
 
     output_path: OutputPath = OutputPath("output")
-    skip_required_files: bool = False
-    save_rules_json: bool = False
-    rules_json_format: str = "rule_builder"  # Options: "rule_builder", "ast", "both"
-    save_tracker_pickle: bool = False  # Export multiworld as pickle for tracker (alternative to rules_json)
-    skip_preset_copy_if_rules_identical: bool = False
-    save_sphere_log: bool = False
-    verbose_sphere_log: bool = False
-    extend_sphere_log_to_all_locations: bool = False
-    log_fractional_sphere_details: bool = True
-    log_integer_sphere_details: bool = False
-    auto_collect_events: bool = False  # Auto-collect event items when locations become accessible
-    filter_event_items: bool = False  # Filter out event locations/items from sphere log output (matches UT behavior)
-    update_frontend_presets: bool = False
-    clear_game_presets: bool = False  # Delete all existing presets for the current game before generating new ones
-    clear_all_presets: bool = False  # Delete all existing presets for ALL games before generating new ones
-    resolve_options_to_constants: bool = True  # Resolve world.options.X.value to constants at export time (default: True)
-    use_tracking_mode_config: bool = False  # Use tracking-mode-config.json for per-game export decisions
 
 
 class ServerOptions(Group):
@@ -924,9 +900,4 @@ def get_settings() -> Settings:
                 res = Settings(None)
                 res.save(user_path(filenames[1]))
             setattr(get_settings, "_cache", res)
-
-            # Update the global variable after loading/creating settings
-            global skip_required_files
-            skip_required_files = res.general_options.skip_required_files
-            
         return res
