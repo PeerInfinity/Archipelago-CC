@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Pickle
 
-**Generated:** 2026-02-07 03:33:12
+**Generated:** 2026-02-07 03:42:39
 
 **Source Data Last Updated:** 2026-01-26T04:45:29
 
@@ -17,13 +17,13 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 ## Summary
 
-- **Total Games Tested:** 85
-- **Passing Both:** 37 (43.5%)
-- **Passing Original Only:** 1 (1.2%)
-- **Passing Pickle Only:** 38 (44.7%)
-- **Passing Neither:** 9 (10.6%)
-- **Passing Pickle with no custom code:** 43 (50.6%)
-- **Passing Pickle Only with no custom code:** 16 (18.8%)
+- **Total Games Tested:** 87
+- **Passing Both:** 37 (42.5%)
+- **Passing Original Only:** 1 (1.1%)
+- **Passing Pickle Only:** 39 (44.8%)
+- **Passing Neither:** 10 (11.5%)
+- **Passing Pickle with no custom code:** 42 (48.3%)
+- **Passing Pickle Only with no custom code:** 15 (17.2%)
 
 ## Full Comparison
 
@@ -52,17 +52,18 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ⚠️ 52.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0.0% | ✅ 100.0% | 8.8KB | ✅ | 295.0KB |
+| EarthBound | N/A | ✅ 100.0% | N/A | N/A | N/A |
+| Factorio | ❌ 0.0% | ❌ 0.0% | 8.8KB | ✅ | 295.0KB |
 | Faxanadu | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ 1.0% | ⚠️ 70.0% | 13.4KB | ✅ | 549.5KB |
+| Final Fantasy Mystic Quest | ❌ 1.0% | ✅ 80.0% | 13.4KB | ✅ | 549.5KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 11.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 101.9KB |
 | Inscryption | ✅ 100.0% | ✅ 100.0% | 8.0KB | ✅ | 84.2KB |
 | Jak and Daxter: The Precursor Legacy | ⚠️ 62.0% | ✅ 100.0% | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ❌ 18.0% | ✅ 100.0% | ✅ | ✅ | 753.6KB |
-| Kingdom Hearts 2 | ❌ 37.0% | ❌ 10.0% | 19.5KB | ✅ | 1641.1KB |
+| Kingdom Hearts 2 | ❌ 37.0% | ❌ 0.0% | 19.5KB | ✅ | 1641.1KB |
 | Kirby's Dream Land 3 | ❌ 3.0% | ✅ 100.0% | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ❌ 20.0% | ✅ 100.0% | 3.6KB | ✅ | 210.5KB |
 | Lingo | ❌ 21.0% | ✅ 30.0% | 38.0KB | 10.7KB | 946.3KB |
@@ -85,24 +86,25 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Raft | ✅ 100.0% | ✅ 100.0% | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 1.0% | ✅ 100.0% | 61.4KB | 51.3KB | 1044.7KB |
+| Satisfactory | N/A | ❌ 0.0% | N/A | N/A | N/A |
 | Saving Princess | ❌ 28.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ 100.0% | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ❌ 0.0% | ⚠️ 90.0% | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ❌ 8.0% | ✅ 100.0% | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0.0% | ❌ 0.0% | 28.7KB | 90.1KB | 1126.8KB |
-| Stardew Valley | ❌ 4.0% | ⚠️ 80.0% | 18.8KB | 8.0KB | 2430.2KB |
+| Stardew Valley | ❌ 4.0% | ❌ 0.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ❌ 10.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Super Mario 64 | ❌ 29.0% | ✅ 100.0% | ✅ | ✅ | 93.2KB |
+| Super Mario 64 | ❌ 29.0% | ❌ 0.0% | ✅ | ✅ | 93.2KB |
 | Super Mario Land 2 | ❌ 10.0% | ✅ 100.0% | 96.3KB | ✅ | 982.7KB |
 | Super Mario World | ⚠️ 54.0% | ✅ 90.0% | ✅ | ✅ | 178.2KB |
-| Super Metroid | ❌ 1.0% | ⚠️ 60.0% | 60.9KB | 114.5KB | 625.4KB |
+| Super Metroid | ❌ 1.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.4KB |
 | TOEM original | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 102.8KB |
 | TUNIC | ✅ 100.0% | ✅ 100.0% | 3.1KB | ✅ | 653.3KB |
 | Terraria | ⚠️ 98.0% | ✅ 90.0% | 16.8KB | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 555.3KB |
-| The Messenger | ❌ 2.0% | ⚠️ 80.0% | 15.2KB | ✅ | 211.8KB |
+| The Messenger | ❌ 2.0% | ✅ 100.0% | 15.2KB | ✅ | 211.8KB |
 | The Wind Waker | ❌ 3.0% | ✅ 50.0% | 7.0KB | ✅ | 253.9KB |
 | The Witness | ✅ 100.0% | ✅ 100.0% | 14.1KB | ✅ | 398.4KB |
 | Timespinner | ❌ 5.0% | ✅ 100.0% | 2.2KB | ✅ | 267.3KB |
@@ -112,7 +114,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Yacht Dice | ❌ 5.0% | ✅ 100.0% | 0.9KB | 285.0KB | 249.5KB |
 | Yoshi's Island | ❌ 22.0% | ✅ 100.0% | 9.2KB | ✅ | 296.7KB |
 | Yu-Gi-Oh! 2006 | ❌ 33.0% | ✅ 100.0% | 1.3KB | 21.4KB | 628.0KB |
-| Zillion | ❌ 0.0% | ⚠️ 80.0% | ✅ | ✅ | N/A |
+| Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ 42.0% | ✅ 100.0% | ✅ | ✅ | 155.3KB |
 
 ## Games Passing Both (37)
@@ -167,7 +169,7 @@ These games pass in the Original UT but fail in the Pickle UT.
 |-----------|:--------:|:---------:|:----------:|
 | Secret of Evermore | 5.3KB | 7.5KB | 418.7KB |
 
-## Games Passing Pickle Only (38)
+## Games Passing Pickle Only (39)
 
 These games pass in the Pickle UT but fail in the Original UT.
 
@@ -180,8 +182,9 @@ These games pass in the Pickle UT but fail in the Original UT.
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
 | DLCQuest | 1.2KB | ✅ | 51.0KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
-| Factorio | 8.8KB | ✅ | 295.0KB |
+| EarthBound | N/A | N/A | N/A |
 | Faxanadu | ✅ | ✅ | 68.7KB |
+| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ✅ | ✅ | 753.6KB |
@@ -200,10 +203,10 @@ These games pass in the Pickle UT but fail in the Original UT.
 | Saving Princess | ✅ | ✅ | 33.8KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 266.2KB |
 | Subnautica | 2.2KB | ✅ | 207.8KB |
-| Super Mario 64 | ✅ | ✅ | 93.2KB |
 | Super Mario Land 2 | 96.3KB | ✅ | 982.7KB |
 | Super Mario World | ✅ | ✅ | 178.2KB |
 | Terraria | 16.8KB | ✅ | 283.0KB |
+| The Messenger | 15.2KB | ✅ | 211.8KB |
 | The Wind Waker | 7.0KB | ✅ | 253.9KB |
 | Timespinner | 2.2KB | ✅ | 267.3KB |
 | VVVVVV | 3.8KB | ✅ | 22.8KB |
@@ -212,20 +215,21 @@ These games pass in the Pickle UT but fail in the Original UT.
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
 | shapez | ✅ | ✅ | 155.3KB |
 
-## Games Passing Neither (9)
+## Games Passing Neither (10)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
+| Factorio | 8.8KB | ✅ | 295.0KB |
 | Kingdom Hearts 2 | 19.5KB | ✅ | 1641.1KB |
 | Ocarina of Time | ✅ | ✅ | N/A |
+| Satisfactory | N/A | N/A | N/A |
 | Shivers | ✅ | ✅ | 151.3KB |
 | Starcraft 2 | 28.7KB | 90.1KB | 1126.8KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
+| Super Mario 64 | ✅ | ✅ | 93.2KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
-| The Messenger | 15.2KB | ✅ | 211.8KB |
 | Zillion | ✅ | ✅ | N/A |
 
 ## Notes
