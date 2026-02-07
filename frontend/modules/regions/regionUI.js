@@ -64,6 +64,8 @@ export class RegionUI {
     this.discoverySettings = {
       undiscoveredDisplay: 'hidden',
       clickDiscoversLocation: true,
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
       showUndiscoveredDetails: false
     };
 
@@ -1054,6 +1056,12 @@ export class RegionUI {
       );
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
         'moduleSettings.discovery.clickDiscoversLocation', true
+      );
+      this.discoverySettings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false
+      );
+      this.discoverySettings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false
       );
       this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredDetails', false

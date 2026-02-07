@@ -2,6 +2,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -53,26 +54,40 @@ export class NavigationManager {
         const regionName = node.id();
         const count = this.ui.regionPathCounts.get(regionName) || 0;
 
-        // Update the label to include count if region is in path
-        const staticData = stateManager.getStaticData();
-        const regionData = staticData?.regions?.[regionName];
-        const baseText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
-
-        if (count > 0) {
-          node.data('label', `${baseText} (${count})`);
-          node.addClass('in-path');
-
-          // Add different classes based on count for visual distinction
-          if (count === 1) {
-            node.removeClass('path-multiple');
-            node.addClass('path-single');
+        // In discovery mode, undiscovered regions show ??? or name depending on setting
+        const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+        const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
+        if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
+          if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
+            const staticData = stateManager.getStaticData();
+            const regionData = staticData?.regions?.[regionName];
+            node.data('label', regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' '));
           } else {
-            node.removeClass('path-single');
-            node.addClass('path-multiple');
+            node.data('label', '???');
           }
-        } else {
-          node.data('label', baseText);
           node.removeClass('in-path path-single path-multiple');
+        } else {
+          // Update the label to include count if region is in path
+          const staticData = stateManager.getStaticData();
+          const regionData = staticData?.regions?.[regionName];
+          const baseText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
+
+          if (count > 0) {
+            node.data('label', `${baseText} (${count})`);
+            node.addClass('in-path');
+
+            // Add different classes based on count for visual distinction
+            if (count === 1) {
+              node.removeClass('path-multiple');
+              node.addClass('path-single');
+            } else {
+              node.removeClass('path-single');
+              node.addClass('path-multiple');
+            }
+          } else {
+            node.data('label', baseText);
+            node.removeClass('in-path path-single path-multiple');
+          }
         }
       });
 

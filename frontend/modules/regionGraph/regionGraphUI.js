@@ -26,6 +26,7 @@ export class RegionGraphUI {
     this.selectedNode = null;
     this.nodePositions = new Map();
     this.isLayoutRunning = false;
+    this.layoutGeneration = 0;
     this.pathFinder = new PathFinder(stateManager);
     this.dataManager = new GraphDataManager(this);
     this.interactionManager = new GraphInteractionManager(this);
@@ -65,7 +66,10 @@ export class RegionGraphUI {
     this.discoverySettings = {
       undiscoveredDisplay: 'hidden',
       clickDiscoversLocation: true,
-      showUndiscoveredDetails: false
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
+      showUndiscoveredDetails: false,
+      showUndiscoveredRegionNames: false
     };
     
     this.rootElement = document.createElement('div');
@@ -628,16 +632,21 @@ export class RegionGraphUI {
           }
         },
         // Hidden nodes and edges (for discovery mode - preserves layout)
+        // Use visibility:hidden instead of display:none so hidden nodes still
+        // participate in the COSE layout and cy.fit() bounding box calculations.
+        // This prevents the zoom from snapping in to show only visible nodes.
         {
           selector: 'node.discovery-hidden',
           style: {
-            'display': 'none'
+            'visibility': 'hidden',
+            'events': 'no'
           }
         },
         {
           selector: 'edge.discovery-hidden',
           style: {
-            'display': 'none'
+            'visibility': 'hidden',
+            'events': 'no'
           }
         }
       ],
@@ -952,8 +961,15 @@ export class RegionGraphUI {
     if (data && data.settings) {
       this.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
       this.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+      this.discoverySettings.clickDiscoversRegion = data.settings.clickDiscoversRegion ?? false;
+      this.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
       this.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
-      logger.info('Discovery settings updated:', this.discoverySettings);
+      this.discoverySettings.showUndiscoveredRegionNames = data.settings.showUndiscoveredRegionNames ?? false;
+      // Also update discovery mode active state if included
+      if (typeof data.settings.enableDiscoveryMode === 'boolean') {
+        this.isDiscoveryModeActive = data.settings.enableDiscoveryMode;
+      }
+      logger.info('Discovery settings updated:', this.discoverySettings, 'mode active:', this.isDiscoveryModeActive);
       // Rebuild the graph with new settings
       if (this.cy && this.graphInitialized) {
         this.loadGraphData();
@@ -961,14 +977,25 @@ export class RegionGraphUI {
     }
   }
 
-  onDiscoveryChanged() {
+  async onDiscoveryChanged() {
     // Discovery state changed (region/location/exit discovered)
     // Update the graph to show/hide nodes and edges based on new discovery state
     // This uses CSS classes to toggle visibility, preserving the layout
-    if (this.cy && this.graphInitialized && this.isDiscoveryModeActive) {
-      const snapshot = stateManager.getLatestStateSnapshot();
-      if (snapshot) {
-        this.dataManager.onStateUpdate({ snapshot });
+    if (!this.cy || !this.graphInitialized) return;
+
+    // Refresh discovery mode state in case it wasn't set correctly during initialization
+    const wasActive = this.isDiscoveryModeActive;
+    await this.loadDiscoverySettings();
+
+    if (this.isDiscoveryModeActive) {
+      if (!wasActive) {
+        // Discovery mode just became active - full rebuild needed
+        this.loadGraphData();
+      } else {
+        const snapshot = stateManager.getLatestStateSnapshot();
+        if (snapshot) {
+          this.dataManager.onStateUpdate({ snapshot });
+        }
       }
     }
   }
@@ -979,8 +1006,14 @@ export class RegionGraphUI {
         'moduleSettings.discovery.undiscoveredDisplay', 'hidden');
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
         'moduleSettings.discovery.clickDiscoversLocation', true);
+      this.discoverySettings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false);
+      this.discoverySettings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false);
       this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredDetails', false);
+      this.discoverySettings.showUndiscoveredRegionNames = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredRegionNames', false);
 
       // Check if discovery mode is currently enabled
       this.isDiscoveryModeActive = await settingsManager.getSetting(

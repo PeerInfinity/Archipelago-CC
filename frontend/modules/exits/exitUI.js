@@ -347,18 +347,12 @@ export class ExitUI {
 
     log('info', `[ExitUI] Exit clicked: ${exit.name} in ${sourceRegion} -> ${connectedRegion}`);
 
-    // Handle discovery mode: if clickDiscoversLocation is enabled, discover the exit
-    if (this.isDiscoveryModeActive && this.discoverySettings.clickDiscoversLocation) {
-      const isExitDiscovered = discoveryStateSingleton.isExitDiscovered(sourceRegion, exit.name);
-      if (!isExitDiscovered) {
-        log('info', `[ExitUI] Discovering exit via click: ${exit.name} in ${sourceRegion}`);
-        discoveryStateSingleton.discoverExit(sourceRegion, exit.name);
-        // Also discover the source region if not already discovered
-        if (sourceRegion && !discoveryStateSingleton.isRegionDiscovered(sourceRegion)) {
-          discoveryStateSingleton.discoverRegion(sourceRegion);
-        }
-      }
-    }
+    // Publish click event for Discovery module to handle
+    eventBus.publish('ui:exitClicked', {
+      exitName: exit.name,
+      sourceRegion,
+      destinationRegion: connectedRegion
+    }, 'exits');
 
     // Publish via dispatcher - handlers can intercept or let it propagate to the default handler
     import('./index.js').then(({ getExitsModuleDispatcher }) => {

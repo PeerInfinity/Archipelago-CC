@@ -133,6 +133,11 @@ export class DiscoveryState {
         error
       );
     }
+
+    // Notify listeners that discovery state has been initialized
+    if (this.eventBus) {
+      this.eventBus.publish('discovery:changed', {}, 'discovery');
+    }
   }
 
   // --- Discovery Checking Methods ---
