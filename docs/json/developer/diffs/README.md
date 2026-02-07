@@ -12,7 +12,7 @@ Changes to the main Archipelago core files:
 
 These are the most significant changes that affect core Archipelago functionality.
 
-### 2. `config-files.diff` (151 lines)
+### 2. `config-files.diff` (169 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (added permissions)
@@ -75,7 +75,7 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 ## Notes
 
 - These diffs were last updated on 2026-02-06 against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621`
-- Total lines changed across all diffs: 866 lines (194 + 151 + 27 + 494)
+- Total lines changed across all diffs: 884 lines (194 + 169 + 27 + 494)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
