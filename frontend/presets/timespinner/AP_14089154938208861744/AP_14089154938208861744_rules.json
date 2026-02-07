@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Timespinner",
   "game_directory": "timespinner",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -2087,9 +2087,37 @@
             "name": "Main Lab -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "rule": "has_forwarddash_doublejump",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_forwarddash_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 0
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Lab Access Genza"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -2170,7 +2198,26 @@
             "name": "Lab: Trash jump room",
             "id": 1337070,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_doublejump_of_npc",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      },
+                      "_converted_from_ast": true
+                    }
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Max Sand",
@@ -2184,7 +2231,27 @@
             "name": "Lab: Experiment #13",
             "id": 1337073,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      },
+                      "_converted_from_ast": true
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Lab Access Experiment"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Trendy Jacket",
@@ -2198,10 +2265,59 @@
             "name": "Lab: Sentry platform terminal (Origins)",
             "id": 1337167,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Tablet"
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "can_teleport_to",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "Time"
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "GateDadsTower"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 0
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Lab Access Genza"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Tablet"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Silence Ring",
@@ -2255,7 +2371,37 @@
             "name": "Lab: Dynamo Works",
             "id": 1337071,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "has_upwarddash",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Lab Access Dynamo"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      },
+                      "_converted_from_ast": true
+                    }
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Meyef",
@@ -3129,7 +3275,32 @@
             "name": "Forest -> Castle Ramparts",
             "connected_region": "Castle Ramparts",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "has_upwarddash",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Not",
+                  "args": {
+                    "condition": {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      },
+                      "_converted_from_ast": true
+                    }
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Drawbridge Key"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4269,9 +4440,36 @@
             "name": "Castle Keep -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "has_doublejump",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "has_pink",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 0
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -5582,11 +5780,28 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 0
-                  },
-                  "_converted_from_ast": true
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 0
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Not",
+                      "args": {
+                        "condition": {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 0
+                          },
+                          "_converted_from_ast": true
+                        }
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "can_teleport_to",

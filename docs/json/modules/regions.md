@@ -42,7 +42,7 @@ This module does not register any public functions.
 
 #### Dependencies & Interactions
 
-- **StateManager**: The `Regions` module is fundamentally dependent on the `StateManager`. It gets the static region graph from the `staticDataCache` and uses the `createStateSnapshotInterface` to evaluate the rules for all contained exits and locations during each render.
+- **StateManager**: The `Regions` module is fundamentally dependent on the `StateManager`. It gets the static region graph from the `staticDataCache` and uses the `createSnapshotInterface` to evaluate the rules for all contained exits and locations during each render.
 - **Path Analyzer Module**: The `RegionUI` instantiates and directly calls the `PathAnalyzerUI` to render the path analysis results within its own panel.
 - **CommonUI**: It makes extensive use of `commonUI.renderLogicTree` and `commonUI.createRegionLink` to build its display.
 - **Dungeons Module**: It renders links to dungeons, which, when clicked, publish an event to activate and navigate the `Dungeons` panel.

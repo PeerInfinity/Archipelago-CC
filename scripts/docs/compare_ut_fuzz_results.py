@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Compare Universal Tracker fuzz test results between original and modified versions.
+Compare Universal Tracker fuzz test results between original and worldgen versions.
 
 This script compares test results from the original Universal Tracker
-(FarisTheAncient) with the modified version in this repository to identify
+(FarisTheAncient) with the worldgen version in this repository to identify
 improvements and regressions.
 
 Usage:
     python scripts/docs/compare_ut_fuzz_results.py
-    python scripts/docs/compare_ut_fuzz_results.py --original path/to/original.json --modified path/to/modified.json
+    python scripts/docs/compare_ut_fuzz_results.py --original path/to/original.json --worldgen path/to/worldgen.json
 """
 
 import argparse
@@ -62,17 +62,17 @@ def extract_game_results(results: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
     return games
 
 
-def compare_results(original: Dict[str, Dict], modified: Dict[str, Dict]) -> Dict[str, List]:
+def compare_results(original: Dict[str, Dict], worldgen: Dict[str, Dict]) -> Dict[str, List]:
     """
-    Compare original and modified results.
+    Compare original and worldgen results.
 
     Returns dict with:
-        - improved: Games that failed in original but pass in modified
-        - regressed: Games that passed in original but fail in modified
+        - improved: Games that failed in original but pass in worldgen
+        - regressed: Games that passed in original but fail in worldgen
         - both_pass: Games that pass in both
         - both_fail: Games that fail in both
         - only_original: Games only in original results
-        - only_modified: Games only in modified results
+        - only_worldgen: Games only in worldgen results
     """
     comparison = {
         'improved': [],
@@ -80,36 +80,36 @@ def compare_results(original: Dict[str, Dict], modified: Dict[str, Dict]) -> Dic
         'both_pass': [],
         'both_fail': [],
         'only_original': [],
-        'only_modified': []
+        'only_worldgen': []
     }
 
-    all_games = set(original.keys()) | set(modified.keys())
+    all_games = set(original.keys()) | set(worldgen.keys())
 
     for game in sorted(all_games):
         orig = original.get(game)
-        mod = modified.get(game)
+        wg = worldgen.get(game)
 
         if orig is None:
-            comparison['only_modified'].append((game, mod))
-        elif mod is None:
+            comparison['only_worldgen'].append((game, wg))
+        elif wg is None:
             comparison['only_original'].append((game, orig))
         else:
             orig_passed = orig['passed']
-            mod_passed = mod['passed']
+            wg_passed = wg['passed']
 
-            if not orig_passed and mod_passed:
-                comparison['improved'].append((game, orig, mod))
-            elif orig_passed and not mod_passed:
-                comparison['regressed'].append((game, orig, mod))
-            elif orig_passed and mod_passed:
-                comparison['both_pass'].append((game, orig, mod))
+            if not orig_passed and wg_passed:
+                comparison['improved'].append((game, orig, wg))
+            elif orig_passed and not wg_passed:
+                comparison['regressed'].append((game, orig, wg))
+            elif orig_passed and wg_passed:
+                comparison['both_pass'].append((game, orig, wg))
             else:
-                comparison['both_fail'].append((game, orig, mod))
+                comparison['both_fail'].append((game, orig, wg))
 
     return comparison
 
 
-def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_meta: Dict):
+def print_comparison(comparison: Dict[str, List], original_meta: Dict, worldgen_meta: Dict):
     """Print a formatted comparison report."""
 
     print("=" * 80)
@@ -124,10 +124,10 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
     print(f"  Runs per game: {original_meta.get('runs_per_game', 'unknown')}")
     print()
 
-    print("Modified UT:")
-    print(f"  Version: {modified_meta.get('ut_version', 'unknown')}")
-    print(f"  Seed: {modified_meta.get('seed', 'unknown')}")
-    print(f"  Runs per game: {modified_meta.get('runs_per_game', 'unknown')}")
+    print("Worldgen UT:")
+    print(f"  Version: {worldgen_meta.get('ut_version', 'unknown')}")
+    print(f"  Seed: {worldgen_meta.get('seed', 'unknown')}")
+    print(f"  Runs per game: {worldgen_meta.get('runs_per_game', 'unknown')}")
     print()
 
     # Summary
@@ -138,14 +138,14 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
     print("SUMMARY")
     print("-" * 80)
     print(f"Total games compared: {total_games}")
-    print(f"  Improved (original fail -> modified pass): {len(comparison['improved'])}")
-    print(f"  Regressed (original pass -> modified fail): {len(comparison['regressed'])}")
+    print(f"  Improved (original fail -> worldgen pass): {len(comparison['improved'])}")
+    print(f"  Regressed (original pass -> worldgen fail): {len(comparison['regressed'])}")
     print(f"  Both pass: {len(comparison['both_pass'])}")
     print(f"  Both fail: {len(comparison['both_fail'])}")
     if comparison['only_original']:
         print(f"  Only in original: {len(comparison['only_original'])}")
-    if comparison['only_modified']:
-        print(f"  Only in modified: {len(comparison['only_modified'])}")
+    if comparison['only_worldgen']:
+        print(f"  Only in worldgen: {len(comparison['only_worldgen'])}")
     print()
 
     # Improved games
@@ -153,13 +153,13 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
         print("-" * 80)
         print(f"IMPROVED ({len(comparison['improved'])} games)")
         print("-" * 80)
-        print(f"{'Game':<40} {'Original':<20} {'Modified':<20}")
+        print(f"{'Game':<40} {'Original':<20} {'Worldgen':<20}")
         print(f"{'':<40} {'Success Rate':<20} {'Success Rate':<20}")
         print("-" * 80)
-        for game, orig, mod in comparison['improved']:
+        for game, orig, wg in comparison['improved']:
             orig_rate = f"{orig['success']}/{orig['total']} ({orig['success_rate']:.1f}%)"
-            mod_rate = f"{mod['success']}/{mod['total']} ({mod['success_rate']:.1f}%)"
-            print(f"{game:<40} {orig_rate:<20} {mod_rate:<20}")
+            wg_rate = f"{wg['success']}/{wg['total']} ({wg['success_rate']:.1f}%)"
+            print(f"{game:<40} {orig_rate:<20} {wg_rate:<20}")
         print()
 
     # Regressed games
@@ -167,13 +167,13 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
         print("-" * 80)
         print(f"REGRESSED ({len(comparison['regressed'])} games)")
         print("-" * 80)
-        print(f"{'Game':<40} {'Original':<20} {'Modified':<20}")
+        print(f"{'Game':<40} {'Original':<20} {'Worldgen':<20}")
         print(f"{'':<40} {'Success Rate':<20} {'Success Rate':<20}")
         print("-" * 80)
-        for game, orig, mod in comparison['regressed']:
+        for game, orig, wg in comparison['regressed']:
             orig_rate = f"{orig['success']}/{orig['total']} ({orig['success_rate']:.1f}%)"
-            mod_rate = f"{mod['success']}/{mod['total']} ({mod['success_rate']:.1f}%)"
-            print(f"{game:<40} {orig_rate:<20} {mod_rate:<20}")
+            wg_rate = f"{wg['success']}/{wg['total']} ({wg['success_rate']:.1f}%)"
+            print(f"{game:<40} {orig_rate:<20} {wg_rate:<20}")
         print()
 
     # Both fail (with improvement details)
@@ -181,15 +181,15 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
         print("-" * 80)
         print(f"BOTH FAIL ({len(comparison['both_fail'])} games)")
         print("-" * 80)
-        print(f"{'Game':<40} {'Original':<20} {'Modified':<20} {'Change':<10}")
+        print(f"{'Game':<40} {'Original':<20} {'Worldgen':<20} {'Change':<10}")
         print("-" * 80)
 
-        for game, orig, mod in comparison['both_fail']:
+        for game, orig, wg in comparison['both_fail']:
             orig_rate = f"{orig['success']}/{orig['total']} ({orig['success_rate']:.1f}%)"
-            mod_rate = f"{mod['success']}/{mod['total']} ({mod['success_rate']:.1f}%)"
+            wg_rate = f"{wg['success']}/{wg['total']} ({wg['success_rate']:.1f}%)"
 
             # Calculate change
-            rate_diff = mod['success_rate'] - orig['success_rate']
+            rate_diff = wg['success_rate'] - orig['success_rate']
             if rate_diff > 0:
                 change = f"+{rate_diff:.1f}%"
             elif rate_diff < 0:
@@ -197,7 +197,7 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
             else:
                 change = "="
 
-            print(f"{game:<40} {orig_rate:<20} {mod_rate:<20} {change:<10}")
+            print(f"{game:<40} {orig_rate:<20} {wg_rate:<20} {change:<10}")
         print()
 
     # Both pass
@@ -216,12 +216,12 @@ def print_comparison(comparison: Dict[str, List], original_meta: Dict, modified_
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Compare UT fuzz test results between original and modified versions'
+        description='Compare UT fuzz test results between original and worldgen versions'
     )
     parser.add_argument('--original', type=str,
                         help='Path to original UT results JSON')
-    parser.add_argument('--modified', type=str,
-                        help='Path to modified UT results JSON')
+    parser.add_argument('--worldgen', type=str,
+                        help='Path to worldgen UT results JSON')
     parser.add_argument('--markdown', action='store_true',
                         help='Output in markdown format')
 
@@ -240,40 +240,40 @@ def main():
     elif not os.path.isabs(original_path):
         original_path = os.path.join(project_root, original_path)
 
-    modified_path = args.modified
-    if not modified_path:
-        modified_path = os.path.join(results_dir, 'test-results-modified-fixed-seed.json')
-    elif not os.path.isabs(modified_path):
-        modified_path = os.path.join(project_root, modified_path)
+    worldgen_path = args.worldgen
+    if not worldgen_path:
+        worldgen_path = os.path.join(results_dir, 'test-results-worldgen-fixed-seed.json')
+    elif not os.path.isabs(worldgen_path):
+        worldgen_path = os.path.join(project_root, worldgen_path)
 
     # Check files exist
     if not os.path.exists(original_path):
         print(f"Error: Original results file not found: {original_path}")
         return 1
 
-    if not os.path.exists(modified_path):
-        print(f"Error: Modified results file not found: {modified_path}")
+    if not os.path.exists(worldgen_path):
+        print(f"Error: Worldgen results file not found: {worldgen_path}")
         return 1
 
     # Load results
     original_data = load_results(original_path)
-    modified_data = load_results(modified_path)
+    worldgen_data = load_results(worldgen_path)
 
-    if not original_data or not modified_data:
+    if not original_data or not worldgen_data:
         return 1
 
     # Extract game results
     original_games = extract_game_results(original_data)
-    modified_games = extract_game_results(modified_data)
+    worldgen_games = extract_game_results(worldgen_data)
 
     # Compare
-    comparison = compare_results(original_games, modified_games)
+    comparison = compare_results(original_games, worldgen_games)
 
     # Print report
     print_comparison(
         comparison,
         original_data.get('metadata', {}),
-        modified_data.get('metadata', {})
+        worldgen_data.get('metadata', {})
     )
 
     return 0

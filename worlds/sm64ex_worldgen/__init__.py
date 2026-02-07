@@ -97,7 +97,7 @@ class SM64World(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Power Star", "Basement Key", "Second Floor Key", "Progressive Key", "Wing Cap", "Metal Cap", "Vanish Cap", "1Up Mushroom", "Double Jump", "Triple Jump", "Long Jump", "Backflip", "Side Flip", "Wall Kick", "Dive", "Ground Pound", "Kick", "Climb", "Ledge Grab", "Cannon Unlock BoB", "Cannon Unlock WF", "Cannon Unlock JRB", "Cannon Unlock CCM", "Cannon Unlock SSL", "Cannon Unlock SL", "Cannon Unlock WDW", "Cannon Unlock TTM", "Cannon Unlock THI", "Cannon Unlock RR"]),
+        "Everything": frozenset(["Power Star", "Basement Key", "Second Floor Key", "Progressive Key", "Wing Cap", "Metal Cap", "Vanish Cap", "1Up Mushroom", "Double Jump", "Triple Jump", "Long Jump", "Backflip", "Side Flip", "Wall Kick", "Dive", "Ground Pound", "Kick", "Climb", "Ledge Grab", "Cannon Unlock BoB", "Cannon Unlock WF", "Cannon Unlock JRB", "Cannon Unlock CCM", "Cannon Unlock SSL", "Cannon Unlock SL", "Cannon Unlock WDW", "Cannon Unlock TTM", "Cannon Unlock THI", "Cannon Unlock RR", "Painting Unlock WF", "Painting Unlock JRB", "Painting Unlock CCM", "Painting Unlock LLL", "Painting Unlock SSL", "Painting Unlock DDD", "Painting Unlock SL", "Painting Unlock WDW", "Painting Unlock TTM", "Painting Unlock THI", "Painting Unlock TTC"]),
     }
 
     # Canonical item placements - where items belong in the "vanilla" game
@@ -418,7 +418,7 @@ class SM64World(RuleWorldMixin, World):
         self.star_costs = types.SimpleNamespace(FirstBowserDoorCost=7, BasementDoorCost=26, SecondFloorDoorCost=44, MIPS1Cost=13, MIPS2Cost=44, StarsToFinish=61)
         self.area_connections = {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311}
         self.world_description = 'The first Super Mario game to feature 3D gameplay, it features freedom of movement within a large open world based on polygons,\ncombined with traditional Mario gameplay, visual style, and characters.'
-        self.slot_data = {'AreaRando': {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311}, 'MoveRandoVec': 0, 'DeathLink': 0, 'CompletionType': 0, 'FirstBowserDoorCost': 7, 'BasementDoorCost': 26, 'SecondFloorDoorCost': 44, 'MIPS1Cost': 13, 'MIPS2Cost': 44, 'StarsToFinish': 61}
+        self.slot_data = {'AreaRando': {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311}, 'MoveRandoVec': 0, 'PaintingRando': 0, 'DeathLink': 0, 'CompletionType': 0, 'FirstBowserDoorCost': 7, 'BasementDoorCost': 26, 'SecondFloorDoorCost': 44, 'MIPS1Cost': 13, 'MIPS2Cost': 44, 'StarsToFinish': 61}
 
     # Canonical seed for deterministic placement
     CANONICAL_SEED: ClassVar[int] = 1
@@ -650,6 +650,7 @@ class SM64World(RuleWorldMixin, World):
         return {
             "AreaRando": {91: 91, 241: 241, 121: 121, 51: 51, 41: 41, 71: 71, 221: 221, 81: 81, 231: 231, 101: 101, 111: 111, 361: 361, 132: 132, 131: 131, 141: 141, 151: 151, 271: 271, 201: 201, 171: 171, 291: 291, 281: 281, 181: 181, 191: 191, 311: 311},
             "MoveRandoVec": 0,
+            "PaintingRando": 0,
             "DeathLink": 0,
             "CompletionType": 0,
             "FirstBowserDoorCost": 7,

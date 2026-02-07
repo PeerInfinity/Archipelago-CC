@@ -94,7 +94,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Canoe Tree", player),
-        Or(And(CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'), CanReachRegion('Edgeville')), CanReachRegion('South of Varrock'), And(CanReachRegion('Barbarian Village'), CanReachRegion('Oak Tree')))
+        Or(And(CanReachRegion('Barbarian Village'), CanReachRegion('Oak Tree')), And(CanReachRegion('Edgeville'), CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree')), CanReachRegion('South of Varrock'))
     )
 
     world.set_rule(
@@ -209,7 +209,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Canoe Tree", player),
-        Or(And(CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'), CanReachRegion('Wilderness')), CanReachRegion('Barbarian Village'), CanReachRegion('Lumbridge'), And(CanReachRegion('Edgeville'), CanReachRegion('Oak Tree')))
+        Or(And(CanReachRegion('Edgeville'), CanReachRegion('Oak Tree')), And(CanReachRegion('Oak Tree'), CanReachRegion('Wilderness'), CanReachRegion('Willow Tree')), CanReachRegion('Barbarian Village'), CanReachRegion('Lumbridge'))
     )
 
     world.set_rule(
@@ -299,7 +299,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Cook's Guild", player),
-        And(Or(And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'), CanReachRegion('Fly Fishing Spot')), CanReachRegion('Port Sarim')), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), Has('Area: West Varrock'))
+        And(Or(And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot')), CanReachRegion('Port Sarim')), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), Has('Area: West Varrock'))
     )
 
     world.set_rule(
@@ -334,7 +334,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Canoe Tree", player),
-        Or(And(CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'), CanReachRegion('Lumbridge')), CanReachRegion('Barbarian Village'), CanReachRegion('Wilderness'), And(CanReachRegion('Oak Tree'), CanReachRegion('South of Varrock')))
+        Or(And(CanReachRegion('Lumbridge'), CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree')), And(CanReachRegion('Oak Tree'), CanReachRegion('South of Varrock')), CanReachRegion('Barbarian Village'), CanReachRegion('Wilderness'))
     )
 
     world.set_rule(
@@ -359,7 +359,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Canoe Tree", player),
-        Or(CanReachRegion('Edgeville'), CanReachRegion('South of Varrock'), And(CanReachRegion('Lumbridge'), CanReachRegion('Oak Tree')), And(CanReachRegion('Oak Tree'), CanReachRegion('Wilderness')))
+        Or(And(CanReachRegion('Lumbridge'), CanReachRegion('Oak Tree')), And(CanReachRegion('Oak Tree'), CanReachRegion('Wilderness')), CanReachRegion('Edgeville'), CanReachRegion('South of Varrock'))
     )
 
     world.set_rule(
@@ -569,7 +569,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Crandor", player),
-        And(CanReachRegion('South of Varrock'), CanReachRegion('Edgeville'), CanReachRegion('Lumbridge'), CanReachRegion('Rimmington'), CanReachRegion('Monastery'), CanReachRegion('Dwarven Mines'), CanReachRegion('Port Sarim'), CanReachRegion('Draynor Village'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">=", 32), Has('Area: Crandor'))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">=", 32), CanReachRegion('Draynor Village'), CanReachRegion('Dwarven Mines'), CanReachRegion('Edgeville'), CanReachRegion('Lumbridge'), CanReachRegion('Monastery'), CanReachRegion('Port Sarim'), CanReachRegion('Rimmington'), CanReachRegion('South of Varrock'), Has('Area: Crandor'))
     )
 
     world.set_rule(
@@ -599,7 +599,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Karamja->Crandor", player),
-        And(CanReachRegion('South of Varrock'), CanReachRegion('Edgeville'), CanReachRegion('Lumbridge'), CanReachRegion('Rimmington'), CanReachRegion('Monastery'), CanReachRegion('Dwarven Mines'), CanReachRegion('Port Sarim'), CanReachRegion('Draynor Village'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">=", 32), Has('Area: Crandor'))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">=", 32), CanReachRegion('Draynor Village'), CanReachRegion('Dwarven Mines'), CanReachRegion('Edgeville'), CanReachRegion('Lumbridge'), CanReachRegion('Monastery'), CanReachRegion('Port Sarim'), CanReachRegion('Rimmington'), CanReachRegion('South of Varrock'), Has('Area: Crandor'))
     )
 
     world.set_rule(
@@ -654,12 +654,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player),
-        And(Or(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_gold, helper_name="can_gold")), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_silver, helper_name="can_silver")), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Central Varrock'), Has('Area: Crafting Guild'))
+        And(Or(And(HelperCall(helper_func=can_gold, helper_name="can_gold"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), And(HelperCall(helper_func=can_silver, helper_name="can_silver"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Central Varrock'), Has('Area: Crafting Guild'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player),
-        And(Or(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_gold, helper_name="can_gold")), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_silver, helper_name="can_silver")), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Central Varrock'), Has('Area: Crafting Guild'))
+        And(Or(And(HelperCall(helper_func=can_gold, helper_name="can_gold"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), And(HelperCall(helper_func=can_silver, helper_name="can_silver"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Central Varrock'), Has('Area: Crafting Guild'))
     )
 
     world.set_rule(
@@ -764,7 +764,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Canoe Tree", player),
-        Or(And(CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'), CanReachRegion('South of Varrock')), CanReachRegion('Edgeville'), And(CanReachRegion('Barbarian Village'), CanReachRegion('Oak Tree')))
+        Or(And(CanReachRegion('Barbarian Village'), CanReachRegion('Oak Tree')), And(CanReachRegion('Oak Tree'), CanReachRegion('South of Varrock'), CanReachRegion('Willow Tree')), CanReachRegion('Edgeville'))
     )
     # Register indirect conditions for proper sphere calculation
     multiworld.register_indirect_condition(
@@ -780,11 +780,11 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Lumbridge->Edgeville", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Oak Tree"),
+        world.get_region("Barbarian Village"),
         multiworld.get_entrance("Lumbridge->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Willow Tree"),
+        world.get_region("Oak Tree"),
         multiworld.get_entrance("Lumbridge->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
@@ -792,14 +792,14 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Lumbridge->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
+        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("South of Varrock"),
         multiworld.get_entrance("Lumbridge->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Barbarian Village"),
-        multiworld.get_entrance("Lumbridge->Canoe Tree", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Oak Tree"),
         multiworld.get_entrance("South of Varrock->Edgeville", player)
     )
@@ -808,15 +808,19 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("South of Varrock->Edgeville", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Oak Tree"),
+        world.get_region("Edgeville"),
         multiworld.get_entrance("South of Varrock->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Willow Tree"),
+        world.get_region("Oak Tree"),
         multiworld.get_entrance("South of Varrock->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("Wilderness"),
+        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Willow Tree"),
         multiworld.get_entrance("South of Varrock->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
@@ -825,10 +829,6 @@ def set_rules(world: "World") -> None:
     )
     multiworld.register_indirect_condition(
         world.get_region("Lumbridge"),
-        multiworld.get_entrance("South of Varrock->Canoe Tree", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Edgeville"),
         multiworld.get_entrance("South of Varrock->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
@@ -872,6 +872,10 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Edgeville->Lumbridge", player)
     )
     multiworld.register_indirect_condition(
+        world.get_region("Lumbridge"),
+        multiworld.get_entrance("Edgeville->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("Oak Tree"),
         multiworld.get_entrance("Edgeville->Canoe Tree", player)
     )
@@ -880,7 +884,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Edgeville->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Lumbridge"),
+        world.get_region("South of Varrock"),
         multiworld.get_entrance("Edgeville->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
@@ -892,18 +896,6 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Edgeville->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("South of Varrock"),
-        multiworld.get_entrance("Edgeville->Canoe Tree", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Edgeville"),
-        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("South of Varrock"),
-        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Lumbridge"),
         multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
     )
@@ -916,7 +908,19 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
+        world.get_region("Edgeville"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("South of Varrock"),
+        multiworld.get_entrance("Barbarian Village->Canoe Tree", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Draynor Village"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dwarven Mines"),
         multiworld.get_entrance("Port Sarim->Crandor", player)
     )
     multiworld.register_indirect_condition(
@@ -928,15 +932,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Port Sarim->Crandor", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Rimmington"),
-        multiworld.get_entrance("Port Sarim->Crandor", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Monastery"),
-        multiworld.get_entrance("Port Sarim->Crandor", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dwarven Mines"),
         multiworld.get_entrance("Port Sarim->Crandor", player)
     )
     multiworld.register_indirect_condition(
@@ -944,11 +940,19 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Port Sarim->Crandor", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Draynor Village"),
+        world.get_region("Rimmington"),
         multiworld.get_entrance("Port Sarim->Crandor", player)
     )
     multiworld.register_indirect_condition(
         world.get_region("South of Varrock"),
+        multiworld.get_entrance("Port Sarim->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Draynor Village"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Dwarven Mines"),
         multiworld.get_entrance("Karamja->Crandor", player)
     )
     multiworld.register_indirect_condition(
@@ -960,15 +964,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Karamja->Crandor", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Rimmington"),
-        multiworld.get_entrance("Karamja->Crandor", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Monastery"),
-        multiworld.get_entrance("Karamja->Crandor", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Dwarven Mines"),
         multiworld.get_entrance("Karamja->Crandor", player)
     )
     multiworld.register_indirect_condition(
@@ -976,7 +972,11 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Karamja->Crandor", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Draynor Village"),
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Karamja->Crandor", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("South of Varrock"),
         multiworld.get_entrance("Karamja->Crandor", player)
     )
     multiworld.register_indirect_condition(
@@ -984,6 +984,22 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Rimmington->Corsair Cove", player)
     )
     multiworld.register_indirect_condition(
+        world.get_region("Gold Ore"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Furnace"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Al Kharid"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("Anvil"),
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
@@ -996,23 +1012,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Furnace"),
-        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Iron Ore"),
-        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Gold Ore"),
-        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Al Kharid"),
-        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Rimmington"),
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
@@ -1028,6 +1028,22 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
+        world.get_region("Gold Ore"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Furnace"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Al Kharid"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
         world.get_region("Anvil"),
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
     )
@@ -1040,23 +1056,7 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Furnace"),
-        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
         world.get_region("Iron Ore"),
-        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Gold Ore"),
-        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Al Kharid"),
-        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Rimmington"),
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
     )
     multiworld.register_indirect_condition(
@@ -1080,11 +1080,11 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Wilderness->South of Varrock", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Oak Tree"),
+        world.get_region("Barbarian Village"),
         multiworld.get_entrance("Wilderness->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Willow Tree"),
+        world.get_region("Oak Tree"),
         multiworld.get_entrance("Wilderness->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
@@ -1092,11 +1092,11 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Wilderness->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Edgeville"),
+        world.get_region("Willow Tree"),
         multiworld.get_entrance("Wilderness->Canoe Tree", player)
     )
     multiworld.register_indirect_condition(
-        world.get_region("Barbarian Village"),
+        world.get_region("Edgeville"),
         multiworld.get_entrance("Wilderness->Canoe Tree", player)
     )
     # Location rules
@@ -1117,7 +1117,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Cook's Assistant", player),
-        And(CanReachRegion('Lumbridge'), CanReachRegion('Wheat'), CanReachRegion('Windmill'), CanReachRegion('Egg'), CanReachRegion('Milk'))
+        And(CanReachRegion('Egg'), CanReachRegion('Lumbridge'), CanReachRegion('Milk'), CanReachRegion('Wheat'), CanReachRegion('Windmill'))
     )
 
     world.set_rule(
@@ -1137,7 +1137,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Rune Mysteries", player),
-        And(CanReachRegion('Lumbridge'), CanReachRegion('Wizard Tower'), CanReachRegion('Central Varrock'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('Lumbridge'), CanReachRegion('Wizard Tower'))
     )
 
     world.set_rule(
@@ -1182,7 +1182,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Demon Slayer", player),
-        And(CanReachRegion('Central Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('Wizard Tower'), CanReachRegion('South of Varrock'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('South of Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('Wizard Tower'))
     )
 
     world.set_rule(
@@ -1192,7 +1192,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Romeo & Juliet", player),
-        And(CanReachRegion('Central Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('South of Varrock'), CanReachRegion('West Varrock'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('South of Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('West Varrock'))
     )
 
     world.set_rule(
@@ -1202,7 +1202,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Shield of Arrav", player),
-        And(CanReachRegion('Central Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('South of Varrock'), CanReachRegion('West Varrock'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('South of Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('West Varrock'))
     )
 
     world.set_rule(
@@ -1212,12 +1212,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Have the Apothecary Make a Strength Potion", player),
-        And(CanReachRegion('Central Varrock'), CanReachRegion('Red Spider Eggs'), CanReachRegion('Limpwurt Root'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('Limpwurt Root'), CanReachRegion('Red Spider Eggs'))
     )
 
     world.set_rule(
         multiworld.get_location("Enter the Cook's Guild", player),
-        And(Or(And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'), CanReachRegion('Fly Fishing Spot')), CanReachRegion('Port Sarim')), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), CanReachRegion("Cook's Guild"))
+        And(Or(And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot')), CanReachRegion('Port Sarim')), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), CanReachRegion("Cook's Guild"))
     )
 
     world.set_rule(
@@ -1232,7 +1232,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Doric's Quest", player),
-        And(CanReachRegion('Clay Ore'), CanReachRegion('Dwarven Mountain Pass'), CanReachRegion('Iron Ore'), CanReachRegion('Bronze Ores'), Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Iron Ore'))
+        And(Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore'), CanReachRegion('Dwarven Mountain Pass'), CanReachRegion('Iron Ore'), CanReachRegion('Iron Ore'))
     )
 
     world.set_rule(
@@ -1242,7 +1242,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Black Knights' Fortress", player),
-        And(CanReachRegion('Dwarven Mines'), CanReachRegion('Falador'), CanReachRegion('Monastery'), CanReachRegion('Ice Mountain'), CanReachRegion('Falador Farms'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 12), Has('Progressive Armor'))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 12), CanReachRegion('Dwarven Mines'), CanReachRegion('Falador Farms'), CanReachRegion('Falador'), CanReachRegion('Ice Mountain'), CanReachRegion('Monastery'), Has('Progressive Armor'))
     )
 
     world.set_rule(
@@ -1252,7 +1252,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Below Ice Mountain", player),
-        And(CanReachRegion('Dwarven Mines'), CanReachRegion('Dwarven Mountain Pass'), CanReachRegion('Ice Mountain'), CanReachRegion('Barbarian Village'), CanReachRegion('Falador'), CanReachRegion('Central Varrock'), CanReachRegion('Edgeville'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 16))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 16), CanReachRegion('Barbarian Village'), CanReachRegion('Central Varrock'), CanReachRegion('Dwarven Mines'), CanReachRegion('Dwarven Mountain Pass'), CanReachRegion('Edgeville'), CanReachRegion('Falador'), CanReachRegion('Ice Mountain'))
     )
 
     world.set_rule(
@@ -1262,7 +1262,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Goblin Diplomacy", player),
-        And(CanReachRegion('Draynor Village'), CanReachRegion('Goblin Village'), CanReachRegion('Falador'), CanReachRegion('South of Varrock'), CanReachRegion('Onion'))
+        And(CanReachRegion('Draynor Village'), CanReachRegion('Falador'), CanReachRegion('Goblin Village'), CanReachRegion('Onion'), CanReachRegion('South of Varrock'))
     )
 
     world.set_rule(
@@ -1277,7 +1277,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: The Knight's Sword", player),
-        And(CanReachRegion('Falador'), CanReachRegion('Varrock Palace'), CanReachRegion('Mudskipper Point'), CanReachRegion('South of Varrock'), CanReachRegion('Windmill'), CanReachRegion('Pie Dish'), CanReachRegion('Port Sarim'), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')))
+        And(Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Falador'), CanReachRegion('Mudskipper Point'), CanReachRegion('Pie Dish'), CanReachRegion('Port Sarim'), CanReachRegion('South of Varrock'), CanReachRegion('Varrock Palace'), CanReachRegion('Windmill'))
     )
 
     world.set_rule(
@@ -1287,7 +1287,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Pirate's Treasure", player),
-        And(CanReachRegion('Karamja'), CanReachRegion('Port Sarim'), CanReachRegion('Falador'), CanReachRegion('Central Varrock'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('Falador'), CanReachRegion('Karamja'), CanReachRegion('Port Sarim'))
     )
 
     world.set_rule(
@@ -1297,7 +1297,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Dragon Slayer", player),
-        And(CanReachRegion('Crandor'), CanReachRegion('South of Varrock'), CanReachRegion('Edgeville'), CanReachRegion('Lumbridge'), CanReachRegion('Rimmington'), CanReachRegion('Monastery'), CanReachRegion('Dwarven Mines'), CanReachRegion('Port Sarim'), CanReachRegion('Draynor Village'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 32))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 32), CanReachRegion('Crandor'), CanReachRegion('Draynor Village'), CanReachRegion('Dwarven Mines'), CanReachRegion('Edgeville'), CanReachRegion('Lumbridge'), CanReachRegion('Monastery'), CanReachRegion('Port Sarim'), CanReachRegion('Rimmington'), CanReachRegion('South of Varrock'))
     )
 
     world.set_rule(
@@ -1312,7 +1312,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: The Corsair Curse", player),
-        And(CanReachRegion('Falador Farms'), CanReachRegion('Rimmington'), CanReachRegion('Corsair Cove'))
+        And(CanReachRegion('Corsair Cove'), CanReachRegion('Falador Farms'), CanReachRegion('Rimmington'))
     )
 
     world.set_rule(
@@ -1322,7 +1322,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Vampyre Slayer", player),
-        And(CanReachRegion('Central Varrock'), CanReachRegion('Draynor Village'), CanReachRegion('Draynor Manor'))
+        And(CanReachRegion('Central Varrock'), CanReachRegion('Draynor Manor'), CanReachRegion('Draynor Village'))
     )
 
     world.set_rule(
@@ -1347,7 +1347,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quest: Prince Ali Rescue", player),
-        And(CanReachRegion('Al Kharid'), CanReachRegion('Central Varrock'), CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore'), CanReachRegion('Sheep'), CanReachRegion('Spinning Wheel'), CanReachRegion('Draynor Village'))
+        And(CanReachRegion('Al Kharid'), CanReachRegion('Bronze Ores'), CanReachRegion('Central Varrock'), CanReachRegion('Clay Ore'), CanReachRegion('Draynor Village'), CanReachRegion('Sheep'), CanReachRegion('Spinning Wheel'))
     )
 
     world.set_rule(
@@ -1362,57 +1362,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cut a Diamond", player),
-        And(Or(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_gold, helper_name="can_gold")), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_silver, helper_name="can_silver")), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Chisel'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 8))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 8), Or(And(HelperCall(helper_func=can_gold, helper_name="can_gold"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), And(HelperCall(helper_func=can_silver, helper_name="can_silver"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Chisel'))
     )
 
     world.set_rule(
         multiworld.get_location("Cut a Ruby", player),
-        And(Or(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_gold, helper_name="can_gold")), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), HelperCall(helper_func=can_silver, helper_name="can_silver")), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Chisel'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 4))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 4), Or(And(HelperCall(helper_func=can_gold, helper_name="can_gold"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), And(HelperCall(helper_func=can_silver, helper_name="can_silver"), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=can_tan, helper_name="can_tan")), CanReachRegion('Chisel'))
     )
 
     world.set_rule(
         multiworld.get_location("Smelt an Iron Bar", player),
-        And(CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Iron Ore'))
+        And(Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))
     )
 
     world.set_rule(
         multiworld.get_location("Mine Silver", player),
-        And(Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Iron Ore'), CanReachRegion('Silver Ore'))
+        And(Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Silver Ore'), CanReachRegion('Iron Ore'))
     )
 
     world.set_rule(
         multiworld.get_location("Smelt a Gold Bar", player),
-        And(CanReachRegion('Furnace'), CanReachRegion('Gold Ore'), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'), Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Iron Ore'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 6))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 6), Or(CanReachRegion('Bronze Ores'), CanReachRegion('Clay Ore')), CanReachRegion('Furnace'), CanReachRegion('Gold Ore'), CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))
     )
 
     world.set_rule(
         multiworld.get_location("Catch a Trout", player),
-        And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'), CanReachRegion('Fly Fishing Spot'))
+        And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'))
     )
 
     world.set_rule(
         multiworld.get_location("Catch a Lobster", player),
-        And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'), CanReachRegion('Lobster Spot'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 6))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 6), CanReachRegion('Lobster Spot'), CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'))
     )
 
     world.set_rule(
         multiworld.get_location("Bake a Redberry Pie", player),
-        And(CanReachRegion('Redberry Bush'), CanReachRegion('Wheat'), CanReachRegion('Windmill'), CanReachRegion('Pie Dish'), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')))
+        And(Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), CanReachRegion('Pie Dish'), CanReachRegion('Redberry Bush'), CanReachRegion('Wheat'), CanReachRegion('Windmill'))
     )
 
     world.set_rule(
         multiworld.get_location("Bake a Cake", player),
-        And(CanReachRegion('Wheat'), CanReachRegion('Windmill'), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Cake Tin'), Or(And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot'), CanReachRegion('Fly Fishing Spot')), CanReachRegion('Port Sarim')), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 6))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 6), Or(And(CanReachRegion('Fly Fishing Spot'), CanReachRegion('Port Sarim'), CanReachRegion('Shrimp Spot')), CanReachRegion('Port Sarim')), Or(And(CanReachRegion('Wheat'), CanReachRegion('Windmill')), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Shrimp Spot')), CanReachRegion('Cake Tin'), CanReachRegion('Egg'), CanReachRegion('Milk'), CanReachRegion('Wheat'), CanReachRegion('Windmill'))
     )
 
     world.set_rule(
         multiworld.get_location("Burn some Oak Logs", player),
-        And(CanReachRegion('Oak Tree'), CanReachRegion('Oak Tree'), CanReachRegion('Oak Tree'), CanReachRegion('Oak Tree'))
+        And(CanReachRegion('Oak Tree'), CanReachRegion('Oak Tree'))
     )
 
     world.set_rule(
         multiworld.get_location("Burn some Willow Logs", player),
-        And(CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'), CanReachRegion('Willow Tree'), CanReachRegion('Willow Tree'), CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'))
+        And(CanReachRegion('Willow Tree'), CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree'))
     )
 
     world.set_rule(
@@ -1427,7 +1427,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Kill a Hill Giant", player),
-        And(CanReachRegion('Hill Giant'), Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 2))
+        And(Compare(HelperCall(helper_func=quest_points, helper_name="quest_points", args=()), ">", 2), CanReachRegion('Hill Giant'))
     )
 
     world.set_rule(

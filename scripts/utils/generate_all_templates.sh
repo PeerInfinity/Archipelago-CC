@@ -82,6 +82,7 @@ python Generate.py --weights_file_path "Templates/DLCQuest.yaml" --multi 1 --see
 python Generate.py --weights_file_path "Templates/Donkey Kong Country 3.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/DOOM 1993.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/DOOM II.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/EarthBound.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Factorio.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Faxanadu.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Final Fantasy Mystic Quest.yaml" --multi 1 --seed 1
@@ -109,6 +110,7 @@ python Generate.py --weights_file_path "Templates/Paint.yaml" --multi 1 --seed 1
 # python Generate.py --weights_file_path "Templates/Pokemon Red and Blue.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 python Generate.py --weights_file_path "Templates/Raft.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Risk of Rain 2.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Satisfactory.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Saving Princess.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Secret of Evermore.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/shapez.yaml" --multi 1 --seed 1
@@ -198,6 +200,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Donkey Kong Country 3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "DOOM 1993.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "DOOM II.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  python scripts/test/test-world-generator.py --include-list "EarthBound.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Factorio.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Faxanadu.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Final Fantasy Mystic Quest.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -225,6 +228,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   # python scripts/test/test-world-generator.py --include-list "Pokemon Red and Blue.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Raft.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Risk of Rain 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  python scripts/test/test-world-generator.py --include-list "Satisfactory.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Saving Princess.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Secret of Evermore.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "shapez.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -291,6 +295,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Donkey Kong Country 3 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/DOOM 1993 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/DOOM II WorldGen.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/EarthBound WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Factorio WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Faxanadu WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Final Fantasy Mystic Quest WorldGen.yaml" --multi 1 --seed 1
@@ -318,6 +323,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   # python Generate.py --weights_file_path "Templates/Pokemon Red and Blue WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Raft WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Risk of Rain 2 WorldGen.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/Satisfactory WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Saving Princess WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Secret of Evermore WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/shapez WorldGen.yaml" --multi 1 --seed 1

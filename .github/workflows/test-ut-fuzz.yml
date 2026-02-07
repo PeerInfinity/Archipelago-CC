@@ -21,6 +21,11 @@ on:
         type: number
         default: 60
 
+      process_timeout:
+        description: 'Total timeout per game in seconds (default: auto-calculated)'
+        required: false
+        type: number
+
       seed:
         description: 'Random seed for reproducibility (leave empty for random)'
         required: false
@@ -37,15 +42,16 @@ on:
         type: boolean
         default: false
 
-      test_original_ut:
-        description: 'Test original Universal Tracker (from FarisTheAncient) instead of modified version'
-        type: boolean
-        default: false
-
-      prefer_native_ut:
-        description: 'Prefer native UT support for compatible worlds (skips rule export). Only applies to modified UT.'
-        type: boolean
-        default: false
+      ut_mode:
+        description: 'Universal Tracker mode to test'
+        required: true
+        type: choice
+        default: 'worldgen'
+        options:
+          - 'original'
+          - 'worldgen'
+          - 'pickle'
+          - 'hybrid'
 
       test_apworlds:
         description: 'Test stable APWorlds from community index instead of bundled worlds'
@@ -305,7 +311,7 @@ jobs:
           python scripts/build/build-world-mapping.py --apworlds-only
 
       - name: Swap to original Universal Tracker
-        if: inputs.test_original_ut
+        if: inputs.ut_mode == 'original'
         run: |
           echo "Replacing modified tracker with original tracker from FarisTheAncient..."
           rm -rf worlds/tracker
@@ -319,8 +325,7 @@ jobs:
         run: |
           source .venv/bin/activate
           echo "Using seed: ${{ inputs.seed || 'random' }}"
-          echo "UT version: ${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }}"
-          echo "Prefer native UT: ${{ inputs.prefer_native_ut }}"
+          echo "UT mode: ${{ inputs.ut_mode }}"
           echo "World source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}"
 
           # Determine debug mode include list
@@ -334,15 +339,26 @@ jobs:
             fi
           fi
 
+          # Map ut_mode to command line arguments
+          UT_VERSION="${{ inputs.ut_mode }}"
+          TRACKING_CONFIG=""
+          if [ "$UT_VERSION" = "hybrid" ]; then
+            UT_VERSION="worldgen"
+            TRACKING_CONFIG="--use-tracking-config"
+          else
+            TRACKING_CONFIG="--no-use-tracking-config"
+          fi
+
           python scripts/test/test-all-ut-fuzz.py \
             --runs ${{ inputs.runs_per_game }} \
             ${{ inputs.jobs && format('--jobs {0}', inputs.jobs) || '' }} \
             --timeout ${{ inputs.timeout }} \
+            ${{ inputs.process_timeout && format('--process-timeout {0}', inputs.process_timeout) || '' }} \
             ${{ inputs.seed && format('--seed {0}', inputs.seed) || '' }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --ut-version ${{ inputs.test_original_ut && 'original' || 'modified' }} \
-            ${{ inputs.prefer_native_ut && '--prefer-native-ut' || '--no-prefer-native-ut' }} \
+            --ut-version $UT_VERSION \
+            $TRACKING_CONFIG \
             ${{ inputs.test_apworlds && '--custom-worlds-only --world-source apworlds' || '' }} \
             $DEBUG_INCLUDE
 
@@ -350,7 +366,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }}-ut-fuzz-split-${{ matrix.split_num }}
+          name: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-ut-fuzz-split-${{ matrix.split_num }}
           path: scripts/output/ut-fuzz/test-results-*-split-${{ matrix.split_num }}.json
           retention-days: 7
 
@@ -358,7 +374,7 @@ jobs:
         if: ${{ !cancelled() && failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }}-split-${{ matrix.split_num }}
+          name: fuzz-output-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-split-${{ matrix.split_num }}
           path: fuzz_output/
           retention-days: 7
 
@@ -397,7 +413,7 @@ jobs:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }}-ut-fuzz-split-*
+          pattern: test-results-${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}-${{ inputs.ut_mode }}-ut-fuzz-split-*
           path: artifacts
 
       - name: Download world mapping for apworlds
@@ -409,7 +425,7 @@ jobs:
 
       - name: Combine test results
         env:
-          UT_VERSION: ${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }}
+          UT_VERSION: ${{ inputs.ut_mode }}
           WORLD_SOURCE: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
         run: |
           mkdir -p scripts/output/ut-fuzz
@@ -421,10 +437,10 @@ jobs:
           import os
           from datetime import datetime
 
-          ut_version = os.environ.get('UT_VERSION', 'modified')
+          ut_version = os.environ.get('UT_VERSION', 'worldgen')
           world_source = os.environ.get('WORLD_SOURCE', 'bundled')
 
-          # Find all split result files (pattern matches both original and modified artifacts)
+          # Find all split result files (pattern matches both original and worldgen artifacts)
           files = glob.glob("artifacts/test-results-*-ut-fuzz-split-*/test-results-*-split-*.json")
           print(f"Found {len(files)} result files to combine")
 
@@ -500,12 +516,11 @@ jobs:
           fi
 
           if ! git diff --staged --quiet; then
-            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }} UT)
+            git commit -m "Update UT fuzz test results (${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}, ${{ inputs.ut_mode }} UT)
 
             Generated by workflow run: ${{ github.run_id }}
             World Source: ${{ inputs.test_apworlds && 'apworlds' || 'bundled' }}
-            UT Version: ${{ inputs.test_original_ut && 'original' || (inputs.prefer_native_ut && 'hybrid' || 'modified') }}
-            Prefer Native UT: ${{ inputs.prefer_native_ut }}
+            UT Mode: ${{ inputs.ut_mode }}
             Seed: ${{ inputs.seed || 'random' }}
             Runs per game: ${{ inputs.runs_per_game }}
             Jobs: ${{ inputs.jobs }}

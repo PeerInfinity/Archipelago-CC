@@ -122,6 +122,15 @@ Runtime patching that hooks into Archipelago's core functions without modifying 
 python -m worlds.json_tools_installer install
 ```
 
+For technical details on how monkey patching works internally, see [docs/monkey-patching.md](docs/monkey-patching.md).
+
+**Limitations of monkey patching:**
+- Exported files are not included in the output `.zip` archive (they go directly to `frontend/presets/`)
+- Requires either configured `host.yaml` export settings or installer config for settings
+- The exporter module must be installed separately for actual export functionality
+
+For full integration without these limitations, use file-based patching or the Archipelago-CC fork.
+
 ### 2. File-Based Patching
 Replaces core Archipelago files with patched versions. Original files are backed up and can be restored. Requires confirmation before applying:
 ```bash

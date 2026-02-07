@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Hylics 2",
   "game_directory": "hylics2",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -126,12 +126,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "paper_cup",
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "enter_hylemxylem",
+                  "rule": "paper_cup",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -443,17 +443,17 @@
                   "_converted_from_ast": true
                 },
                 {
+                  "rule": "enter_sageship",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "paper_cup",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
                   "rule": "worm_room_key",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "enter_sageship",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -472,12 +472,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "paper_cup",
+                  "rule": "enter_hylemxylem",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "enter_hylemxylem",
+                  "rule": "paper_cup",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 }
@@ -983,19 +983,9 @@
             "name": "Viewax's Edifice: Shielded Key",
             "id": 200657,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "paddle",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "paddle",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "paddle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "LINK MOLLUSC",

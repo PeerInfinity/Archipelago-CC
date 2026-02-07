@@ -306,7 +306,7 @@ def main():
     # Default paths
     ut_fuzz_path = args.ut_fuzz
     if not ut_fuzz_path:
-        ut_fuzz_path = os.path.join(project_root, 'scripts/output/ut-fuzz/test-results-modified-fixed-seed.json')
+        ut_fuzz_path = os.path.join(project_root, 'scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json')
     elif not os.path.isabs(ut_fuzz_path):
         ut_fuzz_path = os.path.join(project_root, ut_fuzz_path)
 

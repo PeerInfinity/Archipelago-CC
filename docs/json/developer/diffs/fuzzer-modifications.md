@@ -2,9 +2,11 @@
 
 This document describes the modifications made to the fuzzer compared to the original [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong.
 
-- **Original version:** 0.4.2
+- **Original version:** 0.5.1
+- **Modified version:** 0.5.1-modified
 - **Location in this repository:** `fuzz.py`
-- **Last compared:** 2026-02-02
+- **Original copy for comparison:** `scripts/test/fixtures/fuzzer_original/`
+- **Last compared:** 2026-02-03
 
 ## Summary of Changes
 
@@ -18,6 +20,13 @@ The modifications add several features:
 7. **ALttP entrance shuffle seed handling** for deterministic regeneration
 
 Additionally, there are bug fixes for specific edge cases encountered during testing.
+
+### Features from Upstream (Backported)
+
+The following features were backported from upstream v0.5.1:
+- **Fuzz constraints system** - Sophisticated constraint handling for option combinations via meta files
+- **Triggers support** - Archipelago triggers in meta files
+- **option_defs tracking** - For Range validation in constraints
 
 ---
 
@@ -199,10 +208,10 @@ if args.seed is not None:
 
 ### 5. Main Loop
 
-**Change:** Added random seeding before YAML generation.
+**Change:** Added random seeding before YAML generation and `STOP_REQUESTED` handling.
 
 ```python
-while i < args.runs:
+while i < args.runs and not STOP_REQUESTED:
     # Seed random for this iteration if seed is provided
     # This ensures YAML generation in main process is deterministic
     if args.seed is not None:
@@ -235,9 +244,11 @@ parser.add_argument("--stop-on-first-failure", default=False, action="store_true
 
 ## Diff Statistics
 
-- **Original lines:** 815
-- **Modified lines:** 982
-- **Lines added:** ~167
+| Metric | Value |
+|--------|-------|
+| Original lines (v0.5.1) | 991 |
+| Modified lines | 1146 |
+| Lines added | 155 |
 
 ---
 
@@ -278,5 +289,6 @@ python fuzz.py -g alttp -r 100 --hook worlds.tracker.fuzzer_hook:Hook --fraction
 ## Related Files
 
 - **Original repository:** https://github.com/Eijebong/Archipelago-fuzzer
+- **Original copy for comparison:** `scripts/test/fixtures/fuzzer_original/`
 - **This project's fuzzer:** `fuzz.py`
-- **Fuzzer testing documentation:** `CC/docs/fuzzer-testing.md`
+- **Fuzzer testing documentation:** [`test-fuzz.md`](../tests/test-fuzz.md)

@@ -19,8 +19,6 @@ from collections import Counter, defaultdict
 from MultiServer import mark_raw
 from NetUtils import NetworkItem
 
-from . import TrackerCore
-
 from Generate import main as GMain, mystery_argparse
 
 if TYPE_CHECKING:
@@ -1287,12 +1285,14 @@ class TrackerGameContext(CommonContext):
                     return
                 if self.checksums[self.game] != connected_cls.get_data_package_data()["checksum"]:
                     logger.warning("*****\nWarning: the local datapackage for the connected game does not match the server's datapackage\n*****")
-                # Auto-discover rules JSON BEFORE initializing tracker core
-                # This allows worldgen-based tracking to be used when rules.json is available
+                # Auto-discover pickle/JSON BEFORE initializing tracker core
+                # This allows pickle or worldgen-based tracking to be used when available
                 if self.seed_name:
                     # Set up debug logger for tracker_core to use the same debug log file
                     self.tracker_core.set_debug_logger(self._log_debug_message)
                     self.tracker_core.set_seed_name(self.seed_name)
+                    # Try pickle first (fastest), then JSON
+                    self.tracker_core.auto_discover_pickle()
                     self.tracker_core.auto_discover_rules_json()
                 self.tracker_core.initalize_tracker_core(connected_cls,args["slot_data"])
                 if not self.tracker_core.multiworld:

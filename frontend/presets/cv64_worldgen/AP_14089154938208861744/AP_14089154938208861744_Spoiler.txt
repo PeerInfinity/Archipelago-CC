@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -6,7 +6,7 @@ Plando Options:                  connections, texts, bosses
 Game:                            Castlevania 64 WorldGen
 Location Count:                  213
 Progression Balancing:           50
-Accessibility:                   Full
+Accessibility:                   Items
 Local Items:                     
 Non-local Items:                 
 Start Inventory:                 
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Background Music:                Normal
 Bad Ending Condition:            Kill Vincent
 Big Toss:                        No
@@ -58,7 +59,8 @@ Skip Waterway Blocks:            No
 Spare Keys:                      Off
 Special1s Per Warp:              1
 Stage Shuffle:                   No
-Starting Stage:                  Room Of Clocks
+Start Inventory from Pool:       
+Starting Stage:                  Castle Wall
 Sub-weapon Shuffle:              Off
 Total Special1s:                 7
 Total Special2s:                 25

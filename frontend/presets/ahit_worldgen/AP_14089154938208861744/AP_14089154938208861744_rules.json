@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Hat in Time WorldGen",
   "game_directory": "ahit_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -215,14 +215,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -688,14 +680,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -731,14 +715,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 2
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -948,14 +924,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 4
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1236,15 +1204,15 @@
                   }
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": "Act Completion (Mail Delivery Service)"
-                  }
-                },
-                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Train Rush"
+                  }
+                },
+                {
+                  "rule": "CanReachLocation",
+                  "args": {
+                    "location_name": "Act Completion (Mail Delivery Service)"
                   }
                 },
                 {
@@ -1309,14 +1277,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -1392,6 +1352,12 @@
                 {
                   "rule": "CanReachRegion",
                   "args": {
+                    "region_name": "Alpine Free Roam"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
                     "region_name": "Heating Up Mafia Town"
                   }
                 },
@@ -1399,12 +1365,6 @@
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": "Act Completion (Heating Up Mafia Town)"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Alpine Free Roam"
                   }
                 }
               ]
@@ -1500,10 +1460,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -1514,6 +1470,10 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -1525,10 +1485,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -1539,6 +1495,10 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -1580,6 +1540,12 @@
                 {
                   "rule": "CanReachRegion",
                   "args": {
+                    "region_name": "Alpine Free Roam"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
                     "region_name": "Heating Up Mafia Town"
                   }
                 },
@@ -1587,12 +1553,6 @@
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": "Act Completion (Heating Up Mafia Town)"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Alpine Free Roam"
                   }
                 }
               ]
@@ -3027,10 +2987,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -3041,6 +2997,10 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -3052,10 +3012,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
-                },
-                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -3066,6 +3022,10 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -3081,14 +3041,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 0
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -3208,19 +3160,19 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper"
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Crayon",
-                    "count": 4
-                  }
                 }
               ]
             }
@@ -3443,14 +3395,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -3519,10 +3463,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "can_use_hookshot",
@@ -3689,14 +3629,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4210,14 +4142,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4245,14 +4169,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 2
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4429,14 +4345,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4542,14 +4450,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 2
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4777,14 +4677,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 2
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -4806,14 +4698,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 2
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5379,14 +5263,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5611,14 +5487,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5654,14 +5522,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5683,14 +5543,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 1
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5712,14 +5564,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5741,14 +5585,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5784,14 +5620,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -5855,14 +5683,6 @@
                 "capability": "use_hat",
                 "inferred": true,
                 "description": "Requires ability to use hat",
-                "helper_args": [
-                  {
-                    "rule": "Constant",
-                    "args": {
-                      "value": 3
-                    }
-                  }
-                ],
                 "_original_ast_type": "capability"
               },
               "_converted_from_ast": true
@@ -7543,6 +7363,7 @@
         "ShipShapeCustomTaskGoal": 0,
         "ShuffleActContracts": true,
         "ShuffleAlpineZiplines": false,
+        "ShuffleDirectorTokens": false,
         "ShuffleStorybookPages": true,
         "ShuffleSubconPaintings": false,
         "StartWithCompassBadge": true,
@@ -7894,6 +7715,11 @@
           "default": false,
           "display_name": "Shuffle Alpine Ziplines"
         },
+        "ShuffleDirectorTokens": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Shuffle Director Tokens"
+        },
         "ShuffleStorybookPages": {
           "type": "default_on_toggle",
           "default": 1,
@@ -8185,6 +8011,7 @@
         "StartWithCompassBadge": 1,
         "CompassBadgeMode": 1,
         "ShuffleStorybookPages": 1,
+        "ShuffleDirectorTokens": 0,
         "ShuffleActContracts": 1,
         "ShuffleSubconPaintings": 0,
         "NoPaintingSkips": 0,

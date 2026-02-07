@@ -90,7 +90,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Climbing Claws Shop", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Rope Dart'))
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Rope Dart', 'Second Wind'))
     )
 
     world.set_rule(
@@ -100,7 +100,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Lakeside Checkpoint", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Rope Dart'))
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Rope Dart', 'Second Wind'))
     )
 
     world.set_rule(
@@ -368,7 +368,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Underworld - Fireball Wave Shop -> Underworld - Long Climb Shop", player),
-        HasAny('Rope Dart', 'Wingsuit', 'Lightfoot Tabi', 'Strike of the Ninja')
+        HasAny('Lightfoot Tabi', 'Rope Dart', 'Strike of the Ninja', 'Wingsuit')
     )
 
     world.set_rule(
@@ -398,7 +398,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Riviere Turquoise - Launch of Faith Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
-        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Second Wind', 'Rope Dart'))
+        And(HasAny('Meditation', 'Path of Resilience'), HasAll('Rope Dart', 'Second Wind'))
     )
 
     world.set_rule(
@@ -683,7 +683,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Elemental Skylands Seal - Fire", player),
-        HasAll('Aerobatics Warrior', 'Wingsuit', 'Rope Dart', 'Strike of the Ninja')
+        HasAll('Aerobatics Warrior', 'Rope Dart', 'Strike of the Ninja', 'Wingsuit')
     )
 
     world.set_rule(

@@ -15,6 +15,8 @@ This directory documents bugs discovered in the upstream Archipelago repository 
 | Bug | Status | Description |
 |-----|--------|-------------|
 | [Memory Leak](./landstalker-memory-leak.md) | False alarm | Initially thought to be upstream bug, but was fork-specific (exporter called `fill_slot_data` after cleanup) |
+| [Memory Leak Repro](./landstalker-memory-leak-repro.md) | Closed | Reproduction steps for the false alarm |
+| [Memory Leak Fix](./landstalker-memory-leak-fix.md) | Applied | Fix documentation for the fork-specific issue |
 
 ## Document Types
 

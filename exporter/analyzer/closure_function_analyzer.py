@@ -858,6 +858,9 @@ class ClosureFunctionAnalyzer:
         This is used to simplify rules like `has(X) or option.to_bool()` when we can
         determine the option's value from the world context.
 
+        Controlled by the resolve_options_to_constants setting - when False, this
+        method always returns None to keep options as references.
+
         Args:
             option_name: Name of the option to evaluate (e.g., 'open_pyramid')
             closure_vars: Closure variables that might contain world context
@@ -865,8 +868,14 @@ class ClosureFunctionAnalyzer:
         Returns:
             True if option evaluates to True
             False if option evaluates to False
-            None if we cannot determine the value
+            None if we cannot determine the value or resolve_options_to_constants is False
         """
+        # Check if we should resolve options to constants
+        if self.game_handler and hasattr(self.game_handler, 'should_resolve_options_to_constants'):
+            if not self.game_handler.should_resolve_options_to_constants():
+                logger.debug(f"_try_evaluate_option: Skipping evaluation of '{option_name}' (resolve_options_to_constants=False)")
+                return None
+
         # Try to get world from closure vars or game handler
         world = closure_vars.get('world')
 

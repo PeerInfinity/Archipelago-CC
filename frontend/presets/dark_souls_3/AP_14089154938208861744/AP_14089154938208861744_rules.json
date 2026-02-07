@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Dark Souls III",
   "game_directory": "dark_souls_3",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -3034,9 +3034,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "US -> RS",
                   "Pyromancy Flame",
-                  "Transposing Kiln"
+                  "Transposing Kiln",
+                  "US -> RS"
                 ]
               }
             }
@@ -19952,6 +19952,20 @@
                     {
                       "rule": "Constant",
                       "args": {
+                        "value": "FS: Divine Blessing - Greirat from IBV"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
                         "value": "FS: Divine Blessing - Greirat from US"
                       },
                       "_converted_from_ast": true
@@ -19966,21 +19980,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "Irithyll of the Boreal Valley"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
-                },
-                {
-                  "rule": "_can_get",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "FS: Divine Blessing - Greirat from IBV"
+                        "value": "Grand Archives"
                       },
                       "_converted_from_ast": true
                     }
@@ -19994,7 +19994,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "Grand Archives"
+                        "value": "Irithyll of the Boreal Valley"
                       },
                       "_converted_from_ast": true
                     }

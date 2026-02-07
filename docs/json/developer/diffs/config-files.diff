@@ -24,7 +24,7 @@ index 3abbb5f64..dbde0d080 100644
      strategy:
        fail-fast: false
 diff --git a/.gitignore b/.gitignore
-index 3bb4e68c9..400684f2e 100644
+index cbc33e585..e7b98139e 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -53,7 +53,7 @@ _persistent_storage.yaml
@@ -36,7 +36,7 @@ index 3bb4e68c9..400684f2e 100644
  Output Logs/
  /factorio/
  /WebHostLib/static/generated
-@@ -195,3 +195,87 @@ _speedups.html
+@@ -198,3 +198,105 @@ _speedups.html
  .LSOverride
  Thumbs.db
  [Dd]esktop.ini
@@ -79,6 +79,8 @@ index 3bb4e68c9..400684f2e 100644
 +node_modules/*
 +test-results/*
 +set.mm
++*.pkl.gz
++*_pickle_meta.json
 +
 +!scripts/build/
 +!scripts/lib/
@@ -109,6 +111,19 @@ index 3bb4e68c9..400684f2e 100644
 +scripts/output/multiworld-worldgen/test-results_*
 +scripts/output/multiworld-apworld/test-results-*
 +scripts/output/multiworld-apworld/test-results_*
++scripts/output/ut-fuzz/test-results-*
++scripts/output/ut-fuzz/test-results_*
++# Track specific UT fuzz result files
++!scripts/output/ut-fuzz/test-results-original-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json
++!scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json
++
++*_from_pickle_rules.json
 +
 +!CC/scripts/prompts/gen-errors.txt
 +
@@ -124,6 +139,9 @@ index 3bb4e68c9..400684f2e 100644
 +worlds/apworld_manager/
 +worlds_disabled/
 +custom_worlds_disabled/
++journey-to-ascension/
++journey-to-ascension-modified/
++fuzz_output/
 \ No newline at end of file
 diff --git a/pytest.ini b/pytest.ini
 index f050d58b7..92f141336 100644
@@ -140,12 +158,18 @@ index f050d58b7..92f141336 100644
 +    ignore:.*pkg_resources is deprecated.*
 \ No newline at end of file
 diff --git a/requirements.txt b/requirements.txt
-index 928909b87..3a9c21272 100644
+index 27bca5c7c..1477660d9 100644
 --- a/requirements.txt
 +++ b/requirements.txt
-@@ -15,3 +15,5 @@ typing_extensions>=4.15.0
- pyshortcuts>=1.9.6
- kivymd @ git+https://github.com/kivymd/KivyMD@5ff9d0d
- kivymd>=2.0.1.dev0
+@@ -1,4 +1,5 @@
+ colorama>=0.4.6
++dill>=0.3.8
+ websockets>=13.0.1,<14
+ PyYAML>=6.0.3
+ jellyfish>=1.2.1
+@@ -19,3 +20,5 @@ kivymd>=2.0.1.dev0
+ 
+ # Legacy world dependencies that custom worlds rely on
+ Pymem>=1.13.0
 +astunparse>=1.6.3
 +psutil>=6.1.1

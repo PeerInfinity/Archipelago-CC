@@ -11,29 +11,13 @@ from typing import Any, Dict, List, Optional, Set
 from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
-from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
+from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule, ANALYZER_RUNTIME_TYPES
+from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
-def sanitize_class_name(name: str) -> str:
-    """Sanitize a name to be a valid Python identifier.
-
-    Removes all characters that are not alphanumeric (keeps letters and digits).
-    """
-    return re.sub(r'[^a-zA-Z0-9]', '', name)
-
-
-def sanitize_option_name(name: str) -> str:
-    """Sanitize an option name to be a valid Python identifier.
-
-    Replaces non-alphanumeric characters (except underscores) with underscores.
-    Collapses multiple consecutive underscores into one.
-    """
-    # Replace any non-alphanumeric character (except underscore) with underscore
-    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
-    # Collapse multiple underscores into one
-    sanitized = re.sub(r'_+', '_', sanitized)
-    # Remove leading/trailing underscores
-    return sanitized.strip('_')
+# Backwards-compatible aliases
+sanitize_class_name = sanitize_for_class_name
+sanitize_option_name = sanitize_for_identifier
 
 
 def is_valid_identifier(name: str) -> bool:
@@ -275,12 +259,19 @@ def _rule_needs_lambda(rule: dict) -> bool:
     if rule_name == 'AST_function_call':
         args = rule.get('args', {})
         function = args.get('function', {})
-        if isinstance(function, dict) and function.get('rule'):
-            func_rule = function.get('rule')
-            if func_rule in BOOLEAN_RULE_TYPES:
-                # Function is a Rule Builder rule - check if IT needs lambda
-                # (it might have nested dynamic references)
-                return _rule_needs_lambda(function)
+        if isinstance(function, dict):
+            if function.get('rule'):
+                func_rule = function.get('rule')
+                if func_rule in BOOLEAN_RULE_TYPES:
+                    # Function is a Rule Builder rule - check if IT needs lambda
+                    # (it might have nested dynamic references)
+                    return _rule_needs_lambda(function)
+            # state_method and item_check types produce complete expressions
+            # (e.g., has_all, has_any, has, can_reach) that can be converted
+            # to Rule Builder format without needing a lambda wrapper
+            func_type = function.get('type', '')
+            if func_type in ANALYZER_RUNTIME_TYPES - {'helper'}:
+                return False
         # Unknown function call structure - needs lambda
         return True
 

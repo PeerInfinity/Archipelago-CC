@@ -33,7 +33,10 @@ let _settings = {
   undiscoveredDisplay: 'hidden',
   showDebugOptions: true,
   clickDiscoversLocation: true,
-  showUndiscoveredDetails: false
+  clickDiscoversRegion: false,
+  disableLocationCheckUI: false,
+  showUndiscoveredDetails: false,
+  showUndiscoveredRegionNames: false
 };
 
 // --- Module Info ---
@@ -93,6 +96,16 @@ export function register(registrationApi) {
       type: 'boolean',
       default: true,
       description: 'Clicking an undiscovered location in the Locations panel discovers it'
+    },
+    clickDiscoversRegion: {
+      type: 'boolean',
+      default: false,
+      description: 'Clicking an undiscovered region in the Region Graph or Regions panel discovers it'
+    },
+    disableLocationCheckUI: {
+      type: 'boolean',
+      default: false,
+      description: 'Disable location check UI elements - clicking locations will not trigger checks'
     },
     showUndiscoveredDetails: {
       type: 'boolean',
@@ -197,6 +210,16 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       'discovery'
     );
     _unsubscribeHandles.push(settingsChangedUnsubscribe);
+
+    // Subscribe to UI click events for discovery handling
+    log('info', '[Discovery Module] Subscribing to UI click events');
+    _unsubscribeHandles.push(
+      _moduleEventBus.subscribe('regionGraph:nodeSelected', handleRegionClicked, 'discovery'),
+      _moduleEventBus.subscribe('ui:regionHeaderClicked', handleRegionClicked, 'discovery'),
+      _moduleEventBus.subscribe('ui:locationClicked', handleLocationClicked, 'discovery'),
+      _moduleEventBus.subscribe('ui:exitClicked', handleExitClicked, 'discovery'),
+      _moduleEventBus.subscribe('playerState:regionChanged', handlePlayerRegionChanged, 'discovery')
+    );
   } else {
     log('error',
       '[Discovery Module] EventBus not available for subscriptions.'
@@ -351,6 +374,100 @@ function handleLocationChecked(eventData) {
   }
 }
 
+// --- UI Click Event Handlers ---
+
+/**
+ * Handle region click from region graph or regions panel.
+ * Discovers the region if clickDiscoversRegion is enabled.
+ */
+function handleRegionClicked(eventData) {
+  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversRegion) return;
+  if (!discoveryStateSingleton) return;
+
+  // regionGraph:nodeSelected uses nodeId, ui:regionHeaderClicked uses regionName
+  const regionName = eventData?.regionName || eventData?.nodeId;
+  if (!regionName) return;
+
+  if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
+    log('info', `[Discovery Module] Discovering region via click: ${regionName}`);
+    const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(regionName);
+    if (wasNewlyDiscovered) {
+      autoDiscoverLocationsInRegion(regionName);
+      autoDiscoverExitsInRegion(regionName);
+    }
+  }
+}
+
+/**
+ * Handle location click from locations panel.
+ * Discovers the location (and its region) if clickDiscoversLocation is enabled.
+ */
+function handleLocationClicked(eventData) {
+  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversLocation) return;
+  if (!discoveryStateSingleton) return;
+
+  const { locationName, regionName } = eventData || {};
+  if (!locationName) return;
+
+  if (!discoveryStateSingleton.isLocationDiscovered(locationName)) {
+    log('info', `[Discovery Module] Discovering location via click: ${locationName}`);
+    discoveryStateSingleton.discoverLocation(locationName);
+  }
+
+  if (regionName && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
+    const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(regionName);
+    if (wasNewlyDiscovered) {
+      autoDiscoverLocationsInRegion(regionName);
+      autoDiscoverExitsInRegion(regionName);
+    }
+  }
+}
+
+/**
+ * Handle exit click from exits panel.
+ * Discovers the exit (and its source region) if clickDiscoversLocation is enabled.
+ */
+function handleExitClicked(eventData) {
+  if (!_settings.enableDiscoveryMode || !_settings.clickDiscoversLocation) return;
+  if (!discoveryStateSingleton) return;
+
+  const { exitName, sourceRegion } = eventData || {};
+  if (!exitName || !sourceRegion) return;
+
+  if (!discoveryStateSingleton.isExitDiscovered(sourceRegion, exitName)) {
+    log('info', `[Discovery Module] Discovering exit via click: ${exitName} in ${sourceRegion}`);
+    discoveryStateSingleton.discoverExit(sourceRegion, exitName);
+  }
+
+  if (!discoveryStateSingleton.isRegionDiscovered(sourceRegion)) {
+    const wasNewlyDiscovered = discoveryStateSingleton.discoverRegion(sourceRegion);
+    if (wasNewlyDiscovered) {
+      autoDiscoverLocationsInRegion(sourceRegion);
+      autoDiscoverExitsInRegion(sourceRegion);
+    }
+  }
+}
+
+/**
+ * Handle player region change (e.g. from text adventure or other sources).
+ * Auto-discovers locations and exits in the new region if settings allow.
+ * This complements the loop:moveCompleted handler for non-loop region changes.
+ */
+function handlePlayerRegionChanged(eventData) {
+  if (!_settings.enableDiscoveryMode) return;
+  if (!discoveryStateSingleton) return;
+
+  const regionName = eventData?.newRegion;
+  if (!regionName) return;
+
+  // Only trigger auto-discovery if the region is already discovered
+  // (region discovery itself is handled by loop:moveCompleted or click handlers)
+  if (discoveryStateSingleton.isRegionDiscovered(regionName)) {
+    autoDiscoverLocationsInRegion(regionName);
+    autoDiscoverExitsInRegion(regionName);
+  }
+}
+
 // --- Settings Functions ---
 
 /**
@@ -379,8 +496,17 @@ async function loadSettings() {
     _settings.clickDiscoversLocation = await settingsManager.getSetting(
       'moduleSettings.discovery.clickDiscoversLocation', true
     );
+    _settings.clickDiscoversRegion = await settingsManager.getSetting(
+      'moduleSettings.discovery.clickDiscoversRegion', false
+    );
+    _settings.disableLocationCheckUI = await settingsManager.getSetting(
+      'moduleSettings.discovery.disableLocationCheckUI', false
+    );
     _settings.showUndiscoveredDetails = await settingsManager.getSetting(
       'moduleSettings.discovery.showUndiscoveredDetails', false
+    );
+    _settings.showUndiscoveredRegionNames = await settingsManager.getSetting(
+      'moduleSettings.discovery.showUndiscoveredRegionNames', false
     );
     log('info', '[Discovery Module] Settings loaded:', _settings);
   } catch (error) {

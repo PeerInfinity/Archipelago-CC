@@ -17,10 +17,11 @@ Unlike the regular spoiler tests (which use default template settings), fuzz tes
 | Test | What It Tests | Test Results |
 |------|---------------|--------------|
 | **UT Fuzz (Original)** | Universal Tracker logic against Python sphere calculations | [View](../test-results/test-results-ut-fuzz-original.md) |
-| **UT Fuzz (Modified)** | Modified UT with worldgen-based tracking | [View](../test-results/test-results-ut-fuzz-modified.md) |
-| **UT Fuzz (Hybrid)** | Modified UT preferring native support | [View](../test-results/test-results-ut-fuzz-hybrid.md) |
+| **UT Fuzz (Worldgen)** | Worldgen UT (regenerates world from rules.json) | [View](../test-results/test-results-ut-fuzz-worldgen.md) |
+| **UT Fuzz (Hybrid)** | Worldgen UT preferring native support | [View](../test-results/test-results-ut-fuzz-hybrid.md) |
+| **UT Fuzz (Pickle)** | Pickle-based UT (loads serialized multiworld) | [View](../test-results/test-results-ut-fuzz-pickle.md) |
 | **Spoiler Fuzz** | Frontend spoiler playthrough | [View](../test-results/test-results-spoiler-fuzz.md) |
-| **Multiworld UT Fuzz** | Multiworld assembly with UT validation | [View](../test-results/test-results-multiworld-ut-fuzz.md) |
+| **Multiworld Sphere Fuzz** | Multiworld assembly with sphere validation | [Details](./test-multiworld-ut-fuzz.md) / [Results](../test-results/test-results-multiworld-ut-fuzz.md) |
 
 ## UT Fuzz Tests
 
@@ -43,24 +44,27 @@ UT has a fundamental limitation: if a game has **randomness in logic** that isn'
 
 ### UT Versions
 
-There are three versions of Universal Tracker tested:
+There are four versions of Universal Tracker tested:
 
 | Version | Description |
 |---------|-------------|
 | **Original** | The original UT from [FarisTheAncient/Archipelago](https://github.com/FarisTheAncient/Archipelago). Uses each game's native integration (if available) to determine what's in logic. |
-| **Modified** | Modified UT that uses worldgen-based tracking for all worlds. Generates a temporary worldgen world from the rules.json and uses it for logic calculations. |
-| **Hybrid** | Modified UT that prefers native game support when available, falling back to worldgen-based tracking otherwise. Best of both worlds. |
+| **Worldgen** | Uses worldgen-based tracking for all worlds. Generates a temporary worldgen world from the rules.json and uses it for logic calculations. |
+| **Hybrid** | Prefers native game support when available, falling back to worldgen-based tracking otherwise. Best of both worlds. |
+| **Pickle** | Loads the multiworld directly from a pickle file. Fastest mode - preserves exact lambdas without regeneration or AST conversion. Requires `dill` library. |
 
 ### Why Test Multiple Versions?
 
 - **Original** tests games' native UT integration
-- **Modified** tests the worldgen/JSON export path
+- **Worldgen** tests the worldgen/JSON export path
 - **Hybrid** tests the production configuration
+- **Pickle** tests direct multiworld serialization (fastest, preserves exact rules)
 
 Comparing results between versions helps identify:
 - Games that work better with native vs worldgen tracking
 - Issues specific to the worldgen export process
 - Games that need custom handling
+- Differences between pickle (exact lambdas) vs worldgen (AST-converted rules)
 
 ## Spoiler Fuzz Test
 
@@ -80,26 +84,25 @@ The Spoiler Fuzz test runs the **frontend spoiler playthrough** with randomized 
 - The **frontend Rule Builder** evaluates rules correctly with different options
 - Games are **completable** regardless of option settings
 
-## Multiworld UT Fuzz Test
+## Multiworld Sphere Fuzz Test
 
-Tests multiworld assembly by incrementally adding games that passed single-player UT fuzz tests.
+Tests multiworld assembly by incrementally adding games with randomized options and validating using Python's sphere analysis. This test does **not** use Universal Tracker — it validates purely through Python-side victory condition checks.
 
 ### How It Works
 
-1. Start with games that passed single-player UT fuzz
-2. For each game:
+1. For each game:
    - Generate a random YAML configuration
    - Add it to the multiworld
    - Generate the combined seed
-   - Validate using UT
+   - Validate each player's victory condition using sphere analysis
    - Keep the game if it passes, remove if it fails
-3. Track which games successfully integrated
+2. Track which games successfully integrated
 
 ### What It Tests
 
 - Games work correctly in **multiworld** with random options
 - Random option combinations are **compatible** across games
-- UT validation works for **multi-player** seeds
+- Each player's **victory condition** can be met in multi-player seeds
 
 ## Understanding Results
 
@@ -127,7 +130,7 @@ Tests multiworld assembly by incrementally adding games that passed single-playe
 ### UT Fuzz Test
 
 ```bash
-# Test all games with 10 runs each (modified UT)
+# Test all games with 10 runs each (worldgen UT)
 python scripts/test/test-all-ut-fuzz.py --runs 10
 
 # Test specific game
@@ -138,6 +141,9 @@ python scripts/test/test-all-ut-fuzz.py --runs 10 --ut-version original
 
 # Test with hybrid UT (prefer native support)
 python scripts/test/test-all-ut-fuzz.py --runs 10 --prefer-native-ut
+
+# Test with pickle-based UT (fastest, preserves exact lambdas)
+python scripts/test/test-all-ut-fuzz.py --runs 10 --ut-version pickle
 ```
 
 ### Spoiler Fuzz Test
@@ -150,10 +156,10 @@ python scripts/test/test-all-spoiler-fuzz.py --runs 10
 python scripts/test/test-all-spoiler-fuzz.py --runs 10 --include-list Adventure.yaml
 ```
 
-### Multiworld UT Fuzz Test
+### Multiworld Sphere Fuzz Test
 
 ```bash
-# Test multiworld assembly
+# Test multiworld assembly (sphere validation only, no UT)
 python scripts/test/test-multiworld-ut-fuzz.py --runs 5
 ```
 
@@ -163,7 +169,7 @@ python scripts/test/test-multiworld-ut-fuzz.py --runs 5
 |------|------|
 | UT Fuzz test script | `scripts/test/test-all-ut-fuzz.py` |
 | Spoiler Fuzz test script | `scripts/test/test-all-spoiler-fuzz.py` |
-| Multiworld UT Fuzz script | `scripts/test/test-multiworld-ut-fuzz.py` |
+| Multiworld Sphere Fuzz script | `scripts/test/test-multiworld-ut-fuzz.py` |
 | Fuzzer core | `fuzz.py` |
 | UT Fuzzer hook | `worlds/tracker/fuzzer_hook.py` |
 | UT Fuzz results | `scripts/output/ut-fuzz/` |
@@ -184,6 +190,7 @@ The fuzz tests complement the standard tests by covering the option space that d
 
 ## Related Documentation
 
+- [Fuzzer Debugging Guide](../guides/fuzzer-debugging.md) - Hands-on guide for running and debugging the fuzzer
 - [Spoiler Tests](./test-spoilers.md) - Standard spoiler tests with default options
 - [Fuzzer Modifications](../diffs/fuzzer-modifications.md) - Changes to the fuzzer for this fork
 - [Universal Tracker Modifications](../diffs/universal-tracker-modifications.md) - UT changes for this fork

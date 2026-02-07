@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Badeline Chaser Frequency:       0
 Badeline Chaser Source:          Locations
 Badeline Chaser Speed:           3
@@ -124,18 +125,14 @@ Playthrough:
 }
 4: {
   Badeline Island Checkpoint: Badeline Island Checkpoint
-  Badeline Tower Breakable Bottom Strawberry: Strawberry
   Badeline Tower Checkpoint: Badeline Tower Checkpoint
   Double Dash Puzzle Strawberry: Strawberry
   Feather Chain Strawberry: Strawberry
   Feather Hidden Strawberry: Coins
   Feather Maze Strawberry: Strawberry
-  Theo Tower Lower Cassette Strawberry: Strawberry
-  Traffic Block Strawberry: Strawberry
   You Are Ready Cassette Strawberry: Strawberry
 }
 5: {
-  Badeline Tower Cassette Strawberry: Strawberry
   Distant Feather Cassette Strawberry: Strawberry
   Feather Arches Cassette Strawberry: Strawberry
   South End of Bridge Cassette Strawberry: Springs

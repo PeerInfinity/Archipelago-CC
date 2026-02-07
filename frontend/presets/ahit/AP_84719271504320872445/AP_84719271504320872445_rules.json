@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "A Hat in Time",
   "game_directory": "ahit",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 3,
   "seed_name": "84719271504320872445",
   "player_names": {
@@ -1367,18 +1367,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Dead Bird Studio"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (Barrel Battle)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Dead Bird Studio"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1527,18 +1527,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -1699,18 +1699,18 @@
                   }
                 },
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Train Rush"
+                  }
+                },
+                {
                   "rule": "AST_location_rule_ref",
                   "args": {
                     "location": "Act Completion (The Big Parade)",
                     "_original_ast_type": "location_rule_ref"
                   },
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Train Rush"
-                  }
                 },
                 {
                   "rule": "AST_location_rule_ref",
@@ -3254,6 +3254,13 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "HasGroup",
+                  "args": {
+                    "group": "Crayon",
+                    "count": 4
+                  }
+                },
+                {
                   "rule": "can_hit",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true,
@@ -3267,13 +3274,6 @@
                   "rule": "can_use_hookshot",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "Crayon",
-                    "count": 4
-                  }
                 }
               ]
             }
@@ -3599,11 +3599,6 @@
                       "rule": "True_"
                     }
                   ]
-                },
-                {
-                  "rule": "can_use_hookshot",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_hookshot",
@@ -7356,6 +7351,7 @@
         "ShipShapeCustomTaskGoal": 0,
         "ShuffleActContracts": true,
         "ShuffleAlpineZiplines": false,
+        "ShuffleDirectorTokens": false,
         "ShuffleStorybookPages": true,
         "ShuffleSubconPaintings": false,
         "StartWithCompassBadge": true,
@@ -7705,6 +7701,11 @@
           "default": 0,
           "display_name": "Shuffle Alpine Ziplines"
         },
+        "ShuffleDirectorTokens": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Director Tokens"
+        },
         "ShuffleStorybookPages": {
           "type": "default_on_toggle",
           "default": 1,
@@ -7990,6 +7991,7 @@
         "StartWithCompassBadge": 1,
         "CompassBadgeMode": 1,
         "ShuffleStorybookPages": 1,
+        "ShuffleDirectorTokens": 0,
         "ShuffleActContracts": 1,
         "ShuffleSubconPaintings": 0,
         "NoPaintingSkips": 0,

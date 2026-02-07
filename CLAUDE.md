@@ -155,24 +155,20 @@ python scripts/setup/update_host_settings.py full-spoilers
 | Rule Builder module | `rule_builder/` |
 | Seed ID calculator | `scripts/lib/seed_utils.py` |
 | Frontend logging | `frontend/settings.json` |
-| Claude instructions | `CC/` |
-| Fork documentation | `docs/json/` |
-| World generator guide | `docs/json/developer/guides/world-generator.md` |
-| Repository diffs | `docs/json/developer/diffs/repository-changes.md` |
-| Cloud setup | `CC/cloud-setup.md` |
 
 ## Documentation
 
 | Topic | Location |
 |-------|----------|
-| Main documentation portal | `docs/json/README.md` |
-| Developer documentation | `docs/json/developer/README.md` |
-| Frontend modules reference | `docs/json/modules/README.md` |
-| Exporter module | `exporter/README.md` |
-| World generator module | `world_generator/README.md` |
-| Rule Builder module | `rule_builder/README.md` |
-| Frontend overview | `frontend/README.md` |
-| Planning documents | `CC/docs/plans/README.md` |
+| Documentation portal | [docs/json/](docs/json/README.md) |
+| Developer docs | [docs/json/developer/](docs/json/developer/README.md) |
+| Frontend modules | [docs/json/modules/](docs/json/modules/README.md) |
+| Exporter | [exporter/](exporter/README.md) |
+| World generator | [world_generator/](world_generator/README.md) |
+| Rule Builder | [rule_builder/](rule_builder/README.md) |
+| Frontend | [frontend/](frontend/README.md) |
+| Claude Code | [CC/](CC/README.md) |
+| Planning docs | [CC/docs/plans/](CC/docs/plans/README.md) |
 
 ## Notes
 - For frontend debugging, `console.log` is easier than configuring the logging system

@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Ace Weapon Upgrade:              Always Upgraded
 Cliff Weapon Upgrade:            Always Upgraded
 Death Link:                      No
@@ -26,6 +27,7 @@ Instant Saving:                  Yes
 Music Shuffle:                   No
 Screen Shake Intensity %:        50
 Sprint Availability:             Available With Jacket
+Start Inventory from Pool:       
 Trap Chance:                     50
 
 
@@ -75,7 +77,6 @@ Playthrough:
 
 }
 1: {
-  Cave: After Wallboss: Clip Extension
   Cave: Spike pit: Powered Blaster
   Cave: Wallboss (Boss): Faster Reload
   Hub: Console login: Clip Extension
@@ -89,26 +90,19 @@ Playthrough:
   Cave: Powered Blaster chest: Volcanic Key
   Hub: Hidden near Arctic: Faster Reload
   Swamp: Down the chimney: Ice Spreadshot
-  Swamp: Wall maze: Clip Extension
   Volcanic: Under bridge: Life Extension
 }
 3: {
-  Arctic: Ace (Boss): Life Extension
-  Arctic: Ice Spreadshot chest: Faster Reload
   Swamp: Special Extension chest: Life Extension
-  Volcanic: Cliff (Boss): Clip Extension
   Volcanic: Flamethrower chest: Cave Key
   Volcanic: Hot coals: Flamethrower
 }
 4: {
   Arctic: Under snow: Faster Reload
-  Electrical: Before Malakhov: Faster Reload
-  Electrical: Behind wall: Clip Extension
-  Electrical: Volt Laser chest: Life Extension
-  Hub: Ninja scare (Boss?): Life Extension
-  Swamp: Bramble room: Volt Laser
 }
 5: {
-  Electrical: BRAINOS (Boss): Life Extension
+  Swamp: Bramble room: Volt Laser
+}
+6: {
   Mission objective: PRINCESS
 }

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Starcraft 2",
   "game_directory": "sc2",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -19636,12 +19636,16 @@
         "groups": [
           "Ability",
           "Everything",
+          "HotS Items",
           "Kerrigan Abilities",
           "Kerrigan Active Abilities",
+          "Kerrigan HotS Abilities",
           "Kerrigan Logic Active Abilities",
           "Kerrigan Non-Ultimate Active Abilities",
           "Kerrigan Non-Ultimates",
+          "Kerrigan Tier 1",
           "Kinetic Blast",
+          "Vanilla Items",
           "Zerg",
           "Zerg Items"
         ],
@@ -19710,7 +19714,6 @@
           "Kerrigan Logic Active Abilities",
           "Kerrigan Non-Ultimate Active Abilities",
           "Kerrigan Non-Ultimates",
-          "Kerrigan Tier 1",
           "Kerrigan Tier 2",
           "Vanilla Items",
           "Zerg",
@@ -38288,7 +38291,7 @@
         },
         "lowest_maximum_supply": {
           "type": "range",
-          "range_start": 100,
+          "range_start": 50,
           "range_end": 200,
           "default": 180,
           "display_name": "Lowest Maximum Supply"
@@ -40686,19 +40689,21 @@
           {
             "type": "for_iter",
             "iterable": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": {
-                    "Time Stop (Spear of Adun)": 4,
-                    "Purifier Beam (Spear of Adun)": 3,
-                    "Solar Bombardment (Spear of Adun)": 3
-                  }
-                },
-                "attr": "items"
-              }
+              "type": "constant",
+              "value": [
+                [
+                  "Purifier Beam (Spear of Adun)",
+                  3
+                ],
+                [
+                  "Solar Bombardment (Spear of Adun)",
+                  3
+                ],
+                [
+                  "Time Stop (Spear of Adun)",
+                  4
+                ]
+              ]
             },
             "body": [
               {
@@ -40742,22 +40747,33 @@
           {
             "type": "for_iter",
             "iterable": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": {
-                    "Solar Lance (Spear of Adun)": 8,
-                    "Deploy Fenix (Spear of Adun)": 7,
-                    "Temporal Field (Spear of Adun)": 6,
-                    "Progressive Proxy Pylon (Spear of Adun)": 5,
-                    "Shield Overcharge (Spear of Adun)": 5,
-                    "Orbital Strike (Spear of Adun)": 4
-                  }
-                },
-                "attr": "items"
-              }
+              "type": "constant",
+              "value": [
+                [
+                  "Deploy Fenix (Spear of Adun)",
+                  7
+                ],
+                [
+                  "Orbital Strike (Spear of Adun)",
+                  4
+                ],
+                [
+                  "Progressive Proxy Pylon (Spear of Adun)",
+                  5
+                ],
+                [
+                  "Shield Overcharge (Spear of Adun)",
+                  5
+                ],
+                [
+                  "Solar Lance (Spear of Adun)",
+                  8
+                ],
+                [
+                  "Temporal Field (Spear of Adun)",
+                  6
+                ]
+              ]
             },
             "body": [
               {
@@ -41861,23 +41877,37 @@
                   ]
                 },
                 "iterator": {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": {
-                        "Automated Refinery (Terran)": 4,
-                        "MULE (Command Center)": 4,
-                        "Orbital Depots (Terran)": 2,
-                        "Command Center Reactor (Command Center)": 2,
-                        "Extra Supplies (Command Center)": 2,
-                        "Micro-Filtering (Terran)": 2,
-                        "Tech Reactor (Terran)": 2
-                      }
-                    },
-                    "attr": "items"
-                  }
+                  "type": "constant",
+                  "value": [
+                    [
+                      "Automated Refinery (Terran)",
+                      4
+                    ],
+                    [
+                      "Command Center Reactor (Command Center)",
+                      2
+                    ],
+                    [
+                      "Extra Supplies (Command Center)",
+                      2
+                    ],
+                    [
+                      "MULE (Command Center)",
+                      4
+                    ],
+                    [
+                      "Micro-Filtering (Terran)",
+                      2
+                    ],
+                    [
+                      "Orbital Depots (Terran)",
+                      2
+                    ],
+                    [
+                      "Tech Reactor (Terran)",
+                      2
+                    ]
+                  ]
                 },
                 "condition": {
                   "type": "item_check",
@@ -41956,18 +41986,17 @@
                       ]
                     },
                     "iterator": {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": {
-                            "Guardian Shell (Spear of Adun)": 4,
-                            "Overwatch (Spear of Adun)": 2
-                          }
-                        },
-                        "attr": "items"
-                      }
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Guardian Shell (Spear of Adun)",
+                          4
+                        ],
+                        [
+                          "Overwatch (Spear of Adun)",
+                          2
+                        ]
+                      ]
                     },
                     "condition": {
                       "type": "item_check",

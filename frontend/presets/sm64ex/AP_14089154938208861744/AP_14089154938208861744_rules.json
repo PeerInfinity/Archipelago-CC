@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario 64",
   "game_directory": "sm64ex",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -32,8 +32,8 @@
             }
           },
           {
-            "name": "Menu -> Jolly Roger Bay",
-            "connected_region": "Jolly Roger Bay",
+            "name": "Menu -> Jolly Roger Bay Door",
+            "connected_region": "Jolly Roger Bay Door",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -287,10 +287,15 @@
             "name": "BoB: Island",
             "connected_region": "BoB: Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Cannon Unlock BoB"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Cannon Unlock BoB"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -327,13 +332,24 @@
             "name": "BoB: Mario Wings to the Sky",
             "id": 3626004,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "AST_function_call",
               "args": {
-                "items": [
-                  "Cannon Unlock BoB",
-                  "Wing Cap"
-                ]
-              }
+                "function": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Cannon Unlock BoB"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Wing Cap"
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -465,10 +481,25 @@
             "name": "WF: Fall onto the Caged Island",
             "id": 3626011,
             "access_rule": {
-              "rule": "CanReachRegion",
+              "rule": "AST_function_call",
               "args": {
-                "region_name": "WF: Tower"
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "can_reach",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "WF: Tower"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Region"
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -482,10 +513,15 @@
             "name": "WF: Blast Away the Wall",
             "id": 3626012,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Cannon Unlock WF"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Cannon Unlock WF"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -531,19 +567,32 @@
           }
         ]
       },
+      "Jolly Roger Bay Door": {
+        "name": "Jolly Roger Bay Door",
+        "exits": [
+          {
+            "name": "Jolly Roger Bay Door -> Jolly Roger Bay",
+            "connected_region": "Jolly Roger Bay",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Jolly Roger Bay Door -> The Secret Aquarium",
+            "connected_region": "The Secret Aquarium",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "Jolly Roger Bay": {
         "name": "Jolly Roger Bay",
         "exits": [
           {
             "name": "JRB: Upper",
             "connected_region": "JRB: Upper",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Jolly Roger Bay -> The Secret Aquarium",
-            "connected_region": "The Secret Aquarium",
             "access_rule": {
               "rule": "True_"
             }
@@ -596,10 +645,23 @@
             "name": "JRB: Blast to the Stone Pillar",
             "id": 3626018,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Cannon Unlock JRB"
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Cannon Unlock JRB"
+                      ]
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -613,10 +675,15 @@
             "name": "JRB: Through the Jet Stream",
             "id": 3626019,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Metal Cap"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Metal Cap"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -740,10 +807,15 @@
             "name": "CCM: Wall Kicks Will Work",
             "id": 3626026,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Cannon Unlock CCM"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Cannon Unlock CCM"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -897,10 +969,15 @@
             "name": "BBH: Eye to Eye in the Secret Room",
             "id": 3626033,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Vanish Cap"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Vanish Cap"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -1207,10 +1284,23 @@
             "name": "HMC: Metal-Head Mario Can Move!",
             "id": 3626037,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Metal Cap"
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Metal Cap"
+                      ]
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -1478,9 +1568,11 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wing Cap"
+                    "items": [
+                      "Wing Cap"
+                    ]
                   }
                 }
               ]
@@ -1585,9 +1677,11 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Wing Cap"
+                    "items": [
+                      "Wing Cap"
+                    ]
                   }
                 }
               ]
@@ -1652,10 +1746,15 @@
             "name": "DDD: Through the Jet Stream",
             "id": 3626059,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Metal Cap"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Metal Cap"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -1683,13 +1782,24 @@
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "AST_function_call",
               "args": {
-                "items": [
-                  "Metal Cap",
-                  "Vanish Cap"
-                ]
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Metal Cap",
+                        "Vanish Cap"
+                      ]
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -1703,10 +1813,25 @@
             "name": "DDD: Pole-Jumping for Red Coins",
             "id": 3626058,
             "access_rule": {
-              "rule": "CanReachLocation",
+              "rule": "AST_function_call",
               "args": {
-                "location_name": "Bowser in the Fire Sea Key"
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "can_reach",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Bowser in the Fire Sea Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Location"
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -1740,10 +1865,15 @@
             "name": "Cavern of the Metal Cap Red Coins",
             "id": 3626133,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Metal Cap"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Metal Cap"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -1791,10 +1921,15 @@
             "name": "Vanish Cap Under the Moat Red Coins",
             "id": 3626147,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Vanish Cap"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Vanish Cap"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -2025,10 +2160,15 @@
             "name": "SL: Into the Igloo",
             "id": 3626068,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Vanish Cap"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Vanish Cap"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -2273,10 +2413,15 @@
             "name": "TTM: Blast to the Lonely Mushroom",
             "id": 3626082,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Cannon Unlock TTM"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Cannon Unlock TTM"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -2916,10 +3061,15 @@
             "name": "RR: Somewhere Over the Rainbow",
             "id": 3626103,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Cannon Unlock RR"
-              }
+                "function": {
+                  "type": "item_check",
+                  "item": "Cannon Unlock RR"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -2973,10 +3123,23 @@
             "name": "Wing Mario Over the Rainbow Red Coins",
             "id": 3626154,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Wing Cap"
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Wing Cap"
+                      ]
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Power Star",
@@ -2990,10 +3153,23 @@
             "name": "Wing Mario Over the Rainbow 1Up Block",
             "id": 3626243,
             "access_rule": {
-              "rule": "Has",
+              "rule": "AST_function_call",
               "args": {
-                "item_name": "Wing Cap"
-              }
+                "function": {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Wing Cap"
+                      ]
+                    }
+                  ]
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3383,6 +3559,127 @@
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Painting Unlock WF": {
+        "name": "Painting Unlock WF",
+        "id": 3626231,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock JRB": {
+        "name": "Painting Unlock JRB",
+        "id": 3626232,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock CCM": {
+        "name": "Painting Unlock CCM",
+        "id": 3626233,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock LLL": {
+        "name": "Painting Unlock LLL",
+        "id": 3626236,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock SSL": {
+        "name": "Painting Unlock SSL",
+        "id": 3626237,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock DDD": {
+        "name": "Painting Unlock DDD",
+        "id": 3626238,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock SL": {
+        "name": "Painting Unlock SL",
+        "id": 3626239,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock WDW": {
+        "name": "Painting Unlock WDW",
+        "id": 3626240,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock TTM": {
+        "name": "Painting Unlock TTM",
+        "id": 3626241,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock THI": {
+        "name": "Painting Unlock THI",
+        "id": 3626242,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock TTC": {
+        "name": "Painting Unlock TTC",
+        "id": 3626243,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -3433,6 +3730,7 @@
         "completion_type": 0,
         "death_link": false,
         "enable_coin_stars": 0,
+        "enable_locked_paintings": false,
         "enable_move_rando": false,
         "exclamation_boxes": false,
         "exclude_locations": [],
@@ -3530,6 +3828,11 @@
           },
           "default": 0,
           "display_name": "Enable 100 Coin Stars"
+        },
+        "enable_locked_paintings": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Enable Locked Paintings"
         },
         "enable_move_rando": {
           "type": "toggle",
@@ -3670,6 +3973,7 @@
           "311": 311
         },
         "MoveRandoVec": 0,
+        "PaintingRando": 0,
         "DeathLink": 0,
         "CompletionType": 0,
         "FirstBowserDoorCost": 7,

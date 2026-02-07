@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Links Awakening DX",
   "game_directory": "ladx",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -333,15 +333,15 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
-                  "Magic Rod",
-                  "Progressive Sword",
                   "Magic Powder",
-                  "Progressive Power Bracelet"
+                  "Magic Rod",
+                  "Progressive Power Bracelet",
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -674,15 +674,15 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
-                  "Magic Rod",
-                  "Progressive Sword",
                   "Magic Powder",
-                  "Progressive Power Bracelet"
+                  "Magic Rod",
+                  "Progressive Power Bracelet",
+                  "Progressive Shield",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -1574,10 +1574,10 @@
               "args": {
                 "items": [
                   "Ballad of the Wind Fish",
-                  "Ocarina",
                   "Conch Horn",
                   "Coral Triangle",
                   "Full Moon Cello",
+                  "Ocarina",
                   "Organ of Evening Calm",
                   "Sea Lily's Bell",
                   "Surf Harp",
@@ -2297,9 +2297,9 @@
                   "args": {
                     "items": [
                       "Bomb",
-                      "Progressive Sword",
                       "Bow",
-                      "Magic Rod"
+                      "Magic Rod",
+                      "Progressive Sword"
                     ]
                   }
                 },
@@ -2938,8 +2938,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Power Bracelet",
-                      "Nightmare Key (Bottle Grotto)"
+                      "Nightmare Key (Bottle Grotto)",
+                      "Progressive Power Bracelet"
                     ]
                   }
                 }
@@ -2972,8 +2972,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Progressive Power Bracelet",
-                      "Nightmare Key (Bottle Grotto)"
+                      "Nightmare Key (Bottle Grotto)",
+                      "Progressive Power Bracelet"
                     ]
                   }
                 }
@@ -3170,9 +3170,9 @@
                   "args": {
                     "items": [
                       "Bomb",
-                      "Progressive Sword",
                       "Bow",
-                      "Magic Rod"
+                      "Magic Rod",
+                      "Progressive Sword"
                     ]
                   }
                 },
@@ -5879,12 +5879,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -5897,12 +5897,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -5921,12 +5921,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -5980,12 +5980,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -7349,11 +7349,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
+                      "Bomb",
                       "Boomerang",
                       "Bow",
-                      "Magic Rod",
-                      "Bomb",
                       "Hookshot",
+                      "Magic Rod",
                       "Progressive Sword"
                     ]
                   }
@@ -7457,11 +7457,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
+                      "Bomb",
                       "Boomerang",
                       "Bow",
-                      "Magic Rod",
-                      "Bomb",
                       "Hookshot",
+                      "Magic Rod",
                       "Progressive Sword"
                     ]
                   }
@@ -7808,13 +7808,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Turtle Rock)",
-                    "count": 4
-                  }
-                },
-                {
                   "rule": "HasAny",
                   "args": {
                     "items": [
@@ -7826,6 +7819,13 @@
                       "Magic Rod",
                       "Progressive Sword"
                     ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Turtle Rock)",
+                    "count": 4
                   }
                 },
                 {
@@ -10038,10 +10038,10 @@
               "args": {
                 "items": [
                   "Ballad of the Wind Fish",
-                  "Ocarina",
                   "Conch Horn",
                   "Coral Triangle",
                   "Full Moon Cello",
+                  "Ocarina",
                   "Organ of Evening Calm",
                   "Sea Lily's Bell",
                   "Surf Harp",
@@ -10538,12 +10538,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -10690,12 +10690,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -10884,12 +10884,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -10976,12 +10976,12 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -11436,13 +11436,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Pegasus Boots",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Pegasus Boots",
                   "Progressive Sword"
                 ]
               }
@@ -11519,13 +11519,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Pegasus Boots",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Pegasus Boots",
                   "Progressive Sword"
                 ]
               }
@@ -14377,8 +14377,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Nightmare Key (Catfish's Maw)",
                   "Hookshot",
+                  "Nightmare Key (Catfish's Maw)",
                   "Progressive Sword"
                 ]
               }
@@ -14398,8 +14398,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Nightmare Key (Catfish's Maw)",
                   "Hookshot",
+                  "Nightmare Key (Catfish's Maw)",
                   "Progressive Sword"
                 ]
               }
@@ -15361,8 +15361,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Bow",
                   "Bomb",
+                  "Bow",
                   "Magic Rod"
                 ]
               }
@@ -15424,8 +15424,8 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Bow",
                   "Bomb",
+                  "Bow",
                   "Magic Rod"
                 ]
               }
@@ -16436,10 +16436,10 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Sword",
                   "Boomerang",
                   "Feather",
-                  "Hookshot"
+                  "Hookshot",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -16467,10 +16467,10 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Sword",
                   "Boomerang",
                   "Feather",
-                  "Hookshot"
+                  "Hookshot",
+                  "Progressive Sword"
                 ]
               }
             }
@@ -17012,13 +17012,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -17048,11 +17048,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Shield",
                       "Bomb",
                       "Boomerang",
                       "Bow",
                       "Hookshot",
+                      "Progressive Shield",
                       "Progressive Sword"
                     ]
                   }
@@ -17245,13 +17245,13 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Bomb",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Powder",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -17304,11 +17304,11 @@
                   "rule": "HasAny",
                   "args": {
                     "items": [
-                      "Progressive Shield",
                       "Bomb",
                       "Boomerang",
                       "Bow",
                       "Hookshot",
+                      "Progressive Shield",
                       "Progressive Sword"
                     ]
                   }
@@ -17499,11 +17499,11 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -17573,11 +17573,11 @@
               "rule": "HasAny",
               "args": {
                 "items": [
-                  "Progressive Shield",
                   "Boomerang",
                   "Bow",
                   "Hookshot",
                   "Magic Rod",
+                  "Progressive Shield",
                   "Progressive Sword"
                 ]
               }
@@ -20035,6 +20035,35 @@
         "STONE_BEAK": 0,
         "INSTRUMENT": 100
       },
+      "ladxr_settings_dict": {
+        "logic": "normal",
+        "tradequest": "false",
+        "rooster": "true",
+        "dungeonshuffle": "false",
+        "entranceshuffle": "none",
+        "goal": 8,
+        "linkspalette": "-1",
+        "warps": "vanilla",
+        "trendygame": "normal",
+        "gfxmod": "false",
+        "palette": "normal",
+        "textshuffle": "false",
+        "foreignitemicons": "guessbyname",
+        "shufflenightmarekeys": "originaldungeon",
+        "shufflesmallkeys": "originaldungeon",
+        "music": "",
+        "musicchange": "always",
+        "nagmessages": "false",
+        "aptitlescreen": "true",
+        "bootscontrols": "vanilla",
+        "steal": "outoflogic",
+        "quickswap": "none",
+        "hardmode": "none",
+        "lowhpbeep": "default",
+        "textmode": "fast",
+        "noflash": "true",
+        "overworld": "normal"
+      },
       "ladxr_logic": {
         "start": "Start House",
         "windfish": "Windfish",
@@ -20046,11 +20075,8 @@
           {
             "items": [
               {
-                "item": "BOMB",
                 "room": 676,
-                "metadata": "Well Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Well Heart Piece"
               }
             ],
             "gated_connections": []
@@ -20058,11 +20084,8 @@
           {
             "items": [
               {
-                "item": "RUPEES_20",
                 "room": 689,
-                "metadata": "Fishing Game Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Fishing Game Heart Piece"
               }
             ],
             "gated_connections": []
@@ -20070,11 +20093,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 163,
-                "metadata": "Bush Field",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bush Field"
               }
             ],
             "gated_connections": []
@@ -20082,11 +20102,8 @@
           {
             "items": [
               {
-                "item": "TOADSTOOL",
                 "room": 210,
-                "metadata": "Outside D1 Tree Bonk",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Outside D1 Tree Bonk"
               }
             ],
             "simple_connections": [
@@ -20100,12 +20117,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_100",
                 "room": 146,
                 "extra": 220,
-                "metadata": "Ballad of the Wind Fish",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Ballad of the Wind Fish"
               }
             ],
             "simple_connections": [
@@ -20130,11 +20144,8 @@
           {
             "items": [
               {
-                "item": "GEL",
                 "room": 233,
-                "metadata": "Lone Bush",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Lone Bush"
               }
             ],
             "gated_connections": []
@@ -20142,11 +20153,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 248,
-                "metadata": "Island Bush of Destiny",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Island Bush of Destiny"
               }
             ],
             "gated_connections": []
@@ -20169,11 +20177,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 80,
-                "metadata": "Toadstool",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Toadstool"
               }
             ],
             "gated_connections": []
@@ -20182,12 +20187,9 @@
           {
             "items": [
               {
-                "item": "SLIME_KEY",
                 "room": 701,
                 "metadata": "Cave Crystal Chest",
-                "addr": 2077,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2077
               }
             ],
             "simple_connections": [
@@ -20201,11 +20203,8 @@
           {
             "items": [
               {
-                "item": "TAIL_KEY",
                 "room": 683,
-                "metadata": "Cave Skull Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Cave Skull Heart Piece"
               }
             ],
             "simple_connections": [
@@ -20220,12 +20219,9 @@
           {
             "items": [
               {
-                "item": "FEATHER",
                 "room": 65,
                 "metadata": "Tail Key Chest",
-                "addr": 1441,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1441
               }
             ],
             "gated_connections": []
@@ -20235,12 +20231,9 @@
           {
             "items": [
               {
-                "item": "SHOVEL",
                 "room": 686,
                 "metadata": "Write Cave West",
-                "addr": 2062,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2062
               }
             ],
             "gated_connections": []
@@ -20248,12 +20241,9 @@
           {
             "items": [
               {
-                "item": "POWER_BRACELET",
                 "room": 687,
                 "metadata": "Write Cave East",
-                "addr": 2063,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2063
               }
             ],
             "simple_connections": [
@@ -20269,12 +20259,9 @@
             "items": [
               {
                 "unadjusted_room": 680,
-                "item": "TRADING_ITEM_BROOM",
                 "room": 680,
                 "metadata": "MrWrite",
-                "default_item": "TRADING_ITEM_BROOM",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_BROOM"
               }
             ],
             "simple_connections": [
@@ -20292,12 +20279,9 @@
           {
             "items": [
               {
-                "item": "KEY2",
                 "room": 310,
                 "metadata": "Entrance Chest",
-                "addr": 1686,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1686
               }
             ],
             "dungeon": 2,
@@ -20310,11 +20294,8 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 306,
-                "metadata": "Two Stalfos Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Two Stalfos Key"
               }
             ],
             "dungeon": 2,
@@ -20323,12 +20304,9 @@
           {
             "items": [
               {
-                "item": "KEY2",
                 "room": 312,
                 "metadata": "First Switch Locked Chest",
-                "addr": 1688,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1688
               }
             ],
             "dungeon": 2,
@@ -20337,12 +20315,9 @@
           {
             "items": [
               {
-                "item": "MAP2",
                 "room": 313,
                 "metadata": "Button Spawn Chest",
-                "addr": 1689,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1689
               }
             ],
             "dungeon": 2
@@ -20354,20 +20329,14 @@
           {
             "items": [
               {
-                "item": "KEY2",
                 "room": 294,
                 "metadata": "Vacuum Mouth Chest",
-                "addr": 1670,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1670
               },
               {
-                "item": "SEASHELL",
                 "room": 289,
                 "metadata": "Outside Boo Buddies Room Chest",
-                "addr": 1665,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1665
               }
             ],
             "dungeon": 2
@@ -20375,12 +20344,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 290,
                 "metadata": "Second Switch Locked Chest",
-                "addr": 1666,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1666
               }
             ],
             "dungeon": 2
@@ -20388,12 +20354,9 @@
           {
             "items": [
               {
-                "item": "KEY2",
                 "room": 295,
                 "metadata": "Enemy Order Room Chest",
-                "addr": 1671,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1671
               }
             ],
             "dungeon": 2,
@@ -20416,18 +20379,12 @@
           {
             "items": [
               {
-                "item": "SHIELD",
                 "room": 299,
-                "metadata": "Genie Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Genie Heart Container"
               },
               {
-                "item": "INSTRUMENT2",
                 "room": 298,
-                "metadata": "Conch Horn",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Conch Horn"
               }
             ],
             "dungeon": 2,
@@ -20440,12 +20397,9 @@
           {
             "items": [
               {
-                "item": "COMPASS2",
                 "room": 288,
                 "metadata": "Boo Buddies Room Chest",
-                "addr": 1664,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1664
               }
             ],
             "dungeon": 2,
@@ -20454,11 +20408,8 @@
           {
             "items": [
               {
-                "item": "KEY2",
                 "room": 308,
-                "metadata": "Mask-Mimic Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Mask-Mimic Key"
               }
             ],
             "dungeon": 2,
@@ -20467,12 +20418,9 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK2",
                 "room": 311,
                 "metadata": "Mask-Mimic Chest",
-                "addr": 1687,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1687
               }
             ],
             "dungeon": 2,
@@ -20485,12 +20433,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY2",
                 "room": 302,
                 "metadata": "Hardhat Beetle Pit Chest",
-                "addr": 1678,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1678
               }
             ],
             "dungeon": 2,
@@ -20499,12 +20444,8 @@
           {
             "items": [
               {
-                "item": "TRADING_ITEM_LETTER",
                 "metadata": "Unset Room",
-                "custom_item_name": "ANGLER KEYHOLE",
-                "event": "ANGLER_KEYHOLE",
-                "item_owner": 1,
-                "location_owner": 1
+                "event": "ANGLER_KEYHOLE"
               }
             ],
             "gated_connections": []
@@ -20536,12 +20477,8 @@
           {
             "items": [
               {
-                "item": "TRADING_ITEM_LETTER",
                 "metadata": "Unset Room",
-                "custom_item_name": "CASTLE BUTTON",
-                "event": "CASTLE_BUTTON",
-                "item_owner": 1,
-                "location_owner": 1
+                "event": "CASTLE_BUTTON"
               }
             ],
             "gated_connections": []
@@ -20549,11 +20486,8 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 722,
-                "metadata": "Darknut, Zol, Bubble Leaf",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Darknut, Zol, Bubble Leaf"
               }
             ],
             "gated_connections": []
@@ -20561,11 +20495,8 @@
           {
             "items": [
               {
-                "item": "FLIPPERS",
                 "room": 709,
-                "metadata": "Bombable Darknut Leaf",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bombable Darknut Leaf"
               }
             ],
             "gated_connections": []
@@ -20581,11 +20512,8 @@
           {
             "items": [
               {
-                "item": "BOOMERANG",
                 "room": 710,
-                "metadata": "Ball and Chain Darknut Leaf",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Ball and Chain Darknut Leaf"
               }
             ],
             "simple_connections": [],
@@ -20594,11 +20522,8 @@
           {
             "items": [
               {
-                "item": "RED_TUNIC",
                 "room": 90,
-                "metadata": "Bomberman Meets Whack-a-mole Leaf",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bomberman Meets Whack-a-mole Leaf"
               }
             ],
             "gated_connections": []
@@ -20606,11 +20531,8 @@
           {
             "items": [
               {
-                "item": "SWORD",
                 "room": 88,
-                "metadata": "Crow Rock Leaf",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Crow Rock Leaf"
               }
             ],
             "gated_connections": []
@@ -20631,11 +20553,8 @@
           {
             "items": [
               {
-                "item": "ROOSTER",
                 "room": 765,
-                "metadata": "Manbo's Mambo",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Manbo's Mambo"
               }
             ],
             "gated_connections": []
@@ -20643,20 +20562,14 @@
           {
             "items": [
               {
-                "item": "MAP4",
                 "room": 377,
                 "metadata": "Watery Statue Chest",
-                "addr": 1753,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1753
               },
               {
-                "item": "KEY4",
                 "room": 362,
                 "metadata": "NW of Boots Pit Ledge Chest",
-                "addr": 1738,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1738
               }
             ],
             "dungeon": 4,
@@ -20665,12 +20578,9 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 376,
                 "metadata": "Two Spiked Beetle, Zol Chest",
-                "addr": 1752,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1752
               }
             ],
             "dungeon": 4
@@ -20678,12 +20588,9 @@
           {
             "items": [
               {
-                "item": "KEY4",
                 "room": 379,
                 "metadata": "Crystal Chest",
-                "addr": 1755,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1755
               }
             ],
             "dungeon": 4,
@@ -20701,12 +20608,9 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK4",
                 "room": 373,
                 "metadata": "Flipper Locked Before Boots Pit Chest",
-                "addr": 1749,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1749
               }
             ],
             "dungeon": 4,
@@ -20723,12 +20627,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 361,
                 "extra": 380,
-                "metadata": "Pit Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Pit Key"
               }
             ],
             "dungeon": 4,
@@ -20737,12 +20638,9 @@
           {
             "items": [
               {
-                "item": "MEDICINE",
                 "room": 366,
                 "metadata": "Flipper Locked After Boots Pit Chest",
-                "addr": 1742,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1742
               }
             ],
             "dungeon": 4,
@@ -20751,20 +20649,14 @@
           {
             "items": [
               {
-                "item": "KEY4",
                 "room": 365,
                 "metadata": "Blob Chest",
-                "addr": 1741,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1741
               },
               {
-                "item": "COMPASS4",
                 "room": 360,
                 "metadata": "Spark Chest",
-                "addr": 1736,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1736
               }
             ],
             "dungeon": 4,
@@ -20773,12 +20665,9 @@
           {
             "items": [
               {
-                "item": "KEY4",
                 "room": 374,
                 "metadata": "Nightmare Key Ledge Chest",
-                "addr": 1750,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1750
               }
             ],
             "dungeon": 4,
@@ -20787,12 +20676,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY4",
                 "room": 352,
                 "metadata": "Flippers Chest",
-                "addr": 1728,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1728
               }
             ],
             "dungeon": 4,
@@ -20810,19 +20696,13 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 358,
                 "extra": 511,
-                "metadata": "Angler Fish Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Angler Fish Heart Container"
               },
               {
-                "item": "INSTRUMENT4",
                 "room": 354,
-                "metadata": "Surf Harp",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Surf Harp"
               }
             ],
             "dungeon": 4,
@@ -20836,12 +20716,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_20",
                 "room": 369,
                 "metadata": "Lower Bomb Locked Watery Chest",
-                "addr": 1745,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1745
               }
             ],
             "dungeon": 4,
@@ -20850,12 +20727,9 @@
           {
             "items": [
               {
-                "item": "KEY4",
                 "room": 357,
                 "metadata": "Upper Bomb Locked Watery Chest",
-                "addr": 1733,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1733
               }
             ],
             "dungeon": 4,
@@ -20868,20 +20742,14 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 92,
                 "metadata": "West",
-                "addr": 1468,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1468
               },
               {
-                "item": "SINGLE_ARROW",
                 "room": 93,
                 "metadata": "East",
-                "addr": 1469,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1469
               }
             ],
             "gated_connections": []
@@ -20902,12 +20770,9 @@
             "items": [
               {
                 "unadjusted_room": 205,
-                "item": "TRADING_ITEM_FISHING_HOOK",
                 "room": 205,
                 "metadata": "Grandma",
-                "default_item": "TRADING_ITEM_FISHING_HOOK",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_FISHING_HOOK"
               }
             ],
             "gated_connections": []
@@ -20916,12 +20781,9 @@
             "items": [
               {
                 "unadjusted_room": 663,
-                "item": "TRADING_ITEM_MAGNIFYING_GLASS",
                 "room": 663,
                 "metadata": "Mermaid Statue",
-                "default_item": "TRADING_ITEM_MAGNIFYING_GLASS",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_MAGNIFYING_GLASS"
               }
             ],
             "gated_connections": []
@@ -20929,11 +20791,8 @@
           {
             "items": [
               {
-                "item": "GOLD_LEAF",
                 "room": 218,
-                "metadata": "Peninsula Dig",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Peninsula Dig"
               }
             ],
             "gated_connections": []
@@ -20945,12 +20804,9 @@
           {
             "items": [
               {
-                "item": "FACE_KEY",
                 "room": 206,
                 "extra": 504,
-                "metadata": "Lanmola",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Lanmola"
               }
             ],
             "gated_connections": []
@@ -20962,11 +20818,8 @@
           {
             "items": [
               {
-                "item": "RUPEES_100",
                 "room": 488,
-                "metadata": "Cave Under Lanmola",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Cave Under Lanmola"
               }
             ],
             "gated_connections": []
@@ -20974,11 +20827,8 @@
           {
             "items": [
               {
-                "item": "BOW",
                 "room": 255,
-                "metadata": "Rock Seashell",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Rock Seashell"
               }
             ],
             "gated_connections": []
@@ -20990,11 +20840,8 @@
           {
             "items": [
               {
-                "item": "HOOKSHOT",
                 "room": 742,
-                "metadata": "Bomb Arrow Cave",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bomb Arrow Cave"
               }
             ],
             "gated_connections": []
@@ -21004,12 +20851,9 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 764,
                 "metadata": "Under Armos Cave",
-                "addr": 2140,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2140
               }
             ],
             "simple_connections": [
@@ -21025,11 +20869,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 639,
-                "metadata": "Armos Knight",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Armos Knight"
               }
             ],
             "gated_connections": []
@@ -21050,12 +20891,9 @@
             "items": [
               {
                 "unadjusted_room": 729,
-                "item": "TRADING_ITEM_LETTER",
                 "room": 729,
                 "metadata": "Goat",
-                "default_item": "TRADING_ITEM_LETTER",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_LETTER"
               }
             ],
             "gated_connections": []
@@ -21068,12 +20906,9 @@
             "items": [
               {
                 "unadjusted_room": 727,
-                "item": "TRADING_ITEM_PINEAPPLE",
                 "room": 727,
                 "metadata": "Bear Cook",
-                "default_item": "TRADING_ITEM_PINEAPPLE",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_PINEAPPLE"
               }
             ],
             "gated_connections": []
@@ -21090,12 +20925,8 @@
           {
             "items": [
               {
-                "item": "TRADING_ITEM_LETTER",
                 "metadata": "Unset Room",
-                "custom_item_name": "RAFT",
-                "event": "RAFT",
-                "item_owner": 1,
-                "location_owner": 1
+                "event": "RAFT"
               }
             ],
             "gated_connections": []
@@ -21107,11 +20938,8 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 498,
-                "metadata": "Damp Cave Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Damp Cave Heart Piece"
               }
             ],
             "gated_connections": []
@@ -21127,12 +20955,9 @@
           {
             "items": [
               {
-                "item": "SONG2",
                 "room": 699,
                 "metadata": "Access Tunnel Interior",
-                "addr": 2075,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2075
               }
             ],
             "gated_connections": []
@@ -21152,11 +20977,8 @@
           {
             "items": [
               {
-                "item": "MAGIC_POWDER",
                 "room": 12,
-                "metadata": "Bridge Rock",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bridge Rock"
               }
             ],
             "gated_connections": []
@@ -21176,12 +20998,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 4,
                 "metadata": "Outside Mad Batter",
-                "addr": 1380,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1380
               }
             ],
             "gated_connections": []
@@ -21214,12 +21033,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_200",
                 "room": 591,
                 "metadata": "Push Block Chest",
-                "addr": 1967,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1967
               }
             ],
             "dungeon": 8,
@@ -21228,12 +21044,9 @@
           {
             "items": [
               {
-                "item": "BOWWOW",
                 "room": 576,
                 "metadata": "Beamos Blocked Chest",
-                "addr": 1952,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1952
               }
             ],
             "dungeon": 8
@@ -21241,12 +21054,9 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 589,
                 "metadata": "Left of Hinox Zamboni Chest",
-                "addr": 1965,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1965
               }
             ],
             "dungeon": 8,
@@ -21255,12 +21065,9 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 604,
                 "metadata": "Vacuum Mouth Chest",
-                "addr": 1980,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1980
               }
             ],
             "dungeon": 8,
@@ -21269,11 +21076,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 588,
-                "metadata": "Left Vire Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Left Vire Key"
               }
             ],
             "dungeon": 8,
@@ -21282,12 +21086,9 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 597,
                 "metadata": "Spark, Pit Chest",
-                "addr": 1973,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1973
               }
             ],
             "dungeon": 8,
@@ -21296,12 +21097,9 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK8",
                 "room": 582,
                 "metadata": "Two Torches Room Chest",
-                "addr": 1958,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1958
               }
             ],
             "dungeon": 8,
@@ -21310,12 +21108,9 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 573,
                 "metadata": "Dodongo Chest",
-                "addr": 1949,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1949
               }
             ],
             "dungeon": 8,
@@ -21324,11 +21119,8 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 0,
-                "metadata": "Outside Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Outside Heart Piece"
               }
             ],
             "gated_connections": []
@@ -21336,11 +21128,8 @@
           {
             "items": [
               {
-                "item": "MAX_BOMBS_UPGRADE",
                 "room": 577,
-                "metadata": "Lava Arrow Statue Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Lava Arrow Statue Key"
               }
             ],
             "dungeon": 8,
@@ -21349,12 +21138,9 @@
           {
             "items": [
               {
-                "item": "MAP8",
                 "room": 570,
                 "metadata": "West of Boss Door Ledge Chest",
-                "addr": 1946,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1946
               }
             ],
             "dungeon": 8,
@@ -21367,11 +21153,8 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 574,
-                "metadata": "Gibdos on Cracked Floor Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Gibdos on Cracked Floor Key"
               }
             ],
             "dungeon": 8,
@@ -21380,12 +21163,9 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 565,
                 "metadata": "Lava Ledge Chest",
-                "addr": 1941,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1941
               }
             ],
             "dungeon": 8,
@@ -21411,12 +21191,9 @@
           {
             "items": [
               {
-                "item": "MAX_POWDER_UPGRADE",
                 "room": 567,
                 "metadata": "Magic Rod Chest",
-                "addr": 1943,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1943
               }
             ],
             "dungeon": 8,
@@ -21434,12 +21211,9 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 562,
                 "metadata": "Nightmare Key/Big Zamboni Chest",
-                "addr": 1938,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1938
               }
             ],
             "dungeon": 8,
@@ -21453,18 +21227,12 @@
           {
             "items": [
               {
-                "item": "KEY8",
                 "room": 564,
-                "metadata": "Hot Head Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Hot Head Heart Container"
               },
               {
-                "item": "INSTRUMENT8",
                 "room": 560,
-                "metadata": "Thunder Drum",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Thunder Drum"
               }
             ],
             "dungeon": 8,
@@ -21473,12 +21241,9 @@
           {
             "items": [
               {
-                "item": "COMPASS8",
                 "room": 601,
                 "metadata": "Right Lava Chest",
-                "addr": 1977,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1977
               }
             ],
             "dungeon": 8,
@@ -21487,11 +21252,8 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY8",
                 "room": 602,
-                "metadata": "Zamboni, Two Zol Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Zamboni, Two Zol Key"
               }
             ],
             "dungeon": 8,
@@ -21500,12 +21262,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 607,
                 "metadata": "Four Ropes Pot Chest",
-                "addr": 1983,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1983
               }
             ],
             "dungeon": 8,
@@ -21518,11 +21277,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 482,
-                "metadata": "Mad Batter",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Mad Batter"
               }
             ],
             "gated_connections": []
@@ -21530,11 +21286,8 @@
           {
             "items": [
               {
-                "item": "MAX_ARROWS_UPGRADE",
                 "room": 698,
-                "metadata": "Access Tunnel Bombable Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Access Tunnel Bombable Heart Piece"
               }
             ],
             "simple_connections": [],
@@ -21547,11 +21300,8 @@
           {
             "items": [
               {
-                "item": "PEGASUS_BOOTS",
                 "room": 634,
-                "metadata": "Bird Key Cave",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bird Key Cave"
               }
             ],
             "gated_connections": []
@@ -21563,12 +21313,9 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 650,
                 "metadata": "Paphl Cave",
-                "addr": 2026,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2026
               }
             ],
             "gated_connections": []
@@ -21581,12 +21328,9 @@
             "items": [
               {
                 "unadjusted_room": 25,
-                "item": "TRADING_ITEM_HIBISCUS",
                 "room": 25,
                 "metadata": "Papahl",
-                "default_item": "TRADING_ITEM_HIBISCUS",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_HIBISCUS"
               }
             ],
             "simple_connections": [],
@@ -21603,12 +21347,9 @@
           {
             "items": [
               {
-                "item": "BOMB",
                 "room": 29,
                 "metadata": "Outside Five Chest Game",
-                "addr": 1405,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1405
               }
             ],
             "gated_connections": []
@@ -21656,11 +21397,8 @@
           {
             "items": [
               {
-                "item": "KEY7",
                 "room": 528,
-                "metadata": "Entrance Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Entrance Key"
               }
             ],
             "dungeon": 7,
@@ -21669,12 +21407,9 @@
           {
             "items": [
               {
-                "item": "COMPASS7",
                 "room": 521,
                 "metadata": "Switch Wrapped Chest",
-                "addr": 1897,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1897
               }
             ],
             "dungeon": 7
@@ -21682,12 +21417,9 @@
           {
             "items": [
               {
-                "item": "BOMB",
                 "room": 530,
                 "metadata": "Horse Head, Bubble Chest",
-                "addr": 1906,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1906
               }
             ],
             "dungeon": 7,
@@ -21696,12 +21428,9 @@
           {
             "items": [
               {
-                "item": "KEY7",
                 "room": 529,
                 "metadata": "Three of a Kind, No Pit Chest",
-                "addr": 1905,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1905
               }
             ],
             "dungeon": 7,
@@ -21715,12 +21444,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY7",
                 "room": 513,
                 "metadata": "Kirby Ledge Chest",
-                "addr": 1889,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1889
               }
             ],
             "dungeon": 7,
@@ -21730,11 +21456,8 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK7",
                 "room": 539,
-                "metadata": "Hinox Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Hinox Key"
               }
             ],
             "dungeon": 7,
@@ -21743,12 +21466,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 548,
                 "metadata": "Nightmare Key/After Grim Creeper Chest",
-                "addr": 1924,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1924
               }
             ],
             "dungeon": 7,
@@ -21757,12 +21477,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 538,
                 "metadata": "Mirror Shield Chest",
-                "addr": 1914,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1914
               }
             ],
             "dungeon": 7,
@@ -21771,12 +21488,9 @@
           {
             "items": [
               {
-                "item": "GEL",
                 "room": 516,
                 "metadata": "Beamos Ledge Chest",
-                "addr": 1892,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1892
               }
             ],
             "dungeon": 7,
@@ -21785,12 +21499,9 @@
           {
             "items": [
               {
-                "item": "MAP7",
                 "room": 540,
                 "metadata": "Three of a Kind, Pit Chest",
-                "addr": 1916,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1916
               }
             ],
             "dungeon": 7,
@@ -21809,12 +21520,9 @@
           {
             "items": [
               {
-                "item": "KEY7",
                 "room": 544,
                 "metadata": "Conveyor Beamos Chest",
-                "addr": 1920,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1920
               }
             ],
             "dungeon": 7,
@@ -21828,19 +21536,13 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 547,
                 "extra": 744,
-                "metadata": "Evil Eagle Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Evil Eagle Heart Container"
               },
               {
-                "item": "INSTRUMENT7",
                 "room": 556,
-                "metadata": "Organ of Evening Calm",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Organ of Evening Calm"
               }
             ],
             "dungeon": 7,
@@ -21849,12 +21551,9 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 24,
                 "metadata": "Access Tunnel Exterior",
-                "addr": 1400,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1400
               }
             ],
             "gated_connections": []
@@ -21868,12 +21567,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 738,
                 "metadata": "Moblin Cave",
-                "addr": 2114,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2114
               }
             ],
             "gated_connections": []
@@ -21893,11 +21589,8 @@
           {
             "items": [
               {
-                "item": "RUPEES_20",
                 "room": 116,
-                "metadata": "Ghost Grave Dig",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Ghost Grave Dig"
               }
             ],
             "gated_connections": []
@@ -21905,11 +21598,8 @@
           {
             "items": [
               {
-                "item": "GOLD_LEAF",
                 "room": 735,
-                "metadata": "Graveyard Connector",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Graveyard Connector"
               }
             ],
             "gated_connections": []
@@ -21922,12 +21612,9 @@
           {
             "items": [
               {
-                "item": "KEY9",
                 "room": 788,
                 "metadata": "Lower Small Key",
-                "addr": 2164,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2164
               }
             ],
             "dungeon": 9
@@ -21935,12 +21622,9 @@
           {
             "items": [
               {
-                "item": "BIRD_KEY",
                 "room": 785,
                 "metadata": "Two Socket Chest",
-                "addr": 2161,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2161
               }
             ],
             "dungeon": 9,
@@ -21949,19 +21633,13 @@
           {
             "items": [
               {
-                "item": "MAP9",
                 "room": 783,
                 "metadata": "Entrance Chest",
-                "addr": 2159,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2159
               },
               {
-                "item": "KEY9",
                 "room": 776,
-                "metadata": "Upper Small Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Upper Small Key"
               }
             ],
             "dungeon": 9,
@@ -21970,12 +21648,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY9",
                 "room": 770,
                 "metadata": "Nightmare Key Chest",
-                "addr": 2146,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2146
               }
             ],
             "dungeon": 9,
@@ -21988,12 +21663,9 @@
           {
             "items": [
               {
-                "item": "KEY9",
                 "room": 774,
                 "metadata": "Zol Chest",
-                "addr": 2150,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2150
               }
             ],
             "dungeon": 9,
@@ -22002,11 +21674,8 @@
           {
             "items": [
               {
-                "item": "COMPASS9",
                 "room": 775,
-                "metadata": "Bullshit Room",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Bullshit Room"
               }
             ],
             "dungeon": 9,
@@ -22029,19 +21698,13 @@
             "items": [
               {
                 "index": 0,
-                "item": "SEASHELL",
                 "room": 769,
-                "metadata": "Tunic Fairy Item 1",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Tunic Fairy Item 1"
               },
               {
                 "index": 1,
-                "item": "STONE_BEAK9",
                 "room": 769,
-                "metadata": "Tunic Fairy Item 2",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Tunic Fairy Item 2"
               }
             ],
             "dungeon": 9,
@@ -22051,12 +21714,9 @@
             "items": [
               {
                 "unadjusted_room": 123,
-                "item": "TRADING_ITEM_STICK",
                 "room": 123,
                 "metadata": "Kiki",
-                "default_item": "TRADING_ITEM_STICK",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_STICK"
               }
             ],
             "gated_connections": []
@@ -22065,12 +21725,9 @@
             "items": [
               {
                 "unadjusted_room": 135,
-                "item": "TRADING_ITEM_HONEYCOMB",
                 "room": 135,
                 "metadata": "Honeycomb",
-                "default_item": "TRADING_ITEM_HONEYCOMB",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_HONEYCOMB"
               }
             ],
             "gated_connections": []
@@ -22082,11 +21739,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 165,
-                "metadata": "Outside D3 Ledge Dig",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Outside D3 Ledge Dig"
               }
             ],
             "gated_connections": []
@@ -22099,12 +21753,9 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 339,
                 "metadata": "Vacuum Mouth Chest",
-                "addr": 1715,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1715
               }
             ],
             "dungeon": 3,
@@ -22113,12 +21764,9 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 335,
                 "metadata": "Four Zol Chest",
-                "addr": 1711,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1711
               }
             ],
             "dungeon": 3,
@@ -22127,12 +21775,9 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 337,
                 "metadata": "Two Bombite, Sword Stalfos, Zol Chest",
-                "addr": 1713,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1713
               }
             ],
             "dungeon": 3,
@@ -22145,12 +21790,9 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 334,
                 "metadata": "Two Stalfos, Zol Chest",
-                "addr": 1710,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1710
               }
             ],
             "dungeon": 3,
@@ -22163,11 +21805,8 @@
           {
             "items": [
               {
-                "item": "COMPASS3",
                 "room": 340,
-                "metadata": "North Key Room Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "North Key Room Key"
               }
             ],
             "dungeon": 3,
@@ -22176,12 +21815,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY3",
                 "room": 332,
                 "metadata": "Zol Switch Chest",
-                "addr": 1708,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1708
               }
             ],
             "dungeon": 3,
@@ -22191,12 +21827,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 336,
                 "metadata": "Sword Stalfos, Keese Switch Chest",
-                "addr": 1712,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1712
               }
             ],
             "dungeon": 3,
@@ -22210,11 +21843,8 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 341,
-                "metadata": "West Key Room Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "West Key Room Key"
               }
             ],
             "dungeon": 3,
@@ -22227,11 +21857,8 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK3",
                 "room": 344,
-                "metadata": "South Key Room Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "South Key Room Key"
               }
             ],
             "dungeon": 3,
@@ -22244,11 +21871,8 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 333,
-                "metadata": "After Stairs Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "After Stairs Key"
               }
             ],
             "dungeon": 3,
@@ -22257,12 +21881,9 @@
           {
             "items": [
               {
-                "item": "MAP3",
                 "room": 327,
                 "metadata": "Tile Arrow Ledge Chest",
-                "addr": 1703,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1703
               }
             ],
             "dungeon": 3,
@@ -22271,12 +21892,9 @@
           {
             "items": [
               {
-                "item": "SWORD",
                 "room": 326,
                 "metadata": "Boots Chest",
-                "addr": 1702,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1702
               }
             ],
             "dungeon": 3,
@@ -22285,12 +21903,9 @@
           {
             "items": [
               {
-                "item": "MAGIC_ROD",
                 "room": 322,
                 "metadata": "Three Zol, Stalfos Chest",
-                "addr": 1698,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1698
               }
             ],
             "dungeon": 3,
@@ -22299,11 +21914,8 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 321,
-                "metadata": "Three Bombite Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Three Bombite Key"
               }
             ],
             "dungeon": 3,
@@ -22312,11 +21924,8 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 328,
-                "metadata": "Two Zol, Two Pairodd Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Two Zol, Two Pairodd Key"
               }
             ],
             "dungeon": 3,
@@ -22325,12 +21934,9 @@
           {
             "items": [
               {
-                "item": "KEY3",
                 "room": 324,
                 "metadata": "Two Zol, Stalfos Ledge Chest",
-                "addr": 1700,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1700
               }
             ],
             "dungeon": 3,
@@ -22358,11 +21964,8 @@
           {
             "items": [
               {
-                "item": "SHIELD",
                 "room": 347,
-                "metadata": "Nightmare Door Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Nightmare Door Key"
               }
             ],
             "dungeon": 3,
@@ -22371,18 +21974,12 @@
           {
             "items": [
               {
-                "item": "BOMB",
                 "room": 346,
-                "metadata": "Slime Eye Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Slime Eye Heart Container"
               },
               {
-                "item": "INSTRUMENT3",
                 "room": 345,
-                "metadata": "Sea Lily's Bell",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Sea Lily's Bell"
               }
             ],
             "dungeon": 3,
@@ -22391,11 +21988,8 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 166,
-                "metadata": "Outside D3 Island Bush",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Outside D3 Island Bush"
               }
             ],
             "gated_connections": []
@@ -22403,11 +21997,8 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 139,
-                "metadata": "East of Seashell Mansion Bush",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "East of Seashell Mansion Bush"
               }
             ],
             "gated_connections": []
@@ -22415,11 +22006,8 @@
           {
             "items": [
               {
-                "item": "GOLD_LEAF",
                 "room": 164,
-                "metadata": "East of Mabe Tree Bonk",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "East of Mabe Tree Bonk"
               }
             ],
             "gated_connections": []
@@ -22427,11 +22015,8 @@
           {
             "items": [
               {
-                "item": "MESSAGE",
                 "room": 185,
-                "metadata": "Rock Seashell",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Rock Seashell"
               }
             ],
             "gated_connections": []
@@ -22439,12 +22024,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 509,
                 "metadata": "Boots Pit",
-                "addr": 1885,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1885
               }
             ],
             "gated_connections": []
@@ -22452,12 +22034,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_20",
                 "room": 717,
                 "metadata": "Cave East of Mabe",
-                "addr": 2093,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2093
               }
             ],
             "gated_connections": []
@@ -22469,12 +22048,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_20",
                 "room": 756,
                 "metadata": "Boots 'n' Bomb Cave Chest",
-                "addr": 2132,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2132
               }
             ],
             "gated_connections": []
@@ -22482,11 +22058,8 @@
           {
             "items": [
               {
-                "item": "GEL",
                 "room": 741,
-                "metadata": "Boots 'n' Bomb Cave Bombable Wall",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Boots 'n' Bomb Cave Bombable Wall"
               }
             ],
             "gated_connections": []
@@ -22498,11 +22071,8 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 763,
-                "metadata": "Mamu",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Mamu"
               }
             ],
             "gated_connections": []
@@ -22514,11 +22084,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 745,
-                "metadata": "Seashell Mansion",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Seashell Mansion"
               }
             ],
             "gated_connections": []
@@ -22538,11 +22105,8 @@
           {
             "items": [
               {
-                "item": "MEDICINE",
                 "room": 168,
-                "metadata": "Donut Plains Ledge Dig",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Donut Plains Ledge Dig"
               }
             ],
             "gated_connections": []
@@ -22558,12 +22122,9 @@
           {
             "items": [
               {
-                "item": "ARROWS_10",
                 "room": 712,
                 "metadata": "Under Richard's House",
-                "addr": 2088,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2088
               }
             ],
             "gated_connections": []
@@ -22575,11 +22136,8 @@
           {
             "items": [
               {
-                "item": "MEDICINE",
                 "room": 198,
-                "metadata": "Slime Key Dig",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Slime Key Dig"
               }
             ],
             "gated_connections": []
@@ -22588,12 +22146,9 @@
             "items": [
               {
                 "unadjusted_room": 757,
-                "item": "TRADING_ITEM_NECKLACE",
                 "room": 757,
                 "metadata": "Fisher",
-                "default_item": "TRADING_ITEM_NECKLACE",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_NECKLACE"
               }
             ],
             "gated_connections": []
@@ -22602,12 +22157,9 @@
             "items": [
               {
                 "unadjusted_room": 201,
-                "item": "TRADING_ITEM_SCALE",
                 "room": 201,
                 "metadata": "Mermaid",
-                "default_item": "TRADING_ITEM_SCALE",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_SCALE"
               }
             ],
             "gated_connections": []
@@ -22623,12 +22175,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 416,
                 "metadata": "Entrance Hookshottable Chest",
-                "addr": 1792,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1792
               }
             ],
             "dungeon": 5,
@@ -22637,12 +22186,9 @@
           {
             "items": [
               {
-                "item": "KEY5",
                 "room": 414,
                 "metadata": "Spark, Two Iron Mask Chest",
-                "addr": 1790,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1790
               }
             ],
             "dungeon": 5,
@@ -22651,11 +22197,8 @@
           {
             "items": [
               {
-                "item": "KEY5",
                 "room": 385,
-                "metadata": "Crystal Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Crystal Key"
               }
             ],
             "dungeon": 5,
@@ -22668,12 +22211,9 @@
           {
             "items": [
               {
-                "item": "MAP5",
                 "room": 411,
                 "metadata": "Flying Bomb Chest South",
-                "addr": 1787,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1787
               }
             ],
             "dungeon": 5,
@@ -22682,12 +22222,9 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK5",
                 "room": 407,
                 "metadata": "Three Iron Mask Chest",
-                "addr": 1783,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1783
               }
             ],
             "dungeon": 5,
@@ -22696,12 +22233,9 @@
           {
             "items": [
               {
-                "item": "OCARINA",
                 "room": 406,
                 "metadata": "Hookshot Note Chest",
-                "addr": 1782,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1782
               }
             ],
             "dungeon": 5,
@@ -22727,18 +22261,12 @@
           {
             "items": [
               {
-                "item": "ANGLER_KEY",
                 "room": 389,
-                "metadata": "Slime Eel Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Slime Eel Heart Container"
               },
               {
-                "item": "INSTRUMENT5",
                 "room": 386,
-                "metadata": "Wind Marimba",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Wind Marimba"
               }
             ],
             "dungeon": 5,
@@ -22752,12 +22280,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY5",
                 "room": 398,
                 "metadata": "Two Stalfos, Star Pit Chest",
-                "addr": 1774,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1774
               }
             ],
             "dungeon": 5,
@@ -22766,12 +22291,9 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 392,
                 "metadata": "Swort Stalfos, Star, Bridge Chest",
-                "addr": 1768,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1768
               }
             ],
             "dungeon": 5,
@@ -22780,12 +22302,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 399,
                 "metadata": "Flying Bomb Chest East",
-                "addr": 1775,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1775
               }
             ],
             "dungeon": 5,
@@ -22799,11 +22318,8 @@
           {
             "items": [
               {
-                "item": "COMPASS5",
                 "room": 384,
-                "metadata": "Master Stalfos Item",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Master Stalfos Item"
               }
             ],
             "dungeon": 5,
@@ -22812,12 +22328,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 387,
                 "metadata": "Three Stalfos Chest",
-                "addr": 1763,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1763
               }
             ],
             "dungeon": 5,
@@ -22826,12 +22339,9 @@
           {
             "items": [
               {
-                "item": "KEY5",
                 "room": 390,
                 "metadata": "Nightmare Key/Torch Cross Chest",
-                "addr": 1766,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1766
               }
             ],
             "dungeon": 5,
@@ -22840,11 +22350,8 @@
           {
             "items": [
               {
-                "item": "RUPEES_100",
                 "room": 120,
-                "metadata": "In the Moat Heart Piece",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "In the Moat Heart Piece"
               }
             ],
             "gated_connections": []
@@ -22872,12 +22379,9 @@
           {
             "items": [
               {
-                "item": "MAP6",
                 "room": 463,
                 "metadata": "Mini-Moldorm, Spark Chest",
-                "addr": 1839,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1839
               }
             ],
             "dungeon": 6,
@@ -22886,12 +22390,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 457,
                 "metadata": "Flying Heart, Statue Chest",
-                "addr": 1833,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1833
               }
             ],
             "dungeon": 6,
@@ -22900,12 +22401,9 @@
           {
             "items": [
               {
-                "item": "COMPASS6",
                 "room": 462,
                 "metadata": "L2 Bracelet Chest",
-                "addr": 1838,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1838
               }
             ],
             "dungeon": 6,
@@ -22914,12 +22412,9 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 448,
                 "metadata": "Three Wizzrobe, Switch Chest",
-                "addr": 1824,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1824
               }
             ],
             "dungeon": 6,
@@ -22928,20 +22423,14 @@
           {
             "items": [
               {
-                "item": "RUPEES_20",
                 "room": 441,
                 "metadata": "Stairs Across Statues Chest",
-                "addr": 1817,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1817
               },
               {
-                "item": "KEY6",
                 "room": 435,
                 "metadata": "Switch, Star Above Statues Chest",
-                "addr": 1811,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1811
               }
             ],
             "dungeon": 6,
@@ -22950,11 +22439,8 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK6",
                 "room": 436,
-                "metadata": "Two Wizzrobe Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Two Wizzrobe Key"
               }
             ],
             "dungeon": 6,
@@ -22963,12 +22449,9 @@
           {
             "items": [
               {
-                "item": "SONG1",
                 "room": 432,
                 "metadata": "Top Left Horse Heads Chest",
-                "addr": 1808,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1808
               }
             ],
             "dungeon": 6,
@@ -22977,12 +22460,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 108,
                 "metadata": "Raft Chest",
-                "addr": 1484,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1484
               }
             ],
             "gated_connections": []
@@ -22990,12 +22470,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 446,
                 "metadata": "Water Tektite Chest",
-                "addr": 1822,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1822
               }
             ],
             "dungeon": 6,
@@ -23004,12 +22481,9 @@
           {
             "items": [
               {
-                "item": "KEY6",
                 "room": 465,
                 "metadata": "Four Wizzrobe Ledge Chest",
-                "addr": 1841,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1841
               }
             ],
             "dungeon": 6,
@@ -23027,11 +22501,8 @@
           {
             "items": [
               {
-                "item": "BLUE_TUNIC",
                 "room": 451,
-                "metadata": "Tile Room Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Tile Room Key"
               }
             ],
             "dungeon": 6
@@ -23039,18 +22510,12 @@
           {
             "items": [
               {
-                "item": "SONG3",
                 "room": 444,
-                "metadata": "Facade Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Facade Heart Container"
               },
               {
-                "item": "INSTRUMENT6",
                 "room": 437,
-                "metadata": "Coral Triangle",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Coral Triangle"
               }
             ],
             "dungeon": 6,
@@ -23059,12 +22524,9 @@
           {
             "items": [
               {
-                "item": "KEY6",
                 "room": 433,
                 "metadata": "Top Right Horse Heads Chest",
-                "addr": 1809,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1809
               }
             ],
             "dungeon": 6,
@@ -23073,12 +22535,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY6",
                 "room": 438,
                 "metadata": "Pot Locked Chest",
-                "addr": 1814,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1814
               }
             ],
             "dungeon": 6,
@@ -23103,11 +22562,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 480,
-                "metadata": "Mad Batter",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Mad Batter"
               }
             ],
             "gated_connections": []
@@ -23116,11 +22572,8 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 483,
-                "metadata": "Ghost House Barrel",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Ghost House Barrel"
               }
             ],
             "simple_connections": [
@@ -23135,13 +22588,10 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 501,
                 "metadata": "Boomerang Guy Item",
                 "setting": "gift",
-                "MULTIWORLD": true,
-                "item_owner": 1,
-                "location_owner": 1
+                "MULTIWORLD": true
               }
             ],
             "simple_connections": [
@@ -23157,12 +22607,9 @@
             "items": [
               {
                 "unadjusted_room": 766,
-                "item": "TRADING_ITEM_BANANAS",
                 "room": 766,
                 "metadata": "Banana Sale",
-                "default_item": "TRADING_ITEM_BANANAS",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_BANANAS"
               }
             ],
             "simple_connections": [
@@ -23178,12 +22625,9 @@
             "items": [
               {
                 "unadjusted_room": 678,
-                "item": "TRADING_ITEM_RIBBON",
                 "room": 678,
                 "metadata": "Papahl's Wife",
-                "default_item": "TRADING_ITEM_RIBBON",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_RIBBON"
               }
             ],
             "simple_connections": [
@@ -23198,12 +22642,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 703,
                 "metadata": "Dream Hut East",
-                "addr": 2079,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2079
               }
             ],
             "gated_connections": []
@@ -23211,12 +22652,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 702,
                 "metadata": "Dream Hut West",
-                "addr": 2078,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2078
               }
             ],
             "gated_connections": []
@@ -23225,11 +22663,8 @@
           {
             "items": [
               {
-                "item": "GOLD_LEAF",
                 "room": 484,
-                "metadata": "Rooster",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Rooster"
               }
             ],
             "gated_connections": []
@@ -23238,11 +22673,8 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 673,
-                "metadata": "Shop 200 Item",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Shop 200 Item"
               }
             ],
             "gated_connections": []
@@ -23250,11 +22682,8 @@
           {
             "items": [
               {
-                "item": "HEART_CONTAINER",
                 "room": 679,
-                "metadata": "Shop 980 Item",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Shop 980 Item"
               }
             ],
             "gated_connections": []
@@ -23263,11 +22692,8 @@
           {
             "items": [
               {
-                "item": "POWER_BRACELET",
                 "room": 690,
-                "metadata": "Dog House Dig",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Dog House Dig"
               }
             ],
             "simple_connections": [
@@ -23282,12 +22708,9 @@
             "items": [
               {
                 "unadjusted_room": 690,
-                "item": "TRADING_ITEM_DOG_FOOD",
                 "room": 692,
                 "metadata": "YipYip",
-                "default_item": "TRADING_ITEM_DOG_FOOD",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_DOG_FOOD"
               }
             ],
             "simple_connections": [
@@ -23303,12 +22726,9 @@
             "items": [
               {
                 "unadjusted_room": 672,
-                "item": "TRADING_ITEM_YOSHI_DOLL",
                 "room": 672,
                 "metadata": "Trendy Game",
-                "default_item": "TRADING_ITEM_YOSHI_DOLL",
-                "item_owner": 1,
-                "location_owner": 1
+                "default_item": "TRADING_ITEM_YOSHI_DOLL"
               }
             ],
             "gated_connections": []
@@ -23316,28 +22736,19 @@
           {
             "items": [
               {
-                "item": "RUPEES_50",
                 "room": 275,
                 "metadata": "Pit Button Chest",
-                "addr": 1651,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1651
               },
               {
-                "item": "COMPASS1",
                 "room": 277,
                 "metadata": "Four Zol Chest",
-                "addr": 1653,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1653
               },
               {
-                "item": "KEY1",
                 "room": 270,
                 "metadata": "Spark, Mini-Moldorm Chest",
-                "addr": 1646,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1646
               }
             ],
             "dungeon": 1
@@ -23345,11 +22756,8 @@
           {
             "items": [
               {
-                "item": "KEY1",
                 "room": 278,
-                "metadata": "Hardhat Beetles Key",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Hardhat Beetles Key"
               }
             ],
             "dungeon": 1,
@@ -23358,12 +22766,9 @@
           {
             "items": [
               {
-                "item": "NIGHTMARE_KEY1",
                 "room": 269,
                 "metadata": "Mini-Moldorm Spawn Chest",
-                "addr": 1645,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1645
               }
             ],
             "dungeon": 1,
@@ -23372,12 +22777,9 @@
           {
             "items": [
               {
-                "item": "KEY1",
                 "room": 276,
                 "metadata": "Two Stalfos, Two Keese Chest",
-                "addr": 1652,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1652
               }
             ],
             "dungeon": 1,
@@ -23386,12 +22788,9 @@
           {
             "items": [
               {
-                "item": "GEL",
                 "room": 268,
                 "metadata": "Bombable Wall Seashell Chest",
-                "addr": 1644,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1644
               }
             ],
             "dungeon": 1,
@@ -23404,12 +22803,9 @@
           {
             "items": [
               {
-                "item": "RUPEES_200",
                 "room": 285,
                 "metadata": "Feather Chest",
-                "addr": 1661,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1661
               }
             ],
             "dungeon": 1,
@@ -23418,12 +22814,9 @@
           {
             "items": [
               {
-                "item": "MAP1",
                 "room": 264,
                 "metadata": "Nightmare Key Chest",
-                "addr": 1640,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1640
               }
             ],
             "dungeon": 1,
@@ -23436,12 +22829,9 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 266,
                 "metadata": "Three of a Kind Chest",
-                "addr": 1642,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1642
               }
             ],
             "dungeon": 1,
@@ -23460,18 +22850,12 @@
           {
             "items": [
               {
-                "item": "STONE_BEAK1",
                 "room": 262,
-                "metadata": "Moldorm Heart Container",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Moldorm Heart Container"
               },
               {
-                "item": "INSTRUMENT1",
                 "room": 258,
-                "metadata": "Full Moon Cello",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Full Moon Cello"
               }
             ],
             "dungeon": 1,
@@ -23480,12 +22864,9 @@
           {
             "items": [
               {
-                "item": "SEASHELL",
                 "room": 113,
                 "metadata": "Two Zol, Moblin Chest",
-                "addr": 1489,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 1489
               }
             ],
             "simple_connections": [
@@ -23500,12 +22881,9 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 691,
                 "metadata": "Hookshot Cave",
-                "addr": 2067,
-                "item_owner": 1,
-                "location_owner": 1
+                "addr": 2067
               }
             ],
             "gated_connections": []
@@ -23514,11 +22892,8 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 481,
-                "metadata": "Mad Batter",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Mad Batter"
               }
             ],
             "simple_connections": [
@@ -23536,11 +22911,8 @@
           {
             "items": [
               {
-                "item": "HEART_PIECE",
                 "room": 674,
-                "metadata": "Witch Item",
-                "item_owner": 1,
-                "location_owner": 1
+                "metadata": "Witch Item"
               }
             ],
             "gated_connections": []
@@ -23549,12 +22921,8 @@
           {
             "items": [
               {
-                "item": "MEDICINE",
                 "metadata": "Unset Room",
-                "custom_item_name": "MEDICINE2",
-                "event": "MEDICINE2",
-                "item_owner": 1,
-                "location_owner": 1
+                "event": "MEDICINE2"
               }
             ],
             "gated_connections": []
@@ -23562,1793 +22930,1117 @@
         ],
         "iteminfo_list": [
           {
-            "item": "MAGIC_POWDER",
             "room": 675,
             "metadata": "Tarin's Gift",
-            "give_bowwow": false,
-            "item_owner": 1,
-            "location_owner": 1
+            "give_bowwow": false
           },
           {
-            "item": "BOMB",
             "room": 676,
-            "metadata": "Well Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Well Heart Piece"
           },
           {
-            "item": "RUPEES_20",
             "room": 689,
-            "metadata": "Fishing Game Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Fishing Game Heart Piece"
           },
           {
-            "item": "SEASHELL",
             "room": 163,
-            "metadata": "Bush Field",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bush Field"
           },
           {
-            "item": "TOADSTOOL",
             "room": 210,
-            "metadata": "Outside D1 Tree Bonk",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Outside D1 Tree Bonk"
           },
           {
-            "item": "RUPEES_100",
             "room": 146,
             "extra": 220,
-            "metadata": "Ballad of the Wind Fish",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Ballad of the Wind Fish"
           },
           {
-            "item": "RUPEES_50",
             "room": 242,
-            "metadata": "Sword on the Beach",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Sword on the Beach"
           },
           {
-            "item": "GOLD_LEAF",
             "room": 229,
             "metadata": "West of Ghost House Chest",
-            "addr": 1605,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1605
           },
           {
-            "item": "GEL",
             "room": 233,
-            "metadata": "Lone Bush",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Lone Bush"
           },
           {
-            "item": "SEASHELL",
             "room": 248,
-            "metadata": "Island Bush of Destiny",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Island Bush of Destiny"
           },
           {
-            "item": "HEART_PIECE",
             "room": 68,
-            "metadata": "Heart Piece of Shame",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Heart Piece of Shame"
           },
           {
-            "item": "SEASHELL",
             "room": 80,
-            "metadata": "Toadstool",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Toadstool"
           },
           {
-            "item": "SLIME_KEY",
             "room": 701,
             "metadata": "Cave Crystal Chest",
-            "addr": 2077,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2077
           },
           {
-            "item": "TAIL_KEY",
             "room": 683,
-            "metadata": "Cave Skull Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Cave Skull Heart Piece"
           },
           {
-            "item": "RUPEES_200",
             "room": 52,
             "metadata": "Swampy Chest",
-            "addr": 1428,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1428
           },
           {
-            "item": "FEATHER",
             "room": 65,
             "metadata": "Tail Key Chest",
-            "addr": 1441,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1441
           },
           {
-            "item": "SHOVEL",
             "room": 686,
             "metadata": "Write Cave West",
-            "addr": 2062,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2062
           },
           {
-            "item": "POWER_BRACELET",
             "room": 687,
             "metadata": "Write Cave East",
-            "addr": 2063,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2063
           },
           {
             "unadjusted_room": 680,
-            "item": "TRADING_ITEM_BROOM",
             "room": 680,
             "metadata": "MrWrite",
             "default_item": "TRADING_ITEM_BROOM",
             "OPTIONS": [
               "TRADING_ITEM_BROOM"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "KEY2",
             "room": 310,
             "metadata": "Entrance Chest",
-            "addr": 1686,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1686
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 306,
-            "metadata": "Two Stalfos Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Two Stalfos Key"
           },
           {
-            "item": "KEY2",
             "room": 312,
             "metadata": "First Switch Locked Chest",
-            "addr": 1688,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1688
           },
           {
-            "item": "MAP2",
             "room": 313,
             "metadata": "Button Spawn Chest",
-            "addr": 1689,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1689
           },
           {
-            "item": "KEY2",
             "room": 294,
             "metadata": "Vacuum Mouth Chest",
-            "addr": 1670,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1670
           },
           {
-            "item": "SEASHELL",
             "room": 289,
             "metadata": "Outside Boo Buddies Room Chest",
-            "addr": 1665,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1665
           },
           {
-            "item": "SEASHELL",
             "room": 290,
             "metadata": "Second Switch Locked Chest",
-            "addr": 1666,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1666
           },
           {
-            "item": "KEY2",
             "room": 295,
             "metadata": "Enemy Order Room Chest",
-            "addr": 1671,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1671
           },
           {
-            "item": "SHIELD",
             "room": 299,
-            "metadata": "Genie Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Genie Heart Container"
           },
           {
-            "item": "INSTRUMENT2",
             "room": 298,
             "metadata": "Conch Horn",
             "OPTIONS": [
               "INSTRUMENT2"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "COMPASS2",
             "room": 288,
             "metadata": "Boo Buddies Room Chest",
-            "addr": 1664,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1664
           },
           {
-            "item": "KEY2",
             "room": 308,
-            "metadata": "Mask-Mimic Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Mask-Mimic Key"
           },
           {
-            "item": "STONE_BEAK2",
             "room": 311,
             "metadata": "Mask-Mimic Chest",
-            "addr": 1687,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1687
           },
           {
-            "item": "NIGHTMARE_KEY2",
             "room": 302,
             "metadata": "Hardhat Beetle Pit Chest",
-            "addr": 1678,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1678
           },
           {
-            "item": "TRADING_ITEM_LETTER",
             "metadata": "Unset Room",
-            "custom_item_name": "ANGLER KEYHOLE",
-            "event": "ANGLER_KEYHOLE",
-            "item_owner": 1,
-            "location_owner": 1
+            "event": "ANGLER_KEYHOLE"
           },
           {
-            "item": "TRADING_ITEM_LETTER",
             "metadata": "Unset Room",
-            "custom_item_name": "CASTLE BUTTON",
-            "event": "CASTLE_BUTTON",
-            "item_owner": 1,
-            "location_owner": 1
+            "event": "CASTLE_BUTTON"
           },
           {
-            "item": "RUPEES_50",
             "room": 722,
-            "metadata": "Darknut, Zol, Bubble Leaf",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Darknut, Zol, Bubble Leaf"
           },
           {
-            "item": "FLIPPERS",
             "room": 709,
-            "metadata": "Bombable Darknut Leaf",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bombable Darknut Leaf"
           },
           {
-            "item": "BOOMERANG",
             "room": 710,
-            "metadata": "Ball and Chain Darknut Leaf",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Ball and Chain Darknut Leaf"
           },
           {
-            "item": "RED_TUNIC",
             "room": 90,
-            "metadata": "Bomberman Meets Whack-a-mole Leaf",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bomberman Meets Whack-a-mole Leaf"
           },
           {
-            "item": "SWORD",
             "room": 88,
-            "metadata": "Crow Rock Leaf",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Crow Rock Leaf"
           },
           {
-            "item": "ROOSTER",
             "room": 765,
-            "metadata": "Manbo's Mambo",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Manbo's Mambo"
           },
           {
-            "item": "MAP4",
             "room": 377,
             "metadata": "Watery Statue Chest",
-            "addr": 1753,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1753
           },
           {
-            "item": "KEY4",
             "room": 362,
             "metadata": "NW of Boots Pit Ledge Chest",
-            "addr": 1738,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1738
           },
           {
-            "item": "HEART_PIECE",
             "room": 376,
             "metadata": "Two Spiked Beetle, Zol Chest",
-            "addr": 1752,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1752
           },
           {
-            "item": "KEY4",
             "room": 379,
             "metadata": "Crystal Chest",
-            "addr": 1755,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1755
           },
           {
-            "item": "STONE_BEAK4",
             "room": 373,
             "metadata": "Flipper Locked Before Boots Pit Chest",
-            "addr": 1749,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1749
           },
           {
-            "item": "SEASHELL",
             "room": 361,
             "extra": 380,
-            "metadata": "Pit Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Pit Key"
           },
           {
-            "item": "MEDICINE",
             "room": 366,
             "metadata": "Flipper Locked After Boots Pit Chest",
-            "addr": 1742,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1742
           },
           {
-            "item": "KEY4",
             "room": 365,
             "metadata": "Blob Chest",
-            "addr": 1741,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1741
           },
           {
-            "item": "COMPASS4",
             "room": 360,
             "metadata": "Spark Chest",
-            "addr": 1736,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1736
           },
           {
-            "item": "KEY4",
             "room": 374,
             "metadata": "Nightmare Key Ledge Chest",
-            "addr": 1750,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1750
           },
           {
-            "item": "NIGHTMARE_KEY4",
             "room": 352,
             "metadata": "Flippers Chest",
-            "addr": 1728,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1728
           },
           {
-            "item": "HEART_PIECE",
             "room": 358,
             "extra": 511,
-            "metadata": "Angler Fish Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Angler Fish Heart Container"
           },
           {
-            "item": "INSTRUMENT4",
             "room": 354,
             "metadata": "Surf Harp",
             "OPTIONS": [
               "INSTRUMENT4"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "RUPEES_20",
             "room": 369,
             "metadata": "Lower Bomb Locked Watery Chest",
-            "addr": 1745,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1745
           },
           {
-            "item": "KEY4",
             "room": 357,
             "metadata": "Upper Bomb Locked Watery Chest",
-            "addr": 1733,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1733
           },
           {
-            "item": "SEASHELL",
             "room": 92,
             "metadata": "West",
-            "addr": 1468,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1468
           },
           {
-            "item": "SINGLE_ARROW",
             "room": 93,
             "metadata": "East",
-            "addr": 1469,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1469
           },
           {
             "unadjusted_room": 205,
-            "item": "TRADING_ITEM_FISHING_HOOK",
             "room": 205,
             "metadata": "Grandma",
             "default_item": "TRADING_ITEM_FISHING_HOOK",
             "OPTIONS": [
               "TRADING_ITEM_FISHING_HOOK"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
             "unadjusted_room": 663,
-            "item": "TRADING_ITEM_MAGNIFYING_GLASS",
             "room": 663,
             "metadata": "Mermaid Statue",
             "default_item": "TRADING_ITEM_MAGNIFYING_GLASS",
             "OPTIONS": [
               "TRADING_ITEM_MAGNIFYING_GLASS"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "GOLD_LEAF",
             "room": 218,
-            "metadata": "Peninsula Dig",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Peninsula Dig"
           },
           {
-            "item": "FACE_KEY",
             "room": 206,
             "extra": 504,
-            "metadata": "Lanmola",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Lanmola"
           },
           {
-            "item": "RUPEES_100",
             "room": 488,
-            "metadata": "Cave Under Lanmola",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Cave Under Lanmola"
           },
           {
-            "item": "BOW",
             "room": 255,
-            "metadata": "Rock Seashell",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Rock Seashell"
           },
           {
-            "item": "HOOKSHOT",
             "room": 742,
-            "metadata": "Bomb Arrow Cave",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bomb Arrow Cave"
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 764,
             "metadata": "Under Armos Cave",
-            "addr": 2140,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2140
           },
           {
-            "item": "SEASHELL",
             "room": 639,
-            "metadata": "Armos Knight",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Armos Knight"
           },
           {
             "unadjusted_room": 729,
-            "item": "TRADING_ITEM_LETTER",
             "room": 729,
             "metadata": "Goat",
             "default_item": "TRADING_ITEM_LETTER",
             "OPTIONS": [
               "TRADING_ITEM_LETTER"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
             "unadjusted_room": 727,
-            "item": "TRADING_ITEM_PINEAPPLE",
             "room": 727,
             "metadata": "Bear Cook",
             "default_item": "TRADING_ITEM_PINEAPPLE",
             "OPTIONS": [
               "TRADING_ITEM_PINEAPPLE"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "TRADING_ITEM_LETTER",
             "metadata": "Unset Room",
-            "custom_item_name": "RAFT",
-            "event": "RAFT",
-            "item_owner": 1,
-            "location_owner": 1
+            "event": "RAFT"
           },
           {
-            "item": "HEART_PIECE",
             "room": 498,
-            "metadata": "Damp Cave Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Damp Cave Heart Piece"
           },
           {
-            "item": "SONG2",
             "room": 699,
             "metadata": "Access Tunnel Interior",
-            "addr": 2075,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2075
           },
           {
-            "item": "MAGIC_POWDER",
             "room": 12,
-            "metadata": "Bridge Rock",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bridge Rock"
           },
           {
-            "item": "SEASHELL",
             "room": 4,
             "metadata": "Outside Mad Batter",
-            "addr": 1380,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1380
           },
           {
-            "item": "RUPEES_200",
             "room": 591,
             "metadata": "Push Block Chest",
-            "addr": 1967,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1967
           },
           {
-            "item": "BOWWOW",
             "room": 576,
             "metadata": "Beamos Blocked Chest",
-            "addr": 1952,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1952
           },
           {
-            "item": "KEY8",
             "room": 589,
             "metadata": "Left of Hinox Zamboni Chest",
-            "addr": 1965,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1965
           },
           {
-            "item": "KEY8",
             "room": 604,
             "metadata": "Vacuum Mouth Chest",
-            "addr": 1980,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1980
           },
           {
-            "item": "SEASHELL",
             "room": 588,
-            "metadata": "Left Vire Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Left Vire Key"
           },
           {
-            "item": "KEY8",
             "room": 597,
             "metadata": "Spark, Pit Chest",
-            "addr": 1973,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1973
           },
           {
-            "item": "STONE_BEAK8",
             "room": 582,
             "metadata": "Two Torches Room Chest",
-            "addr": 1958,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1958
           },
           {
-            "item": "KEY8",
             "room": 573,
             "metadata": "Dodongo Chest",
-            "addr": 1949,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1949
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 0,
-            "metadata": "Outside Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Outside Heart Piece"
           },
           {
-            "item": "MAX_BOMBS_UPGRADE",
             "room": 577,
-            "metadata": "Lava Arrow Statue Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Lava Arrow Statue Key"
           },
           {
-            "item": "MAP8",
             "room": 570,
             "metadata": "West of Boss Door Ledge Chest",
-            "addr": 1946,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1946
           },
           {
-            "item": "KEY8",
             "room": 574,
-            "metadata": "Gibdos on Cracked Floor Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Gibdos on Cracked Floor Key"
           },
           {
-            "item": "KEY8",
             "room": 565,
             "metadata": "Lava Ledge Chest",
-            "addr": 1941,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1941
           },
           {
-            "item": "MAX_POWDER_UPGRADE",
             "room": 567,
             "metadata": "Magic Rod Chest",
-            "addr": 1943,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1943
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 562,
             "metadata": "Nightmare Key/Big Zamboni Chest",
-            "addr": 1938,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1938
           },
           {
-            "item": "KEY8",
             "room": 564,
-            "metadata": "Hot Head Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Hot Head Heart Container"
           },
           {
-            "item": "INSTRUMENT8",
             "room": 560,
             "metadata": "Thunder Drum",
             "OPTIONS": [
               "INSTRUMENT8"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "COMPASS8",
             "room": 601,
             "metadata": "Right Lava Chest",
-            "addr": 1977,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1977
           },
           {
-            "item": "NIGHTMARE_KEY8",
             "room": 602,
-            "metadata": "Zamboni, Two Zol Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Zamboni, Two Zol Key"
           },
           {
-            "item": "SEASHELL",
             "room": 607,
             "metadata": "Four Ropes Pot Chest",
-            "addr": 1983,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1983
           },
           {
-            "item": "SEASHELL",
             "room": 482,
-            "metadata": "Mad Batter",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Mad Batter"
           },
           {
-            "item": "MAX_ARROWS_UPGRADE",
             "room": 698,
-            "metadata": "Access Tunnel Bombable Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Access Tunnel Bombable Heart Piece"
           },
           {
-            "item": "PEGASUS_BOOTS",
             "room": 634,
-            "metadata": "Bird Key Cave",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bird Key Cave"
           },
           {
-            "item": "HEART_PIECE",
             "room": 650,
             "metadata": "Paphl Cave",
-            "addr": 2026,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2026
           },
           {
             "unadjusted_room": 25,
-            "item": "TRADING_ITEM_HIBISCUS",
             "room": 25,
             "metadata": "Papahl",
             "default_item": "TRADING_ITEM_HIBISCUS",
             "OPTIONS": [
               "TRADING_ITEM_HIBISCUS"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "BOMB",
             "room": 29,
             "metadata": "Outside Five Chest Game",
-            "addr": 1405,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1405
           },
           {
-            "item": "KEY7",
             "room": 528,
-            "metadata": "Entrance Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Entrance Key"
           },
           {
-            "item": "COMPASS7",
             "room": 521,
             "metadata": "Switch Wrapped Chest",
-            "addr": 1897,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1897
           },
           {
-            "item": "BOMB",
             "room": 530,
             "metadata": "Horse Head, Bubble Chest",
-            "addr": 1906,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1906
           },
           {
-            "item": "KEY7",
             "room": 529,
             "metadata": "Three of a Kind, No Pit Chest",
-            "addr": 1905,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1905
           },
           {
-            "item": "NIGHTMARE_KEY7",
             "room": 513,
             "metadata": "Kirby Ledge Chest",
-            "addr": 1889,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1889
           },
           {
-            "item": "STONE_BEAK7",
             "room": 539,
-            "metadata": "Hinox Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Hinox Key"
           },
           {
-            "item": "SEASHELL",
             "room": 548,
             "metadata": "Nightmare Key/After Grim Creeper Chest",
-            "addr": 1924,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1924
           },
           {
-            "item": "RUPEES_50",
             "room": 538,
             "metadata": "Mirror Shield Chest",
-            "addr": 1914,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1914
           },
           {
-            "item": "GEL",
             "room": 516,
             "metadata": "Beamos Ledge Chest",
-            "addr": 1892,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1892
           },
           {
-            "item": "MAP7",
             "room": 540,
             "metadata": "Three of a Kind, Pit Chest",
-            "addr": 1916,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1916
           },
           {
-            "item": "KEY7",
             "room": 544,
             "metadata": "Conveyor Beamos Chest",
-            "addr": 1920,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1920
           },
           {
-            "item": "SEASHELL",
             "room": 547,
             "extra": 744,
-            "metadata": "Evil Eagle Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Evil Eagle Heart Container"
           },
           {
-            "item": "INSTRUMENT7",
             "room": 556,
             "metadata": "Organ of Evening Calm",
             "OPTIONS": [
               "INSTRUMENT7"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 24,
             "metadata": "Access Tunnel Exterior",
-            "addr": 1400,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1400
           },
           {
-            "item": "RUPEES_50",
             "room": 738,
             "metadata": "Moblin Cave",
-            "addr": 2114,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2114
           },
           {
-            "item": "RUPEES_20",
             "room": 116,
-            "metadata": "Ghost Grave Dig",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Ghost Grave Dig"
           },
           {
-            "item": "GOLD_LEAF",
             "room": 735,
-            "metadata": "Graveyard Connector",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Graveyard Connector"
           },
           {
-            "item": "KEY9",
             "room": 788,
             "metadata": "Lower Small Key",
-            "addr": 2164,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2164
           },
           {
-            "item": "BIRD_KEY",
             "room": 785,
             "metadata": "Two Socket Chest",
-            "addr": 2161,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2161
           },
           {
-            "item": "MAP9",
             "room": 783,
             "metadata": "Entrance Chest",
-            "addr": 2159,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2159
           },
           {
-            "item": "KEY9",
             "room": 776,
-            "metadata": "Upper Small Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Upper Small Key"
           },
           {
-            "item": "NIGHTMARE_KEY9",
             "room": 770,
             "metadata": "Nightmare Key Chest",
-            "addr": 2146,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2146
           },
           {
-            "item": "KEY9",
             "room": 774,
             "metadata": "Zol Chest",
-            "addr": 2150,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2150
           },
           {
-            "item": "COMPASS9",
             "room": 775,
-            "metadata": "Bullshit Room",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Bullshit Room"
           },
           {
             "index": 0,
-            "item": "SEASHELL",
             "room": 769,
-            "metadata": "Tunic Fairy Item 1",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Tunic Fairy Item 1"
           },
           {
             "index": 1,
-            "item": "STONE_BEAK9",
             "room": 769,
-            "metadata": "Tunic Fairy Item 2",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Tunic Fairy Item 2"
           },
           {
             "unadjusted_room": 123,
-            "item": "TRADING_ITEM_STICK",
             "room": 123,
             "metadata": "Kiki",
             "default_item": "TRADING_ITEM_STICK",
             "OPTIONS": [
               "TRADING_ITEM_STICK"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
             "unadjusted_room": 135,
-            "item": "TRADING_ITEM_HONEYCOMB",
             "room": 135,
             "metadata": "Honeycomb",
             "default_item": "TRADING_ITEM_HONEYCOMB",
             "OPTIONS": [
               "TRADING_ITEM_HONEYCOMB"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "SEASHELL",
             "room": 165,
-            "metadata": "Outside D3 Ledge Dig",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Outside D3 Ledge Dig"
           },
           {
-            "item": "KEY3",
             "room": 339,
             "metadata": "Vacuum Mouth Chest",
-            "addr": 1715,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1715
           },
           {
-            "item": "KEY3",
             "room": 335,
             "metadata": "Four Zol Chest",
-            "addr": 1711,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1711
           },
           {
-            "item": "KEY3",
             "room": 337,
             "metadata": "Two Bombite, Sword Stalfos, Zol Chest",
-            "addr": 1713,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1713
           },
           {
-            "item": "KEY3",
             "room": 334,
             "metadata": "Two Stalfos, Zol Chest",
-            "addr": 1710,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1710
           },
           {
-            "item": "COMPASS3",
             "room": 340,
-            "metadata": "North Key Room Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "North Key Room Key"
           },
           {
-            "item": "NIGHTMARE_KEY3",
             "room": 332,
             "metadata": "Zol Switch Chest",
-            "addr": 1708,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1708
           },
           {
-            "item": "RUPEES_50",
             "room": 336,
             "metadata": "Sword Stalfos, Keese Switch Chest",
-            "addr": 1712,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1712
           },
           {
-            "item": "KEY3",
             "room": 341,
-            "metadata": "West Key Room Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "West Key Room Key"
           },
           {
-            "item": "STONE_BEAK3",
             "room": 344,
-            "metadata": "South Key Room Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "South Key Room Key"
           },
           {
-            "item": "KEY3",
             "room": 333,
-            "metadata": "After Stairs Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "After Stairs Key"
           },
           {
-            "item": "MAP3",
             "room": 327,
             "metadata": "Tile Arrow Ledge Chest",
-            "addr": 1703,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1703
           },
           {
-            "item": "SWORD",
             "room": 326,
             "metadata": "Boots Chest",
-            "addr": 1702,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1702
           },
           {
-            "item": "MAGIC_ROD",
             "room": 322,
             "metadata": "Three Zol, Stalfos Chest",
-            "addr": 1698,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1698
           },
           {
-            "item": "KEY3",
             "room": 321,
-            "metadata": "Three Bombite Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Three Bombite Key"
           },
           {
-            "item": "KEY3",
             "room": 328,
-            "metadata": "Two Zol, Two Pairodd Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Two Zol, Two Pairodd Key"
           },
           {
-            "item": "KEY3",
             "room": 324,
             "metadata": "Two Zol, Stalfos Ledge Chest",
-            "addr": 1700,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1700
           },
           {
-            "item": "SHIELD",
             "room": 347,
-            "metadata": "Nightmare Door Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Nightmare Door Key"
           },
           {
-            "item": "BOMB",
             "room": 346,
-            "metadata": "Slime Eye Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Slime Eye Heart Container"
           },
           {
-            "item": "INSTRUMENT3",
             "room": 345,
             "metadata": "Sea Lily's Bell",
             "OPTIONS": [
               "INSTRUMENT3"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "RUPEES_50",
             "room": 166,
-            "metadata": "Outside D3 Island Bush",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Outside D3 Island Bush"
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 139,
-            "metadata": "East of Seashell Mansion Bush",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "East of Seashell Mansion Bush"
           },
           {
-            "item": "GOLD_LEAF",
             "room": 164,
-            "metadata": "East of Mabe Tree Bonk",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "East of Mabe Tree Bonk"
           },
           {
-            "item": "MESSAGE",
             "room": 185,
-            "metadata": "Rock Seashell",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Rock Seashell"
           },
           {
-            "item": "SEASHELL",
             "room": 509,
             "metadata": "Boots Pit",
-            "addr": 1885,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1885
           },
           {
-            "item": "RUPEES_20",
             "room": 717,
             "metadata": "Cave East of Mabe",
-            "addr": 2093,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2093
           },
           {
-            "item": "RUPEES_20",
             "room": 756,
             "metadata": "Boots 'n' Bomb Cave Chest",
-            "addr": 2132,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2132
           },
           {
-            "item": "GEL",
             "room": 741,
-            "metadata": "Boots 'n' Bomb Cave Bombable Wall",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Boots 'n' Bomb Cave Bombable Wall"
           },
           {
-            "item": "HEART_PIECE",
             "room": 763,
-            "metadata": "Mamu",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Mamu"
           },
           {
-            "item": "SEASHELL",
             "room": 745,
-            "metadata": "Seashell Mansion",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Seashell Mansion"
           },
           {
-            "item": "MEDICINE",
             "room": 168,
-            "metadata": "Donut Plains Ledge Dig",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Donut Plains Ledge Dig"
           },
           {
-            "item": "ARROWS_10",
             "room": 712,
             "metadata": "Under Richard's House",
-            "addr": 2088,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2088
           },
           {
-            "item": "MEDICINE",
             "room": 198,
-            "metadata": "Slime Key Dig",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Slime Key Dig"
           },
           {
             "unadjusted_room": 757,
-            "item": "TRADING_ITEM_NECKLACE",
             "room": 757,
             "metadata": "Fisher",
             "default_item": "TRADING_ITEM_NECKLACE",
             "OPTIONS": [
               "TRADING_ITEM_NECKLACE"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
             "unadjusted_room": 201,
-            "item": "TRADING_ITEM_SCALE",
             "room": 201,
             "metadata": "Mermaid",
             "default_item": "TRADING_ITEM_SCALE",
             "OPTIONS": [
               "TRADING_ITEM_SCALE"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "RUPEES_50",
             "room": 416,
             "metadata": "Entrance Hookshottable Chest",
-            "addr": 1792,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1792
           },
           {
-            "item": "KEY5",
             "room": 414,
             "metadata": "Spark, Two Iron Mask Chest",
-            "addr": 1790,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1790
           },
           {
-            "item": "KEY5",
             "room": 385,
-            "metadata": "Crystal Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Crystal Key"
           },
           {
-            "item": "MAP5",
             "room": 411,
             "metadata": "Flying Bomb Chest South",
-            "addr": 1787,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1787
           },
           {
-            "item": "STONE_BEAK5",
             "room": 407,
             "metadata": "Three Iron Mask Chest",
-            "addr": 1783,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1783
           },
           {
-            "item": "OCARINA",
             "room": 406,
             "metadata": "Hookshot Note Chest",
-            "addr": 1782,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1782
           },
           {
-            "item": "ANGLER_KEY",
             "room": 389,
-            "metadata": "Slime Eel Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Slime Eel Heart Container"
           },
           {
-            "item": "INSTRUMENT5",
             "room": 386,
             "metadata": "Wind Marimba",
             "OPTIONS": [
               "INSTRUMENT5"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "NIGHTMARE_KEY5",
             "room": 398,
             "metadata": "Two Stalfos, Star Pit Chest",
-            "addr": 1774,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1774
           },
           {
-            "item": "HEART_PIECE",
             "room": 392,
             "metadata": "Swort Stalfos, Star, Bridge Chest",
-            "addr": 1768,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1768
           },
           {
-            "item": "RUPEES_50",
             "room": 399,
             "metadata": "Flying Bomb Chest East",
-            "addr": 1775,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1775
           },
           {
-            "item": "COMPASS5",
             "room": 384,
-            "metadata": "Master Stalfos Item",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Master Stalfos Item"
           },
           {
-            "item": "RUPEES_50",
             "room": 387,
             "metadata": "Three Stalfos Chest",
-            "addr": 1763,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1763
           },
           {
-            "item": "KEY5",
             "room": 390,
             "metadata": "Nightmare Key/Torch Cross Chest",
-            "addr": 1766,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1766
           },
           {
-            "item": "RUPEES_100",
             "room": 120,
-            "metadata": "In the Moat Heart Piece",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "In the Moat Heart Piece"
           },
           {
-            "item": "MAP6",
             "room": 463,
             "metadata": "Mini-Moldorm, Spark Chest",
-            "addr": 1839,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1839
           },
           {
-            "item": "RUPEES_50",
             "room": 457,
             "metadata": "Flying Heart, Statue Chest",
-            "addr": 1833,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1833
           },
           {
-            "item": "COMPASS6",
             "room": 462,
             "metadata": "L2 Bracelet Chest",
-            "addr": 1838,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1838
           },
           {
-            "item": "HEART_PIECE",
             "room": 448,
             "metadata": "Three Wizzrobe, Switch Chest",
-            "addr": 1824,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1824
           },
           {
-            "item": "RUPEES_20",
             "room": 441,
             "metadata": "Stairs Across Statues Chest",
-            "addr": 1817,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1817
           },
           {
-            "item": "KEY6",
             "room": 435,
             "metadata": "Switch, Star Above Statues Chest",
-            "addr": 1811,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1811
           },
           {
-            "item": "STONE_BEAK6",
             "room": 436,
-            "metadata": "Two Wizzrobe Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Two Wizzrobe Key"
           },
           {
-            "item": "SONG1",
             "room": 432,
             "metadata": "Top Left Horse Heads Chest",
-            "addr": 1808,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1808
           },
           {
-            "item": "SEASHELL",
             "room": 108,
             "metadata": "Raft Chest",
-            "addr": 1484,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1484
           },
           {
-            "item": "SEASHELL",
             "room": 446,
             "metadata": "Water Tektite Chest",
-            "addr": 1822,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1822
           },
           {
-            "item": "KEY6",
             "room": 465,
             "metadata": "Four Wizzrobe Ledge Chest",
-            "addr": 1841,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1841
           },
           {
-            "item": "BLUE_TUNIC",
             "room": 451,
-            "metadata": "Tile Room Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Tile Room Key"
           },
           {
-            "item": "SONG3",
             "room": 444,
-            "metadata": "Facade Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Facade Heart Container"
           },
           {
-            "item": "INSTRUMENT6",
             "room": 437,
             "metadata": "Coral Triangle",
             "OPTIONS": [
               "INSTRUMENT6"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "KEY6",
             "room": 433,
             "metadata": "Top Right Horse Heads Chest",
-            "addr": 1809,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1809
           },
           {
-            "item": "NIGHTMARE_KEY6",
             "room": 438,
             "metadata": "Pot Locked Chest",
-            "addr": 1814,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1814
           },
           {
-            "item": "SEASHELL",
             "room": 480,
-            "metadata": "Mad Batter",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Mad Batter"
           },
           {
-            "item": "SEASHELL",
             "room": 483,
-            "metadata": "Ghost House Barrel",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Ghost House Barrel"
           },
           {
-            "item": "SEASHELL",
             "room": 501,
             "metadata": "Boomerang Guy Item",
             "setting": "gift",
-            "MULTIWORLD": true,
-            "item_owner": 1,
-            "location_owner": 1
+            "MULTIWORLD": true
           },
           {
             "unadjusted_room": 766,
-            "item": "TRADING_ITEM_BANANAS",
             "room": 766,
             "metadata": "Banana Sale",
             "default_item": "TRADING_ITEM_BANANAS",
             "OPTIONS": [
               "TRADING_ITEM_BANANAS"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
             "unadjusted_room": 678,
-            "item": "TRADING_ITEM_RIBBON",
             "room": 678,
             "metadata": "Papahl's Wife",
             "default_item": "TRADING_ITEM_RIBBON",
             "OPTIONS": [
               "TRADING_ITEM_RIBBON"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "RUPEES_50",
             "room": 703,
             "metadata": "Dream Hut East",
-            "addr": 2079,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2079
           },
           {
-            "item": "RUPEES_50",
             "room": 702,
             "metadata": "Dream Hut West",
-            "addr": 2078,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2078
           },
           {
-            "item": "GOLD_LEAF",
             "room": 484,
-            "metadata": "Rooster",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Rooster"
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 673,
-            "metadata": "Shop 200 Item",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Shop 200 Item"
           },
           {
-            "item": "HEART_CONTAINER",
             "room": 679,
-            "metadata": "Shop 980 Item",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Shop 980 Item"
           },
           {
-            "item": "POWER_BRACELET",
             "room": 690,
-            "metadata": "Dog House Dig",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Dog House Dig"
           },
           {
             "unadjusted_room": 690,
-            "item": "TRADING_ITEM_DOG_FOOD",
             "room": 692,
             "metadata": "YipYip",
             "default_item": "TRADING_ITEM_DOG_FOOD",
             "OPTIONS": [
               "TRADING_ITEM_DOG_FOOD"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
             "unadjusted_room": 672,
-            "item": "TRADING_ITEM_YOSHI_DOLL",
             "room": 672,
             "metadata": "Trendy Game",
             "default_item": "TRADING_ITEM_YOSHI_DOLL",
             "OPTIONS": [
               "TRADING_ITEM_YOSHI_DOLL"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "RUPEES_50",
             "room": 275,
             "metadata": "Pit Button Chest",
-            "addr": 1651,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1651
           },
           {
-            "item": "COMPASS1",
             "room": 277,
             "metadata": "Four Zol Chest",
-            "addr": 1653,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1653
           },
           {
-            "item": "KEY1",
             "room": 270,
             "metadata": "Spark, Mini-Moldorm Chest",
-            "addr": 1646,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1646
           },
           {
-            "item": "KEY1",
             "room": 278,
-            "metadata": "Hardhat Beetles Key",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Hardhat Beetles Key"
           },
           {
-            "item": "NIGHTMARE_KEY1",
             "room": 269,
             "metadata": "Mini-Moldorm Spawn Chest",
-            "addr": 1645,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1645
           },
           {
-            "item": "KEY1",
             "room": 276,
             "metadata": "Two Stalfos, Two Keese Chest",
-            "addr": 1652,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1652
           },
           {
-            "item": "GEL",
             "room": 268,
             "metadata": "Bombable Wall Seashell Chest",
-            "addr": 1644,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1644
           },
           {
-            "item": "RUPEES_200",
             "room": 285,
             "metadata": "Feather Chest",
-            "addr": 1661,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1661
           },
           {
-            "item": "MAP1",
             "room": 264,
             "metadata": "Nightmare Key Chest",
-            "addr": 1640,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1640
           },
           {
-            "item": "HEART_PIECE",
             "room": 266,
             "metadata": "Three of a Kind Chest",
-            "addr": 1642,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1642
           },
           {
-            "item": "STONE_BEAK1",
             "room": 262,
-            "metadata": "Moldorm Heart Container",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Moldorm Heart Container"
           },
           {
-            "item": "INSTRUMENT1",
             "room": 258,
             "metadata": "Full Moon Cello",
             "OPTIONS": [
               "INSTRUMENT1"
-            ],
-            "item_owner": 1,
-            "location_owner": 1
+            ]
           },
           {
-            "item": "SEASHELL",
             "room": 113,
             "metadata": "Two Zol, Moblin Chest",
-            "addr": 1489,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 1489
           },
           {
-            "item": "HEART_PIECE",
             "room": 691,
             "metadata": "Hookshot Cave",
-            "addr": 2067,
-            "item_owner": 1,
-            "location_owner": 1
+            "addr": 2067
           },
           {
-            "item": "HEART_PIECE",
             "room": 481,
-            "metadata": "Mad Batter",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Mad Batter"
           },
           {
-            "item": "HEART_PIECE",
             "room": 674,
-            "metadata": "Witch Item",
-            "item_owner": 1,
-            "location_owner": 1
+            "metadata": "Witch Item"
           },
           {
-            "item": "MEDICINE",
             "metadata": "Unset Room",
-            "custom_item_name": "MEDICINE2",
-            "event": "MEDICINE2",
-            "item_owner": 1,
-            "location_owner": 1
+            "event": "MEDICINE2"
           }
         ]
       },
@@ -25707,6 +24399,1352 @@
           "Tunic Fairy Item 1 (Color Dungeon)",
           "Tunic Fairy Item 2 (Color Dungeon)"
         ]
+      ],
+      "rom_item_placements": [
+        {
+          "item": "MAGIC_POWDER",
+          "custom_item_name": "Magic Powder",
+          "item_owner": 1,
+          "name_id": "0x2A3"
+        },
+        {
+          "item": "BOMB",
+          "custom_item_name": "Bomb",
+          "item_owner": 1,
+          "name_id": "0x2A4"
+        },
+        {
+          "item": "RUPEES_20",
+          "custom_item_name": "20 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2B1"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x0A3"
+        },
+        {
+          "item": "TOADSTOOL",
+          "custom_item_name": "Toadstool",
+          "item_owner": 1,
+          "name_id": "0x0D2"
+        },
+        {
+          "item": "RUPEES_100",
+          "custom_item_name": "100 Rupees",
+          "item_owner": 1,
+          "name_id": "0x092"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x0F2"
+        },
+        {
+          "item": "GOLD_LEAF",
+          "custom_item_name": "Gold Leaf",
+          "item_owner": 1,
+          "name_id": "0x0E5"
+        },
+        {
+          "item": "GEL",
+          "custom_item_name": "Zol Attack",
+          "item_owner": 1,
+          "name_id": "0x0E9"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x0F8"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x044"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x050"
+        },
+        {
+          "item": "SLIME_KEY",
+          "custom_item_name": "Slime Key",
+          "item_owner": 1,
+          "name_id": "0x2BD"
+        },
+        {
+          "item": "TAIL_KEY",
+          "custom_item_name": "Tail Key",
+          "item_owner": 1,
+          "name_id": "0x2AB"
+        },
+        {
+          "item": "RUPEES_200",
+          "custom_item_name": "200 Rupees",
+          "item_owner": 1,
+          "name_id": "0x034"
+        },
+        {
+          "item": "FEATHER",
+          "custom_item_name": "Feather",
+          "item_owner": 1,
+          "name_id": "0x041"
+        },
+        {
+          "item": "SHOVEL",
+          "custom_item_name": "Shovel",
+          "item_owner": 1,
+          "name_id": "0x2AE"
+        },
+        {
+          "item": "POWER_BRACELET",
+          "custom_item_name": "Progressive Power Bracelet",
+          "item_owner": 1,
+          "name_id": "0x2AF"
+        },
+        {
+          "item": "TRADING_ITEM_BROOM",
+          "custom_item_name": "Broom",
+          "item_owner": 1,
+          "name_id": "0x2A8-Trade"
+        },
+        {
+          "item": "KEY2",
+          "custom_item_name": "Small Key (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x136"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x132"
+        },
+        {
+          "item": "KEY2",
+          "custom_item_name": "Small Key (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x138"
+        },
+        {
+          "item": "MAP2",
+          "custom_item_name": "Dungeon Map (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x139"
+        },
+        {
+          "item": "KEY2",
+          "custom_item_name": "Small Key (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x126"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x121"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x122"
+        },
+        {
+          "item": "KEY2",
+          "custom_item_name": "Small Key (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x127"
+        },
+        {
+          "item": "SHIELD",
+          "custom_item_name": "Progressive Shield",
+          "item_owner": 1,
+          "name_id": "0x12B"
+        },
+        {
+          "item": "INSTRUMENT2",
+          "custom_item_name": "Conch Horn",
+          "item_owner": 1,
+          "name_id": "0x12A"
+        },
+        {
+          "item": "COMPASS2",
+          "custom_item_name": "Compass (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x120"
+        },
+        {
+          "item": "KEY2",
+          "custom_item_name": "Small Key (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x134"
+        },
+        {
+          "item": "STONE_BEAK2",
+          "custom_item_name": "Stone Beak (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x137"
+        },
+        {
+          "item": "NIGHTMARE_KEY2",
+          "custom_item_name": "Nightmare Key (Bottle Grotto)",
+          "item_owner": 1,
+          "name_id": "0x12E"
+        },
+        {
+          "item": "TRADING_ITEM_LETTER",
+          "custom_item_name": "ANGLER_KEYHOLE",
+          "item_owner": 1,
+          "name_id": "None"
+        },
+        {
+          "item": "TRADING_ITEM_LETTER",
+          "custom_item_name": "CASTLE_BUTTON",
+          "item_owner": 1,
+          "name_id": "None"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2D2"
+        },
+        {
+          "item": "FLIPPERS",
+          "custom_item_name": "Flippers",
+          "item_owner": 1,
+          "name_id": "0x2C5"
+        },
+        {
+          "item": "BOOMERANG",
+          "custom_item_name": "Boomerang",
+          "item_owner": 1,
+          "name_id": "0x2C6"
+        },
+        {
+          "item": "RED_TUNIC",
+          "custom_item_name": "Red Tunic",
+          "item_owner": 1,
+          "name_id": "0x05A"
+        },
+        {
+          "item": "SWORD",
+          "custom_item_name": "Progressive Sword",
+          "item_owner": 1,
+          "name_id": "0x058"
+        },
+        {
+          "item": "ROOSTER",
+          "custom_item_name": "Rooster",
+          "item_owner": 1,
+          "name_id": "0x2FD"
+        },
+        {
+          "item": "MAP4",
+          "custom_item_name": "Dungeon Map (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x179"
+        },
+        {
+          "item": "KEY4",
+          "custom_item_name": "Small Key (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x16A"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x178"
+        },
+        {
+          "item": "KEY4",
+          "custom_item_name": "Small Key (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x17B"
+        },
+        {
+          "item": "STONE_BEAK4",
+          "custom_item_name": "Stone Beak (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x175"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x169"
+        },
+        {
+          "item": "MEDICINE",
+          "custom_item_name": "Medicine",
+          "item_owner": 1,
+          "name_id": "0x16E"
+        },
+        {
+          "item": "KEY4",
+          "custom_item_name": "Small Key (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x16D"
+        },
+        {
+          "item": "COMPASS4",
+          "custom_item_name": "Compass (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x168"
+        },
+        {
+          "item": "KEY4",
+          "custom_item_name": "Small Key (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x176"
+        },
+        {
+          "item": "NIGHTMARE_KEY4",
+          "custom_item_name": "Nightmare Key (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x160"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x166"
+        },
+        {
+          "item": "INSTRUMENT4",
+          "custom_item_name": "Surf Harp",
+          "item_owner": 1,
+          "name_id": "0x162"
+        },
+        {
+          "item": "RUPEES_20",
+          "custom_item_name": "20 Rupees",
+          "item_owner": 1,
+          "name_id": "0x171"
+        },
+        {
+          "item": "KEY4",
+          "custom_item_name": "Small Key (Angler's Tunnel)",
+          "item_owner": 1,
+          "name_id": "0x165"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x05C"
+        },
+        {
+          "item": "SINGLE_ARROW",
+          "custom_item_name": "Single Arrow",
+          "item_owner": 1,
+          "name_id": "0x05D"
+        },
+        {
+          "item": "TRADING_ITEM_FISHING_HOOK",
+          "custom_item_name": "Fishing Hook",
+          "item_owner": 1,
+          "name_id": "0x0CD-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_MAGNIFYING_GLASS",
+          "custom_item_name": "Magnifying Glass",
+          "item_owner": 1,
+          "name_id": "0x297-Trade"
+        },
+        {
+          "item": "GOLD_LEAF",
+          "custom_item_name": "Gold Leaf",
+          "item_owner": 1,
+          "name_id": "0x0DA"
+        },
+        {
+          "item": "FACE_KEY",
+          "custom_item_name": "Face Key",
+          "item_owner": 1,
+          "name_id": "0x0CE"
+        },
+        {
+          "item": "RUPEES_100",
+          "custom_item_name": "100 Rupees",
+          "item_owner": 1,
+          "name_id": "0x1E8"
+        },
+        {
+          "item": "BOW",
+          "custom_item_name": "Bow",
+          "item_owner": 1,
+          "name_id": "0x0FF"
+        },
+        {
+          "item": "HOOKSHOT",
+          "custom_item_name": "Hookshot",
+          "item_owner": 1,
+          "name_id": "0x2E6"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x2FC"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x27F"
+        },
+        {
+          "item": "TRADING_ITEM_LETTER",
+          "custom_item_name": "Letter",
+          "item_owner": 1,
+          "name_id": "0x2D9-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_PINEAPPLE",
+          "custom_item_name": "Pineapple",
+          "item_owner": 1,
+          "name_id": "0x2D7-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_LETTER",
+          "custom_item_name": "RAFT",
+          "item_owner": 1,
+          "name_id": "None"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x1F2"
+        },
+        {
+          "item": "SONG2",
+          "custom_item_name": "Manbo's Mambo",
+          "item_owner": 1,
+          "name_id": "0x2BB"
+        },
+        {
+          "item": "MAGIC_POWDER",
+          "custom_item_name": "Magic Powder",
+          "item_owner": 1,
+          "name_id": "0x00C"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x004"
+        },
+        {
+          "item": "RUPEES_200",
+          "custom_item_name": "200 Rupees",
+          "item_owner": 1,
+          "name_id": "0x24F"
+        },
+        {
+          "item": "BOWWOW",
+          "custom_item_name": "BowWow",
+          "item_owner": 1,
+          "name_id": "0x240"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x24D"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x25C"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x24C"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x255"
+        },
+        {
+          "item": "STONE_BEAK8",
+          "custom_item_name": "Stone Beak (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x246"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x23D"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x000"
+        },
+        {
+          "item": "MAX_BOMBS_UPGRADE",
+          "custom_item_name": "Max Bombs Upgrade",
+          "item_owner": 1,
+          "name_id": "0x241"
+        },
+        {
+          "item": "MAP8",
+          "custom_item_name": "Dungeon Map (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x23A"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x23E"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x235"
+        },
+        {
+          "item": "MAX_POWDER_UPGRADE",
+          "custom_item_name": "Max Powder Upgrade",
+          "item_owner": 1,
+          "name_id": "0x237"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x232"
+        },
+        {
+          "item": "KEY8",
+          "custom_item_name": "Small Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x234"
+        },
+        {
+          "item": "INSTRUMENT8",
+          "custom_item_name": "Thunder Drum",
+          "item_owner": 1,
+          "name_id": "0x230"
+        },
+        {
+          "item": "COMPASS8",
+          "custom_item_name": "Compass (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x259"
+        },
+        {
+          "item": "NIGHTMARE_KEY8",
+          "custom_item_name": "Nightmare Key (Turtle Rock)",
+          "item_owner": 1,
+          "name_id": "0x25A"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x25F"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x1E2"
+        },
+        {
+          "item": "MAX_ARROWS_UPGRADE",
+          "custom_item_name": "Max Arrows Upgrade",
+          "item_owner": 1,
+          "name_id": "0x2BA"
+        },
+        {
+          "item": "PEGASUS_BOOTS",
+          "custom_item_name": "Pegasus Boots",
+          "item_owner": 1,
+          "name_id": "0x27A"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x28A"
+        },
+        {
+          "item": "TRADING_ITEM_HIBISCUS",
+          "custom_item_name": "Hibiscus",
+          "item_owner": 1,
+          "name_id": "0x019-Trade"
+        },
+        {
+          "item": "BOMB",
+          "custom_item_name": "Bomb",
+          "item_owner": 1,
+          "name_id": "0x01D"
+        },
+        {
+          "item": "KEY7",
+          "custom_item_name": "Small Key (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x210"
+        },
+        {
+          "item": "COMPASS7",
+          "custom_item_name": "Compass (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x209"
+        },
+        {
+          "item": "BOMB",
+          "custom_item_name": "Bomb",
+          "item_owner": 1,
+          "name_id": "0x212"
+        },
+        {
+          "item": "KEY7",
+          "custom_item_name": "Small Key (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x211"
+        },
+        {
+          "item": "NIGHTMARE_KEY7",
+          "custom_item_name": "Nightmare Key (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x201"
+        },
+        {
+          "item": "STONE_BEAK7",
+          "custom_item_name": "Stone Beak (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x21B"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x224"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x21A"
+        },
+        {
+          "item": "GEL",
+          "custom_item_name": "Zol Attack",
+          "item_owner": 1,
+          "name_id": "0x204"
+        },
+        {
+          "item": "MAP7",
+          "custom_item_name": "Dungeon Map (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x21C"
+        },
+        {
+          "item": "KEY7",
+          "custom_item_name": "Small Key (Eagle's Tower)",
+          "item_owner": 1,
+          "name_id": "0x220"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x223"
+        },
+        {
+          "item": "INSTRUMENT7",
+          "custom_item_name": "Organ of Evening Calm",
+          "item_owner": 1,
+          "name_id": "0x22C"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x018"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2E2"
+        },
+        {
+          "item": "RUPEES_20",
+          "custom_item_name": "20 Rupees",
+          "item_owner": 1,
+          "name_id": "0x074"
+        },
+        {
+          "item": "GOLD_LEAF",
+          "custom_item_name": "Gold Leaf",
+          "item_owner": 1,
+          "name_id": "0x2DF"
+        },
+        {
+          "item": "KEY9",
+          "custom_item_name": "Small Key (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x314"
+        },
+        {
+          "item": "BIRD_KEY",
+          "custom_item_name": "Bird Key",
+          "item_owner": 1,
+          "name_id": "0x311"
+        },
+        {
+          "item": "MAP9",
+          "custom_item_name": "Dungeon Map (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x30F"
+        },
+        {
+          "item": "KEY9",
+          "custom_item_name": "Small Key (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x308"
+        },
+        {
+          "item": "NIGHTMARE_KEY9",
+          "custom_item_name": "Nightmare Key (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x302"
+        },
+        {
+          "item": "KEY9",
+          "custom_item_name": "Small Key (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x306"
+        },
+        {
+          "item": "COMPASS9",
+          "custom_item_name": "Compass (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x307"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x301-0"
+        },
+        {
+          "item": "STONE_BEAK9",
+          "custom_item_name": "Stone Beak (Color Dungeon)",
+          "item_owner": 1,
+          "name_id": "0x301-1"
+        },
+        {
+          "item": "TRADING_ITEM_STICK",
+          "custom_item_name": "Stick",
+          "item_owner": 1,
+          "name_id": "0x07B-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_HONEYCOMB",
+          "custom_item_name": "Honeycomb",
+          "item_owner": 1,
+          "name_id": "0x087-Trade"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x0A5"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x153"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x14F"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x151"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x14E"
+        },
+        {
+          "item": "COMPASS3",
+          "custom_item_name": "Compass (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x154"
+        },
+        {
+          "item": "NIGHTMARE_KEY3",
+          "custom_item_name": "Nightmare Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x14C"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x150"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x155"
+        },
+        {
+          "item": "STONE_BEAK3",
+          "custom_item_name": "Stone Beak (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x158"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x14D"
+        },
+        {
+          "item": "MAP3",
+          "custom_item_name": "Dungeon Map (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x147"
+        },
+        {
+          "item": "SWORD",
+          "custom_item_name": "Progressive Sword",
+          "item_owner": 1,
+          "name_id": "0x146"
+        },
+        {
+          "item": "MAGIC_ROD",
+          "custom_item_name": "Magic Rod",
+          "item_owner": 1,
+          "name_id": "0x142"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x141"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x148"
+        },
+        {
+          "item": "KEY3",
+          "custom_item_name": "Small Key (Key Cavern)",
+          "item_owner": 1,
+          "name_id": "0x144"
+        },
+        {
+          "item": "SHIELD",
+          "custom_item_name": "Progressive Shield",
+          "item_owner": 1,
+          "name_id": "0x15B"
+        },
+        {
+          "item": "BOMB",
+          "custom_item_name": "Bomb",
+          "item_owner": 1,
+          "name_id": "0x15A"
+        },
+        {
+          "item": "INSTRUMENT3",
+          "custom_item_name": "Sea Lily's Bell",
+          "item_owner": 1,
+          "name_id": "0x159"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x0A6"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x08B"
+        },
+        {
+          "item": "GOLD_LEAF",
+          "custom_item_name": "Gold Leaf",
+          "item_owner": 1,
+          "name_id": "0x0A4"
+        },
+        {
+          "item": "MESSAGE",
+          "custom_item_name": "Nothing",
+          "item_owner": 1,
+          "name_id": "0x0B9"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x1FD"
+        },
+        {
+          "item": "RUPEES_20",
+          "custom_item_name": "20 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2CD"
+        },
+        {
+          "item": "RUPEES_20",
+          "custom_item_name": "20 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2F4"
+        },
+        {
+          "item": "GEL",
+          "custom_item_name": "Zol Attack",
+          "item_owner": 1,
+          "name_id": "0x2E5"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x2FB"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x2E9"
+        },
+        {
+          "item": "MEDICINE",
+          "custom_item_name": "Medicine",
+          "item_owner": 1,
+          "name_id": "0x0A8"
+        },
+        {
+          "item": "ARROWS_10",
+          "custom_item_name": "10 Arrows",
+          "item_owner": 1,
+          "name_id": "0x2C8"
+        },
+        {
+          "item": "MEDICINE",
+          "custom_item_name": "Medicine",
+          "item_owner": 1,
+          "name_id": "0x0C6"
+        },
+        {
+          "item": "TRADING_ITEM_NECKLACE",
+          "custom_item_name": "Necklace",
+          "item_owner": 1,
+          "name_id": "0x2F5-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_SCALE",
+          "custom_item_name": "Scale",
+          "item_owner": 1,
+          "name_id": "0x0C9-Trade"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x1A0"
+        },
+        {
+          "item": "KEY5",
+          "custom_item_name": "Small Key (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x19E"
+        },
+        {
+          "item": "KEY5",
+          "custom_item_name": "Small Key (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x181"
+        },
+        {
+          "item": "MAP5",
+          "custom_item_name": "Dungeon Map (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x19B"
+        },
+        {
+          "item": "STONE_BEAK5",
+          "custom_item_name": "Stone Beak (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x197"
+        },
+        {
+          "item": "OCARINA",
+          "custom_item_name": "Ocarina",
+          "item_owner": 1,
+          "name_id": "0x196"
+        },
+        {
+          "item": "ANGLER_KEY",
+          "custom_item_name": "Angler Key",
+          "item_owner": 1,
+          "name_id": "0x185"
+        },
+        {
+          "item": "INSTRUMENT5",
+          "custom_item_name": "Wind Marimba",
+          "item_owner": 1,
+          "name_id": "0x182"
+        },
+        {
+          "item": "NIGHTMARE_KEY5",
+          "custom_item_name": "Nightmare Key (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x18E"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x188"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x18F"
+        },
+        {
+          "item": "COMPASS5",
+          "custom_item_name": "Compass (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x180"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x183"
+        },
+        {
+          "item": "KEY5",
+          "custom_item_name": "Small Key (Catfish's Maw)",
+          "item_owner": 1,
+          "name_id": "0x186"
+        },
+        {
+          "item": "RUPEES_100",
+          "custom_item_name": "100 Rupees",
+          "item_owner": 1,
+          "name_id": "0x078"
+        },
+        {
+          "item": "MAP6",
+          "custom_item_name": "Dungeon Map (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1CF"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x1C9"
+        },
+        {
+          "item": "COMPASS6",
+          "custom_item_name": "Compass (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1CE"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x1C0"
+        },
+        {
+          "item": "RUPEES_20",
+          "custom_item_name": "20 Rupees",
+          "item_owner": 1,
+          "name_id": "0x1B9"
+        },
+        {
+          "item": "KEY6",
+          "custom_item_name": "Small Key (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1B3"
+        },
+        {
+          "item": "STONE_BEAK6",
+          "custom_item_name": "Stone Beak (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1B4"
+        },
+        {
+          "item": "SONG1",
+          "custom_item_name": "Ballad of the Wind Fish",
+          "item_owner": 1,
+          "name_id": "0x1B0"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x06C"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x1BE"
+        },
+        {
+          "item": "KEY6",
+          "custom_item_name": "Small Key (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1D1"
+        },
+        {
+          "item": "BLUE_TUNIC",
+          "custom_item_name": "Blue Tunic",
+          "item_owner": 1,
+          "name_id": "0x1C3"
+        },
+        {
+          "item": "SONG3",
+          "custom_item_name": "Frog's Song of Soul",
+          "item_owner": 1,
+          "name_id": "0x1BC"
+        },
+        {
+          "item": "INSTRUMENT6",
+          "custom_item_name": "Coral Triangle",
+          "item_owner": 1,
+          "name_id": "0x1B5"
+        },
+        {
+          "item": "KEY6",
+          "custom_item_name": "Small Key (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1B1"
+        },
+        {
+          "item": "NIGHTMARE_KEY6",
+          "custom_item_name": "Nightmare Key (Face Shrine)",
+          "item_owner": 1,
+          "name_id": "0x1B6"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x1E0"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x1E3"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x1F5"
+        },
+        {
+          "item": "TRADING_ITEM_BANANAS",
+          "custom_item_name": "Bananas",
+          "item_owner": 1,
+          "name_id": "0x2FE-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_RIBBON",
+          "custom_item_name": "Ribbon",
+          "item_owner": 1,
+          "name_id": "0x2A6-Trade"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2BF"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x2BE"
+        },
+        {
+          "item": "GOLD_LEAF",
+          "custom_item_name": "Gold Leaf",
+          "item_owner": 1,
+          "name_id": "0x1E4"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x2A1"
+        },
+        {
+          "item": "HEART_CONTAINER",
+          "custom_item_name": "Heart Container",
+          "item_owner": 1,
+          "name_id": "0x2A7"
+        },
+        {
+          "item": "POWER_BRACELET",
+          "custom_item_name": "Progressive Power Bracelet",
+          "item_owner": 1,
+          "name_id": "0x2B2"
+        },
+        {
+          "item": "TRADING_ITEM_DOG_FOOD",
+          "custom_item_name": "Dog Food",
+          "item_owner": 1,
+          "name_id": "0x2B2-Trade"
+        },
+        {
+          "item": "TRADING_ITEM_YOSHI_DOLL",
+          "custom_item_name": "Yoshi Doll",
+          "item_owner": 1,
+          "name_id": "0x2A0-Trade"
+        },
+        {
+          "item": "RUPEES_50",
+          "custom_item_name": "50 Rupees",
+          "item_owner": 1,
+          "name_id": "0x113"
+        },
+        {
+          "item": "COMPASS1",
+          "custom_item_name": "Compass (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x115"
+        },
+        {
+          "item": "KEY1",
+          "custom_item_name": "Small Key (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x10E"
+        },
+        {
+          "item": "KEY1",
+          "custom_item_name": "Small Key (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x116"
+        },
+        {
+          "item": "NIGHTMARE_KEY1",
+          "custom_item_name": "Nightmare Key (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x10D"
+        },
+        {
+          "item": "KEY1",
+          "custom_item_name": "Small Key (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x114"
+        },
+        {
+          "item": "GEL",
+          "custom_item_name": "Zol Attack",
+          "item_owner": 1,
+          "name_id": "0x10C"
+        },
+        {
+          "item": "RUPEES_200",
+          "custom_item_name": "200 Rupees",
+          "item_owner": 1,
+          "name_id": "0x11D"
+        },
+        {
+          "item": "MAP1",
+          "custom_item_name": "Dungeon Map (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x108"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x10A"
+        },
+        {
+          "item": "STONE_BEAK1",
+          "custom_item_name": "Stone Beak (Tail Cave)",
+          "item_owner": 1,
+          "name_id": "0x106"
+        },
+        {
+          "item": "INSTRUMENT1",
+          "custom_item_name": "Full Moon Cello",
+          "item_owner": 1,
+          "name_id": "0x102"
+        },
+        {
+          "item": "SEASHELL",
+          "custom_item_name": "Seashell",
+          "item_owner": 1,
+          "name_id": "0x071"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x2B3"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x1E1"
+        },
+        {
+          "item": "HEART_PIECE",
+          "custom_item_name": "Heart Piece",
+          "item_owner": 1,
+          "name_id": "0x2A2"
+        },
+        {
+          "item": "MEDICINE",
+          "custom_item_name": "MEDICINE2",
+          "item_owner": 1,
+          "name_id": "None"
+        }
       ],
       "name_cache": {
         "POWER_BRACELETS": "POWER_BRACELET",
@@ -26351,7 +26389,7 @@
       "base_id": 10000000,
       "world_description": "After a previous adventure, Link is stranded on Koholint Island, full of mystery and familiar faces.\nGather the 8 Instruments of the Sirens to wake the Wind Fish, so that Link can go home!",
       "slot_data": {
-        "world_version": "2.0.1",
+        "world_version": "2.0.2",
         "instrument_count": 8,
         "logic": "normal",
         "tradequest": "false",

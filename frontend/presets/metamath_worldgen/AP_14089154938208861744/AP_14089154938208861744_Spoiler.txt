@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,10 +17,11 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Auto-Download Database:          No
+Use Canonical Options:           Yes
+Auto-Download Database:          Yes
 Proof Complexity:                Moderate
 Starting Statements %:           0
-Theorem to Prove:                2p2e4
+Theorem to Prove:                2P2E4
 
 
 Starting Items:

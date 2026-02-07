@@ -2,7 +2,7 @@
 import { RegionUI } from './regionUI.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import eventBus from '../../app/core/eventBus.js';
 
 // Helper function for logging with fallback
@@ -156,7 +156,7 @@ function handleExitClicked(data, propagationOptions) {
   let rulePasses = true;
   if (accessRule) {
     try {
-      const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+      const snapshotInterface = createSnapshotInterface(snapshot, staticData);
       rulePasses = evaluateRule(accessRule, snapshotInterface);
     } catch (e) {
       log('error', `[${moduleId} Module] Error evaluating rule for exit ${exitName}:`, e);

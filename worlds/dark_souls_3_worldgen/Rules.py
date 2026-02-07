@@ -61,7 +61,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Road of Sacrifices", player),
-        HasAll('US -> RS', 'Pyromancy Flame', 'Transposing Kiln')
+        HasAll('Pyromancy Flame', 'Transposing Kiln', 'US -> RS')
     )
 
     world.set_rule(
@@ -1081,7 +1081,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Ember - shop for Greirat's Ashes", player),
-        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from IBV',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from IBV")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Grand Archives',), body_rule=CanReachEntrance("Go To Grand Archives")))
+        And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('CD: Shotel - Patches',), body_rule=CanReachLocation("CD: Shotel - Patches")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from IBV',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from IBV")), HelperCall(helper_func=_can_get, helper_name="_can_get", args=('FS: Divine Blessing - Greirat from US',), body_rule=CanReachLocation("FS: Divine Blessing - Greirat from US")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Grand Archives',), body_rule=CanReachEntrance("Go To Grand Archives")), HelperCall(helper_func=_can_go_to, helper_name="_can_go_to", args=('Irithyll of the Boreal Valley',), body_rule=CanReachEntrance("Go To Irithyll of the Boreal Valley")))
     )
 
     world.set_rule(

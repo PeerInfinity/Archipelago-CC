@@ -83,7 +83,14 @@ export class EventCoordinator {
       if (data && data.settings) {
         this.regionUI.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
         this.regionUI.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+        this.regionUI.discoverySettings.clickDiscoversRegion = data.settings.clickDiscoversRegion ?? false;
+        this.regionUI.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
         this.regionUI.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
+        this.regionUI.discoverySettings.showUndiscoveredRegionNames = data.settings.showUndiscoveredRegionNames ?? false;
+        // Also update discovery mode active state if included
+        if (typeof data.settings.enableDiscoveryMode === 'boolean') {
+          this.regionUI.isDiscoveryModeActive = data.settings.enableDiscoveryMode;
+        }
         logger.info('Discovery settings updated:', this.regionUI.discoverySettings);
         debouncedUpdate();
       }
