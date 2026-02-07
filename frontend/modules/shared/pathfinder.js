@@ -1,5 +1,5 @@
 import { evaluateRule } from './ruleEngine.js';
-import { createStateSnapshotInterface } from './stateInterface.js';
+import { createSnapshotInterface } from './snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 
 const logger = createUniversalLogger('pathfinder');
@@ -43,7 +43,7 @@ export class PathFinder {
       return null;
     }
 
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) {
       return null;
     }
@@ -211,7 +211,7 @@ export class PathFinder {
       return [];
     }
 
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) {
       return [];
     }
@@ -262,7 +262,7 @@ export class PathFinder {
       return null;
     }
 
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) {
       return null;
     }

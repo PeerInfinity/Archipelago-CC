@@ -3,7 +3,7 @@ import commonUI, { renderLogicTree } from '../commonUI/index.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { debounce } from '../commonUI/index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
@@ -275,7 +275,7 @@ export class HelperUI {
       return;
     }
 
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );

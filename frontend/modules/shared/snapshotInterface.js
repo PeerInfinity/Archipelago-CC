@@ -27,11 +27,11 @@
  *     │     └─> Returns: { inventory, flags, events, regionReachability, player, ... }
  *     ├─> Calls getStaticGameData() to get static data
  *     │     └─> Returns: { items, regions, locations, world, exporter, progressionMapping, ... }
- *     ├─> Calls createStateSnapshotInterface(snapshot, staticData, contextVars)
+ *     ├─> Calls createSnapshotInterface(snapshot, staticData, contextVars)
  *     │
  *   Output: SnapshotInterface object
  *   ↓
- * createStateSnapshotInterface() [THIS FILE] (worker thread):
+ * createSnapshotInterface() [THIS FILE] (worker thread):
  *   Input:
  *     ├─> snapshot: Current game state from StateManager
  *     │     └─> { inventory: Map, flags: [], events: [], regionReachability: {}, ... }
@@ -84,11 +84,11 @@
  *     │     └─> Returns CACHED snapshot from proxy (no worker call)
  *     ├─> const staticData = stateManager.getStaticData()
  *     │     └─> Returns CACHED static data from proxy (no worker call)
- *     ├─> const snapshotInterface = createStateSnapshotInterface(snapshot, staticData)
+ *     ├─> const snapshotInterface = createSnapshotInterface(snapshot, staticData)
  *     │
  *   Output: SnapshotInterface object
  *   ↓
- * createStateSnapshotInterface() [THIS FILE] (main thread):
+ * createSnapshotInterface() [THIS FILE] (main thread):
  *   Input:
  *     ├─> snapshot: Cached snapshot from proxy
  *     │     └─> { inventory: {}, flags: [], events: [], regionReachability: {}, ... }
@@ -174,13 +174,13 @@
  * - Progressive item mapping support
  * - Helper functions attached directly to interface for compatibility
  *
- * @module shared/stateInterface
+ * @module shared/snapshotInterface
  * @see ruleEngine.js - Uses this interface for rule evaluation
  * @see gameLogicRegistry.js - Provides game-specific helper functions
  * @see stateManager/stateManager.js - Creates interface in worker thread
  */
 
-// frontend/modules/shared/stateInterface.js
+// frontend/modules/shared/snapshotInterface.js
 
 import { evaluateRule, resolveHelperScope } from './ruleEngine.js';
 import { getGameLogic } from './gameLogic/gameLogicRegistry.js';
@@ -190,13 +190,13 @@ import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
-    window.logger[level]('stateInterface', message, ...data);
+    window.logger[level]('snapshotInterface', message, ...data);
   } else {
     // In worker context, only log ERROR and WARN levels to keep console clean
     if (level === 'error' || level === 'warn') {
       const consoleMethod =
         console[level === 'info' ? 'log' : level] || console.log;
-      consoleMethod(`[stateInterface] ${message}`, ...data);
+      consoleMethod(`[snapshotInterface] ${message}`, ...data);
     }
   }
 }
@@ -233,7 +233,7 @@ function getStateMethods(gameName) {
  * @param {object} contextVariables - Optional context variables (e.g., { location: currentLocation }).
  * @returns {object} - An object conforming to the StateSnapshotInterface.
  */
-export function createStateSnapshotInterface(
+export function createSnapshotInterface(
   snapshot,
   staticData,
   contextVariables = {},
@@ -734,7 +734,7 @@ export function createStateSnapshotInterface(
 
       // Create a new interface with location context for rule evaluation
       // This matches what StateManager does in its isLocationAccessible method
-      const locationContext = createStateSnapshotInterface(snapshot, staticData, {
+      const locationContext = createSnapshotInterface(snapshot, staticData, {
         ...contextVariables,
         location: locData,
         currentLocation: locData
@@ -790,7 +790,7 @@ export function createStateSnapshotInterface(
 
         // Create a context for evaluating the entrance's access rule
         // Bind the entrance under both standard names and its normalized name
-        const entranceContext = createStateSnapshotInterface(snapshot, staticData, {
+        const entranceContext = createSnapshotInterface(snapshot, staticData, {
           ...contextVariables,
           entrance: enhancedEntrance,
           currentEntrance: enhancedEntrance,

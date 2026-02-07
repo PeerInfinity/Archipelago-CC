@@ -38,7 +38,7 @@
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { profiler } from '../shared/profiler.js';
@@ -518,7 +518,7 @@ export class EventProcessor {
 
                 // NEW: Check if location is accessible BEFORE attempting to check it
                 const currentSnapshot = await stateManager.getFullSnapshot();
-                const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
+                const snapshotInterface = createSnapshotInterface(currentSnapshot, stateManager.getStaticData());
                 const isAccessible = snapshotInterface.isLocationAccessible(locationName);
 
                 if (!isAccessible) {
@@ -764,7 +764,7 @@ export class EventProcessor {
               throw new Error(`Snapshot unavailable for ${locName} check`);
             }
             // Create a location-specific snapshotInterface with the location as context
-            const snapshotInterface = createStateSnapshotInterface(
+            const snapshotInterface = createSnapshotInterface(
               currentSnapshot,
               staticData,
               { location: locDef } // Pass the location definition as context
@@ -1066,7 +1066,7 @@ export class EventProcessor {
 
       // Verify accessibility before checking
       const currentSnapshot = await stateManager.getFullSnapshot();
-      const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
+      const snapshotInterface = createSnapshotInterface(currentSnapshot, stateManager.getStaticData());
       const isAccessible = snapshotInterface.isLocationAccessible(locationName);
 
       if (!isAccessible) {

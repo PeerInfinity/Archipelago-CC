@@ -1,6 +1,6 @@
 // frontend/modules/tests/testController.js
 import { stateManagerProxySingleton } from '../stateManager/index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
 // --- TestController Class ---
@@ -218,7 +218,7 @@ export class TestController {
         const snapshot = this.stateManager.getSnapshot();
         const staticData = this.stateManager.getStaticData();
         if (snapshot && staticData && actionDetails.locationName) {
-          const snapshotInterface = createStateSnapshotInterface(
+          const snapshotInterface = createSnapshotInterface(
             snapshot,
             staticData
           );

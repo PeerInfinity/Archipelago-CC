@@ -397,5 +397,5 @@ Add the module containing item constants to `ITEM_NAME_MODULES`.
 - **Unofficial exporters**: `exporter/games/unofficial/<game>.py` - Community apworld configurations
 - **Frontend helpers**: `frontend/modules/shared/gameLogic/<game>/helpers.js`
 - **Rule engine**: `frontend/modules/shared/ruleEngine.js` - Helper definition lookup
-- **State interface**: `frontend/modules/shared/stateInterface.js` - getStaticData()
+- **State interface**: `frontend/modules/shared/snapshotInterface.js` - getStaticData()
 - **State persistence**: `frontend/modules/stateManager/core/statePersistence.js` - getStaticGameData()

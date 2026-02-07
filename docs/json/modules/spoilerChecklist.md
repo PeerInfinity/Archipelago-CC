@@ -37,7 +37,7 @@ This module does not register public functions. It is a UI panel component.
 
 - **`stateManager`:** Gets game snapshots and location data
 - **`ruleEngine`:** Evaluates rules via `evaluateRule()`
-- **`stateInterface`:** Creates snapshot interface
+- **`snapshotInterface`:** Creates snapshot interface
 - **`settingsManager`:** Gets display settings
 - **`eventBus`:** Subscribes to app ready event
 - **`eventDispatcher`:** Dispatches location check events

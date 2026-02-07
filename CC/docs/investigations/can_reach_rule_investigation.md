@@ -59,7 +59,7 @@ The frontend handles `can_reach` checks through two different rule types:
        └─> Call: context.isRegionReachable(regionName)
 
 3. Context Method Resolution
-   └─> stateInterface.js:458-471
+   └─> snapshotInterface.js:458-471
        isRegionReachable: (regionName) => {
          // During BFS computation
          if (stateManager._computing && stateManager.knownReachableRegions) {
@@ -91,7 +91,7 @@ The frontend handles `can_reach` checks through two different rule types:
        └─> Call: context.executeStateManagerMethod(rule.method, ...args)
 
 3. State Method Dispatcher
-   └─> stateInterface.js:393-409
+   └─> snapshotInterface.js:393-409
        executeStateManagerMethod: (methodName, ...args) => {
          return executeStateMethod(stateManager, methodName, ...args);
        }
@@ -597,7 +597,7 @@ To debug the current issue:
 | `reachabilityEngine.js` | 726 | `can_reach()` (670-713)<br>`isRegionReachable()` (507-514)<br>`computeReachableRegions()` (200-311) | ⚠️ Player filtering occurs here<br>BFS implementation<br>Reachability computation |
 | `ruleEngine.js` | 2213 | `evaluateRule()` (335-1912)<br>case 'can_reach' (1789-1803)<br>case 'state_method' (471-492) | Main rule evaluation engine<br>Handles both rule types |
 | `ruleEvaluator.js` | 604 | `executeStateMethod()` (130-213) | Dispatches state method calls<br>Sets default player=1 |
-| `stateInterface.js` | 822 | `isRegionReachable()` (458-471)<br>`executeStateManagerMethod()` (393-409) | Context interface for rule evaluation<br>Bridges rules to StateManager |
+| `snapshotInterface.js` | 822 | `isRegionReachable()` (458-471)<br>`executeStateManagerMethod()` (393-409) | Context interface for rule evaluation<br>Bridges rules to StateManager |
 | `stateManager.js` | ~800 | `constructor()` (lines ~85-109)<br>`can_reach()` (687-688) | Initializes `playerSlot = 1`<br>Delegates to ReachabilityModule |
 
 ### Critical Code Locations

@@ -28,7 +28,7 @@
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 
 const logger = createUniversalLogger('testSpoilerUI:ComparisonEngine');
@@ -127,7 +127,7 @@ export class ComparisonEngine {
 
     // No need to modify the snapshot; it already has the correct inventory from the worker.
     const stateAccessibleUnchecked = [];
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       currentWorkerSnapshot, // Use the authoritative snapshot directly
       staticData,
       { playerId: playerId } // Pass playerId for multiworld game logic selection
@@ -161,7 +161,7 @@ export class ComparisonEngine {
       let locationRuleEvalResult = true;
       if (locationAccessRule) {
         // Create a location-specific snapshotInterface with the location as context
-        const locationSnapshotInterface = createStateSnapshotInterface(
+        const locationSnapshotInterface = createSnapshotInterface(
           currentWorkerSnapshot,
           staticData,
           { location: locDef, playerId: playerId } // Pass location and playerId for multiworld
