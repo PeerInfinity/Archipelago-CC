@@ -237,6 +237,8 @@ trash/*
 node_modules/*
 test-results/*
 set.mm
+*.pkl.gz
+*_pickle_meta.json
 
 !scripts/build/
 !scripts/lib/
@@ -267,6 +269,19 @@ scripts/output/multiworld-worldgen/test-results-*
 scripts/output/multiworld-worldgen/test-results_*
 scripts/output/multiworld-apworld/test-results-*
 scripts/output/multiworld-apworld/test-results_*
+scripts/output/ut-fuzz/test-results-*
+scripts/output/ut-fuzz/test-results_*
+# Track specific UT fuzz result files
+!scripts/output/ut-fuzz/test-results-original-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json
+!scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json
+
+*_from_pickle_rules.json
 
 !CC/scripts/prompts/gen-errors.txt
 
@@ -282,3 +297,6 @@ frontend/modules/mazeGame-iframe/
 worlds/apworld_manager/
 worlds_disabled/
 custom_worlds_disabled/
+journey-to-ascension/
+journey-to-ascension-modified/
+fuzz_output/
