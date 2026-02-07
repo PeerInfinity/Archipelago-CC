@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Added Ammo - Arrows:             50
 Added Ammo - Claw Orbs:          200
 Added Ammo - Crystals:           100
@@ -46,6 +47,7 @@ Random Music:                    Vanilla
 Random Pickups:                  Shuffle
 Reset Level on Death:            Yes
 Split Bag of Holding:            No
+Start Inventory from Pool:       
 Start With Map Scrolls:          No
 
 

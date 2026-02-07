@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario Land 2 WorldGen",
   "game_directory": "marioland2_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -40705,24 +40705,24 @@
         }
       },
       "marios_castle_wario": {
-        "type": "or",
+        "type": "and",
         "conditions": [
           {
-            "type": "and",
+            "type": "helper",
+            "name": "has_pipe_right"
+          },
+          {
+            "type": "or",
             "conditions": [
               {
                 "type": "helper",
-                "name": "has_pipe_right"
+                "name": "has_pipe_left"
               },
               {
-                "type": "helper",
-                "name": "has_pipe_left"
+                "type": "item_check",
+                "item": "Mario's Castle Midway Bell"
               }
             ]
-          },
-          {
-            "type": "item_check",
-            "item": "Mario's Castle Midway Bell"
           }
         ]
       },

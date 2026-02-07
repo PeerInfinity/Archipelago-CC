@@ -917,7 +917,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Rocket Launch", player),
-        HasAll('advanced-circuit', 'advanced-material-processing-2', 'advanced-oil-processing', 'engine', 'flamethrower', 'night-vision-equipment', 'oil-processing', 'plastics', 'rocket-silo', 'steel-processing')
+        HasAll('advanced-circuit', 'advanced-material-processing-2', 'advanced-oil-processing', 'concrete', 'electric-engine', 'engine', 'flamethrower', 'lubricant', 'night-vision-equipment', 'oil-processing', 'plastics', 'processing-unit', 'rocket-silo', 'steel-processing', 'sulfur-processing')
     )
 
     world.set_rule(

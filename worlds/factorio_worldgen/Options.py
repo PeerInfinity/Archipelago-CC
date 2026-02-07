@@ -62,6 +62,13 @@ class ClusterGrenadeTraps(Range):
     range_end = 25
     default = 0
 
+class Craftsanity(Range):
+    """Option for CraftSanity."""
+    display_name = "CraftSanity"
+    range_start = 0
+    range_end = 183
+    default = 0
+
 class DeathLink(Toggle):
     """Option for Death Link."""
     display_name = "Death Link"
@@ -273,6 +280,7 @@ class FactorioWorldGenOptions(PerGameCommonOptions):
     atomic_rocket_traps: AtomicRocketTraps
     attack_traps: AttackTraps
     cluster_grenade_traps: ClusterGrenadeTraps
+    craftsanity: Craftsanity
     death_link: DeathLink
     energy_link: EnergyLink
     evolution_trap_increase: EvolutionTrapIncrease

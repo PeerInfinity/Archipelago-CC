@@ -915,7 +915,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Red Coins", player),
-        HasAll('Chomp Rock', 'Large Spring Ball')
+        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Large Spring Ball')
     )
 
     world.set_rule(

@@ -5,6 +5,7 @@
   "atomic_rocket_traps": 0,
   "attack_traps": 0,
   "cluster_grenade_traps": 0,
+  "craftsanity": 0,
   "death_link": false,
   "energy_link": false,
   "evolution_trap_increase": 10,
