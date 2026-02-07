@@ -158,10 +158,16 @@ index f050d58b7..92f141336 100644
 +    ignore:.*pkg_resources is deprecated.*
 \ No newline at end of file
 diff --git a/requirements.txt b/requirements.txt
-index 27bca5c7c..6740207a5 100644
+index 27bca5c7c..1477660d9 100644
 --- a/requirements.txt
 +++ b/requirements.txt
-@@ -19,3 +19,5 @@ kivymd>=2.0.1.dev0
+@@ -1,4 +1,5 @@
+ colorama>=0.4.6
++dill>=0.3.8
+ websockets>=13.0.1,<14
+ PyYAML>=6.0.3
+ jellyfish>=1.2.1
+@@ -19,3 +20,5 @@ kivymd>=2.0.1.dev0
  
  # Legacy world dependencies that custom worlds rely on
  Pymem>=1.13.0
