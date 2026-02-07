@@ -661,25 +661,39 @@ class RuleExpansionMixin:
                 items = self._extract_items_from_constant(items_arg)
 
                 if items is not None:
-                    # Convert to item checks
-                    if len(items) == 0:
-                        # Empty set, always true
-                        return {"type": "constant", "value": True}
-                    elif len(items) == 1:
-                        # Single item, simple item_check
-                        return {"type": "item_check", "item": items[0]}
-                    else:
-                        # Multiple items, AND them together
-                        return {
-                            "type": "and",
-                            "conditions": [
-                                {"type": "item_check", "item": item}
-                                for item in items
-                            ]
-                        }
+                    return self._items_to_and_check(items)
+
+        # Check if first arg is a constant list (e.g., from resolved set comprehension)
+        if isinstance(first_arg, dict) and first_arg.get('type') == 'constant':
+            items = self._extract_items_from_constant(first_arg)
+            if items is not None:
+                return self._items_to_and_check(items)
 
         # Couldn't simplify, return original
         return rule
+
+    def _items_to_and_check(self, items: List[str]) -> Dict[str, Any]:
+        """Convert a list of item names to item_check rules ANDed together.
+
+        Args:
+            items: List of item name strings
+
+        Returns:
+            A rule structure: constant True for empty, item_check for single,
+            or AND of item_checks for multiple items.
+        """
+        if len(items) == 0:
+            return {"type": "constant", "value": True}
+        elif len(items) == 1:
+            return {"type": "item_check", "item": items[0]}
+        else:
+            return {
+                "type": "and",
+                "conditions": [
+                    {"type": "item_check", "item": item}
+                    for item in items
+                ]
+            }
 
     def _extract_items_from_constant(self, arg: Any) -> Optional[List[str]]:
         """Extract list of item names from a constant value argument.
