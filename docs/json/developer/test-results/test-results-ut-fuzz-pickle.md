@@ -6,7 +6,7 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-07 05:13:22
+**Generated:** 2026-02-07 14:01:39
 
 **Source Data Created:** 2026-02-07T05:13:22.623022
 
@@ -51,9 +51,9 @@ Of the 75 games with 100% pass rate:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 576.8KB
+- **Total Exporter Code:** 612.0KB
 - **Total Game Logic Code:** 655.3KB
-- **Combined Total:** 1232.0KB
+- **Combined Total:** 1267.3KB
 
 ## Test Results
 
@@ -116,7 +116,7 @@ Of the 75 games with 100% pass rate:
 | Raft | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 146.1KB |
 | SMZ3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | 61.4KB | 51.3KB | 1044.7KB |
-| Satisfactory | ❌ | 100 | 0 | 99 | 0 | 1 | ❌ 0.0% | ✅ | ✅ | 1183.8KB |
+| Satisfactory | ❌ | 100 | 0 | 99 | 0 | 1 | ❌ 0.0% | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% | ✅ | ✅ | 151.3KB |
