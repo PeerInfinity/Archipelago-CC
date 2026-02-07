@@ -3,7 +3,7 @@ index 4d88fde4f..91b2454ef 100644
 --- a/BaseClasses.py
 +++ b/BaseClasses.py
 @@ -1691,6 +1691,17 @@ class Spoiler:
-
+ 
      def create_playthrough(self, create_paths: bool = True) -> None:
          """Destructive to the multiworld while it is run, damage gets repaired afterwards."""
 +
@@ -21,7 +21,7 @@ index 4d88fde4f..91b2454ef 100644
          # get locations containing progress items
          multiworld = self.multiworld
 diff --git a/Main.py b/Main.py
-index 47a28813f..673eaaa2 100644
+index 47a28813f..673eaaa24 100644
 --- a/Main.py
 +++ b/Main.py
 @@ -19,6 +19,7 @@ from Utils import __version__, output_path, restricted_dumps, version_tuple
@@ -29,13 +29,13 @@ index 47a28813f..673eaaa2 100644
  from worlds import AutoWorld
  from worlds.generic.Rules import exclusion_rules, locality_rules
 +from exporter import export_game_rules, export_multiworld_pickle
-
+ 
  __all__ = ["main"]
-
+ 
 @@ -35,6 +36,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
      # initialize the multiworld
      multiworld = MultiWorld(args.multi)
-
+ 
 +    # Set output directory for sphere logging
 +    multiworld.temp_dir_for_sphere_log = args.outputpath
 +
@@ -43,9 +43,9 @@ index 47a28813f..673eaaa2 100644
      multiworld.set_seed(seed, args.race, str(args.outputname) if args.outputname else None)
      multiworld.plando_options = args.plando
 @@ -202,6 +206,18 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
-
+ 
      AutoWorld.call_all(multiworld, 'post_fill')
-
+ 
 +    # Apply vanilla item placement overrides if requested
 +    import os as os_module
 +    if os_module.environ.get('VANILLA_PLACEMENT') == '1':
@@ -72,23 +72,23 @@ index 47a28813f..673eaaa2 100644
 +                check_accessibility_task = pool.submit(lambda: True)  # Always return True
 +            else:
 +                check_accessibility_task = pool.submit(multiworld.fulfills_accessibility)
-
+ 
              output_file_futures = [pool.submit(AutoWorld.call_stage, multiworld, "generate_output", temp_dir)]
              for player in output_players:
 @@ -273,6 +294,9 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
-
+ 
                  for slot in multiworld.player_ids:
                      slot_data[slot] = multiworld.worlds[slot].fill_slot_data()
 +                    # Cache slot_data on the world for the exporter to use
 +                    # This avoids calling fill_slot_data twice
 +                    multiworld.worlds[slot]._cached_slot_data = slot_data[slot]
-
+ 
                  def precollect_hint(location: Location, auto_status: HintStatus):
                      entrance = er_hint_data.get(location.player, {}).get(location.address, "")
 @@ -369,6 +393,10 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
                      logger.info(f'Generating output files ({i}/{len(output_file_futures)}).')
                  future.result()
-
+ 
 +        # Make temp_dir available for sphere_log.jsonl in Spoiler.create_playthrough
 +        if hasattr(multiworld, 'spoiler'): # Ensure spoiler object exists
 +            multiworld.temp_dir_for_sphere_log = temp_dir
@@ -96,10 +96,10 @@ index 47a28813f..673eaaa2 100644
          if args.spoiler > 1:
              logger.info('Calculating playthrough.')
              multiworld.spoiler.create_playthrough(create_paths=args.spoiler > 2)
-@@ -376,6 +404,30 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
+@@ -376,6 +404,36 @@ def main(args, seed=None, baked_server_options: dict[str, object] | None = None)
          if args.spoiler:
              multiworld.spoiler.to_file(os.path.join(temp_dir, '%s_Spoiler.txt' % outfilebase))
-
+ 
 +        # Export rules data after create_playthrough so sphere_log.jsonl is included.
 +        # The exporter uses cached _cached_slot_data instead of calling fill_slot_data,
 +        # so it won't repopulate caches that were cleared by stage_modify_multidata.
@@ -134,12 +134,12 @@ index 47a28813f..673eaaa2 100644
          logger.info(f"Creating final archive at {zipfilename}")
          with zipfile.ZipFile(zipfilename, mode="w", compression=zipfile.ZIP_DEFLATED,
 diff --git a/settings.py b/settings.py
-index 3b3d0deec..01552ae67 100644
+index 3b3d0deec..c56120aff 100644
 --- a/settings.py
 +++ b/settings.py
 @@ -23,6 +23,7 @@ __all__ = [
  ]
-
+ 
  no_gui = False
 +skip_required_files = False
  skip_autosave = False
@@ -158,9 +158,9 @@ index 3b3d0deec..01552ae67 100644
                  with _lock:  # lock to avoid opening multiple
                      new = None if no_gui else attr.browse()
                      if new is None:
-@@ -518,6 +525,21 @@ class GeneralOptions(Group):
+@@ -518,6 +525,23 @@ class GeneralOptions(Group):
          # created on demand, so marked as optional
-
+ 
      output_path: OutputPath = OutputPath("output")
 +    skip_required_files: bool = False
 +    save_rules_json: bool = False
@@ -179,10 +179,10 @@ index 3b3d0deec..01552ae67 100644
 +    clear_all_presets: bool = False  # Delete all existing presets for ALL games before generating new ones
 +    resolve_options_to_constants: bool = True  # Resolve world.options.X.value to constants at export time (default: True)
 +    use_tracking_mode_config: bool = False  # Use tracking-mode-config.json for per-game export decisions
-
-
+ 
+ 
  class ServerOptions(Group):
-@@ -900,4 +922,9 @@ def get_settings() -> Settings:
+@@ -900,4 +924,9 @@ def get_settings() -> Settings:
                  res = Settings(None)
                  res.save(user_path(filenames[1]))
              setattr(get_settings, "_cache", res)

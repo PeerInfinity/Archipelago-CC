@@ -2,10 +2,10 @@
 
 This document tracks the differences between this repository and the upstream Archipelago repository.
 
-**Upstream commit:** `886cc68051f23d6049f8d846379b193aa0415e24` (Timespinner: Exclude Removed Location from Web Tracker #5701)
-**Upstream date:** November 29, 2025 11:13:43 -0700
-**Upstream version:** 0.6.5-rc1
-**Last updated:** 2026-02-05
+**Upstream commit:** `1dd91ec85b894c2a1d62ad688af074f2166ee621` (Core, Tests: allow Archipelago items in all worlds #5893)
+**Upstream date:** February 5, 2026 07:56:25 +0000
+**Upstream version:** 0.6.5+80
+**Last updated:** 2026-02-06
 
 ## Summary
 
@@ -262,6 +262,6 @@ The following major components were developed specifically for this project:
 
 ---
 
-**Last updated:** 2026-02-05
-**Base commit:** 886cc68051f23d6049f8d846379b193aa0415e24
-**Upstream version:** 0.6.5-rc1
+**Last updated:** 2026-02-06
+**Base commit:** 1dd91ec85b894c2a1d62ad688af074f2166ee621
+**Upstream version:** 0.6.5+80
