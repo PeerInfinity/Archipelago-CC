@@ -46,6 +46,8 @@ def main():
     patch_group.add_argument("--no-patch", action="store_true", help="Do not apply any patches")
     patch_group.add_argument("--file-patch", action="store_true", help="Use file-based patching")
     # Note: monkey patching is the default, no flag needed
+    install_parser.add_argument("--apply-romless-patches", action="store_true",
+                                help="Apply ROM-less patches after download")
     # Export settings
     export_group = install_parser.add_mutually_exclusive_group()
     export_group.add_argument("--configure-export", action="store_true", default=True,
@@ -120,6 +122,8 @@ def main():
             install_args.append("--no-patch")
         if args.file_patch:
             install_args.append("--file-patch")
+        if args.apply_romless_patches:
+            install_args.append("--apply-romless-patches")
         # Export settings
         if args.no_configure_export:
             install_args.append("--no-configure-export")

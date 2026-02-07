@@ -56,6 +56,10 @@ from ..installer.patcher import (
     revert_patches,
     get_patch_summary,
 )
+from ..installer.romless_patcher import (
+    apply_romless_patches,
+    revert_romless_patches,
+)
 
 
 def print_header(text: str) -> None:
@@ -99,6 +103,7 @@ def do_install(
     skip_confirmation: bool = False,
     configure_export: bool = True,
     export_preset: str = "normal",
+    apply_romless: bool = False,
 ) -> bool:
     """
     Perform the installation.
@@ -112,6 +117,7 @@ def do_install(
         skip_confirmation: If True, skip confirmation prompts for file patching.
         configure_export: If True, configure export settings in host.yaml.
         export_preset: Export settings preset to use ("normal" or "minimal-spoilers").
+        apply_romless: If True, apply ROM-less patches after extraction.
 
     Returns:
         True if successful.
@@ -264,6 +270,24 @@ def do_install(
             # No patching (patch_mode == "none")
             print("\n  [INFO] No patching selected, skipping patch application.")
             config.patches.method = "none"
+
+    # Apply ROM-less patches if requested
+    if apply_romless:
+        if "romless_patches" not in components:
+            print("\n  [WARN] --apply-romless-patches requires --romless-patches component to be downloaded.")
+            print("         Skipping ROM-less patch application.")
+        else:
+            print("\n  Applying ROM-less patches...")
+            romless_result = apply_romless_patches(config)
+            if romless_result.success:
+                if romless_result.patched_files:
+                    print(f"  [OK] Applied ROM-less patches to {len(romless_result.patched_files)} files")
+                    for f in romless_result.patched_files:
+                        print(f"    - {f}")
+            else:
+                print("  [WARN] ROM-less patching issues:")
+                for error in romless_result.errors:
+                    print(f"    - {error}")
 
     # Configure export settings in host.yaml
     if configure_export:
@@ -455,6 +479,12 @@ def main(args=None):
     # Note: monkey patching is the default, no flag needed
 
     parser.add_argument(
+        "--apply-romless-patches",
+        action="store_true",
+        help="Apply ROM-less patches after download (allows generation without ROMs)",
+    )
+
+    parser.add_argument(
         "--yes", "-y",
         action="store_true",
         help="Skip confirmation prompts (auto-confirm)",
@@ -577,6 +607,7 @@ def main(args=None):
         parsed.yes,  # skip_confirmation
         configure_export,
         parsed.export_preset,
+        parsed.apply_romless_patches,
     )
     return 0 if success else 1
 
