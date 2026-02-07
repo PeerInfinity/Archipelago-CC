@@ -33,6 +33,8 @@ let _settings = {
   undiscoveredDisplay: 'hidden',
   showDebugOptions: true,
   clickDiscoversLocation: true,
+  clickDiscoversRegion: false,
+  disableLocationCheckUI: false,
   showUndiscoveredDetails: false
 };
 
@@ -93,6 +95,16 @@ export function register(registrationApi) {
       type: 'boolean',
       default: true,
       description: 'Clicking an undiscovered location in the Locations panel discovers it'
+    },
+    clickDiscoversRegion: {
+      type: 'boolean',
+      default: false,
+      description: 'Clicking an undiscovered region in the Region Graph or Regions panel discovers it'
+    },
+    disableLocationCheckUI: {
+      type: 'boolean',
+      default: false,
+      description: 'Disable location check UI elements - clicking locations will not trigger checks'
     },
     showUndiscoveredDetails: {
       type: 'boolean',
@@ -378,6 +390,12 @@ async function loadSettings() {
     );
     _settings.clickDiscoversLocation = await settingsManager.getSetting(
       'moduleSettings.discovery.clickDiscoversLocation', true
+    );
+    _settings.clickDiscoversRegion = await settingsManager.getSetting(
+      'moduleSettings.discovery.clickDiscoversRegion', false
+    );
+    _settings.disableLocationCheckUI = await settingsManager.getSetting(
+      'moduleSettings.discovery.disableLocationCheckUI', false
     );
     _settings.showUndiscoveredDetails = await settingsManager.getSetting(
       'moduleSettings.discovery.showUndiscoveredDetails', false

@@ -33,6 +33,8 @@ export class DiscoveryPanelUI {
       undiscoveredDisplay: 'hidden',
       showDebugOptions: true,
       clickDiscoversLocation: true,
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
       showUndiscoveredDetails: false
     };
 
@@ -298,6 +300,12 @@ export class DiscoveryPanelUI {
       this.settings.clickDiscoversLocation = await settingsManager.getSetting(
         'moduleSettings.discovery.clickDiscoversLocation', true
       );
+      this.settings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false
+      );
+      this.settings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false
+      );
       this.settings.showUndiscoveredDetails = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredDetails', false
       );
@@ -409,6 +417,20 @@ export class DiscoveryPanelUI {
         { value: 'hidden', label: 'Hide entirely' },
         { value: 'placeholder', label: 'Show as "???"' }
       ]
+    ));
+
+    // Click Discovers Region
+    content.appendChild(this.createBooleanSetting(
+      'clickDiscoversRegion',
+      'Click Discovers Region',
+      'Clicking an undiscovered region in the Region Graph or Regions panel discovers it'
+    ));
+
+    // Disable Location Check UI
+    content.appendChild(this.createBooleanSetting(
+      'disableLocationCheckUI',
+      'Disable Location Check UI',
+      'Prevent location check actions when clicking locations (useful for entrance shuffle exploration)'
     ));
 
     // Show Debug Options toggle

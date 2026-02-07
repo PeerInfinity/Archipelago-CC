@@ -192,7 +192,7 @@ export class RegionBlockBuilder {
     regionBlock.appendChild(contentEl);
 
     // Add event listeners
-    this.attachEventListeners(headerEl, uid);
+    this.attachEventListeners(headerEl, uid, regionName, isDiscoveryModeActive, isRegionDiscovered, settings);
 
     return regionBlock;
   }
@@ -1200,12 +1200,21 @@ export class RegionBlockBuilder {
   /**
    * Attaches event listeners to the header element
    */
-  attachEventListeners(headerEl, uid) {
+  attachEventListeners(headerEl, uid, regionName, isDiscoveryModeActive = false, isRegionDiscovered = true, discoverySettings = {}) {
     // Header click listener
     headerEl.addEventListener('click', (e) => {
       if (e.target.classList.contains('collapse-btn')) {
         e.stopPropagation();
       }
+
+      // Discovery mode: discover region on click if enabled
+      if (isDiscoveryModeActive && discoverySettings.clickDiscoversRegion && !isRegionDiscovered) {
+        if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
+          log('info', `[RegionBlockBuilder] Discovering region via click: ${regionName}`);
+          discoveryStateSingleton.discoverRegion(regionName);
+        }
+      }
+
       this.regionUI.toggleRegionByUID(uid);
     });
 

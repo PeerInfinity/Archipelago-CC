@@ -65,6 +65,8 @@ export class RegionGraphUI {
     this.discoverySettings = {
       undiscoveredDisplay: 'hidden',
       clickDiscoversLocation: true,
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
       showUndiscoveredDetails: false
     };
     
@@ -952,6 +954,8 @@ export class RegionGraphUI {
     if (data && data.settings) {
       this.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
       this.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+      this.discoverySettings.clickDiscoversRegion = data.settings.clickDiscoversRegion ?? false;
+      this.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
       this.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
       logger.info('Discovery settings updated:', this.discoverySettings);
       // Rebuild the graph with new settings
@@ -979,6 +983,10 @@ export class RegionGraphUI {
         'moduleSettings.discovery.undiscoveredDisplay', 'hidden');
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting(
         'moduleSettings.discovery.clickDiscoversLocation', true);
+      this.discoverySettings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false);
+      this.discoverySettings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false);
       this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredDetails', false);
 

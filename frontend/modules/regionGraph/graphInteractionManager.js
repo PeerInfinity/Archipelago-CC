@@ -4,6 +4,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -205,6 +206,12 @@ export class GraphInteractionManager {
 
     logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
 
+    // Discovery mode: if location checks are disabled, skip the check
+    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
+      logger.debug(`Location check disabled by discovery settings, skipping: ${locationName}`);
+      return;
+    }
+
     // Check which actions are enabled via checkboxes (same logic as region nodes)
     const movePlayerOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
     const movePlayerDirectlyCheckbox = this.ui.controlPanel.querySelector('#movePlayerDirectly');
@@ -281,6 +288,14 @@ export class GraphInteractionManager {
 
     logger.debug(`Node clicked: ${regionName}`);
 
+    // Discovery mode: discover region on click if enabled
+    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.clickDiscoversRegion) {
+      if (!discoveryStateSingleton.isRegionDiscovered(regionName)) {
+        logger.debug(`Discovering region via click: ${regionName}`);
+        discoveryStateSingleton.discoverRegion(regionName);
+      }
+    }
+
     // Update visual selection
     this.ui.cy.$('node').removeClass('selected');
     node.addClass('selected');
@@ -339,6 +354,12 @@ export class GraphInteractionManager {
   }
 
   checkAllLocationsInRegion(regionName) {
+    // Discovery mode: if location checks are disabled, skip
+    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
+      logger.debug(`Location checks disabled by discovery settings, skipping bulk check for: ${regionName}`);
+      return;
+    }
+
     // Get locations in this region
     const staticData = stateManager.getStaticData();
     const regionData = staticData?.regions?.[regionName];

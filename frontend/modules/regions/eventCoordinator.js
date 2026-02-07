@@ -83,6 +83,8 @@ export class EventCoordinator {
       if (data && data.settings) {
         this.regionUI.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
         this.regionUI.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+        this.regionUI.discoverySettings.clickDiscoversRegion = data.settings.clickDiscoversRegion ?? false;
+        this.regionUI.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
         this.regionUI.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
         logger.info('Discovery settings updated:', this.regionUI.discoverySettings);
         debouncedUpdate();

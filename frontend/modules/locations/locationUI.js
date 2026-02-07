@@ -54,6 +54,7 @@ export class LocationUI {
     this.discoverySettings = {
       undiscoveredDisplay: 'hidden',
       clickDiscoversLocation: true,
+      disableLocationCheckUI: false,
       showUndiscoveredDetails: false
     };
     // this.dispatcher = getDispatcher(); // Removed from constructor
@@ -114,6 +115,7 @@ export class LocationUI {
       // Load discovery settings
       this.discoverySettings.undiscoveredDisplay = await settingsManager.getSetting('moduleSettings.discovery.undiscoveredDisplay', 'hidden');
       this.discoverySettings.clickDiscoversLocation = await settingsManager.getSetting('moduleSettings.discovery.clickDiscoversLocation', true);
+      this.discoverySettings.disableLocationCheckUI = await settingsManager.getSetting('moduleSettings.discovery.disableLocationCheckUI', false);
       this.discoverySettings.showUndiscoveredDetails = await settingsManager.getSetting('moduleSettings.discovery.showUndiscoveredDetails', false);
       this.isDiscoveryModeActive = await settingsManager.getSetting('moduleSettings.discovery.enableDiscoveryMode', false);
     } catch (error) {
@@ -371,6 +373,7 @@ export class LocationUI {
         if (data && data.settings) {
           this.discoverySettings.undiscoveredDisplay = data.settings.undiscoveredDisplay ?? 'hidden';
           this.discoverySettings.clickDiscoversLocation = data.settings.clickDiscoversLocation ?? true;
+          this.discoverySettings.disableLocationCheckUI = data.settings.disableLocationCheckUI ?? false;
           this.discoverySettings.showUndiscoveredDetails = data.settings.showUndiscoveredDetails ?? false;
           log('info', '[LocationUI] Discovery settings updated:', this.discoverySettings);
           debouncedUpdate();
@@ -618,6 +621,12 @@ export class LocationUI {
           discoveryStateSingleton.discoverRegion(regionName);
         }
       }
+    }
+
+    // Discovery mode: if location checks are disabled, don't perform the check
+    if (this.isDiscoveryModeActive && this.discoverySettings.disableLocationCheckUI) {
+      log('info', `[LocationUI] Location check disabled by discovery settings, skipping: ${locationName}`);
+      return;
     }
 
     // ADDED: Add to pending set and update UI

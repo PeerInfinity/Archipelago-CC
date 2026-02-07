@@ -186,6 +186,8 @@
       "undiscoveredDisplay": "hidden",
       "showDebugOptions": true,
       "clickDiscoversLocation": true,
+      "clickDiscoversRegion": false,
+      "disableLocationCheckUI": false,
       "showUndiscoveredDetails": false
     }
   }
