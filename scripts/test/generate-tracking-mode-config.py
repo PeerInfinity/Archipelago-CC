@@ -32,7 +32,7 @@ def load_test_results(mode: str, world_source: str = "bundled") -> Optional[Dict
     """Load test results for a specific mode and world source.
 
     Args:
-        mode: The UT mode (original, modified, pickle, hybrid)
+        mode: The UT mode (original, worldgen, pickle, hybrid)
         world_source: Either 'bundled' or 'apworlds'
 
     Returns:
@@ -121,7 +121,7 @@ def generate_config(
     print("Loading test results...")
 
     # Load results for each mode
-    modes = ["modified", "pickle", "original"]
+    modes = ["worldgen", "pickle", "original"]
     bundled_results = {}
     apworlds_results = {}
 
@@ -181,7 +181,7 @@ def generate_config(
         fallback_order = existing_config["fallback_order"]
         print(f"  Preserving existing fallback_order: {fallback_order}")
     else:
-        fallback_order = ["modified", "pickle", "original"]
+        fallback_order = ["worldgen", "pickle", "original"]
         print(f"  Using default fallback_order: {fallback_order}")
 
     # Build config
@@ -205,7 +205,7 @@ def generate_config(
         if not games:
             continue
 
-        mode_counts = {"modified": 0, "pickle": 0, "original": 0, "none": 0}
+        mode_counts = {"worldgen": 0, "pickle": 0, "original": 0, "none": 0}
         for game, passing_modes in games.items():
             first_mode = None
             for mode in fallback_order:

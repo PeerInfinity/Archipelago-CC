@@ -57,6 +57,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                   - 'all': Combine all exclude lists (permanent + main + worldgen) - default
                   - 'main': Permanent exclusions + main test exclusions
                   - 'worldgen': Permanent exclusions + worldgen test exclusions
+                  - 'ut_fuzz': Permanent exclusions + UT fuzz exclusions (games that hang/timeout)
                   - 'permanent': Only permanent exclusions (exclude_list)
                   - 'ut_fuzz_apworld': Only UT fuzz apworld exclusions (no WorldGen variants added)
         skip_worldgen_variants: If True, don't add WorldGen variants (useful for display purposes)
@@ -115,6 +116,7 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
             # Load the test-type specific lists (may not exist in old format files)
             main_list = normalize_list(data.get('main_test_exclude_list', []))
             worldgen_list = normalize_list(data.get('worldgen_test_exclude_list', []))
+            ut_fuzz_list = normalize_list(data.get('ut_fuzz_exclude_list', []))
             ut_fuzz_apworld_list = normalize_list(data.get('ut_fuzz_apworld_exclude_list', []))
 
             # Combine lists based on test_type
@@ -124,6 +126,8 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
                 combined_list = permanent_list + main_list
             elif test_type == 'worldgen':
                 combined_list = permanent_list + worldgen_list
+            elif test_type == 'ut_fuzz':
+                combined_list = permanent_list + ut_fuzz_list
             elif test_type == 'ut_fuzz_apworld':
                 # Return UT fuzz apworld list without adding WorldGen variants
                 # (apworlds don't have WorldGen variants like templates do)
@@ -739,3 +743,136 @@ def parse_playwright_analysis(analysis_text: str) -> Dict:
                     pass
 
     return result
+
+
+def load_tracking_mode_config(project_root: str = None) -> Dict:
+    """
+    Load the tracking mode configuration from exporter/tracking-mode-config.json.
+
+    Args:
+        project_root: Optional project root path. If not provided, will be inferred.
+
+    Returns:
+        Dict containing the tracking mode config, or empty dict if not found.
+    """
+    if project_root is None:
+        # Infer project root from this file's location (scripts/lib/test_utils.py)
+        project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+    config_path = os.path.join(project_root, 'exporter', 'tracking-mode-config.json')
+
+    try:
+        with open(config_path, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Warning: Could not load tracking mode config: {e}")
+        return {}
+
+
+def get_expected_failures_for_mode(
+    ut_mode: str,
+    category: str = 'bundled',
+    project_root: str = None,
+    include_reasons: bool = False
+) -> List:
+    """
+    Get the list of games expected to fail for a given UT mode.
+
+    For regular modes (worldgen, pickle, original):
+        A game is expected to fail if that mode is NOT in its list of passing modes.
+
+    For hybrid mode:
+        A game is expected to fail only if it has NO passing modes (empty list).
+        If a game passes ANY mode, it's expected to pass hybrid.
+
+    Args:
+        ut_mode: The UT mode to check ('worldgen', 'pickle', 'original', 'hybrid')
+        category: Which category to check ('bundled' or 'apworlds')
+        project_root: Optional project root path
+        include_reasons: If True, returns list of dicts with 'name' and 'reason'.
+                        If False, returns list of template filenames only.
+
+    Returns:
+        List of template filenames (if include_reasons=False) or
+        List of dicts with 'name' and 'reason' keys (if include_reasons=True)
+    """
+    config = load_tracking_mode_config(project_root)
+
+    if not config:
+        return []
+
+    game_results = config.get('game_results', {})
+    category_results = game_results.get(category, {})
+
+    expected_failures = []
+
+    for game_name, passing_modes in category_results.items():
+        # Determine if this game is expected to fail
+        if ut_mode == 'hybrid':
+            # For hybrid mode, expect failure only if NO modes pass
+            is_expected_failure = len(passing_modes) == 0
+        else:
+            # For specific modes, expect failure if that mode is not in passing list
+            is_expected_failure = ut_mode not in passing_modes
+
+        if is_expected_failure:
+            template_name = f"{game_name}.yaml"
+
+            if include_reasons:
+                # Build a reason string from the passing modes
+                if passing_modes:
+                    reason = f"Only passes: {', '.join(passing_modes)}"
+                else:
+                    reason = "No passing modes"
+                expected_failures.append({'name': template_name, 'reason': reason})
+            else:
+                expected_failures.append(template_name)
+
+    return expected_failures
+
+
+def get_games_passing_mode(
+    ut_mode: str,
+    category: str = 'bundled',
+    project_root: str = None
+) -> List[str]:
+    """
+    Get the list of games that pass a given UT mode.
+
+    For regular modes (worldgen, pickle, original):
+        A game passes if that mode is in its list of passing modes.
+
+    For hybrid mode:
+        A game passes if it has ANY passing mode (non-empty list).
+
+    Args:
+        ut_mode: The UT mode to check ('worldgen', 'pickle', 'original', 'hybrid')
+        category: Which category to check ('bundled' or 'apworlds')
+        project_root: Optional project root path
+
+    Returns:
+        List of game names that pass the requested mode.
+    """
+    config = load_tracking_mode_config(project_root)
+
+    if not config:
+        return []
+
+    game_results = config.get('game_results', {})
+    category_results = game_results.get(category, {})
+
+    passing_games = []
+
+    for game_name, passing_modes in category_results.items():
+        # Determine if this game passes
+        if ut_mode == 'hybrid':
+            # For hybrid mode, pass if ANY mode passes
+            is_passing = len(passing_modes) > 0
+        else:
+            # For specific modes, pass if that mode is in the list
+            is_passing = ut_mode in passing_modes
+
+        if is_passing:
+            passing_games.append(game_name)
+
+    return passing_games

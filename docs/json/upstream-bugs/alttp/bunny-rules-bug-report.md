@@ -57,7 +57,7 @@ This calls `path_to_access_rule()` immediately and appends the result, avoiding 
 
 ### Failing test cases
 
-These bugs were discovered using the **UT Fuzz test** with the **modified Universal Tracker** (which uses worldgen-based tracking rather than native game integration). The test validates game logic by comparing Universal Tracker's accessibility calculations against Python's sphere calculations during seed generation. The test:
+These bugs were discovered using the **UT Fuzz test** with the **Worldgen Universal Tracker** (which uses worldgen-based tracking rather than native game integration). The test validates game logic by comparing Universal Tracker's accessibility calculations against Python's sphere calculations during seed generation. The test:
 
 1. Generates seeds with randomized option configurations
 2. At each sphere, compares what Python says is accessible vs what Universal Tracker calculates

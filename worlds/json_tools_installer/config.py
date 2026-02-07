@@ -75,6 +75,7 @@ class ExportSettings:
     When running with monkey patching on vanilla Archipelago, these settings
     serve as the configuration source since vanilla AP doesn't have these options.
     """
+    skip_required_files: bool = False
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # "rule_builder", "ast", "both"
     skip_preset_copy_if_rules_identical: bool = False
@@ -86,8 +87,13 @@ class ExportSettings:
     auto_collect_events: bool = False
     filter_event_items: bool = False
     update_frontend_presets: bool = False
-    skip_export_for_native_ut: bool = False
-    skip_export_from_list: bool = False
+    use_tracking_mode_config: bool = False
+    resolve_options_to_constants: bool = True
+    # Preset clearing settings
+    clear_game_presets: bool = False
+    clear_all_presets: bool = False
+    # Pickle export settings
+    save_tracker_pickle: bool = False
 
 
 @dataclass
@@ -163,6 +169,7 @@ class InstallerConfig:
 
         export_settings = data.get("export_settings", {})
         config.export_settings = ExportSettings(
+            skip_required_files=export_settings.get("skip_required_files", False),
             save_rules_json=export_settings.get("save_rules_json", False),
             rules_json_format=export_settings.get("rules_json_format", "rule_builder"),
             skip_preset_copy_if_rules_identical=export_settings.get("skip_preset_copy_if_rules_identical", False),
@@ -174,8 +181,11 @@ class InstallerConfig:
             auto_collect_events=export_settings.get("auto_collect_events", False),
             filter_event_items=export_settings.get("filter_event_items", False),
             update_frontend_presets=export_settings.get("update_frontend_presets", False),
-            skip_export_for_native_ut=export_settings.get("skip_export_for_native_ut", False),
-            skip_export_from_list=export_settings.get("skip_export_from_list", False),
+            use_tracking_mode_config=export_settings.get("use_tracking_mode_config", False),
+            resolve_options_to_constants=export_settings.get("resolve_options_to_constants", True),
+            clear_game_presets=export_settings.get("clear_game_presets", False),
+            clear_all_presets=export_settings.get("clear_all_presets", False),
+            save_tracker_pickle=export_settings.get("save_tracker_pickle", False),
         )
 
         return config
@@ -278,8 +288,11 @@ EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
         "auto_collect_events": False,
         "filter_event_items": False,
         "update_frontend_presets": False,
-        "skip_export_for_native_ut": False,
-        "skip_export_from_list": False,
+        "use_tracking_mode_config": False,
+        "resolve_options_to_constants": True,
+        "clear_game_presets": False,
+        "clear_all_presets": False,
+        "save_tracker_pickle": False,
     },
     "minimal-spoilers": {
         "skip_required_files": True,
@@ -294,8 +307,11 @@ EXPORT_PRESETS: Dict[str, Dict[str, Any]] = {
         "auto_collect_events": False,
         "filter_event_items": False,
         "update_frontend_presets": True,
-        "skip_export_for_native_ut": False,
-        "skip_export_from_list": False,
+        "use_tracking_mode_config": False,
+        "resolve_options_to_constants": True,
+        "clear_game_presets": False,
+        "clear_all_presets": False,
+        "save_tracker_pickle": False,
     },
 }
 
@@ -427,21 +443,32 @@ def configure_export_settings(
 
 def get_export_setting(setting_name: str, default: Any = None) -> Any:
     """
-    Get an export setting from host.yaml.
+    Get an export setting, checking host.yaml first then installer config.
 
     Args:
         setting_name: The name of the setting (e.g., 'save_rules_json')
         default: Default value if setting is not found
 
     Returns:
-        The setting value from host.yaml, or the default if not found.
+        The setting value from host.yaml, installer config, or the default.
     """
+    # First try host.yaml (fork's settings)
     try:
         from settings import get_settings
         settings = get_settings()
         if hasattr(settings, 'general_options'):
-            return getattr(settings.general_options, setting_name, default)
+            value = getattr(settings.general_options, setting_name, None)
+            if value is not None:
+                return value
     except (ImportError, AttributeError):
+        pass
+
+    # Fall back to installer config (for vanilla AP with monkey patching)
+    try:
+        config = load_config()
+        if hasattr(config.export_settings, setting_name):
+            return getattr(config.export_settings, setting_name)
+    except Exception:
         pass
 
     return default

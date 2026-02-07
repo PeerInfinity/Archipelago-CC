@@ -110,50 +110,6 @@ def clear_rule_cache():
     _rule_analysis_cache.clear()
 
 
-# Cache for skip-export-games list to avoid repeated file reads
-_skip_export_games_cache: Optional[Set[str]] = None
-
-
-def _load_skip_export_games_list() -> Set[str]:
-    """Load the list of games to skip export for from skip-export-games.json.
-
-    The file is expected to be in the same directory as this module.
-    Returns a set of game names that should skip rule export.
-    """
-    global _skip_export_games_cache
-    if _skip_export_games_cache is not None:
-        return _skip_export_games_cache
-
-    skip_list_path = os.path.join(os.path.dirname(__file__), 'skip-export-games.json')
-    games = set()
-
-    if os.path.exists(skip_list_path):
-        try:
-            with open(skip_list_path, 'r') as f:
-                data = json.load(f)
-                # Support both flat list and categorized format
-                if isinstance(data, list):
-                    games = set(data)
-                elif isinstance(data, dict):
-                    # Combine all categories (bundled, apworlds, etc.)
-                    if 'games' in data:
-                        for category_games in data['games'].values():
-                            games.update(category_games)
-                    else:
-                        # Direct category keys
-                        for key, value in data.items():
-                            if isinstance(value, list):
-                                games.update(value)
-            logger.debug(f"Loaded {len(games)} games from skip-export-games.json")
-        except (json.JSONDecodeError, IOError) as e:
-            logger.warning(f"Failed to load skip-export-games.json: {e}")
-    else:
-        logger.debug(f"skip-export-games.json not found at {skip_list_path}")
-
-    _skip_export_games_cache = games
-    return games
-
-
 # Cache for tracking-mode-config to avoid repeated file reads
 _tracking_mode_config_cache: Optional[Dict[str, Any]] = None
 
@@ -211,7 +167,7 @@ def _get_passing_modes(game_name: str, config: Dict[str, Any]) -> List[str]:
         config: The loaded tracking mode config
 
     Returns:
-        List of passing mode names (e.g., ['modified', 'pickle']) or empty list
+        List of passing mode names (e.g., ['worldgen', 'pickle']) or empty list
     """
     if not config:
         return []
@@ -247,7 +203,7 @@ def _get_first_passing_mode(game_name: str, config: Dict[str, Any]) -> Optional[
     if not config:
         return None
 
-    fallback_order = config.get('fallback_order', ['modified', 'pickle', 'original'])
+    fallback_order = config.get('fallback_order', ['worldgen', 'pickle', 'original'])
     passing_modes = _get_passing_modes(game_name, config)
 
     for mode in fallback_order:
@@ -260,7 +216,7 @@ def _get_first_passing_mode(game_name: str, config: Dict[str, Any]) -> Optional[
 def _should_export_rules_json_from_config(game_name: str) -> bool:
     """Determine if rules.json should be exported based on tracking mode config.
 
-    Rules.json should be exported if the first passing mode is 'modified'.
+    Rules.json should be exported if the first passing mode is 'worldgen'.
 
     Args:
         game_name: Name of the game
@@ -274,7 +230,7 @@ def _should_export_rules_json_from_config(game_name: str) -> bool:
         return True
 
     first_mode = _get_first_passing_mode(game_name, config)
-    return first_mode == 'modified'
+    return first_mode == 'worldgen'
 
 
 def _should_export_pickle_from_config(game_name: str) -> bool:
@@ -2540,36 +2496,17 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     settings = get_settings()
 
     if getattr(settings.general_options, 'use_tracking_mode_config', False):
-        # New config-based logic: use tracking-mode-config.json
+        # Config-based logic: use tracking-mode-config.json
         if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
             world = list(multiworld.worlds.values())[0]
             if not _should_export_rules_json_from_config(world.game):
-                logger.info(f"Skipping rules export for {world.game} (config-based: first passing mode is not 'modified')")
+                logger.info(f"Skipping rules export for {world.game} (config-based: first passing mode is not 'worldgen')")
                 return {}
     else:
-        # Legacy flag-based logic
+        # Simple flag-based logic
         if not getattr(settings.general_options, 'save_rules_json', False):
             # save_rules_json is False - don't export
             return {}
-
-        # For single-world multiworlds, optionally skip rule export.
-        # This is controlled by the skip_export_for_native_ut setting (default: False).
-        # When skip_export_from_list is also True, use a list of games from skip-export-games.json
-        # instead of checking ut_can_gen_without_yaml.
-        if getattr(settings.general_options, 'skip_export_for_native_ut', False):
-            if len(multiworld.worlds) == 1:  # Only 1 player in the multiworld
-                world = list(multiworld.worlds.values())[0]
-
-                if getattr(settings.general_options, 'skip_export_from_list', False):
-                    # Use the skip list instead of checking ut_can_gen_without_yaml
-                    skip_list = _load_skip_export_games_list()
-                    if world.game in skip_list:
-                        logger.info(f"Skipping rule export for {world.game}: game is in skip-export-games.json list")
-                        return {}
-                elif getattr(world.__class__, "ut_can_gen_without_yaml", False):
-                    # Fall back to checking ut_can_gen_without_yaml
-                    logger.info(f"Skipping rule export for {world.game}: world has native UT support (ut_can_gen_without_yaml)")
-                    return {}
 
     os.makedirs(output_dir, exist_ok=True)
 
