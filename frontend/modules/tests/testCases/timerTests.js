@@ -273,8 +273,8 @@ async function timerOfflineTestGanonImmediateCheck(testController) {
     }
     const dispatcher = window.eventDispatcher;
 
-    // Import createStateSnapshotInterface for accessibility checks
-    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+    // Import createSnapshotInterface for accessibility checks
+    const { createSnapshotInterface } = await import('../../shared/snapshotInterface.js');
 
     const initialSnapshot = stateManager.getSnapshot();
 
@@ -301,7 +301,7 @@ async function timerOfflineTestGanonImmediateCheck(testController) {
     testController.reportCondition('Ganon location exists', true);
 
     // Check accessibility at start
-    const snapshotInterface = createStateSnapshotInterface(initialSnapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(initialSnapshot, staticData);
     const isGanonAccessible = snapshotInterface.isLocationAccessible('Ganon');
 
     testController.log(`Ganon accessibility at start: ${isGanonAccessible ? 'ACCESSIBLE' : 'NOT accessible'}`);
@@ -434,8 +434,8 @@ async function timerOfflineTestCheckRejection(testController) {
     }
     const dispatcher = window.eventDispatcher;
 
-    // Import createStateSnapshotInterface for accessibility checks
-    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+    // Import createSnapshotInterface for accessibility checks
+    const { createSnapshotInterface } = await import('../../shared/snapshotInterface.js');
 
     const initialSnapshot = stateManager.getSnapshot();
 
@@ -491,7 +491,7 @@ async function timerOfflineTestCheckRejection(testController) {
       for (const locationName of locationsInSphere) {
         // Get current snapshot to check accessibility
         const currentSnapshot = stateManager.getSnapshot();
-        const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
+        const snapshotInterface = createSnapshotInterface(currentSnapshot, staticData);
 
         // Skip if already checked
         if (currentSnapshot?.checkedLocations?.includes(locationName)) {
@@ -658,8 +658,8 @@ async function timerOfflineTestWithSphereOrderAndAccessibilityCheck(testControll
     }
     const dispatcher = window.eventDispatcher;
 
-    // Import createStateSnapshotInterface for accessibility checks
-    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+    // Import createSnapshotInterface for accessibility checks
+    const { createSnapshotInterface } = await import('../../shared/snapshotInterface.js');
 
     const initialSnapshot = stateManager.getSnapshot();
 
@@ -707,7 +707,7 @@ async function timerOfflineTestWithSphereOrderAndAccessibilityCheck(testControll
       for (const locationName of locationsInSphere) {
         // Get current snapshot to check accessibility
         const currentSnapshot = stateManager.getSnapshot();
-        const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
+        const snapshotInterface = createSnapshotInterface(currentSnapshot, staticData);
 
         // Check if location is already checked
         if (currentSnapshot?.checkedLocations?.includes(locationName)) {
@@ -859,8 +859,8 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
     }
     const dispatcher = window.eventDispatcher;
 
-    // Import createStateSnapshotInterface for accessibility checks
-    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+    // Import createSnapshotInterface for accessibility checks
+    const { createSnapshotInterface } = await import('../../shared/snapshotInterface.js');
 
     const initialSnapshot = stateManager.getSnapshot();
 
@@ -913,7 +913,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
 
       // Get fresh snapshot and create interface for accessibility checks
       const currentSnapshot = stateManager.getSnapshot();
-      const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
+      const snapshotInterface = createSnapshotInterface(currentSnapshot, staticData);
 
       // Count currently accessible locations
       const accessibleLocations = [];
@@ -1004,7 +1004,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
 
       // Get updated snapshot after check
       const afterSnapshot = stateManager.getSnapshot();
-      const afterSnapshotInterface = createStateSnapshotInterface(afterSnapshot, staticData);
+      const afterSnapshotInterface = createSnapshotInterface(afterSnapshot, staticData);
 
       // Get accessible locations after check
       const accessibleAfter = [];
@@ -1603,8 +1603,8 @@ async function timerOfflineTestWithLoopsQueue(testController) {
     const pathFinder = new PathFinder(stateManager);
     testController.reportCondition('PathFinder loaded', true);
 
-    // Import createStateSnapshotInterface for accessibility checks
-    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
+    // Import createSnapshotInterface for accessibility checks
+    const { createSnapshotInterface } = await import('../../shared/snapshotInterface.js');
 
     // Get loopState singleton
     const getLoopState = window.centralRegistry.getPublicFunction('loops', 'getLoopState');
@@ -1699,7 +1699,7 @@ async function timerOfflineTestWithLoopsQueue(testController) {
 
         // Get fresh snapshot
         const currentSnapshot = stateManager.getSnapshot();
-        const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
+        const snapshotInterface = createSnapshotInterface(currentSnapshot, staticData);
 
         // Find first accessible unchecked location
         let targetLocation = null;

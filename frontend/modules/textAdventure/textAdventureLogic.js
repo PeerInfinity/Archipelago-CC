@@ -3,7 +3,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { moduleDispatcher } from './index.js';
 // Instance registration is no longer needed
 
@@ -420,7 +420,7 @@ export class TextAdventureLogic {
             if (locationDef.access_rule) {
                 try {
                     // Create context-aware snapshot interface with location object (same as Regions)
-                    const locationContextInterface = createStateSnapshotInterface(
+                    const locationContextInterface = createSnapshotInterface(
                         snapshot,
                         staticData,
                         { location: locationDef }
@@ -507,7 +507,7 @@ export class TextAdventureLogic {
             if (exitDef.access_rule && !exitDef.isReverseExit) {
                 log('debug', `Evaluating rule for ${exitName}:`, exitDef.access_rule);
                 try {
-                    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+                    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
                     exitAccessible = evaluateRule(exitDef.access_rule, snapshotInterface);
                     log('debug', `Rule evaluation result for ${exitName}: ${exitAccessible}`);
                 } catch (e) {

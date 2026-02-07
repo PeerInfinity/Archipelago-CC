@@ -2,7 +2,7 @@ import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
@@ -369,7 +369,7 @@ export class GraphInteractionManager {
     if (regionData && regionData.locations && regionData.locations.length > 0) {
       // Get current state to check which locations are accessible
       const snapshot = stateManager.getLatestStateSnapshot();
-      const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+      const snapshotInterface = createSnapshotInterface(snapshot, staticData);
       const checkedLocations = new Set(snapshot.checkedLocations || []);
 
       // Check each location that is accessible and not already checked

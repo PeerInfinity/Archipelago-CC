@@ -1,6 +1,6 @@
 // regionBlockBuilder.js
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { renderLogicTree } from '../commonUI/index.js';
 import commonUI from '../commonUI/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -1118,7 +1118,7 @@ export class RegionBlockBuilder {
         
         // Render logic tree for the location rule inside the wrapper
         if (locationDef.access_rule) {
-          const locationContextInterface = createStateSnapshotInterface(
+          const locationContextInterface = createSnapshotInterface(
             snapshot,
             stateManagerProxySingleton.getStaticData(),
             { location: locationDef }

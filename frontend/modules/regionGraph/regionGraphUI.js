@@ -2,7 +2,7 @@ import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { PathFinder } from './pathfinder.js';
 import { RegionGraphLayoutEditor } from './regionGraphLayoutEditor.js';

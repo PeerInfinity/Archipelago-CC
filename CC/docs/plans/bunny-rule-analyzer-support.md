@@ -402,7 +402,7 @@ class BunnyRulePatternMatcher:
 
 The frontend would need to evaluate analyzed bunny rules. This requires:
 
-**File: `frontend/modules/shared/stateInterface.js`**
+**File: `frontend/modules/shared/snapshotInterface.js`**
 
 ```javascript
 // Add support for path-based bunny rule evaluation
@@ -716,4 +716,4 @@ npm test -- --mode=test-fuzzer --game=alttp --seed-range=1-100
 - `exporter/analyzer/ast_visitors/expression_visitors.py`: Callable list analysis
 - `exporter/analyzer/cache.py`: Callable list cache
 - `frontend/modules/shared/ruleEngine.js`: Enhanced can_reach rule evaluation
-- `frontend/modules/shared/stateInterface.js`: Frontend rule evaluation
+- `frontend/modules/shared/snapshotInterface.js`: Frontend rule evaluation

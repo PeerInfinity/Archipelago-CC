@@ -1,6 +1,6 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -89,7 +89,7 @@ export class GraphDataManager {
       return { checked: 0, accessible: 0, inaccessible: 0, total: 0 };
     }
 
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     const locations = regionData.locations || [];
     const checkedLocations = new Set(snapshot.checkedLocations || []);
 
@@ -528,7 +528,7 @@ export class GraphDataManager {
     if (!staticData) return;
 
     // Create snapshot interface for rule evaluation
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) return;
 
     // Get discovery mode state
@@ -1091,7 +1091,7 @@ export class GraphDataManager {
     }
 
     // Evaluate location accessibility using existing rule engine
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     let locationAccessible = true;
 
     if (location.access_rule) {

@@ -14,7 +14,7 @@ import {
   determineGameName,
   getGameLogic
 } from '../shared/gameLogic/gameLogicRegistry.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { DEFAULT_PLAYER_ID, PlayerIdUtils } from '../shared/playerIdUtils.js';
 
 // Import universal logger for consistent logging across contexts

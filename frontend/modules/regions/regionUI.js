@@ -9,7 +9,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
@@ -728,7 +728,7 @@ export class RegionUI {
     resetUnknownEvaluationCounter();
 
     // Create snapshot interface
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     if (!snapshotInterface) {
       log('error', '[RegionUI] Failed to create snapshot interface. Rendering may be incomplete.');
       return;

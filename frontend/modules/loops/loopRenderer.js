@@ -2,7 +2,7 @@
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 const logger = createUniversalLogger('loopUI:Renderer');
 
@@ -83,7 +83,7 @@ export class LoopRenderer {
     // Get snapshot and static data for rendering
     const snapshot = stateManager.getSnapshot();
     const staticData = stateManager.getStaticData();
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     const currentActionIndex = loopState.currentActionIndex || 0;
     const useLoopColorblind = this.displaySettings.getColorblindMode();
 

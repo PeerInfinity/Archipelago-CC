@@ -12,7 +12,7 @@
 
 import { profiler } from '../../shared/profiler.js';
 import { evaluateRule } from '../../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../../shared/stateInterface.js';
+import { createSnapshotInterface } from '../../shared/snapshotInterface.js';
 
 /**
  * Worker-side spoiler test runner

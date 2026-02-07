@@ -8,7 +8,7 @@
  * **THREAD-AGNOSTIC DESIGN**:
  * This file runs in BOTH thread contexts without modification:
  * - **Worker Thread**: Used by StateManager during initialization and rule evaluation
- * - **Main Thread**: Used by stateInterface.js for helper function selection
+ * - **Main Thread**: Used by snapshotInterface.js for helper function selection
  *
  * The key to thread-agnostic design:
  * - Pure functional exports - no side effects
@@ -74,11 +74,11 @@
  *   Processing:
  *     ├─> Gets cached snapshot from proxy
  *     ├─> Gets cached staticData from proxy
- *     ├─> Calls createStateSnapshotInterface(snapshot, staticData)
+ *     ├─> Calls createSnapshotInterface(snapshot, staticData)
  *     │
  *   Output: Need SnapshotInterface with helper execution capability
  *   ↓
- * stateInterface.js - createStateSnapshotInterface():
+ * snapshotInterface.js - createSnapshotInterface():
  *   Processing:
  *     ├─> Detects game name from staticData
  *     │     └─> const gameName = staticData?.game_name || snapshot?.game
@@ -99,7 +99,7 @@
  *     └─> { logicModule, helperFunctions }
  *           └─> SAME helper functions as worker thread!
  *   ↓
- * stateInterface.js:
+ * snapshotInterface.js:
  *   Processing:
  *     ├─> Creates interface with executeHelper() method
  *     │     └─> executeHelper(name, ...args) {
@@ -205,7 +205,7 @@
  * - Thread-safe by design (no shared mutable state)
  *
  * @module shared/gameLogic/gameLogicRegistry
- * @see stateInterface.js - Uses this for helper function selection (both threads)
+ * @see snapshotInterface.js - Uses this for helper function selection (both threads)
  * @see stateManager/core/initialization.js - Uses this for StateManager setup (worker)
  * @see ruleEngine.js - Calls helpers returned by this registry
  */

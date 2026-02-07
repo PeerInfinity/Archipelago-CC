@@ -1,5 +1,5 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
@@ -337,7 +337,7 @@ export class NavigationManager {
     // Get the adjacency map to find the final exit name
     const staticData = this.ui.pathFinder.stateManager.getStaticData();
     const snapshot = this.ui.pathFinder.stateManager.getLatestStateSnapshot();
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     const adjacencyMap = this.ui.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
 
     const finalExitName = this.ui.pathFinder.findExitBetweenRegions(
@@ -419,7 +419,7 @@ export class NavigationManager {
     // Build adjacency map for finding exits
     const staticData = stateManager.getStaticData();
     const snapshot = stateManager.getLatestStateSnapshot();
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     const adjacencyMap = this.ui.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
 
     stepsToExecute.forEach((stepRegion, index) => {
@@ -492,7 +492,7 @@ export class NavigationManager {
     // Build adjacency map for finding exits
     const staticData = stateManager.getStaticData();
     const snapshot = stateManager.getLatestStateSnapshot();
-    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
     const adjacencyMap = this.ui.pathFinder.buildAccessibilityMap(staticData, snapshot, snapshotInterface);
 
     stepsToExecute.forEach((stepRegion, index) => {

@@ -1,10 +1,10 @@
 // locationUI.js
 import {
   stateManagerProxySingleton as stateManager,
-  // createStateSnapshotInterface, // Removed redundant import
+  // createSnapshotInterface, // Removed redundant import
 } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js'; // Keep this one
+import { createSnapshotInterface } from '../shared/snapshotInterface.js'; // Keep this one
 import commonUI, {
   debounce,
   renderLogicTree,
@@ -785,7 +785,7 @@ export class LocationUI {
     resetUnknownEvaluationCounter(); // Assuming this is a global/static reset from commonUI/index.js
 
     // --- ADDED: Create snapshot interface for rule evaluation on main thread --- >
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );
@@ -1424,7 +1424,7 @@ export class LocationUI {
             const ruleDiv = document.createElement('div');
             ruleDiv.className = 'text-sm';
             // Create context-aware snapshot interface with location object
-            const locationContextInterface = createStateSnapshotInterface(
+            const locationContextInterface = createSnapshotInterface(
               snapshot,
               staticData,
               { location: location }
@@ -1536,7 +1536,7 @@ export class LocationUI {
       return;
     }
 
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );
@@ -1571,7 +1571,7 @@ export class LocationUI {
 
         // Render the rule tree using the imported renderLogicTree
         // Create context-aware snapshot interface with location object
-        const locationContextInterface = createStateSnapshotInterface(
+        const locationContextInterface = createSnapshotInterface(
           snapshot,
           staticData,
           { location: location }

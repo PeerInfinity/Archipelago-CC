@@ -3,7 +3,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 // REMOVED: Global stateManager import
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import loopState from '../loops/loopStateSingleton.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -165,7 +165,7 @@ export class PathAnalyzerLogic {
     }
 
     log('info', `[PathAnalyzer] Creating snapshotInterface...`);
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );
