@@ -48,6 +48,7 @@
   "ShipShapeCustomTaskGoal": 0,
   "ShuffleActContracts": true,
   "ShuffleAlpineZiplines": false,
+  "ShuffleDirectorTokens": false,
   "ShuffleStorybookPages": true,
   "ShuffleSubconPaintings": false,
   "StartWithCompassBadge": true,

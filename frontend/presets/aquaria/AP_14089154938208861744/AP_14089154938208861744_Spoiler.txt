@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -707,7 +707,7 @@ Sunken City left area, crate before the bedroom
    =>   Abyss left bottom area -> Abyss left bottom area to Sunken City right area
    =>   Sunken City right area -> Sunken City right area to Sunken City left area
    =>   Sunken City left area -> Sunken City left area to Sunken City left area
-   =>   Sunken City left area
+   =>   Sunken City left area crates
 The Veil top left area, bulb inside the fish pass
         Menu -> Menu to Verse Cave right area
    =>   Verse Cave right area -> Verse Cave right area to Verse Cave left area

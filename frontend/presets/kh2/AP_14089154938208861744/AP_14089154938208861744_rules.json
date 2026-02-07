@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Kingdom Hearts 2",
   "game_directory": "kh2",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -20794,7 +20794,7 @@
               }
             },
             "item": {
-              "name": "Donald MP Hastera",
+              "name": "Donald Thunder Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -20836,7 +20836,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Donald Blizzard Boost",
+              "name": "Donald Draw",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -20867,7 +20867,7 @@
               }
             },
             "item": {
-              "name": "Donald Draw",
+              "name": "Donald Hyper Healing",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -20884,7 +20884,7 @@
               }
             },
             "item": {
-              "name": "Donald Fire",
+              "name": "Donald MP Hastera",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -20935,9 +20935,9 @@
               }
             },
             "item": {
-              "name": "Donald Fantasia",
+              "name": "Donald Lucky Lucky",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": true
@@ -20952,7 +20952,7 @@
               }
             },
             "item": {
-              "name": "Donald MP Hastega",
+              "name": "Donald Blizzard Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -20969,7 +20969,7 @@
               }
             },
             "item": {
-              "name": "Donald Thunder Boost",
+              "name": "Donald MP Hastega",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -21000,9 +21000,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Donald Lucky Lucky",
+              "name": "Donald Fantasia",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": true
@@ -21014,7 +21014,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Donald Hyper Healing",
+              "name": "Donald Fire",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -26217,6 +26217,7 @@
         "BountyAmount": 10,
         "BountyRequired": 7,
         "BountyStartingHintToggle": false,
+        "CasualBounties": false,
         "CorSkipToggle": false,
         "Cups": 0,
         "CustomItemPoolQuantity": {
@@ -26331,14 +26332,14 @@
         "BountyAmount": {
           "type": "range",
           "range_start": 1,
-          "range_end": 26,
+          "range_end": 42,
           "default": 10,
           "display_name": "Bounties Available"
         },
         "BountyRequired": {
           "type": "range",
           "range_start": 1,
-          "range_end": 26,
+          "range_end": 42,
           "default": 7,
           "display_name": "Bounties Required"
         },
@@ -26346,6 +26347,11 @@
           "type": "toggle",
           "default": false,
           "display_name": "Start with Bounties Hinted"
+        },
+        "CasualBounties": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Add Casual Bounties"
         },
         "CorSkipToggle": {
           "type": "toggle",
@@ -31659,7 +31665,7 @@
             "Attack": 4,
             "Magic": 6,
             "Defense": 0,
-            "Ability": 421,
+            "Ability": 410,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31707,7 +31713,7 @@
             "Attack": 4,
             "Magic": 3,
             "Defense": 0,
-            "Ability": 409,
+            "Ability": 405,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31739,7 +31745,7 @@
             "Attack": 4,
             "Magic": 7,
             "Defense": 0,
-            "Ability": 405,
+            "Ability": 419,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31755,7 +31761,7 @@
             "Attack": 7,
             "Magic": 4,
             "Defense": 0,
-            "Ability": 165,
+            "Ability": 421,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31803,7 +31809,7 @@
             "Attack": 3,
             "Magic": 7,
             "Defense": 0,
-            "Ability": 199,
+            "Ability": 407,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31819,7 +31825,7 @@
             "Attack": 4,
             "Magic": 5,
             "Defense": 0,
-            "Ability": 422,
+            "Ability": 409,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31835,7 +31841,7 @@
             "Attack": 6,
             "Magic": 6,
             "Defense": 0,
-            "Ability": 410,
+            "Ability": 422,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31867,7 +31873,7 @@
             "Attack": 6,
             "Magic": 6,
             "Defense": 0,
-            "Ability": 407,
+            "Ability": 199,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -31883,7 +31889,7 @@
             "Attack": 7,
             "Magic": 7,
             "Defense": 0,
-            "Ability": 419,
+            "Ability": 165,
             "AbilityPoints": 0,
             "Unknown08": 100,
             "FireResistance": 100,
@@ -32306,7 +32312,9 @@
             ]
           }
         ],
-        "title": "Randomizer Seed AP-14089154938208861744-P1-Player1"
+        "title": "Archipelago Seed - Player1",
+        "originalAuthor": "JaredWeakStrike",
+        "description": "Seed 14089154938208861744 was generated for Player1 - Player 1 at 07Feb2026-034440 UTC. Have fun! \nCredit to delilahisdidi for the icons!"
       },
       "pooh_text": [
         {
@@ -32413,6 +32421,10 @@
         "LevelDepth": 0,
         "DonaldGoofyStatsanity": 1,
         "CorSkipToggle": 0,
+        "SuperBosses": 1,
+        "Cups": 0,
+        "AtlanticaToggle": 0,
+        "SummonLevelLocationToggle": 0,
         "hitlist": [],
         "PoptrackerVersionCheck": 4.3,
         "KeybladeAbilities": {
@@ -32632,6 +32644,34 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
                   }
                 ]
@@ -32661,34 +32701,6 @@
                   {
                     "type": "constant",
                     "value": "Roxas Event Location"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },

@@ -326,6 +326,11 @@ class Shufflealpineziplines(Toggle):
     display_name = "Shuffle Alpine Ziplines"
     default = False
 
+class Shuffledirectortokens(Toggle):
+    """Option for Shuffle Director Tokens."""
+    display_name = "Shuffle Director Tokens"
+    default = False
+
 class Shufflestorybookpages(DefaultOnToggle):
     """Option for Shuffle Storybook Pages."""
     display_name = "Shuffle Storybook Pages"
@@ -489,6 +494,7 @@ class AHatinTimeWorldGenOptions(PerGameCommonOptions):
     ShipShapeCustomTaskGoal: Shipshapecustomtaskgoal
     ShuffleActContracts: Shuffleactcontracts
     ShuffleAlpineZiplines: Shufflealpineziplines
+    ShuffleDirectorTokens: Shuffledirectortokens
     ShuffleStorybookPages: Shufflestorybookpages
     ShuffleSubconPaintings: Shufflesubconpaintings
     StartWithCompassBadge: Startwithcompassbadge

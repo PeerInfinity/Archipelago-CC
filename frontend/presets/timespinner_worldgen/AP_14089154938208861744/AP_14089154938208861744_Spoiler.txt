@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Heal After Bosses:               Yes
 Boss Randomization:              Off
 Cantoran:                        No
@@ -69,7 +70,7 @@ Find the Flame:                  No
 Fixed Drop Rate:                 5
 Gate Keep:                       No
 Gyre Archives:                   No
-Has Replaced Options:            No
+has_replaced_options:            No
 HP Cap:                          999
 Inverted:                        No
 Level Cap:                       99

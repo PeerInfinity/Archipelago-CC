@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Canvas Size Increment:           100
 Death Link:                      No
 Goal Image:                      1
@@ -24,7 +25,8 @@ Goal Percent:                    80
 Half Percent Checks:             50
 Logic Percent:                   80
 Quarter Percent Checks:          70
-Starting Tool:                   Brush
+Start Inventory from Pool:       
+starting_tool:                   Brush
 Trap Fill Percent:               0
 
 

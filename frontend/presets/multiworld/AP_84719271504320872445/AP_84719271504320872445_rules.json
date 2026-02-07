@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Multiworld",
   "game_directory": "multiworld",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 3,
   "seed_name": "84719271504320872445",
   "player_names": {
@@ -31843,6 +31843,7 @@
         "ShipShapeCustomTaskGoal": 0,
         "ShuffleActContracts": true,
         "ShuffleAlpineZiplines": false,
+        "ShuffleDirectorTokens": false,
         "ShuffleStorybookPages": true,
         "ShuffleSubconPaintings": false,
         "StartWithCompassBadge": true,
@@ -32192,6 +32193,11 @@
           "default": 0,
           "display_name": "Shuffle Alpine Ziplines"
         },
+        "ShuffleDirectorTokens": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle Director Tokens"
+        },
         "ShuffleStorybookPages": {
           "type": "default_on_toggle",
           "default": 1,
@@ -32477,6 +32483,7 @@
         "StartWithCompassBadge": 1,
         "CompassBadgeMode": 1,
         "ShuffleStorybookPages": 1,
+        "ShuffleDirectorTokens": 0,
         "ShuffleActContracts": 1,
         "ShuffleSubconPaintings": 0,
         "NoPaintingSkips": 0,
@@ -32566,7 +32573,7 @@
         "local_items": [],
         "map_shuffle": 0,
         "menuspeed": 0,
-        "misery_mire_medallion": 2,
+        "misery_mire_medallion": 0,
         "mode": 1,
         "music": true,
         "non_local_items": [],
@@ -32611,7 +32618,7 @@
         "triforce_pieces_percentage": 150,
         "triforce_pieces_required": 20,
         "triforcehud": 0,
-        "turtle_rock_medallion": 0,
+        "turtle_rock_medallion": 2,
         "uw_palettes": 0
       },
       "option_definitions": {
@@ -33801,8 +33808,8 @@
       "fix_palaceofdarkness_exit": false,
       "fix_trock_exit": false,
       "required_medallions": [
-        "Quake",
-        "Ether"
+        "Ether",
+        "Quake"
       ],
       "escape_assist": [],
       "logical_heart_containers": 10,
@@ -34185,8 +34192,8 @@
         "triforce_pieces_required": 20,
         "triforce_pieces_available": 30,
         "triforce_pieces_extra": 10,
-        "mm_medalion": "Quake",
-        "tr_medalion": "Ether"
+        "mm_medalion": "Ether",
+        "tr_medalion": "Quake"
       },
       "web": {
         "theme": "grass",
