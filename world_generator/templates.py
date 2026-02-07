@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional, Set
 from rule_builder import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
-from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
+from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule, ANALYZER_RUNTIME_TYPES
 from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
 
@@ -270,8 +270,7 @@ def _rule_needs_lambda(rule: dict) -> bool:
             # (e.g., has_all, has_any, has, can_reach) that can be converted
             # to Rule Builder format without needing a lambda wrapper
             func_type = function.get('type', '')
-            if func_type in ('state_method', 'item_check', 'item_check_any',
-                             'item_check_all', 'count_check', 'group_check'):
+            if func_type in ANALYZER_RUNTIME_TYPES - {'helper'}:
                 return False
         # Unknown function call structure - needs lambda
         return True
