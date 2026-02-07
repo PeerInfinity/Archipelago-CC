@@ -77,7 +77,7 @@
             {
               "type": "component",
               "componentType": "editorCodeMirror6Panel",
-              "title": "Editor (CM6)"
+              "title": "Editor"
             },
             {
               "type": "component",
