@@ -36,6 +36,13 @@ class MockContext {
     playerId = 1,
     helpers = {},
     capabilities = {},
+    progItems = {},
+    placements = {},
+    entrances = {},
+    worldAttributes = {},
+    checkedLocationsCount = 0,
+    locationRules = {},
+    regionAttributes = {},
   } = {}) {
     // Mark as a valid snapshot interface for ruleEngine validation
     this._isSnapshotInterface = true;
@@ -47,6 +54,13 @@ class MockContext {
     this.playerId = playerId;
     this.helpers = helpers; // Pre-configured helper results: { helperName: result }
     this.capabilities = capabilities; // Pre-configured capability results: { capName: result }
+    this.progItems = progItems; // Progression items: { key: count }
+    this.placements = placements; // Item placements: { location: [itemName, player] }
+    this.entrances = entrances; // Entrance access states: { entranceName: boolean }
+    this.worldAttributes = worldAttributes; // World attributes: { attrName: value }
+    this.checkedLocationsCount = checkedLocationsCount; // Number of checked locations
+    this.locationRules = locationRules; // Location rule results: { locationName: boolean }
+    this.regionAttributes = regionAttributes; // Region attributes: { regionName: { attr: value } }
   }
 
   /**
@@ -119,6 +133,124 @@ class MockContext {
    */
   getSetting(settingName) {
     return this.settings[settingName];
+  }
+
+  /**
+   * Get the count of a progression item.
+   * @param {string} key - The progression item key
+   * @returns {number}
+   */
+  countProgItem(key) {
+    return this.progItems[key] || 0;
+  }
+
+  /**
+   * Get unique count of items in a group.
+   * @param {string} groupName - Name of the group
+   * @returns {number}
+   */
+  countGroupUnique(groupName) {
+    // For testing purposes, use the same value as countGroup
+    return this.groups[groupName] || 0;
+  }
+
+  /**
+   * Check if an entrance is accessible.
+   * @param {string} entranceName - Name of the entrance
+   * @returns {boolean}
+   */
+  isEntranceAccessible(entranceName) {
+    return this.entrances[entranceName] ?? true;
+  }
+
+  /**
+   * Get total count of all items in inventory.
+   * @returns {number}
+   */
+  getTotalItemCount() {
+    let total = 0;
+    for (const item in this.inventory) {
+      total += this.inventory[item] || 0;
+    }
+    return total;
+  }
+
+  /**
+   * Get count of checked locations.
+   * @returns {number}
+   */
+  getCheckedLocationsCount() {
+    return this.checkedLocationsCount || 0;
+  }
+
+  /**
+   * Get static data for the game.
+   * Returns a mock static data structure used by ruleEngine.
+   * @returns {Object}
+   */
+  getStaticData() {
+    const playerId = this.playerId;
+
+    // Build regions map from test context data
+    const regions = new Map();
+
+    // Add regions from regionAttributes (for region_attribute tests)
+    // Format: { "LightWorld": { "is_light_world": true } }
+    for (const [regionName, attributes] of Object.entries(this.regionAttributes)) {
+      const existingRegion = regions.get(regionName) || { name: regionName, locations: [], exits: [] };
+      Object.assign(existingRegion, attributes);
+      regions.set(regionName, existingRegion);
+    }
+
+    // Add locations from locationRules (for location_rule_ref tests)
+    // Format: { "Chest in Cave": true }
+    // Creates a "TestRegion" with locations that have access_rule returning the boolean
+    if (Object.keys(this.locationRules).length > 0) {
+      const testRegion = regions.get('TestRegion') || { name: 'TestRegion', locations: [], exits: [] };
+      for (const [locationName, result] of Object.entries(this.locationRules)) {
+        testRegion.locations.push({
+          name: locationName,
+          access_rule: { type: 'constant', value: result }
+        });
+      }
+      regions.set('TestRegion', testRegion);
+    }
+
+    // Add entrances from entrances (for EntranceAccessRule tests)
+    // Format: { "Cave Entrance": true }
+    // Creates a "TestRegion" with exits that have access_rule returning the boolean
+    if (Object.keys(this.entrances).length > 0) {
+      const testRegion = regions.get('TestRegion') || { name: 'TestRegion', locations: [], exits: [] };
+      for (const [entranceName, result] of Object.entries(this.entrances)) {
+        testRegion.exits.push({
+          name: entranceName,
+          access_rule: { type: 'constant', value: result }
+        });
+      }
+      regions.set('TestRegion', testRegion);
+    }
+
+    // Build locationItems from placements (for placement_lookup tests)
+    // Format: { "Chest A": ["Sword", 1] } -> { "Chest A": { name: "Sword", player: 1 } }
+    const locationItems = {};
+    for (const [locationName, [itemName, player]] of Object.entries(this.placements)) {
+      locationItems[locationName] = { name: itemName, player: player || 1 };
+    }
+
+    return {
+      world: {
+        [playerId]: {
+          ...this.settings,
+          ...this.worldAttributes,
+        },
+      },
+      placements: {
+        [playerId]: this.placements,
+      },
+      locationItems: locationItems,
+      helpers: {},
+      regions: regions,
+    };
   }
 
   /**
@@ -202,6 +334,14 @@ class MockContext {
       playerId: contextDict.playerId || 1,
       helpers: contextDict.helpers || {},
       capabilities: contextDict.capabilities || {},
+      progItems: contextDict.progItems || {},
+      placements: contextDict.placements || {},
+      entrances: contextDict.entrances || {},
+      worldAttributes: contextDict.worldAttributes || {},
+      // Support both field names for checked locations count
+      checkedLocationsCount: contextDict.checkedLocationsCount ?? contextDict.checkedLocations ?? 0,
+      locationRules: contextDict.locationRules || {},
+      regionAttributes: contextDict.regionAttributes || {},
     });
   }
 }
@@ -211,7 +351,7 @@ class MockContext {
  * These will be skipped until the features are added to ruleEngine.js.
  */
 const SKIP_TESTS = new Set([
-  // All block/for_range tests now pass after implementing var support
+  // All rule type tests are now implemented!
 ]);
 
 /**
@@ -234,6 +374,9 @@ function runFixtureTest(suiteName, testCase) {
     const normalizedResult = Object.is(result, -0) ? 0 : result;
     const normalizedExpected = Object.is(testCase.expected, -0) ? 0 : testCase.expected;
     expect(normalizedResult).toBe(normalizedExpected);
+  } else if (typeof testCase.expected === 'object' && testCase.expected !== null) {
+    // Use deep equality for objects
+    expect(result).toEqual(testCase.expected);
   } else {
     expect(result).toBe(testCase.expected);
   }

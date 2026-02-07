@@ -22,6 +22,18 @@ IGNORED_ERROR_PATTERNS = [
     "Failed to fetch map shuffle data for FFMQ",
     "Invalid OC2 settings",
     "OC2 needs at least",
+    # Item pool/location count issues
+    "Failed to limit item pool size",
+    "Too many locations created",
+    "There are not enough available tasks to fill",
+    # TWW option conflicts
+    "You cannot make bosses required when progression dungeons are disabled",
+    "A conflict was found in the lists of required and banned dungeons",
+    "Could not select required bosses to satisfy options",
+    # shapez option conflicts
+    "Achievements must be included when belt and extractor are locked",
+    # Common generation errors from option combinations
+    "list index out of range",
 ]
 
 

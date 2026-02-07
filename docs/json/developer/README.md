@@ -52,7 +52,7 @@ Documentation of changes from upstream Archipelago:
 | [Universal Tracker Modifications](./diffs/universal-tracker-modifications.md) | UT integration changes |
 | [Fuzzer Modifications](./diffs/fuzzer-modifications.md) | Fuzzer enhancements |
 
-### [Proposals](./proposals/)
+### [Proposals](./proposals/README.md)
 
 Proposals for upstream Archipelago changes that would reduce fork maintenance:
 
@@ -74,7 +74,11 @@ Format and implementation comparisons for design decisions.
 
 ### [Specs](./specs/)
 
-Formal specifications for data formats and protocols.
+Formal specifications for data formats and protocols:
+
+| Specification | Description |
+|---------------|-------------|
+| [Rule Format Specification](./specs/rule-format-specification.md) | Formal specification for rule data formats |
 
 ## Common Tasks
 

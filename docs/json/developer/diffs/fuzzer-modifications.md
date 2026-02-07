@@ -291,4 +291,4 @@ python fuzz.py -g alttp -r 100 --hook worlds.tracker.fuzzer_hook:Hook --fraction
 - **Original repository:** https://github.com/Eijebong/Archipelago-fuzzer
 - **Original copy for comparison:** `scripts/test/fixtures/fuzzer_original/`
 - **This project's fuzzer:** `fuzz.py`
-- **Fuzzer testing documentation:** `CC/docs/fuzzer-testing.md`
+- **Fuzzer testing documentation:** [`test-fuzz.md`](../tests/test-fuzz.md)

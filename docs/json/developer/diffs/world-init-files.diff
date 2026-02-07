@@ -393,7 +393,7 @@ index 8de83da7e..f53fb5fad 100644
                                   self.evermizer_seed, flags, money, exp, switches)):
                  raise RuntimeError()
 diff --git a/worlds/tloz/__init__.py b/worlds/tloz/__init__.py
-index c8c76bd85..c4f3b2fad 100644
+index da347c752..713e05382 100644
 --- a/worlds/tloz/__init__.py
 +++ b/worlds/tloz/__init__.py
 @@ -121,7 +121,11 @@ class TLoZWorld(World):
@@ -409,7 +409,7 @@ index c8c76bd85..c4f3b2fad 100644
  
      def create_item(self, name: str):
          return TLoZItem(name, item_table[name].classification, self.item_name_to_id[name], self.player)
-@@ -286,6 +290,23 @@ class TLoZWorld(World):
+@@ -280,6 +284,23 @@ class TLoZWorld(World):
          return rom_data
  
      def generate_output(self, output_directory: str):
@@ -433,7 +433,7 @@ index c8c76bd85..c4f3b2fad 100644
          try:
              patched_rom = self.apply_randomizer()
              outfilebase = 'AP_' + self.multiworld.seed_name
-@@ -316,7 +337,7 @@ class TLoZWorld(World):
+@@ -310,7 +331,7 @@ class TLoZWorld(World):
          import base64
          self.rom_name_available_event.wait()
          rom_name = getattr(self, "rom_name", None)

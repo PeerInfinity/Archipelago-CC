@@ -1,18 +1,18 @@
 # Diff Files from Upstream
 
-This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository at commit `886cc68051f23d6049f8d846379b193aa0415e24` (November 29, 2025, version 0.6.5-rc1).
+This directory contains diff files showing changes made to this repository compared to the upstream Archipelago repository at commit `1dd91ec85b894c2a1d62ad688af074f2166ee621` (February 5, 2026, 0.6.5+80).
 
 ## Available Diff Files
 
-### 1. `core-files.diff` (178 lines)
+### 1. `core-files.diff` (194 lines)
 Changes to the main Archipelago core files:
 - **BaseClasses.py** - Core data structures and sphere logging modifications
-- **Main.py** - Main generation logic, vanilla placement trigger, JSON export, and workflow changes
-- **settings.py** - Configuration settings for JSON export, sphere logging, and skip_required_files
+- **Main.py** - Main generation logic, vanilla placement trigger, JSON export, pickle export, and workflow changes
+- **settings.py** - Configuration settings for JSON export, sphere logging, pickle export, preset clearing, tracking mode config, and skip_required_files
 
 These are the most significant changes that affect core Archipelago functionality.
 
-### 2. `config-files.diff` (151 lines)
+### 2. `config-files.diff` (169 lines)
 Changes to configuration and repository setup files:
 - **.gitattributes** - Git attribute configurations (merge strategy for .gitignore and README.md)
 - **.github/workflows/codeql-analysis.yml** - Code analysis workflow modifications (added permissions)
@@ -22,7 +22,7 @@ Changes to configuration and repository setup files:
 
 These files configure the development environment and CI/CD pipeline.
 
-### 3. `alttp-bunny-rules.diff` (26 lines)
+### 3. `alttp-bunny-rules.diff` (27 lines)
 Bug fixes for ALttP's `set_bunny_rules()` function:
 - **worlds/alttp/Rules.py** - Fixed missing `(state)` invocation and Python late binding bug in superbunny path lambdas
 
@@ -74,8 +74,8 @@ grep -A 999999 "diff --git a/BaseClasses.py" docs/json/developer/diffs/core-file
 
 ## Notes
 
-- These diffs were last updated on 2026-01-14 against upstream commit `886cc68051f23d6049f8d846379b193aa0415e24`
-- Total lines changed across all diffs: 849 lines (178 + 151 + 26 + 494)
+- These diffs were last updated on 2026-02-06 against upstream commit `1dd91ec85b894c2a1d62ad688af074f2166ee621`
+- Total lines changed across all diffs: 884 lines (194 + 169 + 27 + 494)
 - These diffs only include modifications to existing files that also exist in upstream
 - New files and new directories are not included in these diffs
 - For a complete list of all changes, see [repository-changes.md](./repository-changes.md)
@@ -148,7 +148,7 @@ For full documentation, see [worlds/json_tools_installer/README.md](../../../../
 
 These diffs were created using:
 ```bash
-git diff 886cc68051f23d6049f8d846379b193aa0415e24 HEAD -- [files...] > [output.diff]
+git diff 1dd91ec85b894c2a1d62ad688af074f2166ee621 HEAD -- [files...] > [output.diff]
 ```
 
 ## Related Documentation

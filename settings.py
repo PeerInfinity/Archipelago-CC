@@ -928,5 +928,5 @@ def get_settings() -> Settings:
             # Update the global variable after loading/creating settings
             global skip_required_files
             skip_required_files = res.general_options.skip_required_files
-            
+
         return res

@@ -1441,6 +1441,70 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         break;
       }
 
+      case 'unique_count': {
+        // AST format: { type: 'unique_count', args: [threshold, items_list] }
+        // Counts unique items owned and returns true if count >= threshold
+        // Items can be [itemName, weight] pairs or simple strings (weight=1)
+        const argsArray = rule.args || [];
+        if (argsArray.length < 2) {
+          log('warn', '[evaluateRule] unique_count: missing args');
+          result = undefined;
+          break;
+        }
+
+        const threshold = evaluateRule(argsArray[0], context, depth + 1, localScope);
+        const items = evaluateRule(argsArray[1], context, depth + 1, localScope);
+
+        if (typeof threshold !== 'number') {
+          log('warn', '[evaluateRule] unique_count: invalid threshold', { threshold });
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(items)) {
+          log('warn', '[evaluateRule] unique_count: invalid items array', { items });
+          result = undefined;
+          break;
+        }
+
+        // Count unique items owned (each item adds weight if owned)
+        let total = 0;
+        for (const item of items) {
+          let itemName, weight;
+          if (Array.isArray(item) && item.length >= 2) {
+            [itemName, weight] = item;
+          } else if (typeof item === 'string') {
+            itemName = item;
+            weight = 1;
+          } else {
+            continue;
+          }
+
+          // Check if player has this item
+          let hasItem = false;
+          if (typeof context.hasItem === 'function') {
+            hasItem = context.hasItem(itemName);
+          } else if (typeof context.countItem === 'function') {
+            hasItem = (context.countItem(itemName) || 0) > 0;
+          }
+
+          if (hasItem) {
+            total += weight;
+          }
+
+          // Early exit if threshold met
+          if (total >= threshold) {
+            result = true;
+            break;
+          }
+        }
+
+        if (result !== true) {
+          result = total >= threshold;
+        }
+        break;
+      }
+
       case 'weighted_count_true': {
         // Weighted version of count_true for compact representation
         // Each condition has an associated weight (multiplicity)
@@ -1865,7 +1929,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       }
 
       case 'function_call': {
-        // Special handling for state method calls like state.CanAcquireAtLeast()
+        // Special handling for state method calls like state.has(), state.count(), etc.
         // In the exported rules, these appear as: {type: 'function_call', function: {type: 'attribute', object: {type: 'constant', value: true}, attr: 'MethodName'}}
         // The constant 'true' is a placeholder for the state/world object
         if (rule.function?.type === 'attribute' &&
@@ -1873,24 +1937,67 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             rule.function.object.value === true) {
 
           const methodName = rule.function.attr;
-          const args = (rule.args || []).map(
+          const methodArgs = (rule.args || []).map(
             (arg) => evaluateRule(arg, context, depth + 1, localScope)
           );
 
           // If any argument evaluation results in undefined, return undefined
-          if (args.some((arg) => arg === undefined)) {
+          if (methodArgs.some((arg) => arg === undefined)) {
             result = undefined;
             break;
           }
 
-          // For SMZ3, prepend 'smz3_' to the method name to get the helper function name
+          // First, try common state methods mapped directly to context methods
+          let handled = true;
+          switch (methodName) {
+            case 'has':
+              // state.has(item) -> context.hasItem(item)
+              if (typeof context.hasItem === 'function') {
+                result = context.hasItem(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'item_check', item: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'count':
+              // state.count(item) -> context.countItem(item)
+              if (typeof context.countItem === 'function') {
+                result = context.countItem(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'count_item', item: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'can_reach':
+              // state.can_reach(region) -> context.canReach(region)
+              if (typeof context.canReach === 'function') {
+                result = context.canReach(methodArgs[0]);
+              } else {
+                result = evaluateRule({ type: 'can_reach', region: methodArgs[0] }, context, depth + 1, localScope);
+              }
+              break;
+            case 'has_group':
+              // state.has_group(group, count) -> context.hasGroup(group, count)
+              if (typeof context.hasGroup === 'function') {
+                result = context.hasGroup(methodArgs[0], methodArgs[1] || 1);
+              } else {
+                result = evaluateRule({ type: 'group_check', group: methodArgs[0], count: methodArgs[1] || 1 }, context, depth + 1, localScope);
+              }
+              break;
+            default:
+              handled = false;
+          }
+
+          if (handled) {
+            break;
+          }
+
+          // For SMZ3 and other game-specific methods, prepend 'smz3_' to the method name
           // This handles methods like CanAcquireAtLeast, CanAcquireAll, etc.
           const helperName = `smz3_${methodName}`;
 
           // Call the helper function through context.executeHelper
           if (context.executeHelper) {
             try {
-              result = context.executeHelper(helperName, ...args);
+              result = context.executeHelper(helperName, ...methodArgs);
               break;
             } catch (error) {
               logError(
@@ -2687,9 +2794,13 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
         } else if (Array.isArray(list)) {
-          result = list[index]; // Access array index
+          // Python-style negative indexing: -1 = last element, -2 = second to last, etc.
+          const idx = index < 0 ? list.length + index : index;
+          result = list[idx]; // Access array index
         } else if (typeof list === 'string') {
-          result = list[index]; // String character access
+          // Python-style negative indexing for strings
+          const idx = index < 0 ? list.length + index : index;
+          result = list[idx]; // String character access
         } else if (list && typeof list === 'object') {
           result = list[index]; // Access object property
           // If list[index] itself is undefined (property doesn't exist), result remains undefined.
@@ -4438,9 +4549,17 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
         result = false;
 
         // Search through locations
-        for (const locPair of locations) {
-          if (!Array.isArray(locPair) || locPair.length < 2) continue;
-          const [locName, locPlayer] = locPair;
+        // Locations can be either strings or [locationName, player] pairs
+        for (const locEntry of locations) {
+          let locName, locPlayer;
+          if (Array.isArray(locEntry) && locEntry.length >= 2) {
+            [locName, locPlayer] = locEntry;
+          } else if (typeof locEntry === 'string') {
+            locName = locEntry;
+            locPlayer = searchPlayer; // Use the rule's player parameter
+          } else {
+            continue;
+          }
           if (typeof locName !== 'string') continue;
 
           // Look up item at this location
@@ -4841,10 +4960,19 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
       case 'while_loop': {
         // Execute a loop body while condition is true
         // Similar to for_iter but with a condition check instead of iteration
+        // Accepts both 'condition' and 'test' property names for the loop condition
 
         // Ensure we have a scope
         if (localScope === null) {
           log('warn', '[evaluateRule] while_loop used without local scope');
+          result = undefined;
+          break;
+        }
+
+        // Get the condition rule (support both 'condition' and 'test' property names)
+        const conditionRule = rule.condition || rule.test;
+        if (!conditionRule) {
+          log('warn', '[evaluateRule] while_loop missing condition/test');
           result = undefined;
           break;
         }
@@ -4856,7 +4984,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
 
         while (!breakWhileLoop && whileIterCount < maxWhileIterations) {
           // Evaluate condition each iteration
-          const conditionResult = evaluateRule(rule.condition, context, depth + 1, localScope);
+          const conditionResult = evaluateRule(conditionRule, context, depth + 1, localScope);
 
           // If condition is false or undefined, exit loop
           if (!conditionResult) {
@@ -4987,6 +5115,28 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
             case '__contains__':
               // value in list
               result = obj.includes(args[0]);
+              break;
+            case 'append':
+              // list.append(value) - add value to end of list (mutates in place)
+              // Returns undefined like Python, but the array is mutated
+              obj.push(args[0]);
+              result = undefined;
+              break;
+            case 'extend':
+              // list.extend(iterable) - add all items from iterable to list
+              if (Array.isArray(args[0])) {
+                obj.push(...args[0]);
+              }
+              result = undefined;
+              break;
+            case 'pop':
+              // list.pop() - remove and return last element
+              result = obj.pop();
+              break;
+            case 'clear':
+              // list.clear() - remove all elements
+              obj.length = 0;
+              result = undefined;
               break;
             default:
               log('warn', `[evaluateRule] Unknown array method: ${rule.method}`);
@@ -5802,11 +5952,12 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       // Evaluate an entrance's access_rule, optionally with a fake Moon Pearl state.
       // This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
       // is called with a fake pearl state, simulating having Moon Pearl.
-      const entranceName = args.entrance_name;
+      // Accept both 'entrance_name' (from Python export) and 'entrance' (simpler form)
+      const entranceName = args.entrance_name || args.entrance;
       const fakePearl = args.fake_pearl || false;
 
       if (!entranceName) {
-        log('warn', '[evaluateRuleBuilderRule] EntranceAccessRule missing entrance_name');
+        log('warn', '[evaluateRuleBuilderRule] EntranceAccessRule missing entrance_name/entrance');
         return undefined;
       }
 
@@ -6177,6 +6328,50 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       }
       // Fallback: delegate to AST evaluator
       return evaluateRule({ type: 'state_method', method: 'count_group_unique', args: [{ type: 'constant', value: groupName }] }, context, depth + 1, localScope);
+    }
+
+    // CountFromList: get cumulative count of items from a list
+    // Rule Builder: {"rule": "CountFromList", "args": {"item_names": ["Key", "Door"]}}
+    // Returns total count of all listed items (duplicates in list are counted separately)
+    case 'CountFromList': {
+      const itemNames = args.item_names || args.items || [];
+      if (!Array.isArray(itemNames) || itemNames.length === 0) {
+        return 0;
+      }
+      let total = 0;
+      for (const itemName of itemNames) {
+        if (typeof context?.countItem === 'function') {
+          total += context.countItem(itemName) || 0;
+        } else {
+          // Fallback: delegate to AST evaluator
+          const count = evaluateRule({ type: 'count_item', item: itemName }, context, depth + 1, localScope);
+          total += count || 0;
+        }
+      }
+      return total;
+    }
+
+    // UniqueCount: check if enough unique item types are present
+    // Rule Builder: {"rule": "UniqueCount", "args": {"threshold": 3, "items": [["ItemA", 1.0], ["ItemB", 1.0]]}}
+    // Returns true if the number of unique item types present >= threshold
+    case 'UniqueCount': {
+      const threshold = args.threshold || 0;
+      const items = args.items || [];
+      if (!Array.isArray(items)) {
+        return threshold <= 0;
+      }
+      let uniqueCount = 0;
+      for (const itemEntry of items) {
+        // Items can be either strings or [itemName, weight] tuples
+        const itemName = Array.isArray(itemEntry) ? itemEntry[0] : itemEntry;
+        const hasItem = typeof context?.hasItem === 'function'
+          ? context.hasItem(itemName)
+          : evaluateRule({ type: 'item_check', item: itemName }, context, depth + 1, localScope);
+        if (hasItem) {
+          uniqueCount++;
+        }
+      }
+      return uniqueCount >= threshold;
     }
 
     // SettingValue: get a game setting value
