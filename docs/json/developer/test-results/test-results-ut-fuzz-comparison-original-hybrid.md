@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Hybrid
 
-**Generated:** 2026-02-07 04:18:57
+**Generated:** 2026-02-07 05:13:22
 
 **Source Data Last Updated:** 2026-01-26T04:45:29
 
@@ -29,7 +29,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 
 | Game Name | Original Success Rate | Hybrid Success Rate | Exporter | GameLogic | Rules Size |
 |-----------|:---------------------:|:---------------------:|:--------:|:---------:|:----------:|
-| A Hat in Time | ❌ 17.0% | ✅ 100.0% | 18.2KB | ✅ | 231.1KB |
+| A Hat in Time | ❌ 17.0% | ✅ 100.0% | 18.2KB | ✅ | 231.3KB |
 | A Link to the Past | ❌ 0.0% | ✅ 80.0% | 12.6KB | ✅ | 667.7KB |
 | A Short Hike | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 410.7KB |
 | APQuest | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 11.0KB |
@@ -52,7 +52,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | DOOM II | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ⚠️ 52.0% | ✅ 100.0% | ✅ | ✅ | 122.5KB |
-| Factorio | ❌ 0.0% | ✅ 100.0% | 8.8KB | ✅ | 295.0KB |
+| Factorio | ❌ 0.0% | ✅ 100.0% | 8.8KB | ✅ | 295.4KB |
 | Faxanadu | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Final Fantasy Mystic Quest | ❌ 1.0% | ❌ 0.0% | 13.4KB | ✅ | 549.5KB |
@@ -62,13 +62,13 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Inscryption | ✅ 100.0% | ✅ 100.0% | 8.0KB | ✅ | 84.2KB |
 | Jak and Daxter: The Precursor Legacy | ⚠️ 62.0% | ✅ 100.0% | 21.6KB | 4.6KB | 298.6KB |
 | Kingdom Hearts | ❌ 18.0% | ✅ 100.0% | ✅ | ✅ | 753.6KB |
-| Kingdom Hearts 2 | ❌ 37.0% | ❌ 10.0% | 19.5KB | ✅ | 1641.1KB |
+| Kingdom Hearts 2 | ❌ 37.0% | ❌ 10.0% | 19.5KB | ✅ | 1641.6KB |
 | Kirby's Dream Land 3 | ❌ 3.0% | ✅ 100.0% | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ❌ 20.0% | ✅ 100.0% | 3.6KB | ✅ | 210.5KB |
 | Lingo | ❌ 21.0% | ✅ 30.0% | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | ❌ 23.0% | ✅ 100.0% | 7.4KB | ✅ | 714.5KB |
+| Links Awakening DX | ❌ 23.0% | ✅ 100.0% | 7.4KB | ✅ | 705.8KB |
 | Lufia II Ancient Cave | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 132.4KB |
-| Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 398.5KB |
+| Mario & Luigi Superstar Saga | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 398.8KB |
 | Math Adventure | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 12.6KB |
 | Mega Man 2 | ⚠️ 91.0% | ✅ 100.0% | ✅ | ✅ | 51.5KB |
 | MegaMan Battle Network 3 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 209.8KB |
@@ -93,7 +93,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Stardew Valley | ❌ 4.0% | ✅ 100.0% | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | ❌ 10.0% | ✅ 100.0% | 2.2KB | ✅ | 207.8KB |
 | Sudoku | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Super Mario 64 | ❌ 29.0% | ✅ 100.0% | ✅ | ✅ | 93.2KB |
+| Super Mario 64 | ❌ 29.0% | ✅ 100.0% | ✅ | ✅ | 101.9KB |
 | Super Mario Land 2 | ❌ 10.0% | ✅ 100.0% | 96.3KB | ✅ | 982.7KB |
 | Super Mario World | ⚠️ 54.0% | ✅ 90.0% | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 1.0% | ❌ 0.0% | 60.9KB | 114.5KB | 625.4KB |
@@ -110,7 +110,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | VVVVVV | ⚠️ 67.0% | ✅ 100.0% | 3.8KB | ✅ | 22.8KB |
 | Wargroove | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 44.7KB |
 | Yacht Dice | ❌ 5.0% | ✅ 100.0% | 0.9KB | 285.0KB | 249.5KB |
-| Yoshi's Island | ❌ 22.0% | ✅ 100.0% | 9.2KB | ✅ | 296.7KB |
+| Yoshi's Island | ❌ 22.0% | ✅ 100.0% | 9.2KB | ✅ | 296.8KB |
 | Yu-Gi-Oh! 2006 | ❌ 33.0% | ✅ 100.0% | 1.3KB | 21.4KB | 628.0KB |
 | Zillion | ❌ 0.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | shapez | ❌ 42.0% | ✅ 100.0% | ✅ | ✅ | 155.3KB |
@@ -142,7 +142,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Hylics 2 | ✅ | ✅ | 101.9KB |
 | Inscryption | 8.0KB | ✅ | 84.2KB |
 | Lufia II Ancient Cave | ✅ | ✅ | 132.4KB |
-| Mario & Luigi Superstar Saga | ✅ | ✅ | 398.5KB |
+| Mario & Luigi Superstar Saga | ✅ | ✅ | 398.8KB |
 | Math Adventure | ✅ | ✅ | 12.6KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | ✅ | 57.2KB |
@@ -166,14 +166,14 @@ These games pass in the Hybrid UT but fail in the Original UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| A Hat in Time | 18.2KB | ✅ | 231.1KB |
+| A Hat in Time | 18.2KB | ✅ | 231.3KB |
 | A Link to the Past | 12.6KB | ✅ | 667.7KB |
 | Adventure | ✅ | ✅ | 26.0KB |
 | Castlevania 64 | ✅ | ✅ | 138.5KB |
 | Celeste (Open World) | ✅ | ✅ | 1043.4KB |
 | DLCQuest | 1.2KB | ✅ | 51.0KB |
 | Donkey Kong Country 3 | ✅ | ✅ | 122.5KB |
-| Factorio | 8.8KB | ✅ | 295.0KB |
+| Factorio | 8.8KB | ✅ | 295.4KB |
 | Faxanadu | ✅ | ✅ | 68.7KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
@@ -181,7 +181,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Kirby's Dream Land 3 | 10.1KB | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.5KB |
 | Lingo | 38.0KB | 10.7KB | 946.3KB |
-| Links Awakening DX | 7.4KB | ✅ | 714.5KB |
+| Links Awakening DX | 7.4KB | ✅ | 705.8KB |
 | Mega Man 2 | ✅ | ✅ | 51.5KB |
 | Metamath | ✅ | ✅ | 48.1KB |
 | Muse Dash | ✅ | ✅ | 233.5KB |
@@ -195,7 +195,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Sonic Adventure 2 Battle | ✅ | ✅ | 266.2KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Subnautica | 2.2KB | ✅ | 207.8KB |
-| Super Mario 64 | ✅ | ✅ | 93.2KB |
+| Super Mario 64 | ✅ | ✅ | 101.9KB |
 | Super Mario Land 2 | 96.3KB | ✅ | 982.7KB |
 | Super Mario World | ✅ | ✅ | 178.2KB |
 | Terraria | 16.8KB | ✅ | 283.0KB |
@@ -204,7 +204,7 @@ These games pass in the Hybrid UT but fail in the Original UT.
 | Timespinner | 2.2KB | ✅ | 267.3KB |
 | VVVVVV | 3.8KB | ✅ | 22.8KB |
 | Yacht Dice | 0.9KB | 285.0KB | 249.5KB |
-| Yoshi's Island | 9.2KB | ✅ | 296.7KB |
+| Yoshi's Island | 9.2KB | ✅ | 296.8KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
 | shapez | ✅ | ✅ | 155.3KB |
 
@@ -215,7 +215,7 @@ These games fail in both Universal Tracker versions.
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
-| Kingdom Hearts 2 | 19.5KB | ✅ | 1641.1KB |
+| Kingdom Hearts 2 | 19.5KB | ✅ | 1641.6KB |
 | Ocarina of Time | ✅ | ✅ | N/A |
 | Starcraft 2 | 28.7KB | 90.1KB | 1126.8KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
