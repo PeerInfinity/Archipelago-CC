@@ -89,7 +89,7 @@ def mario_zone_4_boss(state: "CollectionState", player: int) -> bool:
 
 
 def marios_castle_wario(state: "CollectionState", player: int) -> bool:
-    return ((has_pipe_right(state, player)) and (has_pipe_left(state, player))) or (state.has("Mario's Castle Midway Bell", player))
+    return (has_pipe_right(state, player)) and ((has_pipe_left(state, player)) or (state.has("Mario's Castle Midway Bell", player)))
 
 
 def not_blocked_by_sharks(state: "CollectionState", player: int) -> bool:

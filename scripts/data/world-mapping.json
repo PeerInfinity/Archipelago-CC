@@ -449,6 +449,24 @@
     "has_custom_game_logic": false,
     "world_directory": "dkc3_worldgen"
   },
+  "EarthBound": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "earthbound"
+  },
+  "EarthBound WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "earthbound_worldgen"
+  },
   "Factorio": {
     "exporter_path": "exporter/games/official/factorio.py",
     "exporter_size": 9040,
@@ -997,6 +1015,24 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "smz3_worldgen"
+  },
+  "Satisfactory": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "satisfactory"
+  },
+  "Satisfactory WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "satisfactory_worldgen"
   },
   "Saving Princess": {
     "exporter_path": null,

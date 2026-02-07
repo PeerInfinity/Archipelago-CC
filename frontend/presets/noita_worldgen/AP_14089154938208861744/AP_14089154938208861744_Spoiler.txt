@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 Traps:                           Yes
 Bosses as Location Checks:       No Bosses
 Death Link:                      No
@@ -26,6 +27,7 @@ Orbs as Location Checks:         No Orbs
 Path Option:                     Main Path
 Pedestal Checks per Biome:       6
 Shop Price Reduction:            Full Price
+Start Inventory from Pool:       
 Victory Condition:               Greed Ending
 
 

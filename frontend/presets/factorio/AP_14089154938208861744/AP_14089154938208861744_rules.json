@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Factorio",
   "game_directory": "factorio",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -4354,13 +4354,18 @@
                   "advanced-circuit",
                   "advanced-material-processing-2",
                   "advanced-oil-processing",
+                  "concrete",
+                  "electric-engine",
                   "engine",
                   "flamethrower",
+                  "lubricant",
                   "night-vision-equipment",
                   "oil-processing",
                   "plastics",
+                  "processing-unit",
                   "rocket-silo",
-                  "steel-processing"
+                  "steel-processing",
+                  "sulfur-processing"
                 ]
               }
             },
@@ -8926,6 +8931,7 @@
         "atomic_rocket_traps": 0,
         "attack_traps": 0,
         "cluster_grenade_traps": 0,
+        "craftsanity": 0,
         "death_link": false,
         "energy_link": false,
         "evolution_trap_increase": 10,
@@ -9295,6 +9301,13 @@
           "range_end": 25,
           "default": 0,
           "display_name": "Cluster Grenade Traps"
+        },
+        "craftsanity": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 183,
+          "default": 0,
+          "display_name": "CraftSanity"
         },
         "death_link": {
           "type": "toggle",
@@ -9716,6 +9729,7 @@
         "AP-1-499",
         "AP-2-569"
       ],
+      "craftsanity_locations": [],
       "tech_mix": 70,
       "skip_silo": false,
       "want_progressives": {

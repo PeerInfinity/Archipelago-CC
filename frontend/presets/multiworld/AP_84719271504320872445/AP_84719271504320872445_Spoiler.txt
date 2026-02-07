@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 3
+﻿Archipelago Version 0.6.7  -  Seed: 3
 
 Filling Algorithm:               balanced
 Players:                         4
@@ -34,6 +34,7 @@ Umbrella Logic:                  No
 Start with Compass Badge:        Yes
 Compass Badge Mode:              Closest
 Shuffle Storybook Pages:         Yes
+Shuffle Director Tokens:         No
 Shuffle Contracts:               Yes
 Shuffle Subcon Paintings:        No
 No Subcon Fire Wall Skips:       No
@@ -163,8 +164,8 @@ Shuffle Capacity Upgrades:       Off
 Bombless Start:                  No
 Shuffle Prizes:                  General
 Tile Shuffle:                    No
-Misery Mire Medallion:           Quake
-Turtle Rock Medallion:           Ether
+Misery Mire Medallion:           Ether
+Turtle Rock Medallion:           Quake
 Glitched Starting Boots:         Yes
 Beemizer Total Chance:           0
 Beemizer Trap Chance:            60
@@ -256,8 +257,8 @@ Player2: Links House <= Chris Houlihan Room Exit
 
 Medallions:
 
-Misery Mire (Player2): Quake
-Turtle Rock (Player2): Ether
+Misery Mire (Player2): Ether
+Turtle Rock (Player2): Quake
 
 Fairy Fountain Bottle Fill:
 
@@ -1442,9 +1443,10 @@ Act Completion (Time Rift - The Owl Express) (Player1)
    =>   Time Rift - The Owl Express
 Act Completion (Time Rift - Village) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   Toilet of Doom -> Time Rift - Pipe Portal - Entrance 3
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
+   =>   The Subcon Well -> Time Rift - Pipe Portal - Entrance 2
    =>   Time Rift - Village
 Act Completion (Toilet of Doom) (Player1)
         Menu -> Save File -> Spaceship
@@ -2699,8 +2701,8 @@ Subcon Forest - Boss Arena Chest (Player1)
    =>   Mafia Town -> Mafia Town - Act 1
    =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
    =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 5: Connection 2
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 6: Connection 1
+   =>   Mail Delivery Service -> Mafia Town - Act 5: Connection 1
    =>   Your Contract has Expired -> Subcon Forest Entrance YCHE
    =>   Subcon Forest Boss Arena
 Subcon Forest - Burning Forest Treehouse (Player1)

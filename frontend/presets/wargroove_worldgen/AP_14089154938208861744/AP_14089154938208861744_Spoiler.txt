@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,6 +17,7 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Use Canonical Options:           Yes
 AI Sacrifice Limit:              0
 AI Summon Limit:                 0
 Commander Choice:                Locked Random
@@ -25,6 +26,7 @@ Death Link:                      No
 Income Boost:                    25
 Player Sacrifice Limit:          0
 Player Summon Limit:             0
+Start Inventory from Pool:       
 
 
 Locations:

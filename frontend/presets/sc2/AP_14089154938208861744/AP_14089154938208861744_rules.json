@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Starcraft 2",
   "game_directory": "sc2",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -19636,12 +19636,16 @@
         "groups": [
           "Ability",
           "Everything",
+          "HotS Items",
           "Kerrigan Abilities",
           "Kerrigan Active Abilities",
+          "Kerrigan HotS Abilities",
           "Kerrigan Logic Active Abilities",
           "Kerrigan Non-Ultimate Active Abilities",
           "Kerrigan Non-Ultimates",
+          "Kerrigan Tier 1",
           "Kinetic Blast",
+          "Vanilla Items",
           "Zerg",
           "Zerg Items"
         ],
@@ -19710,7 +19714,6 @@
           "Kerrigan Logic Active Abilities",
           "Kerrigan Non-Ultimate Active Abilities",
           "Kerrigan Non-Ultimates",
-          "Kerrigan Tier 1",
           "Kerrigan Tier 2",
           "Vanilla Items",
           "Zerg",
@@ -38288,7 +38291,7 @@
         },
         "lowest_maximum_supply": {
           "type": "range",
-          "range_start": 100,
+          "range_start": 50,
           "range_end": 200,
           "default": 180,
           "display_name": "Lowest Maximum Supply"

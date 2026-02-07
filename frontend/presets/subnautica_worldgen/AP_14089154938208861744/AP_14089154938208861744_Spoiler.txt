@@ -1,4 +1,4 @@
-﻿Archipelago Version 0.6.5  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 1
 
 Filling Algorithm:               balanced
 Players:                         1
@@ -17,7 +17,16 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Swim Rule:                       0
+Use Canonical Options:           Yes
+Aggressive Creature Scan Logic:  Stasis
+Creature Scans:                  0
+Death Link:                      No
+Early Seaglide:                  Yes
+empty_tanks:                     Yes
+Free Samples:                    No
+Goal:                            Launch
+Start Inventory from Pool:       
+Swim Rule:                       Easy
 
 
 Locations:

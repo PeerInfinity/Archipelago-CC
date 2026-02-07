@@ -3,7 +3,7 @@
   "game_name": "A Link to the Past",
   "game_directory": "alttp",
   "playerId": "2",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 3,
   "seed_name": "84719271504320872445",
   "player_names": {
@@ -20063,7 +20063,7 @@
         "local_items": [],
         "map_shuffle": 0,
         "menuspeed": 0,
-        "misery_mire_medallion": 2,
+        "misery_mire_medallion": 0,
         "mode": 1,
         "music": true,
         "non_local_items": [],
@@ -20108,7 +20108,7 @@
         "triforce_pieces_percentage": 150,
         "triforce_pieces_required": 20,
         "triforcehud": 0,
-        "turtle_rock_medallion": 0,
+        "turtle_rock_medallion": 2,
         "uw_palettes": 0
       },
       "option_definitions": {
@@ -21298,8 +21298,8 @@
       "fix_palaceofdarkness_exit": false,
       "fix_trock_exit": false,
       "required_medallions": [
-        "Quake",
-        "Ether"
+        "Ether",
+        "Quake"
       ],
       "escape_assist": [],
       "logical_heart_containers": 10,
@@ -21682,8 +21682,8 @@
         "triforce_pieces_required": 20,
         "triforce_pieces_available": 30,
         "triforce_pieces_extra": 10,
-        "mm_medalion": "Quake",
-        "tr_medalion": "Ether"
+        "mm_medalion": "Ether",
+        "tr_medalion": "Quake"
       },
       "web": {
         "theme": "grass",

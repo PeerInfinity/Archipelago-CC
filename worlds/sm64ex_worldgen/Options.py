@@ -75,6 +75,11 @@ class EnableCoinStars(Choice):
     option_vanilla = 2
     default = 0
 
+class EnableLockedPaintings(Toggle):
+    """Option for Enable Locked Paintings."""
+    display_name = "Enable Locked Paintings"
+    default = False
+
 class EnableMoveRando(Toggle):
     """Option for Enable Move Randomizer."""
     display_name = "Enable Move Randomizer"
@@ -149,6 +154,7 @@ class SuperMario64WorldGenOptions(PerGameCommonOptions):
     completion_type: CompletionType
     death_link: DeathLink
     enable_coin_stars: EnableCoinStars
+    enable_locked_paintings: EnableLockedPaintings
     enable_move_rando: EnableMoveRando
     exclamation_boxes: ExclamationBoxes
     first_bowser_star_door_cost: FirstBowserStarDoorCost

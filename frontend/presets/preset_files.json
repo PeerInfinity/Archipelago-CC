@@ -1864,7 +1864,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.5.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -2423,7 +2423,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.5.zip",
+          "AP-14089154938208861744-P1-Player1-07Feb2026-034440_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -2508,7 +2508,7 @@
           }
         ],
         "files": [
-          "AP-14089154938208861744-P1-Player1_0.6.5.zip",
+          "AP-14089154938208861744-P1-Player1_0.6.7.zip",
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
@@ -8255,6 +8255,70 @@
             "player": 1,
             "name": "Player1",
             "game": "Adventure WorldGen2"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "earthbound": {
+    "name": "EarthBound",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "EarthBound"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apeb",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "satisfactory": {
+    "name": "Satisfactory",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Satisfactory"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "earthbound_worldgen": {
+    "name": "EarthBound WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "EarthBound WorldGen"
           }
         ],
         "files": [
