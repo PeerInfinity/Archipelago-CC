@@ -1784,7 +1784,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 '''
     else:
         pre_fill_section = ''

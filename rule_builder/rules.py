@@ -3659,10 +3659,16 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             This outputs the format expected by the frontend, matching the AST exporter format.
             Empty 'options' and 'args' are omitted.
+
+            Includes '_rb_helper': True to signal that this helper call was produced by
+            the Rule Builder and should not be pattern-expanded by the exporter's
+            GenericGameExportHandler. The helper body is available in the helpers section
+            of the exported rules.json for frontend evaluation.
             """
             result: dict[str, Any] = {
                 "rule": self.helper_name,
                 "_original_ast_type": "helper",
+                "_rb_helper": True,
             }
             if self.args:
                 # Convert args to proper rule format for frontend compatibility
