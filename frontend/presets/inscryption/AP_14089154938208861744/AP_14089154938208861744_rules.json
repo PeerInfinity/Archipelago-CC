@@ -48,9 +48,9 @@
                   "args": {
                     "items": [
                       "Camera Replica",
-                      "Pile Of Meat",
                       "Film Roll",
-                      "Monocle"
+                      "Monocle",
+                      "Pile Of Meat"
                     ]
                   }
                 }
@@ -75,12 +75,12 @@
                   "args": {
                     "items": [
                       "Camera Replica",
-                      "Pile Of Meat",
+                      "Film Roll",
                       "Gems Module",
                       "Inspectometer Battery",
-                      "Quill",
-                      "Film Roll",
-                      "Monocle"
+                      "Monocle",
+                      "Pile Of Meat",
+                      "Quill"
                     ]
                   }
                 }
@@ -1727,9 +1727,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Mycologists Holo Key",
                   "Gems Module",
                   "Inspectometer Battery",
+                  "Mycologists Holo Key",
                   "Quill"
                 ]
               }
@@ -1860,8 +1860,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Holo Pelt",
                   "Gems Module",
+                  "Holo Pelt",
                   "Inspectometer Battery"
                 ]
               }
@@ -2188,9 +2188,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Quill",
                   "Gems Module",
-                  "Inspectometer Battery"
+                  "Inspectometer Battery",
+                  "Quill"
                 ]
               }
             },
@@ -2240,9 +2240,9 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Quill",
                   "Gems Module",
-                  "Inspectometer Battery"
+                  "Inspectometer Battery",
+                  "Quill"
                 ]
               }
             },
@@ -3221,15 +3221,15 @@
         "type": "or",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
+            "type": "and",
+            "conditions": [
               {
-                "type": "constant",
-                "value": [
-                  "Camera Replica",
-                  "Pile Of Meat"
-                ]
+                "type": "item_check",
+                "item": "Camera Replica"
+              },
+              {
+                "type": "item_check",
+                "item": "Pile Of Meat"
               }
             ]
           },
@@ -3263,17 +3263,12 @@
             }
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Camera Replica",
-                  "Pile Of Meat"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Camera Replica"
+          },
+          {
+            "type": "item_check",
+            "item": "Pile Of Meat"
           },
           {
             "type": "item_check",
@@ -3350,17 +3345,12 @@
             "item": "Quill"
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Gems Module",
-                  "Inspectometer Battery"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Gems Module"
+          },
+          {
+            "type": "item_check",
+            "item": "Inspectometer Battery"
           }
         ]
       }

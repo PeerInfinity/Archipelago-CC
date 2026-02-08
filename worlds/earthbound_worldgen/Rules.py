@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, Or
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Has, HasAll, HasAny, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -33,7 +33,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ness's Mind -> Onett", player),
-        Has('Onett Teleport', 1)
+        True_()
     )
 
     world.set_rule(

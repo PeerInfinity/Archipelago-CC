@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -97,6 +97,14 @@ class MuseDashWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["DeamonHunter"]
+        ),
+        Tutorial(
+            "Mod Setup and Use Guide",
+            "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+            "Español",
+            "setup_es.md",
+            "setup/es",
+            ["Shiny"]
         )
     ]
 

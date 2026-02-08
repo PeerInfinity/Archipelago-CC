@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario 64 WorldGen",
   "game_directory": "sm64ex_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -32,8 +32,8 @@
             }
           },
           {
-            "name": "Menu -> Jolly Roger Bay",
-            "connected_region": "Jolly Roger Bay",
+            "name": "Menu -> Jolly Roger Bay Door",
+            "connected_region": "Jolly Roger Bay Door",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -531,19 +531,32 @@
           }
         ]
       },
+      "Jolly Roger Bay Door": {
+        "name": "Jolly Roger Bay Door",
+        "exits": [
+          {
+            "name": "Jolly Roger Bay Door -> Jolly Roger Bay",
+            "connected_region": "Jolly Roger Bay",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Jolly Roger Bay Door -> The Secret Aquarium",
+            "connected_region": "The Secret Aquarium",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "Jolly Roger Bay": {
         "name": "Jolly Roger Bay",
         "exits": [
           {
             "name": "JRB: Upper",
             "connected_region": "JRB: Upper",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Jolly Roger Bay -> The Secret Aquarium",
-            "connected_region": "The Secret Aquarium",
             "access_rule": {
               "rule": "True_"
             }
@@ -3383,6 +3396,127 @@
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Painting Unlock WF": {
+        "name": "Painting Unlock WF",
+        "id": 3626231,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock JRB": {
+        "name": "Painting Unlock JRB",
+        "id": 3626232,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock CCM": {
+        "name": "Painting Unlock CCM",
+        "id": 3626233,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock LLL": {
+        "name": "Painting Unlock LLL",
+        "id": 3626236,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock SSL": {
+        "name": "Painting Unlock SSL",
+        "id": 3626237,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock DDD": {
+        "name": "Painting Unlock DDD",
+        "id": 3626238,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock SL": {
+        "name": "Painting Unlock SL",
+        "id": 3626239,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock WDW": {
+        "name": "Painting Unlock WDW",
+        "id": 3626240,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock TTM": {
+        "name": "Painting Unlock TTM",
+        "id": 3626241,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock THI": {
+        "name": "Painting Unlock THI",
+        "id": 3626242,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock TTC": {
+        "name": "Painting Unlock TTC",
+        "id": 3626243,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -3584,6 +3718,7 @@
         "completion_type": 0,
         "death_link": false,
         "enable_coin_stars": 0,
+        "enable_locked_paintings": false,
         "enable_move_rando": false,
         "exclamation_boxes": false,
         "exclude_locations": [],
@@ -3671,6 +3806,11 @@
           },
           "default": 0,
           "display_name": "Enable 100 Coin Stars"
+        },
+        "enable_locked_paintings": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Enable Locked Paintings"
         },
         "enable_move_rando": {
           "type": "toggle",
@@ -3821,6 +3961,7 @@
           "311": 311
         },
         "MoveRandoVec": 0,
+        "PaintingRando": 0,
         "DeathLink": 0,
         "CompletionType": 0,
         "FirstBowserDoorCost": 7,

@@ -3335,15 +3335,15 @@
         "type": "or",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
+            "type": "and",
+            "conditions": [
               {
-                "type": "constant",
-                "value": [
-                  "Camera Replica",
-                  "Pile Of Meat"
-                ]
+                "type": "item_check",
+                "item": "Camera Replica"
+              },
+              {
+                "type": "item_check",
+                "item": "Pile Of Meat"
               }
             ]
           },
@@ -3377,17 +3377,12 @@
             }
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Camera Replica",
-                  "Pile Of Meat"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Camera Replica"
+          },
+          {
+            "type": "item_check",
+            "item": "Pile Of Meat"
           },
           {
             "type": "item_check",
@@ -3445,17 +3440,12 @@
             "item": "Quill"
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Gems Module",
-                  "Inspectometer Battery"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Gems Module"
+          },
+          {
+            "type": "item_check",
+            "item": "Inspectometer Battery"
           }
         ]
       }

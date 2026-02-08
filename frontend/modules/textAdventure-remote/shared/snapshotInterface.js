@@ -180,7 +180,7 @@
  * @see stateManager/stateManager.js - Creates interface in worker thread
  */
 
-// frontend/modules/textAdventure-remote/shared/snapshotInterface.js
+// frontend/modules/shared/snapshotInterface.js
 
 import { evaluateRule, resolveHelperScope } from './ruleEngine.js';
 import { getGameLogic } from './gameLogic/gameLogicRegistry.js';

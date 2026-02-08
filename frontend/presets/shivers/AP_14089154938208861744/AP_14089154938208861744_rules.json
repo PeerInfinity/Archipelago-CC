@@ -5147,19 +5147,31 @@
   "helpers": {
     "1": {
       "all_skull_dials_set": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Set Skull Dial: Burial",
-              "Set Skull Dial: Egypt",
-              "Set Skull Dial: Gods Room",
-              "Set Skull Dial: Prehistoric",
-              "Set Skull Dial: Tar River",
-              "Set Skull Dial: Werewolf"
-            ]
+            "type": "item_check",
+            "item": "Set Skull Dial: Burial"
+          },
+          {
+            "type": "item_check",
+            "item": "Set Skull Dial: Egypt"
+          },
+          {
+            "type": "item_check",
+            "item": "Set Skull Dial: Gods Room"
+          },
+          {
+            "type": "item_check",
+            "item": "Set Skull Dial: Prehistoric"
+          },
+          {
+            "type": "item_check",
+            "item": "Set Skull Dial: Tar River"
+          },
+          {
+            "type": "item_check",
+            "item": "Set Skull Dial: Werewolf"
           }
         ]
       },

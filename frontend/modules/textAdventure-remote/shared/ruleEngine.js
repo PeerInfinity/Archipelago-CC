@@ -3504,7 +3504,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           } else {
             // Normalize certain string values to be falsy
             // This handles Choice options where 0='off'/'none' etc.
-            // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+            // The normalization of 'off'/'none' strings is now handled in snapshotInterface.getSetting
             result = rawValue;
           }
 

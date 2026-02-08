@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -87,6 +87,30 @@ class shapezWorldGenWeb(WebWorld):
             "English",
             "setup_en.md",
             "setup/en",
+            ["BlastSlimey"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to playing shapez with Archipelago:",
+            "Deutsch",
+            "setup_de.md",
+            "setup/de",
+            ["BlastSlimey"]
+        ),
+        Tutorial(
+            "Changing datapackage settings",
+            "3000 locations are too many or not enough? Here's how you can change that:",
+            "English",
+            "datapackage_settings_en.md",
+            "datapackage_settings/en",
+            ["BlastSlimey"]
+        ),
+        Tutorial(
+            "Changing datapackage settings",
+            "3000 locations are too many or not enough? Here's how you can change that:",
+            "Deutsch",
+            "datapackage_settings_de.md",
+            "datapackage_settings/de",
             ["BlastSlimey"]
         )
     ]

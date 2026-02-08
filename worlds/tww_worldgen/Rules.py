@@ -37,7 +37,7 @@ def can_access_boss_entrance_in_tower_of_the_gods(state: "CollectionState", play
 
 
 def can_access_boss_entrance_in_wind_temple(state: "CollectionState", player: int) -> bool:
-    return (can_reach_wind_temple_tall_basement_room(state, player)) and (state.has_all(['Hookshot', 'Iron Boots', 'WT Big Key'], player)) and (can_play_command_melody(state, player)) and (can_play_wind_gods_aria(state, player))
+    return (can_reach_wind_temple_tall_basement_room(state, player)) and (state.has('Hookshot', player)) and (state.has('Iron Boots', player)) and (state.has('WT Big Key', player)) and (can_play_command_melody(state, player)) and (can_play_wind_gods_aria(state, player))
 
 
 def can_access_dungeon_entrance_in_forest_haven_sector(state: "CollectionState", player: int) -> bool:
@@ -53,7 +53,7 @@ def can_access_dungeon_entrance_on_dragon_roost_island(state: "CollectionState",
 
 
 def can_access_dungeon_entrance_on_gale_isle(state: "CollectionState", player: int) -> bool:
-    return state.has_all(['Iron Boots', 'Skull Hammer'], player)
+    return (state.has('Iron Boots', player)) and (state.has('Skull Hammer', player))
 
 
 def can_access_dungeon_entrance_on_headstone_island(state: "CollectionState", player: int) -> bool:
@@ -113,7 +113,7 @@ def can_access_miniboss_entrance_in_earth_temple(state: "CollectionState", playe
 
 
 def can_access_miniboss_entrance_in_forbidden_woods(state: "CollectionState", player: int) -> bool:
-    return (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_boko_babas(state, player)) and (state.has_all(['FW Small Key', 'Grappling Hook'], player))
+    return (can_fly_with_deku_leaf_indoors(state, player)) and (can_defeat_boko_babas(state, player)) and (state.has('FW Small Key', player)) and (state.has('Grappling Hook', player))
 
 
 def can_access_miniboss_entrance_in_hyrule_castle(state: "CollectionState", player: int) -> bool:
@@ -189,7 +189,7 @@ def can_access_secret_cave_entrance_on_pawprint_isle_side_isle(state: "Collectio
 
 
 def can_access_secret_cave_entrance_on_private_oasis(state: "CollectionState", player: int) -> bool:
-    return state.has_all(['Cabana Deed', 'Delivery Bag', 'Grappling Hook'], player)
+    return (state.has('Cabana Deed', player)) and (state.has('Delivery Bag', player)) and (state.has('Grappling Hook', player))
 
 
 def can_access_secret_cave_entrance_on_rock_spire_isle(state: "CollectionState", player: int) -> bool:
@@ -197,7 +197,7 @@ def can_access_secret_cave_entrance_on_rock_spire_isle(state: "CollectionState",
 
 
 def can_access_secret_cave_entrance_on_shark_island(state: "CollectionState", player: int) -> bool:
-    return state.has_all(['Iron Boots', 'Skull Hammer'], player)
+    return (state.has('Iron Boots', player)) and (state.has('Skull Hammer', player))
 
 
 def can_access_secret_cave_entrance_on_star_island(state: "CollectionState", player: int) -> bool:
@@ -421,23 +421,23 @@ def can_open_wind_temple_upper_giant_grate(state: "CollectionState", player: int
 
 
 def can_play_command_melody(state: "CollectionState", player: int) -> bool:
-    return state.has_all(['Command Melody', 'Wind Waker'], player)
+    return (state.has('Command Melody', player)) and (state.has('Wind Waker', player))
 
 
 def can_play_earth_gods_lyric(state: "CollectionState", player: int) -> bool:
-    return state.has_all(["Earth God's Lyric", 'Wind Waker'], player)
+    return (state.has("Earth God's Lyric", player)) and (state.has('Wind Waker', player))
 
 
 def can_play_wind_gods_aria(state: "CollectionState", player: int) -> bool:
-    return state.has_all(["Wind God's Aria", 'Wind Waker'], player)
+    return (state.has("Wind God's Aria", player)) and (state.has('Wind Waker', player))
 
 
 def can_play_winds_requiem(state: "CollectionState", player: int) -> bool:
-    return state.has_all(['Wind Waker', "Wind's Requiem"], player)
+    return (state.has('Wind Waker', player)) and (state.has("Wind's Requiem", player))
 
 
 def can_reach_and_defeat_ganondorf(state: "CollectionState", player: int) -> bool:
-    return (can_reach_and_defeat_puppet_ganon(state, player)) and (state.has_all(['Grappling Hook', 'Hookshot'], player)) and (can_defeat_ganondorf(state, player))
+    return (can_reach_and_defeat_puppet_ganon(state, player)) and (state.has('Grappling Hook', player)) and (state.has('Hookshot', player)) and (can_defeat_ganondorf(state, player))
 
 
 def can_reach_and_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
@@ -505,7 +505,7 @@ def can_reach_outset_island_upper_level(state: "CollectionState", player: int) -
 
 
 def can_reach_tower_of_the_gods_second_floor(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(['Bombs', 'TotG Small Key'], player)) and (can_defeat_yellow_chuchus(state, player))
+    return (state.has('Bombs', player)) and (state.has('TotG Small Key', player)) and (can_defeat_yellow_chuchus(state, player))
 
 
 def can_reach_tower_of_the_gods_third_floor(state: "CollectionState", player: int) -> bool:
@@ -616,7 +616,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Gale Isle -> Wind Temple", player),
-        HelperCall(helper_func=can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle", body_rule=HasAll('Iron Boots', 'Skull Hammer'))
+        HelperCall(helper_func=can_access_dungeon_entrance_on_gale_isle, helper_name="can_access_dungeon_entrance_on_gale_isle", body_rule=(Has("Iron Boots")) & (Has("Skull Hammer")))
     )
 
     world.set_rule(
@@ -651,7 +651,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Private Oasis -> Cabana Labyrinth", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis", body_rule=HasAll('Cabana Deed', 'Delivery Bag', 'Grappling Hook'))
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_private_oasis, helper_name="can_access_secret_cave_entrance_on_private_oasis", body_rule=(Has("Cabana Deed")) & (Has("Delivery Bag")) & (Has("Grappling Hook")))
     )
 
     world.set_rule(
@@ -711,7 +711,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Shark Island -> Shark Island Secret Cave", player),
-        HelperCall(helper_func=can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island", body_rule=HasAll('Iron Boots', 'Skull Hammer'))
+        HelperCall(helper_func=can_access_secret_cave_entrance_on_shark_island, helper_name="can_access_secret_cave_entrance_on_shark_island", body_rule=(Has("Iron Boots")) & (Has("Skull Hammer")))
     )
 
     world.set_rule(
@@ -1016,7 +1016,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Second Chest Guarded by Armos Knights", player),
-        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=HasAll('Wind Waker', "Wind's Requiem")), HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
+        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=(Has("Wind Waker")) & (Has("Wind's Requiem"))), HelperCall(helper_func=can_reach_tower_of_the_gods_second_floor, helper_name="can_reach_tower_of_the_gods_second_floor"), Has('Bombs'))
     )
 
     world.set_rule(
@@ -1054,12 +1054,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest Behind Statues", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))))
+        And(HelperCall(helper_func=can_reach_earth_temple_moblins_and_poes_room, helper_name="can_reach_earth_temple_moblins_and_poes_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker")))))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Chest In Three Blocks Room", player),
-        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_left_path, helper_name="can_reach_earth_temple_left_path"), HelperCall(helper_func=has_fire_arrows, helper_name="has_fire_arrows"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker")))), Has('Power Bracelets'))
     )
 
     world.set_rule(
@@ -1069,22 +1069,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - End of Foggy Room With Floormasters", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))))
+        And(HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker")))))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Kill All Floormasters in Foggy Room", player),
-        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))))
+        And(HelperCall(helper_func=can_defeat_floormasters, helper_name="can_defeat_floormasters"), HelperCall(helper_func=can_reach_earth_temple_redead_hub_room, helper_name="can_reach_earth_temple_redead_hub_room"), Or(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker")))))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Left Chest", player),
-        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker')), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_aim_mirror_shield, helper_name="can_aim_mirror_shield"), HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker"))), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Many Mirrors Room Right Chest", player),
-        And(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker')), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
+        And(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker"))), HelperCall(helper_func=can_reach_earth_temple_many_mirrors_room, helper_name="can_reach_earth_temple_many_mirrors_room"))
     )
 
     world.set_rule(
@@ -1094,17 +1094,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest In Warp Pot Room", player),
-        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))
+        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker")))
     )
 
     world.set_rule(
         multiworld.get_location("Earth Temple - Transparent Chest in First Crypt", player),
-        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker')), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield", body_rule=Has("Progressive Shield", 2))), Has('Power Bracelets'))
+        And(HelperCall(helper_func=can_reach_earth_temple_right_path, helper_name="can_reach_earth_temple_right_path"), Or(HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker"))), HelperCall(helper_func=has_mirror_shield, helper_name="has_mirror_shield", body_rule=Has("Progressive Shield", 2))), Has('Power Bracelets'))
     )
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Big Key Chest", player),
-        And(HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_rule=Has("Deku Leaf")), HelperCall(helper_func=can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria", body_rule=HasAll("Wind God's Aria", 'Wind Waker')), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
+        And(HelperCall(helper_func=can_defeat_darknuts, helper_name="can_defeat_darknuts"), HelperCall(helper_func=can_fan_with_deku_leaf, helper_name="can_fan_with_deku_leaf", body_rule=Has("Deku Leaf")), HelperCall(helper_func=can_play_wind_gods_aria, helper_name="can_play_wind_gods_aria", body_rule=(Has("Wind God's Aria")) & (Has("Wind Waker"))), HelperCall(helper_func=can_reach_wind_temple_kidnapping_room, helper_name="can_reach_wind_temple_kidnapping_room"), Has('Iron Boots'))
     )
 
     world.set_rule(
@@ -1119,7 +1119,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wind Temple - Chest Between Two Dirt Patches", player),
-        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=HasAll('Command Melody', 'Wind Waker'))
+        HelperCall(helper_func=can_play_command_melody, helper_name="can_play_command_melody", body_rule=(Has("Command Melody")) & (Has("Wind Waker")))
     )
 
     multiworld.get_location("Wind Temple - Chest In Many Cyclones Room", player).access_rule = \
@@ -1217,7 +1217,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Upper Floor Chest", player),
-        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=HasAll('Wind Waker', "Wind's Requiem")), Has('Skull Hammer'))
+        And(HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=(Has("Wind Waker")) & (Has("Wind's Requiem"))), Has('Skull Hammer'))
     )
 
     world.set_rule(
@@ -1232,7 +1232,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bird's Peak Rock - Cave", player),
-        HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=HasAll('Wind Waker', "Wind's Requiem"))
+        HelperCall(helper_func=can_play_winds_requiem, helper_name="can_play_winds_requiem", body_rule=(Has("Wind Waker")) & (Has("Wind's Requiem")))
     )
 
     world.set_rule(

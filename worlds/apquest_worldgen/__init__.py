@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -54,6 +54,14 @@ class APQuestWorldGenWeb(WebWorld):
             "English",
             "setup_en.md",
             "setup/en",
+            ["NewSoupVi"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up APQuest for MultiWorld.",
+            "German",
+            "setup_de.md",
+            "setup/de",
             ["NewSoupVi"]
         )
     ]

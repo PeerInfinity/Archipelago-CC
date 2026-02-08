@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -69,11 +69,11 @@ class WargrooveWorldGenWeb(WebWorld):
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago Wargroove WorldGen randomizer.",
+            "A guide to setting up Wargroove for Archipelago.",
             "English",
-            "setup_en.md",
-            "setup/en",
-            ["Archipelago Team"]
+            "wargroove_en.md",
+            "wargroove/en",
+            ["Fly Sniper"]
         )
     ]
 

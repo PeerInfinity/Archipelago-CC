@@ -1568,11 +1568,9 @@
                   }
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Wing Cap"
-                    ]
+                    "item_name": "Wing Cap"
                   }
                 }
               ]
@@ -1677,11 +1675,9 @@
                   }
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Wing Cap"
-                    ]
+                    "item_name": "Wing Cap"
                   }
                 }
               ]

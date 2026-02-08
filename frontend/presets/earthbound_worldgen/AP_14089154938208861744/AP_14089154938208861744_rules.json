@@ -53,10 +53,7 @@
             "name": "Ness's Mind -> Onett",
             "connected_region": "Onett",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Onett Teleport"
-              }
+              "rule": "True_"
             }
           },
           {
