@@ -7,6 +7,7 @@ This section contains technical documentation for developers working on the Arch
 - **[Getting Started](./getting-started.md)** - Set up your development environment
 - **[Getting Started (Windows)](./getting-started-windows.md)** - Windows-specific setup guide
 - **[Architecture](./architecture.md)** - System design overview
+- **[Path and Queue Settings](./path-and-queue-settings.md)** - Settings ownership across modules
 
 ## Documentation Sections
 

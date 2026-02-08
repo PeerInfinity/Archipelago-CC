@@ -8,6 +8,7 @@
 
 - `frontend/modules/shared/ruleEngine.js` - Core rule evaluation engine
 - `frontend/modules/shared/snapshotInterface.js` - Thread-agnostic context objects
+- `frontend/modules/shared/pathUtils.js` - Path data filtering utilities
 - `frontend/modules/shared/pathfinder.js` - Region pathfinding
 - `frontend/modules/shared/playerIdUtils.js` - Player ID normalization
 - `frontend/modules/shared/bidirectionalDetector.js` - Exit pattern detection
@@ -44,6 +45,17 @@ createSnapshotInterface(snapshot, staticData, contextVariables)
 - `isLocationAccessible(locationName)` - Location accessibility
 - `getStaticData()` - Access game data
 - `resolveName(name)` - Python name resolution
+
+### pathUtils.js
+
+Shared utility functions for modules that consume playerState path data.
+
+**Key Export:**
+```javascript
+getRegionMovesFromPath(path)  // Filter path to only regionMove entries
+```
+
+Used by `regionGraph` and `regions` modules to derive display-ready paths from the raw playerState path.
 
 ### pathfinder.js
 

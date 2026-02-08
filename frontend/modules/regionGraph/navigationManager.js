@@ -1,6 +1,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
+import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 
@@ -39,7 +40,7 @@ export class NavigationManager {
     logger.debug(`Path updated with ${data.path.length} entries`);
 
     // Store the path data (filter for only regionMove entries)
-    this.ui.currentPath = data.path.filter(entry => entry.type === 'regionMove');
+    this.ui.currentPath = getRegionMovesFromPath(data.path);
     this.ui.regionPathCounts = data.regionCounts || new Map();
     logger.debug(`Filtered to ${this.ui.currentPath.length} region moves`);
 

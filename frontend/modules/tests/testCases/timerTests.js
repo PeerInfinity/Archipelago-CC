@@ -1627,14 +1627,13 @@ async function timerOfflineTestWithLoopsQueue(testController) {
       testController.log('WARNING: loopStats module not available, skipping analysis');
     }
 
-    // Get playerState API
-    const getPlayerStateAPI = window.centralRegistry.getPublicFunction('loops', 'getPlayerStateAPI');
-    if (!getPlayerStateAPI) {
-      throw new Error('loops getPlayerStateAPI function not found in central registry');
-    }
-    const playerStateAPI = getPlayerStateAPI();
-    if (!playerStateAPI) {
-      throw new Error('playerStateAPI not available');
+    // Get playerState API functions directly from the playerState module
+    const playerStateAPI = {
+      trimPath: window.centralRegistry.getPublicFunction('playerState', 'trimPath'),
+      addLocationCheck: window.centralRegistry.getPublicFunction('playerState', 'addLocationCheck'),
+    };
+    if (!playerStateAPI.trimPath || !playerStateAPI.addLocationCheck) {
+      throw new Error('playerState public functions not found in central registry');
     }
     testController.reportCondition('PlayerState API available', true);
 
