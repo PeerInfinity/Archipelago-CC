@@ -1,10 +1,10 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-07 22:52:34
+**Generated:** 2026-02-08 01:58:03
 
-**Source Data Created:** 2026-02-07T22:09:22.153259
+**Source Data Created:** 2026-02-08T01:19:08.985783
 
-**Source Data Last Updated:** 2026-02-07T22:09:22.153264
+**Source Data Last Updated:** 2026-02-08T01:19:08.985790
 
 [<- Back to Main Test Results Summary](./test-results-summary.md)
 
@@ -24,9 +24,9 @@ This summary combines results from fuzz tests that validate game configurations 
 
 ### Individual Test Results
 
-- **Javascript:** 62/75 passed (82.7%)
+- **Javascript:** 63/75 passed (84.0%)
 - **UT Fuzz Original:** 38/85 passed (44.7%)
-- **UT Fuzz Worldgen:** 71/87 passed (81.6%)
+- **UT Fuzz Worldgen:** 73/87 passed (83.9%)
 - **UT Fuzz Pickle:** 75/87 passed (86.2%)
 - **UT Fuzz Hybrid:** 79/85 passed (92.9%)
 
@@ -35,9 +35,9 @@ This summary combines results from fuzz tests that validate game configurations 
 - **Games passing all 5 fuzz tests:** 31/87 (35.6%)
 - **Games passing 4 fuzz tests:** 32/87 (36.8%)
 - **Games passing 3 fuzz tests:** 8/87 (9.2%)
-- **Games passing 2 fuzz tests:** 8/87 (9.2%)
-- **Games passing 1 fuzz test:** 2/87 (2.3%)
-- **Games passing 0 fuzz tests:** 6/87 (6.9%)
+- **Games passing 2 fuzz tests:** 9/87 (10.3%)
+- **Games passing 1 fuzz test:** 3/87 (3.4%)
+- **Games passing 0 fuzz tests:** 4/87 (4.6%)
 
 ### Combined Results (Excluding UT Original)
 
@@ -45,9 +45,9 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 
 - **Games passing all 4 fuzz tests:** 57/87 (65.5%)
 - **Games passing 3 fuzz tests:** 13/87 (14.9%)
-- **Games passing 2 fuzz tests:** 9/87 (10.3%)
-- **Games passing 1 fuzz test:** 2/87 (2.3%)
-- **Games passing 0 fuzz tests:** 6/87 (6.9%)
+- **Games passing 2 fuzz tests:** 10/87 (11.5%)
+- **Games passing 1 fuzz test:** 3/87 (3.4%)
+- **Games passing 0 fuzz tests:** 4/87 (4.6%)
 
 ## Test Results
 
@@ -80,7 +80,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Factorio | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 295.4KB |
 | Faxanadu | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | 🔶 60% | ❌ 1% | 🔶 60% | 🔶 80% | ❌ 0% | 549.5KB |
+| Final Fantasy Mystic Quest | 🔶 50% | ❌ 1% | ✅ | 🔶 80% | ❌ 0% | 549.5KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | 367.5KB |
 | Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 101.9KB |
@@ -105,18 +105,18 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Old School Runescape | ✅ | ✅ | ✅ | ✅ | ✅ | 307.1KB |
 | Overcooked! 2 | ✅ | ❌ 12% | ✅ | ✅ | ✅ | 489.2KB |
 | Paint | ✅ | ✅ | ✅ | ✅ | ✅ | 123.7KB |
-| Pokemon Emerald | — | 🔶 59% | ❌ 30% | ✅ | ✅ | 1390.9KB |
+| Pokemon Emerald | — | 🔶 59% | ❌ 20% | ✅ | ✅ | 1390.9KB |
 | Pokemon Red and Blue | — | ❌ 0% | ❌ 0% | ✅ | ✅ | 1029.2KB |
 | Raft | ✅ | ✅ | ✅ | ✅ | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | 1044.7KB |
-| Satisfactory | ❌ 0% | — | ❌ 0% | ❌ 0% | — | 1703.4KB |
+| Satisfactory | ✅ | — | ✅ | ❌ 0% | — | 1703.4KB |
 | Saving Princess | ✅ | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | 🔶 70% | ✅ | ✅ | ❌ 0% | ✅ | 418.7KB |
 | Shivers | ✅ | ❌ 0% | ✅ | ❌ 0% | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | ❌ 8% | ✅ | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.8KB |
-| Stardew Valley | ❌ 30% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
+| Stardew Valley | ❌ 20% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 101.9KB |
