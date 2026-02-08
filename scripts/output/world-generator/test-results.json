@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-02-07T03:57:51.096673",
+    "timestamp": "2026-02-08T22:57:50.842297+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed1": true,
@@ -18,7 +18,7 @@
     "Coding Adventure": {
       "template": "Coding Adventure.yaml",
       "game_name": "Coding Adventure",
-      "timestamp": "2026-02-07T03:57:52.086040",
+      "timestamp": "2026-02-08T22:57:51.792848+00:00",
       "original": {
         "generation": {
           "success": true,
@@ -27,7 +27,7 @@
           "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 3.8
+          "processing_time_seconds": 3.4
         },
         "spoiler_test": {
           "success": false,
@@ -40,7 +40,7 @@
           "success": true,
           "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/codingadventure_worldgen",
           "error": null,
-          "processing_time_seconds": 2.87
+          "processing_time_seconds": 2.62
         },
         "seed_generation": {
           "success": false

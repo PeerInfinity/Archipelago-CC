@@ -65,7 +65,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Shrink Down", player),
-        HasAll('Rope Dart', 'Key of Chaos', 'Key of Courage', 'Key of Hope', 'Key of Love', 'Key of Strength', 'Key of Symbiosis')
+        HasAll('Key of Chaos', 'Key of Courage', 'Key of Hope', 'Key of Love', 'Key of Strength', 'Key of Symbiosis', 'Rope Dart')
     )
 
     world.set_rule(

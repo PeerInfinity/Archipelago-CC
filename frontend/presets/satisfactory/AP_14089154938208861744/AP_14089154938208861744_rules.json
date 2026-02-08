@@ -275,16 +275,7 @@
             "name": "Can Produce: Leaves in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Leaves",
@@ -301,16 +292,7 @@
             "name": "Can Produce: Wood in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Wood",
@@ -327,16 +309,7 @@
             "name": "Can Produce: Hatcher Remains in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Hatcher Remains",
@@ -353,16 +326,7 @@
             "name": "Can Produce: Hog Remains in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Hog Remains",
@@ -379,16 +343,7 @@
             "name": "Can Produce: Plasma Spitter Remains in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Plasma Spitter Remains",
@@ -405,16 +360,7 @@
             "name": "Can Produce: Stinger Remains in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Stinger Remains",
@@ -431,16 +377,7 @@
             "name": "Can Produce: Mycelia in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Mycelia",
@@ -457,16 +394,7 @@
             "name": "Can Produce: Beryl Nut in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Beryl Nut",
@@ -483,16 +411,7 @@
             "name": "Can Produce: Paleberry in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Paleberry",
@@ -509,16 +428,7 @@
             "name": "Can Produce: Bacon Agaric in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Bacon Agaric",
@@ -535,16 +445,7 @@
             "name": "Can Produce: Blue Power Slug in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Blue Power Slug",
@@ -561,16 +462,7 @@
             "name": "Can Produce: Yellow Power Slug in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Yellow Power Slug",
@@ -587,16 +479,7 @@
             "name": "Can Produce: Purple Power Slug in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Purple Power Slug",
@@ -613,16 +496,7 @@
             "name": "Can Produce: Hard Drive in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Hard Drive",
@@ -639,16 +513,7 @@
             "name": "Can Produce: Mercer Sphere in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Mercer Sphere",
@@ -665,16 +530,7 @@
             "name": "Can Produce: Somersloop in Overworld",
             "id": null,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Can Build: Conveyor Mk.1",
-                  "Can Build: Conveyor Mk.2",
-                  "Can Build: Conveyor Mk.3",
-                  "Can Build: Conveyor Mk.4",
-                  "Can Build: Conveyor Mk.5"
-                ]
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "Can Produce: Somersloop",
@@ -15953,8 +15809,24 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Elevator Phase 1"
+                  }
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Can Build: Power level: Automated",
+                      "Can Build: MAM",
+                      "Can Build: AWESOME Sink",
+                      "Can Build: AWESOME Shop",
+                      "Can Build: Power Storage"
+                    ]
+                  }
+                }
               ]
             }
           },
@@ -17448,8 +17320,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: AI Limiter"
+                  }
+                }
               ]
             },
             "item": {
@@ -17467,8 +17349,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: AI Limiter"
+                  }
+                }
               ]
             },
             "item": {
@@ -17486,8 +17378,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: AI Limiter"
+                  }
+                }
               ]
             },
             "item": {
@@ -17505,8 +17407,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Black Powder"
+                  }
+                }
               ]
             },
             "item": {
@@ -17524,8 +17436,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Black Powder"
+                  }
+                }
               ]
             },
             "item": {
@@ -17543,8 +17465,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Circuit Board"
+                  }
+                }
               ]
             },
             "item": {
@@ -17562,8 +17494,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Computer"
+                  }
+                }
               ]
             },
             "item": {
@@ -17581,8 +17523,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -17600,8 +17552,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -17619,8 +17581,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -17638,8 +17610,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -17657,8 +17639,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -17676,8 +17668,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -20189,8 +20191,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Crystal Oscillator"
+                  }
+                }
               ]
             },
             "item": {
@@ -20208,8 +20220,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Encased Industrial Beam"
+                  }
+                }
               ]
             },
             "item": {
@@ -20227,8 +20249,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Encased Industrial Beam"
+                  }
+                }
               ]
             },
             "item": {
@@ -20246,8 +20278,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Encased Industrial Beam"
+                  }
+                }
               ]
             },
             "item": {
@@ -20265,8 +20307,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Encased Industrial Beam"
+                  }
+                }
               ]
             },
             "item": {
@@ -20284,8 +20336,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Encased Industrial Beam"
+                  }
+                }
               ]
             },
             "item": {
@@ -20303,8 +20365,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Heat Sink"
+                  }
+                }
               ]
             },
             "item": {
@@ -20322,8 +20394,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Heat Sink"
+                  }
+                }
               ]
             },
             "item": {
@@ -20341,8 +20423,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Heat Sink"
+                  }
+                }
               ]
             },
             "item": {
@@ -20360,8 +20452,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Heavy Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20379,8 +20481,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: High-Speed Connector"
+                  }
+                }
               ]
             },
             "item": {
@@ -20398,8 +20510,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: High-Speed Connector"
+                  }
+                }
               ]
             },
             "item": {
@@ -20417,8 +20539,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20436,8 +20568,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20455,8 +20597,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20474,8 +20626,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20493,8 +20655,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20512,8 +20684,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Modular Frame"
+                  }
+                }
               ]
             },
             "item": {
@@ -20531,8 +20713,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -20550,8 +20742,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -20569,8 +20771,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -20588,8 +20800,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -20607,8 +20829,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -20626,8 +20858,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23237,8 +23479,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23256,8 +23508,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23275,8 +23537,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23294,8 +23566,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23313,8 +23595,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Motor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23332,8 +23624,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Quartz Crystal"
+                  }
+                }
               ]
             },
             "item": {
@@ -23351,8 +23653,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Quickwire"
+                  }
+                }
               ]
             },
             "item": {
@@ -23370,8 +23682,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Quickwire"
+                  }
+                }
               ]
             },
             "item": {
@@ -23389,8 +23711,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Quickwire"
+                  }
+                }
               ]
             },
             "item": {
@@ -23408,8 +23740,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Radio Control Unit"
+                  }
+                }
               ]
             },
             "item": {
@@ -23427,8 +23769,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23446,8 +23798,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23465,8 +23827,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23484,8 +23856,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23503,8 +23885,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23522,8 +23914,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23541,8 +23943,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rotor"
+                  }
+                }
               ]
             },
             "item": {
@@ -23560,8 +23972,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rubber"
+                  }
+                }
               ]
             },
             "item": {
@@ -23579,8 +24001,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Rubber"
+                  }
+                }
               ]
             },
             "item": {
@@ -23598,8 +24030,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Screw"
+                  }
+                }
               ]
             },
             "item": {
@@ -23617,8 +24059,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Screw"
+                  }
+                }
               ]
             },
             "item": {
@@ -23636,8 +24088,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Stator"
+                  }
+                }
               ]
             },
             "item": {
@@ -23655,8 +24117,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Steel Beam"
+                  }
+                }
               ]
             },
             "item": {
@@ -23674,8 +24146,18 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {},
-                {}
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Build: MAM"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Can Produce: Steel Pipe"
+                  }
+                }
               ]
             },
             "item": {
@@ -24490,18 +24972,6 @@
                   "args": {
                     "item_name": "Can Produce: Iron Ingot"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -24536,18 +25006,6 @@
                       "args": {
                         "item_name": "Can Produce: Iron Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -24571,18 +25029,6 @@
                       "args": {
                         "item_name": "Can Produce: Steel Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -24605,18 +25051,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Aluminum Ingot"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -24654,18 +25088,6 @@
                       "args": {
                         "item_name": "Can Produce: Iron Rod"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -24689,18 +25111,6 @@
                       "args": {
                         "item_name": "Can Produce: Iron Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -24723,16 +25133,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Steel Beam"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -24776,18 +25176,6 @@
                       "args": {
                         "item_name": "Can Produce: Copper Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -24811,18 +25199,6 @@
                       "args": {
                         "item_name": "Can Produce: Iron Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -24845,17 +25221,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Caterium Ingot"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -24889,18 +25254,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Wire"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -24939,18 +25292,6 @@
                   "args": {
                     "item_name": "Can Produce: Caterium Ingot"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -24987,18 +25328,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Copper Ingot"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -25040,18 +25369,6 @@
                       "args": {
                         "item_name": "Can Produce: Steel Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25074,17 +25391,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Iron Ingot"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25128,18 +25434,6 @@
                       "args": {
                         "item_name": "Can Produce: Steel Ingot"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25162,18 +25456,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Aluminum Ingot"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25207,18 +25489,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Limestone"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -25257,18 +25527,6 @@
                   "args": {
                     "item_name": "Can Produce: Raw Quartz"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -25306,18 +25564,6 @@
                   "args": {
                     "item_name": "Can Produce: Raw Quartz"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -25354,18 +25600,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Alclad Aluminum Sheet"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -25407,18 +25641,6 @@
                       "args": {
                         "item_name": "Can Produce: Hatcher Remains"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25441,18 +25663,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Hog Remains"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25477,18 +25687,6 @@
                       "args": {
                         "item_name": "Can Produce: Plasma Spitter Remains"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25511,18 +25709,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Stinger Remains"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25560,17 +25746,6 @@
                       "args": {
                         "item_name": "Can Produce: Leaves"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25587,15 +25762,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Wood"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25620,16 +25786,6 @@
                       "args": {
                         "item_name": "Can Produce: Mycelia"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25652,15 +25808,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Alien Protein"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25704,18 +25851,6 @@
                       "args": {
                         "item_name": "Can Produce: Plastic"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25738,18 +25873,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Steel Ingot"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -25790,18 +25913,6 @@
                   "args": {
                     "item_name": "Can Produce: Alien Protein"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -25838,18 +25949,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Iron Rod"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -25891,18 +25990,6 @@
                       "args": {
                         "item_name": "Can Produce: Blue Power Slug"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25926,18 +26013,6 @@
                       "args": {
                         "item_name": "Can Produce: Yellow Power Slug"
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -25960,18 +26035,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Can Produce: Purple Power Slug"
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
                       }
                     }
                   ]
@@ -26011,17 +26074,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: SAM"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -26072,18 +26124,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26108,18 +26148,6 @@
                         "items": [
                           "Can Produce: Iron Plate",
                           "Can Produce: Rubber"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26148,16 +26176,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26176,18 +26194,6 @@
                         "items": [
                           "Can Produce: Iron Plate",
                           "Can Produce: Wire"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26235,17 +26241,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26272,16 +26267,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26306,18 +26291,6 @@
                         "items": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Wire"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26365,18 +26338,6 @@
                           "Can Produce: Wire"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26401,18 +26362,6 @@
                         "items": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Quickwire"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26457,17 +26406,6 @@
                       "Can Produce: Plastic"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -26500,17 +26438,6 @@
                     "items": [
                       "Can Produce: Copper Ingot",
                       "Can Produce: Caterium Ingot"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -26556,17 +26483,6 @@
                           "Can Produce: Rubber"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26591,18 +26507,6 @@
                         "items": [
                           "Can Produce: Quickwire",
                           "Can Produce: Rubber"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26645,17 +26549,6 @@
                     "items": [
                       "Can Produce: Caterium Ingot",
                       "Can Produce: Copper Ingot"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -26701,18 +26594,6 @@
                           "Can Produce: Silica"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26737,18 +26618,6 @@
                         "items": [
                           "Can Produce: Limestone",
                           "Can Produce: Rubber"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26793,18 +26662,6 @@
                       "Can Produce: Limestone"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -26843,18 +26700,6 @@
                     "items": [
                       "Can Produce: Coal",
                       "Can Produce: Sulfur"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -26900,18 +26745,6 @@
                           "Can Produce: Stator"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -26936,18 +26769,6 @@
                         "items": [
                           "Can Produce: Electromagnetic Control Rod",
                           "Can Produce: Rotor"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -26995,18 +26816,6 @@
                           "Can Produce: Iron Rod"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27033,16 +26842,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27067,18 +26866,6 @@
                         "items": [
                           "Can Produce: Reinforced Iron Plate",
                           "Can Produce: Steel Pipe"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27126,18 +26913,6 @@
                           "Can Produce: Concrete"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27162,18 +26937,6 @@
                         "items": [
                           "Can Produce: Steel Pipe",
                           "Can Produce: Concrete"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27216,18 +26979,6 @@
                     "items": [
                       "Can Produce: Circuit Board",
                       "Can Produce: Crystal Oscillator"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -27273,18 +27024,6 @@
                           "Can Produce: Plastic"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27309,18 +27048,6 @@
                         "items": [
                           "Can Produce: Rubber",
                           "Can Produce: Petroleum Coke"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27349,18 +27076,6 @@
                           "Can Produce: Silica"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27385,18 +27100,6 @@
                         "items": [
                           "Can Produce: Plastic",
                           "Can Produce: Quickwire"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27444,17 +27147,6 @@
                           "Can Produce: Quickwire"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27479,17 +27171,6 @@
                         "items": [
                           "Can Produce: Quickwire",
                           "Can Produce: Plastic"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27537,18 +27218,6 @@
                           "Can Produce: AI Limiter"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27573,18 +27242,6 @@
                         "items": [
                           "Can Produce: Stator",
                           "Can Produce: High-Speed Connector"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27629,18 +27286,6 @@
                       "Can Produce: Rotor"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -27679,18 +27324,6 @@
                     "items": [
                       "Can Produce: Modular Frame",
                       "Can Produce: Steel Beam"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -27733,18 +27366,6 @@
                       "Can Produce: Cable"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -27785,18 +27406,6 @@
                       "Can Produce: Copper Ingot"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -27835,18 +27444,6 @@
                     "items": [
                       "Can Produce: Aluminum Ingot",
                       "Can Produce: Copper Ingot"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -27892,17 +27489,6 @@
                           "Can Produce: Silica"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -27927,16 +27513,6 @@
                         "items": [
                           "Can Produce: Aluminum Casing",
                           "Can Produce: Rubber"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -27981,17 +27557,6 @@
                       "Can Produce: Mycelia"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -28030,18 +27595,6 @@
                     "items": [
                       "Can Produce: Iron Plate",
                       "Can Produce: Copper Sheet"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -28084,18 +27637,6 @@
                       "Can Produce: Compacted Coal"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -28136,17 +27677,6 @@
                       "Can Produce: Smokeless Powder"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -28185,18 +27715,6 @@
                     "items": [
                       "Can Produce: Black Powder",
                       "Can Produce: Steel Pipe"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -28246,18 +27764,6 @@
                       "Can Produce: Crystal Oscillator"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -28303,16 +27809,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -28341,15 +27837,6 @@
                           "Can Produce: Screw"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -28376,18 +27863,6 @@
                           "Can Produce: Encased Industrial Beam",
                           "Can Produce: Steel Pipe",
                           "Can Produce: Concrete"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -28436,16 +27911,6 @@
                           "Can Produce: Plastic"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -28471,17 +27936,6 @@
                           "Can Produce: Circuit Board",
                           "Can Produce: Quickwire",
                           "Can Produce: Rubber"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -28530,18 +27984,6 @@
                           "Can Produce: Reinforced Iron Plate"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -28567,18 +28009,6 @@
                           "Can Produce: Quartz Crystal",
                           "Can Produce: Rubber",
                           "Can Produce: AI Limiter"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -28627,16 +28057,6 @@
                           "Can Produce: Circuit Board"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -28662,17 +28082,6 @@
                           "Can Produce: Quickwire",
                           "Can Produce: Silica",
                           "Can Produce: Circuit Board"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -28718,18 +28127,6 @@
                       "Can Produce: Plastic"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -28771,18 +28168,6 @@
                       "Can Produce: Rubber"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -28822,17 +28207,6 @@
                       "Can Produce: Stator",
                       "Can Produce: Wire",
                       "Can Produce: High-Speed Connector"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -28879,18 +28253,6 @@
                           "Can Produce: Computer"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -28916,18 +28278,6 @@
                           "Can Produce: Heat Sink",
                           "Can Produce: High-Speed Connector",
                           "Can Produce: Quartz Crystal"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -28956,17 +28306,6 @@
                           "Can Produce: Circuit Board",
                           "Can Produce: Aluminum Casing",
                           "Can Produce: Rubber"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -29022,17 +28361,6 @@
                       "Can Produce: Iodine-Infused Filter"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -29072,18 +28400,6 @@
                       "Can Produce: Coal",
                       "Can Produce: Rubber",
                       "Can Produce: Fabric"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -29127,18 +28443,6 @@
                       "Can Produce: Aluminum Casing"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -29178,18 +28482,6 @@
                       "Can Produce: Reanimated SAM",
                       "Can Produce: Steel Pipe",
                       "Can Produce: Wire"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -29261,18 +28553,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -29336,18 +28616,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -29411,18 +28679,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -29492,18 +28748,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -29553,18 +28797,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -29614,18 +28846,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -29691,18 +28911,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -29752,18 +28960,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -29813,18 +29009,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -29890,17 +29074,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -29964,18 +29137,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -30039,18 +29200,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30097,18 +29246,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30155,18 +29292,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30213,16 +29338,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -30288,17 +29403,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30345,18 +29449,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30403,16 +29495,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -30478,18 +29560,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30536,18 +29606,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -30613,17 +29671,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -30687,17 +29734,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -30761,17 +29797,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -30838,17 +29863,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -30898,17 +29912,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -30977,17 +29980,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -31037,17 +30029,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -31116,18 +30097,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -31177,17 +30146,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -31256,18 +30214,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -31317,18 +30263,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -31391,17 +30325,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -31468,17 +30391,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -31528,16 +30440,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -31606,15 +30508,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -31664,15 +30557,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -31738,18 +30622,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -31813,18 +30685,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -31888,18 +30748,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -31966,18 +30814,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -32027,18 +30863,6 @@
                           }
                         }
                       ]
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 }
@@ -32104,18 +30928,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32185,18 +30997,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32220,7 +31020,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Recipe: Distilled Silica"
+                    "item_name": "Recipe: Quartz Purification"
                   }
                 },
                 {
@@ -32261,18 +31061,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32338,16 +31126,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32412,18 +31190,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32497,18 +31263,6 @@
                       "Can Produce: Iodine-Infused Filter"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32574,18 +31328,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32628,27 +31370,10 @@
             "name": "Can Produce: Limestone in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Limestone",
@@ -32665,27 +31390,10 @@
             "name": "Can Produce: Raw Quartz in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Raw Quartz",
@@ -32702,27 +31410,10 @@
             "name": "Can Produce: Iron Ore in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Iron Ore",
@@ -32739,27 +31430,10 @@
             "name": "Can Produce: Copper Ore in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Copper Ore",
@@ -32776,27 +31450,10 @@
             "name": "Can Produce: Coal in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Coal",
@@ -32813,27 +31470,10 @@
             "name": "Can Produce: Sulfur in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Sulfur",
@@ -32850,27 +31490,10 @@
             "name": "Can Produce: Caterium Ore in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Caterium Ore",
@@ -32887,27 +31510,10 @@
             "name": "Can Produce: Bauxite in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: Bauxite",
@@ -32940,18 +31546,6 @@
                       "Can Produce: Iodine-Infused Filter"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -32970,27 +31564,10 @@
             "name": "Can Produce: SAM in Miner Mk.1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Miner Mk.1"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Miner Mk.1"
+              }
             },
             "item": {
               "name": "Can Produce: SAM",
@@ -33043,18 +31620,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33109,18 +31674,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33164,18 +31717,6 @@
                   "args": {
                     "item_name": "Can Produce: Iron Ore"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33207,18 +31748,6 @@
                   "args": {
                     "item_name": "Can Produce: Copper Ore"
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33249,18 +31778,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Caterium Ore"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -33298,18 +31815,6 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Can Produce: Aluminum Scrap"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
                   }
                 }
               ]
@@ -33357,18 +31862,6 @@
                       "Can Produce: Steel Ingot"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33407,18 +31900,6 @@
                     "items": [
                       "Can Produce: Steel Ingot",
                       "Can Produce: Concrete"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -33461,17 +31942,6 @@
                       "Can Produce: Concrete"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33510,17 +31980,6 @@
                     "items": [
                       "Can Produce: Raw Quartz",
                       "Can Produce: Coal"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -33566,18 +32025,6 @@
                           "Can Produce: Copper Ore"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -33596,18 +32043,6 @@
                         "items": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Limestone"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -33655,18 +32090,6 @@
                           "Can Produce: Coal"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -33691,17 +32114,6 @@
                         "items": [
                           "Can Produce: Iron Ore",
                           "Can Produce: Petroleum Coke"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -33730,18 +32142,6 @@
                           "Can Produce: Compacted Coal"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -33766,18 +32166,6 @@
                         "items": [
                           "Can Produce: Iron Ingot",
                           "Can Produce: Coal"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -33825,17 +32213,6 @@
                           "Can Produce: Iron Ore"
                         ]
                       }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
-                        ]
-                      }
                     }
                   ]
                 },
@@ -33860,18 +32237,6 @@
                         "items": [
                           "Can Produce: Copper Ore",
                           "Can Produce: Petroleum Coke"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "HasAny",
-                      "args": {
-                        "items": [
-                          "Can Build: Conveyor Mk.1",
-                          "Can Build: Conveyor Mk.2",
-                          "Can Build: Conveyor Mk.3",
-                          "Can Build: Conveyor Mk.4",
-                          "Can Build: Conveyor Mk.5"
                         ]
                       }
                     }
@@ -33916,18 +32281,6 @@
                       "Can Produce: Petroleum Coke"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -33968,17 +32321,6 @@
                       "Can Produce: Silica"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -34003,27 +32345,10 @@
             "name": "Can Produce: Water in Resource Well Pressurizer",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Resource Well Pressurizer"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Resource Well Pressurizer"
+              }
             },
             "item": {
               "name": "Can Produce: Water",
@@ -34040,27 +32365,10 @@
             "name": "Can Produce: Crude Oil in Resource Well Pressurizer",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Can Build: Resource Well Pressurizer"
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Can Build: Resource Well Pressurizer"
+              }
             },
             "item": {
               "name": "Can Produce: Crude Oil",
@@ -34107,18 +32415,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -34167,18 +32463,6 @@
                       "Can Produce: Alclad Aluminum Sheet"
                     ]
                   }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
-                    ]
-                  }
                 }
               ]
             },
@@ -34217,18 +32501,6 @@
                     "items": [
                       "Can Produce: Coal",
                       "Can Produce: Sulfur"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -34270,18 +32542,6 @@
                       "Can Produce: Reinforced Iron Plate",
                       "Can Produce: Wire",
                       "Can Produce: Screw"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Can Build: Conveyor Mk.1",
-                      "Can Build: Conveyor Mk.2",
-                      "Can Build: Conveyor Mk.3",
-                      "Can Build: Conveyor Mk.4",
-                      "Can Build: Conveyor Mk.5"
                     ]
                   }
                 }
@@ -50662,19 +48922,19 @@
             "FreeSampleRadioactive": false,
             "EnergyLink": true,
             "StartingRecipies": [
-              1338262,
-              1338616,
-              1338244,
               1338224,
-              1338215,
-              1338617,
-              1338347,
-              1338601,
-              1338203,
-              1338259,
-              1338600,
               1338218,
-              1338220
+              1338203,
+              1338347,
+              1338220,
+              1338601,
+              1338262,
+              1338600,
+              1338616,
+              1338617,
+              1338244,
+              1338259,
+              1338215
             ]
           },
           "SlotDataVersion": 1,

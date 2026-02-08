@@ -12074,26 +12074,6 @@
               "NewSoupVi",
               "Jarno"
             ]
-          },
-          {
-            "name": "Multiworld Setup Guide",
-            "description": "A guide to playing The Witness with Archipelago.",
-            "language": "German",
-            "file_name": "setup_de.md",
-            "link": "setup/de",
-            "authors": [
-              "NewSoupVi"
-            ]
-          },
-          {
-            "name": "Multiworld Setup Guide",
-            "description": "A guide to playing The Witness with Archipelago.",
-            "language": "Fran\u00e7ais",
-            "file_name": "setup_fr.md",
-            "link": "setup/fr",
-            "authors": [
-              "Rever"
-            ]
           }
         ]
       },

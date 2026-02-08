@@ -156,12 +156,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SSL: Free Flying for 8 Red Coins", player),
-        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
+        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), Has('Wing Cap'))
     )
 
     world.set_rule(
         multiworld.get_location("SSL: Stand Tall on the Four Pillars", player),
-        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
+        Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), Has('Wing Cap'))
     )
 
     world.set_rule(

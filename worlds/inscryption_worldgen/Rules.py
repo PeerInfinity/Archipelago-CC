@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def has_act2_bridge_requirements(state: "CollectionState", player: int) -> bool:
-    return (state.has_all(['Camera Replica', 'Pile Of Meat'], player)) or (state.has('Epitaph Piece', player, 9))
+    return ((state.has('Camera Replica', player)) and (state.has('Pile Of Meat', player))) or (state.has('Epitaph Piece', player, 9))
 
 
 def has_act2_requirements(state: "CollectionState", player: int) -> bool:
@@ -25,7 +25,7 @@ def has_act2_requirements(state: "CollectionState", player: int) -> bool:
 
 
 def has_act3_requirements(state: "CollectionState", player: int) -> bool:
-    return (state.has('Film Roll', player)) and (state.has('Epitaph Piece', player, 9)) and (state.has_all(['Camera Replica', 'Pile Of Meat'], player)) and (state.has('Monocle', player))
+    return (state.has('Film Roll', player)) and (state.has('Epitaph Piece', player, 9)) and (state.has('Camera Replica', player)) and (state.has('Pile Of Meat', player)) and (state.has('Monocle', player))
 
 
 def has_all_epitaph_pieces(state: "CollectionState", player: int) -> bool:
@@ -49,7 +49,7 @@ def has_monocle(state: "CollectionState", player: int) -> bool:
 
 
 def has_transcendence_requirements(state: "CollectionState", player: int) -> bool:
-    return (state.has('Quill', player)) and (state.has_all(['Gems Module', 'Inspectometer Battery'], player))
+    return (state.has('Quill', player)) and (state.has('Gems Module', player)) and (state.has('Inspectometer Battery', player))
 
 
 def set_rules(world: "World") -> None:
@@ -65,12 +65,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Act 3", player),
-        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Pile Of Meat', 'Film Roll', 'Monocle'))
+        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Film Roll', 'Monocle', 'Pile Of Meat'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Epilogue", player),
-        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Pile Of Meat', 'Gems Module', 'Inspectometer Battery', 'Quill', 'Film Roll', 'Monocle'))
+        And(Has('Epitaph Piece', 9), HasAll('Camera Replica', 'Film Roll', 'Gems Module', 'Inspectometer Battery', 'Monocle', 'Pile Of Meat', 'Quill'))
     )
     # Location rules
     world.set_rule(
@@ -295,7 +295,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss Mycologists", player),
-        HasAll('Mycologists Holo Key', 'Gems Module', 'Inspectometer Battery', 'Quill')
+        HasAll('Gems Module', 'Inspectometer Battery', 'Mycologists Holo Key', 'Quill')
     )
 
     world.set_rule(
@@ -330,7 +330,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 1", player),
-        HasAll('Holo Pelt', 'Gems Module', 'Inspectometer Battery')
+        HasAll('Gems Module', 'Holo Pelt', 'Inspectometer Battery')
     )
 
     world.set_rule(
@@ -390,7 +390,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Luke's File Entry 4", player),
-        HasAll('Quill', 'Gems Module', 'Inspectometer Battery')
+        HasAll('Gems Module', 'Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(
@@ -400,7 +400,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - The Great Transcendence", player),
-        HasAll('Quill', 'Gems Module', 'Inspectometer Battery')
+        HasAll('Gems Module', 'Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(

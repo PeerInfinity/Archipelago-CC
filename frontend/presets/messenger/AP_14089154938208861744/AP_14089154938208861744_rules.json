@@ -99,13 +99,13 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Rope Dart",
                   "Key of Chaos",
                   "Key of Courage",
                   "Key of Hope",
                   "Key of Love",
                   "Key of Strength",
-                  "Key of Symbiosis"
+                  "Key of Symbiosis",
+                  "Rope Dart"
                 ]
               }
             }

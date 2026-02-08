@@ -6738,18 +6738,16 @@
             "name": "can_reach_wind_temple_tall_basement_room"
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Hookshot",
-                  "Iron Boots",
-                  "WT Big Key"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Hookshot"
+          },
+          {
+            "type": "item_check",
+            "item": "Iron Boots"
+          },
+          {
+            "type": "item_check",
+            "item": "WT Big Key"
           },
           {
             "type": "helper",
@@ -6836,15 +6834,15 @@
         "value": true
       },
       "can_access_dungeon_entrance_on_gale_isle": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Iron Boots",
-              "Skull Hammer"
-            ]
+            "type": "item_check",
+            "item": "Iron Boots"
+          },
+          {
+            "type": "item_check",
+            "item": "Skull Hammer"
           }
         ]
       },
@@ -6992,17 +6990,12 @@
             "name": "can_defeat_boko_babas"
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "FW Small Key",
-                  "Grappling Hook"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "FW Small Key"
+          },
+          {
+            "type": "item_check",
+            "item": "Grappling Hook"
           }
         ]
       },
@@ -7168,16 +7161,19 @@
         "item": "Hookshot"
       },
       "can_access_secret_cave_entrance_on_private_oasis": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Cabana Deed",
-              "Delivery Bag",
-              "Grappling Hook"
-            ]
+            "type": "item_check",
+            "item": "Cabana Deed"
+          },
+          {
+            "type": "item_check",
+            "item": "Delivery Bag"
+          },
+          {
+            "type": "item_check",
+            "item": "Grappling Hook"
           }
         ]
       },
@@ -7186,15 +7182,15 @@
         "item": "Bombs"
       },
       "can_access_secret_cave_entrance_on_shark_island": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Iron Boots",
-              "Skull Hammer"
-            ]
+            "type": "item_check",
+            "item": "Iron Boots"
+          },
+          {
+            "type": "item_check",
+            "item": "Skull Hammer"
           }
         ]
       },
@@ -8517,54 +8513,54 @@
         ]
       },
       "can_play_command_melody": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Command Melody",
-              "Wind Waker"
-            ]
+            "type": "item_check",
+            "item": "Command Melody"
+          },
+          {
+            "type": "item_check",
+            "item": "Wind Waker"
           }
         ]
       },
       "can_play_earth_gods_lyric": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Earth God's Lyric",
-              "Wind Waker"
-            ]
+            "type": "item_check",
+            "item": "Earth God's Lyric"
+          },
+          {
+            "type": "item_check",
+            "item": "Wind Waker"
           }
         ]
       },
       "can_play_wind_gods_aria": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Wind God's Aria",
-              "Wind Waker"
-            ]
+            "type": "item_check",
+            "item": "Wind God's Aria"
+          },
+          {
+            "type": "item_check",
+            "item": "Wind Waker"
           }
         ]
       },
       "can_play_winds_requiem": {
-        "type": "state_method",
-        "method": "has_all",
-        "args": [
+        "type": "and",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Wind Waker",
-              "Wind's Requiem"
-            ]
+            "type": "item_check",
+            "item": "Wind Waker"
+          },
+          {
+            "type": "item_check",
+            "item": "Wind's Requiem"
           }
         ]
       },
@@ -8576,17 +8572,12 @@
             "name": "can_reach_and_defeat_puppet_ganon"
           },
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Grappling Hook",
-                  "Hookshot"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Grappling Hook"
+          },
+          {
+            "type": "item_check",
+            "item": "Hookshot"
           },
           {
             "type": "helper",
@@ -9033,17 +9024,12 @@
         "type": "and",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Bombs",
-                  "TotG Small Key"
-                ]
-              }
-            ]
+            "type": "item_check",
+            "item": "Bombs"
+          },
+          {
+            "type": "item_check",
+            "item": "TotG Small Key"
           },
           {
             "type": "helper",

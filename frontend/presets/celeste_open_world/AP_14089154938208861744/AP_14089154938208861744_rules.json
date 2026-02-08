@@ -31537,12 +31537,9 @@
             "name": "7a_c-06b_south -> 7a_c-06b_east",
             "connected_region": "7a_c-06b_east",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Dream Blocks",
-                  "Dream Blocks"
-                ]
+                "item_name": "Dream Blocks"
               }
             }
           },
