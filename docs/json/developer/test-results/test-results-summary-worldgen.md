@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2026-02-07 14:01:39
+**Generated:** 2026-02-08 20:36:30
 
 **Source Data Created:** 2026-01-27T22:55:56.684110
 
@@ -56,9 +56,9 @@ Of the 43 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 267.8KB
+- **Total Exporter Code:** 268.3KB
 - **Total Game Logic Code:** 0.0KB
-- **Combined Total:** 267.8KB
+- **Combined Total:** 268.3KB
 
 ## Test Results
 
@@ -90,7 +90,7 @@ Of the 43 templates passing all 4 tests:
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 131.1KB |
 | Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.8KB | ✅ | 236.7KB |
 | Faxanadu WorldGen | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 75.0KB |
-| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.4KB | ✅ | 557.9KB |
+| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.9KB | ✅ | 557.9KB |
 | Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 401.4KB |
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 104.0KB |
 | Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.0KB | ✅ | 88.7KB |
@@ -153,7 +153,7 @@ Of the 43 templates passing all 4 tests:
 | 3 | A Hat in Time WorldGen | 18.2KB |
 | 4 | Terraria WorldGen | 16.8KB |
 | 5 | The Messenger WorldGen | 15.2KB |
-| 6 | Final Fantasy Mystic Quest WorldGen | 13.4KB |
+| 6 | Final Fantasy Mystic Quest WorldGen | 13.9KB |
 | 7 | A Link to the Past WorldGen | 12.6KB |
 | 8 | Yoshi's Island WorldGen | 9.2KB |
 | 9 | Factorio WorldGen | 8.8KB |
