@@ -273,12 +273,12 @@ class WorldGenerator:
 
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create docs directory
-        docs_dir = output_dir / 'docs' / 'en'
+        # Create docs directory (flat structure matching Archipelago conventions)
+        docs_dir = output_dir / 'docs'
         docs_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create a basic setup.md
-        setup_md = docs_dir / 'setup.md'
+        # Create a basic setup_en.md
+        setup_md = docs_dir / 'setup_en.md'
         if not setup_md.exists() or self.force:
             # self.data is guaranteed non-None when this method is called from generate()
             assert self.data is not None

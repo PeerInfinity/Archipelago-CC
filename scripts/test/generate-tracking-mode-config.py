@@ -19,7 +19,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -187,7 +187,7 @@ def generate_config(
     # Build config
     config = {
         "description": "Universal Tracker mode configuration. Specifies which tracking modes pass for each game.",
-        "generated": datetime.now().isoformat(),
+        "generated": datetime.now(timezone.utc).isoformat(),
         "fallback_order": fallback_order,
         "game_results": {
             "bundled": bundled_games,

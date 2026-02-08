@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -64,14 +64,15 @@ STARTING_ITEMS: Dict[str, int] = {
 class PaintWorldGenWeb(WebWorld):
     """Web interface for Paint WorldGen."""
     theme = "partyTime"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
-            "Start Guide",
-            "A guide to playing Paint in Archipelago.",
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago Paint WorldGen randomizer.",
             "English",
-            "guide_en.md",
-            "guide/en",
-            ["MarioManTAW"]
+            "setup_en.md",
+            "setup/en",
+            ["Archipelago Team"]
         )
     ]
 

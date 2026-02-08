@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -72,6 +72,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class DLCQuestWorldGenWeb(WebWorld):
     """Web interface for DLCQuest WorldGen."""
     theme = "grass"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -80,14 +81,6 @@ class DLCQuestWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["axe_y"]
-        ),
-        Tutorial(
-            "Guide de configuration MultiWorld",
-            "Un guide pour configurer DLCQuest sur votre PC.",
-            "Français",
-            "setup_fr.md",
-            "setup/fr",
-            ["Deoxis"]
         )
     ]
 

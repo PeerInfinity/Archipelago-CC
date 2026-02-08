@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -155,6 +155,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class LinksAwakeningDXWorldGenWeb(WebWorld):
     """Web interface for Links Awakening DX WorldGen."""
     theme = "ocean"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

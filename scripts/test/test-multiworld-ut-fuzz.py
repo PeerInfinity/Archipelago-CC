@@ -35,7 +35,7 @@ import signal
 import shutil
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, TYPE_CHECKING
 
@@ -811,8 +811,8 @@ def main():
     # Initialize results structure
     results = {
         "metadata": {
-            "created": datetime.now().isoformat(),
-            "last_updated": datetime.now().isoformat(),
+            "created": datetime.now(timezone.utc).isoformat(),
+            "last_updated": datetime.now(timezone.utc).isoformat(),
             "script_version": "2.0.0",
             "seed_mode": seed_type,
             "seed": args.seed if args.seed is not None else "random",
@@ -922,7 +922,7 @@ def main():
             "game": game_name,
             "world_dir": world_dir,
             "player_number": player_count,
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "multiworld_size": player_count,
             "games_in_multiworld": games_in_multiworld.copy()
         }
@@ -1008,7 +1008,7 @@ def main():
                     existing_result["test_result"] = test_result
                     existing_result["multiworld_size"] = player_count
                     existing_result["games_in_multiworld"] = games_in_multiworld.copy()
-                    existing_result["timestamp"] = datetime.now().isoformat()
+                    existing_result["timestamp"] = datetime.now(timezone.utc).isoformat()
                     existing_result["status"] = "passed"
         else:
             print(f"  FAILED: {test_result['failure']}/{test_result['total']} runs failed")
@@ -1034,7 +1034,7 @@ def main():
         results["results"][template_name] = game_result
 
         # Save intermediate results
-        results["metadata"]["last_updated"] = datetime.now().isoformat()
+        results["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
         results["final_multiworld"] = games_in_multiworld.copy()
         results["rejected_games"] = rejected_games.copy()
         results["ignored_games"] = ignored_games.copy()
@@ -1042,7 +1042,7 @@ def main():
             json.dump(results, f, indent=2)
 
     # Final summary
-    results["metadata"]["last_updated"] = datetime.now().isoformat()
+    results["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
     results["final_multiworld"] = games_in_multiworld.copy()
     results["rejected_games"] = rejected_games.copy()
     results["ignored_games"] = ignored_games.copy()

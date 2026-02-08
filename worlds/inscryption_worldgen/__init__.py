@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -81,6 +81,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class InscryptionWorldGenWeb(WebWorld):
     """Web interface for Inscryption WorldGen."""
     theme = "dirt"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -89,14 +90,6 @@ class InscryptionWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["DrBibop"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "Un guide pour configurer Inscryption Archipelago Multiworld",
-            "Français",
-            "setup_fr.md",
-            "setup/fr",
-            ["Glowbuzz"]
         )
     ]
 

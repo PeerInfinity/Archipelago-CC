@@ -33,7 +33,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -672,8 +672,8 @@ def main():
     # Initialize results structure
     results = {
         "metadata": {
-            "created": datetime.now().isoformat(),
-            "last_updated": datetime.now().isoformat(),
+            "created": datetime.now(timezone.utc).isoformat(),
+            "last_updated": datetime.now(timezone.utc).isoformat(),
             "script_version": "1.1.0",
             "test_type": "spoiler_fuzz",
             "seed_mode": seed_type,
@@ -788,7 +788,7 @@ def main():
                     "game_name": game_name,
                     "world_directory": world_dir
                 },
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat()
             }
 
             results["results"][template_name] = result_entry
@@ -820,7 +820,7 @@ def main():
             print()
 
             # Save intermediate results after each template
-            results["metadata"]["last_updated"] = datetime.now().isoformat()
+            results["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
             with open(output_path, 'w') as f:
                 json.dump(results, f, indent=2)
 

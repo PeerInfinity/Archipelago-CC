@@ -66,6 +66,13 @@ class RuleCodeGenerator:
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
         self._current_entrance: Optional[str] = None
+        # Items that can actually be obtained (in pool, canonical placements, or starting inventory)
+        # Used to detect unsatisfiable Has rules referencing virtual/computed items
+        self.obtainable_items: Optional[Set[str]] = None
+
+    def set_obtainable_items(self, items: Set[str]) -> None:
+        """Set the items that can actually be obtained during gameplay."""
+        self.obtainable_items = items
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
@@ -1393,6 +1400,19 @@ class RuleCodeGenerator:
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
+
+            # Check if this rule references a virtual/computed item that can never be obtained.
+            # Items like "Reachable Orbs" are dynamically computed counters in the original game
+            # via collect_item hooks, but WorldGen worlds can't replicate this mechanism.
+            if (self.obtainable_items is not None
+                    and item_name
+                    and item_name not in self.obtainable_items
+                    and isinstance(count, int) and count > 0):
+                import sys
+                print(f"LOSSY FALLBACK: Has('{item_name}', {count}) references unobtainable item, "
+                      f"using True_() (always accessible) as fallback", file=sys.stderr)
+                self.required_imports.add('True_')
+                return 'True_()'
 
             self.required_imports.add('Has')
 

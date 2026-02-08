@@ -9,7 +9,15 @@ from .Rules import set_rules
 
 class CodingAdventureWeb(WebWorld):
     theme = "ocean"
-    tutorials = []
+    game_info_languages = []
+    tutorials = [Tutorial(
+        "Multiworld Setup Guide",
+        "A guide to setting up Coding Adventure for MultiWorld.",
+        "English",
+        "setup_en.md",
+        "setup/en",
+        ["Archipelago Team"]
+    )]
 
 
 class CodingAdventureWorld(World):

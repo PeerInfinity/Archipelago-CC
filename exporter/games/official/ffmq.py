@@ -32,6 +32,13 @@ class FFMQGameExportHandler(GenericGameExportHandler):
     # Item name modules for automatic item constant resolution
     ITEM_NAME_MODULES = ['worlds.ffmq.Items']
 
+    # FFMQ uses progressive items (Progressive Bomb → Bomb → Jumbo Bomb → Mega Grenade)
+    # where the player can start with a tier item (e.g., Bomb) and the rules check for
+    # resolved names (e.g., "Mega Grenade"). The JS progressive count logic doesn't account
+    # for starting items that overlap with progressive tiers, so we use resolved_items
+    # which contain the correct tier names from Python's collect_item resolution.
+    USE_RESOLVED_ITEMS = True
+
     def __init__(self, world=None):
         super().__init__(world)
         # Cache item_groups for rule resolution

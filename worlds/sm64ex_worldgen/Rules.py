@@ -66,8 +66,10 @@ def set_rules(world: "World") -> None:
         Or(Has('Progressive Key', 2), Has('Second Floor Key'))
     )
 
-    multiworld.get_entrance("BoB: Island", player).access_rule = \
-        lambda state: state.has('Cannon Unlock BoB', player)
+    world.set_rule(
+        multiworld.get_entrance("BoB: Island", player),
+        Has("Cannon Unlock BoB")
+    )
 
     world.set_rule(
         multiworld.get_entrance("Basement -> Dire, Dire Docks", player),
@@ -117,26 +119,40 @@ def set_rules(world: "World") -> None:
     multiworld.get_location("BoB: Mario Wings to the Sky", player).access_rule = \
         lambda state: (state.has('Cannon Unlock BoB', player)) and (state.has('Wing Cap', player))
 
-    multiworld.get_location("WF: Fall onto the Caged Island", player).access_rule = \
-        lambda state: state.can_reach('WF: Tower', 'Region', player)()
+    world.set_rule(
+        multiworld.get_location("WF: Fall onto the Caged Island", player),
+        CanReachRegion("WF: Tower")
+    )
 
-    multiworld.get_location("WF: Blast Away the Wall", player).access_rule = \
-        lambda state: state.has('Cannon Unlock WF', player)
+    world.set_rule(
+        multiworld.get_location("WF: Blast Away the Wall", player),
+        Has("Cannon Unlock WF")
+    )
 
-    multiworld.get_location("JRB: Blast to the Stone Pillar", player).access_rule = \
-        lambda state: state.has_all(['Cannon Unlock JRB'], player)()
+    world.set_rule(
+        multiworld.get_location("JRB: Blast to the Stone Pillar", player),
+        HasAll('Cannon Unlock JRB')
+    )
 
-    multiworld.get_location("JRB: Through the Jet Stream", player).access_rule = \
-        lambda state: state.has('Metal Cap', player)
+    world.set_rule(
+        multiworld.get_location("JRB: Through the Jet Stream", player),
+        Has("Metal Cap")
+    )
 
-    multiworld.get_location("CCM: Wall Kicks Will Work", player).access_rule = \
-        lambda state: state.has('Cannon Unlock CCM', player)
+    world.set_rule(
+        multiworld.get_location("CCM: Wall Kicks Will Work", player),
+        Has("Cannon Unlock CCM")
+    )
 
-    multiworld.get_location("BBH: Eye to Eye in the Secret Room", player).access_rule = \
-        lambda state: state.has('Vanish Cap', player)
+    world.set_rule(
+        multiworld.get_location("BBH: Eye to Eye in the Secret Room", player),
+        Has("Vanish Cap")
+    )
 
-    multiworld.get_location("HMC: Metal-Head Mario Can Move!", player).access_rule = \
-        lambda state: state.has_all(['Metal Cap'], player)()
+    world.set_rule(
+        multiworld.get_location("HMC: Metal-Head Mario Can Move!", player),
+        HasAll('Metal Cap')
+    )
 
     world.set_rule(
         multiworld.get_location("SSL: Free Flying for 8 Red Coins", player),
@@ -148,37 +164,57 @@ def set_rules(world: "World") -> None:
         Or(HasAll('Cannon Unlock SSL', 'Wing Cap'), HasAll('Wing Cap'))
     )
 
-    multiworld.get_location("DDD: Through the Jet Stream", player).access_rule = \
-        lambda state: state.has('Metal Cap', player)
+    world.set_rule(
+        multiworld.get_location("DDD: Through the Jet Stream", player),
+        Has("Metal Cap")
+    )
 
-    multiworld.get_location("DDD: Collect the Caps...", player).access_rule = \
-        lambda state: state.has_all(['Metal Cap', 'Vanish Cap'], player)()
+    world.set_rule(
+        multiworld.get_location("DDD: Collect the Caps...", player),
+        HasAll('Metal Cap', 'Vanish Cap')
+    )
 
-    multiworld.get_location("DDD: Pole-Jumping for Red Coins", player).access_rule = \
-        lambda state: state.can_reach('Bowser in the Fire Sea Key', 'Location', player)()
+    world.set_rule(
+        multiworld.get_location("DDD: Pole-Jumping for Red Coins", player),
+        CanReachLocation("Bowser in the Fire Sea Key")
+    )
 
-    multiworld.get_location("Cavern of the Metal Cap Red Coins", player).access_rule = \
-        lambda state: state.has('Metal Cap', player)
+    world.set_rule(
+        multiworld.get_location("Cavern of the Metal Cap Red Coins", player),
+        Has("Metal Cap")
+    )
 
-    multiworld.get_location("Vanish Cap Under the Moat Red Coins", player).access_rule = \
-        lambda state: state.has('Vanish Cap', player)
+    world.set_rule(
+        multiworld.get_location("Vanish Cap Under the Moat Red Coins", player),
+        Has("Vanish Cap")
+    )
 
-    multiworld.get_location("SL: Into the Igloo", player).access_rule = \
-        lambda state: state.has('Vanish Cap', player)
+    world.set_rule(
+        multiworld.get_location("SL: Into the Igloo", player),
+        Has("Vanish Cap")
+    )
 
     world.set_rule(
         multiworld.get_location("WDW: Quick Race Through Downtown!", player),
         Has('Vanish Cap', 1)
     )
 
-    multiworld.get_location("TTM: Blast to the Lonely Mushroom", player).access_rule = \
-        lambda state: state.has('Cannon Unlock TTM', player)
+    world.set_rule(
+        multiworld.get_location("TTM: Blast to the Lonely Mushroom", player),
+        Has("Cannon Unlock TTM")
+    )
 
-    multiworld.get_location("RR: Somewhere Over the Rainbow", player).access_rule = \
-        lambda state: state.has('Cannon Unlock RR', player)
+    world.set_rule(
+        multiworld.get_location("RR: Somewhere Over the Rainbow", player),
+        Has("Cannon Unlock RR")
+    )
 
-    multiworld.get_location("Wing Mario Over the Rainbow Red Coins", player).access_rule = \
-        lambda state: state.has_all(['Wing Cap'], player)()
+    world.set_rule(
+        multiworld.get_location("Wing Mario Over the Rainbow Red Coins", player),
+        HasAll('Wing Cap')
+    )
 
-    multiworld.get_location("Wing Mario Over the Rainbow 1Up Block", player).access_rule = \
-        lambda state: state.has_all(['Wing Cap'], player)()
+    world.set_rule(
+        multiworld.get_location("Wing Mario Over the Rainbow 1Up Block", player),
+        HasAll('Wing Cap')
+    )

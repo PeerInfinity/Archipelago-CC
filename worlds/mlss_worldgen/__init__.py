@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -182,6 +182,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class MarioLuigiSuperstarSagaWorldGenWeb(WebWorld):
     """Web interface for Mario & Luigi Superstar Saga WorldGen."""
     theme = "partyTime"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Setup Guide",
@@ -190,14 +191,6 @@ class MarioLuigiSuperstarSagaWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["jamesbrq"]
-        ),
-        Tutorial(
-            "Setup Guide",
-            "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
-            "Español",
-            "setup_es.md",
-            "setup/es",
-            ["GreenMarco"]
         )
     ]
 

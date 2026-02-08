@@ -11,7 +11,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -51,7 +51,7 @@ def generate_markdown(results: Dict[str, Any]) -> str:
     md_content += "[📖 Learn about this test](../tests/test-multiworld-ut-fuzz.md)\n\n"
 
     # Metadata
-    md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    md_content += f"**Generated:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
 
     if metadata:
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"

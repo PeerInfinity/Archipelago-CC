@@ -350,7 +350,7 @@ jobs:
           python3 << 'PYTHON_SCRIPT'
           import json
           import os
-          from datetime import datetime
+          from datetime import datetime, timezone
 
           ut_label = os.environ.get('UT_LABEL', 'worldgen')
           seed_mode = os.environ.get('SEED_MODE', 'fixed')
@@ -371,7 +371,7 @@ jobs:
               print(f"Main results file not found, creating new structure")
               main_data = {
                   "metadata": {
-                      "created": datetime.now().isoformat(),
+                      "created": datetime.now(timezone.utc).isoformat(),
                       "script_version": "1.0.0",
                       "ut_version": ut_label,
                       "world_source": "bundled",
@@ -390,11 +390,11 @@ jobs:
               # Add note about the update
               main_data["results"][template_name]["updated_from_single_game_test"] = {
                   "runs": runs,
-                  "updated_at": datetime.now().isoformat()
+                  "updated_at": datetime.now(timezone.utc).isoformat()
               }
 
           # Update metadata
-          main_data["metadata"]["last_updated"] = datetime.now().isoformat()
+          main_data["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
           main_data["metadata"]["total_templates"] = len(main_data["results"])
 
           # Write updated results
@@ -646,7 +646,7 @@ jobs:
           import json
           import glob
           import os
-          from datetime import datetime
+          from datetime import datetime, timezone
 
           # Find all split result files
           files = glob.glob("artifacts/test-results-split-*/test-results-single-game-*-split-*.json")
@@ -659,8 +659,8 @@ jobs:
           # Combine results
           combined = {
               "metadata": {
-                  "created": datetime.now().isoformat(),
-                  "last_updated": datetime.now().isoformat(),
+                  "created": datetime.now(timezone.utc).isoformat(),
+                  "last_updated": datetime.now(timezone.utc).isoformat(),
                   "script_version": "1.0.0",
                   "combined_from": len(files)
               },
@@ -702,7 +702,7 @@ jobs:
                               "errors": {}
                           },
                           "world_info": result.get("world_info", {}),
-                          "timestamp": datetime.now().isoformat()
+                          "timestamp": datetime.now(timezone.utc).isoformat()
                       }
 
                   ut_fuzz = result.get("ut_fuzz", {})
@@ -895,7 +895,7 @@ jobs:
           python3 << 'PYTHON_SCRIPT'
           import json
           import os
-          from datetime import datetime
+          from datetime import datetime, timezone
 
           ut_label = os.environ.get('UT_LABEL', 'worldgen')
           seed_mode = os.environ.get('SEED_MODE', 'fixed')
@@ -916,7 +916,7 @@ jobs:
               print(f"Main results file not found, creating new structure")
               main_data = {
                   "metadata": {
-                      "created": datetime.now().isoformat(),
+                      "created": datetime.now(timezone.utc).isoformat(),
                       "script_version": "1.0.0",
                       "ut_version": ut_label,
                       "world_source": "bundled",
@@ -935,11 +935,11 @@ jobs:
               # Add note about the update
               main_data["results"][template_name]["updated_from_single_game_test"] = {
                   "runs": runs,
-                  "updated_at": datetime.now().isoformat()
+                  "updated_at": datetime.now(timezone.utc).isoformat()
               }
 
           # Update metadata
-          main_data["metadata"]["last_updated"] = datetime.now().isoformat()
+          main_data["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
           main_data["metadata"]["total_templates"] = len(main_data["results"])
 
           # Write updated results

@@ -10,13 +10,23 @@ This directory documents bugs discovered in the upstream Archipelago repository 
 |-----|--------|-------------|
 | [Bunny Rules](./alttp/bunny-rules.md) | Fixed in fork | Superbunny path rules always evaluate to True due to missing invocation and late binding bugs |
 
+### Satisfactory
+
+| Bug | Status | Description |
+|-----|--------|-------------|
+| [Belt Speed Dead Code](./satisfactory/belt-speed-dead-code.md) | Workaround in fork | Belt speed rule callable never invoked with `(state)`, always evaluates truthy |
+
+### APWorld Manager
+
+| Bug | Status | Description |
+|-----|--------|-------------|
+| [flake8 F821 Errors](./apworld-manager/flake8.md) | Upstream | `md_app.py` references Kivy classes without importing them |
+
 ### Landstalker
 
 | Bug | Status | Description |
 |-----|--------|-------------|
 | [Memory Leak](./landstalker-memory-leak.md) | False alarm | Initially thought to be upstream bug, but was fork-specific (exporter called `fill_slot_data` after cleanup) |
-| [Memory Leak Repro](./landstalker-memory-leak-repro.md) | Closed | Reproduction steps for the false alarm |
-| [Memory Leak Fix](./landstalker-memory-leak-fix.md) | Applied | Fix documentation for the fork-specific issue |
 
 ## Document Types
 

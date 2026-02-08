@@ -29,7 +29,7 @@ import subprocess
 import sys
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -783,8 +783,8 @@ def main():
     # Initialize results structure
     results = {
         "metadata": {
-            "created": datetime.now().isoformat(),
-            "last_updated": datetime.now().isoformat(),
+            "created": datetime.now(timezone.utc).isoformat(),
+            "last_updated": datetime.now(timezone.utc).isoformat(),
             "script_version": "1.0.0",
             "ut_version": ut_version,
             "use_tracking_config": args.use_tracking_config if args.ut_version != "original" else None,
@@ -873,7 +873,7 @@ def main():
                 "game_name": game_name,
                 "world_directory": world_dir
             },
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
         # Include apworld download URL if testing apworlds
@@ -917,7 +917,7 @@ def main():
         print()
 
         # Save intermediate results after each template
-        results["metadata"]["last_updated"] = datetime.now().isoformat()
+        results["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
         with open(output_path, 'w') as f:
             json.dump(results, f, indent=2)
 
