@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -477,7 +477,7 @@ def process_template(
     template_result = {
         'template': template_name,
         'game_name': game_name_display,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'original': {
             'generation': {'success': False},
             'spoiler_test': {'success': False, 'pass_fail': 'unknown'}
@@ -836,7 +836,7 @@ def main():
     # Initialize results - use dict keyed by game name for compatibility with combine-test-results.py
     results = {
         'metadata': {
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'seed': args.seed,
             'phase': args.phase,
             'canonical_seed1': args.canonical_seed1,
@@ -998,7 +998,7 @@ def main():
                 template_result = {
                     'template': original_template,
                     'game_name': game_name_display,
-                    'timestamp': datetime.now().isoformat(),
+                    'timestamp': datetime.now(timezone.utc).isoformat(),
                     'original': {
                         'generation': {'success': True, 'note': 'Phase 1'},
                         'spoiler_test': {'success': False, 'pass_fail': 'unknown'}

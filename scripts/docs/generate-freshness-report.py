@@ -22,7 +22,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -391,11 +391,13 @@ WORKFLOW_OVERVIEW = [
 
 def parse_generated_date(content: str) -> Optional[datetime]:
     """Extract the **Generated:** date from markdown content."""
-    # Format: **Generated:** 2026-01-30 23:54:13
-    match = re.search(r'\*\*Generated:\*\*\s*(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})', content)
+    # Format: **Generated:** 2026-01-30 23:54:13 UTC (or without UTC for legacy)
+    match = re.search(r'\*\*Generated:\*\*\s*(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})(\s+UTC)?', content)
     if match:
         try:
-            return datetime.strptime(match.group(1), '%Y-%m-%d %H:%M:%S')
+            dt = datetime.strptime(match.group(1), '%Y-%m-%d %H:%M:%S')
+            # Treat as UTC (either explicitly marked or assumed for consistency)
+            return dt.replace(tzinfo=timezone.utc)
         except ValueError:
             pass
     return None
@@ -404,16 +406,24 @@ def parse_generated_date(content: str) -> Optional[datetime]:
 def parse_source_data_date(content: str) -> Optional[datetime]:
     """Extract the **Source Data Last Updated:** or **Source Data Created:** date from markdown content."""
     # Try Last Updated first (preferred)
-    # Format can be ISO with T (2026-01-30T23:11:27) or with space (2026-01-30 23:11:27)
-    match = re.search(r'\*\*Source Data Last Updated:\*\*\s*(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})', content)
+    # Format can be ISO with T (2026-01-30T23:11:27+00:00) or with space (2026-01-30 23:11:27)
+    # May include timezone offset (+00:00) or UTC suffix
+    match = re.search(r'\*\*Source Data Last Updated:\*\*\s*(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})([+-]\d{2}:\d{2})?', content)
     if not match:
         # Fall back to Created
-        match = re.search(r'\*\*Source Data Created:\*\*\s*(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})', content)
+        match = re.search(r'\*\*Source Data Created:\*\*\s*(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})([+-]\d{2}:\d{2})?', content)
 
     if match:
         try:
             date_str = match.group(1).replace(' ', 'T')  # Normalize to ISO format
-            return datetime.fromisoformat(date_str)
+            tz_offset = match.group(2)
+            if tz_offset:
+                date_str += tz_offset
+            dt = datetime.fromisoformat(date_str)
+            # If no timezone info, treat as UTC for consistency
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt
         except ValueError:
             pass
     return None
@@ -613,7 +623,7 @@ def run_sync_scripts() -> Dict[str, Dict]:
 def scan_test_results() -> List[Dict]:
     """Scan all markdown files in the test results directory and extract date information."""
     results = []
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
 
     if not TEST_RESULTS_DIR.exists():
         print(f"Warning: Test results directory not found: {TEST_RESULTS_DIR}")
@@ -655,12 +665,12 @@ def scan_test_results() -> List[Dict]:
 
 def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) -> str:
     """Generate the markdown report content."""
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
 
     md = "# Test Results Freshness Report\n\n"
     md += "This report shows when each test result document was generated, how fresh the underlying data is, "
     md += "and how to regenerate each document.\n\n"
-    md += f"**Report Generated:** {now.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    md += f"**Report Generated:** {now.strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
 
     # Summary statistics (based on source data date)
     total = len(results)

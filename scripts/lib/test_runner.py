@@ -16,7 +16,7 @@ import os
 import shlex
 import shutil
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
 from .seed_utils import get_seed_id as compute_seed_id
 
@@ -56,7 +56,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         'game_name_from_filename': game_name_from_filename,
         'seed': seed,
         'seed_id': seed_id,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'world_info': world_info,
         'generation': {
             'success': False,
@@ -532,7 +532,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
         'first_failure_reason': None,
         'consecutive_passes_before_failure': 0,
         'stop_on_failure': stop_on_failure,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'individual_results': {},
         'summary': {
             'all_passed': False,
@@ -726,7 +726,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         'game_name_from_filename': game_name_from_filename,
         'seed': seed,
         'seed_id': seed_id,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'world_info': world_info,
         'prerequisite_check': {
             'spoiler_minimal_passed': False,
@@ -1298,7 +1298,7 @@ def test_template_multiworld_bisect(template_file: str, templates_dir: str, proj
         'triggered': True,
         'tested_pairs': [],
         'failing_pairs': [],
-        'timestamp': datetime.now().isoformat()
+        'timestamp': datetime.now(timezone.utc).isoformat()
     }
 
     # Compute seed ID
@@ -1512,7 +1512,7 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
         print(f"Error: Seed '{seed}' is not a valid number")
         return {
             'seed': seed,
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'rules_identical': None,
             'spoilers_identical': None,
             'error': f"Invalid seed: {seed}"
@@ -1535,7 +1535,7 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
         print(f"Error: Original rules file not found: {full_rules_path}")
         return {
             'seed': seed,
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'rules_identical': None,
             'spoilers_identical': None,
             'error': 'Original rules file not found'
@@ -1545,7 +1545,7 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
         print(f"Error: Original sphere log file not found: {full_sphere_log_path}")
         return {
             'seed': seed,
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'rules_identical': None,
             'spoilers_identical': None,
             'error': 'Original sphere log file not found'
@@ -1593,7 +1593,7 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
         print(f"Error: Re-generation failed with return code {gen_return_code}")
         return {
             'seed': seed,
-            'timestamp': datetime.now().isoformat(),
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'rules_identical': None,
             'spoilers_identical': None,
             'error': f'Re-generation failed with return code {gen_return_code}'
@@ -1614,7 +1614,7 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
 
     result = {
         'seed': seed,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': datetime.now(timezone.utc).isoformat(),
         'rules_identical': rules_identical,
         'spoilers_identical': spoilers_identical,
         'original_rules_hash': original_rules_hash,
