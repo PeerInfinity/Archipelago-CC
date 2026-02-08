@@ -17,6 +17,7 @@ This handler resolves these patterns in post_process_data by:
    and ShopSlot rules using world data
 """
 
+import json
 import re
 import logging
 from typing import Any, Dict, List, Optional
@@ -213,6 +214,25 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
             self._options = getattr(world, 'options', None)
             logger.debug(f"Initialized Satisfactory export handler for player {world.player}")
 
+    def _get_base_recipe_name(self, recipe_name: str) -> str:
+        """Get the base (source) item name for a recipe, handling indirect_recipes.
+
+        In Python, indirect_recipes maps source -> target (e.g.,
+        "Recipe: Quartz Purification" -> "Recipe: Distilled Silica").
+        The player receives the source item, but the recipe object stores the target name.
+        We need to check for the source item in rules, since the frontend uses base_items.
+        """
+        if not self._game_logic:
+            return recipe_name
+        inverse = getattr(self, '_inverse_indirect_recipes', None)
+        if inverse is None:
+            self._inverse_indirect_recipes = {
+                target: source
+                for source, target in self._game_logic.indirect_recipes.items()
+            }
+            inverse = self._inverse_indirect_recipes
+        return inverse.get(recipe_name, recipe_name)
+
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Transform Satisfactory rules from AST format to Rule Builder format."""
         data = super().post_process_data(data)
@@ -225,6 +245,9 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
                     access_rule = exit_data.get('access_rule')
                     if access_rule:
                         exit_data['access_rule'] = self._transform_rule(access_rule, region_name)
+
+                # Fix broken hub tier transition exits (closure variables can't be resolved)
+                self._fix_hub_tier_exits(region_name, exits)
 
                 # Transform location rules
                 for loc_data in region_data.get('locations', []):
@@ -579,7 +602,8 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         # HardDrive locations: "Hard drive random check N"
         hd_match = re.match(r"^Hard drive random check (\d+)$", loc_name)
         if hd_match and self._game_logic:
-            return self._transform_hard_drive_rule(rule, loc_data)
+            hd_num = int(hd_match.group(1))
+            return self._build_hard_drive_rule(hd_num)
 
         # AWESOME Shop purchase locations
         shop_match = re.match(r"^AWESOME Shop purchase (\d+)$", loc_name)
@@ -622,7 +646,10 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
             implicitly_unlocked = getattr(self._critical_path, 'implicitly_unlocked', set())
 
         if recipe.name not in implicitly_unlocked:
-            conditions.append(_make_has(recipe.name))
+            # Use the source item name if this recipe is an indirect recipe target
+            # (e.g., "Recipe: Distilled Silica" is resolved from "Recipe: Quartz Purification")
+            recipe_item_name = self._get_base_recipe_name(recipe.name)
+            conditions.append(_make_has(recipe_item_name))
 
         # can_build: check building (redundant with region entrance, but safe)
         if recipe.building:
@@ -640,9 +667,9 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         if recipe.is_radio_active:
             conditions.append(_make_radio_active_rule())
 
-        # belt_rule
-        if recipe.minimal_belt_speed:
-            conditions.append(_make_belt_rule(recipe.minimal_belt_speed - 1))
+        # NOTE: belt_rule is dead code in Python's StateLogic.py - the belt_rule
+        # callable is referenced but never called with (state), so it always
+        # evaluates as truthy. We omit it here to match actual Python behavior.
 
         return _make_and(conditions)
 
@@ -676,7 +703,8 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
                     implicitly_unlocked = getattr(self._critical_path, 'implicitly_unlocked', set())
 
                 if recipe.name not in implicitly_unlocked:
-                    recipe_conditions.append(_make_has(recipe.name))
+                    recipe_item_name = self._get_base_recipe_name(recipe.name)
+                    recipe_conditions.append(_make_has(recipe_item_name))
 
                 # Need to be able to handcraft all inputs
                 if recipe.inputs:
@@ -781,33 +809,33 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
             return _make_or(conditions)
         return _make_true()
 
-    def _transform_hard_drive_rule(
-        self, rule: Dict[str, Any], loc_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Transform HardDrive location rules."""
-        # HardDrive rules check: can_build("MAM") and (not unlocked_by or can_produce(unlocked_by))
-        # Transform AST_function_call into proper form
-        if rule.get("rule") == "AST_function_call":
-            return self._transform_ast_function_call_to_hard_drive(rule)
+    def _build_hard_drive_rule(self, hd_num: int) -> Dict[str, Any]:
+        """Build rule for 'Hard drive random check N' from game data.
 
-        # If it's an And, transform children
-        if rule.get("rule") == "And":
-            children = [self._transform_rule(c, "hard_drive") for c in rule.get("children", [])]
-            return _make_and(children)
+        The Python rule is: can_build("MAM") AND (not unlocked_by OR can_produce(unlocked_by))
+        where unlocked_by comes from DropPodData.item for the sorted drop pod list.
 
-        return self._transform_rule(rule, "hard_drive")
-
-    def _transform_ast_function_call_to_hard_drive(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Transform a hard drive AST_function_call rule.
-
-        Pattern: state_logic.can_build(state, 'MAM') and
-                 (not unlocked_by or state_logic.can_produce(state, unlocked_by))
+        When unlocked_by is None, simplifies to: Has("Can Build: MAM")
+        When unlocked_by is set, simplifies to: And(Has("Can Build: MAM"), Has("Can Produce: item"))
         """
-        # Try to resolve as a simple state_logic call first
-        result = self._transform_ast_function_call(rule, "hard_drive")
-        if result is not rule:
-            return result
-        return _make_true()
+        if not hasattr(self, '_sorted_drop_pods'):
+            self._sorted_drop_pods = sorted(
+                self._game_logic.drop_pods,
+                key=lambda dp: ("!" if dp.item is None else dp.item) + str(dp.x - dp.z)
+            )
+
+        pod_index = hd_num - 1
+        if pod_index < 0 or pod_index >= len(self._sorted_drop_pods):
+            logger.warning(f"Hard drive {hd_num} out of range (max {len(self._sorted_drop_pods)})")
+            return _make_has(BUILDING_EVENT_PREFIX + "MAM")
+
+        pod = self._sorted_drop_pods[pod_index]
+        conditions = [_make_has(BUILDING_EVENT_PREFIX + "MAM")]
+
+        if pod.item:
+            conditions.append(_make_has(PART_EVENT_PREFIX + pod.item))
+
+        return _make_and(conditions)
 
     def _build_shop_rule(self, slot_num: int) -> Dict[str, Any]:
         """Build rule for AWESOME Shop purchase locations.
@@ -840,6 +868,85 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
             return _make_has(f"Elevator Phase {limited_phase}")
         else:
             return _make_true()
+
+    def _fix_hub_tier_exits(self, region_name: str, exits: list) -> None:
+        """Fix broken hub tier transition exit rules.
+
+        The Python code uses closure variables (player, is_universal_tracker) that
+        the AST analyzer can't resolve, producing empty {} rule nodes.
+
+        Hub tier transitions from Python Regions.py:
+        - Hub Tier 1 -> Hub Tier 2: can_build_all(super_early_game_buildings)
+        - Hub Tier 2 -> Hub Tier 3: Has("Elevator Phase 1") AND can_build_all(early_game_buildings)
+        - Hub Tier 4 -> Hub Tier 5: Has("Elevator Phase 2")
+        - Hub Tier 6 -> Hub Tier 7: Has("Elevator Phase 3")
+        - Hub Tier 8 -> Hub Tier 9: Has("Elevator Phase 4")
+        """
+        if not self._options:
+            return
+
+        for exit_data in exits:
+            rule = exit_data.get('access_rule', {})
+            rule_str = json.dumps(rule)
+            if '{}' not in rule_str:
+                continue
+
+            # This exit has unresolved empty rules - rebuild it
+            rebuilt = self._rebuild_hub_tier_exit_rule(region_name)
+            if rebuilt:
+                exit_data['access_rule'] = rebuilt
+
+    def _rebuild_hub_tier_exit_rule(self, region_name: str) -> Optional[Dict[str, Any]]:
+        """Rebuild the hub tier transition rule for a given region."""
+        from worlds.satisfactory.Options import Placement
+        from worlds.satisfactory.GameLogic import PowerInfrastructureLevel
+
+        if not self._options:
+            return None
+
+        final_phase = self._options.final_elevator_phase.value
+
+        if region_name == "Hub Tier 1":
+            # Hub Tier 1 -> Hub Tier 2: can_build_all(super_early_game_buildings)
+            buildings = ["Foundation", "Walls Orange"]
+            if self._options.splitter_placement == Placement.early:
+                buildings.extend(["Conveyor Splitter", "Conveyor Merger"])
+            if final_phase == 1:
+                # When final_phase == 1, early_game_buildings are merged into super_early
+                buildings.append(PowerInfrastructureLevel.Automated.to_name())
+                if self._options.mam_logic_placement.value == Placement.early:
+                    buildings.append("MAM")
+                if self._options.awesome_logic_placement.value == Placement.early:
+                    buildings.extend(["AWESOME Sink", "AWESOME Shop"])
+                if self._options.energy_link_logic_placement.value == Placement.early:
+                    buildings.append("Power Storage")
+            items = [BUILDING_EVENT_PREFIX + b for b in buildings]
+            return _make_has_all(items)
+
+        elif region_name == "Hub Tier 2" and final_phase >= 2:
+            # Hub Tier 2 -> Hub Tier 3: Has("Elevator Phase 1") AND can_build_all(early_game_buildings)
+            conditions = [_make_has("Elevator Phase 1")]
+            buildings = [PowerInfrastructureLevel.Automated.to_name()]
+            if self._options.mam_logic_placement.value == Placement.early:
+                buildings.append("MAM")
+            if self._options.awesome_logic_placement.value == Placement.early:
+                buildings.extend(["AWESOME Sink", "AWESOME Shop"])
+            if self._options.energy_link_logic_placement.value == Placement.early:
+                buildings.append("Power Storage")
+            items = [BUILDING_EVENT_PREFIX + b for b in buildings]
+            conditions.append(_make_has_all(items))
+            return _make_and(conditions)
+
+        elif region_name == "Hub Tier 4" and final_phase >= 3:
+            return _make_has("Elevator Phase 2")
+
+        elif region_name == "Hub Tier 6" and final_phase >= 4:
+            return _make_has("Elevator Phase 3")
+
+        elif region_name == "Hub Tier 8" and final_phase >= 5:
+            return _make_has("Elevator Phase 4")
+
+        return None
 
     def _transform_conditional(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Transform Conditional rules.

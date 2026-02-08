@@ -205,6 +205,15 @@ class WorldgenMixin:
                     self.logger.info(f"Unregistering existing '{worldgen_game_name}' before reload")
                     del AutoWorld.AutoWorldRegister.world_types[worldgen_game_name]
 
+                # Delete submodules from sys.modules so they get reimported fresh.
+                # Without this, importlib.reload() on the package __init__ would
+                # reuse stale submodule data (e.g., location_table from a previous
+                # generation with different options).
+                for sub in ('Items', 'Locations', 'Regions', 'Rules', 'Options'):
+                    sub_module = f"{full_module_name}.{sub}"
+                    if sub_module in sys.modules:
+                        del sys.modules[sub_module]
+
                 # Reload the module to pick up the new code
                 self.logger.info(f"Reloading module: {full_module_name}")
                 importlib.reload(sys.modules[full_module_name])

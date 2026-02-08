@@ -1,10 +1,10 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-07 14:01:39
+**Generated:** 2026-02-07 22:52:34
 
-**Source Data Created:** 2026-02-07T04:18:57.750050
+**Source Data Created:** 2026-02-07T22:09:22.153259
 
-**Source Data Last Updated:** 2026-02-07T04:18:57.750056
+**Source Data Last Updated:** 2026-02-07T22:09:22.153264
 
 [<- Back to Main Test Results Summary](./test-results-summary.md)
 
@@ -24,18 +24,18 @@ This summary combines results from fuzz tests that validate game configurations 
 
 ### Individual Test Results
 
-- **Javascript:** 61/73 passed (83.6%)
+- **Javascript:** 62/75 passed (82.7%)
 - **UT Fuzz Original:** 38/85 passed (44.7%)
-- **UT Fuzz Worldgen:** 68/87 passed (78.2%)
+- **UT Fuzz Worldgen:** 71/87 passed (81.6%)
 - **UT Fuzz Pickle:** 75/87 passed (86.2%)
 - **UT Fuzz Hybrid:** 79/85 passed (92.9%)
 
 ### Combined Results (All 5 Tests)
 
 - **Games passing all 5 fuzz tests:** 31/87 (35.6%)
-- **Games passing 4 fuzz tests:** 30/87 (34.5%)
+- **Games passing 4 fuzz tests:** 32/87 (36.8%)
 - **Games passing 3 fuzz tests:** 8/87 (9.2%)
-- **Games passing 2 fuzz tests:** 10/87 (11.5%)
+- **Games passing 2 fuzz tests:** 8/87 (9.2%)
 - **Games passing 1 fuzz test:** 2/87 (2.3%)
 - **Games passing 0 fuzz tests:** 6/87 (6.9%)
 
@@ -43,9 +43,9 @@ This summary combines results from fuzz tests that validate game configurations 
 
 This view excludes UT Original, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.
 
-- **Games passing all 4 fuzz tests:** 55/87 (63.2%)
+- **Games passing all 4 fuzz tests:** 57/87 (65.5%)
 - **Games passing 3 fuzz tests:** 13/87 (14.9%)
-- **Games passing 2 fuzz tests:** 11/87 (12.6%)
+- **Games passing 2 fuzz tests:** 9/87 (10.3%)
 - **Games passing 1 fuzz test:** 2/87 (2.3%)
 - **Games passing 0 fuzz tests:** 6/87 (6.9%)
 
@@ -76,21 +76,21 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 🔶 52% | ✅ | ✅ | ✅ | 122.5KB |
-| EarthBound | — | — | ✅ | ✅ | — | 343.8KB |
-| Factorio | ✅ | ❌ 0% | ❌ 0% | ✅ | ✅ | 295.4KB |
+| EarthBound | ✅ | — | ✅ | ✅ | — | 343.8KB |
+| Factorio | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 295.4KB |
 | Faxanadu | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | 🔶 50% | ❌ 1% | 🔶 80% | 🔶 80% | ❌ 0% | 549.5KB |
+| Final Fantasy Mystic Quest | 🔶 60% | ❌ 1% | 🔶 60% | 🔶 80% | ❌ 0% | 549.5KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | 367.5KB |
-| Hollow Knight | — | ❌ 11% | ❌ 10% | ✅ | ✅ | N/A |
+| Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 101.9KB |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | 84.2KB |
 | Jak and Daxter: The Precursor Legacy | — | 🔶 62% | ✅ | ✅ | ✅ | 298.6KB |
-| Kingdom Hearts | 🔶 80% | ❌ 18% | ❌ 19% | ⚠️ 98% | ✅ | 753.6KB |
+| Kingdom Hearts | 🔶 80% | ❌ 18% | ❌ 40% | ⚠️ 98% | ✅ | 753.6KB |
 | Kingdom Hearts 2 | ✅ | ❌ 37% | ❌ 0% | ❌ 44% | ❌ 10% | 1641.6KB |
-| Kirby's Dream Land 3 | 🔶 50% | ❌ 3% | ❌ 3% | ✅ | ✅ | 529.1KB |
+| Kirby's Dream Land 3 | 🔶 50% | ❌ 3% | ❌ 0% | ✅ | ✅ | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 210.5KB |
-| Lingo | ❌ 20% | ❌ 21% | ❌ 20% | ✅ | ✅ | 946.3KB |
+| Lingo | ❌ 20% | ❌ 21% | ✅ | ✅ | ✅ | 946.3KB |
 | Links Awakening DX | ✅ | ❌ 23% | ✅ | ❌ 23% | ✅ | 705.8KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | 398.8KB |
@@ -105,21 +105,21 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Old School Runescape | ✅ | ✅ | ✅ | ✅ | ✅ | 307.1KB |
 | Overcooked! 2 | ✅ | ❌ 12% | ✅ | ✅ | ✅ | 489.2KB |
 | Paint | ✅ | ✅ | ✅ | ✅ | ✅ | 123.7KB |
-| Pokemon Emerald | — | 🔶 59% | 🔶 57% | ✅ | ✅ | 1390.9KB |
+| Pokemon Emerald | — | 🔶 59% | ❌ 30% | ✅ | ✅ | 1390.9KB |
 | Pokemon Red and Blue | — | ❌ 0% | ❌ 0% | ✅ | ✅ | 1029.2KB |
 | Raft | ✅ | ✅ | ✅ | ✅ | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | 1044.7KB |
-| Satisfactory | — | — | ❌ 0% | ❌ 0% | — | 1703.4KB |
+| Satisfactory | ❌ 0% | — | ❌ 0% | ❌ 0% | — | 1703.4KB |
 | Saving Princess | ✅ | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | 🔶 70% | ✅ | ✅ | ❌ 0% | ✅ | 418.7KB |
 | Shivers | ✅ | ❌ 0% | ✅ | ❌ 0% | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | ❌ 8% | ✅ | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.8KB |
-| Stardew Valley | ❌ 20% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
+| Stardew Valley | ❌ 30% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Super Mario 64 | ✅ | ❌ 29% | ❌ 0% | ✅ | ✅ | 101.9KB |
+| Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 101.9KB |
 | Super Mario Land 2 | ⚠️ 90% | ❌ 10% | ✅ | ✅ | ✅ | 982.7KB |
 | Super Mario World | ✅ | 🔶 54% | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 0% | ❌ 1% | ❌ 0% | ❌ 49% | ❌ 0% | 625.4KB |
@@ -135,9 +135,9 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ | 🔶 67% | ✅ | ✅ | ✅ | 22.8KB |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | 44.7KB |
-| Yacht Dice | — | ❌ 5% | ❌ 1% | ✅ | ✅ | 249.5KB |
+| Yacht Dice | — | ❌ 5% | ❌ 0% | ✅ | ✅ | 249.5KB |
 | Yoshi's Island | ✅ | ❌ 22% | ✅ | ✅ | ✅ | 296.8KB |
-| Yu-Gi-Oh! 2006 | — | ❌ 33% | ❌ 34% | ✅ | ✅ | 628.0KB |
+| Yu-Gi-Oh! 2006 | — | ❌ 33% | 🔶 50% | ✅ | ✅ | 628.0KB |
 | Zillion | — | ❌ 0% | ❌ 0% | 🔶 78% | ❌ 0% | N/A |
 | shapez | ✅ | ❌ 42% | ✅ | ✅ | ✅ | 155.3KB |
 
