@@ -514,7 +514,7 @@
   },
   "Final Fantasy Mystic Quest": {
     "exporter_path": "exporter/games/official/ffmq.py",
-    "exporter_size": 13757,
+    "exporter_size": 14230,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1018,7 +1018,7 @@
   },
   "Satisfactory": {
     "exporter_path": "exporter/games/official/satisfactory.py",
-    "exporter_size": 36082,
+    "exporter_size": 41457,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
