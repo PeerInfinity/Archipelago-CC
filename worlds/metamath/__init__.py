@@ -8,7 +8,15 @@ from .Options import MetamathOptions, metamath_option_groups
 from .Rules import ProofStructure, ProofStatement, set_metamath_rules, parse_metamath_proof
 
 class MetamathWeb(WebWorld):
-    tutorials = []
+    game_info_languages = []
+    tutorials = [Tutorial(
+        "Multiworld Setup Guide",
+        "A guide to setting up Metamath for MultiWorld.",
+        "English",
+        "setup_en.md",
+        "setup/en",
+        ["Archipelago Team"]
+    )]
     option_groups = metamath_option_groups
 
 class MetamathWorld(World):

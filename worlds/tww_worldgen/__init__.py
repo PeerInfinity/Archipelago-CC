@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -109,6 +109,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class TheWindWakerWorldGenWeb(WebWorld):
     """Web interface for The Wind Waker WorldGen."""
     theme = "ocean"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -117,14 +118,6 @@ class TheWindWakerWorldGenWeb(WebWorld):
             "setup_en.md",
             "setup/en",
             ["tanjo3", "Lunix"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago The Wind Waker software on your computer.",
-            "Français",
-            "setup_fr.md",
-            "setup/fr",
-            ["mobby45"]
         )
     ]
 
