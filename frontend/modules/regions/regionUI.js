@@ -10,6 +10,7 @@ import { debounce } from '../commonUI/index.js';
 // Import the exported dispatcher from the module's index
 import { moduleDispatcher } from './index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { getRegionMovesFromPath } from '../shared/pathUtils.js';
 import {
   resetUnknownEvaluationCounter,
   logAndGetUnknownEvaluationCounter,
@@ -447,8 +448,7 @@ export class RegionUI {
     this.visitedRegions = [];
     this.nextUID = 1;
     
-    // Filter for only regionMove entries
-    const regionMoves = path.filter(entry => entry.type === 'regionMove');
+    const regionMoves = getRegionMovesFromPath(path);
     
     regionMoves.forEach((pathEntry, index) => {
       const uid = this.nextUID++;
