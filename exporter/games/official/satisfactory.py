@@ -237,7 +237,14 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         """Transform Satisfactory rules from AST format to Rule Builder format."""
         data = super().post_process_data(data)
 
-        for player_id, player_regions in data.get('regions', {}).items():
+        # Only process this player's regions, not all players' regions.
+        # In multiworld, data['regions'] contains all players' region data keyed by player ID.
+        # Processing other players' regions would corrupt their rules.
+        my_player_id = str(self.world.player) if self.world else None
+        player_ids_to_process = [my_player_id] if my_player_id and my_player_id in data.get('regions', {}) else list(data.get('regions', {}).keys())
+
+        for player_id in player_ids_to_process:
+            player_regions = data['regions'][player_id]
             for region_name, region_data in player_regions.items():
                 exits = region_data.get('exits', [])
                 # Transform exit rules
@@ -257,14 +264,16 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
                             access_rule, loc_data, region_name
                         )
 
-        # Remove the helpers section since we've inlined everything
+        # Remove the helpers section only for this player
         if 'helpers' in data:
-            for player_id in data['helpers']:
-                helpers = data['helpers'][player_id]
-                for helper_name in ['can_build', 'can_produce', 'can_produce_all',
-                                    'has_recipe', 'is_recipe_producible',
-                                    'can_handcraft_single_part']:
-                    helpers.pop(helper_name, None)
+            helpers_to_process = [my_player_id] if my_player_id and my_player_id in data.get('helpers', {}) else list(data.get('helpers', {}).keys())
+            for player_id in helpers_to_process:
+                if player_id in data['helpers']:
+                    helpers = data['helpers'][player_id]
+                    for helper_name in ['can_build', 'can_produce', 'can_produce_all',
+                                        'has_recipe', 'is_recipe_producible',
+                                        'can_handcraft_single_part']:
+                        helpers.pop(helper_name, None)
 
         return data
 
