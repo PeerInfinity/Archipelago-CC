@@ -3,8 +3,8 @@
   "game_name": "Final Fantasy Mystic Quest",
   "game_directory": "ffmq",
   "archipelago_version": "0.6.7",
-  "generation_seed": 1,
-  "seed_name": "14089154938208861744",
+  "generation_seed": 8,
+  "seed_name": "20777137877808592492",
   "player_names": {
     "1": "Player1"
   },
@@ -65,15 +65,7 @@
             "name": "Overworld - Bone Dungeon",
             "connected_region": "Bone Dungeon 1F",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -128,9 +120,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Battle Axe",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -167,32 +159,7 @@
             "name": "Overworld - Wintry Cave",
             "connected_region": "Wintry Cave 1F - East Ledge",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Cat Claw",
-                        "Charm Claw",
-                        "Dragon Claw"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Bomb",
-                        "Bomb",
-                        "Jumbo Bomb",
-                        "Mega Grenade"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -206,47 +173,7 @@
             "name": "Overworld - Ice Pyramid",
             "connected_region": "Ice Pyramid 1F Maze Lobby",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "And",
-                    "args": {
-                      "rules": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Magic Mirror"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Cat Claw",
-                              "Charm Claw",
-                              "Dragon Claw"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Bomb",
-                        "Bomb",
-                        "Jumbo Bomb",
-                        "Mega Grenade"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -308,7 +235,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Moon Helm",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -379,7 +306,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Magic Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -411,30 +338,7 @@
             "name": "Overworld - Mine",
             "connected_region": "Mine Exterior North West Platforms",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Cat Claw",
-                        "Charm Claw",
-                        "Dragon Claw"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Mega Grenade",
-                        "Reuben 1"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -448,24 +352,14 @@
             "name": "Overworld - Volcano",
             "connected_region": "Volcano Base",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Mask"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
             "name": "Overworld - Lava Dome",
             "connected_region": "Lava Dome Inner Ring Main Loop",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Mega Grenade"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -527,9 +421,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Sand Coin",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -542,9 +436,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Elixir",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -612,44 +506,10 @@
             "name": "Overworld - Giant Tree",
             "connected_region": "Giant Tree 1F Main Area",
             "access_rule": {
-              "rule": "And",
+              "rule": "HasAll",
               "args": {
-                "rules": [
-                  {
-                    "rule": "And",
-                    "args": {
-                      "rules": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Barred"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Progressive Axe",
-                              "Axe",
-                              "Battle Axe",
-                              "Giant's Axe",
-                              "Progressive Claw"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
+                "items": [
+                  "Barred"
                 ]
               }
             }
@@ -679,42 +539,14 @@
             "name": "Overworld - Mount Gale",
             "connected_region": "Mount Gale",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
             "name": "Overworld - Pazuzu Tower",
             "connected_region": "Pazuzu Tower 1F Main Lobby",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Bomb",
-                        "Bomb",
-                        "Jumbo Bomb",
-                        "Mega Grenade"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -831,13 +663,7 @@
             "name": "Overworld - Mac Ship",
             "connected_region": "Mac Ship Deck",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw",
-                  "Captain's Cap"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -899,26 +725,10 @@
             "name": "Overworld - Mac Ship Doom",
             "connected_region": "Mac Ship Deck",
             "access_rule": {
-              "rule": "And",
+              "rule": "HasAll",
               "args": {
-                "rules": [
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Barred"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw",
-                        "Captain's Cap"
-                      ]
-                    }
-                  }
+                "items": [
+                  "Barred"
                 ]
               }
             }
@@ -981,48 +791,13 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Magic Mirror",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
             "type": "Chest"
-          },
-          {
-            "name": "Doom Castle B2 - Bone Ledge Box",
-            "id": 4325406,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle B2 - Hook Platform Box",
-            "id": 4325407,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 1
@@ -1046,9 +821,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Claw",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1167,23 +942,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Focus Tower 1F - Main Lobby Box",
-            "id": 4325409,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Aero Book",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 6
       },
       "Focus Tower 1F SandCoin Room": {
@@ -1321,7 +1080,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Aegis Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1372,9 +1131,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Venus Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1410,7 +1169,7 @@
               }
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1439,23 +1198,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Focus Tower 3F - River Door Box",
-            "id": 4325410,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 13
       },
       "Focus Tower 3F - Upper Floor": {
@@ -1492,117 +1235,6 @@
         ],
         "locations": [
           {
-            "name": "Level Forest - Northwest Box",
-            "id": 4325416,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Level Forest - Northeast Box",
-            "id": 4325417,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Level Forest - Middle Box",
-            "id": 4325418,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Level Forest - Southwest Box",
-            "id": 4325419,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Level Forest - Southeast Box",
-            "id": 4325420,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Progressive Claw",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Minotaur",
             "id": null,
             "access_rule": {
@@ -1630,7 +1262,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Claw",
+              "name": "River Coin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1651,9 +1283,9 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Gemini Crest",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1701,32 +1333,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Foresta - Outside Box",
-            "id": 4325421,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 16
       },
       "Kaeli's House": {
@@ -1741,21 +1348,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Foresta - Kaeli's House Box",
-            "id": 4325422,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sun Coin",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Kaeli Companion",
             "id": null,
@@ -1860,9 +1452,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Multi Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1898,23 +1490,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Foresta - Rest House Box",
-            "id": 4325423,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 20
       },
       "Libra Treehouse": {
@@ -1933,23 +1509,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Alive Forest - Libra Treehouse Box",
-            "id": 4325426,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 21
       },
       "Gemini Treehouse": {
@@ -1968,23 +1528,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Alive Forest - Gemini Treehouse Box",
-            "id": 4325427,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 22
       },
       "Mobius Treehouse": {
@@ -2003,38 +1547,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Alive Forest - Mobius Treehouse West Box",
-            "id": 4325424,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Alive Forest - Mobius Treehouse East Box",
-            "id": 4325425,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 23
       },
       "Sand Temple": {
@@ -2086,53 +1599,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Bone Dungeon 1F - Entrance Room West Box",
-            "id": 4325429,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Bone Dungeon 1F - Entrance Room Middle Box",
-            "id": 4325430,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Bone Dungeon 1F - Entrance Room East Box",
-            "id": 4325431,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 25
       },
       "Bone Dungeon B1 - Waterway": {
@@ -2177,7 +1644,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Noble Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2197,7 +1664,7 @@
               }
             },
             "item": {
-              "name": "Sky Coin",
+              "name": "Sun Coin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2247,31 +1714,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Bone Dungeon B1 - Checker Room Box",
-            "id": 4325432,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 28
       },
       "Bone Dungeon B1 - Hidden Room": {
@@ -2285,23 +1728,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Bone Dungeon B1 - Ribcage Waterway Box",
-            "id": 4325433,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Captain's Cap",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 29
       },
       "Bone Dungeon B2 - Exploding Skull Room - First Room": {
@@ -2328,21 +1755,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Bone Dungeon B2 - Spines Room Alcove Box",
-            "id": 4325435,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Long Spine",
             "id": null,
@@ -2412,21 +1824,6 @@
         ],
         "locations": [
           {
-            "name": "Bone Dungeon B2 - Spines Room Looped Hallway Box",
-            "id": 4325434,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Short Spine",
             "id": null,
             "access_rule": {
@@ -2490,23 +1887,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Bone Dungeon B2 - Lone Room Box",
-            "id": 4325437,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Sword",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 33
       },
       "Bone Dungeon B2 - Quake Room": {
@@ -2528,7 +1909,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Venus Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2563,21 +1944,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Bone Dungeon B2 - Two Skulls Room Box",
-            "id": 4325436,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Skull 1",
             "id": null,
@@ -2722,43 +2088,13 @@
         ],
         "locations": [
           {
-            "name": "Bone Dungeon B2 - North Box",
-            "id": 4325438,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Bone Dungeon B2 - South Box",
-            "id": 4325439,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Bone Dungeon B2 - Flamerus Rex Chest",
             "id": 4325384,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "River Coin",
+              "name": "Bomb",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2773,9 +2109,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cat Claw",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2824,21 +2160,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Libra Temple - Box",
-            "id": 4325440,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Phoebe Companion",
             "id": null,
@@ -2950,23 +2271,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Aquaria - Phoebe's House Chest",
-            "id": 4325441,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 41
       },
       "Aquaria Vendor House": {
@@ -2995,28 +2300,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Apollo Helm",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
             "type": "NPC"
-          },
-          {
-            "name": "Aquaria - Vendor House Box",
-            "id": 4325442,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 42
@@ -3098,58 +2388,6 @@
         ],
         "locations": [
           {
-            "name": "Wintry Cave 1F - North Box",
-            "id": 4325443,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Cave 1F - Entrance Box",
-            "id": 4325446,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Cave 1F - Slippery Cliff Box",
-            "id": 4325444,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Wintry Cave 1F - Phoebe",
             "id": 4325681,
             "access_rule": {
@@ -3161,7 +2399,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Gaia's Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3204,30 +2442,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Wintry Cave 1F - Scenic Overlook Box",
-            "id": 4325445,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 46
       },
       "Wintry Cave 1F - West Ledge": {
@@ -3284,68 +2499,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Wintry Cave 2F - West Left Box",
-            "id": 4325447,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Venus Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Cave 2F - West Right Box",
-            "id": 4325448,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Cave 2F - East Left Box",
-            "id": 4325449,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Cave 2F - East Right Box",
-            "id": 4325450,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Accessory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 48
       },
       "Wintry Cave 3F Top": {
@@ -3359,38 +2513,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Wintry Cave 3F - West Box",
-            "id": 4325451,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Cave 3F - East Box",
-            "id": 4325452,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Book",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 49
       },
       "Wintry Cave 3F Bottom": {
@@ -3417,7 +2540,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Blizzard Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3440,21 +2563,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Wintry Cave 3F - Before Boss Box",
-            "id": 4325453,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 50
@@ -3484,28 +2592,13 @@
         ],
         "locations": [
           {
-            "name": "Life Temple - Box",
-            "id": 4325454,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Life Temple - Mysterious Man",
             "id": 4325682,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Mask",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3540,9 +2633,9 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Charm Claw",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3563,21 +2656,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Falls Basin - Box",
-            "id": 4325455,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 52
@@ -3601,58 +2679,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Chest"
-          },
-          {
-            "name": "Ice Pyramid B1 - West Box",
-            "id": 4325456,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Tree Wither",
+              "name": "Excalibur",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid B1 - North Box",
-            "id": 4325457,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Thunder Seal",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid B1 - East Box",
-            "id": 4325458,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
+            "type": "Chest"
           }
         ],
         "id": 53
@@ -3767,58 +2800,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Axe",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
             "type": "Chest"
-          },
-          {
-            "name": "Ice Pyramid 1F - Sandwiched Alcove Box",
-            "id": 4325459,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 1F - Southwest Left Box",
-            "id": 4325460,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 1F - Southwest Right Box",
-            "id": 4325461,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 55
@@ -3841,46 +2829,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 2F - South Side Glass Door Box",
-            "id": 4325463,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Sword",
-                  "Steel Sword",
-                  "Knight Sword",
-                  "Excalibur"
-                ]
-              }
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 2F - South Side East Box",
-            "id": 4325467,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 56
       },
       "Ice Pyramid 2F West Room": {
@@ -3894,23 +2843,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 2F - Northwest Room Box",
-            "id": 4325466,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Meteor Seal",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 57
       },
       "Ice Pyramid 2F Center Room": {
@@ -3924,23 +2857,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 2F - Center Room Box",
-            "id": 4325462,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 58
       },
       "Ice Pyramid 2F Small North Room": {
@@ -3954,31 +2871,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 2F - North Room Glass Door Box",
-            "id": 4325464,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Sword",
-                  "Steel Sword",
-                  "Knight Sword",
-                  "Excalibur"
-                ]
-              }
-            },
-            "item": {
-              "name": "Progressive Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 59
       },
       "Ice Pyramid 2F North Corridor": {
@@ -3999,31 +2892,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 2F - North Corridor Glass Door Box",
-            "id": 4325465,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Sword",
-                  "Steel Sword",
-                  "Knight Sword",
-                  "Excalibur"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 60
       },
       "Ice Pyramid 3F Two Boxes Room": {
@@ -4037,38 +2906,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 3F - Staircase Dead End Left Box",
-            "id": 4325470,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 3F - Staircase Dead End Right Box",
-            "id": 4325471,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 61
       },
       "Ice Pyramid 3F Main Loop": {
@@ -4095,66 +2933,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Ice Pyramid 3F - Inner Room North Box",
-            "id": 4325468,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 3F - Inner Room South Box",
-            "id": 4325469,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 3F - East Alcove Box",
-            "id": 4325472,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 3F - Leapfrog Box",
-            "id": 4325473,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Ice Pyramid 3F Statue",
             "id": null,
@@ -4265,118 +3043,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Thunder Rock",
+              "name": "Dragon Claw",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false,
             "type": "Chest"
-          },
-          {
-            "name": "Ice Pyramid 4F - Northwest Box",
-            "id": 4325474,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 4F - West Left Box",
-            "id": 4325475,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 4F - West Right Box",
-            "id": 4325476,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 4F - South Left Box",
-            "id": 4325477,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 4F - South Right Box",
-            "id": 4325478,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 4F - East Left Box",
-            "id": 4325479,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 4F - East Right Box",
-            "id": 4325480,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           },
           {
             "name": "Ice Pyramid 4F Statue",
@@ -4473,108 +3146,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Ice Pyramid 5F - Glass Door Left Box",
-            "id": 4325481,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Ice Pyramid 5F Statue"
-                ]
-              }
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 5F - West Ledge Box",
-            "id": 4325482,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 5F - South Shelf Box",
-            "id": 4325483,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 5F - South Leapfrog Box",
-            "id": 4325484,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 5F - Glass Door Right Box",
-            "id": 4325485,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Ice Pyramid 5F Statue"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Ice Pyramid 5F - North Box",
-            "id": 4325486,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 66
       },
       "Ice Pyramid 5F Stairs to Ice Golem": {
@@ -4717,7 +3289,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Charm",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4785,35 +3357,13 @@
         ],
         "locations": [
           {
-            "name": "Spencer's Cave - Box",
-            "id": 4325487,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Spencer's Cave - Spencer",
             "id": 4325684,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Fire Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4833,7 +3383,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Thunder Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5096,9 +3646,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Mobius Crest",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5137,38 +3687,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Wintry Temple - West Box",
-            "id": 4325488,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Wintry Temple - North Box",
-            "id": 4325489,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 75
       },
       "Fireburg Upper Plaza": {
@@ -5250,23 +3769,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Fireburg - Hidden Tunnel Box",
-            "id": 4325492,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 208
       },
       "Reuben's House": {
@@ -5293,9 +3796,9 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Tree Wither",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5316,21 +3819,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Fireburg - Reuben's House Box",
-            "id": 4325493,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 77
@@ -5366,9 +3854,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Captain's Cap",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5424,7 +3912,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Exit Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5488,7 +3976,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5724,52 +4212,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Mine - Parallel Room West Box",
-            "id": 4325495,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Progressive Axe",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mine - Parallel Room East Box",
-            "id": 4325496,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Magic Mirror",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 88
       },
       "Mine Crescent Room": {
@@ -5791,9 +4234,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Libra Crest",
+              "name": "Cupid Locket",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5813,30 +4256,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Mine - Glitchy Collision Cave Box",
-            "id": 4325494,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Cat Claw",
-                  "Charm Claw",
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 90
       },
       "Mine Cliff": {
@@ -5852,66 +4272,6 @@
         ],
         "locations": [
           {
-            "name": "Mine - Cliff Southwest Box",
-            "id": 4325497,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mine - Cliff Northwest Box",
-            "id": 4325498,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Accessory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mine - Cliff Northeast Box",
-            "id": 4325499,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Sword",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mine - Cliff Southeast Box",
-            "id": 4325500,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Mine - Reuben",
             "id": 4325683,
             "access_rule": {
@@ -5923,7 +4283,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Steel Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5978,38 +4338,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Sealed Temple - West Box",
-            "id": 4325501,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Sealed Temple - East Box",
-            "id": 4325502,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 92
       },
       "Volcano Base": {
@@ -6045,58 +4374,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Chest"
-          },
-          {
-            "name": "Volcano - Base West Box",
-            "id": 4325503,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Volcano - Base East Left Box",
-            "id": 4325504,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Volcano - Base East Right Box",
-            "id": 4325505,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Sand Coin",
+              "name": "Thunder Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
             "locked": false,
-            "type": "Box"
+            "type": "Chest"
           }
         ],
         "id": 93
@@ -6125,7 +4409,7 @@
               }
             },
             "item": {
-              "name": "Progressive Helm",
+              "name": "Aero Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6148,21 +4432,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Volcano - Behind Medusa Box",
-            "id": 4325506,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 94
@@ -6178,38 +4447,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Volcano - Top of the Volcano Left Box",
-            "id": 4325507,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Volcano - Top of the Volcano Right Box",
-            "id": 4325508,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 95
       },
       "Volcano Right Path": {
@@ -6223,23 +4461,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Volcano - Right Path Box",
-            "id": 4325511,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 96
       },
       "Volcano Left Path": {
@@ -6267,23 +4489,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Volcano - Left Path Box",
-            "id": 4325510,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 98
       },
       "Volcano Cross Left-Right": {
@@ -6325,23 +4531,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Volcano - Crossover Section Box",
-            "id": 4325509,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 209
       },
       "Lava Dome Inner Ring Main Loop": {
@@ -6383,38 +4573,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Exterior Caldera Near Switch Cliff Box",
-            "id": 4325512,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Exterior South Cliff Box",
-            "id": 4325513,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 100
       },
       "Lava Dome Inner Ring Center Ledge": {
@@ -6442,23 +4601,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Exterior Center Dropoff Ledge Box",
-            "id": 4325514,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 101
       },
       "Lava Dome Inner Ring Plate Ledge": {
@@ -6606,23 +4749,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Exterior Dead End Caldera Box",
-            "id": 4325515,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mobius Crest",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 106
       },
       "Lava Dome Jump Maze II": {
@@ -6650,98 +4777,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Gold Maze Northwest Box",
-            "id": 4325516,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Gold Maze Southwest Box",
-            "id": 4325622,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Gold Maze Northeast Box",
-            "id": 4325623,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Gold Maze North Box",
-            "id": 4325624,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Gold Maze Center Box",
-            "id": 4325625,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Helm",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Gold Maze Southeast Box",
-            "id": 4325626,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 107
       },
       "Lava Dome Up-Down Corridor": {
@@ -6783,68 +4819,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Bare Maze Leapfrog Alcove North Box",
-            "id": 4325517,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Bare Maze Leapfrog Alcove South Box",
-            "id": 4325518,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Bare Maze Center Box",
-            "id": 4325519,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Armor",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Bare Maze Southwest Box",
-            "id": 4325520,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 109
       },
       "Lava Dome Pointless Room": {
@@ -6879,38 +4854,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - U-Bend Room North Box",
-            "id": 4325522,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mask",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - U-Bend Room South Box",
-            "id": 4325523,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Quake Book",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 111
       },
       "Lava Dome Moon Helm Room": {
@@ -6932,28 +4876,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Flare Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
             "type": "Chest"
-          },
-          {
-            "name": "Lava Dome - Beyond River Room Box",
-            "id": 4325521,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 112
@@ -6969,23 +4898,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Three Jumps Room Box",
-            "id": 4325526,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 113
       },
       "Lava Dome Life Chest Room Lower Ledge": {
@@ -7026,9 +4939,9 @@
               }
             },
             "item": {
-              "name": "Heal Book",
+              "name": "Giant's Axe",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7062,38 +4975,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Gold Bar Room Leapfrog Alcove Box West",
-            "id": 4325524,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Gold Bar Room Leapfrog Alcove Box East",
-            "id": 4325525,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 115
       },
       "Lava Dome Big Jump Room Main Area": {
@@ -7126,53 +5008,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Lava River Room North Box",
-            "id": 4325528,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Lava River Room East Box",
-            "id": 4325529,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Lava River Room South Box",
-            "id": 4325530,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 116
       },
       "Lava Dome Big Jump Room MegaGrenade Area": {
@@ -7222,23 +5058,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Split Corridor Box",
-            "id": 4325527,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 118
       },
       "Lava Dome Plate Corridor": {
@@ -7280,68 +5100,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Lava Dome - Caldera Stairway West Left Box",
-            "id": 4325531,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Caldera Stairway West Right Box",
-            "id": 4325532,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Caldera Stairway East Left Box",
-            "id": 4325533,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Caldera Stairway East Right Box",
-            "id": 4325534,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 120
       },
       "Lava Dome Hydra Room": {
@@ -7380,7 +5139,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Meteor Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7403,36 +5162,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Lava Dome - Hydra Room Northwest Box",
-            "id": 4325535,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Sword",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Lava Dome - Hydra Room Southweast Box",
-            "id": 4325536,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 121
@@ -7462,38 +5191,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Rope Bridge - West Box",
-            "id": 4325539,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Rope Bridge - East Box",
-            "id": 4325540,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Axe",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 123
       },
       "Alive Forest": {
@@ -7642,85 +5340,13 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Quake Book",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
             "type": "Chest"
-          },
-          {
-            "name": "Alive Forest - Near Entrance Box",
-            "id": 4325541,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Alive Forest - After Bridge Box",
-            "id": 4325542,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Alive Forest - Gemini Stump Box",
-            "id": 4325543,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 124
@@ -7748,68 +5374,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 1F - Northwest Box",
-            "id": 4325544,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 1F - Southwest Box",
-            "id": 4325545,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 1F - Center Box",
-            "id": 4325546,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 1F - East Box",
-            "id": 4325547,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 125
       },
       "Giant Tree 1F North Island": {
@@ -7899,23 +5464,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 2F - North Box",
-            "id": 4325548,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 127
       },
       "Giant Tree 2F West Ledge": {
@@ -7949,23 +5498,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 2F - Dropdown Ledge Box",
-            "id": 4325550,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 128
       },
       "Giant Tree 2F Lower Area": {
@@ -8000,23 +5533,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 2F - South Box",
-            "id": 4325549,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 129
       },
       "Giant Tree 2F Central Island": {
@@ -8107,9 +5624,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Mega Grenade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -8169,56 +5686,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 2F - Mushroom Tunnel West Box",
-            "id": 4325551,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Progressive Axe",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 2F - Mushroom Tunnel East Box",
-            "id": 4325552,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 133
       },
       "Giant Tree 3F Central Island": {
@@ -8258,23 +5726,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 3F - Central Island Box",
-            "id": 4325555,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Blizzard Book",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 135
       },
       "Giant Tree 3F Central Area": {
@@ -8309,38 +5761,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 3F - Center North Box",
-            "id": 4325553,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 3F - Center West Box",
-            "id": 4325554,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 136
       },
       "Giant Tree 3F Lower Ledge": {
@@ -8395,23 +5816,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 3F - West Side Box",
-            "id": 4325556,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 138
       },
       "Giant Tree 3F Middle Up Island": {
@@ -8580,56 +5985,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 3F - Worm Room North Box",
-            "id": 4325557,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Fire Book",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 3F - Worm Room South Box",
-            "id": 4325558,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 142
       },
       "Giant Tree Worm Room Lower Ledge": {
@@ -8726,38 +6082,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 4F - Highest Platform North Box",
-            "id": 4325559,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 4F - Highest Platform South Box",
-            "id": 4325560,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 144
       },
       "Giant Tree 4F Upper Floor": {
@@ -8812,38 +6137,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 4F - Hook Ledge Northeast Box",
-            "id": 4325561,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 4F - Hook Ledge Southwest Box",
-            "id": 4325562,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 146
       },
       "Giant Tree 4F Slime Room East Area": {
@@ -8857,32 +6151,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 4F - East Slime Room Box",
-            "id": 4325564,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Axe",
-                  "Axe",
-                  "Battle Axe",
-                  "Giant's Axe",
-                  "Progressive Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 147
       },
       "Giant Tree 4F Slime Room West Area": {
@@ -8982,23 +6251,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 4F - West Slime Room Box",
-            "id": 4325563,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Bomb",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 149
       },
       "Giant Tree 5F Lower Area": {
@@ -9033,68 +6286,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Giant Tree 5F - Northwest Left Box",
-            "id": 4325565,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 5F - Northwest Right Box",
-            "id": 4325566,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 5F - South Left Box",
-            "id": 4325567,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Giant Tree 5F - South Right Box",
-            "id": 4325568,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "White Seal",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 150
       },
       "Giant Tree 5F Gidrah Platform": {
@@ -9199,23 +6391,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Kaidge Temple - Box",
-            "id": 4325569,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 153
       },
       "Windhole Temple": {
@@ -9229,23 +6405,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Windhole Temple - Box",
-            "id": 4325570,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 154
       },
       "Mount Gale": {
@@ -9273,9 +6433,9 @@
               }
             },
             "item": {
-              "name": "Flare Seal",
+              "name": "Jumbo Bomb",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -9317,41 +6477,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Mount Gale - East Box",
-            "id": 4325571,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mount Gale - West Box",
-            "id": 4325572,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 155
@@ -9459,23 +6584,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Windia - Otto's Attic Box",
-            "id": 4325573,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 158
       },
       "Windia Kid House": {
@@ -9564,38 +6673,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Windia - Mobius Basement West Box",
-            "id": 4325576,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Windia - Mobius Basement East Box",
-            "id": 4325577,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 162
       },
       "Windia Inn Lobby": {
@@ -9632,36 +6710,6 @@
         ],
         "locations": [
           {
-            "name": "Windia - Inn Bedroom North Box",
-            "id": 4325574,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Windia - Inn Bedroom South Box",
-            "id": 4325575,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Gemini Crest",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Windia - Kaeli",
             "id": 4325691,
             "access_rule": {
@@ -9673,7 +6721,7 @@
               }
             },
             "item": {
-              "name": "Multi Key",
+              "name": "Libra Crest",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9703,7 +6751,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Life Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9769,92 +6817,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Pazuzu's Tower 1F - Descent Bomb Wall West Box",
-            "id": 4325578,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 1F - Descent Bomb Wall Center Box",
-            "id": 4325579,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
-            },
-            "item": {
-              "name": "Wakewater",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 1F - Descent Bomb Wall East Box",
-            "id": 4325580,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 1F - Descent Box",
-            "id": 4325581,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 167
       },
       "Pazuzu Tower 1F Southern Platform": {
@@ -9916,36 +6879,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Pazuzu's Tower 2F - East Room West Box",
-            "id": 4325582,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Refresher",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 2F - East Room East Box",
-            "id": 4325583,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Pazuzu 2F Lock",
             "id": null,
@@ -10017,36 +6950,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Pazuzu's Tower 3F - Guest Room West Box",
-            "id": 4325584,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 3F - Guest Room East Box",
-            "id": 4325585,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Pazuzu 3F",
             "id": null,
@@ -10127,23 +7030,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Pazuzu's Tower 3F - South Ledge Box",
-            "id": 4325586,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Accessory",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 172
       },
       "Pazuzu 4F": {
@@ -10180,59 +7067,13 @@
         ],
         "locations": [
           {
-            "name": "Pazuzu's Tower 4F - Elevator West Box",
-            "id": 4325587,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 4F - Elevator East Box",
-            "id": 4325588,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Pazuzu's Tower 4F - East Storage Room Chest",
             "id": 4325400,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Exit Book",
+              "name": "White Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10348,38 +7189,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Pazuzu's Tower 5F - North Box",
-            "id": 4325589,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Pazuzu's Tower 5F - South Box",
-            "id": 4325590,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Progressive Helm",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 175
       },
       "Pazuzu 6F": {
@@ -10416,30 +7226,15 @@
         ],
         "locations": [
           {
-            "name": "Pazuzu's Tower 6F - Box",
-            "id": 4325591,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Pazuzu's Tower 6F - Chest",
             "id": 4325401,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Bomb",
+              "name": "Steel Helm",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -10619,9 +7414,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Knight Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -10787,23 +7582,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Light Temple - Box",
-            "id": 4325592,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 185
       },
       "Ship Dock": {
@@ -10904,51 +7683,6 @@
             "locked": true,
             "event": true,
             "type": "Trigger"
-          },
-          {
-            "name": "Mac's Ship Deck - North Box",
-            "id": 4325593,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mac's Ship Deck - Center Box",
-            "id": 4325594,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mac's Ship Deck - South Box",
-            "id": 4325595,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
           }
         ],
         "id": 187
@@ -10992,48 +7726,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Mac's Ship B1 - Northwest Hook Platform Box",
-            "id": 4325604,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mac's Ship B1 - Center Hook Platform Box",
-            "id": 4325605,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Progressive Shield",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 188
       },
       "Mac Ship B1 Square Room": {
@@ -11082,23 +7775,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Mac's Ship B1 - Central Corridor Box",
-            "id": 4325606,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 190
       },
       "Mac Ship B2 South Corridor": {
@@ -11154,68 +7831,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Mac's Ship B2 - Barrel Room South Box",
-            "id": 4325599,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Bomb Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mac's Ship B2 - Barrel Room North Box",
-            "id": 4325600,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mac's Ship B2 - Southwest Room Box",
-            "id": 4325601,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Mac's Ship B2 - Southeast Room Box",
-            "id": 4325602,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          }
-        ],
+        "locations": [],
         "id": 193
       },
       "Mac Ship B1 Mac Room": {
@@ -11237,9 +7853,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Wakewater",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -11342,143 +7958,6 @@
         ],
         "locations": [
           {
-            "name": "Doom Castle 4F - Northwest Room Box",
-            "id": 4325607,
-            "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Sword",
-                        "Steel Sword",
-                        "Knight Sword",
-                        "Excalibur"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
-                ]
-              }
-            },
-            "item": {
-              "name": "Life Book",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 4F - Southwest Room Box",
-            "id": 4325608,
-            "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Sword",
-                        "Steel Sword",
-                        "Knight Sword",
-                        "Excalibur"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 4F - Northeast Room Box",
-            "id": 4325609,
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Sword",
-                  "Steel Sword",
-                  "Knight Sword",
-                  "Excalibur"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 4F - Southeast Room Box",
-            "id": 4325610,
-            "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Sword",
-                        "Steel Sword",
-                        "Knight Sword",
-                        "Excalibur"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
-                ]
-              }
-            },
-            "item": {
-              "name": "Cure Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Stone Golem",
             "id": null,
             "access_rule": {
@@ -11533,86 +8012,6 @@
         ],
         "locations": [
           {
-            "name": "Doom Castle 5F - North Left Box",
-            "id": 4325611,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 5F - North Right Box",
-            "id": 4325612,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 5F - South Left Box",
-            "id": 4325613,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 5F - South Right Box",
-            "id": 4325614,
-            "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
-            },
-            "item": {
-              "name": "Heal Potion",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
             "name": "Twinhead Wyvern",
             "id": null,
             "access_rule": {
@@ -11655,36 +8054,6 @@
           }
         ],
         "locations": [
-          {
-            "name": "Doom Castle 6F - West Box",
-            "id": 4325615,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Elixir",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
-          {
-            "name": "Doom Castle 6F - East Box",
-            "id": 4325616,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Projectile Refill",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "type": "Box"
-          },
           {
             "name": "Zuh",
             "id": null,
@@ -11840,7 +8209,7 @@
           "Everything",
           "Key Items"
         ],
-        "classification": "progression",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -11852,7 +8221,7 @@
           "Everything",
           "Key Items"
         ],
-        "classification": "progression",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -11979,7 +8348,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 61
+        "max_count": 1
       },
       "Heal Potion": {
         "name": "Heal Potion",
@@ -11991,7 +8360,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 52
+        "max_count": 1
       },
       "Seed": {
         "name": "Seed",
@@ -12003,7 +8372,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Refresher": {
         "name": "Refresher",
@@ -12015,7 +8384,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 17
+        "max_count": 1
       },
       "Exit Book": {
         "name": "Exit Book",
@@ -12169,7 +8538,7 @@
           "Swords",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12182,7 +8551,7 @@
           "Swords",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12195,7 +8564,7 @@
           "Swords",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12208,7 +8577,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12221,7 +8590,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12234,7 +8603,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12247,7 +8616,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12260,7 +8629,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12273,7 +8642,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12299,7 +8668,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12312,7 +8681,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12324,7 +8693,7 @@
           "Everything",
           "Helms"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12336,7 +8705,7 @@
           "Everything",
           "Helms"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12348,7 +8717,7 @@
           "Everything",
           "Helms"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12372,7 +8741,7 @@
           "Armors",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12384,7 +8753,7 @@
           "Armors",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12396,7 +8765,7 @@
           "Everything",
           "Shields"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12408,7 +8777,7 @@
           "Everything",
           "Shields"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12420,7 +8789,7 @@
           "Everything",
           "Shields"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12432,7 +8801,7 @@
           "Accessories",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12444,7 +8813,7 @@
           "Accessories",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12456,7 +8825,7 @@
           "Accessories",
           "Everything"
         ],
-        "classification": "filler",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12471,7 +8840,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 19
+        "max_count": 1
       },
       "Projectile Refill": {
         "name": "Projectile Refill",
@@ -12483,7 +8852,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 1
       },
       "Sky Fragment": {
         "name": "Sky Fragment",
@@ -12505,10 +8874,10 @@
           "Swords",
           "Weapons"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
       "Progressive Axe": {
         "name": "Progressive Axe",
@@ -12518,10 +8887,10 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
       "Progressive Claw": {
         "name": "Progressive Claw",
@@ -12531,10 +8900,10 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
       "Progressive Bomb": {
         "name": "Progressive Bomb",
@@ -12544,10 +8913,10 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Progressive Helm": {
         "name": "Progressive Helm",
@@ -12556,10 +8925,10 @@
           "Everything",
           "Helms"
         ],
-        "classification": "useful",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -12568,10 +8937,10 @@
           "Armors",
           "Everything"
         ],
-        "classification": "useful",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -12580,10 +8949,10 @@
           "Everything",
           "Shields"
         ],
-        "classification": "useful",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
       "Progressive Accessory": {
         "name": "Progressive Accessory",
@@ -12592,10 +8961,10 @@
           "Accessories",
           "Everything"
         ],
-        "classification": "useful",
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
       "Minotaur": {
         "name": "Minotaur",
@@ -13148,46 +9517,62 @@
   },
   "itempool_counts": {
     "1": {
+      "Aegis Shield": 1,
       "Aero Book": 1,
+      "Apollo Helm": 1,
+      "Axe": 1,
       "Barrel Pushed": 1,
+      "Battle Axe": 1,
       "Blizzard Book": 1,
       "Bomb": 1,
-      "Bomb Refill": 19,
       "Captain's Cap": 1,
+      "Cat Claw": 1,
+      "Charm": 1,
+      "Charm Claw": 1,
+      "Cupid Locket": 1,
       "Cure Book": 1,
-      "Cure Potion": 61,
+      "Cure Potion": 1,
       "Dark King": 1,
+      "Dragon Claw": 1,
       "Dualhead Hydra": 1,
       "Dullahan": 1,
       "Elixir": 1,
+      "Excalibur": 1,
       "Exit Book": 1,
       "Fire Book": 1,
       "Flamerus Rex": 1,
       "Flare Seal": 1,
       "Freezer Crab": 1,
+      "Gaia's Armor": 1,
       "Gemini Crest": 1,
+      "Giant's Axe": 1,
       "Gidrah": 1,
       "Heal Book": 1,
-      "Heal Potion": 52,
       "Ice Golem": 1,
       "Ice Pyramid 1F Statue": 1,
       "Ice Pyramid 3F Statue": 1,
       "Ice Pyramid 4F Statue": 1,
       "Ice Pyramid 5F Statue": 1,
       "Jinn": 1,
+      "Jumbo Bomb": 1,
       "Kaeli 1": 1,
       "Kaeli 2": 1,
+      "Knight Sword": 1,
       "Lava Dome Plate": 1,
       "Libra Crest": 1,
       "Life Book": 1,
       "Long Spine Bombed": 1,
       "Magic Mirror": 1,
+      "Magic Ring": 1,
       "Mask": 1,
       "Medusa": 1,
+      "Mega Grenade": 1,
       "Meteor Seal": 1,
       "Minotaur": 1,
       "Mobius Crest": 1,
+      "Moon Helm": 1,
       "Multi Key": 1,
+      "Noble Armor": 1,
       "Pazuzu": 1,
       "Pazuzu 1F": 1,
       "Pazuzu 2F": 1,
@@ -13200,23 +9585,12 @@
       "Pazuzu 6F Lock": 1,
       "Phanquid": 1,
       "Phoebe 1": 1,
-      "Progressive Accessory": 3,
-      "Progressive Armor": 2,
-      "Progressive Axe": 3,
-      "Progressive Bomb": 2,
-      "Progressive Claw": 3,
-      "Progressive Helm": 3,
-      "Progressive Shield": 3,
-      "Progressive Sword": 3,
-      "Projectile Refill": 50,
       "Quake Book": 1,
       "Rainbow Bridge": 1,
-      "Refresher": 17,
       "Reuben 1": 1,
       "Reuben Dad Saved": 1,
       "River Coin": 1,
       "Sand Coin": 1,
-      "Seed": 2,
       "Ship Dock Access": 1,
       "Ship Liberated": 1,
       "Ship Loaned": 1,
@@ -13227,6 +9601,9 @@
       "Sky Coin": 1,
       "Spencer Cave Libra Block Bombed": 1,
       "Steel Armor": 1,
+      "Steel Helm": 1,
+      "Steel Shield": 1,
+      "Steel Sword": 1,
       "Stone Golem": 1,
       "Summer Aquaria": 1,
       "Sun Coin": 1,
@@ -13237,6 +9614,7 @@
       "Tristam Bone Item Given": 1,
       "Twinhead Wyvern": 1,
       "Venus Key": 1,
+      "Venus Shield": 1,
       "Wakewater": 1,
       "White Seal": 1,
       "Zuh": 1
@@ -13319,8 +9697,9 @@
   },
   "starting_items": {
     "1": [
-      "Bomb",
-      "Steel Armor"
+      "Steel Sword",
+      "Steel Armor",
+      "Sky Coin"
     ]
   },
   "world": {
@@ -13328,12 +9707,12 @@
       "game": "Final Fantasy Mystic Quest",
       "world_class_name": "FFMQWorld",
       "options": {
-        "accessibility": 1,
-        "available_companions": 1,
-        "battlefields_battles_quantities": 0,
-        "bosses_scaling_lower": 4,
+        "accessibility": 2,
+        "available_companions": 4,
+        "battlefields_battles_quantities": 5,
+        "bosses_scaling_lower": 6,
         "bosses_scaling_upper": 7,
-        "brown_boxes": 1,
+        "brown_boxes": 0,
         "companion_leveling_type": 3,
         "companion_spellbook_type": 0,
         "companions_locations": 0,
@@ -13341,35 +9720,35 @@
         "doom_castle_mode": 0,
         "doom_castle_shortcut": false,
         "enemies_density": 3,
-        "enemies_scaling_lower": 0,
-        "enemies_scaling_upper": 6,
-        "enemizer_attacks": 1,
-        "enemizer_groups": 2,
+        "enemies_scaling_lower": 7,
+        "enemies_scaling_upper": 7,
+        "enemizer_attacks": 4,
+        "enemizer_groups": 0,
         "exclude_locations": [],
         "item_links": [],
         "kaelis_mom_fight_minotaur": false,
-        "leveling_curve": 5,
+        "leveling_curve": 1,
         "local_items": [],
-        "logic": 0,
+        "logic": 1,
         "map_shuffle": 0,
-        "map_shuffle_seed": "\tB2\u00c3d\\C\u00c84\ud835\udd8a<#DSD C\u00c86\ud835\udd91L\ud83d\udc80c1\u4e2d\ud83d\udd25$\ud83d\udc80;mx}\u00c3\u672cLp\u00c6Q\ud83c\udfae\u00c3\u00c2>\ud835\udd73\ud835\udd942>\u0433\ud83c\udfb2.yMK(\ud55c<\u6587\ud835\udd8a>Y(\u65e5e9F\u00c6\u0393Z1.wU#\ud55c\u00c0\u00ca \u00c5Vl4,\"n\u00cau'\u4e2dYV&\u00c4d8fN\u00c1\u6587](*Y;vv>Db\u00c9z@\ud83d\udd25\u672c#DZ\"S\ud835\udd91\u6587^T6\ud83c\udfb2I,#[\ud835\udd91\u00c4aX\u00cb\u65e5\u0432\ud835\udd91\uae00\ud835\udd8a\u00c5\"\u0394q'\u00ca$A2\ud835\udd91h9\u8a9eU%#z\ud835\udd8a>0&\u0431T1Sa/@{\u00cb]Q6)d\u0393D|w#*x\u672cl\u0393#\u0393\u6587\u0431\ud835\udd73Ge\u4e2d\ud835\udd8a jk\u8a9e",
+        "map_shuffle_seed": "8\ud83c\udfaf\ud83c\udfb2W\u00c3o,Hm\u0431iX{\u0433Wn,hRE\nl<\ud83c\udfaf:'\ud83c\udfafA*\u0394s[i@\ud835\udd91e&\u00c0ys\ud835\udd91\u672c*6\u00c4*\ud55c4K$T\u65e5\ud55c2ru\u00c8)m/\nO\u00c0T\ud835\udd91;\u4e2d<>{zNtT\\K\",j\u0394\ud83c\udfaf\u65e5>\ud83c\udfb2\u00c0@CSF\ud83c\udfb2bLRCIe2GWM\u0433\u00c1\ud83c\udfae1w,Yov\ud835\udd73,\u65e5dz\u00c9uMob\u0392\u00c8WR\u4e2dv%3\ud83c\udfafDr0%501k(iK\u00c2mek,n\u00c8'\\Ut\u0394\ud835\udd73>&\u00c1t[iyc\ud83c\udfb2rRX,^p\u00c6MSP\ud835\udd94Ua;\u0433<Ah\ud55c{e\uae00\ud835\udd94\u8a9e\u00c8\u0394\u0431*wwR34pkz[C<\u03948\u0392tWpn*",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
-        "progression_balancing": 17,
-        "progressive_formations": 0,
-        "progressive_gear": true,
-        "shattered_sky_coin_quantity": 3,
+        "progression_balancing": 29,
+        "progressive_formations": 1,
+        "progressive_gear": false,
+        "shattered_sky_coin_quantity": 0,
         "shuffle_battlefield_rewards": false,
-        "shuffle_enemies_position": true,
-        "shuffle_res_weak_types": false,
-        "sky_coin_mode": 0,
+        "shuffle_enemies_position": false,
+        "shuffle_res_weak_types": true,
+        "sky_coin_mode": 1,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "starting_companion": 3,
-        "starting_weapon": 3,
-        "tweak_frustrating_dungeons": false
+        "starting_companion": 6,
+        "starting_weapon": 0,
+        "tweak_frustrating_dungeons": true
       },
       "option_definitions": {
         "accessibility": {

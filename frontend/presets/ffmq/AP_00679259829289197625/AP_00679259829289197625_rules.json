@@ -3,8 +3,8 @@
   "game_name": "Final Fantasy Mystic Quest",
   "game_directory": "ffmq",
   "archipelago_version": "0.6.7",
-  "generation_seed": 1,
-  "seed_name": "14089154938208861744",
+  "generation_seed": 6,
+  "seed_name": "00679259829289197625",
   "player_names": {
     "1": "Player1"
   },
@@ -65,15 +65,7 @@
             "name": "Overworld - Bone Dungeon",
             "connected_region": "Bone Dungeon 1F",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Progressive Bomb",
-                  "Bomb",
-                  "Jumbo Bomb",
-                  "Mega Grenade"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -128,7 +120,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -167,32 +159,7 @@
             "name": "Overworld - Wintry Cave",
             "connected_region": "Wintry Cave 1F - East Ledge",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Cat Claw",
-                        "Charm Claw",
-                        "Dragon Claw"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Bomb",
-                        "Bomb",
-                        "Jumbo Bomb",
-                        "Mega Grenade"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -206,47 +173,7 @@
             "name": "Overworld - Ice Pyramid",
             "connected_region": "Ice Pyramid 1F Maze Lobby",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "And",
-                    "args": {
-                      "rules": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Magic Mirror"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Cat Claw",
-                              "Charm Claw",
-                              "Dragon Claw"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Bomb",
-                        "Bomb",
-                        "Jumbo Bomb",
-                        "Mega Grenade"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -308,7 +235,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -411,30 +338,7 @@
             "name": "Overworld - Mine",
             "connected_region": "Mine Exterior North West Platforms",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Cat Claw",
-                        "Charm Claw",
-                        "Dragon Claw"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Mega Grenade",
-                        "Reuben 1"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -448,24 +352,14 @@
             "name": "Overworld - Volcano",
             "connected_region": "Volcano Base",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Mask"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
             "name": "Overworld - Lava Dome",
             "connected_region": "Lava Dome Inner Ring Main Loop",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Mega Grenade"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -527,7 +421,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -612,44 +506,10 @@
             "name": "Overworld - Giant Tree",
             "connected_region": "Giant Tree 1F Main Area",
             "access_rule": {
-              "rule": "And",
+              "rule": "HasAll",
               "args": {
-                "rules": [
-                  {
-                    "rule": "And",
-                    "args": {
-                      "rules": [
-                        {
-                          "rule": "HasAll",
-                          "args": {
-                            "items": [
-                              "Barred"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Progressive Axe",
-                              "Axe",
-                              "Battle Axe",
-                              "Giant's Axe",
-                              "Progressive Claw"
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
+                "items": [
+                  "Barred"
                 ]
               }
             }
@@ -679,42 +539,14 @@
             "name": "Overworld - Mount Gale",
             "connected_region": "Mount Gale",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
             "name": "Overworld - Pazuzu Tower",
             "connected_region": "Pazuzu Tower 1F Main Lobby",
             "access_rule": {
-              "rule": "And",
-              "args": {
-                "rules": [
-                  {
-                    "rule": "HasAny",
-                    "args": {
-                      "items": [
-                        "Progressive Bomb",
-                        "Bomb",
-                        "Jumbo Bomb",
-                        "Mega Grenade"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw"
-                      ]
-                    }
-                  }
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -831,13 +663,7 @@
             "name": "Overworld - Mac Ship",
             "connected_region": "Mac Ship Deck",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Dragon Claw",
-                  "Captain's Cap"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -899,26 +725,10 @@
             "name": "Overworld - Mac Ship Doom",
             "connected_region": "Mac Ship Deck",
             "access_rule": {
-              "rule": "And",
+              "rule": "HasAll",
               "args": {
-                "rules": [
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Barred"
-                      ]
-                    }
-                  },
-                  {
-                    "rule": "HasAll",
-                    "args": {
-                      "items": [
-                        "Dragon Claw",
-                        "Captain's Cap"
-                      ]
-                    }
-                  }
+                "items": [
+                  "Barred"
                 ]
               }
             }
@@ -981,7 +791,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1016,7 +826,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1046,9 +856,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Claw",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1175,7 +985,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Aero Book",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1321,7 +1131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1410,7 +1220,7 @@
               }
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1447,7 +1257,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1507,7 +1317,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Accessory",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1531,7 +1341,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1546,7 +1356,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1570,7 +1380,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Blizzard Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1594,7 +1404,7 @@
               }
             },
             "item": {
-              "name": "Progressive Claw",
+              "name": "Venus Key",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1630,9 +1440,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Claw",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1651,7 +1461,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1718,9 +1528,9 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Sun Coin",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1748,9 +1558,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Coin",
+              "name": "Projectile Refill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1860,7 +1670,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Fire Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1906,7 +1716,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1941,7 +1751,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1976,7 +1786,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2011,7 +1821,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2026,7 +1836,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2124,7 +1934,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2177,9 +1987,9 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Tree Wither",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2197,9 +2007,9 @@
               }
             },
             "item": {
-              "name": "Sky Coin",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2263,7 +2073,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2293,9 +2103,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Captain's Cap",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2498,9 +2308,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Projectile Refill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2528,9 +2338,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Claw",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2570,9 +2380,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Elixir",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2728,7 +2538,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2743,7 +2553,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2758,9 +2568,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "River Coin",
+              "name": "Refresher",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2773,9 +2583,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Gemini Crest",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2831,7 +2641,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2958,9 +2768,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Progressive Axe",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2995,7 +2805,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3010,7 +2820,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3104,7 +2914,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3119,7 +2929,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3141,7 +2951,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3161,9 +2971,9 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Progressive Claw",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3219,9 +3029,9 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Axe",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3292,9 +3102,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Venus Key",
+              "name": "Bomb Refill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3307,7 +3117,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3322,7 +3132,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3337,7 +3147,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Accessory",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3367,7 +3177,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3382,7 +3192,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Book",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3417,7 +3227,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3448,7 +3258,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3490,7 +3300,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3540,7 +3350,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3571,7 +3381,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3601,7 +3411,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Thunder Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3616,9 +3426,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Tree Wither",
+              "name": "Heal Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3631,9 +3441,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Thunder Seal",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3646,7 +3456,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Flare Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3767,7 +3577,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3782,7 +3592,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3797,7 +3607,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3812,7 +3622,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3857,9 +3667,9 @@
               }
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Mobius Crest",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3872,9 +3682,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Progressive Bomb",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3902,7 +3712,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Meteor Seal",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3932,7 +3742,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3970,7 +3780,7 @@
               }
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4015,9 +3825,9 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Multi Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4102,7 +3912,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4117,7 +3927,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4132,7 +3942,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4147,9 +3957,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Captain's Cap",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4265,9 +4075,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Thunder Rock",
+              "name": "Heal Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4280,7 +4090,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4295,9 +4105,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Progressive Claw",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4325,7 +4135,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4340,7 +4150,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4355,7 +4165,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4370,7 +4180,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Progressive Helm",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4486,7 +4296,7 @@
               }
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4501,7 +4311,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4531,7 +4341,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4551,7 +4361,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4566,7 +4376,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4717,7 +4527,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4813,7 +4623,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5096,7 +4906,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5145,7 +4955,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5258,7 +5068,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5293,7 +5103,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Quake Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5366,7 +5176,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Progressive Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5424,7 +5234,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5488,7 +5298,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5739,9 +5549,9 @@
               }
             },
             "item": {
-              "name": "Progressive Axe",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5761,9 +5571,9 @@
               }
             },
             "item": {
-              "name": "Magic Mirror",
+              "name": "Projectile Refill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5791,9 +5601,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Libra Crest",
+              "name": "Heal Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5828,7 +5638,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5858,7 +5668,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5873,7 +5683,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Accessory",
+              "name": "Progressive Helm",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5888,9 +5698,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Refresher",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5923,7 +5733,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Mask",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5986,7 +5796,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6001,7 +5811,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6045,7 +5855,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6060,7 +5870,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6075,7 +5885,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6090,9 +5900,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sand Coin",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6125,7 +5935,7 @@
               }
             },
             "item": {
-              "name": "Progressive Helm",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6156,7 +5966,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6186,7 +5996,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6201,9 +6011,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Progressive Bomb",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6275,7 +6085,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6333,7 +6143,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Armor",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6391,7 +6201,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6406,7 +6216,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6450,7 +6260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6614,9 +6424,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mobius Crest",
+              "name": "Heal Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6658,7 +6468,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Seed",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6688,7 +6498,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6703,7 +6513,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6718,9 +6528,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Helm",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6733,9 +6543,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Thunder Rock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6791,7 +6601,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6806,7 +6616,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6821,7 +6631,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Armor",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6836,7 +6646,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6887,9 +6697,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mask",
+              "name": "Heal Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6902,7 +6712,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Quake Book",
+              "name": "Progressive Accessory",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6932,7 +6742,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6947,7 +6757,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6977,9 +6787,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Libra Crest",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7026,7 +6836,7 @@
               }
             },
             "item": {
-              "name": "Heal Book",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7070,7 +6880,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7085,7 +6895,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7164,7 +6974,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7288,7 +7098,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7303,7 +7113,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7411,9 +7221,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Sword",
+              "name": "Cure Book",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -7426,9 +7236,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Sand Coin",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7470,7 +7280,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7485,9 +7295,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Axe",
+              "name": "Refresher",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -7642,7 +7452,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7666,7 +7476,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Progressive Accessory",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7714,9 +7524,9 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Sky Coin",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7771,7 +7581,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7786,7 +7596,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7801,7 +7611,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8008,7 +7818,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8107,7 +7917,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8186,9 +7996,9 @@
               }
             },
             "item": {
-              "name": "Progressive Axe",
+              "name": "Refresher",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8210,7 +8020,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Life Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8266,7 +8076,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Blizzard Book",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8317,7 +8127,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8332,7 +8142,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Progressive Helm",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8597,7 +8407,7 @@
               }
             },
             "item": {
-              "name": "Fire Book",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8621,7 +8431,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8820,7 +8630,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8835,7 +8645,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8874,7 +8684,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9041,7 +8851,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9056,7 +8866,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9071,7 +8881,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9086,7 +8896,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "White Seal",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9207,7 +9017,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9237,7 +9047,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Refresher",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9273,7 +9083,7 @@
               }
             },
             "item": {
-              "name": "Flare Seal",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9330,9 +9140,9 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Progressive Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -9345,7 +9155,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9467,9 +9277,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Wakewater",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -9572,9 +9382,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "River Coin",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -9587,7 +9397,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9653,9 +9463,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Gemini Crest",
+              "name": "Seed",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -9673,9 +9483,9 @@
               }
             },
             "item": {
-              "name": "Multi Key",
+              "name": "Projectile Refill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -9703,7 +9513,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9785,7 +9595,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9808,9 +9618,9 @@
               }
             },
             "item": {
-              "name": "Wakewater",
+              "name": "Heal Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -9831,7 +9641,7 @@
               }
             },
             "item": {
-              "name": "Refresher",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9846,7 +9656,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9938,7 +9748,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10024,7 +9834,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10039,7 +9849,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Seed",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10135,7 +9945,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Accessory",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10217,7 +10027,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10232,7 +10042,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Exit Book",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10356,7 +10166,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Seed",
+              "name": "Aero Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10371,7 +10181,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Helm",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10422,7 +10232,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Heal Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10437,9 +10247,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Bomb",
+              "name": "Cure Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -10619,7 +10429,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10795,7 +10605,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10912,7 +10722,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10927,7 +10737,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Exit Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10942,7 +10752,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11005,7 +10815,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Magic Mirror",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11025,7 +10835,7 @@
               }
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11090,7 +10900,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11162,7 +10972,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bomb Refill",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11177,7 +10987,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11192,7 +11002,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11207,7 +11017,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11237,7 +11047,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Refresher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11371,7 +11181,7 @@
               }
             },
             "item": {
-              "name": "Life Book",
+              "name": "Heal Book",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11409,7 +11219,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11470,7 +11280,7 @@
               }
             },
             "item": {
-              "name": "Cure Potion",
+              "name": "Projectile Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11544,7 +11354,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "White Seal",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11584,7 +11394,7 @@
               }
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11604,7 +11414,7 @@
               }
             },
             "item": {
-              "name": "Heal Potion",
+              "name": "Bomb Refill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11662,9 +11472,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Elixir",
+              "name": "Meteor Seal",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -11677,7 +11487,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Projectile Refill",
+              "name": "Cure Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11840,7 +11650,7 @@
           "Everything",
           "Key Items"
         ],
-        "classification": "progression",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -11852,7 +11662,7 @@
           "Everything",
           "Key Items"
         ],
-        "classification": "progression",
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12208,7 +12018,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "filler",
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12286,7 +12096,7 @@
           "Everything",
           "Weapons"
         ],
-        "classification": "progression",
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -12521,7 +12331,7 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2
       },
       "Progressive Claw": {
         "name": "Progressive Claw",
@@ -12547,7 +12357,7 @@
         "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 3
       },
       "Progressive Helm": {
         "name": "Progressive Helm",
@@ -13149,9 +12959,9 @@
   "itempool_counts": {
     "1": {
       "Aero Book": 1,
+      "Axe": 1,
       "Barrel Pushed": 1,
       "Blizzard Book": 1,
-      "Bomb": 1,
       "Bomb Refill": 19,
       "Captain's Cap": 1,
       "Cure Book": 1,
@@ -13202,8 +13012,8 @@
       "Phoebe 1": 1,
       "Progressive Accessory": 3,
       "Progressive Armor": 2,
-      "Progressive Axe": 3,
-      "Progressive Bomb": 2,
+      "Progressive Axe": 2,
+      "Progressive Bomb": 3,
       "Progressive Claw": 3,
       "Progressive Helm": 3,
       "Progressive Shield": 3,
@@ -13319,7 +13129,7 @@
   },
   "starting_items": {
     "1": [
-      "Bomb",
+      "Axe",
       "Steel Armor"
     ]
   },
@@ -13328,47 +13138,47 @@
       "game": "Final Fantasy Mystic Quest",
       "world_class_name": "FFMQWorld",
       "options": {
-        "accessibility": 1,
-        "available_companions": 1,
-        "battlefields_battles_quantities": 0,
-        "bosses_scaling_lower": 4,
-        "bosses_scaling_upper": 7,
+        "accessibility": 0,
+        "available_companions": 2,
+        "battlefields_battles_quantities": 2,
+        "bosses_scaling_lower": 6,
+        "bosses_scaling_upper": 8,
         "brown_boxes": 1,
-        "companion_leveling_type": 3,
+        "companion_leveling_type": 6,
         "companion_spellbook_type": 0,
         "companions_locations": 0,
         "crest_shuffle": false,
-        "doom_castle_mode": 0,
-        "doom_castle_shortcut": false,
-        "enemies_density": 3,
-        "enemies_scaling_lower": 0,
-        "enemies_scaling_upper": 6,
-        "enemizer_attacks": 1,
+        "doom_castle_mode": 2,
+        "doom_castle_shortcut": true,
+        "enemies_density": 2,
+        "enemies_scaling_lower": 3,
+        "enemies_scaling_upper": 7,
+        "enemizer_attacks": 4,
         "enemizer_groups": 2,
         "exclude_locations": [],
         "item_links": [],
-        "kaelis_mom_fight_minotaur": false,
-        "leveling_curve": 5,
+        "kaelis_mom_fight_minotaur": true,
+        "leveling_curve": 6,
         "local_items": [],
-        "logic": 0,
+        "logic": 1,
         "map_shuffle": 0,
-        "map_shuffle_seed": "\tB2\u00c3d\\C\u00c84\ud835\udd8a<#DSD C\u00c86\ud835\udd91L\ud83d\udc80c1\u4e2d\ud83d\udd25$\ud83d\udc80;mx}\u00c3\u672cLp\u00c6Q\ud83c\udfae\u00c3\u00c2>\ud835\udd73\ud835\udd942>\u0433\ud83c\udfb2.yMK(\ud55c<\u6587\ud835\udd8a>Y(\u65e5e9F\u00c6\u0393Z1.wU#\ud55c\u00c0\u00ca \u00c5Vl4,\"n\u00cau'\u4e2dYV&\u00c4d8fN\u00c1\u6587](*Y;vv>Db\u00c9z@\ud83d\udd25\u672c#DZ\"S\ud835\udd91\u6587^T6\ud83c\udfb2I,#[\ud835\udd91\u00c4aX\u00cb\u65e5\u0432\ud835\udd91\uae00\ud835\udd8a\u00c5\"\u0394q'\u00ca$A2\ud835\udd91h9\u8a9eU%#z\ud835\udd8a>0&\u0431T1Sa/@{\u00cb]Q6)d\u0393D|w#*x\u672cl\u0393#\u0393\u6587\u0431\ud835\udd73Ge\u4e2d\ud835\udd8a jk\u8a9e",
+        "map_shuffle_seed": "QlU\u03930\u0394G4\u00c0m\u00c7z\u00c0|\u0392Lm\ud835\udd91f(\ud83c\udfafz\u0432:\ud83c\udfb2U&\ud835\udd73\u0433\ud83c\udfb2y\"^;\u00c0\ud83c\udfae\u0394>\ud83d\udd25d|UF[3MT(pl>\ud55c \\zo[,IN\u00c3zW9Cr)A\u0433\u672c\ud55c\u00c0'by\u00cavc;Q$\ud83c\udfaf.{{NVW\\XLq &gx2)\u00c6Ym4F\u0394l\ud83c\udfae[.\u8a9e\uae0055\u00cb\u0433W\u0392j'28M\u00c1\u04310\ud835\udd8aky\u00c6\tI5&\u00c3\u00cb\ud835\udd94wcc/pG(\u0393UyG>5Q\ud83d\udc80'G0\ud83d\udc80\ud55c1]&I[8,9&s\u00c3W<N|\u03947PU,u\ud83c\udfb2\ud83d\udc80{W\n[IO;Y&\u00c4\u0392u\ud835\udd73\u0432L$a{5\ud835\udd94hxd]\u00ca%o\t\u00c2VU\ud835\udd8a<\u65e5(h\ud83d\udd25yt",
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
-        "progression_balancing": 17,
-        "progressive_formations": 0,
+        "progression_balancing": 73,
+        "progressive_formations": 2,
         "progressive_gear": true,
-        "shattered_sky_coin_quantity": 3,
+        "shattered_sky_coin_quantity": 0,
         "shuffle_battlefield_rewards": false,
-        "shuffle_enemies_position": true,
+        "shuffle_enemies_position": false,
         "shuffle_res_weak_types": false,
         "sky_coin_mode": 0,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "starting_companion": 3,
-        "starting_weapon": 3,
+        "starting_companion": 5,
+        "starting_weapon": 1,
         "tweak_frustrating_dungeons": false
       },
       "option_definitions": {

@@ -1,12 +1,12 @@
-﻿Archipelago Version 0.6.7  -  Seed: 1
+﻿Archipelago Version 0.6.7  -  Seed: 5
 
 Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
 Game:                            Final Fantasy Mystic Quest
 Location Count:                  251
-Progression Balancing:           17
-Accessibility:                   Items
+Progression Balancing:           79
+Accessibility:                   Minimal
 Local Items:                     
 Non-local Items:                 
 Start Inventory:                 
@@ -16,465 +16,472 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Logic:                           Friendly
+Logic:                           Expert
 Brown Boxes:                     Include
 Sky Coin Mode:                   Standard
 Shattered Sky Coin:              Random Narrow
-Starting Weapon:                 Bomb
-Progressive Gear:                Yes
-Leveling Curve:                  Triple
-Starting Companion:              Phoebe
-Available Companions:            1
+Starting Weapon:                 Axe
+Progressive Gear:                No
+Leveling Curve:                  Normal
+Starting Companion:              None
+Available Companions:            2
 Companions' Locations:           Standard
-Kaeli's Mom Fights Minotaur:     No
-Companion Leveling Type:         Save Crystals All
-Companion Spellbook Type:        Standard
+Kaeli's Mom Fights Minotaur:     Yes
+Companion Leveling Type:         Benjamin Level Plus 10
+Companion Spellbook Type:        Extended
 Enemies Density:                 Quarter
-Enemies Scaling Lower:           Quarter
-Enemies Scaling Upper:           Double
-Bosses Scaling Lower:            One And Quarter
-Bosses Scaling Upper:            Double And Half
+Enemies Scaling Lower:           Half
+Enemies Scaling Upper:           Triple
+Bosses Scaling Lower:            Quarter
+Bosses Scaling Upper:            Normal
 Enemizer Attacks:                Safe
-Enemizer Groups:                 Mobs Bosses And Dark King
-Shuffle Resistance/Weakness Types:No
-Shuffle Enemies' Positions:      Yes
-Progressive Formations:          Disabled
+Enemizer Groups:                 Mobs And Bosses
+Shuffle Resistance/Weakness Types:Yes
+Shuffle Enemies' Positions:      No
+Progressive Formations:          Regions Strict
 Doom Castle:                     Standard
 Doom Castle Shortcut:            No
 Tweak Frustrating Dungeons:      No
 Map Shuffle:                     None
 Crest Shuffle:                   No
 Shuffle Battlefield Rewards:     No
-Map Shuffle Seed:                	B2Ãd\CÈ4𝖊<#DSD CÈ6𝖑L💀c1中🔥$💀;mx}Ã本LpÆQ🎮ÃÂ>𝕳𝖔2>г🎲.yMK(한<文𝖊>Y(日e9FÆΓZ1.wU#한ÀÊ ÅVl4,"nÊu'中YV&Äd8fNÁ文](*Y;vv>DbÉz@🔥本#DZ"S𝖑文^T6🎲I,#[𝖑ÄaXË日в𝖑글𝖊Å"Δq'Ê$A2𝖑h9語U%#z𝖊>0&бT1Sa/@{Ë]Q6)dΓD|w#*x本lΓ#Γ文б𝕳Ge中𝖊 jk語
-Battlefields Battles Quantity:   Ten
+Map Shuffle Seed:                qqa語aAÊB𝖑v語vLO𝖔z@한 }Ax𝖊𝖔
+z𝖔𝖔🎮XMcU1v𝕳sHiQMб[(a) ÁRiNTбN9ÀOx98ÁwhG𝖊c𝖑ÆT文Zc#Ë1UW*中b5fÁx{𝖑𝖑zpÇF💀б𝖊7S"T🎮\GÊ7n(ÆÊΓV本Le3𝖑lAR"]U🔥sRJ💀À@lN	ONwΓk}tÃ
+N9uÃgk)/💀ZeEÅ)SвG6:1sh🔥|eΓ<Q中AqÄ%𝖑q}🎮Ë0nv3Vth文1Ls6💀{日v'6𝖑&
+ÄO9JL8Z🎯soWв/𝖑w}𝕳<語Rxl&I"Ë#語>
+Battlefields Battles Quantity:   Five
 
 
 Starting Items:
 
-Bomb
+Axe
 Steel Armor
 
 Locations:
 
-Foresta West Battlefield: Projectile Refill
+Foresta West Battlefield: Cure Potion
 South of Aquaria Battlefield: Heal Potion
-North of Libra Temple Battlefield: Projectile Refill
-Path to Fireburg Central Battlefield: Heal Potion
-Mine Battlefield: Projectile Refill
-Doom Castle B2 - Southeast Chest: Cure Potion
+North of Libra Temple Battlefield: Bomb Refill
+Path to Fireburg Central Battlefield: Projectile Refill
+Mine Battlefield: Cure Potion
+Doom Castle B2 - Southeast Chest: Refresher
 Doom Castle B2 - Bone Ledge Box: Cure Potion
-Doom Castle B2 - Hook Platform Box: Cure Potion
-Doom Castle B2 - Sun Door Chest: Progressive Claw
-Focus Tower 1F - Main Lobby Box: Aero Book
-Focus Tower 2F - Sand Door Chest: Projectile Refill
-Focus Tower 2F - Back Door Chest: Cure Potion
-Focus Tower 2F - Venus Chest: Bomb Refill
-Focus Tower 3F - River Door Box: Bomb Refill
-Level Forest - Northwest Box: Cure Potion
-Level Forest - Northeast Box: Cure Potion
+Doom Castle B2 - Hook Platform Box: Sand Coin
+Doom Castle B2 - Sun Door Chest: Cure Potion
+Focus Tower 1F - Main Lobby Box: Wakewater
+Focus Tower 2F - Sand Door Chest: Bomb Refill
+Focus Tower 2F - Back Door Chest: Heal Potion
+Focus Tower 2F - Venus Chest: Cure Potion
+Focus Tower 3F - River Door Box: Refresher
+Level Forest - Northwest Box: Mobius Crest
+Level Forest - Northeast Box: Knight Sword
 Level Forest - Middle Box: Projectile Refill
-Level Forest - Southwest Box: Heal Potion
-Level Forest - Southeast Box: Progressive Claw
+Level Forest - Southwest Box: Projectile Refill
+Level Forest - Southeast Box: Cure Book
 Minotaur: Minotaur
-Level Forest - Old Man: Progressive Claw
+Level Forest - Old Man: Cure Potion
 Level Forest - Kaeli: Heal Potion
-Foresta - Outside Box: Cure Potion
-Foresta - Kaeli's House Box: Sun Coin
+Foresta - Outside Box: Sun Coin
+Foresta - Kaeli's House Box: Meteor Seal
 Kaeli Companion: Kaeli 1
 Kaeli 2: Kaeli 2
-Foresta - Old Man House Chest: Projectile Refill
+Foresta - Old Man House Chest: Cure Potion
 Old Man Barrel: Barrel Pushed
-Foresta - Rest House Box: Bomb Refill
+Foresta - Rest House Box: Projectile Refill
 Alive Forest - Libra Treehouse Box: Projectile Refill
-Alive Forest - Gemini Treehouse Box: Bomb Refill
+Alive Forest - Gemini Treehouse Box: Cure Potion
 Alive Forest - Mobius Treehouse West Box: Cure Potion
-Alive Forest - Mobius Treehouse East Box: Cure Potion
+Alive Forest - Mobius Treehouse East Box: Heal Potion
 Tristam Companion: Tristam
-Bone Dungeon 1F - Entrance Room West Box: Projectile Refill
-Bone Dungeon 1F - Entrance Room Middle Box: Heal Potion
-Bone Dungeon 1F - Entrance Room East Box: Bomb Refill
-Bone Dungeon B1 - Skull Chest: Projectile Refill
-Bone Dungeon B1 - Tristam: Sky Coin
+Bone Dungeon 1F - Entrance Room West Box: Bomb Refill
+Bone Dungeon 1F - Entrance Room Middle Box: Excalibur
+Bone Dungeon 1F - Entrance Room East Box: Cure Potion
+Bone Dungeon B1 - Skull Chest: Heal Potion
+Bone Dungeon B1 - Tristam: Projectile Refill
 Tristam Bone Dungeon Item Given: Tristam Bone Item Given
 Bone Dungeon B1 - Checker Room Box: Cure Potion
-Bone Dungeon B1 - Ribcage Waterway Box: Captain's Cap
+Bone Dungeon B1 - Ribcage Waterway Box: River Coin
 Bone Dungeon B2 - Spines Room Alcove Box: Projectile Refill
 Long Spine: Long Spine Bombed
 Bone Dungeon B2 - Spines Room Looped Hallway Box: Projectile Refill
 Short Spine: Short Spine Bombed
-Bone Dungeon B2 - Lone Room Box: Progressive Sword
+Bone Dungeon B2 - Lone Room Box: Refresher
 Bone Dungeon B2 - Penultimate Room Chest: Cure Potion
-Bone Dungeon B2 - Two Skulls Room Box: Cure Potion
+Bone Dungeon B2 - Two Skulls Room Box: Projectile Refill
 Skull 1: Skull 1 Bombed
 Skull 2: Skull 2 Bombed
 Bone Dungeon B2 - North Box: Heal Potion
 Bone Dungeon B2 - South Box: Cure Potion
-Bone Dungeon B2 - Flamerus Rex Chest: River Coin
+Bone Dungeon B2 - Flamerus Rex Chest: Projectile Refill
 Bone Dungeon B2 - Tristam's Treasure Chest: Projectile Refill
 Flamerus Rex: Flamerus Rex
-Libra Temple - Box: Projectile Refill
+Libra Temple - Box: Quake Book
 Phoebe Companion: Phoebe 1
 Summer Aquaria: Summer Aquaria
-Aquaria - Phoebe's House Chest: Projectile Refill
+Aquaria - Phoebe's House Chest: Elixir
 Aquaria - Vendor: Projectile Refill
-Aquaria - Vendor House Box: Bomb Refill
-Wintry Cave 1F - North Box: Projectile Refill
-Wintry Cave 1F - Entrance Box: Bomb Refill
-Wintry Cave 1F - Slippery Cliff Box: Heal Potion
-Wintry Cave 1F - Phoebe: Heal Potion
-Wintry Cave 1F - Scenic Overlook Box: Cure Potion
-Wintry Cave 2F - West Left Box: Venus Key
-Wintry Cave 2F - West Right Box: Refresher
-Wintry Cave 2F - East Left Box: Heal Potion
-Wintry Cave 2F - East Right Box: Progressive Accessory
-Wintry Cave 3F - West Box: Refresher
-Wintry Cave 3F - East Box: Cure Book
-Wintry Cave 3F - Squidite Chest: Cure Potion
+Aquaria - Vendor House Box: Refresher
+Wintry Cave 1F - North Box: Heal Potion
+Wintry Cave 1F - Entrance Box: Cure Potion
+Wintry Cave 1F - Slippery Cliff Box: Cure Potion
+Wintry Cave 1F - Phoebe: Refresher
+Wintry Cave 1F - Scenic Overlook Box: Charm
+Wintry Cave 2F - West Left Box: Heal Potion
+Wintry Cave 2F - West Right Box: Projectile Refill
+Wintry Cave 2F - East Left Box: Cure Potion
+Wintry Cave 2F - East Right Box: Cure Potion
+Wintry Cave 3F - West Box: Heal Potion
+Wintry Cave 3F - East Box: Battle Axe
+Wintry Cave 3F - Squidite Chest: Heal Potion
 Phanquid: Phanquid
-Wintry Cave 3F - Before Boss Box: Cure Potion
-Life Temple - Box: Refresher
-Life Temple - Mysterious Man: Cure Potion
-Falls Basin - Snow Crab Chest: Cure Potion
+Wintry Cave 3F - Before Boss Box: Bomb Refill
+Life Temple - Box: Heal Potion
+Life Temple - Mysterious Man: Blizzard Book
+Falls Basin - Snow Crab Chest: Refresher
 Freezer Crab: Freezer Crab
-Falls Basin - Box: Projectile Refill
-Ice Pyramid B1 - Chest: Projectile Refill
-Ice Pyramid B1 - West Box: Tree Wither
-Ice Pyramid B1 - North Box: Thunder Seal
-Ice Pyramid B1 - East Box: Cure Potion
+Falls Basin - Box: Thunder Seal
+Ice Pyramid B1 - Chest: Heal Potion
+Ice Pyramid B1 - West Box: Heal Potion
+Ice Pyramid B1 - North Box: Projectile Refill
+Ice Pyramid B1 - East Box: Projectile Refill
 Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
-Ice Pyramid 1F - East Alcove Chest: Cure Potion
-Ice Pyramid 1F - Sandwiched Alcove Box: Cure Potion
-Ice Pyramid 1F - Southwest Left Box: Cure Potion
-Ice Pyramid 1F - Southwest Right Box: Bomb Refill
-Ice Pyramid 2F - South Side Glass Door Box: Bomb Refill
-Ice Pyramid 2F - South Side East Box: Bomb Refill
-Ice Pyramid 2F - Northwest Room Box: Meteor Seal
-Ice Pyramid 2F - Center Room Box: Progressive Shield
-Ice Pyramid 2F - North Room Glass Door Box: Progressive Shield
-Ice Pyramid 2F - North Corridor Glass Door Box: Cure Potion
-Ice Pyramid 3F - Staircase Dead End Left Box: Cure Potion
-Ice Pyramid 3F - Staircase Dead End Right Box: Cure Potion
+Ice Pyramid 1F - East Alcove Chest: Flare Seal
+Ice Pyramid 1F - Sandwiched Alcove Box: Projectile Refill
+Ice Pyramid 1F - Southwest Left Box: Refresher
+Ice Pyramid 1F - Southwest Right Box: Heal Potion
+Ice Pyramid 2F - South Side Glass Door Box: Projectile Refill
+Ice Pyramid 2F - South Side East Box: Projectile Refill
+Ice Pyramid 2F - Northwest Room Box: Cure Potion
+Ice Pyramid 2F - Center Room Box: Cure Potion
+Ice Pyramid 2F - North Room Glass Door Box: Heal Potion
+Ice Pyramid 2F - North Corridor Glass Door Box: Projectile Refill
+Ice Pyramid 3F - Staircase Dead End Left Box: Projectile Refill
+Ice Pyramid 3F - Staircase Dead End Right Box: Moon Helm
 Ice Pyramid 3F - Inner Room North Box: Heal Potion
 Ice Pyramid 3F - Inner Room South Box: Heal Potion
 Ice Pyramid 3F - East Alcove Box: Heal Potion
-Ice Pyramid 3F - Leapfrog Box: Cure Potion
+Ice Pyramid 3F - Leapfrog Box: Refresher
 Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
-Ice Pyramid 4F - Chest: Thunder Rock
-Ice Pyramid 4F - Northwest Box: Bomb Refill
-Ice Pyramid 4F - West Left Box: Projectile Refill
-Ice Pyramid 4F - West Right Box: Heal Potion
-Ice Pyramid 4F - South Left Box: Cure Potion
-Ice Pyramid 4F - South Right Box: Heal Potion
-Ice Pyramid 4F - East Left Box: Cure Potion
+Ice Pyramid 4F - Chest: Seed
+Ice Pyramid 4F - Northwest Box: Cure Potion
+Ice Pyramid 4F - West Left Box: Cure Potion
+Ice Pyramid 4F - West Right Box: Cure Potion
+Ice Pyramid 4F - South Left Box: Steel Shield
+Ice Pyramid 4F - South Right Box: Bomb Refill
+Ice Pyramid 4F - East Left Box: Bomb Refill
 Ice Pyramid 4F - East Right Box: Projectile Refill
 Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
-Ice Pyramid 5F - Glass Door Left Box: Bomb Refill
-Ice Pyramid 5F - West Ledge Box: Projectile Refill
-Ice Pyramid 5F - South Shelf Box: Heal Potion
-Ice Pyramid 5F - South Leapfrog Box: Bomb Refill
-Ice Pyramid 5F - Glass Door Right Box: Projectile Refill
-Ice Pyramid 5F - North Box: Heal Potion
+Ice Pyramid 5F - Glass Door Left Box: Projectile Refill
+Ice Pyramid 5F - West Ledge Box: Steel Helm
+Ice Pyramid 5F - South Shelf Box: Cure Potion
+Ice Pyramid 5F - South Leapfrog Box: Cure Potion
+Ice Pyramid 5F - Glass Door Right Box: Refresher
+Ice Pyramid 5F - North Box: Aegis Shield
 Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
 Ice Pyramid 6F - Ice Golem Chest: Cure Potion
 Ice Golem: Ice Golem
-Spencer's Cave - Box: Projectile Refill
-Spencer's Cave - Spencer: Projectile Refill
-Spencer's Cave - Locked Chest: Heal Potion
+Spencer's Cave - Box: Heal Potion
+Spencer's Cave - Spencer: Cure Potion
+Spencer's Cave - Locked Chest: Bomb
 Collapse Spencer's Cave: Ship Liberated
 Bomb Libra Block: Spencer Cave Libra Block Bombed
-Spencer's Cave - Mobius Chest: Heal Potion
-Wintry Temple - West Box: Projectile Refill
+Spencer's Cave - Mobius Chest: Projectile Refill
+Wintry Temple - West Box: Heal Potion
 Wintry Temple - North Box: Projectile Refill
-Fireburg - Hidden Tunnel Box: Cure Potion
-Fireburg - Reuben's House Arion: Heal Potion
+Fireburg - Hidden Tunnel Box: Heal Potion
+Fireburg - Reuben's House Arion: Cure Potion
 Reuben Companion: Reuben 1
-Fireburg - Reuben's House Box: Projectile Refill
-Fireburg - Locked House Man: Projectile Refill
-Fireburg - Vendor: Cure Potion
-Fireburg - Tristam: Cure Potion
+Fireburg - Reuben's House Box: Cure Potion
+Fireburg - Locked House Man: Bomb Refill
+Fireburg - Vendor: Venus Key
+Fireburg - Tristam: Bomb Refill
 Jinn: Jinn
-Mine - Parallel Room West Box: Progressive Axe
-Mine - Parallel Room East Box: Magic Mirror
-Mine - Crescent Room Chest: Libra Crest
-Mine - Glitchy Collision Cave Box: Projectile Refill
-Mine - Cliff Southwest Box: Refresher
-Mine - Cliff Northwest Box: Progressive Accessory
-Mine - Cliff Northeast Box: Progressive Sword
+Mine - Parallel Room West Box: Cure Potion
+Mine - Parallel Room East Box: Heal Potion
+Mine - Crescent Room Chest: Cure Potion
+Mine - Glitchy Collision Cave Box: Heal Potion
+Mine - Cliff Southwest Box: Thunder Rock
+Mine - Cliff Northwest Box: Multi Key
+Mine - Cliff Northeast Box: Projectile Refill
 Mine - Cliff Southeast Box: Heal Potion
-Mine - Reuben: Heal Potion
+Mine - Reuben: Cure Potion
 Reuben's dad Saved: Reuben Dad Saved
-Sealed Temple - West Box: Projectile Refill
-Sealed Temple - East Box: Refresher
-Volcano - Base Chest: Refresher
+Sealed Temple - West Box: Life Book
+Sealed Temple - East Box: Heal Potion
+Volcano - Base Chest: Gaia's Armor
 Volcano - Base West Box: Refresher
-Volcano - Base East Left Box: Heal Potion
-Volcano - Base East Right Box: Sand Coin
-Volcano - Medusa Chest: Progressive Helm
+Volcano - Base East Left Box: Projectile Refill
+Volcano - Base East Right Box: Projectile Refill
+Volcano - Medusa Chest: Bomb Refill
 Medusa: Medusa
-Volcano - Behind Medusa Box: Refresher
-Volcano - Top of the Volcano Left Box: Cure Potion
-Volcano - Top of the Volcano Right Box: Refresher
-Volcano - Right Path Box: Heal Potion
-Volcano - Left Path Box: Projectile Refill
-Volcano - Crossover Section Box: Progressive Armor
-Lava Dome - Exterior Caldera Near Switch Cliff Box: Cure Potion
-Lava Dome - Exterior South Cliff Box: Heal Potion
-Lava Dome - Exterior Center Dropoff Ledge Box: Heal Potion
+Volcano - Behind Medusa Box: Dragon Claw
+Volcano - Top of the Volcano Left Box: Heal Potion
+Volcano - Top of the Volcano Right Box: Projectile Refill
+Volcano - Right Path Box: Bomb Refill
+Volcano - Left Path Box: Cupid Locket
+Volcano - Crossover Section Box: Cure Potion
+Lava Dome - Exterior Caldera Near Switch Cliff Box: Projectile Refill
+Lava Dome - Exterior South Cliff Box: Bomb Refill
+Lava Dome - Exterior Center Dropoff Ledge Box: Magic Ring
 Lava Dome Plate: Lava Dome Plate
-Lava Dome - Exterior Dead End Caldera Box: Mobius Crest
-Lava Dome - Gold Maze Northwest Box: Seed
-Lava Dome - Gold Maze Southwest Box: Projectile Refill
+Lava Dome - Exterior Dead End Caldera Box: Heal Potion
+Lava Dome - Gold Maze Northwest Box: Heal Potion
+Lava Dome - Gold Maze Southwest Box: Cure Potion
 Lava Dome - Gold Maze Northeast Box: Projectile Refill
-Lava Dome - Gold Maze North Box: Refresher
-Lava Dome - Gold Maze Center Box: Progressive Helm
-Lava Dome - Gold Maze Southeast Box: Heal Potion
-Lava Dome - Bare Maze Leapfrog Alcove North Box: Bomb Refill
+Lava Dome - Gold Maze North Box: Cure Potion
+Lava Dome - Gold Maze Center Box: Bomb Refill
+Lava Dome - Gold Maze Southeast Box: Projectile Refill
+Lava Dome - Bare Maze Leapfrog Alcove North Box: Heal Potion
 Lava Dome - Bare Maze Leapfrog Alcove South Box: Heal Potion
-Lava Dome - Bare Maze Center Box: Progressive Armor
-Lava Dome - Bare Maze Southwest Box: Heal Potion
-Lava Dome - U-Bend Room North Box: Mask
-Lava Dome - U-Bend Room South Box: Quake Book
-Lava Dome - Beyond River Room Chest: Cure Potion
-Lava Dome - Beyond River Room Box: Heal Potion
-Lava Dome - Three Jumps Room Box: Heal Potion
-Lava Dome - Gold Bar Room Boulder Chest: Heal Book
-Lava Dome - Gold Bar Room Leapfrog Alcove Box West: Bomb Refill
+Lava Dome - Bare Maze Center Box: Refresher
+Lava Dome - Bare Maze Southwest Box: Giant's Axe
+Lava Dome - U-Bend Room North Box: Bomb Refill
+Lava Dome - U-Bend Room South Box: Tree Wither
+Lava Dome - Beyond River Room Chest: Cat Claw
+Lava Dome - Beyond River Room Box: Cure Potion
+Lava Dome - Three Jumps Room Box: Magic Mirror
+Lava Dome - Gold Bar Room Boulder Chest: Refresher
+Lava Dome - Gold Bar Room Leapfrog Alcove Box West: Refresher
 Lava Dome - Gold Bar Room Leapfrog Alcove Box East: Projectile Refill
-Lava Dome - Lava River Room North Box: Projectile Refill
-Lava Dome - Lava River Room East Box: Heal Potion
-Lava Dome - Lava River Room South Box: Projectile Refill
-Lava Dome - Split Corridor Box: Projectile Refill
+Lava Dome - Lava River Room North Box: Cure Potion
+Lava Dome - Lava River Room East Box: Projectile Refill
+Lava Dome - Lava River Room South Box: Fire Book
+Lava Dome - Split Corridor Box: Heal Potion
 Lava Dome - Caldera Stairway West Left Box: Projectile Refill
-Lava Dome - Caldera Stairway West Right Box: Cure Potion
-Lava Dome - Caldera Stairway East Left Box: Cure Potion
+Lava Dome - Caldera Stairway West Right Box: Aero Book
+Lava Dome - Caldera Stairway East Left Box: Projectile Refill
 Lava Dome - Caldera Stairway East Right Box: Cure Potion
 Lava Dome - Dualhead Hydra Chest: Heal Potion
 Dualhead Hydra: Dualhead Hydra
-Lava Dome - Hydra Room Northwest Box: Progressive Sword
+Lava Dome - Hydra Room Northwest Box: Venus Shield
 Lava Dome - Hydra Room Southweast Box: Heal Potion
-Rope Bridge - West Box: Refresher
-Rope Bridge - East Box: Progressive Axe
-Alive Forest - Tree Stump Chest: Cure Potion
-Alive Forest - Near Entrance Box: Cure Potion
-Alive Forest - After Bridge Box: Heal Potion
-Alive Forest - Gemini Stump Box: Heal Potion
+Rope Bridge - West Box: Projectile Refill
+Rope Bridge - East Box: Refresher
+Alive Forest - Tree Stump Chest: Bomb Refill
+Alive Forest - Near Entrance Box: Projectile Refill
+Alive Forest - After Bridge Box: Projectile Refill
+Alive Forest - Gemini Stump Box: Cure Potion
 Giant Tree 1F - Northwest Box: Cure Potion
-Giant Tree 1F - Southwest Box: Cure Potion
-Giant Tree 1F - Center Box: Cure Potion
-Giant Tree 1F - East Box: Cure Potion
-Giant Tree 2F - North Box: Projectile Refill
-Giant Tree 2F - Dropdown Ledge Box: Refresher
-Giant Tree 2F - South Box: Projectile Refill
-Giant Tree 2F - Gidrah Chest: Refresher
-Giant Tree 2F - Mushroom Tunnel West Box: Progressive Axe
-Giant Tree 2F - Mushroom Tunnel East Box: Heal Potion
-Giant Tree 3F - Central Island Box: Blizzard Book
-Giant Tree 3F - Center North Box: Projectile Refill
-Giant Tree 3F - Center West Box: Heal Potion
+Giant Tree 1F - Southwest Box: Heal Potion
+Giant Tree 1F - Center Box: Sky Coin
+Giant Tree 1F - East Box: Noble Armor
+Giant Tree 2F - North Box: Cure Potion
+Giant Tree 2F - Dropdown Ledge Box: Heal Potion
+Giant Tree 2F - South Box: Heal Potion
+Giant Tree 2F - Gidrah Chest: Cure Potion
+Giant Tree 2F - Mushroom Tunnel West Box: Cure Potion
+Giant Tree 2F - Mushroom Tunnel East Box: Bomb Refill
+Giant Tree 3F - Central Island Box: Cure Potion
+Giant Tree 3F - Center North Box: Cure Potion
+Giant Tree 3F - Center West Box: Cure Potion
 Giant Tree 3F - West Side Box: Projectile Refill
-Giant Tree 3F - Worm Room North Box: Fire Book
-Giant Tree 3F - Worm Room South Box: Heal Potion
-Giant Tree 4F - Highest Platform North Box: Heal Potion
-Giant Tree 4F - Highest Platform South Box: Cure Potion
+Giant Tree 3F - Worm Room North Box: Bomb Refill
+Giant Tree 3F - Worm Room South Box: Cure Potion
+Giant Tree 4F - Highest Platform North Box: Seed
+Giant Tree 4F - Highest Platform South Box: Heal Potion
 Giant Tree 4F - Hook Ledge Northeast Box: Cure Potion
-Giant Tree 4F - Hook Ledge Southwest Box: Bomb Refill
-Giant Tree 4F - East Slime Room Box: Heal Potion
-Giant Tree 4F - West Slime Room Box: Progressive Bomb
-Giant Tree 5F - Northwest Left Box: Cure Potion
-Giant Tree 5F - Northwest Right Box: Heal Potion
-Giant Tree 5F - South Left Box: Refresher
-Giant Tree 5F - South Right Box: White Seal
+Giant Tree 4F - Hook Ledge Southwest Box: Cure Potion
+Giant Tree 4F - East Slime Room Box: Bomb Refill
+Giant Tree 4F - West Slime Room Box: Heal Potion
+Giant Tree 5F - Northwest Left Box: Bomb Refill
+Giant Tree 5F - Northwest Right Box: Projectile Refill
+Giant Tree 5F - South Left Box: Heal Potion
+Giant Tree 5F - South Right Box: Projectile Refill
 Gidrah: Gidrah
-Kaidge Temple - Box: Cure Potion
-Windhole Temple - Box: Refresher
-Mount Gale - Dullahan Chest: Flare Seal
+Kaidge Temple - Box: Projectile Refill
+Windhole Temple - Box: Cure Potion
+Mount Gale - Dullahan Chest: Cure Potion
 Dullahan: Dullahan
 Mount Gale - East Box: Projectile Refill
-Mount Gale - West Box: Projectile Refill
+Mount Gale - West Box: Heal Potion
 Otto: Rainbow Bridge
 Windia - Otto's Attic Box: Cure Potion
-Windia - Mobius Basement West Box: Heal Potion
-Windia - Mobius Basement East Box: Cure Potion
+Windia - Mobius Basement West Box: Jumbo Bomb
+Windia - Mobius Basement East Box: Heal Potion
 Windia - Inn Bedroom North Box: Cure Potion
-Windia - Inn Bedroom South Box: Gemini Crest
-Windia - Kaeli: Multi Key
-Windia - Vendor: Heal Potion
+Windia - Inn Bedroom South Box: Refresher
+Windia - Kaeli: Exit Book
+Windia - Vendor: Cure Potion
 Pazuzu 1F: Pazuzu 1F
-Pazuzu's Tower 1F - Descent Bomb Wall West Box: Projectile Refill
-Pazuzu's Tower 1F - Descent Bomb Wall Center Box: Wakewater
-Pazuzu's Tower 1F - Descent Bomb Wall East Box: Refresher
-Pazuzu's Tower 1F - Descent Box: Bomb Refill
+Pazuzu's Tower 1F - Descent Bomb Wall West Box: Heal Potion
+Pazuzu's Tower 1F - Descent Bomb Wall Center Box: Captain's Cap
+Pazuzu's Tower 1F - Descent Bomb Wall East Box: Gemini Crest
+Pazuzu's Tower 1F - Descent Box: Cure Potion
 Pazuzu's Tower 2F - East Room West Box: Refresher
 Pazuzu's Tower 2F - East Room East Box: Bomb Refill
 Pazuzu 2F Lock: Pazuzu 2F Lock
 Pazuzu 2F: Pazuzu 2F
-Pazuzu's Tower 3F - Guest Room West Box: Cure Potion
-Pazuzu's Tower 3F - Guest Room East Box: Cure Potion
+Pazuzu's Tower 3F - Guest Room West Box: Projectile Refill
+Pazuzu's Tower 3F - Guest Room East Box: Heal Potion
 Pazuzu 3F: Pazuzu 3F
-Pazuzu's Tower 3F - South Ledge Box: Progressive Accessory
-Pazuzu's Tower 4F - Elevator West Box: Heal Potion
+Pazuzu's Tower 3F - South Ledge Box: Refresher
+Pazuzu's Tower 4F - Elevator West Box: Mega Grenade
 Pazuzu's Tower 4F - Elevator East Box: Heal Potion
-Pazuzu's Tower 4F - East Storage Room Chest: Exit Book
+Pazuzu's Tower 4F - East Storage Room Chest: Projectile Refill
 Pazuzu 4F Lock: Pazuzu 4F Lock
 Pazuzu 4F: Pazuzu 4F
 Pazuzu 5F: Pazuzu 5F
-Pazuzu's Tower 5F - North Box: Seed
-Pazuzu's Tower 5F - South Box: Progressive Helm
-Pazuzu's Tower 6F - Box: Cure Potion
-Pazuzu's Tower 6F - Chest: Progressive Bomb
+Pazuzu's Tower 5F - North Box: Cure Potion
+Pazuzu's Tower 5F - South Box: Projectile Refill
+Pazuzu's Tower 6F - Box: Heal Potion
+Pazuzu's Tower 6F - Chest: White Seal
 Pazuzu 6F Lock: Pazuzu 6F Lock
 Pazuzu 6F: Pazuzu 6F
-Pazuzu's Tower 7F - Pazuzu Chest: Cure Potion
+Pazuzu's Tower 7F - Pazuzu Chest: Mask
 Pazuzu: Pazuzu
 Light Temple - Box: Heal Potion
 Ship Dock Access: Ship Dock Access
 Mac Ship Steering Wheel: Ship Steering Wheel
 Mac's Ship Deck - North Box: Heal Potion
-Mac's Ship Deck - Center Box: Cure Potion
-Mac's Ship Deck - South Box: Cure Potion
-Mac's Ship B1 - Northwest Hook Platform Box: Cure Potion
-Mac's Ship B1 - Center Hook Platform Box: Progressive Shield
-Mac's Ship B1 - Central Corridor Box: Heal Potion
-Mac's Ship B2 - Barrel Room South Box: Bomb Refill
+Mac's Ship Deck - Center Box: Projectile Refill
+Mac's Ship Deck - South Box: Heal Potion
+Mac's Ship B1 - Northwest Hook Platform Box: Heal Potion
+Mac's Ship B1 - Center Hook Platform Box: Projectile Refill
+Mac's Ship B1 - Central Corridor Box: Cure Potion
+Mac's Ship B2 - Barrel Room South Box: Projectile Refill
 Mac's Ship B2 - Barrel Room North Box: Cure Potion
-Mac's Ship B2 - Southwest Room Box: Cure Potion
-Mac's Ship B2 - Southeast Room Box: Heal Potion
-Mac's Ship B1 - Mac Room Chest: Projectile Refill
+Mac's Ship B2 - Southwest Room Box: Heal Book
+Mac's Ship B2 - Southeast Room Box: Apollo Helm
+Mac's Ship B1 - Mac Room Chest: Libra Crest
 Captain Mac: Ship Loaned
-Doom Castle 4F - Northwest Room Box: Life Book
-Doom Castle 4F - Southwest Room Box: Projectile Refill
-Doom Castle 4F - Northeast Room Box: Heal Potion
-Doom Castle 4F - Southeast Room Box: Cure Potion
+Doom Castle 4F - Northwest Room Box: Heal Potion
+Doom Castle 4F - Southwest Room Box: Cure Potion
+Doom Castle 4F - Northeast Room Box: Projectile Refill
+Doom Castle 4F - Southeast Room Box: Steel Sword
 Stone Golem: Stone Golem
-Doom Castle 5F - North Left Box: Projectile Refill
+Doom Castle 5F - North Left Box: Cure Potion
 Doom Castle 5F - North Right Box: Heal Potion
-Doom Castle 5F - South Left Box: Projectile Refill
+Doom Castle 5F - South Left Box: Cure Potion
 Doom Castle 5F - South Right Box: Heal Potion
 Twinhead Wyvern: Twinhead Wyvern
-Doom Castle 6F - West Box: Elixir
-Doom Castle 6F - East Box: Projectile Refill
+Doom Castle 6F - West Box: Charm Claw
+Doom Castle 6F - East Box: Cure Potion
 Zuh: Zuh
 Dark King: Dark King
 
 Playthrough:
 
 0: {
-  Bomb
+  Axe
 }
 1: {
-  Foresta - Kaeli's House Box: Sun Coin
-  Level Forest - Old Man: Progressive Claw
-  Long Spine: Long Spine Bombed
+  Bone Dungeon 1F - Entrance Room Middle Box: Excalibur
+  Focus Tower 1F - Main Lobby Box: Wakewater
+  Foresta - Outside Box: Sun Coin
+  Level Forest - Northeast Box: Knight Sword
+  Level Forest - Northwest Box: Mobius Crest
   Old Man Barrel: Barrel Pushed
   Tristam Companion: Tristam
 }
 2: {
-  Bone Dungeon B1 - Ribcage Waterway Box: Captain's Cap
-  Bone Dungeon B1 - Tristam: Sky Coin
-  Doom Castle B2 - Sun Door Chest: Progressive Claw
-  Rope Bridge - East Box: Progressive Axe
-  Short Spine: Short Spine Bombed
+  Giant Tree 1F - Center Box: Sky Coin
+  Pazuzu 3F: Pazuzu 3F
+  Pazuzu 5F: Pazuzu 5F
+  Ship Dock Access: Ship Dock Access
   Tristam Bone Dungeon Item Given: Tristam Bone Item Given
-  Windia - Inn Bedroom South Box: Gemini Crest
+  Windia - Mobius Basement West Box: Jumbo Bomb
 }
 3: {
-  Level Forest - Southeast Box: Progressive Claw
-  Skull 1: Skull 1 Bombed
+  Long Spine: Long Spine Bombed
 }
 4: {
-  Bone Dungeon B2 - Lone Room Box: Progressive Sword
-  Giant Tree 2F - Mushroom Tunnel West Box: Progressive Axe
-  Pazuzu 2F: Pazuzu 2F
-  Pazuzu 2F Lock: Pazuzu 2F Lock
-  Pazuzu 3F: Pazuzu 3F
-  Pazuzu 4F: Pazuzu 4F
-  Pazuzu 4F Lock: Pazuzu 4F Lock
-  Pazuzu 5F: Pazuzu 5F
-  Pazuzu 6F: Pazuzu 6F
-  Pazuzu 6F Lock: Pazuzu 6F Lock
-  Pazuzu's Tower 1F - Descent Bomb Wall Center Box: Wakewater
-  Pazuzu's Tower 6F - Chest: Progressive Bomb
-  Skull 2: Skull 2 Bombed
+  Bone Dungeon B1 - Ribcage Waterway Box: River Coin
+  Short Spine: Short Spine Bombed
 }
 5: {
-  Bone Dungeon B2 - Flamerus Rex Chest: River Coin
-  Flamerus Rex: Flamerus Rex
-  Giant Tree 4F - West Slime Room Box: Progressive Bomb
+  Fireburg - Vendor: Venus Key
+  Lava Dome - Bare Maze Southwest Box: Giant's Axe
+  Lava Dome - U-Bend Room South Box: Tree Wither
+  Lava Dome Plate: Lava Dome Plate
+  Medusa: Medusa
+  Reuben Companion: Reuben 1
+  Skull 1: Skull 1 Bombed
+  Volcano - Behind Medusa Box: Dragon Claw
 }
 6: {
-  Lava Dome - Exterior Dead End Caldera Box: Mobius Crest
-  Lava Dome - U-Bend Room North Box: Mask
-  Lava Dome Plate: Lava Dome Plate
-  Reuben Companion: Reuben 1
-}
-7: {
   Dualhead Hydra: Dualhead Hydra
   Jinn: Jinn
-  Lava Dome - Hydra Room Northwest Box: Progressive Sword
-  Medusa: Medusa
-  Mine - Crescent Room Chest: Libra Crest
-  Mine - Parallel Room East Box: Magic Mirror
-  Mine - Parallel Room West Box: Progressive Axe
-  Ship Dock Access: Ship Dock Access
-  Volcano - Base East Right Box: Sand Coin
+  Kaeli Companion: Kaeli 1
+  Pazuzu 2F: Pazuzu 2F
+  Pazuzu 2F Lock: Pazuzu 2F Lock
+  Pazuzu 4F: Pazuzu 4F
+  Pazuzu 4F Lock: Pazuzu 4F Lock
+  Pazuzu 6F: Pazuzu 6F
+  Pazuzu 6F Lock: Pazuzu 6F Lock
+  Pazuzu's Tower 1F - Descent Bomb Wall Center Box: Captain's Cap
+  Pazuzu's Tower 1F - Descent Bomb Wall East Box: Gemini Crest
+  Pazuzu's Tower 4F - Elevator West Box: Mega Grenade
+  Skull 2: Skull 2 Bombed
 }
-8: {
-  Dullahan: Dullahan
+7: {
+  Aquaria - Phoebe's House Chest: Elixir
+  Flamerus Rex: Flamerus Rex
   Freezer Crab: Freezer Crab
-  Gidrah: Gidrah
   Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
-  Mine - Cliff Northeast Box: Progressive Sword
-  Pazuzu 1F: Pazuzu 1F
+  Lava Dome - Beyond River Room Chest: Cat Claw
+  Mine - Cliff Northwest Box: Multi Key
+  Mine - Cliff Southwest Box: Thunder Rock
+  Minotaur: Minotaur
   Phanquid: Phanquid
   Phoebe Companion: Phoebe 1
   Reuben's dad Saved: Reuben Dad Saved
   Summer Aquaria: Summer Aquaria
-  Wintry Cave 2F - West Left Box: Venus Key
+  Wintry Cave 3F - East Box: Battle Axe
+}
+8: {
+  Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
+  Kaeli 2: Kaeli 2
+  Otto: Rainbow Bridge
+  Spencer's Cave - Locked Chest: Bomb
 }
 9: {
-  Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
-  Pazuzu: Pazuzu
-}
-10: {
-  Ice Golem: Ice Golem
-  Ice Pyramid 4F - Chest: Thunder Rock
-  Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
-  Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
-  Ice Pyramid B1 - West Box: Tree Wither
-}
-11: {
-  Kaeli Companion: Kaeli 1
-  Otto: Rainbow Bridge
-}
-12: {
   Bomb Libra Block: Spencer Cave Libra Block Bombed
   Collapse Spencer's Cave: Ship Liberated
-  Minotaur: Minotaur
+  Ice Golem: Ice Golem
+  Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
+  Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
+  Windia - Kaeli: Exit Book
 }
-13: {
+10: {
   Captain Mac: Ship Loaned
   Mac Ship Steering Wheel: Ship Steering Wheel
+  Mac's Ship B1 - Mac Room Chest: Libra Crest
 }
-14: {
+11: {
+  Doom Castle 4F - Southeast Room Box: Steel Sword
+  Doom Castle B2 - Hook Platform Box: Sand Coin
   Stone Golem: Stone Golem
 }
-15: {
+12: {
+  Dullahan: Dullahan
+  Gidrah: Gidrah
+  Pazuzu 1F: Pazuzu 1F
   Twinhead Wyvern: Twinhead Wyvern
 }
-16: {
-  Doom Castle 6F - West Box: Elixir
+13: {
+  Doom Castle 6F - West Box: Charm Claw
+  Pazuzu: Pazuzu
   Zuh: Zuh
 }
-17: {
+14: {
   Dark King: Dark King
-  Kaeli 2: Kaeli 2
-}
-18: {
-  Windia - Kaeli: Multi Key
 }
 
 Paths:
 
+Aquaria - Phoebe's House Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Phoebe's House Entrance Script
+   =>   Phoebe's House
 Bomb Libra Block
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -484,6 +491,11 @@ Bomb Libra Block
    =>   Spencer Cave Normal South Ledge -> Spencer Cave Normal South Ledge to Spencer Cave Caved In Main Loop
    =>   Spencer Cave Caved In Main Loop -> Spencer Cave Caved In Main Loop to Spencer Cave Caved In Waters
    =>   Spencer Cave Caved In Waters
+Bone Dungeon 1F - Entrance Room Middle Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F
 Bone Dungeon B1 - Ribcage Waterway Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -494,39 +506,6 @@ Bone Dungeon B1 - Ribcage Waterway Box
    =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
    =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bonne Dungeon B2 - Exploding Skull Room - To Hidden Passage
    =>   Bone Dungeon B1 - Hidden Room
-Bone Dungeon B1 - Tristam
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Overworld - Bone Dungeon
-   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
-   =>   Bone Dungeon B1 - Waterway
-Bone Dungeon B2 - Flamerus Rex Chest
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Overworld - Bone Dungeon
-   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
-   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
-   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
-   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
-   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
-   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
-   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
-   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
-   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
-   =>   Bone Dungeon B2 - Boss Room
-Bone Dungeon B2 - Lone Room Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Overworld - Bone Dungeon
-   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
-   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
-   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
-   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
-   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
-   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
-   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
-   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bonne Dungeon B2 - Two Skulls Room - To Box Room
-   =>   Bone Dungeon B2 - Box Room
 Captain Mac
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -569,6 +548,23 @@ Dark King
    =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Hero Room Entrance
    =>   Doom Castle Hero Room -> Doom Castle Hero Room - Dark King Entrance 1
    =>   Doom Castle Dark King Room
+Doom Castle 4F - Southeast Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Ice Floor Entrance
+   =>   Doom Castle Ice Floor
 Doom Castle 6F - West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -586,15 +582,19 @@ Doom Castle 6F - West Box
    =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
    =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Sky Floor Entrance
    =>   Doom Castle Sky Floor
-Doom Castle B2 - Sun Door Chest
+Doom Castle B2 - Hook Platform Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Overworld - Focus Tower Foresta
-   =>   Focus Tower B1 - Main Loop -> Focus Tower B1 - Main Loop - To Focus Tower 1F - Main Hall
-   =>   Focus Tower 1F Main Lobby -> Focus Tower 1F Main Lobby to Focus Tower 1F SunCoin Room
-   =>   Focus Tower 1F SunCoin Room -> Focus Tower 1F - To Focus Tower B1 - To Aero Chest
-   =>   Focus Tower B1 - Aero Corridor -> Focus Tower B1 - Aero Corridor - To Sand Floor - Aero Chest
-   =>   Doom Castle - Aero Room
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor
 Dualhead Hydra
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -616,6 +616,14 @@ Dullahan
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Overworld - Mount Gale
    =>   Mount Gale
+Fireburg - Vendor
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House
 Flamerus Rex
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -630,51 +638,38 @@ Flamerus Rex
    =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
    =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
    =>   Bone Dungeon B2 - Boss Room
-Foresta - Kaeli's House Box
+Focus Tower 1F - Main Lobby Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Focus Tower Foresta
+   =>   Focus Tower B1 - Main Loop -> Focus Tower B1 - Main Loop - To Focus Tower 1F - Main Hall
+   =>   Focus Tower 1F Main Lobby
+Foresta - Outside Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Overworld - Foresta
-   =>   Foresta -> Foresta - Kaeli's House
-   =>   Kaeli's House
+   =>   Foresta
 Freezer Crab
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Falls Basin
    =>   Fall Basin
-Giant Tree 2F - Mushroom Tunnel West Box
+Giant Tree 1F - Center Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Overworld - Alive Forest
    =>   Alive Forest -> Alive Forest - Giant Tree Entrance
-   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
-   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
-   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby - West Entrance to Mushroom Room
-   =>   Giant Tree 2F Mushroom Room
-Giant Tree 4F - West Slime Room Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Overworld - Alive Forest
-   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
-   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
-   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
-   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
-   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
-   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
-   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
-   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
-   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
-   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
-   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
-   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
-   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
-   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
-   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
-   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
-   =>   Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 1F Main Area
 Gidrah
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -705,7 +700,14 @@ Ice Golem
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -723,38 +725,45 @@ Ice Pyramid 1F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby
 Ice Pyramid 3F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
    =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
    =>   Ice Pyramid 3F Main Loop
-Ice Pyramid 4F - Chest
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
-   =>   Subregion Aquaria -> Overworld - Ice Pyramid
-   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
-   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
-   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
-   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
-   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
-   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
-   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
-   =>   Ice Pyramid 4F Treasure Room
 Ice Pyramid 4F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -768,7 +777,14 @@ Ice Pyramid 5F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -781,20 +797,6 @@ Ice Pyramid 5F Statue
    =>   Ice Pyramid Climbing Wall Room Lower Space -> Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space
    =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
    =>   Ice Pyramid 5F Stairs to Ice Golem
-Ice Pyramid B1 - West Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
-   =>   Subregion Aquaria -> Overworld - Ice Pyramid
-   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
-   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
-   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
-   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
-   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
-   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
-   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
-   =>   Ice Pyramid B1 Taunt Room
 Jinn
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -815,7 +817,7 @@ Kaeli Companion
    =>   Subregion Foresta -> Overworld - Foresta
    =>   Foresta -> Foresta - Kaeli's House
    =>   Kaeli's House
-Lava Dome - Exterior Dead End Caldera Box
+Lava Dome - Bare Maze Southwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
@@ -823,29 +825,18 @@ Lava Dome - Exterior Dead End Caldera Box
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
-   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
-   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
-   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
-   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
-   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Left Entrance
-   =>   Lava Dome Four Boxes Stairs -> Lava Dome Four Boxes Stairs - Lower Entrance
-   =>   Lava Dome Inner Ring Tiny Bottom Ledge
-Lava Dome - Hydra Room Northwest Box
+   =>   Lava Dome Jump Maze I
+Lava Dome - Beyond River Room Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
-   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
-   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
-   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
-   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
-   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
-   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
-   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Right Entrance
-   =>   Lava Dome Inner Ring Big Door Ledge -> Lava Dome Inner Ring Big Door Ledge - Hydra Gate 1
-   =>   Lava Dome Hydra Room
-Lava Dome - U-Bend Room North Box
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room Main Area to Lava Dome Big Jump Room MegaGrenade Area
+   =>   Lava Dome Big Jump Room MegaGrenade Area -> Lava Dome Big Jump Room - North Entrance
+   =>   Lava Dome Moon Helm Room
+Lava Dome - U-Bend Room South Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
@@ -865,12 +856,12 @@ Lava Dome Plate
    =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room - Lower Right Stairs
    =>   Lava Dome Plate Corridor -> Lava Dome Plate Corridor - Right Entrance
    =>   Lava Dome Inner Ring Plate Ledge
-Level Forest - Old Man
+Level Forest - Northeast Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Overworld - Level Forest
    =>   Level Forest
-Level Forest - Southeast Box
+Level Forest - Northwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Overworld - Level Forest
@@ -895,6 +886,23 @@ Mac Ship Steering Wheel
    =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
    =>   Subregion Mac's Ship -> Overworld - Mac Ship
    =>   Mac Ship Deck
+Mac's Ship B1 - Mac Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - North Stairs Script
+   =>   Mac Ship B1 Square Room -> Mac Ship B1 Square Room - South Stairs
+   =>   Mac Ship B2 North Corridor -> Mac Ship B2 North Corridor - South Stairs Script
+   =>   Mac Ship B1 Central Corridor -> Mac Ship B1 Central Corridor - South Stairs
+   =>   Mac Ship B2 South Corridor -> Mac Ship B2 South Corridor - South Stairs
+   =>   Mac Ship B1 Mac Room
 Medusa
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -905,7 +913,7 @@ Medusa
    =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
    =>   Volcano Cross Right-Left -> Volcano Cross Right-Left - To Volcano Top Left Script
    =>   Volcano Top Left
-Mine - Cliff Northeast Box
+Mine - Cliff Northwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
@@ -914,31 +922,15 @@ Mine - Cliff Northeast Box
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
    =>   Mine Cliff
-Mine - Crescent Room Chest
+Mine - Cliff Southwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
-   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior North Ledge
-   =>   Mine Exterior North Ledge -> Mine Exterior - To Crescent Room
-   =>   Mine Crescent Room
-Mine - Parallel Room East Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
-   =>   Subregion Fireburg -> Overworld - Mine
-   =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
-   =>   Mine Parallel Room
-Mine - Parallel Room West Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
-   =>   Subregion Fireburg -> Overworld - Mine
-   =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
-   =>   Mine Parallel Room
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
 Minotaur
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1110,7 +1102,7 @@ Pazuzu's Tower 1F - Descent Bomb Wall Center Box
    =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
    =>   Pazuzu 2F -> Pazuzu 2F - West Lower Stairs
    =>   Pazuzu Tower 1F Boxes Room
-Pazuzu's Tower 6F - Chest
+Pazuzu's Tower 1F - Descent Bomb Wall East Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
@@ -1123,12 +1115,40 @@ Pazuzu's Tower 6F - Chest
    =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
    =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
    =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
-   =>   Pazuzu 6F
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F -> Pazuzu 2F - West Lower Stairs
+   =>   Pazuzu Tower 1F Boxes Room
+Pazuzu's Tower 4F - Elevator West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F
 Phanquid
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Wintry Cave
    =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
    =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
@@ -1139,7 +1159,14 @@ Phoebe Companion
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Libra Temple
    =>   Libra Temple
 Reuben Companion
@@ -1159,12 +1186,6 @@ Reuben's dad Saved
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
    =>   Mine Cliff
-Rope Bridge - East Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Overworld - Rope Bridge
-   =>   Rope Bridge
 Ship Dock Access
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1206,6 +1227,20 @@ Skull 2
    =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
    =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
    =>   Bone Dungeon B2 - Two Skulls Room - Second Room
+Spencer's Cave - Locked Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Summer - Spencer's Place Entrance Top
+   =>   Spencer Waterfall -> Spencer Waterfall - To Spencer Cave
+   =>   Spencer Cave Normal Main
 Stone Golem
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1227,8 +1262,13 @@ Summer Aquaria
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
-   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
    =>   Aquaria
 Tristam Bone Dungeon Item Given
         Menu -> Enter Overworld
@@ -1258,21 +1298,16 @@ Twinhead Wyvern
    =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
    =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
    =>   Doom Castle Lava Floor
-Volcano - Base East Right Box
+Volcano - Behind Medusa Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Volcano
-   =>   Volcano Base
-Windia - Inn Bedroom South Box
-        Menu -> Enter Overworld
-   =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Overworld - Windia
-   =>   Windia -> Windia - INN's Script
-   =>   Windia Inn Lobby -> Windia Inn Lobby - Stairs to Beds
-   =>   Windia Inn Beds
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
+   =>   Volcano Cross Right-Left -> Volcano Cross Right-Left - To Volcano Top Left Script
+   =>   Volcano Top Left
 Windia - Kaeli
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1281,16 +1316,29 @@ Windia - Kaeli
    =>   Windia -> Windia - INN's Script
    =>   Windia Inn Lobby -> Windia Inn Lobby - Stairs to Beds
    =>   Windia Inn Beds
-Wintry Cave 2F - West Left Box
+Windia - Mobius Basement West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement
+Wintry Cave 3F - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Stairs to Gemini Room
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Gemini Teleporter Script
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Room Stairs
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Entrance's Script
+   =>   Aquaria -> Aquaria Winter - Winter Entrance 1
    =>   Subregion Aquaria -> Overworld - Wintry Cave
-   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
-   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
-   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
-   =>   Wintry Cave 2F
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - To 3F Top
+   =>   Wintry Cave 3F Top
 Zuh
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta

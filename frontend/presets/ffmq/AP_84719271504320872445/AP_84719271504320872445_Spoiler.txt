@@ -1,0 +1,1372 @@
+﻿Archipelago Version 0.6.7  -  Seed: 3
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Final Fantasy Mystic Quest
+Location Count:                  50
+Progression Balancing:           30
+Accessibility:                   Items
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Logic:                           Expert
+Brown Boxes:                     Exclude
+Sky Coin Mode:                   Save The Crystals
+Shattered Sky Coin:              Random Wide
+Starting Weapon:                 Bomb
+Progressive Gear:                No
+Leveling Curve:                  Double And Half
+Starting Companion:              None
+Available Companions:            3
+Companions' Locations:           Standard
+Kaeli's Mom Fights Minotaur:     Yes
+Companion Leveling Type:         Benjamin Level
+Companion Spellbook Type:        Extended
+Enemies Density:                 Three Quarter
+Enemies Scaling Lower:           Double And Half
+Enemies Scaling Upper:           Triple
+Bosses Scaling Lower:            Double And Half
+Bosses Scaling Upper:            Triple
+Enemizer Attacks:                Self Destruct
+Enemizer Groups:                 Mobs Bosses And Dark King
+Shuffle Resistance/Weakness Types:No
+Shuffle Enemies' Positions:      No
+Progressive Formations:          Regions Keep Type
+Doom Castle:                     Standard
+Doom Castle Shortcut:            Yes
+Tweak Frustrating Dungeons:      No
+Map Shuffle:                     None
+Crest Shuffle:                   No
+Shuffle Battlefield Rewards:     No
+Map Shuffle Seed:                uÈ𝖑(fMÊdв本I8)Ã🔥한XÂË🔥2YÄΓ^4𝖔𝕳r한Um
+Battlefields Battles Quantity:   Ten
+
+
+Starting Items:
+
+Bomb
+Steel Armor
+
+Locations:
+
+Foresta West Battlefield: Cat Claw
+South of Aquaria Battlefield: White Seal
+North of Libra Temple Battlefield: Venus Shield
+Path to Fireburg Central Battlefield: Fire Book
+Mine Battlefield: Charm Claw
+Doom Castle B2 - Southeast Chest: Thunder Seal
+Doom Castle B2 - Sun Door Chest: Heal Potion
+Focus Tower 2F - Sand Door Chest: Excalibur
+Focus Tower 2F - Back Door Chest: Gaia's Armor
+Focus Tower 2F - Venus Chest: Meteor Seal
+Minotaur: Minotaur
+Level Forest - Old Man: Gemini Crest
+Level Forest - Kaeli: Steel Shield
+Kaeli Companion: Kaeli 1
+Kaeli 2: Kaeli 2
+Foresta - Old Man House Chest: Sand Coin
+Old Man Barrel: Barrel Pushed
+Tristam Companion: Tristam
+Bone Dungeon B1 - Skull Chest: Dragon Claw
+Bone Dungeon B1 - Tristam: Mobius Crest
+Tristam Bone Dungeon Item Given: Tristam Bone Item Given
+Long Spine: Long Spine Bombed
+Short Spine: Short Spine Bombed
+Bone Dungeon B2 - Penultimate Room Chest: Sun Coin
+Skull 1: Skull 1 Bombed
+Skull 2: Skull 2 Bombed
+Bone Dungeon B2 - Flamerus Rex Chest: Blizzard Book
+Bone Dungeon B2 - Tristam's Treasure Chest: Captain's Cap
+Flamerus Rex: Flamerus Rex
+Phoebe Companion: Phoebe 1
+Summer Aquaria: Summer Aquaria
+Aquaria - Vendor: Wakewater
+Wintry Cave 1F - Phoebe: Steel Sword
+Wintry Cave 3F - Squidite Chest: Libra Crest
+Phanquid: Phanquid
+Life Temple - Mysterious Man: Multi Key
+Falls Basin - Snow Crab Chest: Heal Book
+Freezer Crab: Freezer Crab
+Ice Pyramid B1 - Chest: Noble Armor
+Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
+Ice Pyramid 1F - East Alcove Chest: Quake Book
+Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
+Ice Pyramid 4F - Chest: Battle Axe
+Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
+Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
+Ice Pyramid 6F - Ice Golem Chest: Giant's Axe
+Ice Golem: Ice Golem
+Spencer's Cave - Spencer: Life Book
+Spencer's Cave - Locked Chest: Tree Wither
+Collapse Spencer's Cave: Ship Liberated
+Bomb Libra Block: Spencer Cave Libra Block Bombed
+Spencer's Cave - Mobius Chest: Flare Seal
+Fireburg - Reuben's House Arion: Jumbo Bomb
+Reuben Companion: Reuben 1
+Fireburg - Locked House Man: Axe
+Fireburg - Vendor: Thunder Rock
+Fireburg - Tristam: Magic Ring
+Jinn: Jinn
+Mine - Crescent Room Chest: Elixir
+Mine - Reuben: Venus Key
+Reuben's dad Saved: Reuben Dad Saved
+Volcano - Base Chest: Mega Grenade
+Volcano - Medusa Chest: Moon Helm
+Medusa: Medusa
+Lava Dome Plate: Lava Dome Plate
+Lava Dome - Beyond River Room Chest: Exit Book
+Lava Dome - Gold Bar Room Boulder Chest: River Coin
+Lava Dome - Dualhead Hydra Chest: Aero Book
+Dualhead Hydra: Dualhead Hydra
+Alive Forest - Tree Stump Chest: Apollo Helm
+Giant Tree 2F - Gidrah Chest: Knight Sword
+Gidrah: Gidrah
+Mount Gale - Dullahan Chest: Cupid Locket
+Dullahan: Dullahan
+Otto: Rainbow Bridge
+Windia - Kaeli: Charm
+Windia - Vendor: Steel Helm
+Pazuzu 1F: Pazuzu 1F
+Pazuzu 2F Lock: Pazuzu 2F Lock
+Pazuzu 2F: Pazuzu 2F
+Pazuzu 3F: Pazuzu 3F
+Pazuzu's Tower 4F - East Storage Room Chest: Cure Book
+Pazuzu 4F Lock: Pazuzu 4F Lock
+Pazuzu 4F: Pazuzu 4F
+Pazuzu 5F: Pazuzu 5F
+Pazuzu's Tower 6F - Chest: Mask
+Pazuzu 6F Lock: Pazuzu 6F Lock
+Pazuzu 6F: Pazuzu 6F
+Pazuzu's Tower 7F - Pazuzu Chest: Magic Mirror
+Pazuzu: Pazuzu
+Ship Dock Access: Ship Dock Access
+Mac Ship Steering Wheel: Ship Steering Wheel
+Mac's Ship B1 - Mac Room Chest: Aegis Shield
+Captain Mac: Ship Loaned
+Stone Golem: Stone Golem
+Twinhead Wyvern: Twinhead Wyvern
+Zuh: Zuh
+Dark King: Dark King
+
+Playthrough:
+
+0: {
+  Bomb
+}
+1: {
+  Bone Dungeon B1 - Skull Chest: Dragon Claw
+  Foresta - Old Man House Chest: Sand Coin
+  Foresta West Battlefield: Cat Claw
+  Level Forest - Old Man: Gemini Crest
+  Long Spine: Long Spine Bombed
+  Old Man Barrel: Barrel Pushed
+  Tristam Companion: Tristam
+}
+2: {
+  Aquaria - Vendor: Wakewater
+  Bone Dungeon B1 - Tristam: Mobius Crest
+  Fireburg - Vendor: Thunder Rock
+  Focus Tower 2F - Sand Door Chest: Excalibur
+  Freezer Crab: Freezer Crab
+  Jinn: Jinn
+  Lava Dome Plate: Lava Dome Plate
+  Medusa: Medusa
+  Mine - Crescent Room Chest: Elixir
+  Mine Battlefield: Charm Claw
+  Phanquid: Phanquid
+  Phoebe Companion: Phoebe 1
+  Reuben Companion: Reuben 1
+  Short Spine: Short Spine Bombed
+  Tristam Bone Dungeon Item Given: Tristam Bone Item Given
+  Volcano - Base Chest: Mega Grenade
+}
+3: {
+  Dualhead Hydra: Dualhead Hydra
+  Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
+  Lava Dome - Beyond River Room Chest: Exit Book
+  Lava Dome - Gold Bar Room Boulder Chest: River Coin
+  Mine - Reuben: Venus Key
+  Reuben's dad Saved: Reuben Dad Saved
+  Skull 1: Skull 1 Bombed
+  Summer Aquaria: Summer Aquaria
+  Wintry Cave 1F - Phoebe: Steel Sword
+  Wintry Cave 3F - Squidite Chest: Libra Crest
+}
+4: {
+  Fireburg - Reuben's House Arion: Jumbo Bomb
+  Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
+  Life Temple - Mysterious Man: Multi Key
+  Skull 2: Skull 2 Bombed
+  Spencer's Cave - Locked Chest: Tree Wither
+}
+5: {
+  Bone Dungeon B2 - Penultimate Room Chest: Sun Coin
+  Bone Dungeon B2 - Tristam's Treasure Chest: Captain's Cap
+  Dullahan: Dullahan
+  Fireburg - Locked House Man: Axe
+  Flamerus Rex: Flamerus Rex
+  Ice Golem: Ice Golem
+  Ice Pyramid 4F - Chest: Battle Axe
+  Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
+  Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
+  Kaeli Companion: Kaeli 1
+  Otto: Rainbow Bridge
+  Pazuzu 1F: Pazuzu 1F
+  Pazuzu 2F: Pazuzu 2F
+  Pazuzu 3F: Pazuzu 3F
+  Pazuzu 4F: Pazuzu 4F
+  Pazuzu 5F: Pazuzu 5F
+  Pazuzu 6F: Pazuzu 6F
+  Ship Dock Access: Ship Dock Access
+}
+6: {
+  Bomb Libra Block: Spencer Cave Libra Block Bombed
+  Collapse Spencer's Cave: Ship Liberated
+  Gidrah: Gidrah
+  Ice Pyramid 6F - Ice Golem Chest: Giant's Axe
+  Minotaur: Minotaur
+  Pazuzu 2F Lock: Pazuzu 2F Lock
+  Pazuzu 4F Lock: Pazuzu 4F Lock
+  Pazuzu 6F Lock: Pazuzu 6F Lock
+}
+7: {
+  Captain Mac: Ship Loaned
+  Giant Tree 2F - Gidrah Chest: Knight Sword
+  Kaeli 2: Kaeli 2
+  Mac Ship Steering Wheel: Ship Steering Wheel
+  Pazuzu: Pazuzu
+}
+8: {
+  Stone Golem: Stone Golem
+}
+9: {
+  Twinhead Wyvern: Twinhead Wyvern
+}
+10: {
+  Zuh: Zuh
+}
+11: {
+  Dark King: Dark King
+}
+
+Paths:
+
+Aquaria - Vendor
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House
+Bomb Libra Block
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Subregion Windia to Subregion Spencer's Cave
+   =>   Subregion Spencer's Cave -> Overworld - Spencer's Place
+   =>   Spencer Cave Normal South Ledge -> Spencer Cave Normal South Ledge to Spencer Cave Caved In Main Loop
+   =>   Spencer Cave Caved In Main Loop -> Spencer Cave Caved In Main Loop to Spencer Cave Caved In Waters
+   =>   Spencer Cave Caved In Waters
+Bone Dungeon B1 - Skull Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway
+Bone Dungeon B1 - Tristam
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway
+Bone Dungeon B2 - Penultimate Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Quake Room
+   =>   Bone Dungeon B2 - Quake Room
+Bone Dungeon B2 - Tristam's Treasure Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
+   =>   Bone Dungeon B2 - Boss Room
+Captain Mac
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - North Stairs Script
+   =>   Mac Ship B1 Square Room -> Mac Ship B1 Square Room - South Stairs
+   =>   Mac Ship B2 North Corridor -> Mac Ship B2 North Corridor - South Stairs Script
+   =>   Mac Ship B1 Central Corridor -> Mac Ship B1 Central Corridor - South Stairs
+   =>   Mac Ship B2 South Corridor -> Mac Ship B2 South Corridor - South Stairs
+   =>   Mac Ship B1 Mac Room
+Collapse Spencer's Cave
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Subregion Windia to Subregion Spencer's Cave
+   =>   Subregion Spencer's Cave -> Overworld - Spencer's Place
+   =>   Spencer Cave Normal South Ledge
+Dark King
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Hero Room Entrance
+   =>   Doom Castle Hero Room -> Doom Castle Hero Room - Dark King Entrance 1
+   =>   Doom Castle Dark King Room
+Dualhead Hydra
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Right Entrance
+   =>   Lava Dome Inner Ring Big Door Ledge -> Lava Dome Inner Ring Big Door Ledge - Hydra Gate 1
+   =>   Lava Dome Hydra Room
+Dullahan
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Mount Gale
+   =>   Mount Gale
+Fireburg - Locked House Man
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House
+Fireburg - Reuben's House Arion
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - Reuben House
+   =>   Reuben's House
+Fireburg - Vendor
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House
+Flamerus Rex
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
+   =>   Bone Dungeon B2 - Boss Room
+Focus Tower 2F - Sand Door Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Focus Tower Foresta
+   =>   Focus Tower B1 - Main Loop -> Focus Tower B1 - Main Loop - To Focus Tower 1F - Main Hall
+   =>   Focus Tower 1F Main Lobby -> Focus Tower 1F Main Lobby to Focus Tower 1F SandCoin Room
+   =>   Focus Tower 1F SandCoin Room -> Focus Tower 1F - To Focus Tower 2F - From SandCoin
+   =>   Focus Tower 2F - Sand Coin Passage
+Foresta - Old Man House Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Old Man House - Back Door
+   =>   Foresta Houses - Old Man's House Back
+Foresta West Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta
+Freezer Crab
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Falls Basin
+   =>   Fall Basin
+Giant Tree 2F - Gidrah Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby - West Entrance to Mushroom Room
+   =>   Giant Tree 2F Mushroom Room -> Giant Tree 2F Mushroom Room - North Face to Meteor
+   =>   Giant Tree 2F Meteor Chest Room
+Gidrah
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor
+   =>   Giant Tree 4F Upper Floor -> Giant Tree 4F Upper Floor - Upper Central Mouth
+   =>   Giant Tree 5F Lower Area -> Giant Tree 5F Lower Area to Giant Tree 5F Gidrah Platform
+   =>   Giant Tree 5F Gidrah Platform
+Ice Golem
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room -> Ice Pyramid B1 Taunt Room - To Climbing Wall Room
+   =>   Ice Pyramid Climbing Wall Room Lower Space -> Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space
+   =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
+   =>   Ice Pyramid 5F Stairs to Ice Golem -> Ice Pyramid 5F Stairs to Ice Golem - To Ice Golem Room
+   =>   Ice Pyramid Ice Golem Room
+Ice Pyramid 1F Statue
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby
+Ice Pyramid 3F Statue
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop
+Ice Pyramid 4F - Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F Statue
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 5F Statue
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room -> Ice Pyramid B1 Taunt Room - To Climbing Wall Room
+   =>   Ice Pyramid Climbing Wall Room Lower Space -> Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space
+   =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
+   =>   Ice Pyramid 5F Stairs to Ice Golem
+Ice Pyramid 6F - Ice Golem Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room -> Ice Pyramid B1 Taunt Room - To Climbing Wall Room
+   =>   Ice Pyramid Climbing Wall Room Lower Space -> Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space
+   =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
+   =>   Ice Pyramid 5F Stairs to Ice Golem -> Ice Pyramid 5F Stairs to Ice Golem - To Ice Golem Room
+   =>   Ice Pyramid Ice Golem Room
+Jinn
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms
+Kaeli 2
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Kaeli's House
+   =>   Kaeli's House
+Kaeli Companion
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Kaeli's House
+   =>   Kaeli's House
+Lava Dome - Beyond River Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room Main Area to Lava Dome Big Jump Room MegaGrenade Area
+   =>   Lava Dome Big Jump Room MegaGrenade Area -> Lava Dome Big Jump Room - North Entrance
+   =>   Lava Dome Moon Helm Room
+Lava Dome - Gold Bar Room Boulder Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Life Chest Room Lower
+   =>   Lava Dome Life Chest Room Lower Ledge
+Lava Dome Plate
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room - Lower Right Stairs
+   =>   Lava Dome Plate Corridor -> Lava Dome Plate Corridor - Right Entrance
+   =>   Lava Dome Inner Ring Plate Ledge
+Level Forest - Old Man
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Life Temple - Mysterious Man
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Libra Temple
+   =>   Libra Temple -> Libra Temple - Libra Tile Script
+   =>   Life Temple
+Long Spine
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room
+Mac Ship Steering Wheel
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck
+Medusa
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
+   =>   Volcano Cross Right-Left -> Volcano Cross Right-Left - To Volcano Top Left Script
+   =>   Volcano Top Left
+Mine - Crescent Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior North Ledge
+   =>   Mine Exterior North Ledge -> Mine Exterior - To Crescent Room
+   =>   Mine Crescent Room
+Mine - Reuben
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
+Mine Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg
+Minotaur
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Old Man Barrel
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Old Man House - Back Door
+   =>   Foresta Houses - Old Man's House Back
+Otto
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Otto's House
+   =>   Otto's House
+Pazuzu
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Rest of the Area to Pazuzu 7F Sky Room
+   =>   Pazuzu 7F Sky Room
+Pazuzu 1F
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby
+Pazuzu 2F
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F
+Pazuzu 2F Lock
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F
+Pazuzu 3F
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room
+Pazuzu 4F
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F
+Pazuzu 4F Lock
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F
+Pazuzu 5F
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop
+Pazuzu 6F
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F
+Pazuzu 6F Lock
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Main Entrance 1
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F
+Phanquid
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F -> Wintry Cave 2F - To 3F Bottom
+   =>   Wintry Cave 3F Bottom
+Phoebe Companion
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Libra Temple
+   =>   Libra Temple
+Reuben Companion
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - Reuben House
+   =>   Reuben's House
+Reuben's dad Saved
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
+Ship Dock Access
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock
+Short Spine
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room
+Skull 1
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room
+Skull 2
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room
+Spencer's Cave - Locked Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Summer - Spencer's Place Entrance Top
+   =>   Spencer Waterfall -> Spencer Waterfall - To Spencer Cave
+   =>   Spencer Cave Normal Main
+Stone Golem
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Ice Floor Entrance
+   =>   Doom Castle Ice Floor
+Summer Aquaria
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria
+Tristam Bone Dungeon Item Given
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway
+Tristam Companion
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Sand Temple
+   =>   Sand Temple
+Twinhead Wyvern
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
+   =>   Doom Castle Lava Floor
+Volcano - Base Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg - To Overworld
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base
+Wintry Cave 1F - Phoebe
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge
+Wintry Cave 3F - Squidite Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F -> Wintry Cave 2F - To 3F Bottom
+   =>   Wintry Cave 3F Bottom
+Zuh
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House -> Aquaria Vendor House - Vendor House Stairs
+   =>   Aquaria Gemini Room -> Aquaria Gemini Room - Gemini Script
+   =>   Fireburg Gemini Room -> Fireburg Gemini Room - Stairs to Vendor House
+   =>   Fireburg Vendor House -> Fireburg Vendor House - Entrance Script
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House -> GrenadeMan House - To Mobius Crest Room
+   =>   GrenadeMan's Mobius Room -> GrenadeMan Mobius Room - Mobius Teleporter Script
+   =>   Windia Kid House Basement -> Windia Kid House Basement - Stairs
+   =>   Windia Kid House -> Windia Kid House - Entrance Script
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Sky Floor Entrance
+   =>   Doom Castle Sky Floor
