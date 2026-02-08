@@ -268,6 +268,126 @@ REGENERATION_COMMANDS: Dict[str, Tuple[str, str, Optional[str], Optional[str]]] 
 # GitHub repository for workflow links
 GITHUB_REPO = "PeerInfinity/Archipelago-CC"
 
+# Workflow overview: maps workflows to their modes, test result files, and generated documents
+WORKFLOW_OVERVIEW = [
+    {
+        'name': 'Test All Templates (Sequential)',
+        'file': 'test-all-sequential.yml',
+        'description': 'Runs spoiler, multiclient, and multiworld tests across all game templates.',
+        'inputs': [
+            ('template_type', 'original, worldgen, apworld'),
+            ('spoiler_mode', 'single-seed, 10-seeds'),
+            ('enable_minimal_spoilers', 'boolean (default: true)'),
+            ('enable_full_spoilers', 'boolean (default: true)'),
+            ('enable_multiclient', 'boolean (default: true)'),
+            ('enable_multiworld', 'boolean (default: true)'),
+        ],
+        'results': [
+            ('original / Minimal Spoilers', 'scripts/output/spoiler-minimal/test-results.json', ['test-results-spoilers-minimal.md']),
+            ('worldgen / Minimal Spoilers', 'scripts/output/spoiler-minimal-worldgen/test-results.json', ['test-results-spoilers-minimal-worldgen.md']),
+            ('apworld / Minimal Spoilers', 'scripts/output/spoiler-minimal-apworld/test-results.json', ['test-results-spoilers-minimal-apworld.md']),
+            ('original / Full Spoilers', 'scripts/output/spoiler-full/test-results.json', ['test-results-spoilers-full.md']),
+            ('worldgen / Full Spoilers', 'scripts/output/spoiler-full-worldgen/test-results.json', ['test-results-spoilers-full-worldgen.md']),
+            ('apworld / Full Spoilers', 'scripts/output/spoiler-full-apworld/test-results.json', ['test-results-spoilers-full-apworld.md']),
+            ('original / Multiclient', 'scripts/output/multiclient/test-results.json', ['test-results-multiclient.md']),
+            ('worldgen / Multiclient', 'scripts/output/multiclient-worldgen/test-results.json', ['test-results-multiclient-worldgen.md']),
+            ('apworld / Multiclient', 'scripts/output/multiclient-apworld/test-results.json', ['test-results-multiclient-apworld.md']),
+            ('original / Multiworld', 'scripts/output/multiworld/test-results.json', ['test-results-multiworld.md']),
+            ('worldgen / Multiworld', 'scripts/output/multiworld-worldgen/test-results.json', ['test-results-multiworld-worldgen.md']),
+            ('apworld / Multiworld', 'scripts/output/multiworld-apworld/test-results.json', ['test-results-multiworld-apworld.md']),
+        ],
+        'derived_docs': [
+            ('test-results-summary.md', 'python scripts/docs/generate-test-chart.py --summary'),
+            ('test-results-summary-worldgen.md', 'python scripts/docs/generate-test-chart.py --summary --worldgen'),
+            ('test-results-summary-apworld.md', 'python scripts/docs/generate-test-chart.py --summary --apworld'),
+            ('test-results-processing-times.md', 'python scripts/docs/generate-test-chart.py --processing-times'),
+            ('test-results-processing-times-worldgen.md', 'python scripts/docs/generate-test-chart.py --processing-times --worldgen'),
+            ('test-results-processing-times-apworld.md', 'python scripts/docs/generate-test-chart.py --processing-times --apworld'),
+        ],
+    },
+    {
+        'name': 'Test UT Fuzzer',
+        'file': 'test-ut-fuzz.yml',
+        'description': 'Fuzz tests Universal Tracker by generating random option combinations and tracking games.',
+        'inputs': [
+            ('ut_mode', 'original, worldgen, pickle, hybrid'),
+            ('test_apworlds', 'boolean (default: false)'),
+            ('runs_per_game', 'number (default: 10)'),
+            ('seed', 'number (default: 1)'),
+        ],
+        'results': [
+            ('bundled / original', 'scripts/output/ut-fuzz/test-results-original-fixed-seed.json', ['test-results-ut-fuzz-original.md']),
+            ('bundled / worldgen', 'scripts/output/ut-fuzz/test-results-worldgen-fixed-seed.json', ['test-results-ut-fuzz-worldgen.md']),
+            ('bundled / hybrid', 'scripts/output/ut-fuzz/test-results-hybrid-fixed-seed.json', ['test-results-ut-fuzz-hybrid.md']),
+            ('bundled / pickle', 'scripts/output/ut-fuzz/test-results-pickle-fixed-seed.json', ['test-results-ut-fuzz-pickle.md']),
+            ('apworlds / original', 'scripts/output/ut-fuzz/test-results-apworlds-original-fixed-seed.json', ['test-results-ut-fuzz-apworlds-original.md']),
+            ('apworlds / worldgen', 'scripts/output/ut-fuzz/test-results-apworlds-worldgen-fixed-seed.json', ['test-results-ut-fuzz-apworlds-worldgen.md']),
+            ('apworlds / hybrid', 'scripts/output/ut-fuzz/test-results-apworlds-hybrid-fixed-seed.json', ['test-results-ut-fuzz-apworlds-hybrid.md']),
+            ('apworlds / pickle', 'scripts/output/ut-fuzz/test-results-apworlds-pickle-fixed-seed.json', ['test-results-ut-fuzz-apworlds-pickle.md']),
+        ],
+        'derived_docs': [
+            ('test-results-ut-fuzz-comparison-original-worldgen.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
+            ('test-results-ut-fuzz-comparison-original-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
+            ('test-results-ut-fuzz-comparison-original-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
+            ('test-results-ut-fuzz-comparison-worldgen-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
+            ('test-results-ut-fuzz-comparison-worldgen-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py'),
+            ('test-results-ut-fuzz-apworlds-comparison-original-worldgen.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
+            ('test-results-ut-fuzz-apworlds-comparison-original-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
+            ('test-results-ut-fuzz-apworlds-comparison-original-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
+            ('test-results-ut-fuzz-apworlds-comparison-worldgen-hybrid.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
+            ('test-results-ut-fuzz-apworlds-comparison-worldgen-pickle.md', 'python scripts/docs/compare_ut_fuzz_results.py --apworld'),
+        ],
+    },
+    {
+        'name': 'Test Spoiler Fuzzer',
+        'file': 'test-spoiler-fuzz.yml',
+        'description': 'Fuzz tests by generating random seeds and running spoiler verification on them.',
+        'inputs': [
+            ('test_apworlds', 'boolean (default: false)'),
+            ('spoiler_mode', 'minimal-spoilers, full-spoilers'),
+            ('runs_per_game', 'number (default: 10)'),
+            ('seed', 'number (default: 1)'),
+        ],
+        'results': [
+            ('bundled', 'scripts/output/spoiler-fuzz/test-results-fixed-seed.json', ['test-results-spoiler-fuzz.md']),
+            ('apworlds', 'scripts/output/spoiler-fuzz/test-results-apworlds-fixed-seed.json', ['test-results-spoiler-fuzz-apworlds.md']),
+        ],
+        'derived_docs': [
+            ('test-results-fuzz-summary.md', 'python scripts/docs/generate_fuzz_summary_chart.py'),
+            ('test-results-fuzz-summary-apworlds.md', 'python scripts/docs/generate_fuzz_summary_chart.py --apworld'),
+        ],
+    },
+    {
+        'name': 'Test Multiworld UT Fuzz Assembly',
+        'file': 'test-multiworld-ut-fuzz.yml',
+        'description': 'Tests Universal Tracker with incrementally assembled multiworld games.',
+        'inputs': [
+            ('runs_per_test', 'number (default: 3)'),
+            ('max_players', 'number (default: 10)'),
+            ('seed', 'number (default: 1)'),
+            ('timeout', 'number (default: 60)'),
+        ],
+        'results': [
+            ('default', 'scripts/output/multiworld-ut-fuzz/test-results-fixed-seed.json', ['test-results-multiworld-ut-fuzz.md']),
+        ],
+        'derived_docs': [],
+    },
+    {
+        'name': 'Test World Generator',
+        'file': 'test-world-generator.yml',
+        'description': 'Tests the world generator by generating worlds from rules and running spoiler tests.',
+        'inputs': [
+            ('test_mode', 'canonical, random, both'),
+            ('seed', 'number (default: 1)'),
+        ],
+        'results': [
+            ('canonical', 'scripts/output/world-generator/test-results-canonical.json', ['test-results-world-generator.md']),
+            ('random', 'scripts/output/world-generator/test-results-random.json', ['test-results-world-generator.md']),
+        ],
+        'derived_docs': [],
+    },
+]
+
 
 def parse_generated_date(content: str) -> Optional[datetime]:
     """Extract the **Generated:** date from markdown content."""
@@ -357,6 +477,83 @@ def format_workflow_link(workflow_name: Optional[str], workflow_file: Optional[s
         return ""
     # Link to the workflow run page
     return f"[{workflow_name}](https://github.com/{GITHUB_REPO}/actions/workflows/{workflow_file})"
+
+
+def generate_workflow_overview_section(results: List[Dict]) -> str:
+    """Generate the workflow overview section showing workflows, modes, results, and documents."""
+    # Build lookup from document filename to freshness info
+    freshness_lookup = {}
+    for r in results:
+        freshness_lookup[r['filename']] = {
+            'emoji': get_freshness_emoji(r['source_days']),
+            'days': format_days_ago(r['source_days']),
+            'date': format_date(r['source_date']),
+        }
+
+    def doc_status(filename: str) -> str:
+        """Get the freshness emoji for a document, or empty string if unknown."""
+        info = freshness_lookup.get(filename)
+        if info:
+            return info['emoji']
+        return "⚪"
+
+    def doc_freshness(filename: str) -> str:
+        """Get formatted freshness string (date + days) for a document."""
+        info = freshness_lookup.get(filename)
+        if not info:
+            return "N/A"
+        days = info['days']
+        return info['date'] + (f" ({days})" if days else "")
+
+    md = "## Workflow Overview\n\n"
+    md += "Overview of GitHub Actions workflows, their modes, the test result files they produce, "
+    md += "and the documents generated from those results.\n\n"
+
+    for workflow in WORKFLOW_OVERVIEW:
+        name = workflow['name']
+        file = workflow['file']
+        desc = workflow['description']
+        workflow_url = f"https://github.com/{GITHUB_REPO}/actions/workflows/{file}"
+
+        md += f"### [{name}]({workflow_url})\n\n"
+        md += f"{desc}\n\n"
+        md += f"**Workflow file:** `.github/workflows/{file}`\n\n"
+
+        # Inputs table
+        if workflow['inputs']:
+            md += "**Key inputs:**\n\n"
+            md += "| Input | Options |\n"
+            md += "|-------|---------|\n"
+            for input_name, options in workflow['inputs']:
+                md += f"| `{input_name}` | {options} |\n"
+            md += "\n"
+
+        # Results table
+        if workflow['results']:
+            md += "**Test results and documents:**\n\n"
+            md += "| Status | Mode | Test Result File | Document | Freshness |\n"
+            md += "|--------|------|-----------------|----------|----------|\n"
+            for mode, result_file, docs in workflow['results']:
+                # Use freshness of the first (primary) document for status
+                primary_doc = docs[0] if docs else None
+                status = doc_status(primary_doc) if primary_doc else "⚪"
+                freshness = doc_freshness(primary_doc) if primary_doc else "N/A"
+                doc_links = ', '.join(f"[{d}](./{d})" for d in docs)
+                md += f"| {status} | {mode} | `{result_file}` | {doc_links} | {freshness} |\n"
+            md += "\n"
+
+        # Derived documents
+        if workflow['derived_docs']:
+            md += "**Derived documents** (generated from multiple result files):\n\n"
+            md += "| Status | Document | Command | Freshness |\n"
+            md += "|--------|----------|---------|-----------|\n"
+            for doc, cmd in workflow['derived_docs']:
+                status = doc_status(doc)
+                freshness = doc_freshness(doc)
+                md += f"| {status} | [{doc}](./{doc}) | `{cmd}` | {freshness} |\n"
+            md += "\n"
+
+    return md
 
 
 def run_sync_scripts() -> Dict[str, Dict]:
@@ -535,6 +732,8 @@ def generate_markdown(results: List[Dict], sync_results: Optional[Dict] = None) 
                 md += f"| {name} | {coverage} | {status} | {cmd} |\n"
 
         md += "\n"
+
+    md += generate_workflow_overview_section(results)
 
     md += "## Document Freshness\n\n"
     md += "| Status | Document | Source Data | Days Old | Workflow | Local Command |\n"
