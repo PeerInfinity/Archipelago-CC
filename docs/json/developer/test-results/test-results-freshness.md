@@ -2,14 +2,14 @@
 
 This report shows when each test result document was generated, how fresh the underlying data is, and how to regenerate each document.
 
-**Report Generated:** 2026-02-07 14:01:40
+**Report Generated:** 2026-02-07 17:44:39
 
 ## Summary
 
 - **Total Documents:** 42
 - **With Date Info:** 42
-- 🟢 **Fresh (0-1 days):** 11
-- 🟡 **Recent (2-7 days):** 5
+- 🟢 **Fresh (0-1 days):** 12
+- 🟡 **Recent (2-7 days):** 4
 - 🟠 **Aging (8-30 days):** 26
 - 🔴 **Stale (>30 days):** 0
 
@@ -19,17 +19,17 @@ Status of documentation coverage across the codebase:
 
 | Check | Coverage | Status | Command |
 |-------|----------|--------|--------|
-| Rule Types Documentation | 95.8% (138/144) | 🟡 6 gaps | `python scripts/docs/sync-rule-docs.py` |
-| Rule Types Test Coverage | 95.2% (119/125) | 🟡 6 gaps | `python scripts/docs/sync-rule-tests.py` |
+| Rule Types Documentation | 100.0% (138/138) | ✅ Complete | `python scripts/docs/sync-rule-docs.py` |
+| Rule Types Test Coverage | 100.0% (119/119) | ✅ Complete | `python scripts/docs/sync-rule-tests.py` |
 | Script Documentation | 100.0% (78/78) | ✅ Complete | `python scripts/docs/sync-script-docs.py` |
-| Document Reachability | 102.9% (212/206) | ✅ Complete | `python scripts/docs/find_orphaned_docs.py` |
+| Document Reachability | 102.8% (217/211) | ✅ Complete | `python scripts/docs/find_orphaned_docs.py` |
 
 ## Document Freshness
 
 | Status | Document | Source Data | Days Old | Workflow | Local Command |
 |--------|----------|-------------|----------|----------|---------------|
 | 🟠 | [test-results-fuzz-summary-apworlds.md](./test-results-fuzz-summary-apworlds.md) | 2026-01-24 05:05 | 14 days | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py --apworld` |
-| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-02-07 04:18 |  | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
+| 🟢 | [test-results-fuzz-summary.md](./test-results-fuzz-summary.md) | 2026-02-07 22:09 |  | _Local only_ | `python scripts/docs/generate_fuzz_summary_chart.py` |
 | 🟠 | [test-results-multiclient-apworld.md](./test-results-multiclient-apworld.md) | 2026-01-24 07:47 | 14 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --apworld -p` |
 | 🟠 | [test-results-multiclient-worldgen.md](./test-results-multiclient-worldgen.md) | 2026-01-08 06:08 | 30 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient --worldgen -p` |
 | 🟢 | [test-results-multiclient.md](./test-results-multiclient.md) | 2026-02-07 06:32 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --multiclient -p` |
@@ -41,7 +41,7 @@ Status of documentation coverage across the codebase:
 | 🟠 | [test-results-processing-times-worldgen.md](./test-results-processing-times-worldgen.md) | 2026-01-27 22:55 | 10 days | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times --worldgen` |
 | 🟢 | [test-results-processing-times.md](./test-results-processing-times.md) | 2026-02-07 05:53 |  | _Local only_ | `python scripts/docs/generate-test-chart.py --processing-times` |
 | 🟠 | [test-results-spoiler-fuzz-apworlds.md](./test-results-spoiler-fuzz-apworlds.md) | 2026-01-25 04:56 | 13 days | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py --apworld -p` |
-| 🟡 | [test-results-spoiler-fuzz.md](./test-results-spoiler-fuzz.md) | 2026-02-03 19:55 | 3 days | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py -p` |
+| 🟢 | [test-results-spoiler-fuzz.md](./test-results-spoiler-fuzz.md) | 2026-02-07 22:52 |  | [Test Spoiler Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-spoiler-fuzz.yml) | `python scripts/test/test-all-spoiler-fuzz.py -p` |
 | 🟠 | [test-results-spoilers-full-apworld.md](./test-results-spoilers-full-apworld.md) | 2026-01-24 06:28 | 14 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers --apworld -p` |
 | 🟠 | [test-results-spoilers-full-worldgen.md](./test-results-spoilers-full-worldgen.md) | 2026-01-27 23:02 | 10 days | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers --worldgen -p` |
 | 🟢 | [test-results-spoilers-full.md](./test-results-spoilers-full.md) | 2026-02-07 06:19 |  | [Test All Templates (Sequential)](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-all-sequential.yml) | `python scripts/test/test-all-templates.py --full-spoilers -p` |
@@ -64,11 +64,11 @@ Status of documentation coverage across the codebase:
 | 🟠 | [test-results-ut-fuzz-comparison-original-pickle.md](./test-results-ut-fuzz-comparison-original-pickle.md) | 2026-01-26 04:45 | 12 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
 | 🟠 | [test-results-ut-fuzz-comparison-original-worldgen.md](./test-results-ut-fuzz-comparison-original-worldgen.md) | 2026-01-26 04:45 | 12 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
 | 🟡 | [test-results-ut-fuzz-comparison-worldgen-hybrid.md](./test-results-ut-fuzz-comparison-worldgen-hybrid.md) | 2026-02-04 19:19 | 2 days | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
-| 🟢 | [test-results-ut-fuzz-comparison-worldgen-pickle.md](./test-results-ut-fuzz-comparison-worldgen-pickle.md) | 2026-02-07 04:18 |  | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
+| 🟢 | [test-results-ut-fuzz-comparison-worldgen-pickle.md](./test-results-ut-fuzz-comparison-worldgen-pickle.md) | 2026-02-07 05:13 |  | _Local only_ | `python scripts/docs/compare_ut_fuzz_results.py` |
 | 🟡 | [test-results-ut-fuzz-hybrid.md](./test-results-ut-fuzz-hybrid.md) | 2026-02-04 19:19 | 2 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --hybrid` |
 | 🟠 | [test-results-ut-fuzz-original.md](./test-results-ut-fuzz-original.md) | 2026-01-26 04:45 | 12 days | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --original` |
 | 🟢 | [test-results-ut-fuzz-pickle.md](./test-results-ut-fuzz-pickle.md) | 2026-02-07 05:13 |  | _Local only_ | _Unknown_ |
-| 🟢 | [test-results-ut-fuzz-worldgen.md](./test-results-ut-fuzz-worldgen.md) | 2026-02-07 04:18 |  | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --worldgen` |
+| 🟢 | [test-results-ut-fuzz-worldgen.md](./test-results-ut-fuzz-worldgen.md) | 2026-02-08 01:19 |  | [Test UT Fuzzer](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-ut-fuzz.yml) | `python scripts/docs/generate_ut_fuzz_chart.py --worldgen` |
 | 🟠 | [test-results-world-generator.md](./test-results-world-generator.md) | 2026-01-14 04:15 | 24 days | [Test World Generator](https://github.com/PeerInfinity/Archipelago-CC/actions/workflows/test-world-generator.yml) | `python scripts/docs/generate-world-generator-report.py` |
 
 ## Regeneration Commands
