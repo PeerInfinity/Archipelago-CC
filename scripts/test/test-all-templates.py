@@ -16,7 +16,7 @@ import shutil
 import subprocess
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List
 
@@ -891,7 +891,7 @@ def main():
 
     # Save a timestamped backup of the existing results file if it exists (unless disabled)
     if not args.no_backup and os.path.exists(results_file):
-        timestamp_backup = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        timestamp_backup = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
         backup_dir = os.path.dirname(results_file)
         backup_basename = os.path.basename(results_file)
         # Insert timestamp before file extension
@@ -931,8 +931,8 @@ def main():
     # Create new results structure for this run
     results = {
         'metadata': {
-            'created': datetime.now().isoformat(),
-            'last_updated': datetime.now().isoformat(),
+            'created': datetime.now(timezone.utc).isoformat(),
+            'last_updated': datetime.now(timezone.utc).isoformat(),
             'script_version': '1.0.0'
         },
         'results': {}
@@ -944,7 +944,7 @@ def main():
     # Generate timestamped filename (unless disabled by --no-backup)
     timestamped_file = None
     if not args.no_backup:
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
         output_dir = os.path.dirname(results_file)
         output_basename = os.path.basename(results_file)
         # Insert timestamp before file extension
@@ -1065,7 +1065,7 @@ def main():
             consistency_tested_count += 1
 
         # Save the updated results
-        existing_results['metadata']['last_updated'] = datetime.now().isoformat()
+        existing_results['metadata']['last_updated'] = datetime.now(timezone.utc).isoformat()
         save_results(existing_results, results_file)
 
         print(f"\n=== Consistency Testing Complete ===")
@@ -1367,7 +1367,7 @@ def main():
                     intermittent_entry = {
                         'template': yaml_file,
                         'seed': failing_seed,
-                        'timestamp': datetime.now().isoformat(),
+                        'timestamp': datetime.now(timezone.utc).isoformat(),
                         'previously_failed': True,
                         'now_passing': True,
                         'test_type': test_type
@@ -1386,12 +1386,12 @@ def main():
                 if 'intermittent_tracking' not in incremental_merged['metadata']:
                     incremental_merged['metadata']['intermittent_tracking'] = {
                         'failures': [],
-                        'last_updated': datetime.now().isoformat()
+                        'last_updated': datetime.now(timezone.utc).isoformat()
                     }
 
                 # Update with current intermittent failures
                 incremental_merged['metadata']['intermittent_tracking']['failures'] = intermittent_failures.copy()
-                incremental_merged['metadata']['intermittent_tracking']['last_updated'] = datetime.now().isoformat()
+                incremental_merged['metadata']['intermittent_tracking']['last_updated'] = datetime.now(timezone.utc).isoformat()
 
             save_results(incremental_merged, results_file)
 
@@ -1438,7 +1438,7 @@ def main():
             # Create minimal error result
             error_result = {
                 'template_filename': yaml_file,
-                'timestamp': datetime.now().isoformat(),
+                'timestamp': datetime.now(timezone.utc).isoformat(),
                 'error': str(e)
             }
             results['results'][yaml_file] = error_result
@@ -1578,7 +1578,7 @@ def main():
                     if yaml_file in results['results']:
                         results['results'][yaml_file]['second_pass'] = {
                             'error': str(e),
-                            'timestamp': datetime.now().isoformat()
+                            'timestamp': datetime.now(timezone.utc).isoformat()
                         }
 
             # Print second pass summary
@@ -1608,12 +1608,12 @@ def main():
         if 'intermittent_tracking' not in merged_results['metadata']:
             merged_results['metadata']['intermittent_tracking'] = {
                 'failures': [],
-                'last_updated': datetime.now().isoformat()
+                'last_updated': datetime.now(timezone.utc).isoformat()
             }
 
         # Append new intermittent failures to existing list
         merged_results['metadata']['intermittent_tracking']['failures'].extend(intermittent_failures)
-        merged_results['metadata']['intermittent_tracking']['last_updated'] = datetime.now().isoformat()
+        merged_results['metadata']['intermittent_tracking']['last_updated'] = datetime.now(timezone.utc).isoformat()
 
         print(f"\nRecorded {len(intermittent_failures)} intermittent failure(s) in metadata")
     elif not args.retest and not args.include_list:

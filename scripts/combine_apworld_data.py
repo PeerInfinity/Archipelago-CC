@@ -18,7 +18,7 @@ Usage:
 import argparse
 import json
 import zipfile
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
@@ -260,7 +260,7 @@ def main():
 
     output = {
         "metadata": {
-            "created": datetime.now().isoformat(),
+            "created": datetime.now(timezone.utc).isoformat(),
             "sources": {
                 "test_results": to_relative_path(args.test_results) if test_results else None,
                 "mapping": to_relative_path(args.mapping),

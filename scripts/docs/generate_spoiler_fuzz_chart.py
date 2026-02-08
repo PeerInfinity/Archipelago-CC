@@ -14,7 +14,7 @@ import glob
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List
 
@@ -160,7 +160,7 @@ def generate_spoiler_fuzz_markdown(chart_data: List[Dict[str, Any]],
     md_content += "[📖 Learn about fuzz tests](../tests/test-fuzz.md)\n\n"
 
     if metadata:
-        md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        md_content += f"**Generated:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
         md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
         md_content += f"**Seed Mode:** {seed_display}\n\n"

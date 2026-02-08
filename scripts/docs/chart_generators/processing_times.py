@@ -2,7 +2,7 @@
 Processing times chart data extraction and markdown generation.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 
 
@@ -169,7 +169,7 @@ def generate_processing_times_markdown(processing_data: Dict[str, Any],
         title_suffix = ""
 
     md_content = f"# Processing Times Chart{title_suffix}\n\n"
-    md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    md_content += f"**Generated:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
 
     # Add source data metadata if available
     if metadata and ('created' in metadata or 'last_updated' in metadata):

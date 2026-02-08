@@ -8,7 +8,7 @@ game entry so the frontend can display test status.
 import argparse
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
@@ -339,7 +339,7 @@ def update_preset_files_with_all_test_data(preset_files: Dict[str, Any], all_tes
     games_without_test_data = [game_id for game_id in all_game_ids if game_id not in updated_games]
 
     updated_preset_files['metadata'].update({
-        'test_data_updated': datetime.now().isoformat(),
+        'test_data_updated': datetime.now(timezone.utc).isoformat(),
         'games_with_test_data': len(updated_games),
         'total_games': len(all_game_ids),
         'games_without_test_data': len(games_without_test_data),
@@ -477,7 +477,7 @@ def update_preset_files_with_test_data(preset_files: Dict[str, Any], test_result
     games_without_test_data = [game_id for game_id in all_game_ids if game_id not in updated_games]
     
     updated_preset_files['metadata'].update({
-        'test_data_updated': datetime.now().isoformat(),
+        'test_data_updated': datetime.now(timezone.utc).isoformat(),
         'test_data_source': test_results.get('metadata', {}),
         'games_with_test_data': len(updated_games),
         'total_games': len([k for k in updated_preset_files.keys() if k not in ['metadata', 'multiworld']]),

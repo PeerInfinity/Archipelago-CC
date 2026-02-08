@@ -15,7 +15,7 @@ Usage:
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any
 import glob
@@ -200,8 +200,8 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
     # Create combined output structure
     combined = {
         'metadata': {
-            'created': datetime.now().isoformat(),
-            'last_updated': datetime.now().isoformat(),
+            'created': datetime.now(timezone.utc).isoformat(),
+            'last_updated': datetime.now(timezone.utc).isoformat(),
             'script_version': '1.0.0',
             'combined_from': len(all_results),
             'combination_note': 'Results combined from parallel seed tests',
@@ -221,7 +221,7 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
     if merged_intermittent_failures:
         combined['metadata']['intermittent_tracking'] = {
             'failures': merged_intermittent_failures,
-            'last_updated': datetime.now().isoformat()
+            'last_updated': datetime.now(timezone.utc).isoformat()
         }
 
     return combined

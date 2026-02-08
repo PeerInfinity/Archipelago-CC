@@ -10,6 +10,7 @@ from .Rules import set_rules
 
 class MathAdventureWeb(WebWorld):
     theme = "ocean"
+    game_info_languages = []
 
     tutorials = [Tutorial(
         "Mathematical Proof Guide",
