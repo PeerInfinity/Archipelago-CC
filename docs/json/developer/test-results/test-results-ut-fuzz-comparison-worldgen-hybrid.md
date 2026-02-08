@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Worldgen vs Hybrid
 
-**Generated:** 2026-02-07 22:09:22
+**Generated:** 2026-02-08 01:19:09
 
 **Source Data Last Updated:** 2026-02-04T19:19:22
 
@@ -19,9 +19,9 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 
 - **Total Games Tested:** 87
 - **Passing Both:** 70 (80.5%)
-- **Passing Worldgen Only:** 1 (1.1%)
+- **Passing Worldgen Only:** 3 (3.4%)
 - **Passing Hybrid Only:** 9 (10.3%)
-- **Passing Neither:** 7 (8.0%)
+- **Passing Neither:** 5 (5.7%)
 - **Passing Hybrid with no custom code:** 44 (50.6%)
 - **Passing Hybrid Only with no custom code:** 2 (2.3%)
 
@@ -56,7 +56,7 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Factorio | ✅ 100.0% | ✅ 100.0% | 8.8KB | ✅ | 295.4KB |
 | Faxanadu | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ⚠️ 60.0% | ❌ 0.0% | 13.4KB | ✅ | 549.5KB |
+| Final Fantasy Mystic Quest | ✅ 80.0% | ❌ 0.0% | 13.4KB | ✅ | 549.5KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 101.9KB |
@@ -81,12 +81,12 @@ This report compares fuzz test results between the Worldgen Universal Tracker (r
 | Old School Runescape | ✅ 100.0% | ✅ 100.0% | 1.0KB | ✅ | 307.1KB |
 | Overcooked! 2 | ✅ 50.0% | ✅ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ 100.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
-| Pokemon Emerald | ❌ 30.0% | ✅ 60.0% | 5.2KB | 8.7KB | 1390.9KB |
+| Pokemon Emerald | ❌ 20.0% | ✅ 60.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0.0% | ✅ 90.0% | 12.2KB | 13.0KB | 1029.2KB |
 | Raft | ✅ 100.0% | ✅ 100.0% | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 0.0% | ✅ 100.0% | 61.4KB | 51.3KB | 1044.7KB |
-| Satisfactory | ❌ 0.0% | N/A | 35.2KB | ✅ | 1703.4KB |
+| Satisfactory | ✅ 100.0% | N/A | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ 100.0% | ✅ 100.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
@@ -194,13 +194,15 @@ These games have 100% success rate in both Universal Tracker versions.
 | Yoshi's Island | 9.2KB | ✅ | 296.8KB |
 | shapez | ✅ | ✅ | 155.3KB |
 
-## Games Passing Worldgen Only (1)
+## Games Passing Worldgen Only (3)
 
 These games pass in the Worldgen UT but fail in the Hybrid UT.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
 | EarthBound | ✅ | ✅ | 343.8KB |
+| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
+| Satisfactory | 35.2KB | ✅ | 1703.4KB |
 
 ## Games Passing Hybrid Only (9)
 
@@ -218,16 +220,14 @@ These games pass in the Hybrid UT but fail in the Worldgen UT.
 | Yacht Dice | 0.9KB | 285.0KB | 249.5KB |
 | Yu-Gi-Oh! 2006 | 1.3KB | 21.4KB | 628.0KB |
 
-## Games Passing Neither (7)
+## Games Passing Neither (5)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
 | Kingdom Hearts 2 | 19.5KB | ✅ | 1641.6KB |
 | Ocarina of Time | ✅ | ✅ | N/A |
-| Satisfactory | 35.2KB | ✅ | 1703.4KB |
 | Starcraft 2 | 28.7KB | 90.1KB | 1126.8KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
 | Zillion | ✅ | ✅ | N/A |

@@ -1,6 +1,6 @@
 # Universal Tracker Fuzz Test Comparison: Original vs Worldgen
 
-**Generated:** 2026-02-07 22:09:22
+**Generated:** 2026-02-08 01:19:09
 
 **Source Data Last Updated:** 2026-01-26T04:45:29
 
@@ -20,8 +20,8 @@ This report compares fuzz test results between the Original Universal Tracker (F
 - **Total Games Tested:** 87
 - **Passing Both:** 38 (43.7%)
 - **Passing Original Only:** 0 (0.0%)
-- **Passing Worldgen Only:** 33 (37.9%)
-- **Passing Neither:** 16 (18.4%)
+- **Passing Worldgen Only:** 35 (40.2%)
+- **Passing Neither:** 14 (16.1%)
 - **Passing Worldgen with no custom code:** 43 (49.4%)
 - **Passing Worldgen Only with no custom code:** 16 (18.4%)
 
@@ -56,7 +56,7 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Factorio | ❌ 0.0% | ✅ 100.0% | 8.8KB | ✅ | 295.4KB |
 | Faxanadu | ❌ 20.0% | ✅ 100.0% | ✅ | ✅ | 68.7KB |
 | Final Fantasy | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ❌ 1.0% | ⚠️ 60.0% | 13.4KB | ✅ | 549.5KB |
+| Final Fantasy Mystic Quest | ❌ 1.0% | ✅ 80.0% | 13.4KB | ✅ | 549.5KB |
 | Heretic | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 367.5KB |
 | Hollow Knight | ❌ 11.0% | ❌ 0.0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 101.9KB |
@@ -81,12 +81,12 @@ This report compares fuzz test results between the Original Universal Tracker (F
 | Old School Runescape | ✅ 91.0% | ✅ 100.0% | 1.0KB | ✅ | 307.1KB |
 | Overcooked! 2 | ❌ 12.0% | ✅ 50.0% | 28.5KB | ✅ | 489.2KB |
 | Paint | ✅ 98.0% | ✅ 100.0% | 2.7KB | ✅ | 123.7KB |
-| Pokemon Emerald | ⚠️ 59.0% | ❌ 30.0% | 5.2KB | 8.7KB | 1390.9KB |
+| Pokemon Emerald | ⚠️ 59.0% | ❌ 20.0% | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | ❌ 0.0% | ❌ 0.0% | 12.2KB | 13.0KB | 1029.2KB |
 | Raft | ✅ 100.0% | ✅ 100.0% | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ 100.0% | ✅ 100.0% | ✅ | ✅ | 146.1KB |
 | SMZ3 | ❌ 1.0% | ❌ 0.0% | 61.4KB | 51.3KB | 1044.7KB |
-| Satisfactory | N/A | ❌ 0.0% | 35.2KB | ✅ | 1703.4KB |
+| Satisfactory | N/A | ✅ 100.0% | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ❌ 28.0% | ✅ 100.0% | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ 100.0% | ✅ 100.0% | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ❌ 0.0% | ✅ 100.0% | ✅ | ✅ | 151.3KB |
@@ -162,7 +162,7 @@ These games have 100% success rate in both Universal Tracker versions.
 | Undertale | ✅ | ✅ | 58.0KB |
 | Wargroove | ✅ | ✅ | 44.7KB |
 
-## Games Passing Worldgen Only (33)
+## Games Passing Worldgen Only (35)
 
 These games pass in the Worldgen UT but fail in the Original UT.
 
@@ -178,6 +178,7 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | EarthBound | ✅ | ✅ | 343.8KB |
 | Factorio | 8.8KB | ✅ | 295.4KB |
 | Faxanadu | ✅ | ✅ | 68.7KB |
+| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
 | Jak and Daxter: The Precursor Legacy | 21.6KB | 4.6KB | 298.6KB |
 | Landstalker - The Treasures of King Nole | 3.6KB | ✅ | 210.5KB |
 | Lingo | 38.0KB | 10.7KB | 946.3KB |
@@ -187,6 +188,7 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | Muse Dash | ✅ | ✅ | 233.5KB |
 | Noita | ✅ | ✅ | 74.6KB |
 | Overcooked! 2 | 28.5KB | ✅ | 489.2KB |
+| Satisfactory | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ✅ | ✅ | 33.8KB |
 | Shivers | ✅ | ✅ | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | ✅ | 266.2KB |
@@ -202,13 +204,12 @@ These games pass in the Worldgen UT but fail in the Original UT.
 | Yoshi's Island | 9.2KB | ✅ | 296.8KB |
 | shapez | ✅ | ✅ | 155.3KB |
 
-## Games Passing Neither (16)
+## Games Passing Neither (14)
 
 These games fail in both Universal Tracker versions.
 
 | Game Name | Exporter | GameLogic | Rules Size |
 |-----------|:--------:|:---------:|:----------:|
-| Final Fantasy Mystic Quest | 13.4KB | ✅ | 549.5KB |
 | Hollow Knight | ✅ | ✅ | N/A |
 | Kingdom Hearts | ✅ | ✅ | 753.6KB |
 | Kingdom Hearts 2 | 19.5KB | ✅ | 1641.6KB |
@@ -217,7 +218,6 @@ These games fail in both Universal Tracker versions.
 | Pokemon Emerald | 5.2KB | 8.7KB | 1390.9KB |
 | Pokemon Red and Blue | 12.2KB | 13.0KB | 1029.2KB |
 | SMZ3 | 61.4KB | 51.3KB | 1044.7KB |
-| Satisfactory | 35.2KB | ✅ | 1703.4KB |
 | Starcraft 2 | 28.7KB | 90.1KB | 1126.8KB |
 | Stardew Valley | 18.8KB | 8.0KB | 2430.2KB |
 | Super Metroid | 60.9KB | 114.5KB | 625.4KB |
