@@ -368,7 +368,7 @@ The frontend has two separate `getSetting` implementations that both need to han
 
 1. **`frontend/modules/stateManager/core/statePersistence.js`** - Used by StateManager during normal app operation (tracking game state)
 
-2. **`frontend/modules/shared/stateInterface.js`** - Used by ComparisonEngine during spoiler testing (via `createStateSnapshotInterface`)
+2. **`frontend/modules/shared/snapshotInterface.js`** - Used by ComparisonEngine during spoiler testing (via `createSnapshotInterface`)
 
 Both implementations need to handle:
 - **Player-keyed settings**: In multiworld, settings are stored as `{"1": {...settings...}}` keyed by player ID
@@ -396,7 +396,7 @@ getSetting: (settingName) => {
 },
 ```
 
-**Note:** The `stateInterface.js` version also needs to look in `staticData.settings` as a fallback, since the ComparisonEngine's snapshot may not have settings directly attached.
+**Note:** The `snapshotInterface.js` version also needs to look in `staticData.settings` as a fallback, since the ComparisonEngine's snapshot may not have settings directly attached.
 
 ### Example 6: `negate` for Unary Minus
 
@@ -602,7 +602,7 @@ As of December 2024, SC2 has **21 helpers** successfully exported and spoiler te
 
 The following capabilities were added to support `weapon_armor_upgrade_count`:
 
-1. ✅ **`count_from_list` state method** - Added to `stateInterface.js`
+1. ✅ **`count_from_list` state method** - Added to `snapshotInterface.js`
 2. ✅ **`upgrade_bundle_inverted_lookup` export** - Added to `sc2.py` game_info
 3. ✅ **`protoss_generic_upgrades` export** - Added to `sc2.py` game_info
 4. ✅ **`weapon_armor_upgrade_count` helper** - Now exported successfully

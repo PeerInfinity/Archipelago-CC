@@ -16,7 +16,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
@@ -659,7 +659,7 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
     """Generate report for a single test mode."""
     meta = results.get('metadata', {})
 
-    generated_display = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    generated_display = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
     created_display, last_updated_display = get_source_data_timestamps(meta)
     seed_display = get_seed_display(meta)
 
@@ -737,7 +737,7 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
     canonical_meta = canonical_results.get('metadata', {})
     random_meta = random_results.get('metadata', {})
 
-    generated_display = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    generated_display = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
     created_display, last_updated_display = get_source_data_timestamps(canonical_meta)
     seed_display = get_seed_display(canonical_meta)
 

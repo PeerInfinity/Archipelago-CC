@@ -7,6 +7,7 @@ This section contains technical documentation for developers working on the Arch
 - **[Getting Started](./getting-started.md)** - Set up your development environment
 - **[Getting Started (Windows)](./getting-started-windows.md)** - Windows-specific setup guide
 - **[Architecture](./architecture.md)** - System design overview
+- **[Path and Queue Settings](./path-and-queue-settings.md)** - Settings ownership across modules
 
 ## Documentation Sections
 
@@ -37,6 +38,7 @@ Technical references and specifications:
 | [Logging System](./reference/logging-system.md) | Structured logging API |
 | [URL Parameters](./reference/url-parameters.md) | Application URL parameters |
 | [ALttP Specific Data](./reference/alttp-specific-data.md) | A Link to the Past helpers |
+| [Host Settings](./reference/host-settings.md) | Settings added to host.yaml by this fork |
 
 ### [Diffs](./diffs/)
 

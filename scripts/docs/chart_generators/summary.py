@@ -2,7 +2,7 @@
 Summary chart generation combining all test results.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 
 from .utils import format_file_size, get_rules_json_size
@@ -35,7 +35,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         title_suffix = ""
 
     md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
-    md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    md_content += f"**Generated:** {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n\n"
 
     # Add source data dates from metadata (use minimal_metadata as primary source)
     if minimal_metadata and ('created' in minimal_metadata or 'last_updated' in minimal_metadata):

@@ -2,8 +2,9 @@ import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import discoveryStateSingleton from '../discovery/singleton.js';
 
 const logger = createUniversalLogger('regionGraph');
 
@@ -37,9 +38,19 @@ export class GraphInteractionManager {
     this.ui.cy.on('layoutstop', () => {
       this.ui.isLayoutRunning = false;
 
+      // Capture the current layout generation so we can detect if the graph
+      // was rebuilt before this timeout fires (stale layoutstop from a stopped layout)
+      const generation = this.ui.layoutGeneration;
+
       // Wait for the animation to complete before saving positions and positioning player
       // Animation duration is 1000ms as defined in runLayout
       setTimeout(() => {
+        // Skip if the graph was rebuilt since this layout started
+        if (generation !== this.ui.layoutGeneration) {
+          logger.debug('Skipping stale layoutstop timeout (generation mismatch)');
+          return;
+        }
+
         this.ui.saveNodePositions();
         this.ui.updateStatus('Layout complete');
 
@@ -205,6 +216,12 @@ export class GraphInteractionManager {
 
     logger.debug(`Location node clicked: ${locationName} in ${parentRegion}`);
 
+    // Discovery mode: if location checks are disabled, skip the check
+    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
+      logger.debug(`Location check disabled by discovery settings, skipping: ${locationName}`);
+      return;
+    }
+
     // Check which actions are enabled via checkboxes (same logic as region nodes)
     const movePlayerOneStepCheckbox = this.ui.controlPanel.querySelector('#movePlayerOneStep');
     const movePlayerDirectlyCheckbox = this.ui.controlPanel.querySelector('#movePlayerDirectly');
@@ -339,6 +356,12 @@ export class GraphInteractionManager {
   }
 
   checkAllLocationsInRegion(regionName) {
+    // Discovery mode: if location checks are disabled, skip
+    if (this.ui.isDiscoveryModeActive && this.ui.discoverySettings.disableLocationCheckUI) {
+      logger.debug(`Location checks disabled by discovery settings, skipping bulk check for: ${regionName}`);
+      return;
+    }
+
     // Get locations in this region
     const staticData = stateManager.getStaticData();
     const regionData = staticData?.regions?.[regionName];
@@ -346,7 +369,7 @@ export class GraphInteractionManager {
     if (regionData && regionData.locations && regionData.locations.length > 0) {
       // Get current state to check which locations are accessible
       const snapshot = stateManager.getLatestStateSnapshot();
-      const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+      const snapshotInterface = createSnapshotInterface(snapshot, staticData);
       const checkedLocations = new Set(snapshot.checkedLocations || []);
 
       // Check each location that is accessible and not already checked
@@ -564,12 +587,23 @@ export class GraphInteractionManager {
     } else if (zoom < this.ui.zoomLevels.showRegionCounts) {
       // Show only region names, no counts
       const staticData = stateManager.getStaticData();
+      const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+      const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
       this.ui.cy.nodes().forEach(node => {
         if (!node.hasClass('location-node') && !node.hasClass('player')) {
           const regionName = node.data('regionName') || node.id();
-          const regionData = staticData?.regions?.[regionName];
-          const displayText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
-          node.data('label', displayText);
+          if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
+            if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
+              const regionData = staticData?.regions?.[regionName];
+              node.data('label', regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' '));
+            } else {
+              node.data('label', '???');
+            }
+          } else {
+            const regionData = staticData?.regions?.[regionName];
+            const displayText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
+            node.data('label', displayText);
+          }
         }
       });
       // Apply the labels and hide edge labels
@@ -627,18 +661,30 @@ export class GraphInteractionManager {
 
   updateRegionLabelsWithCounts() {
     const staticData = stateManager.getStaticData();
+    const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;
+    const showUndiscoveredNames = this.ui.discoverySettings?.showUndiscoveredRegionNames || false;
     this.ui.cy.nodes().forEach(node => {
       if (!node.hasClass('location-node') && !node.hasClass('player')) {
         const regionName = node.data('regionName') || node.id();
-        const regionData = staticData?.regions?.[regionName];
-        const locationCounts = node.data('locationCounts');
-        if (locationCounts && locationCounts.total > 0) {
-          const displayText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
-          const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
-          node.data('label', `${displayText}\n${countLabel}`);
+        // In discovery mode, undiscovered regions show ??? or name depending on setting
+        if (isDiscoveryModeActive && !discoveryStateSingleton.isRegionDiscovered(regionName)) {
+          if (showUndiscoveredNames && !node.hasClass('discovery-hidden')) {
+            const regionData = staticData?.regions?.[regionName];
+            node.data('label', regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' '));
+          } else {
+            node.data('label', '???');
+          }
         } else {
-          const displayText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
-          node.data('label', displayText);
+          const regionData = staticData?.regions?.[regionName];
+          const locationCounts = node.data('locationCounts');
+          if (locationCounts && locationCounts.total > 0) {
+            const displayText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
+            const countLabel = `${locationCounts.checked}, ${locationCounts.accessible}, ${locationCounts.inaccessible} / ${locationCounts.total}`;
+            node.data('label', `${displayText}\n${countLabel}`);
+          } else {
+            const displayText = regionData ? this.ui.getRegionDisplayText(regionData) : regionName.replace(/_/g, ' ');
+            node.data('label', displayText);
+          }
         }
       }
     });

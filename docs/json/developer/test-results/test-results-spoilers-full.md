@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-02-04 14:05:32
+**Generated:** 2026-02-08 20:36:30
 
-**Source Data Created:** 2026-01-31T04:15:03.561351
+**Source Data Created:** 2026-02-08T20:19:49.550873
 
-**Source Data Last Updated:** 2026-01-31T04:15:03.561360
+**Source Data Last Updated:** 2026-02-08T20:19:49.550880
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 73 (100.0%)
+- **Total Games:** 75
+- **Passed:** 75 (100.0%)
 - **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 38/73 (52.1% of passed)
-- **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 38/73 (52.1% of passed)
+- **Passing with Generic Exporter:** 41/75 (54.7% of passed)
+- **Passing with Generic Logic:** 69/75 (92.0% of passed)
+- **Passing with Both Generic:** 41/75 (54.7% of passed)
 
 ## Test Results
 
@@ -56,9 +56,10 @@
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| EarthBound | ✅ Passed | 0 | 11.7 | 11.7 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 8.8KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 13.4KB | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 13.9KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.0KB | ✅ |
@@ -82,6 +83,7 @@
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
+| Satisfactory | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | 41.2KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |

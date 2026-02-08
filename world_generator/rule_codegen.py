@@ -24,6 +24,26 @@ from ._codegen_utils import (
 
 logger = logging.getLogger(__name__)
 
+# AST analyzer output types that produce complete boolean expressions
+# and can be converted to Rule Builder format.
+ANALYZER_BOOL_TYPES: frozenset[str] = frozenset({
+    'and', 'or', 'not', 'constant',
+    'item_check', 'item_check_any', 'item_check_all',
+    'count_check', 'group_check',
+    'state_method',
+    'can_reach', 'region_check', 'location_check', 'can_reach_entrance',
+    'compare', 'comparison',
+})
+
+# Subset: types that depend on runtime player state
+# (cannot be evaluated at compile time, need lambda wrappers in conditionals)
+ANALYZER_RUNTIME_TYPES: frozenset[str] = frozenset({
+    'state_method',
+    'item_check', 'item_check_any', 'item_check_all',
+    'count_check', 'group_check',
+    'helper',
+})
+
 
 class RuleCodeGenerator:
     """Generates Python Rule Builder code from AST format rules."""
@@ -46,6 +66,13 @@ class RuleCodeGenerator:
         # Used to substitute 'location' or 'entrance' variable references
         self._current_location: Optional[str] = None
         self._current_entrance: Optional[str] = None
+        # Items that can actually be obtained (in pool, canonical placements, or starting inventory)
+        # Used to detect unsatisfiable Has rules referencing virtual/computed items
+        self.obtainable_items: Optional[Set[str]] = None
+
+    def set_obtainable_items(self, items: Set[str]) -> None:
+        """Set the items that can actually be obtained during gameplay."""
+        self.obtainable_items = items
 
     def reset(self) -> None:
         """Reset state for a new generation run."""
@@ -977,21 +1004,8 @@ class RuleCodeGenerator:
             return False
 
         # Convertible AST types (produce boolean, have Rule Builder equivalents)
-        convertible_types = {
-            'constant',
-            'item_check',
-            'count_check',
-            'group_check',
-            'and',
-            'or',
-            'not',
-            'can_reach',
-            'region_check',
-            'location_check',
-            'can_reach_entrance',
-            'compare',
-            'comparison',
-        }
+        # state_method is excluded here — only specific methods are convertible (checked below)
+        convertible_types = ANALYZER_BOOL_TYPES - {'state_method'}
 
         if rule_type not in convertible_types:
             # Special case: state_method with 'has' is convertible
@@ -1386,6 +1400,19 @@ class RuleCodeGenerator:
         if rb_rule == 'Has':
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
+
+            # Check if this rule references a virtual/computed item that can never be obtained.
+            # Items like "Reachable Orbs" are dynamically computed counters in the original game
+            # via collect_item hooks, but WorldGen worlds can't replicate this mechanism.
+            if (self.obtainable_items is not None
+                    and item_name
+                    and item_name not in self.obtainable_items
+                    and isinstance(count, int) and count > 0):
+                import sys
+                print(f"LOSSY FALLBACK: Has('{item_name}', {count}) references unobtainable item, "
+                      f"using True_() (always accessible) as fallback", file=sys.stderr)
+                self.required_imports.add('True_')
+                return 'True_()'
 
             self.required_imports.add('Has')
 
@@ -3903,13 +3930,10 @@ class RuleCodeGenerator:
 
     def _contains_state_method(self, statements: List[Dict[str, Any]]) -> bool:
         """Check if any statement contains runtime-dependent checks like item_check or state_method."""
-        # Types that require runtime evaluation (player state)
-        runtime_types = {'state_method', 'item_check', 'count_check', 'group_check', 'helper'}
-
         def check_value(value: Any) -> bool:
             if not isinstance(value, dict):
                 return False
-            if value.get('type') in runtime_types:
+            if value.get('type') in ANALYZER_RUNTIME_TYPES:
                 return True
             # Check nested structures
             for v in value.values():
@@ -4228,7 +4252,7 @@ class RuleCodeGenerator:
             return None
 
         # Types that depend on runtime state
-        if test_type in ('item_check', 'state_method', 'count_check', 'group_check'):
+        if test_type in ANALYZER_RUNTIME_TYPES:
             return None
 
         return None
@@ -6122,6 +6146,14 @@ class RuleCodeGenerator:
         args = rule.get('args', {})
         function = args.get('function', {})
 
+        # Check if function is a state_method or item_check type (has 'type' key)
+        # These produce complete boolean expressions and should be converted directly
+        # to Rule Builder format without wrapping in an additional function call.
+        # This happens when the analyzer wraps state.has_all(), state.has_any(), etc.
+        # in AST_function_call.
+        if isinstance(function, dict) and function.get('type') in ANALYZER_RUNTIME_TYPES - {'helper'}:
+            return self._convert_rule(function)
+
         # Check if function is a Rule Builder rule (has 'rule' key with known rule types)
         # This happens when bunny rules are analyzed and the inner rule is a valid
         # Rule Builder expression (e.g., And(CanReachEntrance(...), Has(...)))
@@ -7465,11 +7497,8 @@ class HelperCodeGenerator:
                     # This happens when the analyzer wraps path_to_access_rule results.
                     func_rule = function.get('rule', '')
                     func_type = function.get('type', '')
-                    # Also handle analyzer types (lowercase) - these are AST analyzer output types
-                    analyzer_bool_types = ('and', 'or', 'not', 'constant', 'item_check',
-                                          'can_reach', 'region_check', 'location_check')
                     # Check for Rule Builder types, 'helper' AST marker, or analyzer types
-                    if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper' or func_type in analyzer_bool_types:
+                    if func_rule in BOOLEAN_RULE_TYPES or func_rule == 'helper' or func_type in ANALYZER_BOOL_TYPES:
                         # These types already produce complete boolean expressions
                         return self._generate_expression(function)
 

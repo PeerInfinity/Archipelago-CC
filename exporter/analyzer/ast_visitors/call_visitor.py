@@ -1540,6 +1540,16 @@ class CallVisitorMixin:
                             # Could not resolve all elements, keep the list structure
                             logging.debug(f"Could not fully resolve list argument, keeping as-is")
                             resolved_args.append(arg)
+                    elif arg and arg.get('type') in ('set_comprehension', 'generator_expression'):
+                        # Try to resolve set/generator comprehensions like
+                        # {technology.name for technology in recipe.recursive_unlocking_technologies}
+                        # to a concrete list of values
+                        resolved_comp = self._try_resolve_comprehension(arg)
+                        if resolved_comp is not None:
+                            logging.debug(f"Resolved comprehension to {len(resolved_comp)} values: {resolved_comp}")
+                            resolved_args.append({'type': 'constant', 'value': sorted(resolved_comp) if all(isinstance(v, str) for v in resolved_comp) else resolved_comp})
+                        else:
+                            resolved_args.append(arg)
                     else:
                         resolved_args.append(arg)
 
@@ -2277,3 +2287,73 @@ class CallVisitorMixin:
                 return None
 
         return result
+
+    def _try_resolve_comprehension(self, comp_node: dict) -> list:
+        """Try to resolve a set/generator comprehension to a concrete list of values.
+
+        For patterns like:
+            {technology.name for technology in recipe.recursive_unlocking_technologies}
+
+        This resolves the iterator to concrete values (using the expression resolver),
+        then substitutes the target variable into the element expression for each value,
+        collecting the resulting concrete values into a list.
+
+        Args:
+            comp_node: A dict with type 'set_comprehension' or 'generator_expression'
+                       containing 'element' and 'comprehension' keys.
+
+        Returns:
+            A list of resolved values, or None if resolution fails.
+        """
+        comprehension = comp_node.get('comprehension', {})
+        element = comp_node.get('element', {})
+
+        # Get the target variable name
+        target = comprehension.get('target', {})
+        if isinstance(target, dict):
+            target_name = target.get('name')
+        elif isinstance(target, str):
+            target_name = target
+        else:
+            return None
+
+        if not target_name:
+            return None
+
+        # Try to resolve the iterator to concrete values
+        iterator_expr = comprehension.get('iterator', {})
+        iterator_values = self.expression_resolver.resolve_expression(iterator_expr)
+
+        if iterator_values is None:
+            logging.debug(f"_try_resolve_comprehension: Could not resolve iterator expression")
+            return None
+
+        # Must be iterable
+        try:
+            iter_list = list(iterator_values)
+        except (TypeError, ValueError):
+            logging.debug(f"_try_resolve_comprehension: Iterator value is not iterable: {type(iterator_values)}")
+            return None
+
+        if not iter_list:
+            return []
+
+        # For each value, substitute into the element expression and extract the result
+        results = []
+        for value in iter_list:
+            substituted = self._substitute_variable_in_rule(element, target_name, value)
+            if substituted is None:
+                logging.debug(f"_try_resolve_comprehension: Substitution failed for value {value}")
+                return None
+
+            # Extract the concrete value from the substituted expression
+            if isinstance(substituted, dict) and substituted.get('type') == 'constant':
+                results.append(substituted.get('value'))
+            elif isinstance(substituted, str):
+                results.append(substituted)
+            else:
+                # Could not fully resolve
+                logging.debug(f"_try_resolve_comprehension: Element did not resolve to constant: {substituted}")
+                return None
+
+        return results

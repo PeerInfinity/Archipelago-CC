@@ -134,7 +134,9 @@ def extract_js_rule_types(filepath: Path) -> dict[str, RuleTypeInfo]:
                             'rstrip', 'startswith', 'endswith', 'replace',
                             'split', 'join', '__contains__', 'sqrt', 'pow',
                             'floor', 'ceil', 'abs', 'eq', 'ne', 'lt', 'le',
-                            'gt', 'ge', 'in', 'AND', 'OR'}:
+                            'gt', 'ge', 'in', 'AND', 'OR',
+                            'has', 'has_group',
+                            'append', 'extend', 'pop', 'clear'}:
                 continue
 
             if rule_type not in rule_types:

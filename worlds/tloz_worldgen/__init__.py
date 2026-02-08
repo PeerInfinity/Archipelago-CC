@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -81,14 +81,15 @@ STARTING_ITEMS: Dict[str, int] = {
 class TheLegendofZeldaWorldGenWeb(WebWorld):
     """Web interface for The Legend of Zelda WorldGen."""
     theme = "stone"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
-            "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
+            "A guide to setting up the Archipelago The Legend of Zelda WorldGen randomizer.",
             "English",
-            "multiworld_en.md",
-            "multiworld/en",
-            ["Rosalie and Figment"]
+            "setup_en.md",
+            "setup/en",
+            ["Archipelago Team"]
         )
     ]
 

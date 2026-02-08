@@ -12,7 +12,7 @@
 
 import { profiler } from '../../shared/profiler.js';
 import { evaluateRule } from '../../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../../shared/stateInterface.js';
+import { createSnapshotInterface } from '../../shared/snapshotInterface.js';
 
 /**
  * Worker-side spoiler test runner
@@ -288,51 +288,70 @@ export class WorkerSpoilerTest {
         // Items from checking our own locations will be added by checkLocation().
         const isSphere0Base = sphereNumberInt === 0 && !String(sphereIndex).includes('.');
         if (!isSphere0Base && newlyAddedItems.length > 0) {
-          // Calculate items that will be added by checking our own locations
-          // (items at those locations that belong to this player)
-          const itemsFromOwnLocations = {};
-          for (const locationName of locationsToCheck) {
-            const locationDef = this.sm.locations?.get?.(locationName) ||
-                               this.sm.locations?.[locationName];
-            if (locationDef?.item?.name) {
-              const itemPlayer = String(locationDef.item.player || this.playerId);
-              if (itemPlayer === this.playerIdKey) {
-                // This item belongs to us and will be added by checkLocation
-                const itemName = locationDef.item.name;
-                itemsFromOwnLocations[itemName] = (itemsFromOwnLocations[itemName] || 0) + 1;
+          if (useResolvedItems) {
+            // When using resolved_items, add ALL items from the sphere log directly.
+            // The dedup logic doesn't work here because location items use base progressive
+            // names (e.g., "Progressive Claw") while resolved_items use tier names
+            // (e.g., "Cat Claw"). checkLocation will be called with addItems=false below.
+            for (const itemName of newlyAddedItems) {
+              if (accumulatorTargets.has(itemName)) {
+                continue;
+              }
+              this.sm.addItemToInventory(itemName, 1);
+              result.itemsAdded++;
+            }
+            if (result.itemsAdded > 0) {
+              this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} resolved items from sphere log`);
+            }
+          } else {
+            // Calculate items that will be added by checking our own locations
+            // (items at those locations that belong to this player)
+            const itemsFromOwnLocations = {};
+            for (const locationName of locationsToCheck) {
+              const locationDef = this.sm.locations?.get?.(locationName) ||
+                                 this.sm.locations?.[locationName];
+              if (locationDef?.item?.name) {
+                const itemPlayer = String(locationDef.item.player || this.playerId);
+                if (itemPlayer === this.playerIdKey) {
+                  // This item belongs to us and will be added by checkLocation
+                  const itemName = locationDef.item.name;
+                  itemsFromOwnLocations[itemName] = (itemsFromOwnLocations[itemName] || 0) + 1;
+                }
               }
             }
-          }
 
-          // Add only items from other players (not from checking our own locations)
-          // We need to track how many of each item to add, accounting for duplicates
-          const itemsToAdd = [...newlyAddedItems]; // Copy array to modify
-          for (const [itemName, count] of Object.entries(itemsFromOwnLocations)) {
-            let remaining = count;
-            for (let i = itemsToAdd.length - 1; i >= 0 && remaining > 0; i--) {
-              if (itemsToAdd[i] === itemName) {
-                itemsToAdd.splice(i, 1);
-                remaining--;
+            // Add only items from other players (not from checking our own locations)
+            // We need to track how many of each item to add, accounting for duplicates
+            const itemsToAdd = [...newlyAddedItems]; // Copy array to modify
+            for (const [itemName, count] of Object.entries(itemsFromOwnLocations)) {
+              let remaining = count;
+              for (let i = itemsToAdd.length - 1; i >= 0 && remaining > 0; i--) {
+                if (itemsToAdd[i] === itemName) {
+                  itemsToAdd.splice(i, 1);
+                  remaining--;
+                }
               }
             }
-          }
 
-          // Add remaining items (from other players in multiworld)
-          for (const itemName of itemsToAdd) {
-            // Skip accumulator target items when using resolved_items
-            if (useResolvedItems && accumulatorTargets.has(itemName)) {
-              continue;
+            // Add remaining items (from other players in multiworld)
+            for (const itemName of itemsToAdd) {
+              this.sm.addItemToInventory(itemName, 1);
+              result.itemsAdded++;
             }
-            this.sm.addItemToInventory(itemName, 1);
-            result.itemsAdded++;
-          }
-          if (result.itemsAdded > 0) {
-            this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} items from other players (multiworld)`);
+            if (result.itemsAdded > 0) {
+              this.log('info', `[WorkerSpoilerTest] Added ${result.itemsAdded} items from other players (multiworld)`);
+            }
           }
         }
 
         if (locationsToCheck.length > 0) {
           this.log('info', `[WorkerSpoilerTest] Checking ${locationsToCheck.length} locations`);
+
+          // When using resolved_items, don't let checkLocation add items (addItems=false).
+          // Items are already added from the sphere log's resolved_items above, using the
+          // correct resolved tier names. checkLocation would add base progressive names
+          // (e.g., "Progressive Claw") which conflict with the resolved names ("Cat Claw").
+          const addItemsOnCheck = !useResolvedItems;
 
           for (const locationName of locationsToCheck) {
             // Get location definition - use sm.locations directly
@@ -368,8 +387,8 @@ export class WorkerSpoilerTest {
               continue;
             }
 
-            // Check the location (adds item to inventory)
-            this.sm.checkLocation(locationName, true);
+            // Check the location (mark as checked, conditionally add item to inventory)
+            this.sm.checkLocation(locationName, addItemsOnCheck);
             result.locationsChecked++;
           }
         }
@@ -445,9 +464,13 @@ export class WorkerSpoilerTest {
       // helper called 406+ times with the same arguments).
       const sharedHelperCache = this.sm._spoilerTestHelperCache || (this.sm._spoilerTestHelperCache = new Map());
 
+      // Convert flags array to Set for O(1) lookup instead of O(N) array.includes()
+      // This is critical for games with many locations (e.g., coinsanity with 1500+ locations)
+      const flagsSet = new Set(snapshot.flags || []);
+
       for (const [locName, locDef] of locationEntries) {
         // Skip checked locations
-        if (snapshot.flags?.includes(locName)) continue;
+        if (flagsSet.has(locName)) continue;
 
         // Check if location is accessible
         const parentRegion = locDef.parent_region || locDef.region;

@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -250,78 +250,15 @@ class _ShopWrapper:
 class ALinktothePastWorldGen2Web(WebWorld):
     """Web interface for A Link to the Past WorldGen2."""
     theme = "grass"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "A guide to setting up the Archipelago A Link to the Past WorldGen2 randomizer.",
             "English",
-            "multiworld_en.md",
-            "multiworld/en",
-            ["Farrak Kilhn", "Berserker"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-            "Deutsch",
-            "multiworld_de.md",
-            "multiworld/de",
-            ["Fischfilet"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-            "Español",
-            "multiworld_es.md",
-            "multiworld/es",
-            ["Edos"]
-        ),
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-            "Français",
-            "multiworld_fr.md",
-            "multiworld/fr",
-            ["Coxla"]
-        ),
-        Tutorial(
-            "MSU-1 Setup Guide",
-            "A guide to setting up MSU-1, which allows for custom in-game music.",
-            "English",
-            "msu1_en.md",
-            "msu1/en",
-            ["Farrak Kilhn"]
-        ),
-        Tutorial(
-            "MSU-1 Setup Guide",
-            "A guide to setting up MSU-1, which allows for custom in-game music.",
-            "Español",
-            "msu1_es.md",
-            "msu1/es",
-            ["Edos"]
-        ),
-        Tutorial(
-            "MSU-1 Setup Guide",
-            "A guide to setting up MSU-1, which allows for custom in-game music.",
-            "Français",
-            "msu1_fr.md",
-            "msu1/fr",
-            ["Coxla"]
-        ),
-        Tutorial(
-            "Plando Guide",
-            "A guide to creating Multiworld Plandos with LTTP",
-            "English",
-            "plando_en.md",
-            "plando/en",
-            ["Berserker"]
-        ),
-        Tutorial(
-            "'OOF' Sound Replacement",
-            "A guide to customizing Link's 'oof' sound",
-            "English",
-            "oof_sound_en.md",
-            "oof_sound/en",
-            ["Nyx Edelstein"]
+            "setup_en.md",
+            "setup/en",
+            ["Archipelago Team"]
         )
     ]
 

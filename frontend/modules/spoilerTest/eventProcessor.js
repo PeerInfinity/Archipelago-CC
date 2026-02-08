@@ -38,7 +38,7 @@
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { profiler } from '../shared/profiler.js';
@@ -238,15 +238,7 @@ export class EventProcessor {
         const base_items = sphereData.inventoryDetails?.base_items || {};
         const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
 
-        let inventory_from_log;
-
-        if (useResolvedItems) {
-          // Blasphemous and similar games: use only resolved_items
-          inventory_from_log = { ...resolved_items };
-        } else {
-          // Most games (alttp, etc): use only base_items
-          inventory_from_log = { ...base_items };
-        }
+        const inventory_from_log = useResolvedItems ? { ...resolved_items } : { ...base_items };
 
         this.logCallback('info', `[Sphere ${event.sphere_index}] inventory_from_log: ${JSON.stringify(inventory_from_log)}`)
 
@@ -496,6 +488,24 @@ export class EventProcessor {
           } else {
             // Single-player processing: check locations normally
             const locationsToCheck = sphereData.locations || [];
+
+            // When using resolved_items, add all items from the sphere log directly BEFORE
+            // checking locations. checkLocation would add base progressive names (e.g.,
+            // "Progressive Claw") which conflict with the resolved names ("Cat Claw").
+            const addItemsOnCheck = !useResolvedItems;
+            if (useResolvedItems && newlyAddedItems.length > 0) {
+              const sphereStr = String(context.sphere_number);
+              const intSphere = parseInt(sphereStr.split('.')[0], 10);
+              const isSphere0Base = (intSphere === 0 && !sphereStr.includes('.'));
+              if (!isSphere0Base) {
+                this.logCallback('info', `Adding ${newlyAddedItems.length} resolved items from sphere log before checking locations...`);
+                for (const itemName of newlyAddedItems) {
+                  await stateManager.addItemToInventory(itemName, 1);
+                }
+                await stateManager.pingWorker(`sphere_${context.sphere_number}_resolved_items_added`, 10000);
+              }
+            }
+
             if (locationsToCheck.length > 0) {
               this.logCallback('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
               profiler.start('checkLocationsLoop');
@@ -518,7 +528,7 @@ export class EventProcessor {
 
                 // NEW: Check if location is accessible BEFORE attempting to check it
                 const currentSnapshot = await stateManager.getFullSnapshot();
-                const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
+                const snapshotInterface = createSnapshotInterface(currentSnapshot, stateManager.getStaticData());
                 const isAccessible = snapshotInterface.isLocationAccessible(locationName);
 
                 if (!isAccessible) {
@@ -540,11 +550,10 @@ export class EventProcessor {
                   throw new Error(`Pre-check accessibility mismatch for "${locationName}" in sphere ${context.sphere_number}`);
                 }
 
-                // Check location WITH items via event dispatcher instead of direct call
-                // This naturally adds the item (e.g., "Progressive Sword") to inventory
-                // Use event-based flow to match how timer and UI modules interact with stateManager
+                // Check location via event dispatcher. When using resolved_items, pass
+                // addItems=false since items are already added from the sphere log above.
                 const locationRegion = locationDef?.parent_region_name || locationDef?.parent_region || locationDef?.region || null;
-                await this.checkLocationViaEvent(locationName, locationRegion);
+                await this.checkLocationViaEvent(locationName, locationRegion, addItemsOnCheck);
               }
 
               profiler.end('checkLocationsLoop');
@@ -764,7 +773,7 @@ export class EventProcessor {
               throw new Error(`Snapshot unavailable for ${locName} check`);
             }
             // Create a location-specific snapshotInterface with the location as context
-            const snapshotInterface = createStateSnapshotInterface(
+            const snapshotInterface = createSnapshotInterface(
               currentSnapshot,
               staticData,
               { location: locDef } // Pass the location definition as context
@@ -1066,7 +1075,7 @@ export class EventProcessor {
 
       // Verify accessibility before checking
       const currentSnapshot = await stateManager.getFullSnapshot();
-      const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
+      const snapshotInterface = createSnapshotInterface(currentSnapshot, stateManager.getStaticData());
       const isAccessible = snapshotInterface.isLocationAccessible(locationName);
 
       if (!isAccessible) {

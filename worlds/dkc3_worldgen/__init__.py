@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -47,6 +47,7 @@ STARTING_ITEMS: Dict[str, int] = {
 class DonkeyKongCountry3WorldGenWeb(WebWorld):
     """Web interface for Donkey Kong Country 3 WorldGen."""
     theme = "jungle"
+    game_info_languages: List[str] = []
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",

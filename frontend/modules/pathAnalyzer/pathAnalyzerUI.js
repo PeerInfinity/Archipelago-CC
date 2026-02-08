@@ -6,7 +6,7 @@ import commonUI from '../commonUI/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBus from '../../app/core/eventBus.js';
 import loopState from '../loops/loopStateSingleton.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -633,7 +633,7 @@ export class PathAnalyzerUI {
     pathsDiv.classList.add('path-regions-container');
 
     // Create snapshot interface for rule evaluation
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );
@@ -1006,7 +1006,7 @@ export class PathAnalyzerUI {
     pathText.classList.add('path-text');
 
     // Create snapshot interface for rule evaluation
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );

@@ -130,9 +130,8 @@ export function register(registrationApi) {
     return loopStateSingleton;
   });
 
-  registrationApi.registerPublicFunction(moduleInfo.name, 'getPlayerStateAPI', () => {
-    return _playerStateAPI;
-  });
+  // Note: playerState functions are accessed directly via the 'playerState' module's
+  // public API, not re-exported through loops. Internal loops code uses _playerStateAPI.
 
   registrationApi.registerPublicFunction(moduleInfo.name, 'getLoopsModuleDispatcher', () => {
     return moduleDispatcher;

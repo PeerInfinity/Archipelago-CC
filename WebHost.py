@@ -88,10 +88,14 @@ def copy_tutorials_files_to_static() -> None:
                             f.write(zf.read(zfile))
         else:
             source_path = Utils.local_path(os.path.dirname(world.__file__), "docs")
+            if not os.path.isdir(source_path):
+                continue
             files = os.listdir(source_path)
             for file in files:
-                shutil.copyfile(Utils.local_path(source_path, file),
-                                Utils.local_path(target_path, secure_filename(file)))
+                source_file = Utils.local_path(source_path, file)
+                if os.path.isfile(source_file):
+                    shutil.copyfile(source_file,
+                                    Utils.local_path(target_path, secure_filename(file)))
 
 
 if __name__ == "__main__":

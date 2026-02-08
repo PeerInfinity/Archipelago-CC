@@ -42,7 +42,9 @@
         <h2>Game Info Pages</h2>
         <ul>
             {% for game in games | title_sorted %}
-                <li><a href="{{ url_for('game_info', game=game['title'], lang='en') }}">{{ game['title'] }}</a></li>
+                {% if game['has_game_info'] %}
+                    <li><a href="{{ url_for('game_info', game=game['title'], lang='en') }}">{{ game['title'] }}</a></li>
+                {% endif %}
             {% endfor %}
         </ul>
 

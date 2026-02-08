@@ -121,7 +121,7 @@ def tutorial_landing():
     worlds = AutoWorldRegister.world_types
     for world_name, world_type in worlds.items():
         current_world = tutorials[world_name] = {}
-        for tutorial in world_type.web.tutorials:
+        for tutorial in getattr(world_type.web, 'tutorials', []):
             current_tutorial = current_world.setdefault(tutorial.tutorial_name, {
                 "description": tutorial.description, "files": {}})
             current_tutorial["files"][secure_filename(tutorial.file_name).rsplit(".", 1)[0]] = {
@@ -296,5 +296,6 @@ def get_sitemap():
     for game, world in AutoWorldRegister.world_types.items():
         if not world.hidden:
             has_settings: bool = isinstance(world.web.options_page, bool) and world.web.options_page
-            available_games.append({ 'title': game, 'has_settings': has_settings })
+            has_game_info: bool = bool(world.web.game_info_languages)
+            available_games.append({ 'title': game, 'has_settings': has_settings, 'has_game_info': has_game_info })
     return render_template("siteMap.html", games=available_games)

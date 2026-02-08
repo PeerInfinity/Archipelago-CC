@@ -7,7 +7,8 @@
 ## Key Files
 
 - `frontend/modules/shared/ruleEngine.js` - Core rule evaluation engine
-- `frontend/modules/shared/stateInterface.js` - Thread-agnostic context objects
+- `frontend/modules/shared/snapshotInterface.js` - Thread-agnostic context objects
+- `frontend/modules/shared/pathUtils.js` - Path data filtering utilities
 - `frontend/modules/shared/pathfinder.js` - Region pathfinding
 - `frontend/modules/shared/playerIdUtils.js` - Player ID normalization
 - `frontend/modules/shared/bidirectionalDetector.js` - Exit pattern detection
@@ -28,13 +29,13 @@ resolveHelperScope(helperDefinition, args, staticData, playerIdStr)  // Resolve 
 debugRule(rule, indent)  // Debug rule tree
 ```
 
-### stateInterface.js
+### snapshotInterface.js
 
 Creates thread-agnostic context objects for rule evaluation.
 
 **Key Export:**
 ```javascript
-createStateSnapshotInterface(snapshot, staticData, contextVariables)
+createSnapshotInterface(snapshot, staticData, contextVariables)
 ```
 
 **Interface Methods:**
@@ -44,6 +45,17 @@ createStateSnapshotInterface(snapshot, staticData, contextVariables)
 - `isLocationAccessible(locationName)` - Location accessibility
 - `getStaticData()` - Access game data
 - `resolveName(name)` - Python name resolution
+
+### pathUtils.js
+
+Shared utility functions for modules that consume playerState path data.
+
+**Key Export:**
+```javascript
+getRegionMovesFromPath(path)  // Filter path to only regionMove entries
+```
+
+Used by `regionGraph` and `regions` modules to derive display-ready paths from the raw playerState path.
 
 ### pathfinder.js
 
@@ -109,17 +121,17 @@ All shared modules are designed to be thread-agnostic:
 
 ```javascript
 import { evaluateRule } from './shared/ruleEngine.js';
-import { createStateSnapshotInterface } from './shared/stateInterface.js';
+import { createSnapshotInterface } from './shared/snapshotInterface.js';
 import { PathFinder } from './shared/pathfinder.js';
 
 // Create interface from snapshot
-const stateInterface = createStateSnapshotInterface(snapshot, staticData);
+const snapshotInterface = createSnapshotInterface(snapshot, staticData);
 
 // Evaluate a rule
-const result = evaluateRule(locationRule, stateInterface);
+const result = evaluateRule(locationRule, snapshotInterface);
 
 // Find path between regions
-const pathfinder = new PathFinder(staticData, stateInterface);
+const pathfinder = new PathFinder(staticData, snapshotInterface);
 const path = pathfinder.findPath('Menu', 'Boss Room');
 ```
 
@@ -127,6 +139,6 @@ const path = pathfinder.findPath('Menu', 'Boss Room');
 
 The shared module has minimal dependencies:
 - **ruleEngine:** No external dependencies
-- **stateInterface:** Depends on ruleEngine, gameLogicRegistry
-- **pathfinder:** Depends on stateInterface, ruleEngine
+- **snapshotInterface:** Depends on ruleEngine, gameLogicRegistry
+- **pathfinder:** Depends on snapshotInterface, ruleEngine
 - **Other utilities:** No dependencies (pure functions)

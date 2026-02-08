@@ -19,7 +19,7 @@ import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
 import { LoopBlockBuilder } from './loopBlockBuilder.js';
 import { getPlayerStateAPI, getLoopsModuleDispatcher, getCostGenerator, getCostDataManager } from './index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 
 // Helper function for logging with fallback

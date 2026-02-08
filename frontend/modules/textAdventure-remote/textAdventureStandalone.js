@@ -1,5 +1,5 @@
 // Standalone version of TextAdventure adapted for remote communication (iframe or window)
-import { createStateSnapshotInterface, evaluateRule } from './mockDependencies.js';
+import { createSnapshotInterface, evaluateRule } from './mockDependencies.js';
 import { RemoteDependencies } from './dependencies/index.js';
 import { createSharedLogger } from './shared/sharedLogger.js';
 
@@ -591,7 +591,7 @@ Load a rules file in the main application to begin your adventure.`;
         let locAccessible = true;
         if (locationDef.access_rule) {
             try {
-                const snapshotInterface = createStateSnapshotInterface(snapshot, staticData, { location: locationDef });
+                const snapshotInterface = createSnapshotInterface(snapshot, staticData, { location: locationDef });
                 locAccessible = evaluateRule(locationDef.access_rule, snapshotInterface);
             } catch (e) {
                 logger.error(`Error evaluating location rule for ${locationName}:`, e);
@@ -619,7 +619,7 @@ Load a rules file in the main application to begin your adventure.`;
         let exitAccessible = true;
         if (exitDef.access_rule) {
             try {
-                const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+                const snapshotInterface = createSnapshotInterface(snapshot, staticData);
                 exitAccessible = evaluateRule(exitDef.access_rule, snapshotInterface);
             } catch (e) {
                 logger.error(`Error evaluating exit rule for ${exitName}:`, e);

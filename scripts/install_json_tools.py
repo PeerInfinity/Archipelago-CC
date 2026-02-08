@@ -318,8 +318,8 @@ def run_installer(
         "-m", "worlds.json_tools_installer",
         "install",
         "--version", version,
-        "--monkey-patch",  # Use runtime patching for compatibility with newer AP versions
         "--yes",  # Skip confirmation prompts
+        # Monkey patching is the default, no flag needed
     ]
 
     if install_all:
