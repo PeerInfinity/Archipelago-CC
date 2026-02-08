@@ -64,6 +64,12 @@ class RuleExpansionMixin:
         if rule.get('_original_ast_type') == 'helper':
             helper_name = rule.get('rule', '')
             if helper_name:
+                # If this helper has a defined body (from HelperCall with body_rule/helper_func),
+                # preserve it as a helper reference. The helper's definition will be exported
+                # separately in the helpers section. Don't pattern-expand it.
+                if rule.get('_rb_helper_defined'):
+                    return rule
+
                 helper_args = rule.get('args', [])
 
                 # Hook: try pattern-based expansion first (for GenericGameExportHandler)

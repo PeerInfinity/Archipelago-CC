@@ -59,14 +59,9 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "buy_in_eolis",
-                "inferred": true,
-                "description": "Requires ability to buy in eolis",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Elixir",
@@ -80,14 +75,9 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "buy_in_eolis",
-                "inferred": true,
-                "description": "Requires ability to buy in eolis",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Key King",
@@ -101,14 +91,9 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "buy_in_eolis",
-                "inferred": true,
-                "description": "Requires ability to buy in eolis",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Key Jack",
@@ -122,14 +107,9 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "buy_in_eolis",
-                "inferred": true,
-                "description": "Requires ability to buy in eolis",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Black Onyx",
@@ -143,14 +123,9 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "buy_in_eolis",
-                "inferred": true,
-                "description": "Requires ability to buy in eolis",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Wingboots",
@@ -1067,10 +1042,9 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Any_Magic"
-              }
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Red Potion",
@@ -1914,10 +1888,9 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Any_Magic"
-              }
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Ring of Elf",
@@ -1999,10 +1972,9 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Any_Magic"
-              }
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_rb_helper_defined": true
             },
             "item": {
               "name": "Red Potion",
