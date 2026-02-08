@@ -11,7 +11,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { createRegionLink } from '../commonUI/index.js';
 import TestSpoilerRuleEvaluator from './testSpoilerRuleEvaluator.js';
 import { FileLoader } from './fileLoader.js';

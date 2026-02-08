@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-04 14:05:32
+**Generated:** 2026-02-08 01:58:03
 
-**Source Data Created:** 2026-02-03T03:19:01.480259
+**Source Data Created:** 2026-02-08T01:58:02.965160
 
-**Source Data Last Updated:** 2026-02-03T19:55:55.629929
+**Source Data Last Updated:** 2026-02-08T01:58:02.965166
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -20,21 +20,21 @@
 
 ## Summary
 
-- **Total Games:** 73
-- **Games with 100% Pass Rate:** 61 (83.6%)
-- **Games with Failures:** 12 (16.4%)
-- **Total Fuzz Runs:** 1720
-- **Successful Runs:** 1584 (92.1%)
+- **Total Games:** 75
+- **Games with 100% Pass Rate:** 63 (84.0%)
+- **Games with Failures:** 12 (16.0%)
+- **Total Fuzz Runs:** 750
+- **Successful Runs:** 665 (88.7%)
 - **Generation Failures:** 14
-- **Test Failures:** 45
+- **Test Failures:** 46
 - **Timed Out Runs:** 0
 
 ## Test Results
 
 | Game Name | Result | Total | Success | Gen Fail | Test Fail | Timeout | Success Rate | Rules Size |
 |-----------|:------:|:-----:|:-------:|:--------:|:---------:|:-------:|:------------:|:----------:|
-| A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 231.1KB |
-| A Link to the Past | ✅ | 1000 | 954 | 0 | 0 | 0 | 95.4% | 667.7KB |
+| A Hat in Time | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 231.3KB |
+| A Link to the Past | ✅ | 10 | 9 | 0 | 0 | 0 | 90.0% | 667.7KB |
 | A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 410.7KB |
 | APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 11.0KB |
 | Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 26.0KB |
@@ -55,20 +55,21 @@
 | DOOM II | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 326.5KB |
 | Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1062.0KB |
 | Donkey Kong Country 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 122.5KB |
-| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 295.0KB |
+| EarthBound | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 343.8KB |
+| Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 295.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 68.7KB |
 | Final Fantasy Mystic Quest | ❌ | 10 | 5 | 2 | 3 | 0 | ⚠️ 50.0% | 549.5KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 367.5KB |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.9KB |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 84.2KB |
 | Kingdom Hearts | ❌ | 10 | 8 | 0 | 2 | 0 | ⚠️ 80.0% | 753.6KB |
-| Kingdom Hearts 2 | ✅ | 10 | 1 | 0 | 0 | 0 | ❌ 10.0% | 1641.1KB |
+| Kingdom Hearts 2 | ✅ | 10 | 7 | 0 | 0 | 0 | ⚠️ 70.0% | 1641.6KB |
 | Kirby's Dream Land 3 | ❌ | 10 | 5 | 0 | 5 | 0 | ⚠️ 50.0% | 529.1KB |
 | Landstalker - The Treasures of King Nole | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 210.5KB |
 | Lingo | ❌ | 10 | 2 | 0 | 1 | 0 | ❌ 20.0% | 946.3KB |
-| Links Awakening DX | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 714.5KB |
+| Links Awakening DX | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 705.8KB |
 | Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 132.4KB |
-| Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 398.5KB |
+| Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 398.8KB |
 | Math Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 12.6KB |
 | Mega Man 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 51.5KB |
 | MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 209.8KB |
@@ -81,6 +82,7 @@
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 123.7KB |
 | Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 205.9KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 146.1KB |
+| Satisfactory | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1703.4KB |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 33.8KB |
 | Secret of Evermore | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 418.7KB |
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 151.3KB |
@@ -88,10 +90,10 @@
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1126.8KB |
 | Stardew Valley | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 2430.2KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 207.8KB |
-| Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 93.2KB |
+| Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.9KB |
 | Super Mario Land 2 | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 982.7KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 2 | 4 | 0 | ❌ 0.0% | 625.4KB |
+| Super Metroid | ❌ | 10 | 0 | 2 | 5 | 0 | ❌ 0.0% | 625.4KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TUNIC | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 653.3KB |
@@ -104,7 +106,7 @@
 | Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 58.0KB |
 | VVVVVV | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 22.8KB |
 | Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 44.7KB |
-| Yoshi's Island | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 296.7KB |
+| Yoshi's Island | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 296.8KB |
 | shapez | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 155.3KB |
 
 ## Excluded Templates

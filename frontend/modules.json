@@ -38,7 +38,7 @@
     },
     "editor": {
       "path": "./modules/editor/index.js",
-      "enabled": true,
+      "enabled": false,
       "requires": ["editorCore"]
     },
     "editorCodeMirror6": {

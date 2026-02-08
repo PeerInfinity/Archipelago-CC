@@ -39,5 +39,5 @@ This module does not register any public functions. Its functions are consumed b
 
 #### Dependencies & Interactions
 
-- **StateManager (`stateManagerProxy`)**: The `renderLogicTree` and link creation functions are heavily dependent on the `StateManager`. They require a `StateSnapshotInterface` (created via `createStateSnapshotInterface` from the proxy) to evaluate rules and determine the accessibility status of regions and locations for correct styling.
+- **StateManager (`stateManagerProxy`)**: The `renderLogicTree` and link creation functions are heavily dependent on the `StateManager`. They require a `StateSnapshotInterface` (created via `createSnapshotInterface` from the proxy) to evaluate rules and determine the accessibility status of regions and locations for correct styling.
 - **All UI Panels:** Any module that needs to display a rule tree (`locationsPanel`, `exitsPanel`, `regionsPanel`, `pathAnalyzerPanel`) or create a standardized link to a region imports and uses functions from this module.

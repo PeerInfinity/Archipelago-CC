@@ -46,6 +46,6 @@ This module does not register any public functions.
 
 #### Dependencies & Interactions
 
-- **StateManager**: The `Locations` module is fundamentally dependent on the `StateManager`. It gets the static list of all locations from the `staticDataCache` and uses the `createStateSnapshotInterface` method to evaluate the `access_rule` for every location during each render cycle.
+- **StateManager**: The `Locations` module is fundamentally dependent on the `StateManager`. It gets the static list of all locations from the `staticDataCache` and uses the `createSnapshotInterface` method to evaluate the `access_rule` for every location during each render cycle.
 - **EventDispatcher**: It is a primary initiator of the `user:locationCheck` event, which is the core action for checking a location in the game.
 - **CommonUI**: It makes extensive use of `commonUI.renderLogicTree` to display the accessibility rules and `commonUI.createRegionLink` to create clickable links to each location's parent region.

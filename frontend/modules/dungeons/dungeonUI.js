@@ -3,7 +3,7 @@ import commonUI, { renderLogicTree } from '../commonUI/index.js';
 import eventBus from '../../app/core/eventBus.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { debounce } from '../commonUI/index.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 
 function log(level, message, ...data) {
   if (window.logger) {
@@ -161,7 +161,7 @@ export class DungeonUI {
       return;
     }
 
-    const snapshotInterface = createStateSnapshotInterface(
+    const snapshotInterface = createSnapshotInterface(
       snapshot,
       staticData
     );

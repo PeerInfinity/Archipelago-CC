@@ -2,7 +2,7 @@
 
 import { evaluateRule } from '../shared/ruleEngine.js';
 // Import the function directly from its source file
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import eventBusCore from '../../app/core/eventBus.js';

@@ -3,7 +3,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { getPlayerStateSingleton } from '../playerState/singleton.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { moduleDispatcher } from './index.js';
 // Instance registration is no longer needed
 
@@ -420,7 +420,7 @@ export class TextAdventureLogic {
             if (locationDef.access_rule) {
                 try {
                     // Create context-aware snapshot interface with location object (same as Regions)
-                    const locationContextInterface = createStateSnapshotInterface(
+                    const locationContextInterface = createSnapshotInterface(
                         snapshot,
                         staticData,
                         { location: locationDef }
@@ -507,7 +507,7 @@ export class TextAdventureLogic {
             if (exitDef.access_rule && !exitDef.isReverseExit) {
                 log('debug', `Evaluating rule for ${exitName}:`, exitDef.access_rule);
                 try {
-                    const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+                    const snapshotInterface = createSnapshotInterface(snapshot, staticData);
                     exitAccessible = evaluateRule(exitDef.access_rule, snapshotInterface);
                     log('debug', `Rule evaluation result for ${exitName}: ${exitAccessible}`);
                 } catch (e) {
@@ -972,60 +972,10 @@ export class TextAdventureLogic {
         if (data && data.newRegion && data.newRegion !== this.lastDisplayedRegion) {
             this.lastDisplayedRegion = data.newRegion;
 
-            // When discovery mode is enabled, automatically discover all locations and exits in the new region
-            if (this.isDiscoveryModeActive) {
-                this.discoverRegionContents(data.newRegion);
-            }
-
             // Display new region immediately - this event fires when region change is complete
             this.displayCurrentRegion();
         } else {
             log('debug', 'Skipping region display - already displayed this region');
-        }
-    }
-
-    /**
-     * Discover all locations and exits in a region
-     * Called when entering a region with discovery mode enabled
-     * @param {string} regionName - Name of the region to discover contents of
-     */
-    discoverRegionContents(regionName) {
-        if (!discoveryStateSingleton) {
-            log('warn', 'Discovery singleton not available');
-            return;
-        }
-
-        try {
-            const staticData = stateManager.getStaticData();
-            if (!staticData || !staticData.regions) {
-                log('warn', 'No static data available for discovery');
-                return;
-            }
-
-            const regionData = staticData.regions.get(regionName);
-            if (!regionData) {
-                log('warn', `Region ${regionName} not found in static data`);
-                return;
-            }
-
-            // Discover all locations in the region
-            if (regionData.locations && regionData.locations.length > 0) {
-                for (const location of regionData.locations) {
-                    discoveryStateSingleton.discoverLocation(location.name);
-                }
-                log('info', `Discovered ${regionData.locations.length} locations in ${regionName}`);
-            }
-
-            // Discover all exits in the region
-            if (regionData.exits && regionData.exits.length > 0) {
-                for (const exit of regionData.exits) {
-                    discoveryStateSingleton.discoverExit(regionName, exit.name);
-                }
-                log('info', `Discovered ${regionData.exits.length} exits in ${regionName}`);
-            }
-
-        } catch (error) {
-            log('error', 'Error discovering region contents:', error);
         }
     }
 

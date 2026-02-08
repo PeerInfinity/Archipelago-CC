@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-02-07 06:42:13
+**Generated:** 2026-02-07 14:01:39
 
 **Source Data Created:** 2026-02-07T05:53:53.116862
 
@@ -59,9 +59,9 @@ Of the 74 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 474.2KB
+- **Total Exporter Code:** 509.4KB
 - **Total Game Logic Code:** 271.1KB
-- **Combined Total:** 745.3KB
+- **Combined Total:** 780.6KB
 
 ## Test Results
 
@@ -116,7 +116,7 @@ Of the 74 templates passing all 4 tests:
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 123.7KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 146.1KB |
-| Satisfactory | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | ✅ | ✅ | 1183.8KB |
+| Satisfactory | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.3KB |
@@ -148,8 +148,8 @@ Of the 74 templates passing all 4 tests:
 | Rank | Game Name | Rules Size |
 |------|-----------|------------|
 | 1 | Stardew Valley | 2430.2KB |
-| 2 | Kingdom Hearts 2 | 1641.6KB |
-| 3 | Satisfactory | 1183.8KB |
+| 2 | Satisfactory | 1703.4KB |
+| 3 | Kingdom Hearts 2 | 1641.6KB |
 | 4 | Starcraft 2 | 1126.8KB |
 | 5 | Dark Souls III | 1062.0KB |
 | 6 | Celeste (Open World) | 1043.4KB |
@@ -165,36 +165,37 @@ Of the 74 templates passing all 4 tests:
 | 1 | Super Mario Land 2 | 96.3KB |
 | 2 | Super Metroid | 60.9KB |
 | 3 | Lingo | 38.0KB |
-| 4 | Starcraft 2 | 28.7KB |
-| 5 | Overcooked! 2 | 28.5KB |
-| 6 | Kingdom Hearts 2 | 19.5KB |
-| 7 | Stardew Valley | 18.8KB |
-| 8 | A Hat in Time | 18.2KB |
-| 9 | Terraria | 16.8KB |
-| 10 | The Messenger | 15.2KB |
-| 11 | The Witness | 14.1KB |
-| 12 | Final Fantasy Mystic Quest | 13.4KB |
-| 13 | A Link to the Past | 12.6KB |
-| 14 | Kirby's Dream Land 3 | 10.1KB |
-| 15 | Yoshi's Island | 9.2KB |
-| 16 | Factorio | 8.8KB |
-| 17 | Inscryption | 8.0KB |
-| 18 | Links Awakening DX | 7.4KB |
-| 19 | The Wind Waker | 7.0KB |
-| 20 | Raft | 6.5KB |
-| 21 | Secret of Evermore | 5.3KB |
-| 22 | Celeste 64 | 4.1KB |
-| 23 | Castlevania - Circle of the Moon | 4.0KB |
-| 24 | VVVVVV | 3.8KB |
-| 25 | Landstalker - The Treasures of King Nole | 3.6KB |
-| 26 | TUNIC | 3.1KB |
-| 27 | Paint | 2.7KB |
-| 28 | Timespinner | 2.2KB |
-| 29 | Subnautica | 2.2KB |
-| 30 | Aquaria | 1.8KB |
-| 31 | Bomb Rush Cyberfunk | 1.4KB |
-| 32 | DLCQuest | 1.2KB |
-| 33 | Old School Runescape | 1.0KB |
+| 4 | Satisfactory | 35.2KB |
+| 5 | Starcraft 2 | 28.7KB |
+| 6 | Overcooked! 2 | 28.5KB |
+| 7 | Kingdom Hearts 2 | 19.5KB |
+| 8 | Stardew Valley | 18.8KB |
+| 9 | A Hat in Time | 18.2KB |
+| 10 | Terraria | 16.8KB |
+| 11 | The Messenger | 15.2KB |
+| 12 | The Witness | 14.1KB |
+| 13 | Final Fantasy Mystic Quest | 13.4KB |
+| 14 | A Link to the Past | 12.6KB |
+| 15 | Kirby's Dream Land 3 | 10.1KB |
+| 16 | Yoshi's Island | 9.2KB |
+| 17 | Factorio | 8.8KB |
+| 18 | Inscryption | 8.0KB |
+| 19 | Links Awakening DX | 7.4KB |
+| 20 | The Wind Waker | 7.0KB |
+| 21 | Raft | 6.5KB |
+| 22 | Secret of Evermore | 5.3KB |
+| 23 | Celeste 64 | 4.1KB |
+| 24 | Castlevania - Circle of the Moon | 4.0KB |
+| 25 | VVVVVV | 3.8KB |
+| 26 | Landstalker - The Treasures of King Nole | 3.6KB |
+| 27 | TUNIC | 3.1KB |
+| 28 | Paint | 2.7KB |
+| 29 | Timespinner | 2.2KB |
+| 30 | Subnautica | 2.2KB |
+| 31 | Aquaria | 1.8KB |
+| 32 | Bomb Rush Cyberfunk | 1.4KB |
+| 33 | DLCQuest | 1.2KB |
+| 34 | Old School Runescape | 1.0KB |
 
 ### GameLogic Files by Size
 

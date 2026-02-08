@@ -34,7 +34,7 @@ import { profiler } from './profiler.js';
  *   Processing:
  *     ├─> Needs to verify location is accessible
  *     ├─> Creates SnapshotInterface via _createSelfSnapshotInterface()
- *     │     └─> Calls createStateSnapshotInterface(snapshot, staticData)
+ *     │     └─> Calls createSnapshotInterface(snapshot, staticData)
  *     ├─> Calls evaluateRule(location.access_rule, snapshotInterface)
  *     │
  *   Output: Worker evaluates rule, updates state, returns snapshot
@@ -76,7 +76,7 @@ import { profiler } from './profiler.js';
  *     ├─> Calls stateManager.getStaticData() (from proxy)
  *     │     └─> Returns CACHED static data (no worker call)
  *     ├─> Creates SnapshotInterface on main thread
- *     │     └─> const snapshotInterface = createStateSnapshotInterface(snapshot, staticData)
+ *     │     └─> const snapshotInterface = createSnapshotInterface(snapshot, staticData)
  *     │           └─> Same function used in worker!
  *     │
  *   Output: SnapshotInterface ready for evaluation
@@ -149,7 +149,7 @@ import { profiler } from './profiler.js';
  * - Dungeon and boss rule support
  *
  * @module shared/ruleEngine
- * @see stateInterface.js - Creates SnapshotInterface context objects
+ * @see snapshotInterface.js - Creates SnapshotInterface context objects
  * @see gameLogicRegistry.js - Selects game-specific helper functions
  * @see stateManager/core/ruleEvaluator.js - Worker thread helper execution
  */
@@ -158,7 +158,7 @@ import { profiler } from './profiler.js';
 
 /**
  * Resolves helper function parameters from arguments, slot_data, or settings.
- * This is the shared logic used by both stateInterface.js and ruleEvaluator.js
+ * This is the shared logic used by both snapshotInterface.js and ruleEvaluator.js
  * when evaluating helper definitions exported from Python to rules.json.
  *
  * Parameter resolution order:
@@ -3504,7 +3504,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           } else {
             // Normalize certain string values to be falsy
             // This handles Choice options where 0='off'/'none' etc.
-            // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+            // The normalization of 'off'/'none' strings is now handled in snapshotInterface.getSetting
             result = rawValue;
           }
 

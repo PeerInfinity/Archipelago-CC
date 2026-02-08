@@ -83,7 +83,7 @@
 
 // Import the singleton proxy instance
 import stateManagerProxySingleton from './stateManagerProxySingleton.js';
-// REMOVE: import { createStateSnapshotInterface } from './stateManagerProxy.js';
+// REMOVE: import { createSnapshotInterface } from './stateManagerProxy.js';
 import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
@@ -452,7 +452,7 @@ async function handleUserLocationCheckForStateManager(eventData) {
         const snapshot = await stateManagerProxySingleton.getLatestStateSnapshot();
         const staticData = stateManagerProxySingleton.getStaticData();
         if (snapshot && staticData && staticData.locations) {
-            const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
+            const snapshotInterface = createSnapshotInterface(snapshot, staticData);
             const allLocations = Array.from(staticData.locations.values());
             let nextLocationToCheck = null;
 

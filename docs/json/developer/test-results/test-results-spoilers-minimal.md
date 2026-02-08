@@ -10,7 +10,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2026-02-07 06:42:13
+**Generated:** 2026-02-07 14:01:39
 
 **Source Data Created:** 2026-02-07T05:53:53.116862
 
@@ -83,7 +83,7 @@
 | Paint | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | 2.7KB | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
-| Satisfactory | ❌ Failed seed 1 | 0 | 0 | 24.1 | 🔴 0.0% | ✅ | ✅ |
+| Satisfactory | ❌ Failed seed 1 | 0 | 0 | 24.1 | 🔴 0.0% | 35.2KB | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |

@@ -45,7 +45,7 @@
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
-import { createStateSnapshotInterface } from '../shared/stateInterface.js';
+import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 
 const logger = createUniversalLogger('testSpoilerUI:AnalysisReporter');
@@ -156,7 +156,7 @@ export class AnalysisReporter {
       let locationRuleResult;
       try {
         // Create a location-specific snapshotInterface with the location as context for analysis
-        const locationSnapshotInterface = createStateSnapshotInterface(
+        const locationSnapshotInterface = createSnapshotInterface(
           currentWorkerSnapshot,
           staticData,
           { location: locDef } // Pass the location definition as context
@@ -355,7 +355,7 @@ export class AnalysisReporter {
 
             // Evaluate the exit rule
             try {
-              const snapshotInterface = createStateSnapshotInterface(
+              const snapshotInterface = createSnapshotInterface(
                 currentWorkerSnapshot,
                 staticData
               );
@@ -390,7 +390,7 @@ export class AnalysisReporter {
           const accessibleExits = exitsToTarget.filter(exit => {
             if (!exit.exitDef.access_rule) return true;
             try {
-              const snapshotInterface = createStateSnapshotInterface(currentWorkerSnapshot, staticData);
+              const snapshotInterface = createSnapshotInterface(currentWorkerSnapshot, staticData);
               return evaluateRule(exit.exitDef.access_rule, snapshotInterface) === true;
             } catch {
               return false;

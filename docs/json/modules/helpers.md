@@ -38,7 +38,7 @@ This module does not register public functions. It is a UI panel component.
 
 - **`stateManager`:** Gets game snapshots and static data for helper definitions
 - **`ruleEngine`:** Evaluates helper rules via `evaluateRule()`
-- **`stateInterface`:** Creates snapshot interface via `createStateSnapshotInterface()`
+- **`snapshotInterface`:** Creates snapshot interface via `createSnapshotInterface()`
 - **`commonUI`:** Renders logic trees via `renderLogicTree()`
 - **`settingsManager`:** Gets colorblind mode and other display settings
 - **`eventBus`:** Subscribes to state and settings events

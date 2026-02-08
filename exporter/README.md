@@ -236,7 +236,11 @@ The exporter produces JSON files containing:
 
 - **[World Generator Guide](../docs/json/developer/guides/world-generator.md)** - Convert JSON back to Python worlds
 - **[Testing Pipeline](../docs/json/developer/guides/testing-pipeline.md)** - How exports are validated
-- **[Rule Types Reference](../docs/json/developer/reference/rule-types.md)** - Supported rule types
+- **[Rule Types Reference](../docs/json/developer/reference/rule-types-reference.md)** - Supported rule types
+- **[Handler Configuration Reference](../docs/json/developer/reference/handler-configuration.md)** - All handler class attributes
+- **[State Method Transformations](../docs/json/developer/reference/state-method-transformations.md)** - How Python state calls become JSON
+- **[Closure Function Analyzer](../docs/json/developer/reference/closure-function-analyzer.md)** - Closure analysis architecture
+- **[Binary Operation Optimizations](../docs/json/developer/reference/binary-op-optimizations.md)** - Compile-time optimizations
 
 ## Development
 

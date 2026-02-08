@@ -37,6 +37,7 @@ Technical references and specifications:
 | [Logging System](./reference/logging-system.md) | Structured logging API |
 | [URL Parameters](./reference/url-parameters.md) | Application URL parameters |
 | [ALttP Specific Data](./reference/alttp-specific-data.md) | A Link to the Past helpers |
+| [Host Settings](./reference/host-settings.md) | Settings added to host.yaml by this fork |
 
 ### [Diffs](./diffs/)
 

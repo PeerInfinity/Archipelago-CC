@@ -37,6 +37,6 @@ This module does not register any public functions.
 
 #### Dependencies & Interactions
 
-- **StateManager**: The `Exits` module is fundamentally dependent on the `StateManager`. It gets the static list of all exits from the `staticDataCache` and uses the `createStateSnapshotInterface` method on the proxy to evaluate the `access_rule` for every exit during each render cycle.
+- **StateManager**: The `Exits` module is fundamentally dependent on the `StateManager`. It gets the static list of all exits from the `staticDataCache` and uses the `createSnapshotInterface` method on the proxy to evaluate the `access_rule` for every exit during each render cycle.
 - **CommonUI**: It makes extensive use of `commonUI.renderLogicTree` to display the accessibility rules and `commonUI.createRegionLink` to create clickable links for the source and destination regions.
 - **LoopState**: In Loop Mode, the UI queries `loopStateSingleton` to determine if an exit has been discovered and queues actions to it upon user interaction.

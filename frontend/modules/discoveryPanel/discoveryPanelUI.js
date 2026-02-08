@@ -33,7 +33,10 @@ export class DiscoveryPanelUI {
       undiscoveredDisplay: 'hidden',
       showDebugOptions: true,
       clickDiscoversLocation: true,
-      showUndiscoveredDetails: false
+      clickDiscoversRegion: false,
+      disableLocationCheckUI: false,
+      showUndiscoveredDetails: false,
+      showUndiscoveredRegionNames: false
     };
 
     // Section collapse state
@@ -298,8 +301,17 @@ export class DiscoveryPanelUI {
       this.settings.clickDiscoversLocation = await settingsManager.getSetting(
         'moduleSettings.discovery.clickDiscoversLocation', true
       );
+      this.settings.clickDiscoversRegion = await settingsManager.getSetting(
+        'moduleSettings.discovery.clickDiscoversRegion', false
+      );
+      this.settings.disableLocationCheckUI = await settingsManager.getSetting(
+        'moduleSettings.discovery.disableLocationCheckUI', false
+      );
       this.settings.showUndiscoveredDetails = await settingsManager.getSetting(
         'moduleSettings.discovery.showUndiscoveredDetails', false
+      );
+      this.settings.showUndiscoveredRegionNames = await settingsManager.getSetting(
+        'moduleSettings.discovery.showUndiscoveredRegionNames', false
       );
       log('info', '[DiscoveryPanelUI] Settings loaded:', this.settings);
     } catch (error) {
@@ -409,6 +421,27 @@ export class DiscoveryPanelUI {
         { value: 'hidden', label: 'Hide entirely' },
         { value: 'placeholder', label: 'Show as "???"' }
       ]
+    ));
+
+    // Show Undiscovered Region Names
+    content.appendChild(this.createBooleanSetting(
+      'showUndiscoveredRegionNames',
+      'Show Undiscovered Region Names',
+      'Show region names instead of "???" for undiscovered regions that have a discovered exit leading to them'
+    ));
+
+    // Click Discovers Region
+    content.appendChild(this.createBooleanSetting(
+      'clickDiscoversRegion',
+      'Click Discovers Region',
+      'Clicking an undiscovered region in the Region Graph or Regions panel discovers it'
+    ));
+
+    // Disable Location Check UI
+    content.appendChild(this.createBooleanSetting(
+      'disableLocationCheckUI',
+      'Disable Location Check UI',
+      'Prevent location check actions when clicking locations (useful for entrance shuffle exploration)'
     ));
 
     // Show Debug Options toggle

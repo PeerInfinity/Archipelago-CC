@@ -528,8 +528,9 @@ def get_random_value(name, option, disallowed=None, max_item_dict_value=None):
         return option.default
 
     if issubclass(option, OptionSet):
+        min_k = 1 if hasattr(option, 'schema') else 0
         return random.sample(
-            list(option.valid_keys), k=random.randint(0, len(option.valid_keys))
+            list(option.valid_keys), k=random.randint(min_k, len(option.valid_keys))
         )
 
     if issubclass(option, OptionList):
