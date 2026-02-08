@@ -278,14 +278,13 @@
             "name": "Building a MAM",
             "connected_region": "Achievements needing a MAM",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "build_mam",
-                "inferred": true,
-                "description": "Requires ability to build mam",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_build_mam",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           },
           {
@@ -318,20 +317,58 @@
             "name": "Using first level building",
             "connected_region": "Levels with 1 building",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           },
           {
             "name": "Using first upgrade building",
             "connected_region": "Upgrades with 1 building",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           },
           {
@@ -401,14 +438,13 @@
             "name": "Stitching complex shapes",
             "connected_region": "Shapesanity Stitched Uncolored",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "make_stitched_shape",
-                "inferred": true,
-                "description": "Requires ability to make stitched shape",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_make_stitched_shape",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           },
           {
@@ -693,10 +729,29 @@
             "name": "Using second level building",
             "connected_region": "Levels with 2 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -766,10 +821,29 @@
             "name": "Using third level building",
             "connected_region": "Levels with 3 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                },
+                {
+                  "rule": "True_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -839,10 +913,29 @@
             "name": "Using fourth level building",
             "connected_region": "Levels with 4 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -912,10 +1005,29 @@
             "name": "Using fifth level building",
             "connected_region": "Levels with 5 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer",
+                  "Stacker"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -1132,10 +1244,29 @@
             "name": "Using second upgrade building",
             "connected_region": "Upgrades with 2 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -1205,10 +1336,29 @@
             "name": "Using third upgrade building",
             "connected_region": "Upgrades with 3 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  }
+                },
+                {
+                  "rule": "True_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -1278,10 +1428,29 @@
             "name": "Using fourth upgrade building",
             "connected_region": "Upgrades with 4 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -1365,10 +1534,29 @@
             "name": "Using fifth upgrade building",
             "connected_region": "Upgrades with 5 buildings",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Logic_List_Building"
-              }
+              "rule": "has_logic_list_building",
+              "_original_ast_type": "helper",
+              "args": [
+                [
+                  "Stacker",
+                  "Cutter",
+                  "Rotator",
+                  "Painter",
+                  "Color Mixer"
+                ],
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  }
+                },
+                {
+                  "rule": "False_"
+                },
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           }
         ],
@@ -1792,10 +1980,16 @@
             "name": "Delivering per second with 1.6x belt speed",
             "connected_region": "Achievements with x1.6 belt speed",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "X_Belt_Multiplier"
-              }
+              "rule": "has_x_belt_multiplier",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 1.6
+                  }
+                }
+              ]
             }
           }
         ],
