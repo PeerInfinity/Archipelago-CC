@@ -10,29 +10,29 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2026-02-08 03:48:09
+**Generated:** 2026-02-07 14:01:39
 
-**Source Data Created:** 2026-02-08T03:48:07.891854
+**Source Data Created:** 2026-02-07T06:42:12.036116
 
-**Source Data Last Updated:** 2026-02-08T03:48:07.891870
+**Source Data Last Updated:** 2026-02-07T06:42:12.036127
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 67 (89.3%)
-- **Failed:** 8 (10.7%)
+- **Passed:** 74 (98.7%)
+- **Failed:** 1 (1.3%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 70
-- **Second Pass Failed:** 3
+- **Second Pass Tested:** 74
+- **Second Pass Passed:** 74
+- **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 38/67 (56.7% of passed)
-- **Passing with Generic Logic:** 64/67 (95.5% of passed)
-- **Passing with Both Generic:** 38/67 (56.7% of passed)
+- **Passing with Generic Exporter:** 41/74 (55.4% of passed)
+- **Passing with Generic Logic:** 68/74 (91.9% of passed)
+- **Passing with Both Generic:** 41/74 (55.4% of passed)
 
 ## Test Results
 
@@ -57,7 +57,7 @@
 | Coding Adventure | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 1.2KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| DOOM II | ❌ Failed | ❌ Failed | 2 | 2 | ✅ | ✅ |
+| DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | EarthBound | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -77,7 +77,7 @@
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Math Adventure | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| MegaMan Battle Network 3 | ❌ Failed | ❌ Failed | 4 | 4 | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
@@ -87,7 +87,7 @@
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Satisfactory | ❌ Failed | ❌ Failed | 5 | 5 | 40.5KB | ✅ |
+| Satisfactory | ❌ Failed | — | 5 | 5 | 35.2KB | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
@@ -97,7 +97,7 @@
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 96.3KB | ✅ |
-| Super Mario World | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
+| Super Mario World | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 7 | 7 | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
@@ -107,7 +107,7 @@
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 15.2KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 14.1KB | ✅ |
-| Timespinner | ❌ Failed | — | 6 | 6 | 2.2KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 6 | 6 | 2.2KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 3.8KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
@@ -241,7 +241,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
 
-### DOOM II ❌ (Split 10)
+### DOOM II ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -409,7 +409,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Inscryption.yaml |
 | 4 | Mega Man 2.yaml |
 
-### MegaMan Battle Network 3 ❌ (Split 10)
+### MegaMan Battle Network 3 ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -617,7 +617,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Risk of Rain 2.yaml |
 | 6 | Super Mario Land 2.yaml |
 
-### Super Mario World ❌ (Split 10)
+### Super Mario World ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -625,8 +625,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Satisfactory.yaml |
-| 6 | Super Mario World.yaml |
+| 5 | Super Mario World.yaml |
 
 ### Super Metroid ✅ (Split 1)
 
@@ -736,7 +735,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Super Mario Land 2.yaml |
 | 7 | The Witness.yaml |
 
-### Timespinner ❌ (Split 10)
+### Timespinner ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -744,7 +743,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Satisfactory.yaml |
+| 5 | Super Mario World.yaml |
 | 6 | Timespinner.yaml |
 
 ### Undertale ✅ (Split 1)
@@ -817,29 +816,16 @@ Shows which templates were in the multiworld when each game was tested:
 
 When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
 
-### Super Mario World (Super Mario World.yaml)
+### Satisfactory (Satisfactory.yaml)
 
-**Failing pairs found:** 1
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Castlevania - Circle of the Moon.yaml | ✅ | ✅ | ✅ | ✅ |
-| DOOM II.yaml | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| MegaMan Battle Network 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Satisfactory.yaml | ❌ | ✅ | ✅ | ❌ |
-
-### Timespinner (Timespinner.yaml)
-
-**Failing pairs found:** 1
+**Failing pairs found:** 4
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
-| Castlevania - Circle of the Moon.yaml | ✅ | ✅ | ✅ | ✅ |
-| DOOM II.yaml | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| MegaMan Battle Network 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Satisfactory.yaml | ❌ | ✅ | ✅ | ❌ |
+| Castlevania - Circle of the Moon.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM II.yaml | ❌ | ✅ | ✅ | ❌ |
+| Kingdom Hearts 2.yaml | ❌ | ✅ | ✅ | ❌ |
+| MegaMan Battle Network 3.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Second Pass Results
@@ -857,7 +843,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Baking Adventure | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
-| Castlevania - Circle of the Moon | 1 | 5 | 1 | ✅ Passed |
+| Castlevania - Circle of the Moon | 1 | 6 | 1 | ✅ Passed |
 | Castlevania 64 | 2 | 8 | 2 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
@@ -867,7 +853,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Coding Adventure | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
-| DOOM II | 2 | 5 | 2 | ❌ Failed |
+| DOOM II | 2 | 6 | 2 | ✅ Passed |
 | Dark Souls III | 3 | 8 | 3 | ✅ Passed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | EarthBound | 3 | 8 | 3 | ✅ Passed |
@@ -878,7 +864,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Hylics 2 | 3 | 7 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts | 4 | 8 | 4 | ✅ Passed |
-| Kingdom Hearts 2 | 3 | 4 | 2 | ✅ Passed |
+| Kingdom Hearts 2 | 3 | 6 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 4 | 8 | 4 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
@@ -887,7 +873,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | Math Adventure | 4 | 7 | 4 | ✅ Passed |
 | Mega Man 2 | 4 | 7 | 4 | ✅ Passed |
-| MegaMan Battle Network 3 | 4 | 4 | 3 | ❌ Failed |
+| MegaMan Battle Network 3 | 4 | 6 | 4 | ✅ Passed |
 | Meritous | 5 | 8 | 5 | ✅ Passed |
 | Metamath | 5 | 8 | 5 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
@@ -897,7 +883,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 5 | 7 | 5 | ✅ Passed |
-| Satisfactory | 5 | 3 | 3 | ❌ Failed |
 | Saving Princess | 6 | 8 | 6 | ✅ Passed |
 | Secret of Evermore | 6 | 8 | 6 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
@@ -907,6 +892,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
+| Super Mario World | 5 | 6 | 5 | ✅ Passed |
 | Super Metroid | 7 | 8 | 7 | ✅ Passed |
 | TOEM original | 7 | 8 | 7 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
@@ -916,6 +902,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | The Messenger | 7 | 7 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
+| Timespinner | 6 | 6 | 6 | ✅ Passed |
 | Undertale | 8 | 8 | 8 | ✅ Passed |
 | VVVVVV | 8 | 8 | 8 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
@@ -1047,7 +1034,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Satisfactory.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Timespinner.yaml |
 
 #### Castlevania 64 ✅ (Split 1)
 
@@ -1162,7 +1150,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | The Witness.yaml |
 
-#### DOOM II ❌ (Split 10)
+#### DOOM II ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1170,7 +1158,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Satisfactory.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Timespinner.yaml |
 
 #### Dark Souls III ✅ (Split 1)
 
@@ -1303,9 +1292,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
-| 2 | Kingdom Hearts 2.yaml |
-| 3 | MegaMan Battle Network 3.yaml |
-| 4 | Satisfactory.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Timespinner.yaml |
 
 #### Kirby's Dream Land 3 ✅ (Split 2)
 
@@ -1407,14 +1398,16 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | The Witness.yaml |
 
-#### MegaMan Battle Network 3 ❌ (Split 10)
+#### MegaMan Battle Network 3 ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
-| 2 | Kingdom Hearts 2.yaml |
-| 3 | MegaMan Battle Network 3.yaml |
-| 4 | Satisfactory.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Timespinner.yaml |
 
 #### Meritous ✅ (Split 1)
 
@@ -1529,14 +1522,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | The Witness.yaml |
 
-#### Satisfactory ❌ (Split 10)
-
-| Player # | Template |
-|----------|----------|
-| 1 | Castlevania - Circle of the Moon.yaml |
-| 2 | Kingdom Hearts 2.yaml |
-| 3 | Satisfactory.yaml |
-
 #### Saving Princess ✅ (Split 1)
 
 | Player # | Template |
@@ -1649,6 +1634,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Risk of Rain 2.yaml |
 | 6 | Super Mario Land 2.yaml |
 | 7 | The Witness.yaml |
+
+#### Super Mario World ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Timespinner.yaml |
 
 #### Super Metroid ✅ (Split 1)
 
@@ -1763,6 +1759,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario Land 2.yaml |
 | 7 | The Witness.yaml |
 
+#### Timespinner ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | Super Mario World.yaml |
+| 6 | Timespinner.yaml |
+
 #### Undertale ✅ (Split 1)
 
 | Player # | Template |
@@ -1827,40 +1834,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Starcraft 2.yaml |
 | 7 | Terraria.yaml |
 | 8 | shapez.yaml |
-
-### Second Pass Bisection Results
-
-When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-#### DOOM II (DOOM II.yaml)
-
-**Failing pairs found:** 1
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Castlevania - Circle of the Moon.yaml | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| MegaMan Battle Network 3.yaml | ✅ | ✅ | ✅ | ✅ |
-| Satisfactory.yaml | ❌ | ✅ | ❌ | ✅ |
-
-#### MegaMan Battle Network 3 (MegaMan Battle Network 3.yaml)
-
-**Failing pairs found:** 1
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Castlevania - Circle of the Moon.yaml | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Satisfactory.yaml | ❌ | ✅ | ❌ | ✅ |
-
-#### Satisfactory (Satisfactory.yaml)
-
-**Failing pairs found:** 2
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Castlevania - Circle of the Moon.yaml | ❌ | ✅ | ❌ | ✅ |
-| Kingdom Hearts 2.yaml | ❌ | ✅ | ❌ | ✅ |
 
 
 ## Notes

@@ -143,11 +143,20 @@ export class ComparisonEngine {
     }
 
     // staticData.locations is always a Map after initialization
+    // Convert flags array to Set for O(1) lookup instead of O(N) array.includes()
+    // This is critical for games with many locations (e.g., coinsanity with 1500+ locations)
+    const flagsSet = new Set(currentWorkerSnapshot.flags || []);
+
+    // Create a shared helper cache for all location evaluations in this comparison.
+    // This allows helper results to be cached and reused across locations,
+    // significantly improving performance for games with many locations that use
+    // shared helpers (e.g., coinsanity in Mario Land 2 with is_auto_scroll helper).
+    const sharedHelperCache = new Map();
+
     for (const [locName, locDef] of staticData.locations.entries()) {
 
       // Check against the worker's snapshot flags
-      const isChecked = currentWorkerSnapshot.flags?.includes(locName);
-      if (isChecked) continue;
+      if (flagsSet.has(locName)) continue;
 
       const parentRegionName = locDef.parent_region || locDef.region;
       // Use reachability from the worker's snapshot
@@ -166,6 +175,9 @@ export class ComparisonEngine {
           staticData,
           { location: locDef, playerId: playerId } // Pass location and playerId for multiworld
         );
+
+        // Inject shared helper cache for cross-location caching
+        locationSnapshotInterface._helperCache = sharedHelperCache;
 
         locationRuleEvalResult = evaluateRule(
           locationAccessRule,

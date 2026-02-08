@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2026-02-08 03:48:09
+**Generated:** 2026-02-07 14:01:39
 
-**Source Data Created:** 2026-02-08T02:57:06.109476
+**Source Data Created:** 2026-02-07T05:53:53.116862
 
-**Source Data Last Updated:** 2026-02-08T02:57:06.109484
+**Source Data Last Updated:** 2026-02-07T05:53:53.116867
 
 [View APWorld Template Results](./test-results-summary-apworld.md)
 
@@ -29,10 +29,10 @@ Additional information:
 
 ### Individual Test Results
 
-- **Minimal Test:** 75/75 passed (100.0%)
-- **Full Test:** 75/75 passed (100.0%)
-- **Multiclient Test:** 75/75 passed (100.0%)
-- **Multiworld Test:** 70/75 passed (93.3%)
+- **Minimal Test:** 74/75 passed (98.7%)
+- **Full Test:** 74/75 passed (98.7%)
+- **Multiclient Test:** 74/75 passed (98.7%)
+- **Multiworld Test:** 74/75 passed (98.7%)
 
 ### Intermittent Failures
 
@@ -43,25 +43,25 @@ Additional information:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 70/75 (93.3%)
-- **Templates passing 3 tests:** 5/75 (6.7%)
+- **Templates passing all 4 tests:** 74/75 (98.7%)
+- **Templates passing 3 tests:** 0/75 (0.0%)
 - **Templates passing 2 tests:** 0/75 (0.0%)
 - **Templates passing 1 test:** 0/75 (0.0%)
-- **Templates passing 0 tests:** 0/75 (0.0%)
+- **Templates passing 0 tests:** 1/75 (1.3%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 70 templates passing all 4 tests:
+Of the 74 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 38/70 (54.3%)
-- **Passing with Generic Logic:** 64/70 (91.4%)
-- **Passing with Both Generic:** 38/70 (54.3%)
+- **Passing with Generic Exporter:** 41/74 (55.4%)
+- **Passing with Generic Logic:** 68/74 (91.9%)
+- **Passing with Both Generic:** 41/74 (55.4%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 514.7KB
+- **Total Exporter Code:** 509.4KB
 - **Total Game Logic Code:** 271.1KB
-- **Combined Total:** 785.8KB
+- **Combined Total:** 780.6KB
 
 ## Test Results
 
@@ -86,7 +86,7 @@ Of the 70 templates passing all 4 tests:
 | Coding Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.9KB |
 | DLCQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.2KB | ✅ | 51.0KB |
 | DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 280.1KB |
-| DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 326.5KB |
+| DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 326.5KB |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1062.0KB |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 122.5KB |
 | EarthBound | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 343.8KB |
@@ -106,7 +106,7 @@ Of the 70 templates passing all 4 tests:
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 398.8KB |
 | Math Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.6KB |
 | Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 51.5KB |
-| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 209.8KB |
+| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 57.2KB |
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 48.1KB |
 | Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 233.5KB |
@@ -116,7 +116,7 @@ Of the 70 templates passing all 4 tests:
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 123.7KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.5KB | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 146.1KB |
-| Satisfactory | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 40.5KB | ✅ | 1703.4KB |
+| Satisfactory | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ✅ | 35.2KB | ✅ | 1703.4KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | 7.5KB | 418.7KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.3KB |
@@ -126,7 +126,7 @@ Of the 70 templates passing all 4 tests:
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 207.8KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 101.9KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 96.3KB | ✅ | 982.7KB |
-| Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ | 178.2KB |
+| Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 60.9KB | 114.5KB | 625.4KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 102.8KB |
 | TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 102.8KB |
@@ -136,7 +136,7 @@ Of the 70 templates passing all 4 tests:
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.2KB | ✅ | 211.8KB |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 253.9KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.1KB | ✅ | 398.4KB |
-| Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 2.2KB | ✅ | 267.3KB |
+| Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.2KB | ✅ | 267.3KB |
 | Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 58.0KB |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 22.8KB |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 44.7KB |
@@ -164,8 +164,8 @@ Of the 70 templates passing all 4 tests:
 |------|-----------|---------------|
 | 1 | Super Mario Land 2 | 96.3KB |
 | 2 | Super Metroid | 60.9KB |
-| 3 | Satisfactory | 40.5KB |
-| 4 | Lingo | 38.0KB |
+| 3 | Lingo | 38.0KB |
+| 4 | Satisfactory | 35.2KB |
 | 5 | Starcraft 2 | 28.7KB |
 | 6 | Overcooked! 2 | 28.5KB |
 | 7 | Kingdom Hearts 2 | 19.5KB |

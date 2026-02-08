@@ -10,25 +10,25 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2026-02-08 03:48:09
+**Generated:** 2026-02-07 14:01:39
 
-**Source Data Created:** 2026-02-08T03:28:41.434681
+**Source Data Created:** 2026-02-07T06:32:39.326007
 
-**Source Data Last Updated:** 2026-02-08T03:28:41.434686
+**Source Data Last Updated:** 2026-02-07T06:32:39.326013
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 75 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 74 (98.7%)
+- **Failed:** 1 (1.3%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 41/75 (54.7% of passed)
-- **Passing with Generic Logic:** 69/75 (92.0% of passed)
-- **Passing with Both Generic:** 41/75 (54.7% of passed)
+- **Passing with Generic Exporter:** 41/74 (55.4% of passed)
+- **Passing with Generic Logic:** 68/74 (91.9% of passed)
+- **Passing with Both Generic:** 41/74 (55.4% of passed)
 
 ## Test Results
 
@@ -83,7 +83,7 @@
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.5KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
-| Satisfactory | ✅ Passed | 0 | ✅ | 555/555 | 377/377 | 178/178 | ✅ | 555/555 | 40.5KB | ✅ |
+| Satisfactory | ❌ Failed | 0 | ❌ | 0/555 | 0/377 | 0/178 | ❌ | 0/555 | 35.2KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 5.3KB | 7.5KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
