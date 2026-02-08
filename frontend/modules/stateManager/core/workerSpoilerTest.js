@@ -464,9 +464,13 @@ export class WorkerSpoilerTest {
       // helper called 406+ times with the same arguments).
       const sharedHelperCache = this.sm._spoilerTestHelperCache || (this.sm._spoilerTestHelperCache = new Map());
 
+      // Convert flags array to Set for O(1) lookup instead of O(N) array.includes()
+      // This is critical for games with many locations (e.g., coinsanity with 1500+ locations)
+      const flagsSet = new Set(snapshot.flags || []);
+
       for (const [locName, locDef] of locationEntries) {
         // Skip checked locations
-        if (snapshot.flags?.includes(locName)) continue;
+        if (flagsSet.has(locName)) continue;
 
         // Check if location is accessible
         const parentRegion = locDef.parent_region || locDef.region;
