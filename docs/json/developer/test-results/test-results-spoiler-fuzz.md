@@ -4,11 +4,11 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-02-07 22:52:34
+**Generated:** 2026-02-08 01:58:03
 
-**Source Data Created:** 2026-02-07T22:52:34.679215
+**Source Data Created:** 2026-02-08T01:58:02.965160
 
-**Source Data Last Updated:** 2026-02-07T22:52:34.679221
+**Source Data Last Updated:** 2026-02-08T01:58:02.965166
 
 **Seed Mode:** Fixed (seed=1)
 
@@ -21,12 +21,12 @@
 ## Summary
 
 - **Total Games:** 75
-- **Games with 100% Pass Rate:** 62 (82.7%)
-- **Games with Failures:** 13 (17.3%)
+- **Games with 100% Pass Rate:** 63 (84.0%)
+- **Games with Failures:** 12 (16.0%)
 - **Total Fuzz Runs:** 750
-- **Successful Runs:** 657 (87.6%)
+- **Successful Runs:** 665 (88.7%)
 - **Generation Failures:** 14
-- **Test Failures:** 52
+- **Test Failures:** 46
 - **Timed Out Runs:** 0
 
 ## Test Results
@@ -58,7 +58,7 @@
 | EarthBound | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 343.8KB |
 | Factorio | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 295.4KB |
 | Faxanadu | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 68.7KB |
-| Final Fantasy Mystic Quest | ❌ | 10 | 6 | 2 | 2 | 0 | ⚠️ 60.0% | 549.5KB |
+| Final Fantasy Mystic Quest | ❌ | 10 | 5 | 2 | 3 | 0 | ⚠️ 50.0% | 549.5KB |
 | Heretic | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 367.5KB |
 | Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.9KB |
 | Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 84.2KB |
@@ -82,18 +82,18 @@
 | Paint | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 123.7KB |
 | Raft | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 205.9KB |
 | Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 146.1KB |
-| Satisfactory | ❌ | 10 | 0 | 0 | 10 | 0 | ❌ 0.0% | 1703.4KB |
+| Satisfactory | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 1703.4KB |
 | Saving Princess | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 33.8KB |
 | Secret of Evermore | ❌ | 10 | 7 | 0 | 3 | 0 | ⚠️ 70.0% | 418.7KB |
 | Shivers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 151.3KB |
 | Sonic Adventure 2 Battle | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 266.2KB |
 | Starcraft 2 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% | 1126.8KB |
-| Stardew Valley | ❌ | 10 | 3 | 0 | 7 | 0 | ❌ 30.0% | 2430.2KB |
+| Stardew Valley | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 2430.2KB |
 | Subnautica | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 207.8KB |
 | Super Mario 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 101.9KB |
 | Super Mario Land 2 | ❌ | 10 | 9 | 0 | 1 | 0 | 90.0% | 982.7KB |
 | Super Mario World | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 178.2KB |
-| Super Metroid | ❌ | 10 | 0 | 2 | 3 | 0 | ❌ 0.0% | 625.4KB |
+| Super Metroid | ❌ | 10 | 0 | 2 | 5 | 0 | ❌ 0.0% | 625.4KB |
 | TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** | 102.8KB |
 | TUNIC | ❌ | 10 | 2 | 0 | 8 | 0 | ❌ 20.0% | 653.3KB |
