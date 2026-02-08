@@ -17,462 +17,264 @@
             "name": "Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern",
             "connected_region": "Dragon Roost Cavern",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_dungeon_entrance_on_dragon_roost_island",
-                "inferred": true,
-                "description": "Requires ability to access dungeon entrance on dragon roost island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_dungeon_entrance_on_dragon_roost_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Dungeon Entrance in Forest Haven Sector -> Forbidden Woods",
             "connected_region": "Forbidden Woods",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_dungeon_entrance_in_forest_haven_sector",
-                "inferred": true,
-                "description": "Requires ability to access dungeon entrance in forest haven sector",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_dungeon_entrance_in_forest_haven_sector",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods",
             "connected_region": "Tower of the Gods",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_dungeon_entrance_in_tower_of_the_gods_sector",
-                "inferred": true,
-                "description": "Requires ability to access dungeon entrance in tower of the gods sector",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_dungeon_entrance_in_tower_of_the_gods_sector",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Dungeon Entrance on Headstone Island -> Earth Temple",
             "connected_region": "Earth Temple",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_dungeon_entrance_on_headstone_island",
-                "inferred": true,
-                "description": "Requires ability to access dungeon entrance on headstone island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_dungeon_entrance_on_headstone_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Dungeon Entrance on Gale Isle -> Wind Temple",
             "connected_region": "Wind Temple",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_dungeon_entrance_on_gale_isle",
-                "inferred": true,
-                "description": "Requires ability to access dungeon entrance on gale isle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_dungeon_entrance_on_gale_isle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Miniboss Entrance in Hyrule Castle -> Master Sword Chamber",
             "connected_region": "Master Sword Chamber",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_miniboss_entrance_in_hyrule_castle",
-                "inferred": true,
-                "description": "Requires ability to access miniboss entrance in hyrule castle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_miniboss_entrance_in_hyrule_castle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena",
             "connected_region": "Helmaroc King Boss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_boss_entrance_in_forsaken_fortress",
-                "inferred": true,
-                "description": "Requires ability to access boss entrance in forsaken fortress",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_boss_entrance_in_forsaken_fortress",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Outset Island -> Savage Labyrinth",
             "connected_region": "Savage Labyrinth",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_outset_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on outset island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_outset_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Dragon Roost Island -> Dragon Roost Island Secret Cave",
             "connected_region": "Dragon Roost Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_dragon_roost_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on dragon roost island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_dragon_roost_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Fire Mountain -> Fire Mountain Secret Cave",
             "connected_region": "Fire Mountain Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_fire_mountain",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on fire mountain",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_fire_mountain",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Ice Ring Isle -> Ice Ring Isle Secret Cave",
             "connected_region": "Ice Ring Isle Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_ice_ring_isle",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on ice ring isle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_ice_ring_isle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Private Oasis -> Cabana Labyrinth",
             "connected_region": "Cabana Labyrinth",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_private_oasis",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on private oasis",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_private_oasis",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Needle Rock Isle -> Needle Rock Isle Secret Cave",
             "connected_region": "Needle Rock Isle Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_needle_rock_isle",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on needle rock isle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_needle_rock_isle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave",
             "connected_region": "Angular Isles Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_angular_isles",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on angular isles",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_angular_isles",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Boating Course -> Boating Course Secret Cave",
             "connected_region": "Boating Course Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_boating_course",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on boating course",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_boating_course",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave",
             "connected_region": "Stone Watcher Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_stone_watcher_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on stone watcher island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_stone_watcher_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave",
             "connected_region": "Overlook Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_overlook_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on overlook island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_overlook_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave",
             "connected_region": "Bird's Peak Rock Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_birds_peak_rock",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on birds peak rock",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_birds_peak_rock",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave",
             "connected_region": "Pawprint Isle Chuchu Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_pawprint_isle",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on pawprint isle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_pawprint_isle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave",
             "connected_region": "Pawprint Isle Wizzrobe Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_pawprint_isle_side_isle",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on pawprint isle side isle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_pawprint_isle_side_isle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave",
             "connected_region": "Diamond Steppe Island Warp Maze Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_diamond_steppe_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on diamond steppe island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_diamond_steppe_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Bomb Island -> Bomb Island Secret Cave",
             "connected_region": "Bomb Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_bomb_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on bomb island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_bomb_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave",
             "connected_region": "Rock Spire Isle Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_rock_spire_isle",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on rock spire isle",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_rock_spire_isle",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Shark Island -> Shark Island Secret Cave",
             "connected_region": "Shark Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_shark_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on shark island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_shark_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave",
             "connected_region": "Cliff Plateau Isles Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_cliff_plateau_isles",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on cliff plateau isles",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_cliff_plateau_isles",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Horseshoe Island -> Horseshoe Island Secret Cave",
             "connected_region": "Horseshoe Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_horseshoe_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on horseshoe island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_horseshoe_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Secret Cave Entrance on Star Island -> Star Island Secret Cave",
             "connected_region": "Star Island Secret Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_secret_cave_entrance_on_star_island",
-                "inferred": true,
-                "description": "Requires ability to access secret cave entrance on star island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_secret_cave_entrance_on_star_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain",
             "connected_region": "Outset Fairy Fountain",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_fairy_fountain_entrance_on_outset_island",
-                "inferred": true,
-                "description": "Requires ability to access fairy fountain entrance on outset island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_fairy_fountain_entrance_on_outset_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain",
             "connected_region": "Thorned Fairy Fountain",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_fairy_fountain_entrance_on_thorned_fairy_island",
-                "inferred": true,
-                "description": "Requires ability to access fairy fountain entrance on thorned fairy island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_fairy_fountain_entrance_on_thorned_fairy_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Fairy Fountain Entrance on Eastern Fairy Island -> Eastern Fairy Fountain",
             "connected_region": "Eastern Fairy Fountain",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_fairy_fountain_entrance_on_eastern_fairy_island",
-                "inferred": true,
-                "description": "Requires ability to access fairy fountain entrance on eastern fairy island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_fairy_fountain_entrance_on_eastern_fairy_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain",
             "connected_region": "Western Fairy Fountain",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_fairy_fountain_entrance_on_western_fairy_island",
-                "inferred": true,
-                "description": "Requires ability to access fairy fountain entrance on western fairy island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_fairy_fountain_entrance_on_western_fairy_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain",
             "connected_region": "Southern Fairy Fountain",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_fairy_fountain_entrance_on_southern_fairy_island",
-                "inferred": true,
-                "description": "Requires ability to access fairy fountain entrance on southern fairy island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_fairy_fountain_entrance_on_southern_fairy_island",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain",
             "connected_region": "Northern Fairy Fountain",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_fairy_fountain_entrance_on_northern_fairy_island",
-                "inferred": true,
-                "description": "Requires ability to access fairy fountain entrance on northern fairy island",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_fairy_fountain_entrance_on_northern_fairy_island",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -481,14 +283,8 @@
             "name": "Defeat Ganondorf",
             "id": null,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "reach_and_defeat_ganondorf",
-                "inferred": true,
-                "description": "Requires ability to reach and defeat ganondorf",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_reach_and_defeat_ganondorf",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Victory",
@@ -506,14 +302,8 @@
             "name": "Forsaken Fortress - Chest Guarded By Bokoblin",
             "id": 2326645,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "get_inside_forsaken_fortress",
-                "inferred": true,
-                "description": "Requires ability to get inside forsaken fortress",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_get_inside_forsaken_fortress",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "FF Dungeon Map",
@@ -531,14 +321,8 @@
             "name": "Forsaken Fortress - Chest Inside Lower Jail Cell",
             "id": 2326644,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "get_inside_forsaken_fortress",
-                "inferred": true,
-                "description": "Requires ability to get inside forsaken fortress",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_get_inside_forsaken_fortress",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Triforce Shard 2",
@@ -622,14 +406,8 @@
             "name": "Forsaken Fortress - Phantom Ganon",
             "id": 2326642,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "reach_and_defeat_phantom_ganon",
-                "inferred": true,
-                "description": "Requires ability to reach and defeat phantom ganon",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_reach_and_defeat_phantom_ganon",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Orange Rupee",
@@ -696,10 +474,8 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item",
             "id": 2326758,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Any_Wallet_Upgrade"
-              }
+              "rule": "has_any_wallet_upgrade",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Bomb Bag Capacity Upgrade",
@@ -717,10 +493,8 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
             "id": 2326760,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Any_Wallet_Upgrade"
-              }
+              "rule": "has_any_wallet_upgrade",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Progressive Shield",
@@ -738,10 +512,8 @@
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item",
             "id": 2326759,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Any_Wallet_Upgrade"
-              }
+              "rule": "has_any_wallet_upgrade",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Orange Rupee",
@@ -857,14 +629,8 @@
             "name": "Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena",
             "connected_region": "Gohma Boss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_boss_entrance_in_dragon_roost_cavern",
-                "inferred": true,
-                "description": "Requires ability to access boss entrance in dragon roost cavern",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_boss_entrance_in_dragon_roost_cavern",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -971,14 +737,8 @@
             "name": "Dragon Roost Cavern - Boss Stairs Left Chest",
             "id": 2326601,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "reach_dragon_roost_cavern_boss_stairs",
-                "inferred": true,
-                "description": "Requires ability to reach dragon roost cavern boss stairs",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_reach_dragon_roost_cavern_boss_stairs",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "DRC Dungeon Map",
@@ -996,14 +756,8 @@
             "name": "Dragon Roost Cavern - Boss Stairs Right Chest",
             "id": 2326600,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "reach_dragon_roost_cavern_boss_stairs",
-                "inferred": true,
-                "description": "Requires ability to reach dragon roost cavern boss stairs",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_reach_dragon_roost_cavern_boss_stairs",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Deku Leaf",
@@ -1256,28 +1010,16 @@
             "name": "Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena",
             "connected_region": "Forbidden Woods Miniboss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_miniboss_entrance_in_forbidden_woods",
-                "inferred": true,
-                "description": "Requires ability to access miniboss entrance in forbidden woods",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_miniboss_entrance_in_forbidden_woods",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena",
             "connected_region": "Kalle Demos Boss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_boss_entrance_in_forbidden_woods",
-                "inferred": true,
-                "description": "Requires ability to access boss entrance in forbidden woods",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_boss_entrance_in_forbidden_woods",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1768,28 +1510,16 @@
             "name": "Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena",
             "connected_region": "Tower of the Gods Miniboss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_miniboss_entrance_in_tower_of_the_gods",
-                "inferred": true,
-                "description": "Requires ability to access miniboss entrance in tower of the gods",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_miniboss_entrance_in_tower_of_the_gods",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Boss Entrance in Tower of the Gods -> Gohdan Boss Arena",
             "connected_region": "Gohdan Boss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_boss_entrance_in_tower_of_the_gods",
-                "inferred": true,
-                "description": "Requires ability to access boss entrance in tower of the gods",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_boss_entrance_in_tower_of_the_gods",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -1798,14 +1528,8 @@
             "name": "Tower of the Gods - Big Key Chest",
             "id": 2326639,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "reach_tower_of_the_gods_third_floor",
-                "inferred": true,
-                "description": "Requires ability to reach tower of the gods third floor",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_reach_tower_of_the_gods_third_floor",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Empty Bottle",
@@ -2127,28 +1851,16 @@
             "name": "Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena",
             "connected_region": "Earth Temple Miniboss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_miniboss_entrance_in_earth_temple",
-                "inferred": true,
-                "description": "Requires ability to access miniboss entrance in earth temple",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_miniboss_entrance_in_earth_temple",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Boss Entrance in Earth Temple -> Jalhalla Boss Arena",
             "connected_region": "Jalhalla Boss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_boss_entrance_in_earth_temple",
-                "inferred": true,
-                "description": "Requires ability to access boss entrance in earth temple",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_boss_entrance_in_earth_temple",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2267,14 +1979,8 @@
             "name": "Earth Temple - Casket in Second Crypt",
             "id": 2326664,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "reach_earth_temple_moblins_and_poes_room",
-                "inferred": true,
-                "description": "Requires ability to reach earth temple moblins and poes room",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_reach_earth_temple_moblins_and_poes_room",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "ET Dungeon Map",
@@ -2666,28 +2372,16 @@
             "name": "Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena",
             "connected_region": "Wind Temple Miniboss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_miniboss_entrance_in_wind_temple",
-                "inferred": true,
-                "description": "Requires ability to access miniboss entrance in wind temple",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_miniboss_entrance_in_wind_temple",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "Boss Entrance in Wind Temple -> Molgera Boss Arena",
             "connected_region": "Molgera Boss Arena",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_boss_entrance_in_wind_temple",
-                "inferred": true,
-                "description": "Requires ability to access boss entrance in wind temple",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_boss_entrance_in_wind_temple",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -2933,14 +2627,8 @@
             "name": "Wind Temple - Chest In Middle Of Hub Room",
             "id": 2326684,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "open_wind_temple_upper_giant_grate",
-                "inferred": true,
-                "description": "Requires ability to open wind temple upper giant grate",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_open_wind_temple_upper_giant_grate",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Piece of Heart",
@@ -2958,14 +2646,8 @@
             "name": "Wind Temple - Chest at Top of Hub Room",
             "id": 2326688,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "activate_wind_temple_giant_fan",
-                "inferred": true,
-                "description": "Requires ability to activate wind temple giant fan",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_activate_wind_temple_giant_fan",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "WT Small Key",
@@ -3119,14 +2801,8 @@
             "name": "Forbidden Woods - Mothula Miniboss Room",
             "id": 2326616,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_winged_mothulas",
-                "inferred": true,
-                "description": "Requires ability to defeat winged mothulas",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_winged_mothulas",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "FW Compass",
@@ -3245,14 +2921,8 @@
             "name": "Hyrule - Master Sword Chamber",
             "id": 2326641,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_mighty_darknuts",
-                "inferred": true,
-                "description": "Requires ability to defeat mighty darknuts",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_mighty_darknuts",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Piece of Heart",
@@ -3326,14 +2996,8 @@
             "name": "Tower of the Gods - Gohdan Heart Container",
             "id": 2326640,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_gohdan",
-                "inferred": true,
-                "description": "Requires ability to defeat gohdan",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_gohdan",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "TotG Compass",
@@ -3357,14 +3021,8 @@
             "name": "Forsaken Fortress - Helmaroc King Heart Container",
             "id": 2326647,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "defeat_helmaroc_king",
-                "inferred": true,
-                "description": "Requires ability to defeat helmaroc king",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_defeat_helmaroc_king",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Triforce Shard 6",
@@ -3455,14 +3113,8 @@
             "name": "Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave",
             "connected_region": "Ice Ring Isle Inner Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_inner_entrance_in_ice_ring_isle_secret_cave",
-                "inferred": true,
-                "description": "Requires ability to access inner entrance in ice ring isle secret cave",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_inner_entrance_in_ice_ring_isle_secret_cave",
+              "_original_ast_type": "helper"
             }
           }
         ],
@@ -3552,10 +3204,8 @@
             "name": "Needle Rock Isle - Cave",
             "id": 2326718,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Fire_Arrows"
-              }
+              "rule": "has_fire_arrows",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Boomerang",
@@ -3642,14 +3292,8 @@
             "name": "Bird's Peak Rock - Cave",
             "id": 2326730,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "play_winds_requiem",
-                "inferred": true,
-                "description": "Requires ability to play winds requiem",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_play_winds_requiem",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Power Bracelets",
@@ -3673,14 +3317,8 @@
             "name": "Pawprint Isle - Chuchu Cave - Behind Left Boulder",
             "id": 2326732,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "move_boulders",
-                "inferred": true,
-                "description": "Requires ability to move boulders",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_move_boulders",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Silver Rupee",
@@ -3698,14 +3336,8 @@
             "name": "Pawprint Isle - Chuchu Cave - Behind Right Boulder",
             "id": 2326733,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "move_boulders",
-                "inferred": true,
-                "description": "Requires ability to move boulders",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_move_boulders",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Silver Rupee",
@@ -3816,14 +3448,8 @@
             "name": "Bomb Island - Cave",
             "id": 2326754,
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "stun_magtails",
-                "inferred": true,
-                "description": "Requires ability to stun magtails",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_stun_magtails",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Progressive Bow",
@@ -3858,14 +3484,8 @@
             "name": "Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave",
             "connected_region": "Cliff Plateau Isles Inner Cave",
             "access_rule": {
-              "rule": "AST_capability",
-              "args": {
-                "capability": "access_inner_entrance_in_cliff_plateau_isles_secret_cave",
-                "inferred": true,
-                "description": "Requires ability to access inner entrance in cliff plateau isles secret cave",
-                "_original_ast_type": "capability"
-              },
-              "_converted_from_ast": true
+              "rule": "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave",
+              "_original_ast_type": "helper"
             }
           }
         ],
