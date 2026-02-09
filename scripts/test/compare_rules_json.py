@@ -1974,6 +1974,19 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '.value.attr' in path:
             return True
 
+    # Helper bodies fully resolved to constants by WorldGen.
+    # When a helper depends on an option-derived world attribute (e.g., has_midring depends
+    # on midring_start which is `not shuffle_midrings`), WorldGen resolves the attribute at
+    # generation time. If the resolved value makes the helper trivially true/false, the
+    # entire body becomes a constant. The original preserves the dynamic expression.
+    if 'helpers.' in path and path.endswith('.type'):
+        if worldgen_value == 'constant':
+            return True
+    if 'helpers.' in path and path.endswith('.value') and original_value == '<missing>':
+        return True
+    if 'helpers.' in path and path.endswith('.conditions') and worldgen_value == '<missing>':
+        return True
+
     # param_mappings is exporter metadata that maps helper parameters to slot_data keys.
     # WorldGen generates different Python code that doesn't use the same patterns, so
     # this metadata isn't preserved during the roundtrip. It's used for frontend rule
