@@ -88,6 +88,7 @@ import eventBus from '../../app/core/eventBus.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+import { resolveFirstPresetPath } from '../../utils/presetResolver.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -248,7 +249,7 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
 
   let jsonData = null; // This will hold rules fetched if moduleSpecificConfig doesn't have them
   let playerInfo = {}; // Default empty, to be populated
-  let gameName = moduleSpecificConfig.gameName || 'A Link to the Past';
+  let gameName = moduleSpecificConfig.gameName || 'Unknown Game';
 
   try {
     let rulesConfigToUse = moduleSpecificConfig.rulesConfig;
@@ -262,23 +263,37 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     if (!rulesConfigToUse) {
       logger.info(
         moduleInfo.name,
-        '[StateManager Module] rulesConfig not in moduleSpecificConfig, fetching ./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json...'
+        '[StateManager Module] rulesConfig not in moduleSpecificConfig, resolving from preset_files.json...'
       );
-      const response = await fetch(
-        './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'
-      );
-      if (!response.ok) {
+      const presetResponse = await fetch('./presets/preset_files.json');
+      if (!presetResponse.ok) {
         throw new Error(
-          `HTTP error fetching ./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json! status: ${response.status}`
+          `HTTP error fetching preset_files.json! status: ${presetResponse.status}`
         );
       }
-      jsonData = await response.json(); // jsonData is used later for a direct comparison
-      rulesConfigToUse = jsonData;
-      sourceNameForTheseRules =
-        './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'; // If we fetch it, this is the definitive source
+      const presetFilesData = await presetResponse.json();
+      const resolvedPreset = resolveFirstPresetPath(presetFilesData);
+      if (!resolvedPreset) {
+        throw new Error('No valid preset found in preset_files.json');
+      }
+      const rulesPath = resolvedPreset.path;
       logger.info(
         moduleInfo.name,
-        '[StateManager Module] Successfully fetched and parsed ./presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json'
+        `[StateManager Module] Resolved first available preset: ${rulesPath} (game: ${resolvedPreset.gameName})`
+      );
+      const response = await fetch(rulesPath);
+      if (!response.ok) {
+        throw new Error(
+          `HTTP error fetching ${rulesPath}! status: ${response.status}`
+        );
+      }
+      jsonData = await response.json();
+      rulesConfigToUse = jsonData;
+      sourceNameForTheseRules = rulesPath;
+      gameName = resolvedPreset.gameName;
+      logger.info(
+        moduleInfo.name,
+        `[StateManager Module] Successfully fetched and parsed ${rulesPath}`
       );
     } else {
       // rulesConfigToUse was provided directly by moduleSpecificConfig

@@ -63,7 +63,7 @@ function getDefaultModesConfig() {
     default: {
       moduleConfig: { path: './modules.json', enabled: true },
       rulesConfig: {
-        path: './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json',
+        autoResolve: true,
         enabled: true,
       },
       layoutConfig: { path: './layout_presets.json', enabled: true },
