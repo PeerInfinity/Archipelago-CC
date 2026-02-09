@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-08 23:45:52 UTC
+**Generated:** 2026-02-09 03:10:14 UTC
 
 **Source Data Created:** 2026-02-08T01:19:08.985783
 
@@ -70,7 +70,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | 16.2KB |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | 282.3KB |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | 166.9KB |
-| Coding Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | 54.9KB |
+| Coding Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | 55.2KB |
 | DLCQuest | ✅ | ❌ 46% | ✅ | ✅ | ✅ | 51.0KB |
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | 280.1KB |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | 326.5KB |
@@ -80,25 +80,25 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Factorio | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 295.4KB |
 | Faxanadu | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | ⚠️ 90% | ❌ 1% | ✅ | 🔶 80% | ❌ 0% | 549.5KB |
+| Final Fantasy Mystic Quest | ✅ | ❌ 1% | ✅ | 🔶 80% | ❌ 0% | 549.5KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | 367.5KB |
 | Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 101.9KB |
-| Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | 84.2KB |
+| Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | 84.0KB |
 | Jak and Daxter: The Precursor Legacy | — | 🔶 62% | ✅ | ✅ | ✅ | 298.6KB |
 | Kingdom Hearts | 🔶 80% | ❌ 18% | ❌ 40% | ⚠️ 98% | ✅ | 753.6KB |
 | Kingdom Hearts 2 | ✅ | ❌ 37% | ❌ 0% | ❌ 44% | ❌ 10% | 1641.6KB |
 | Kirby's Dream Land 3 | 🔶 50% | ❌ 3% | ❌ 0% | ✅ | ✅ | 529.1KB |
-| Landstalker - The Treasures of King Nole | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 210.5KB |
+| Landstalker - The Treasures of King Nole | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 210.6KB |
 | Lingo | ❌ 20% | ❌ 21% | ✅ | ✅ | ✅ | 946.3KB |
 | Links Awakening DX | ✅ | ❌ 23% | ✅ | ❌ 23% | ✅ | 705.8KB |
 | Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | 132.4KB |
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | 398.8KB |
 | Math Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | 12.6KB |
-| Mega Man 2 | ✅ | ⚠️ 91% | ✅ | ✅ | ✅ | 51.5KB |
+| Mega Man 2 | ✅ | ⚠️ 91% | ✅ | ✅ | ✅ | 52.1KB |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ✅ | 209.8KB |
 | Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | 57.2KB |
-| Metamath | ✅ | 🔶 75% | ✅ | ✅ | ✅ | 48.1KB |
+| Metamath | ✅ | 🔶 75% | ✅ | ✅ | ✅ | 48.3KB |
 | Muse Dash | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 233.5KB |
 | Noita | ✅ | ❌ 22% | ✅ | ✅ | ✅ | 74.6KB |
 | Ocarina of Time | — | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | N/A |
@@ -110,16 +110,16 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Raft | ✅ | ✅ | ✅ | ✅ | ✅ | 205.9KB |
 | Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 146.1KB |
 | SMZ3 | — | ❌ 1% | ❌ 0% | ✅ | ✅ | 1044.7KB |
-| Satisfactory | ✅ | — | ✅ | ❌ 0% | — | 1703.4KB |
+| Satisfactory | ❌ 0% | — | ✅ | ❌ 0% | — | 1431.4KB |
 | Saving Princess | ✅ | ❌ 28% | ✅ | ✅ | ✅ | 33.8KB |
 | Secret of Evermore | 🔶 70% | ✅ | ✅ | ❌ 0% | ✅ | 418.7KB |
-| Shivers | ✅ | ❌ 0% | ✅ | ❌ 0% | ✅ | 151.3KB |
+| Shivers | ✅ | ❌ 0% | ✅ | ❌ 0% | ✅ | 151.5KB |
 | Sonic Adventure 2 Battle | ✅ | ❌ 8% | ✅ | ✅ | ✅ | 266.2KB |
 | Starcraft 2 | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | ❌ 0% | 1126.8KB |
-| Stardew Valley | ❌ 20% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
+| Stardew Valley | ❌ 30% | ❌ 4% | ❌ 0% | ✅ | ✅ | 2430.2KB |
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 101.9KB |
+| Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 101.8KB |
 | Super Mario Land 2 | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 982.7KB |
 | Super Mario World | ✅ | 🔶 54% | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 0% | ❌ 1% | ❌ 0% | ❌ 49% | ❌ 0% | 625.4KB |
@@ -129,7 +129,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Terraria | ✅ | ⚠️ 98% | ✅ | ✅ | ✅ | 283.0KB |
 | The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | ✅ | 555.3KB |
 | The Messenger | ✅ | ❌ 2% | ✅ | ❌ 2% | ✅ | 211.8KB |
-| The Wind Waker | ✅ | ❌ 3% | ✅ | ✅ | ✅ | 253.9KB |
+| The Wind Waker | ✅ | ❌ 3% | ✅ | ✅ | ✅ | 253.6KB |
 | The Witness | ❌ 20% | ✅ | ✅ | ✅ | ✅ | 398.4KB |
 | Timespinner | ✅ | ❌ 5% | ✅ | ✅ | ✅ | 267.3KB |
 | Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | 58.0KB |

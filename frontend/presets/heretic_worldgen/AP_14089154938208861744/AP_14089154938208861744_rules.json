@@ -675,7 +675,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Docks (E1M1) - Silver Shield",
@@ -689,7 +689,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -724,7 +724,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Docks (E1M1) - Ethereal Crossbow",
@@ -738,7 +738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Docks (E1M1) - Tome of Power",
@@ -752,7 +752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Docks (E1M1) - Exit",
@@ -766,7 +766,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -794,7 +794,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -835,7 +835,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Silver Shield",
@@ -849,7 +849,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Torch",
@@ -863,7 +863,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Tome of Power",
@@ -877,7 +877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Ethereal Crossbow",
@@ -891,7 +891,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -922,7 +922,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -960,7 +960,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Green key",
@@ -974,7 +974,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Map Scroll",
@@ -988,7 +988,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Shadowsphere",
@@ -1002,7 +1002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Gauntlets of the Necromancer",
@@ -1016,7 +1016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Silver Shield 2",
@@ -1030,7 +1030,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1065,7 +1065,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Dungeons (E1M2) - Blue key",
@@ -1079,7 +1079,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1130,7 +1130,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Dragon Claw",
@@ -1144,7 +1144,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Silver Shield",
@@ -1158,7 +1158,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Ethereal Crossbow",
@@ -1172,7 +1172,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Torch",
@@ -1186,7 +1186,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Shadowsphere",
@@ -1200,7 +1200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Tome of Power 2",
@@ -1214,7 +1214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Tome of Power 3",
@@ -1228,7 +1228,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1256,7 +1256,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Bag of Holding",
@@ -1270,7 +1270,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Gauntlets of the Necromancer",
@@ -1284,7 +1284,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Ring of Invincibility",
@@ -1298,7 +1298,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Gatehouse (E1M3) - Morph Ovum",
@@ -1312,7 +1312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1343,7 +1343,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1371,7 +1371,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1402,7 +1402,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Dragon Claw",
@@ -1416,7 +1416,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Ethereal Crossbow",
@@ -1430,7 +1430,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Yellow key",
@@ -1444,7 +1444,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Map Scroll",
@@ -1458,7 +1458,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Tome of Power",
@@ -1472,7 +1472,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Silver Shield",
@@ -1486,7 +1486,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Torch",
@@ -1500,7 +1500,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Tome of Power 3",
@@ -1514,7 +1514,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1552,7 +1552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Green key",
@@ -1566,7 +1566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Guard Tower (E1M4) - Tome of Power 2",
@@ -1580,7 +1580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1611,7 +1611,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1642,7 +1642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Gauntlets of the Necromancer",
@@ -1656,7 +1656,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Shadowsphere",
@@ -1670,7 +1670,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Torch",
@@ -1684,7 +1684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1715,7 +1715,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Silver Shield 2",
@@ -1729,7 +1729,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Exit",
@@ -1743,7 +1743,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1788,7 +1788,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Ethereal Crossbow",
@@ -1802,7 +1802,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1847,7 +1847,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Dragon Claw",
@@ -1861,7 +1861,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Ring of Invincibility",
@@ -1875,7 +1875,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Bag of Holding",
@@ -1889,7 +1889,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Tome of Power 3",
@@ -1903,7 +1903,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Morph Ovum",
@@ -1917,7 +1917,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Torch 2",
@@ -1931,7 +1931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Tome of Power 4",
@@ -1945,7 +1945,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Citadel (E1M5) - Tome of Power 5",
@@ -1959,7 +1959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1987,7 +1987,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2018,7 +2018,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Gauntlets of the Necromancer",
@@ -2032,7 +2032,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Tome of Power 3",
@@ -2046,7 +2046,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2091,7 +2091,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Dragon Claw",
@@ -2105,7 +2105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Tome of Power",
@@ -2119,7 +2119,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Shadowsphere",
@@ -2133,7 +2133,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Green key",
@@ -2147,7 +2147,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Silver Shield",
@@ -2161,7 +2161,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Bag of Holding",
@@ -2175,7 +2175,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Ring of Invincibility",
@@ -2189,7 +2189,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Torch",
@@ -2203,7 +2203,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Tome of Power 2",
@@ -2217,7 +2217,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Morph Ovum",
@@ -2231,7 +2231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Map Scroll",
@@ -2245,7 +2245,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Ring of Invincibility 2",
@@ -2259,7 +2259,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2294,7 +2294,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Bag of Holding 2",
@@ -2308,7 +2308,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Exit",
@@ -2322,7 +2322,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2350,7 +2350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cathedral (E1M6) - Bag of Holding 3",
@@ -2364,7 +2364,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2405,7 +2405,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Gauntlets of the Necromancer",
@@ -2419,7 +2419,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2454,7 +2454,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Torch 2",
@@ -2468,7 +2468,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Map Scroll",
@@ -2482,7 +2482,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Exit",
@@ -2496,7 +2496,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2544,7 +2544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Green key",
@@ -2558,7 +2558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Morph Ovum",
@@ -2572,7 +2572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Dragon Claw",
@@ -2586,7 +2586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Tome of Power",
@@ -2600,7 +2600,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Ring of Invincibility",
@@ -2614,7 +2614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Tome of Power 2",
@@ -2628,7 +2628,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Shadowsphere",
@@ -2642,7 +2642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2680,7 +2680,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Silver Shield",
@@ -2694,7 +2694,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Torch",
@@ -2708,7 +2708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crypts (E1M7) - Silver Shield 2",
@@ -2722,7 +2722,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2742,7 +2742,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Dragon Claw",
@@ -2756,7 +2756,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Tome of Power",
@@ -2770,7 +2770,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Gauntlets of the Necromancer",
@@ -2784,7 +2784,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Tome of Power 2",
@@ -2798,7 +2798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Silver Shield",
@@ -2812,7 +2812,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Shadowsphere",
@@ -2826,7 +2826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Ring of Invincibility",
@@ -2840,7 +2840,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Bag of Holding",
@@ -2854,7 +2854,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Bag of Holding 2",
@@ -2868,7 +2868,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Ring of Invincibility 3",
@@ -2882,7 +2882,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Morph Ovum",
@@ -2896,7 +2896,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Hell's Maw (E1M8) - Exit",
@@ -2910,7 +2910,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2961,7 +2961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Bag of Holding",
@@ -2975,7 +2975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Silver Shield",
@@ -2989,7 +2989,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Tome of Power",
@@ -3003,7 +3003,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Morph Ovum",
@@ -3017,7 +3017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Dragon Claw 2",
@@ -3031,7 +3031,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3059,7 +3059,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Exit",
@@ -3073,7 +3073,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3104,7 +3104,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Dragon Claw",
@@ -3118,7 +3118,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3149,7 +3149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Ethereal Crossbow",
@@ -3163,7 +3163,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Shadowsphere",
@@ -3177,7 +3177,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Ring of Invincibility",
@@ -3191,7 +3191,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Torch",
@@ -3205,7 +3205,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Graveyard (E1M9) - Tome of Power 2",
@@ -3219,7 +3219,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3250,7 +3250,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Ethereal Crossbow",
@@ -3264,7 +3264,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Tome of Power",
@@ -3278,7 +3278,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Silver Shield",
@@ -3292,7 +3292,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Torch",
@@ -3306,7 +3306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3344,7 +3344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Dragon Claw",
@@ -3358,7 +3358,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Bag of Holding",
@@ -3372,7 +3372,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Shadowsphere",
@@ -3386,7 +3386,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Crater (E2M1) - Mystic Urn",
@@ -3400,7 +3400,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3431,7 +3431,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3462,7 +3462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Ethereal Crossbow",
@@ -3476,7 +3476,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Shadowsphere",
@@ -3490,7 +3490,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Tome of Power 2",
@@ -3504,7 +3504,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Bag of Holding 2",
@@ -3518,7 +3518,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3559,7 +3559,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Dragon Claw",
@@ -3573,7 +3573,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Hellstaff",
@@ -3587,7 +3587,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Tome of Power",
@@ -3601,7 +3601,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Silver Shield",
@@ -3615,7 +3615,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Gauntlets of the Necromancer",
@@ -3629,7 +3629,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Map Scroll",
@@ -3643,7 +3643,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Chaos Device",
@@ -3657,7 +3657,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Morph Ovum",
@@ -3671,7 +3671,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3709,7 +3709,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Enchanted Shield",
@@ -3723,7 +3723,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Mystic Urn",
@@ -3737,7 +3737,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Lava Pits (E2M2) - Exit",
@@ -3751,7 +3751,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3802,7 +3802,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Gauntlets of the Necromancer",
@@ -3816,7 +3816,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Ethereal Crossbow",
@@ -3830,7 +3830,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Dragon Claw",
@@ -3844,7 +3844,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Tome of Power",
@@ -3858,7 +3858,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Ring of Invincibility",
@@ -3872,7 +3872,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Silver Shield",
@@ -3886,7 +3886,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3917,7 +3917,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Enchanted Shield",
@@ -3931,7 +3931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Chaos Device",
@@ -3945,7 +3945,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Exit",
@@ -3959,7 +3959,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3990,7 +3990,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Morph Ovum",
@@ -4004,7 +4004,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4035,7 +4035,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Phoenix Rod",
@@ -4049,7 +4049,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Tome of Power 2",
@@ -4063,7 +4063,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The River of Fire (E2M3) - Firemace",
@@ -4077,7 +4077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4118,7 +4118,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Ethereal Crossbow",
@@ -4132,7 +4132,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Bag of Holding",
@@ -4146,7 +4146,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Silver Shield",
@@ -4160,7 +4160,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Tome of Power 2",
@@ -4174,7 +4174,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Morph Ovum",
@@ -4188,7 +4188,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Shadowsphere 2",
@@ -4202,7 +4202,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4233,7 +4233,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Exit",
@@ -4247,7 +4247,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4288,7 +4288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Phoenix Rod",
@@ -4302,7 +4302,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Tome of Power 3",
@@ -4316,7 +4316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4354,7 +4354,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Dragon Claw",
@@ -4368,7 +4368,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Torch",
@@ -4382,7 +4382,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Shadowsphere",
@@ -4396,7 +4396,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Chaos Device",
@@ -4410,7 +4410,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Tome of Power",
@@ -4424,7 +4424,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Bag of Holding 2",
@@ -4438,7 +4438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Map Scroll",
@@ -4452,7 +4452,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ice Grotto (E2M4) - Enchanted Shield",
@@ -4466,7 +4466,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4494,7 +4494,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4525,7 +4525,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Gauntlets of the Necromancer",
@@ -4539,7 +4539,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Dragon Claw",
@@ -4553,7 +4553,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Bag of Holding",
@@ -4567,7 +4567,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Torch",
@@ -4581,7 +4581,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4612,7 +4612,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4650,7 +4650,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Ethereal Crossbow",
@@ -4664,7 +4664,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Silver Shield",
@@ -4678,7 +4678,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Shadowsphere",
@@ -4692,7 +4692,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Ring of Invincibility",
@@ -4706,7 +4706,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Tome of Power",
@@ -4720,7 +4720,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Green key",
@@ -4734,7 +4734,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Chaos Device",
@@ -4748,7 +4748,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Tome of Power 2",
@@ -4762,7 +4762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Mystic Urn",
@@ -4776,7 +4776,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Tome of Power 3",
@@ -4790,7 +4790,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4835,7 +4835,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Map Scroll",
@@ -4849,7 +4849,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Morph Ovum",
@@ -4863,7 +4863,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Catacombs (E2M5) - Enchanted Shield",
@@ -4877,7 +4877,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4928,7 +4928,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Gauntlets of the Necromancer",
@@ -4942,7 +4942,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Ethereal Crossbow",
@@ -4956,7 +4956,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Morph Ovum",
@@ -4970,7 +4970,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Firemace",
@@ -4984,7 +4984,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5015,7 +5015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Phoenix Rod 2",
@@ -5029,7 +5029,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Firemace 4",
@@ -5043,7 +5043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Exit",
@@ -5057,7 +5057,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5085,7 +5085,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Dragon Claw",
@@ -5099,7 +5099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Bag of Holding",
@@ -5113,7 +5113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Shadowsphere",
@@ -5127,7 +5127,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Chaos Device",
@@ -5141,7 +5141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Firemace 3",
@@ -5155,7 +5155,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5183,7 +5183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Hellstaff",
@@ -5197,7 +5197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Phoenix Rod",
@@ -5211,7 +5211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Tome of Power",
@@ -5225,7 +5225,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Map Scroll",
@@ -5239,7 +5239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Enchanted Shield",
@@ -5253,7 +5253,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Labyrinth (E2M6) - Tome of Power 2",
@@ -5267,7 +5267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5308,7 +5308,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Morph Ovum",
@@ -5322,7 +5322,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Shadowsphere",
@@ -5336,7 +5336,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Torch",
@@ -5350,7 +5350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Bag of Holding",
@@ -5364,7 +5364,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Silver Shield",
@@ -5378,7 +5378,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Enchanted Shield",
@@ -5392,7 +5392,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Ethereal Crossbow",
@@ -5406,7 +5406,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Gauntlets of the Necromancer",
@@ -5420,7 +5420,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Phoenix Rod",
@@ -5434,7 +5434,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Tome of Power 2",
@@ -5448,7 +5448,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5479,7 +5479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Exit",
@@ -5493,7 +5493,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5534,7 +5534,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Ring of Invincibility",
@@ -5548,7 +5548,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Tome of Power",
@@ -5562,7 +5562,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Chaos Device",
@@ -5576,7 +5576,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Map Scroll",
@@ -5590,7 +5590,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Dragon Claw",
@@ -5604,7 +5604,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Great Hall (E2M7) - Hellstaff",
@@ -5618,7 +5618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5646,7 +5646,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5666,7 +5666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Dragon Claw",
@@ -5680,7 +5680,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Gauntlets of the Necromancer",
@@ -5694,7 +5694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Hellstaff",
@@ -5708,7 +5708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Phoenix Rod",
@@ -5722,7 +5722,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Tome of Power",
@@ -5736,7 +5736,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Silver Shield",
@@ -5750,7 +5750,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Enchanted Shield",
@@ -5764,7 +5764,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Chaos Device",
@@ -5778,7 +5778,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Ring of Invincibility",
@@ -5792,7 +5792,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Morph Ovum",
@@ -5806,7 +5806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Portals of Chaos (E2M8) - Exit",
@@ -5820,7 +5820,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5871,7 +5871,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Ethereal Crossbow",
@@ -5885,7 +5885,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Bag of Holding",
@@ -5899,7 +5899,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Tome of Power",
@@ -5913,7 +5913,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Shadowsphere",
@@ -5927,7 +5927,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Silver Shield",
@@ -5941,7 +5941,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Dragon Claw 2",
@@ -5955,7 +5955,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Morph Ovum",
@@ -5969,7 +5969,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Firemace",
@@ -5983,7 +5983,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Firemace 4",
@@ -5997,7 +5997,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6028,7 +6028,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Map Scroll",
@@ -6042,7 +6042,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Firemace 3",
@@ -6056,7 +6056,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Exit",
@@ -6070,7 +6070,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6101,7 +6101,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Dragon Claw",
@@ -6115,7 +6115,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Chaos Device",
@@ -6129,7 +6129,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Firemace 2",
@@ -6143,7 +6143,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6171,7 +6171,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Phoenix Rod",
@@ -6185,7 +6185,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Hellstaff",
@@ -6199,7 +6199,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Ring of Invincibility",
@@ -6213,7 +6213,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Enchanted Shield",
@@ -6227,7 +6227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Mystic Urn 2",
@@ -6241,7 +6241,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Glacier (E2M9) - Torch",
@@ -6255,7 +6255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6296,7 +6296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Bag of Holding",
@@ -6310,7 +6310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Shadowsphere",
@@ -6324,7 +6324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Silver Shield",
@@ -6338,7 +6338,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Chaos Device",
@@ -6352,7 +6352,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Dragon Claw",
@@ -6366,7 +6366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Gauntlets of the Necromancer",
@@ -6380,7 +6380,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6411,7 +6411,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6442,7 +6442,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Map Scroll",
@@ -6456,7 +6456,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Tome of Power",
@@ -6470,7 +6470,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Hellstaff",
@@ -6484,7 +6484,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Storehouse (E3M1) - Exit",
@@ -6498,7 +6498,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6529,7 +6529,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Ethereal Crossbow",
@@ -6543,7 +6543,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Silver Shield 2",
@@ -6557,7 +6557,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Morph Ovum",
@@ -6571,7 +6571,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Mystic Urn",
@@ -6585,7 +6585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Tome of Power",
@@ -6599,7 +6599,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6630,7 +6630,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Exit",
@@ -6644,7 +6644,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6682,7 +6682,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Dragon Claw",
@@ -6696,7 +6696,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Hellstaff",
@@ -6710,7 +6710,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Bag of Holding",
@@ -6724,7 +6724,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Shadowsphere",
@@ -6738,7 +6738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Tome of Power 3",
@@ -6752,7 +6752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Torch",
@@ -6766,7 +6766,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Firemace 2",
@@ -6780,7 +6780,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Firemace 5",
@@ -6794,7 +6794,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6842,7 +6842,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Gauntlets of the Necromancer",
@@ -6856,7 +6856,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Phoenix Rod",
@@ -6870,7 +6870,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Morph Ovum 2",
@@ -6884,7 +6884,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Enchanted Shield",
@@ -6898,7 +6898,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Map Scroll",
@@ -6912,7 +6912,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Chaos Device",
@@ -6926,7 +6926,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Tome of Power 2",
@@ -6940,7 +6940,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Cesspool (E3M2) - Bag of Holding 2",
@@ -6954,7 +6954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6995,7 +6995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Shadowsphere",
@@ -7009,7 +7009,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Silver Shield",
@@ -7023,7 +7023,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7054,7 +7054,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Hellstaff 2",
@@ -7068,7 +7068,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Gauntlets of the Necromancer",
@@ -7082,7 +7082,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Tome of Power 3",
@@ -7096,7 +7096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Tome of Power 4",
@@ -7110,7 +7110,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Mystic Urn 2",
@@ -7124,7 +7124,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Map Scroll",
@@ -7138,7 +7138,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Phoenix Rod",
@@ -7152,7 +7152,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Enchanted Shield",
@@ -7166,7 +7166,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Firemace 4",
@@ -7180,7 +7180,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Firemace 5",
@@ -7194,7 +7194,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Exit",
@@ -7208,7 +7208,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7236,7 +7236,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Ethereal Crossbow",
@@ -7250,7 +7250,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7298,7 +7298,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Dragon Claw",
@@ -7312,7 +7312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Mystic Urn",
@@ -7326,7 +7326,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Tome of Power 2",
@@ -7340,7 +7340,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Tome of Power 5",
@@ -7354,7 +7354,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Bag of Holding",
@@ -7368,7 +7368,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Morph Ovum",
@@ -7382,7 +7382,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Silver Shield 2",
@@ -7396,7 +7396,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Chaos Device",
@@ -7410,7 +7410,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Torch",
@@ -7424,7 +7424,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Confluence (E3M3) - Firemace",
@@ -7438,7 +7438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7479,7 +7479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Dragon Claw",
@@ -7493,7 +7493,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Ring of Invincibility",
@@ -7507,7 +7507,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Ethereal Crossbow",
@@ -7521,7 +7521,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Gauntlets of the Necromancer",
@@ -7535,7 +7535,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Bag of Holding",
@@ -7549,7 +7549,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Morph Ovum",
@@ -7563,7 +7563,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Mystic Urn",
@@ -7577,7 +7577,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Shadowsphere",
@@ -7591,7 +7591,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Silver Shield",
@@ -7605,7 +7605,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Torch",
@@ -7619,7 +7619,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Tome of Power 2",
@@ -7633,7 +7633,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Tome of Power 3",
@@ -7647,7 +7647,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7675,7 +7675,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Hellstaff",
@@ -7689,7 +7689,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Chaos Device",
@@ -7703,7 +7703,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Torch 3",
@@ -7717,7 +7717,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Enchanted Shield 2",
@@ -7731,7 +7731,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Morph Ovum 2",
@@ -7745,7 +7745,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7773,7 +7773,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Bag of Holding 2",
@@ -7787,7 +7787,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Silver Shield 2",
@@ -7801,7 +7801,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Enchanted Shield",
@@ -7815,7 +7815,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Map Scroll",
@@ -7829,7 +7829,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Tome of Power",
@@ -7843,7 +7843,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Torch 2",
@@ -7857,7 +7857,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Mystic Urn 2",
@@ -7871,7 +7871,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Azure Fortress (E3M4) - Exit",
@@ -7885,7 +7885,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7926,7 +7926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Hellstaff",
@@ -7940,7 +7940,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Ethereal Crossbow",
@@ -7954,7 +7954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Ring of Invincibility",
@@ -7968,7 +7968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Silver Shield",
@@ -7982,7 +7982,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Enchanted Shield",
@@ -7996,7 +7996,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Torch",
@@ -8010,7 +8010,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Tome of Power 2",
@@ -8024,7 +8024,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8052,7 +8052,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Dragon Claw",
@@ -8066,7 +8066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Gauntlets of the Necromancer",
@@ -8080,7 +8080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Bag of Holding",
@@ -8094,7 +8094,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Morph Ovum",
@@ -8108,7 +8108,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Shadowsphere",
@@ -8122,7 +8122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Chaos Device",
@@ -8136,7 +8136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8164,7 +8164,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Silver Shield 2",
@@ -8178,7 +8178,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Map Scroll",
@@ -8192,7 +8192,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Ophidian Lair (E3M5) - Exit",
@@ -8206,7 +8206,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8237,7 +8237,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Ethereal Crossbow",
@@ -8251,7 +8251,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Dragon Claw",
@@ -8265,7 +8265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Tome of Power 3",
@@ -8279,7 +8279,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Hellstaff 2",
@@ -8293,7 +8293,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Firemace 4",
@@ -8307,7 +8307,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8345,7 +8345,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Bag of Holding 2",
@@ -8359,7 +8359,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Map Scroll",
@@ -8373,7 +8373,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Bag of Holding 3",
@@ -8387,7 +8387,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Firemace",
@@ -8401,7 +8401,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Exit",
@@ -8415,7 +8415,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8463,7 +8463,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Gauntlets of the Necromancer",
@@ -8477,7 +8477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Morph Ovum",
@@ -8491,7 +8491,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Mystic Urn",
@@ -8505,7 +8505,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Silver Shield",
@@ -8519,7 +8519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8561,7 +8561,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Hellstaff",
@@ -8575,7 +8575,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Chaos Device",
@@ -8589,7 +8589,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Shadowsphere",
@@ -8603,7 +8603,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Tome of Power 2",
@@ -8617,7 +8617,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Firemace 2",
@@ -8631,7 +8631,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8666,7 +8666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Enchanted Shield",
@@ -8680,7 +8680,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Halls of Fear (E3M6) - Tome of Power",
@@ -8694,7 +8694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8725,7 +8725,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Ethereal Crossbow",
@@ -8739,7 +8739,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Dragon Claw",
@@ -8753,7 +8753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Bag of Holding",
@@ -8767,7 +8767,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Silver Shield",
@@ -8781,7 +8781,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Tome of Power",
@@ -8795,7 +8795,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Shadowsphere 2",
@@ -8809,7 +8809,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Bag of Holding 2",
@@ -8823,7 +8823,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8843,7 +8843,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8894,7 +8894,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Hellstaff",
@@ -8908,7 +8908,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Morph Ovum",
@@ -8922,7 +8922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8953,7 +8953,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Gauntlets of the Necromancer",
@@ -8967,7 +8967,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Phoenix Rod",
@@ -8981,7 +8981,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Ring of Invincibility",
@@ -8995,7 +8995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Mystic Urn",
@@ -9009,7 +9009,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Enchanted Shield",
@@ -9023,7 +9023,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Map Scroll",
@@ -9037,7 +9037,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Chaos Device",
@@ -9051,7 +9051,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Tome of Power 2",
@@ -9065,7 +9065,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Tome of Power 3",
@@ -9079,7 +9079,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Chasm (E3M7) - Torch 2",
@@ -9093,7 +9093,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9113,7 +9113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Dragon Claw",
@@ -9127,7 +9127,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer",
@@ -9141,7 +9141,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Hellstaff",
@@ -9155,7 +9155,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Bag of Holding",
@@ -9169,7 +9169,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Mystic Urn",
@@ -9183,7 +9183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Ring of Invincibility",
@@ -9197,7 +9197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Shadowsphere",
@@ -9211,7 +9211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Silver Shield",
@@ -9225,7 +9225,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Enchanted Shield",
@@ -9239,7 +9239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Tome of Power",
@@ -9253,7 +9253,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "D'Sparil's Keep (E3M8) - Exit",
@@ -9267,7 +9267,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9298,7 +9298,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Silver Shield",
@@ -9312,7 +9312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Tome of Power",
@@ -9326,7 +9326,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Torch",
@@ -9340,7 +9340,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9360,7 +9360,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9401,7 +9401,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Phoenix Rod",
@@ -9415,7 +9415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Ring of Invincibility",
@@ -9429,7 +9429,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Bag of Holding",
@@ -9443,7 +9443,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Chaos Device",
@@ -9457,7 +9457,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9502,7 +9502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Dragon Claw",
@@ -9516,7 +9516,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Hellstaff",
@@ -9530,7 +9530,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Gauntlets of the Necromancer",
@@ -9544,7 +9544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Mystic Urn",
@@ -9558,7 +9558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Morph Ovum",
@@ -9572,7 +9572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Enchanted Shield",
@@ -9586,7 +9586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Tome of Power 2",
@@ -9600,7 +9600,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Shadowsphere",
@@ -9614,7 +9614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Firemace",
@@ -9628,7 +9628,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Firemace 2",
@@ -9642,7 +9642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Aquifer (E3M9) - Firemace 3",
@@ -9656,7 +9656,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }

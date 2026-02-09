@@ -3351,7 +3351,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 1"
           },
           {
@@ -3366,7 +3366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 2"
           },
           {
@@ -3381,7 +3381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 3"
           },
           {
@@ -3396,7 +3396,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 4"
           },
           {
@@ -3411,7 +3411,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 5"
           },
           {
@@ -3426,7 +3426,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 6"
           },
           {
@@ -3444,7 +3444,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 7"
           },
           {
@@ -3462,7 +3462,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 8"
           },
           {
@@ -3480,7 +3480,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 9"
           },
           {
@@ -3498,7 +3498,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "AWESOME Shop purchase 10"
           }
         ]
@@ -3564,7 +3564,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 1"
           },
           {
@@ -3582,7 +3582,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 2"
           },
           {
@@ -3600,7 +3600,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 3"
           },
           {
@@ -3618,7 +3618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 4"
           },
           {
@@ -3636,7 +3636,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 5"
           },
           {
@@ -3654,7 +3654,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 6"
           },
           {
@@ -3672,7 +3672,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 7"
           },
           {
@@ -3690,7 +3690,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 8"
           },
           {
@@ -3708,7 +3708,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 9"
           },
           {
@@ -3726,7 +3726,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 10"
           },
           {
@@ -3744,7 +3744,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 11"
           },
           {
@@ -3762,7 +3762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 12"
           },
           {
@@ -3780,7 +3780,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 13"
           },
           {
@@ -3798,7 +3798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 14"
           },
           {
@@ -3816,7 +3816,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 15"
           },
           {
@@ -3834,7 +3834,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 16"
           },
           {
@@ -3852,7 +3852,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 17"
           },
           {
@@ -3870,7 +3870,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 18"
           },
           {
@@ -3888,7 +3888,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 19"
           },
           {
@@ -3906,7 +3906,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 20"
           },
           {
@@ -3924,7 +3924,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 21"
           },
           {
@@ -3942,7 +3942,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 22"
           },
           {
@@ -3960,7 +3960,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 23"
           },
           {
@@ -3978,7 +3978,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 24"
           }
         ]
@@ -3999,7 +3999,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 1"
           },
           {
@@ -4014,7 +4014,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 2"
           },
           {
@@ -4029,7 +4029,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 3"
           },
           {
@@ -4044,7 +4044,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 4"
           },
           {
@@ -4059,7 +4059,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 5"
           },
           {
@@ -4074,7 +4074,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 6"
           },
           {
@@ -4089,7 +4089,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 7"
           },
           {
@@ -4104,7 +4104,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 8"
           },
           {
@@ -4119,7 +4119,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 9"
           },
           {
@@ -4134,7 +4134,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-1, item 10"
           }
         ]
@@ -4155,7 +4155,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 1"
           },
           {
@@ -4170,7 +4170,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 2"
           },
           {
@@ -4185,7 +4185,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 3"
           },
           {
@@ -4200,7 +4200,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 4"
           },
           {
@@ -4215,7 +4215,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 5"
           },
           {
@@ -4230,7 +4230,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 6"
           },
           {
@@ -4245,7 +4245,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 7"
           },
           {
@@ -4260,7 +4260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 8"
           },
           {
@@ -4275,7 +4275,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 9"
           },
           {
@@ -4290,7 +4290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-2, item 10"
           }
         ]
@@ -4311,7 +4311,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 1"
           },
           {
@@ -4326,7 +4326,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 2"
           },
           {
@@ -4341,7 +4341,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 3"
           },
           {
@@ -4356,7 +4356,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 4"
           },
           {
@@ -4371,7 +4371,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 5"
           },
           {
@@ -4386,7 +4386,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 6"
           },
           {
@@ -4401,7 +4401,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 7"
           },
           {
@@ -4416,7 +4416,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 8"
           },
           {
@@ -4431,7 +4431,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 9"
           },
           {
@@ -4446,7 +4446,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-3, item 10"
           }
         ]
@@ -4467,7 +4467,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 1"
           },
           {
@@ -4482,7 +4482,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 2"
           },
           {
@@ -4497,7 +4497,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 3"
           },
           {
@@ -4512,7 +4512,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 4"
           },
           {
@@ -4527,7 +4527,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 5"
           },
           {
@@ -4542,7 +4542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 6"
           },
           {
@@ -4557,7 +4557,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 7"
           },
           {
@@ -4572,7 +4572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 8"
           },
           {
@@ -4587,7 +4587,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 9"
           },
           {
@@ -4602,7 +4602,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 1-4, item 10"
           }
         ]
@@ -4645,13 +4645,7 @@
             "name": "Hub Tier 2 -> Hub 2-3",
             "connected_region": "Hub 2-3",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Recipe: Rotor",
-                  "Can Produce: Rotor"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
@@ -4685,7 +4679,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 25"
           },
           {
@@ -4703,7 +4697,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 26"
           },
           {
@@ -4721,7 +4715,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 27"
           },
           {
@@ -4739,7 +4733,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 28"
           },
           {
@@ -4757,7 +4751,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 29"
           },
           {
@@ -4775,7 +4769,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 30"
           },
           {
@@ -4793,7 +4787,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 31"
           },
           {
@@ -4811,7 +4805,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 32"
           },
           {
@@ -4829,7 +4823,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 33"
           },
           {
@@ -4847,7 +4841,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 34"
           },
           {
@@ -4865,7 +4859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 35"
           },
           {
@@ -4886,7 +4880,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 36"
           },
           {
@@ -4907,7 +4901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 37"
           },
           {
@@ -4928,7 +4922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 38"
           },
           {
@@ -4949,7 +4943,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 39"
           },
           {
@@ -4970,7 +4964,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 40"
           },
           {
@@ -4991,7 +4985,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 41"
           },
           {
@@ -5012,7 +5006,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 42"
           },
           {
@@ -5033,7 +5027,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 43"
           },
           {
@@ -5054,7 +5048,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 44"
           },
           {
@@ -5075,7 +5069,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 45"
           },
           {
@@ -5096,7 +5090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 46"
           },
           {
@@ -5117,7 +5111,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 47"
           },
           {
@@ -5138,7 +5132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 48"
           }
         ]
@@ -5159,7 +5153,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 1"
           },
           {
@@ -5174,7 +5168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 2"
           },
           {
@@ -5189,7 +5183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 3"
           },
           {
@@ -5204,7 +5198,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 4"
           },
           {
@@ -5219,7 +5213,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 5"
           },
           {
@@ -5234,7 +5228,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 6"
           },
           {
@@ -5249,7 +5243,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 7"
           },
           {
@@ -5264,7 +5258,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 8"
           },
           {
@@ -5279,7 +5273,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 9"
           },
           {
@@ -5294,7 +5288,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-1, item 10"
           }
         ]
@@ -5315,7 +5309,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 1"
           },
           {
@@ -5330,7 +5324,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 2"
           },
           {
@@ -5345,7 +5339,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 3"
           },
           {
@@ -5360,7 +5354,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 4"
           },
           {
@@ -5375,7 +5369,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 5"
           },
           {
@@ -5390,7 +5384,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 6"
           },
           {
@@ -5405,7 +5399,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 7"
           },
           {
@@ -5420,7 +5414,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 8"
           },
           {
@@ -5435,7 +5429,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 9"
           },
           {
@@ -5450,7 +5444,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-2, item 10"
           }
         ]
@@ -5471,7 +5465,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 1"
           },
           {
@@ -5486,7 +5480,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 2"
           },
           {
@@ -5501,7 +5495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 3"
           },
           {
@@ -5516,7 +5510,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 4"
           },
           {
@@ -5531,7 +5525,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 5"
           },
           {
@@ -5546,7 +5540,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 6"
           },
           {
@@ -5561,7 +5555,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 7"
           },
           {
@@ -5576,7 +5570,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 8"
           },
           {
@@ -5591,7 +5585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 9"
           },
           {
@@ -5606,7 +5600,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-3, item 10"
           }
         ]
@@ -5627,7 +5621,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 1"
           },
           {
@@ -5642,7 +5636,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 2"
           },
           {
@@ -5657,7 +5651,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 3"
           },
           {
@@ -5672,7 +5666,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 4"
           },
           {
@@ -5687,7 +5681,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 5"
           },
           {
@@ -5702,7 +5696,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 6"
           },
           {
@@ -5717,7 +5711,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 7"
           },
           {
@@ -5732,7 +5726,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 8"
           },
           {
@@ -5747,7 +5741,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 9"
           },
           {
@@ -5762,7 +5756,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-4, item 10"
           }
         ]
@@ -5783,7 +5777,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 1"
           },
           {
@@ -5798,7 +5792,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 2"
           },
           {
@@ -5813,7 +5807,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 3"
           },
           {
@@ -5828,7 +5822,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 4"
           },
           {
@@ -5843,7 +5837,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 5"
           },
           {
@@ -5858,7 +5852,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 6"
           },
           {
@@ -5873,7 +5867,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 7"
           },
           {
@@ -5888,7 +5882,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 8"
           },
           {
@@ -5903,7 +5897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 9"
           },
           {
@@ -5918,7 +5912,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 2-5, item 10"
           }
         ]
@@ -5937,67 +5931,21 @@
             "name": "Hub Tier 3 -> Hub 3-1",
             "connected_region": "Hub 3-1",
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Recipe: Rotor",
-                  "Can Produce: Rotor"
-                ]
-              }
+              "rule": "True_"
             }
           },
           {
             "name": "Hub Tier 3 -> Hub 3-2",
             "connected_region": "Hub 3-2",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Modular Frame",
-                      "Can Produce: Modular Frame"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Rotor",
-                      "Can Produce: Rotor"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
             "name": "Hub Tier 3 -> Hub 3-3",
             "connected_region": "Hub 3-3",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Modular Frame",
-                      "Can Produce: Modular Frame"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Rotor",
-                      "Can Produce: Rotor"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
@@ -6027,7 +5975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 49"
           },
           {
@@ -6048,7 +5996,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 50"
           },
           {
@@ -6069,7 +6017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 51"
           },
           {
@@ -6090,7 +6038,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 52"
           },
           {
@@ -6111,7 +6059,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 53"
           },
           {
@@ -6132,7 +6080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 54"
           },
           {
@@ -6153,7 +6101,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 55"
           },
           {
@@ -6174,7 +6122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 56"
           },
           {
@@ -6195,7 +6143,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 57"
           },
           {
@@ -6216,7 +6164,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 58"
           },
           {
@@ -6237,7 +6185,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 59"
           },
           {
@@ -6258,7 +6206,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 60"
           },
           {
@@ -6279,7 +6227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 61"
           },
           {
@@ -6300,7 +6248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 62"
           },
           {
@@ -6321,7 +6269,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 63"
           },
           {
@@ -6342,7 +6290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 64"
           },
           {
@@ -6363,7 +6311,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 65"
           },
           {
@@ -6384,7 +6332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 66"
           },
           {
@@ -6405,7 +6353,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 67"
           },
           {
@@ -6426,7 +6374,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 68"
           },
           {
@@ -6447,7 +6395,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 69"
           },
           {
@@ -6468,7 +6416,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 70"
           },
           {
@@ -6489,7 +6437,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 71"
           },
           {
@@ -6510,7 +6458,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 72"
           }
         ]
@@ -6531,7 +6479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 1"
           },
           {
@@ -6546,7 +6494,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 2"
           },
           {
@@ -6561,7 +6509,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 3"
           },
           {
@@ -6576,7 +6524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 4"
           },
           {
@@ -6591,7 +6539,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 5"
           },
           {
@@ -6606,7 +6554,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 6"
           },
           {
@@ -6621,7 +6569,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 7"
           },
           {
@@ -6636,7 +6584,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 8"
           },
           {
@@ -6651,7 +6599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 9"
           },
           {
@@ -6666,7 +6614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-1, item 10"
           }
         ]
@@ -6687,7 +6635,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 1"
           },
           {
@@ -6702,7 +6650,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 2"
           },
           {
@@ -6717,7 +6665,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 3"
           },
           {
@@ -6732,7 +6680,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 4"
           },
           {
@@ -6747,7 +6695,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 5"
           },
           {
@@ -6762,7 +6710,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 6"
           },
           {
@@ -6777,7 +6725,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 7"
           },
           {
@@ -6792,7 +6740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 8"
           },
           {
@@ -6807,7 +6755,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 9"
           },
           {
@@ -6822,7 +6770,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-2, item 10"
           }
         ]
@@ -6843,7 +6791,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 1"
           },
           {
@@ -6858,7 +6806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 2"
           },
           {
@@ -6873,7 +6821,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 3"
           },
           {
@@ -6888,7 +6836,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 4"
           },
           {
@@ -6903,7 +6851,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 5"
           },
           {
@@ -6918,7 +6866,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 6"
           },
           {
@@ -6933,7 +6881,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 7"
           },
           {
@@ -6948,7 +6896,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 8"
           },
           {
@@ -6963,7 +6911,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 9"
           },
           {
@@ -6978,7 +6926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-3, item 10"
           }
         ]
@@ -6999,7 +6947,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 1"
           },
           {
@@ -7014,7 +6962,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 2"
           },
           {
@@ -7029,7 +6977,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 3"
           },
           {
@@ -7044,7 +6992,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 4"
           },
           {
@@ -7059,7 +7007,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 5"
           },
           {
@@ -7074,7 +7022,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 6"
           },
           {
@@ -7089,7 +7037,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 7"
           },
           {
@@ -7104,7 +7052,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 8"
           },
           {
@@ -7119,7 +7067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 9"
           },
           {
@@ -7134,7 +7082,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 3-4, item 10"
           }
         ]
@@ -7146,382 +7094,35 @@
             "name": "Hub Tier 4 -> Hub 4-1",
             "connected_region": "Hub 4-1",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Modular Frame",
-                      "Can Produce: Modular Frame"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Recipe: Steel Ingot",
-                              "Can Produce: Steel Ingot"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Steel Beam"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Steel Beam"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
             "name": "Hub Tier 4 -> Hub 4-2",
             "connected_region": "Hub 4-2",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Recipe: Steel Ingot",
-                              "Can Produce: Steel Ingot"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Steel Beam"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Steel Beam"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Recipe: Steel Ingot",
-                              "Can Produce: Steel Ingot"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Steel Pipe"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Steel Pipe"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
             "name": "Hub Tier 4 -> Hub 4-3",
             "connected_region": "Hub 4-3",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Recipe: Steel Ingot",
-                              "Can Produce: Steel Ingot"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Steel Pipe"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Steel Pipe"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Modular Frame",
-                      "Can Produce: Modular Frame"
-                    ]
-                  }
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Rotor",
-                      "Can Produce: Rotor"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
             "name": "Hub Tier 4 -> Hub 4-4",
             "connected_region": "Hub 4-4",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "HasAny",
-                                  "args": {
-                                    "items": [
-                                      "Recipe: Steel Ingot",
-                                      "Can Produce: Steel Ingot"
-                                    ]
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Recipe: Steel Beam"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Can Produce: Steel Beam"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Encased Industrial Beam"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Encased Industrial Beam"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Recipe: Steel Ingot",
-                              "Can Produce: Steel Ingot"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Steel Beam"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Steel Beam"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Modular Frame",
-                      "Can Produce: Modular Frame"
-                    ]
-                  }
-                }
-              ]
+              "rule": "True_"
             }
           },
           {
             "name": "Hub Tier 4 -> Hub 4-5",
             "connected_region": "Hub 4-5",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Recipe: Copper Sheet",
-                      "Can Produce: Copper Sheet"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Recipe: Steel Ingot",
-                              "Can Produce: Steel Ingot"
-                            ]
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Steel Pipe"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Steel Pipe"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "HasAny",
-                                  "args": {
-                                    "items": [
-                                      "Recipe: Steel Ingot",
-                                      "Can Produce: Steel Ingot"
-                                    ]
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Recipe: Steel Beam"
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Can Produce: Steel Beam"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Recipe: Encased Industrial Beam"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Can Produce: Encased Industrial Beam"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "rule": "True_"
             }
           }
         ],
@@ -7544,7 +7145,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 73"
           },
           {
@@ -7565,7 +7166,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 74"
           },
           {
@@ -7586,7 +7187,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 75"
           },
           {
@@ -7607,7 +7208,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 76"
           },
           {
@@ -7628,7 +7229,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 77"
           },
           {
@@ -7649,7 +7250,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 78"
           },
           {
@@ -7670,7 +7271,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 79"
           },
           {
@@ -7691,7 +7292,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 80"
           },
           {
@@ -7712,7 +7313,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 81"
           },
           {
@@ -7733,7 +7334,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 82"
           },
           {
@@ -7754,7 +7355,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 83"
           },
           {
@@ -7775,7 +7376,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 84"
           },
           {
@@ -7796,7 +7397,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 85"
           },
           {
@@ -7817,7 +7418,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 86"
           },
           {
@@ -7838,7 +7439,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 87"
           },
           {
@@ -7859,7 +7460,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 88"
           },
           {
@@ -7880,7 +7481,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 89"
           },
           {
@@ -7901,7 +7502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 90"
           },
           {
@@ -7922,7 +7523,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 91"
           },
           {
@@ -7943,7 +7544,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 92"
           },
           {
@@ -7964,7 +7565,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 93"
           },
           {
@@ -7985,7 +7586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 95"
           },
           {
@@ -8006,7 +7607,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 96"
           },
           {
@@ -8027,7 +7628,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hard drive random check 97"
           }
         ]
@@ -8048,7 +7649,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 1"
           },
           {
@@ -8063,7 +7664,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 2"
           },
           {
@@ -8078,7 +7679,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 3"
           },
           {
@@ -8093,7 +7694,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 4"
           },
           {
@@ -8108,7 +7709,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 5"
           },
           {
@@ -8123,7 +7724,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 6"
           },
           {
@@ -8138,7 +7739,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 7"
           },
           {
@@ -8153,7 +7754,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 8"
           },
           {
@@ -8168,7 +7769,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 9"
           },
           {
@@ -8183,7 +7784,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-1, item 10"
           }
         ]
@@ -8204,7 +7805,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 1"
           },
           {
@@ -8219,7 +7820,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 2"
           },
           {
@@ -8234,7 +7835,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 3"
           },
           {
@@ -8249,7 +7850,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 4"
           },
           {
@@ -8264,7 +7865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 5"
           },
           {
@@ -8279,7 +7880,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 6"
           },
           {
@@ -8294,7 +7895,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 7"
           },
           {
@@ -8309,7 +7910,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 8"
           },
           {
@@ -8324,7 +7925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 9"
           },
           {
@@ -8339,7 +7940,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-2, item 10"
           }
         ]
@@ -8360,7 +7961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 1"
           },
           {
@@ -8375,7 +7976,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 2"
           },
           {
@@ -8390,7 +7991,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 3"
           },
           {
@@ -8405,7 +8006,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 4"
           },
           {
@@ -8420,7 +8021,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 5"
           },
           {
@@ -8435,7 +8036,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 6"
           },
           {
@@ -8450,7 +8051,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 7"
           },
           {
@@ -8465,7 +8066,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 8"
           },
           {
@@ -8480,7 +8081,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 9"
           },
           {
@@ -8495,7 +8096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-3, item 10"
           }
         ]
@@ -8516,7 +8117,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 1"
           },
           {
@@ -8531,7 +8132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 2"
           },
           {
@@ -8546,7 +8147,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 3"
           },
           {
@@ -8561,7 +8162,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 4"
           },
           {
@@ -8576,7 +8177,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 5"
           },
           {
@@ -8591,7 +8192,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 6"
           },
           {
@@ -8606,7 +8207,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 7"
           },
           {
@@ -8621,7 +8222,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 8"
           },
           {
@@ -8636,7 +8237,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 9"
           },
           {
@@ -8651,7 +8252,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-4, item 10"
           }
         ]
@@ -8672,7 +8273,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 1"
           },
           {
@@ -8687,7 +8288,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 2"
           },
           {
@@ -8702,7 +8303,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 3"
           },
           {
@@ -8717,7 +8318,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 4"
           },
           {
@@ -8732,7 +8333,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 5"
           },
           {
@@ -8747,7 +8348,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 6"
           },
           {
@@ -8762,7 +8363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 7"
           },
           {
@@ -8777,7 +8378,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 8"
           },
           {
@@ -8792,7 +8393,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 9"
           },
           {
@@ -8807,7 +8408,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Hub 4-5, item 10"
           }
         ]
@@ -14044,7 +13645,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Inflated Pocket Dimension"
           }
         ]
@@ -14065,7 +13666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Hostile Organism Detection"
           }
         ]
@@ -14086,7 +13687,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Expanded Toolbelt"
           }
         ]
@@ -14162,7 +13763,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Bio-Organic Properties"
           }
         ]
@@ -14194,7 +13795,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Stinger Research"
           }
         ]
@@ -14226,7 +13827,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Hatcher Research"
           }
         ]
@@ -14258,7 +13859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Hog Research"
           }
         ]
@@ -14290,7 +13891,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Spitter Research"
           }
         ]
@@ -14326,7 +13927,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Structural Analysis"
           }
         ]
@@ -14347,7 +13948,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: Protein Inhaler"
           }
         ]
@@ -14368,7 +13969,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Organisms: The Rebar Gun"
           }
         ]
@@ -14436,7 +14037,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: SAM Analysis"
           }
         ]
@@ -14472,7 +14073,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: SAM Reanimation"
           }
         ]
@@ -14517,7 +14118,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: SAM Fluctuator"
           }
         ]
@@ -14552,7 +14153,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Mercer Sphere Analysis"
           }
         ]
@@ -14614,7 +14215,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Dimensional Depot"
           }
         ]
@@ -14635,7 +14236,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Manual Depot Uploader"
           }
         ]
@@ -14670,7 +14271,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Depot Expansion (200%)"
           }
         ]
@@ -14705,7 +14306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Depot Expansion (300%)"
           }
         ]
@@ -14740,7 +14341,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Depot Expansion (400%)"
           }
         ]
@@ -14761,7 +14362,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Depot Expansion (500%)"
           }
         ]
@@ -14796,7 +14397,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Upload Upgrade: 30/min"
           }
         ]
@@ -14831,7 +14432,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Upload Upgrade: 60/min"
           }
         ]
@@ -14866,7 +14467,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Upload Upgrade: 120/min"
           }
         ]
@@ -14887,7 +14488,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Upload Upgrade: 240/min"
           }
         ]
@@ -14919,7 +14520,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Somersloop Analysis"
           }
         ]
@@ -14969,7 +14570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Alien Energy Harvesting"
           }
         ]
@@ -14990,7 +14591,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Production Amplifier"
           }
         ]
@@ -15011,7 +14612,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Alien Technology: Power Augmenter"
           }
         ]
@@ -15085,7 +14686,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Caterium Electronics"
           }
         ]
@@ -15106,7 +14707,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Bullet Guidance System"
           }
         ]
@@ -15182,7 +14783,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: High-Speed Connector"
           }
         ]
@@ -15214,7 +14815,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Caterium"
           }
         ]
@@ -15246,7 +14847,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Caterium Ingots"
           }
         ]
@@ -15304,7 +14905,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Quickwire"
           }
         ]
@@ -15325,7 +14926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Power Switch"
           }
         ]
@@ -15346,7 +14947,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Priority Power Switch"
           }
         ]
@@ -15381,7 +14982,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Power Poles Mk.2"
           }
         ]
@@ -15457,7 +15058,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: AI Limiter"
           }
         ]
@@ -15478,7 +15079,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Smart Splitter"
           }
         ]
@@ -15499,7 +15100,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Programmable Splitter"
           }
         ]
@@ -15520,7 +15121,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Zipline"
           }
         ]
@@ -15541,7 +15142,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Geothermal Generator"
           }
         ]
@@ -15562,7 +15163,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Stun Rebar"
           }
         ]
@@ -15583,7 +15184,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Caterium: Power Poles Mk.3"
           }
         ]
@@ -15620,7 +15221,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Therapeutic Inhaler"
           }
         ]
@@ -15641,7 +15242,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Expanded Toolbelt"
           }
         ]
@@ -15703,7 +15304,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Mycelia"
           }
         ]
@@ -15778,7 +15379,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Fabric"
           }
         ]
@@ -15827,7 +15428,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Medical Properties"
           }
         ]
@@ -15848,7 +15449,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Toxic Cellular Modification"
           }
         ]
@@ -15869,7 +15470,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Vitamin Inhaler"
           }
         ]
@@ -15890,7 +15491,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Parachute"
           }
         ]
@@ -15911,7 +15512,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Synthethic Polyester Fabric"
           }
         ]
@@ -15932,7 +15533,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Mycelia: Gas Mask"
           }
         ]
@@ -16004,7 +15605,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Nutrients: Bacon Agaric"
           }
         ]
@@ -16040,7 +15641,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Nutrients: Beryl Nut"
           }
         ]
@@ -16076,7 +15677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Nutrients: Paleberry"
           }
         ]
@@ -16112,7 +15713,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Nutrients: Nutritional Processor"
           }
         ]
@@ -16133,7 +15734,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Nutrients: Nutritional Inhaler"
           }
         ]
@@ -16170,7 +15771,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Power Slugs: Slug Scanning"
           }
         ]
@@ -16234,7 +15835,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Power Slugs: Blue Power Slugs"
           }
         ]
@@ -16270,7 +15871,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Power Slugs: Yellow Power Shards"
           }
         ]
@@ -16291,7 +15892,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Power Slugs: Purple Power Shards"
           }
         ]
@@ -16312,7 +15913,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Power Slugs: Overclock Production"
           }
         ]
@@ -16417,7 +16018,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Crystal Oscillator"
           }
         ]
@@ -16465,7 +16066,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Quartz Crystals"
           }
         ]
@@ -16507,7 +16108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Quartz"
           }
         ]
@@ -16528,7 +16129,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Shatter Rebar"
           }
         ]
@@ -16573,7 +16174,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Silica"
           }
         ]
@@ -16594,7 +16195,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Explosive Resonance Application"
           }
         ]
@@ -16615,7 +16216,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Blade Runners"
           }
         ]
@@ -16636,7 +16237,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: The Explorer"
           }
         ]
@@ -16657,7 +16258,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Material Resonance Screening"
           }
         ]
@@ -16678,7 +16279,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Radio Signal Scanning"
           }
         ]
@@ -16699,7 +16300,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Inflated Pocket Dimension"
           }
         ]
@@ -16720,7 +16321,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Quartz: Radar Technology"
           }
         ]
@@ -16757,7 +16358,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: The Nobelisk Detonator"
           }
         ]
@@ -16820,7 +16421,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Smokeless Powder"
           }
         ]
@@ -16869,7 +16470,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Sulfur"
           }
         ]
@@ -16890,7 +16491,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Inflated Pocket Dimension"
           }
         ]
@@ -16939,7 +16540,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: The Rifle"
           }
         ]
@@ -16960,7 +16561,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Compacted Coal"
           }
         ]
@@ -17022,7 +16623,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Black Powder"
           }
         ]
@@ -17043,7 +16644,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Explosive Rebar"
           }
         ]
@@ -17092,7 +16693,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Cluster Nobelisk"
           }
         ]
@@ -17142,7 +16743,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Experimental Power Generation"
           }
         ]
@@ -17177,7 +16778,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Turbo Rifle Ammo"
           }
         ]
@@ -17198,7 +16799,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Turbo Fuel"
           }
         ]
@@ -17219,7 +16820,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Expanded Toolbelt"
           }
         ]
@@ -17254,7 +16855,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "event_name": "Sulfur: Nuclear Deterrent Development"
           }
         ]
@@ -30879,19 +30480,19 @@
             "FreeSampleRadioactive": false,
             "EnergyLink": true,
             "StartingRecipies": [
-              1338224,
               1338218,
-              1338203,
-              1338347,
-              1338220,
-              1338601,
-              1338262,
               1338600,
               1338616,
-              1338617,
-              1338244,
+              1338220,
+              1338347,
+              1338215,
+              1338203,
               1338259,
-              1338215
+              1338617,
+              1338262,
+              1338224,
+              1338244,
+              1338601
             ]
           },
           "SlotDataVersion": 1,

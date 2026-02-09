@@ -538,9 +538,17 @@ class SatisfactoryGameExportHandler(GenericGameExportHandler):
         element_rule = args.get("element_rule", {})
         iterator_info = args.get("iterator_info", {})
 
-        # Check if this is a handcraft_single_part capability check
+        # Check if this is a handcraft_single_part capability check.
+        # The element_rule can appear in two forms:
+        # 1. Generic expansion: {"type": "capability", "capability": "handcraft_single_part"}
+        # 2. Raw AST export: {"type": "helper", "name": "can_handcraft_single_part", ...}
         capability = element_rule.get("capability", "")
-        if capability == "handcraft_single_part" and self._critical_path:
+        helper_name = element_rule.get("name", "")
+        is_handcraft = (
+            capability == "handcraft_single_part"
+            or (element_rule.get("type") == "helper" and helper_name == "can_handcraft_single_part")
+        )
+        if is_handcraft and self._critical_path:
             # Extract the parts from the iterator
             iterator = iterator_info.get("iterator", {})
             parts_value = iterator.get("value") if isinstance(iterator, dict) else None

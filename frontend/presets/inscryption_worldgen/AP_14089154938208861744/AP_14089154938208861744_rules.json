@@ -106,7 +106,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Boss Angler",
@@ -120,7 +120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Boss Trapper",
@@ -134,7 +134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Boss Leshy",
@@ -148,7 +148,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Safe",
@@ -162,7 +162,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Clock Main Compartment",
@@ -179,7 +179,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Clock Upper Compartment",
@@ -193,7 +193,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Dagger",
@@ -210,7 +210,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Wardrobe Drawer 1",
@@ -227,7 +227,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Wardrobe Drawer 2",
@@ -244,7 +244,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Wardrobe Drawer 3",
@@ -261,7 +261,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Wardrobe Drawer 4",
@@ -278,7 +278,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Magnificus Eye",
@@ -295,7 +295,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Painting 1",
@@ -309,7 +309,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Painting 2",
@@ -329,7 +329,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Painting 3",
@@ -349,7 +349,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 1 - Greater Smoke",
@@ -363,7 +363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -389,7 +389,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Boss Magnificus",
@@ -432,7 +432,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Boss Grimora",
@@ -450,7 +450,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Boss P03",
@@ -482,7 +482,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Prospector",
@@ -502,7 +502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Angler",
@@ -522,7 +522,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Trapper",
@@ -542,7 +542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Sawyer",
@@ -556,7 +556,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Royal",
@@ -570,7 +570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Kaycee",
@@ -584,7 +584,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Goobert",
@@ -627,7 +627,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Pike Mage",
@@ -670,7 +670,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Lonely Wizard",
@@ -713,7 +713,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Inspector",
@@ -745,7 +745,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Melter",
@@ -777,7 +777,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Battle Dredger",
@@ -809,7 +809,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Dock Chest",
@@ -823,7 +823,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Forest Cabin Chest",
@@ -837,7 +837,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Forest Meadow Chest",
@@ -857,7 +857,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Cabin Wardrobe Drawer",
@@ -871,7 +871,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Cabin Safe",
@@ -885,7 +885,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Crypt Casket 1",
@@ -899,7 +899,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Crypt Casket 2",
@@ -913,7 +913,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Crypt Well",
@@ -927,7 +927,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Tower Chest 1",
@@ -959,7 +959,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Tower Chest 2",
@@ -1002,7 +1002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Tower Chest 3",
@@ -1045,7 +1045,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Tentacle",
@@ -1088,7 +1088,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Trash Can",
@@ -1120,7 +1120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Drawer 1",
@@ -1152,7 +1152,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Drawer 2",
@@ -1184,7 +1184,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Chest 1",
@@ -1216,7 +1216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Chest 2",
@@ -1248,7 +1248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Chest 3",
@@ -1280,7 +1280,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Factory Chest 4",
@@ -1312,7 +1312,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Ancient Obol",
@@ -1355,7 +1355,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Bone Lord Femur",
@@ -1372,7 +1372,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Bone Lord Horn",
@@ -1389,7 +1389,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Bone Lord Holo Key",
@@ -1406,7 +1406,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Mycologists Holo Key",
@@ -1449,7 +1449,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Camera Replica",
@@ -1463,7 +1463,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Clover",
@@ -1477,7 +1477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Monocle",
@@ -1509,7 +1509,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 1",
@@ -1523,7 +1523,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 2",
@@ -1537,7 +1537,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 3",
@@ -1551,7 +1551,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 4",
@@ -1565,7 +1565,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 5",
@@ -1579,7 +1579,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 6",
@@ -1593,7 +1593,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 7",
@@ -1607,7 +1607,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 8",
@@ -1621,7 +1621,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 2 - Epitaph Piece 9",
@@ -1635,7 +1635,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1658,7 +1658,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Boss Archivist",
@@ -1678,7 +1678,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Boss Unfinished",
@@ -1698,7 +1698,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Boss G0lly",
@@ -1718,7 +1718,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Boss Mycologists",
@@ -1740,7 +1740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Bone Lord Room",
@@ -1760,7 +1760,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Shop Holo Pelt",
@@ -1780,7 +1780,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Middle Holo Pelt",
@@ -1797,7 +1797,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Forest Holo Pelt",
@@ -1814,7 +1814,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Crypt Holo Pelt",
@@ -1831,7 +1831,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Tower Holo Pelt",
@@ -1851,7 +1851,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Trader 1",
@@ -1872,7 +1872,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Trader 2",
@@ -1904,7 +1904,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Trader 3",
@@ -1936,7 +1936,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Trader 4",
@@ -1968,7 +1968,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Trader 5",
@@ -2000,7 +2000,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Drawer 1",
@@ -2014,7 +2014,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Drawer 2",
@@ -2028,7 +2028,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Clock",
@@ -2048,7 +2048,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Extra Battery",
@@ -2065,7 +2065,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Nano Armor Generator",
@@ -2085,7 +2085,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Chest",
@@ -2099,7 +2099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Goobert's Painting",
@@ -2119,7 +2119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Luke's File Entry 1",
@@ -2139,7 +2139,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Luke's File Entry 2",
@@ -2159,7 +2159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Luke's File Entry 3",
@@ -2179,7 +2179,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Luke's File Entry 4",
@@ -2200,7 +2200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Inspectometer Battery",
@@ -2214,7 +2214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Gems Drone",
@@ -2231,7 +2231,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - The Great Transcendence",
@@ -2252,7 +2252,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Act 3 - Well",
@@ -2269,7 +2269,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
