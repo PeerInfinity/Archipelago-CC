@@ -3667,13 +3667,16 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             This outputs the format expected by the frontend, matching the AST exporter format.
             Empty 'options' and 'args' are omitted.
 
-            Includes '_rb_helper_defined' flag when the helper has a body_rule or helper_func,
-            signaling to the exporter that this helper has a real definition and should not
-            be pattern-expanded into an inferred item check.
+            Includes '_rb_helper': True to signal that this helper call was produced by
+            the Rule Builder and should not be pattern-expanded by the exporter's
+            GenericGameExportHandler. Also includes '_rb_helper_defined' flag when the
+            helper has a body_rule or helper_func, signaling that it should not be
+            expanded at all.
             """
             result: dict[str, Any] = {
                 "rule": self.helper_name,
                 "_original_ast_type": "helper",
+                "_rb_helper": True,
             }
             # Mark helpers that have a defined body so the exporter preserves them
             # rather than pattern-expanding (e.g., has_any_magic -> Has(Any_Magic))

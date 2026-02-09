@@ -72,10 +72,14 @@ class RuleExpansionMixin:
 
                 helper_args = rule.get('args', [])
 
-                # Hook: try pattern-based expansion first (for GenericGameExportHandler)
-                pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
-                if pattern_result is not None:
-                    return self.expand_rule(pattern_result, _depth + 1)
+                # Skip pattern-based expansion for Rule Builder native helpers.
+                # These have their body defined in the helpers section of rules.json
+                # and should be preserved as helper calls for frontend evaluation.
+                if not rule.get('_rb_helper'):
+                    # Hook: try pattern-based expansion first (for GenericGameExportHandler)
+                    pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
+                    if pattern_result is not None:
+                        return self.expand_rule(pattern_result, _depth + 1)
 
                 # Standard helper expansion
                 expanded = self.expand_helper(helper_name, helper_args)
