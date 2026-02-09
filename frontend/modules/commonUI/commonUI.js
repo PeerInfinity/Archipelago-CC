@@ -2732,7 +2732,7 @@ class CommonUI {
         // Check if this is a converted helper rule
         // _original_ast_type can be in args or at rule level depending on export format
         // _converted_from_ast is always at rule level
-        if (args._original_ast_type === 'helper' || rule._original_ast_type === 'helper' || rule._converted_from_ast) {
+        if (args._original_ast_type?.endsWith('helper') || rule._original_ast_type?.endsWith('helper') || rule._converted_from_ast) {
           // This is a helper call converted from AST format
           // Update the label to show as helper instead of Rule: helper_name
           label.textContent = `helper: ${ruleName}`;

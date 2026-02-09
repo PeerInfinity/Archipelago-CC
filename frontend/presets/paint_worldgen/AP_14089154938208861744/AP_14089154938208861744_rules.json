@@ -22,7 +22,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 1.0
@@ -34,7 +34,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 2.0%",
@@ -44,7 +44,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 2.0
@@ -56,7 +56,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 3.0%",
@@ -66,7 +66,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 3.0
@@ -78,7 +78,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 4.0%",
@@ -88,7 +88,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 4.0
@@ -100,7 +100,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 5.0%",
@@ -110,7 +110,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 5.0
@@ -122,7 +122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 6.0%",
@@ -132,7 +132,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 6.0
@@ -144,7 +144,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 7.0%",
@@ -154,7 +154,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 7.0
@@ -166,7 +166,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 8.0%",
@@ -176,7 +176,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 8.0
@@ -188,7 +188,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 9.0%",
@@ -198,7 +198,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 9.0
@@ -210,7 +210,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 10.0%",
@@ -220,7 +220,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 10.0
@@ -232,7 +232,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 11.0%",
@@ -242,7 +242,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 11.0
@@ -254,7 +254,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 12.0%",
@@ -264,7 +264,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 12.0
@@ -276,7 +276,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 13.0%",
@@ -286,7 +286,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 13.0
@@ -298,7 +298,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 14.0%",
@@ -308,7 +308,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 14.0
@@ -320,7 +320,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 15.0%",
@@ -330,7 +330,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 15.0
@@ -342,7 +342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 16.0%",
@@ -352,7 +352,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 16.0
@@ -364,7 +364,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 17.0%",
@@ -374,7 +374,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 17.0
@@ -386,7 +386,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 18.0%",
@@ -396,7 +396,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 18.0
@@ -408,7 +408,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 19.0%",
@@ -418,7 +418,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 19.0
@@ -430,7 +430,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 20.0%",
@@ -440,7 +440,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 20.0
@@ -452,7 +452,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 21.0%",
@@ -462,7 +462,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 21.0
@@ -474,7 +474,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 22.0%",
@@ -484,7 +484,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 22.0
@@ -496,7 +496,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 23.0%",
@@ -506,7 +506,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 23.0
@@ -518,7 +518,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 24.0%",
@@ -528,7 +528,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 24.0
@@ -540,7 +540,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 25.0%",
@@ -550,7 +550,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 25.0
@@ -562,7 +562,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 26.0%",
@@ -572,7 +572,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 26.0
@@ -584,7 +584,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 27.0%",
@@ -594,7 +594,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 27.0
@@ -606,7 +606,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 28.0%",
@@ -616,7 +616,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 28.0
@@ -628,7 +628,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 29.0%",
@@ -638,7 +638,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 29.0
@@ -650,7 +650,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 30.0%",
@@ -660,7 +660,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 30.0
@@ -672,7 +672,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 31.0%",
@@ -682,7 +682,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 31.0
@@ -694,7 +694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 32.0%",
@@ -704,7 +704,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 32.0
@@ -716,7 +716,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 33.0%",
@@ -726,7 +726,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 33.0
@@ -738,7 +738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 34.0%",
@@ -748,7 +748,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 34.0
@@ -760,7 +760,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 35.0%",
@@ -770,7 +770,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 35.0
@@ -782,7 +782,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 36.0%",
@@ -792,7 +792,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 36.0
@@ -804,7 +804,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 37.0%",
@@ -814,7 +814,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 37.0
@@ -826,7 +826,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 38.0%",
@@ -836,7 +836,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 38.0
@@ -848,7 +848,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 39.0%",
@@ -858,7 +858,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 39.0
@@ -870,7 +870,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 40.0%",
@@ -880,7 +880,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 40.0
@@ -892,7 +892,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 41.0%",
@@ -902,7 +902,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 41.0
@@ -914,7 +914,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 42.0%",
@@ -924,7 +924,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 42.0
@@ -936,7 +936,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 43.0%",
@@ -946,7 +946,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 43.0
@@ -958,7 +958,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 44.0%",
@@ -968,7 +968,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 44.0
@@ -980,7 +980,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 45.0%",
@@ -990,7 +990,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 45.0
@@ -1002,7 +1002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 46.0%",
@@ -1012,7 +1012,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 46.0
@@ -1024,7 +1024,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 47.0%",
@@ -1034,7 +1034,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 47.0
@@ -1046,7 +1046,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 48.0%",
@@ -1056,7 +1056,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 48.0
@@ -1068,7 +1068,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 49.0%",
@@ -1078,7 +1078,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 49.0
@@ -1090,7 +1090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 50.0%",
@@ -1100,7 +1100,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 50.0
@@ -1112,7 +1112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 50.5%",
@@ -1122,7 +1122,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 50.5
@@ -1134,7 +1134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 51.0%",
@@ -1144,7 +1144,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 51.0
@@ -1156,7 +1156,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 51.5%",
@@ -1166,7 +1166,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 51.5
@@ -1178,7 +1178,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 52.0%",
@@ -1188,7 +1188,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 52.0
@@ -1200,7 +1200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 52.5%",
@@ -1210,7 +1210,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 52.5
@@ -1222,7 +1222,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 53.0%",
@@ -1232,7 +1232,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 53.0
@@ -1244,7 +1244,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 53.5%",
@@ -1254,7 +1254,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 53.5
@@ -1266,7 +1266,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 54.0%",
@@ -1276,7 +1276,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 54.0
@@ -1288,7 +1288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 54.5%",
@@ -1298,7 +1298,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 54.5
@@ -1310,7 +1310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 55.0%",
@@ -1320,7 +1320,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 55.0
@@ -1332,7 +1332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 55.5%",
@@ -1342,7 +1342,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 55.5
@@ -1354,7 +1354,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 56.0%",
@@ -1364,7 +1364,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 56.0
@@ -1376,7 +1376,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 56.5%",
@@ -1386,7 +1386,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 56.5
@@ -1398,7 +1398,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 57.0%",
@@ -1408,7 +1408,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 57.0
@@ -1420,7 +1420,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 57.5%",
@@ -1430,7 +1430,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 57.5
@@ -1442,7 +1442,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 58.0%",
@@ -1452,7 +1452,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 58.0
@@ -1464,7 +1464,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 58.5%",
@@ -1474,7 +1474,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 58.5
@@ -1486,7 +1486,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 59.0%",
@@ -1496,7 +1496,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 59.0
@@ -1508,7 +1508,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 59.5%",
@@ -1518,7 +1518,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 59.5
@@ -1530,7 +1530,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 60.0%",
@@ -1540,7 +1540,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 60.0
@@ -1552,7 +1552,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 60.5%",
@@ -1562,7 +1562,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 60.5
@@ -1574,7 +1574,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 61.0%",
@@ -1584,7 +1584,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 61.0
@@ -1596,7 +1596,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 61.5%",
@@ -1606,7 +1606,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 61.5
@@ -1618,7 +1618,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 62.0%",
@@ -1628,7 +1628,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 62.0
@@ -1640,7 +1640,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 62.5%",
@@ -1650,7 +1650,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 62.5
@@ -1662,7 +1662,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 63.0%",
@@ -1672,7 +1672,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 63.0
@@ -1684,7 +1684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 63.5%",
@@ -1694,7 +1694,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 63.5
@@ -1706,7 +1706,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 64.0%",
@@ -1716,7 +1716,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 64.0
@@ -1728,7 +1728,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 64.5%",
@@ -1738,7 +1738,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 64.5
@@ -1750,7 +1750,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 65.0%",
@@ -1760,7 +1760,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 65.0
@@ -1772,7 +1772,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 65.5%",
@@ -1782,7 +1782,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 65.5
@@ -1794,7 +1794,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 66.0%",
@@ -1804,7 +1804,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 66.0
@@ -1816,7 +1816,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 66.5%",
@@ -1826,7 +1826,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 66.5
@@ -1838,7 +1838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 67.0%",
@@ -1848,7 +1848,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 67.0
@@ -1860,7 +1860,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 67.5%",
@@ -1870,7 +1870,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 67.5
@@ -1882,7 +1882,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 68.0%",
@@ -1892,7 +1892,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 68.0
@@ -1904,7 +1904,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 68.5%",
@@ -1914,7 +1914,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 68.5
@@ -1926,7 +1926,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 69.0%",
@@ -1936,7 +1936,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 69.0
@@ -1948,7 +1948,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 69.5%",
@@ -1958,7 +1958,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 69.5
@@ -1970,7 +1970,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 70.0%",
@@ -1980,7 +1980,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 70.0
@@ -1992,7 +1992,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 70.25%",
@@ -2002,7 +2002,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 70.25
@@ -2014,7 +2014,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 70.5%",
@@ -2024,7 +2024,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 70.5
@@ -2036,7 +2036,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 70.75%",
@@ -2046,7 +2046,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 70.75
@@ -2058,7 +2058,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 71.0%",
@@ -2068,7 +2068,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 71.0
@@ -2080,7 +2080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 71.25%",
@@ -2090,7 +2090,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 71.25
@@ -2102,7 +2102,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 71.5%",
@@ -2112,7 +2112,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 71.5
@@ -2124,7 +2124,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 71.75%",
@@ -2134,7 +2134,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 71.75
@@ -2146,7 +2146,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 72.0%",
@@ -2156,7 +2156,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 72.0
@@ -2168,7 +2168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 72.25%",
@@ -2178,7 +2178,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 72.25
@@ -2190,7 +2190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 72.5%",
@@ -2200,7 +2200,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 72.5
@@ -2212,7 +2212,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 72.75%",
@@ -2222,7 +2222,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 72.75
@@ -2234,7 +2234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 73.0%",
@@ -2244,7 +2244,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 73.0
@@ -2256,7 +2256,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 73.25%",
@@ -2266,7 +2266,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 73.25
@@ -2278,7 +2278,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 73.5%",
@@ -2288,7 +2288,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 73.5
@@ -2300,7 +2300,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 73.75%",
@@ -2310,7 +2310,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 73.75
@@ -2322,7 +2322,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 74.0%",
@@ -2332,7 +2332,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 74.0
@@ -2344,7 +2344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 74.25%",
@@ -2354,7 +2354,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 74.25
@@ -2366,7 +2366,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 74.5%",
@@ -2376,7 +2376,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 74.5
@@ -2388,7 +2388,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 74.75%",
@@ -2398,7 +2398,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 74.75
@@ -2410,7 +2410,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 75.0%",
@@ -2420,7 +2420,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 75.0
@@ -2432,7 +2432,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 75.25%",
@@ -2442,7 +2442,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 75.25
@@ -2454,7 +2454,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 75.5%",
@@ -2464,7 +2464,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 75.5
@@ -2476,7 +2476,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 75.75%",
@@ -2486,7 +2486,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 75.75
@@ -2498,7 +2498,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 76.0%",
@@ -2508,7 +2508,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 76.0
@@ -2520,7 +2520,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 76.25%",
@@ -2530,7 +2530,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 76.25
@@ -2542,7 +2542,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 76.5%",
@@ -2552,7 +2552,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 76.5
@@ -2564,7 +2564,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 76.75%",
@@ -2574,7 +2574,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 76.75
@@ -2586,7 +2586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 77.0%",
@@ -2596,7 +2596,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 77.0
@@ -2608,7 +2608,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 77.25%",
@@ -2618,7 +2618,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 77.25
@@ -2630,7 +2630,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 77.5%",
@@ -2640,7 +2640,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 77.5
@@ -2652,7 +2652,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 77.75%",
@@ -2662,7 +2662,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 77.75
@@ -2674,7 +2674,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 78.0%",
@@ -2684,7 +2684,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 78.0
@@ -2696,7 +2696,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 78.25%",
@@ -2706,7 +2706,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 78.25
@@ -2718,7 +2718,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 78.5%",
@@ -2728,7 +2728,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 78.5
@@ -2740,7 +2740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 78.75%",
@@ -2750,7 +2750,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 78.75
@@ -2762,7 +2762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 79.0%",
@@ -2772,7 +2772,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 79.0
@@ -2784,7 +2784,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 79.25%",
@@ -2794,7 +2794,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 79.25
@@ -2806,7 +2806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 79.5%",
@@ -2816,7 +2816,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 79.5
@@ -2828,7 +2828,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 79.75%",
@@ -2838,7 +2838,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 79.75
@@ -2850,7 +2850,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Similarity: 80.0%",
@@ -2860,7 +2860,7 @@
               "args": {
                 "left": {
                   "rule": "calculate_paint_percent_available",
-                  "_original_ast_type": "helper"
+                  "_original_ast_type": "rb_defined_helper"
                 },
                 "op": ">=",
                 "right": 80.0
@@ -2872,7 +2872,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }

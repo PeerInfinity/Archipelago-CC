@@ -35,42 +35,42 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Heat Man Stage", player),
-        HasAll('Item 2 - Rocket', 'Heat Man Access Codes')
+        HasAll('Heat Man Access Codes', 'Item 2 - Rocket')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Air Man Stage", player),
-        HasAll('Air Man Access Codes')
+        Has('Air Man Access Codes', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wood Man Stage", player),
-        HasAll('Wood Man Access Codes')
+        Has('Wood Man Access Codes', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Bubble Man Stage", player),
-        HasAll('Bubble Man Access Codes')
+        Has('Bubble Man Access Codes', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Quick Man Stage", player),
-        HasAll('Time Stopper', 'Quick Man Access Codes')
+        HasAll('Quick Man Access Codes', 'Time Stopper')
     )
 
     world.set_rule(
         multiworld.get_entrance("To Flash Man Stage", player),
-        HasAll('Flash Man Access Codes')
+        Has('Flash Man Access Codes', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Metal Man Stage", player),
-        HasAll('Metal Man Access Codes')
+        Has('Metal Man Access Codes', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Crash Man Stage", player),
-        HasAll('Crash Man Access Codes')
+        Has('Crash Man Access Codes', 1)
     )
 
     world.set_rule(
@@ -80,27 +80,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 2", player),
-        HasAll('Wily Stage 1 - Completed')
+        Has('Wily Stage 1 - Completed', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 3", player),
-        HasAll('Wily Stage 2 - Completed')
+        Has('Wily Stage 2 - Completed', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 4", player),
-        HasAll('Wily Stage 3 - Completed')
+        Has('Wily Stage 3 - Completed', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 5", player),
-        HasAll('Wily Stage 4 - Completed')
+        Has('Wily Stage 4 - Completed', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Wily Stage 6", player),
-        HasAll('Wily Stage 5 - Completed')
+        Has('Wily Stage 5 - Completed', 1)
     )
     # Location rules
     world.set_rule(
@@ -154,10 +154,10 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Wily Machine 2 - Defeated", player).access_rule = \
-        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].wily_5_requirement, state.multiworld.worlds[player].wily_5_weapons)
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement, {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []})
 
     multiworld.get_location("Wily Stage 5 - Completed", player).access_rule = \
-        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].wily_5_requirement, state.multiworld.worlds[player].wily_5_weapons)
+        lambda state: can_defeat_enough_rbms(state, player, state.multiworld.worlds[player].options.wily_5_requirement, {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 12: []})
 
     world.set_rule(
         multiworld.get_location("Dr. Wily (Alien) - Defeated", player),

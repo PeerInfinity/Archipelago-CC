@@ -3504,7 +3504,7 @@ const _evaluateRuleImpl = (rule, context, depth, localScope) => {
           } else {
             // Normalize certain string values to be falsy
             // This handles Choice options where 0='off'/'none' etc.
-            // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+            // The normalization of 'off'/'none' strings is now handled in snapshotInterface.getSetting
             result = rawValue;
           }
 
@@ -6799,7 +6799,7 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       // Check for _original_ast_type to determine if this should be delegated to AST evaluator
       // Note: _original_ast_type may be at top level (rule._original_ast_type) or inside args (args._original_ast_type)
       const originalAstType = rule._original_ast_type || args?._original_ast_type;
-      if (originalAstType && originalAstType !== 'helper') {
+      if (originalAstType && !originalAstType.endsWith('helper')) {
         // This was converted from an AST rule that we should try to evaluate as AST
         log('debug', `[evaluateRuleBuilderRule] Delegating to AST evaluator for type '${originalAstType}'`);
 
@@ -6826,7 +6826,7 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       if (Array.isArray(args)) {
         // New flattened format - args is directly an array
         helperArgs = args;
-      } else if ((rule._original_ast_type === 'helper' || args._original_ast_type === 'helper') && Array.isArray(args.args)) {
+      } else if ((rule._original_ast_type?.endsWith('helper') || args._original_ast_type?.endsWith('helper')) && Array.isArray(args.args)) {
         // Old nested format - args.args contains the helper arguments
         helperArgs = args.args;
       } else {

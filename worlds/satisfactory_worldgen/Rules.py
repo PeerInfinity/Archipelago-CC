@@ -117,97 +117,97 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-1", player),
-        And(Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-2", player),
-        And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-3", player),
-        And(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 1 -> Hub 1-4", player),
-        And(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub Tier 3", player),
-        And(True_(), True_())
+        And(HasAll('Can Build: Power level: Automated', 'Can Build: MAM', 'Can Build: AWESOME Sink', 'Can Build: AWESOME Shop', 'Can Build: Power Storage'), Has('Elevator Phase 1'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-1", player),
-        And(Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-2", player),
-        And(Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-3", player),
-        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-4", player),
-        And(Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 2 -> Hub 2-5", player),
-        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-1", player),
-        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-2", player),
-        And(Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-3", player),
-        And(Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 3 -> Hub 3-4", player),
-        And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-1", player),
-        And(Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-2", player),
-        And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Pipe')), Has('Can Produce: Steel Pipe')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-3", player),
-        And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Pipe')), Has('Can Produce: Steel Pipe')), Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Or(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Can Produce: Screw')), Has('Recipe: Rotor')), Has('Can Produce: Rotor')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-4", player),
-        And(Or(And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Has('Recipe: Encased Industrial Beam')), Has('Can Produce: Encased Industrial Beam')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Rod')), Has('Recipe: Modular Frame')), Has('Can Produce: Modular Frame')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub Tier 4 -> Hub 4-5", player),
-        And(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Has('Recipe: Copper Sheet')), Has('Can Produce: Copper Sheet')), Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Pipe')), Has('Can Produce: Steel Pipe')), Or(And(Or(And(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Coal')), Has('Recipe: Steel Ingot')), Has('Can Produce: Steel Ingot')), Has('Recipe: Steel Beam')), Has('Can Produce: Steel Beam')), Or(Or(True_(), Has('Can Produce: Limestone')), Has('Can Produce: Concrete')), Has('Recipe: Encased Industrial Beam')), Has('Can Produce: Encased Industrial Beam')))
+        True_()
     )
 
     world.set_rule(
@@ -736,86 +736,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Can Produce: Leaves in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Wood in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Hatcher Remains in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Hog Remains in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Plasma Spitter Remains in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Stinger Remains in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Mycelia in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Beryl Nut in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Paleberry in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Bacon Agaric in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Blue Power Slug in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Yellow Power Slug in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Purple Power Slug in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Hard Drive in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Mercer Sphere in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
-        multiworld.get_location("Can Produce: Somersloop in Overworld", player),
-        HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5')
-    )
-
-    world.set_rule(
         multiworld.get_location("Can Build: Constructor", player),
         And(And(Or(And(Or(Or(And(Or(True_(), Has('Can Produce: Iron Ore')), Or(True_(), Has('Can Produce: Limestone'))), Has('Can Produce: Iron Ingot')), Has('Can Produce: Iron Plate')), Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire'))), Has('Can Produce: Reinforced Iron Plate')), Or(Or(And(Or(Or(True_(), Has('Can Produce: Copper Ore')), Has('Can Produce: Copper Ingot')), Or(Or(True_(), Has('Can Produce: Caterium Ore')), Or(True_(), Has('Can Produce: Caterium Ore')), Has('Can Produce: Caterium Ingot'))), Has('Can Produce: Wire')), Has('Can Produce: Cable'))), Has('Can Build: Power level: Basic'))
     )
@@ -1197,920 +1117,920 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 36", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: AI Limiter')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 37", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: AI Limiter')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 38", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: AI Limiter')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 39", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Black Powder')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 40", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Black Powder')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 41", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Circuit Board')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 42", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Computer')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 43", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 44", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 45", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 46", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 47", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 48", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 49", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Crystal Oscillator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 50", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Encased Industrial Beam')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 51", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Encased Industrial Beam')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 52", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Encased Industrial Beam')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 53", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Encased Industrial Beam')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 54", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Encased Industrial Beam')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 55", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Heat Sink')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 56", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Heat Sink')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 57", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Heat Sink')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 58", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Heavy Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 59", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: High-Speed Connector')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 60", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: High-Speed Connector')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 61", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 62", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 63", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 64", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 65", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 66", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Modular Frame')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 67", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 68", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 69", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 70", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 71", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 72", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 73", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 74", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 75", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 76", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 77", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Motor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 78", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Quartz Crystal')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 79", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Quickwire')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 80", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Quickwire')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 81", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Quickwire')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 82", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Radio Control Unit')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 83", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 84", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 85", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 86", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 87", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 88", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 89", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rotor')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 90", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rubber')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 91", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Rubber')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 92", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Screw')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 93", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Screw')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 95", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Stator')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 96", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Steel Beam')
     )
 
     world.set_rule(
         multiworld.get_location("Hard drive random check 97", player),
-        And(True_(), True_())
+        HasAll('Can Build: MAM', 'Can Produce: Steel Pipe')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Plate in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Iron Ingot'))
+        HasAll('Can Build: Constructor', 'Can Produce: Iron Ingot')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Rod in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Iron Ingot')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Rod', 'Can Build: Constructor', 'Can Produce: Steel Ingot')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Aluminum Rod', 'Can Build: Constructor', 'Can Produce: Aluminum Ingot')))
+        Or(HasAll('Can Build: Constructor', 'Can Produce: Iron Ingot'), HasAll('Recipe: Steel Rod', 'Can Build: Constructor', 'Can Produce: Steel Ingot'), HasAll('Recipe: Aluminum Rod', 'Can Build: Constructor', 'Can Produce: Aluminum Ingot'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Screw in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Iron Rod')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Cast Screw', 'Can Build: Constructor', 'Can Produce: Iron Ingot')), And(HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Screw', 'Can Build: Constructor', 'Can Produce: Steel Beam')))
+        Or(HasAll('Can Build: Constructor', 'Can Produce: Iron Rod'), HasAll('Recipe: Cast Screw', 'Can Build: Constructor', 'Can Produce: Iron Ingot'), HasAll('Recipe: Steel Screw', 'Can Build: Constructor', 'Can Produce: Steel Beam'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Wire in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Wire', 'Can Build: Constructor', 'Can Produce: Copper Ingot')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Iron Wire', 'Can Build: Constructor', 'Can Produce: Iron Ingot')), And(HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Caterium Wire', 'Can Build: Constructor', 'Can Produce: Caterium Ingot')))
+        Or(HasAll('Recipe: Wire', 'Can Build: Constructor', 'Can Produce: Copper Ingot'), HasAll('Recipe: Iron Wire', 'Can Build: Constructor', 'Can Produce: Iron Ingot'), HasAll('Recipe: Caterium Wire', 'Can Build: Constructor', 'Can Produce: Caterium Ingot'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Cable in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Wire'))
+        HasAll('Can Build: Constructor', 'Can Produce: Wire')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Quickwire in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Quickwire', 'Can Build: Constructor', 'Can Produce: Caterium Ingot'))
+        HasAll('Recipe: Quickwire', 'Can Build: Constructor', 'Can Produce: Caterium Ingot')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Copper Sheet in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Copper Sheet', 'Can Build: Constructor', 'Can Produce: Copper Ingot'))
+        HasAll('Recipe: Copper Sheet', 'Can Build: Constructor', 'Can Produce: Copper Ingot')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Steel Pipe in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Pipe', 'Can Build: Constructor', 'Can Produce: Steel Ingot')), And(HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Iron Pipe', 'Can Build: Constructor', 'Can Produce: Iron Ingot')))
+        Or(HasAll('Recipe: Steel Pipe', 'Can Build: Constructor', 'Can Produce: Steel Ingot'), HasAll('Recipe: Iron Pipe', 'Can Build: Constructor', 'Can Produce: Iron Ingot'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Steel Beam in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Beam', 'Can Build: Constructor', 'Can Produce: Steel Ingot')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Aluminum Beam', 'Can Build: Constructor', 'Can Produce: Aluminum Ingot')))
+        Or(HasAll('Recipe: Steel Beam', 'Can Build: Constructor', 'Can Produce: Steel Ingot'), HasAll('Recipe: Aluminum Beam', 'Can Build: Constructor', 'Can Produce: Aluminum Ingot'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Concrete in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Limestone'))
+        HasAll('Can Build: Constructor', 'Can Produce: Limestone')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Silica in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Silica', 'Can Build: Constructor', 'Can Produce: Raw Quartz'))
+        HasAll('Recipe: Silica', 'Can Build: Constructor', 'Can Produce: Raw Quartz')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Quartz Crystal in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Quartz Crystal', 'Can Build: Constructor', 'Can Produce: Raw Quartz'))
+        HasAll('Recipe: Quartz Crystal', 'Can Build: Constructor', 'Can Produce: Raw Quartz')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Aluminum Casing in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Aluminum Casing', 'Can Build: Constructor', 'Can Produce: Alclad Aluminum Sheet'))
+        HasAll('Recipe: Aluminum Casing', 'Can Build: Constructor', 'Can Produce: Alclad Aluminum Sheet')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Alien Protein in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Hatcher Protein', 'Can Build: Constructor', 'Can Produce: Hatcher Remains')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Hog Protein', 'Can Build: Constructor', 'Can Produce: Hog Remains')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Spitter Protein', 'Can Build: Constructor', 'Can Produce: Plasma Spitter Remains')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Stinger Protein', 'Can Build: Constructor', 'Can Produce: Stinger Remains')))
+        Or(HasAll('Recipe: Hatcher Protein', 'Can Build: Constructor', 'Can Produce: Hatcher Remains'), HasAll('Recipe: Hog Protein', 'Can Build: Constructor', 'Can Produce: Hog Remains'), HasAll('Recipe: Spitter Protein', 'Can Build: Constructor', 'Can Produce: Plasma Spitter Remains'), HasAll('Recipe: Stinger Protein', 'Can Build: Constructor', 'Can Produce: Stinger Remains'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Biomass in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Leaves')), And(HasAny('Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Constructor', 'Can Produce: Wood')), And(HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Biomass (Mycelia)', 'Can Build: Constructor', 'Can Produce: Mycelia')), And(HasAny('Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Biomass (Alien Protein)', 'Can Build: Constructor', 'Can Produce: Alien Protein')))
+        Or(HasAll('Can Build: Constructor', 'Can Produce: Leaves'), HasAll('Can Build: Constructor', 'Can Produce: Wood'), HasAll('Recipe: Biomass (Mycelia)', 'Can Build: Constructor', 'Can Produce: Mycelia'), HasAll('Recipe: Biomass (Alien Protein)', 'Can Build: Constructor', 'Can Produce: Alien Protein'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Empty Canister in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Empty Canister', 'Can Build: Constructor', 'Can Produce: Plastic')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Canister', 'Can Build: Constructor', 'Can Produce: Steel Ingot')))
+        Or(HasAll('Recipe: Empty Canister', 'Can Build: Constructor', 'Can Produce: Plastic'), HasAll('Recipe: Steel Canister', 'Can Build: Constructor', 'Can Produce: Steel Ingot'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Alien DNA Capsule in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Alien DNA Capsule', 'Can Build: Constructor', 'Can Produce: Alien Protein'))
+        HasAll('Recipe: Alien DNA Capsule', 'Can Build: Constructor', 'Can Produce: Alien Protein')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Rebar in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Iron Rebar', 'Can Build: Constructor', 'Can Produce: Iron Rod'))
+        HasAll('Recipe: Iron Rebar', 'Can Build: Constructor', 'Can Produce: Iron Rod')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Power Shard in Constructor", player),
-        Or(And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Power Shard (1)', 'Can Build: Constructor', 'Can Produce: Blue Power Slug')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Power Shard (2)', 'Can Build: Constructor', 'Can Produce: Yellow Power Slug')), And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Power Shard (5)', 'Can Build: Constructor', 'Can Produce: Purple Power Slug')))
+        Or(HasAll('Recipe: Power Shard (1)', 'Can Build: Constructor', 'Can Produce: Blue Power Slug'), HasAll('Recipe: Power Shard (2)', 'Can Build: Constructor', 'Can Produce: Yellow Power Slug'), HasAll('Recipe: Power Shard (5)', 'Can Build: Constructor', 'Can Produce: Purple Power Slug'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Reanimated SAM in Constructor", player),
-        And(HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Reanimated SAM', 'Can Build: Constructor', 'Can Produce: SAM'))
+        HasAll('Recipe: Reanimated SAM', 'Can Build: Constructor', 'Can Produce: SAM')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Reinforced Iron Plate in Assembler", player),
-        Or(And(HasAll('Can Produce: Iron Plate', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Reinforced Iron Plate', 'Can Build: Assembler')), And(HasAll('Can Produce: Iron Plate', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Adhered Iron Plate', 'Can Build: Assembler')), And(HasAll('Can Produce: Iron Plate', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Bolted Iron Plate', 'Can Build: Assembler')), And(HasAll('Can Produce: Iron Plate', 'Can Produce: Wire'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Iron Plate', 'Can Produce: Screw'), HasAll('Recipe: Reinforced Iron Plate', 'Can Build: Assembler')), And(HasAll('Can Produce: Iron Plate', 'Can Produce: Rubber'), HasAll('Recipe: Adhered Iron Plate', 'Can Build: Assembler')), And(HasAll('Can Produce: Iron Plate', 'Can Produce: Screw'), HasAll('Recipe: Bolted Iron Plate', 'Can Build: Assembler')), And(HasAll('Can Produce: Iron Plate', 'Can Produce: Wire'), Has('Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Rotor in Assembler", player),
-        Or(And(HasAll('Can Produce: Iron Rod', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Rotor', 'Can Build: Assembler')), And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Copper Rotor', 'Can Build: Assembler')), And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Wire'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Rotor', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Iron Rod', 'Can Produce: Screw'), HasAll('Recipe: Rotor', 'Can Build: Assembler')), And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Screw'), HasAll('Recipe: Copper Rotor', 'Can Build: Assembler')), And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Wire'), HasAll('Recipe: Steel Rotor', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Stator in Assembler", player),
-        Or(And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Wire'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Stator', 'Can Build: Assembler')), And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Quickwire'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Quickwire Stator', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Wire'), HasAll('Recipe: Stator', 'Can Build: Assembler')), And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Quickwire'), HasAll('Recipe: Quickwire Stator', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Plate in Assembler", player),
-        And(HasAll('Can Produce: Iron Ingot', 'Can Produce: Plastic'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Coated Iron Plate', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Iron Ingot', 'Can Produce: Plastic'), HasAll('Recipe: Coated Iron Plate', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Wire in Assembler", player),
-        And(HasAll('Can Produce: Copper Ingot', 'Can Produce: Caterium Ingot'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Assembler'))
+        And(HasAll('Can Produce: Copper Ingot', 'Can Produce: Caterium Ingot'), Has('Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Cable in Assembler", player),
-        Or(And(HasAll('Can Produce: Wire', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Insulated Cable', 'Can Build: Assembler')), And(HasAll('Can Produce: Quickwire', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Quickwire Cable', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Wire', 'Can Produce: Rubber'), HasAll('Recipe: Insulated Cable', 'Can Build: Assembler')), And(HasAll('Can Produce: Quickwire', 'Can Produce: Rubber'), HasAll('Recipe: Quickwire Cable', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Quickwire in Assembler", player),
-        And(HasAll('Can Produce: Caterium Ingot', 'Can Produce: Copper Ingot'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fused Quickwire', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Caterium Ingot', 'Can Produce: Copper Ingot'), HasAll('Recipe: Fused Quickwire', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Concrete in Assembler", player),
-        Or(And(HasAll('Can Produce: Limestone', 'Can Produce: Silica'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fine Concrete', 'Can Build: Assembler')), And(HasAll('Can Produce: Limestone', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Rubber Concrete', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Limestone', 'Can Produce: Silica'), HasAll('Recipe: Fine Concrete', 'Can Build: Assembler')), And(HasAll('Can Produce: Limestone', 'Can Produce: Rubber'), HasAll('Recipe: Rubber Concrete', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Silica in Assembler", player),
-        And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Limestone'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Cheap Silica', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Limestone'), HasAll('Recipe: Cheap Silica', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Compacted Coal in Assembler", player),
-        And(HasAll('Can Produce: Coal', 'Can Produce: Sulfur'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Compacted Coal', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Coal', 'Can Produce: Sulfur'), HasAll('Recipe: Compacted Coal', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Motor in Assembler", player),
-        Or(And(HasAll('Can Produce: Rotor', 'Can Produce: Stator'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Motor', 'Can Build: Assembler')), And(HasAll('Can Produce: Electromagnetic Control Rod', 'Can Produce: Rotor'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Electric Motor', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Rotor', 'Can Produce: Stator'), HasAll('Recipe: Motor', 'Can Build: Assembler')), And(HasAll('Can Produce: Electromagnetic Control Rod', 'Can Produce: Rotor'), HasAll('Recipe: Electric Motor', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Modular Frame in Assembler", player),
-        Or(And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Iron Rod'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Modular Frame', 'Can Build: Assembler')), And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Bolted Frame', 'Can Build: Assembler')), And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Steel Pipe'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steeled Frame', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Iron Rod'), HasAll('Recipe: Modular Frame', 'Can Build: Assembler')), And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Screw'), HasAll('Recipe: Bolted Frame', 'Can Build: Assembler')), And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Steel Pipe'), HasAll('Recipe: Steeled Frame', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Encased Industrial Beam in Assembler", player),
-        Or(And(HasAll('Can Produce: Steel Beam', 'Can Produce: Concrete'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Encased Industrial Beam', 'Can Build: Assembler')), And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Concrete'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Encased Industrial Pipe', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Steel Beam', 'Can Produce: Concrete'), HasAll('Recipe: Encased Industrial Beam', 'Can Build: Assembler')), And(HasAll('Can Produce: Steel Pipe', 'Can Produce: Concrete'), HasAll('Recipe: Encased Industrial Pipe', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Computer in Assembler", player),
-        And(HasAll('Can Produce: Circuit Board', 'Can Produce: Crystal Oscillator'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Crystal Computer', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Circuit Board', 'Can Produce: Crystal Oscillator'), HasAll('Recipe: Crystal Computer', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Circuit Board in Assembler", player),
-        Or(And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Plastic'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Circuit Board', 'Can Build: Assembler')), And(HasAll('Can Produce: Rubber', 'Can Produce: Petroleum Coke'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Electrode Circuit Board', 'Can Build: Assembler')), And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Silica'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Silicon Circuit Board', 'Can Build: Assembler')), And(HasAll('Can Produce: Plastic', 'Can Produce: Quickwire'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Caterium Circuit Board', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Plastic'), HasAll('Recipe: Circuit Board', 'Can Build: Assembler')), And(HasAll('Can Produce: Rubber', 'Can Produce: Petroleum Coke'), HasAll('Recipe: Electrode Circuit Board', 'Can Build: Assembler')), And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Silica'), HasAll('Recipe: Silicon Circuit Board', 'Can Build: Assembler')), And(HasAll('Can Produce: Plastic', 'Can Produce: Quickwire'), HasAll('Recipe: Caterium Circuit Board', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: AI Limiter in Assembler", player),
-        Or(And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Quickwire'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: AI Limiter', 'Can Build: Assembler')), And(HasAll('Can Produce: Quickwire', 'Can Produce: Plastic'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Plastic AI Limiter', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Quickwire'), HasAll('Recipe: AI Limiter', 'Can Build: Assembler')), And(HasAll('Can Produce: Quickwire', 'Can Produce: Plastic'), HasAll('Recipe: Plastic AI Limiter', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Electromagnetic Control Rod in Assembler", player),
-        Or(And(HasAll('Can Produce: Stator', 'Can Produce: AI Limiter'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Electromagnetic Control Rod', 'Can Build: Assembler')), And(HasAll('Can Produce: Stator', 'Can Produce: High-Speed Connector'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Electromagnetic Connection Rod', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Stator', 'Can Produce: AI Limiter'), HasAll('Recipe: Electromagnetic Control Rod', 'Can Build: Assembler')), And(HasAll('Can Produce: Stator', 'Can Produce: High-Speed Connector'), HasAll('Recipe: Electromagnetic Connection Rod', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Smart Plating in Assembler", player),
-        And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Rotor'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Smart Plating', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Rotor'), HasAll('Recipe: Smart Plating', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Versatile Framework in Assembler", player),
-        And(HasAll('Can Produce: Modular Frame', 'Can Produce: Steel Beam'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Versatile Framework', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Modular Frame', 'Can Produce: Steel Beam'), HasAll('Recipe: Versatile Framework', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Automated Wiring in Assembler", player),
-        And(HasAll('Can Produce: Stator', 'Can Produce: Cable'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Automated Wiring', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Stator', 'Can Produce: Cable'), HasAll('Recipe: Automated Wiring', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Alclad Aluminum Sheet in Assembler", player),
-        And(HasAll('Can Produce: Aluminum Ingot', 'Can Produce: Copper Ingot'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Alclad Aluminum Sheet', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Aluminum Ingot', 'Can Produce: Copper Ingot'), HasAll('Recipe: Alclad Aluminum Sheet', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Aluminum Casing in Assembler", player),
-        And(HasAll('Can Produce: Aluminum Ingot', 'Can Produce: Copper Ingot'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Alclad Casing', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Aluminum Ingot', 'Can Produce: Copper Ingot'), HasAll('Recipe: Alclad Casing', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Heat Sink in Assembler", player),
-        Or(And(HasAll('Can Produce: Alclad Aluminum Sheet', 'Can Produce: Silica'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heat Sink', 'Can Build: Assembler')), And(HasAll('Can Produce: Aluminum Casing', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heat Exchanger', 'Can Build: Assembler')))
+        Or(And(HasAll('Can Produce: Alclad Aluminum Sheet', 'Can Produce: Silica'), HasAll('Recipe: Heat Sink', 'Can Build: Assembler')), And(HasAll('Can Produce: Aluminum Casing', 'Can Produce: Rubber'), HasAll('Recipe: Heat Exchanger', 'Can Build: Assembler')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Fabric in Assembler", player),
-        And(HasAll('Can Produce: Biomass', 'Can Produce: Mycelia'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fabric', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Biomass', 'Can Produce: Mycelia'), HasAll('Recipe: Fabric', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Empty Canister in Assembler", player),
-        And(HasAll('Can Produce: Iron Plate', 'Can Produce: Copper Sheet'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Coated Iron Canister', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Iron Plate', 'Can Produce: Copper Sheet'), HasAll('Recipe: Coated Iron Canister', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Black Powder in Assembler", player),
-        And(HasAll('Can Produce: Sulfur', 'Can Produce: Compacted Coal'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fine Black Powder', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Sulfur', 'Can Produce: Compacted Coal'), HasAll('Recipe: Fine Black Powder', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Rifle Ammo in Assembler", player),
-        And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Smokeless Powder'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Rifle Ammo', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Copper Sheet', 'Can Produce: Smokeless Powder'), HasAll('Recipe: Rifle Ammo', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Nobelisk in Assembler", player),
-        And(HasAll('Can Produce: Black Powder', 'Can Produce: Steel Pipe'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Nobelisk', 'Can Build: Assembler'))
+        And(HasAll('Can Produce: Black Powder', 'Can Produce: Steel Pipe'), HasAll('Recipe: Nobelisk', 'Can Build: Assembler'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Motor in Manufacturer", player),
-        And(HasAll('Can Produce: Rotor', 'Can Produce: Stator', 'Can Produce: Crystal Oscillator'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Rigor Motor', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Rotor', 'Can Produce: Stator', 'Can Produce: Crystal Oscillator'), HasAll('Recipe: Rigor Motor', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Heavy Modular Frame in Manufacturer", player),
-        Or(And(HasAll('Can Produce: Modular Frame', 'Can Produce: Steel Pipe', 'Can Produce: Encased Industrial Beam', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heavy Modular Frame', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Modular Frame', 'Can Produce: Encased Industrial Beam', 'Can Produce: Rubber', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heavy Flexible Frame', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Modular Frame', 'Can Produce: Encased Industrial Beam', 'Can Produce: Steel Pipe', 'Can Produce: Concrete'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heavy Encased Frame', 'Can Build: Manufacturer')))
+        Or(And(HasAll('Can Produce: Modular Frame', 'Can Produce: Steel Pipe', 'Can Produce: Encased Industrial Beam', 'Can Produce: Screw'), HasAll('Recipe: Heavy Modular Frame', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Modular Frame', 'Can Produce: Encased Industrial Beam', 'Can Produce: Rubber', 'Can Produce: Screw'), HasAll('Recipe: Heavy Flexible Frame', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Modular Frame', 'Can Produce: Encased Industrial Beam', 'Can Produce: Steel Pipe', 'Can Produce: Concrete'), HasAll('Recipe: Heavy Encased Frame', 'Can Build: Manufacturer')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Computer in Manufacturer", player),
-        Or(And(HasAll('Can Produce: Circuit Board', 'Can Produce: Cable', 'Can Produce: Plastic'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Computer', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Circuit Board', 'Can Produce: Quickwire', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Caterium Computer', 'Can Build: Manufacturer')))
+        Or(And(HasAll('Can Produce: Circuit Board', 'Can Produce: Cable', 'Can Produce: Plastic'), HasAll('Recipe: Computer', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Circuit Board', 'Can Produce: Quickwire', 'Can Produce: Rubber'), HasAll('Recipe: Caterium Computer', 'Can Build: Manufacturer')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Crystal Oscillator in Manufacturer", player),
-        Or(And(HasAll('Can Produce: Quartz Crystal', 'Can Produce: Cable', 'Can Produce: Reinforced Iron Plate'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Crystal Oscillator', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Quartz Crystal', 'Can Produce: Rubber', 'Can Produce: AI Limiter'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Insulated Crystal Oscillator', 'Can Build: Manufacturer')))
+        Or(And(HasAll('Can Produce: Quartz Crystal', 'Can Produce: Cable', 'Can Produce: Reinforced Iron Plate'), HasAll('Recipe: Crystal Oscillator', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Quartz Crystal', 'Can Produce: Rubber', 'Can Produce: AI Limiter'), HasAll('Recipe: Insulated Crystal Oscillator', 'Can Build: Manufacturer')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: High-Speed Connector in Manufacturer", player),
-        Or(And(HasAll('Can Produce: Quickwire', 'Can Produce: Cable', 'Can Produce: Circuit Board'), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: High-Speed Connector', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Quickwire', 'Can Produce: Silica', 'Can Produce: Circuit Board'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Silicon High-Speed Connector', 'Can Build: Manufacturer')))
+        Or(And(HasAll('Can Produce: Quickwire', 'Can Produce: Cable', 'Can Produce: Circuit Board'), HasAll('Recipe: High-Speed Connector', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Quickwire', 'Can Produce: Silica', 'Can Produce: Circuit Board'), HasAll('Recipe: Silicon High-Speed Connector', 'Can Build: Manufacturer')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Smart Plating in Manufacturer", player),
-        And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Rotor', 'Can Produce: Plastic'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Plastic Smart Plating', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Rotor', 'Can Produce: Plastic'), HasAll('Recipe: Plastic Smart Plating', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Versatile Framework in Manufacturer", player),
-        And(HasAll('Can Produce: Modular Frame', 'Can Produce: Steel Beam', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Flexible Framework', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Modular Frame', 'Can Produce: Steel Beam', 'Can Produce: Rubber'), HasAll('Recipe: Flexible Framework', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Automated Wiring in Manufacturer", player),
-        And(HasAll('Can Produce: Stator', 'Can Produce: Wire', 'Can Produce: High-Speed Connector'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Automated Speed Wiring', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Stator', 'Can Produce: Wire', 'Can Produce: High-Speed Connector'), HasAll('Recipe: Automated Speed Wiring', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Radio Control Unit in Manufacturer", player),
-        Or(And(HasAll('Can Produce: Aluminum Casing', 'Can Produce: Crystal Oscillator', 'Can Produce: Computer'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Radio Control Unit', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Heat Sink', 'Can Produce: High-Speed Connector', 'Can Produce: Quartz Crystal'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Radio Connection Unit', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Crystal Oscillator', 'Can Produce: Circuit Board', 'Can Produce: Aluminum Casing', 'Can Produce: Rubber'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Radio Control System', 'Can Build: Manufacturer')))
+        Or(And(HasAll('Can Produce: Aluminum Casing', 'Can Produce: Crystal Oscillator', 'Can Produce: Computer'), HasAll('Recipe: Radio Control Unit', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Heat Sink', 'Can Produce: High-Speed Connector', 'Can Produce: Quartz Crystal'), HasAll('Recipe: Radio Connection Unit', 'Can Build: Manufacturer')), And(HasAll('Can Produce: Crystal Oscillator', 'Can Produce: Circuit Board', 'Can Produce: Aluminum Casing', 'Can Produce: Rubber'), HasAll('Recipe: Radio Control System', 'Can Build: Manufacturer')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Encased Uranium Cell in Manufacturer", player),
-        And(HasAll('Can Produce: Uranium', 'Can Produce: Silica', 'Can Produce: Sulfur', 'Can Produce: Quickwire'), HasAll('Can Produce: Hazmat Suit', 'Can Produce: Iodine-Infused Filter'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Infused Uranium Cell', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Uranium', 'Can Produce: Silica', 'Can Produce: Sulfur', 'Can Produce: Quickwire'), HasAll('Can Produce: Hazmat Suit', 'Can Produce: Iodine-Infused Filter'), HasAll('Recipe: Infused Uranium Cell', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Gas Filter in Manufacturer", player),
-        And(HasAll('Can Produce: Coal', 'Can Produce: Rubber', 'Can Produce: Fabric'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Gas Filter', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Coal', 'Can Produce: Rubber', 'Can Produce: Fabric'), HasAll('Recipe: Gas Filter', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iodine-Infused Filter in Manufacturer", player),
-        And(HasAll('Can Produce: Gas Filter', 'Can Produce: Quickwire', 'Can Produce: Aluminum Casing'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Iodine-Infused Filter', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Gas Filter', 'Can Produce: Quickwire', 'Can Produce: Aluminum Casing'), HasAll('Recipe: Iodine-Infused Filter', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: SAM Fluctuator in Manufacturer", player),
-        And(HasAll('Can Produce: Reanimated SAM', 'Can Produce: Steel Pipe', 'Can Produce: Wire'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: SAM Fluctuator', 'Can Build: Manufacturer'))
+        And(HasAll('Can Produce: Reanimated SAM', 'Can Produce: Steel Pipe', 'Can Produce: Wire'), HasAll('Recipe: SAM Fluctuator', 'Can Build: Manufacturer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Packaged Fuel in Packager", player),
-        And(HasAll('Can Produce: Fuel', 'Can Produce: Empty Canister'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Packaged Fuel', 'Can Build: Packager'))
+        And(HasAll('Can Produce: Fuel', 'Can Produce: Empty Canister'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Packaged Fuel', 'Can Build: Packager'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Packaged Turbofuel in Packager", player),
-        And(HasAll('Can Produce: Turbofuel', 'Can Produce: Empty Canister'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Packaged Turbofuel', 'Can Build: Packager'))
+        And(HasAll('Can Produce: Turbofuel', 'Can Produce: Empty Canister'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Packaged Turbofuel', 'Can Build: Packager'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Packaged Water in Packager", player),
-        And(HasAll('Can Produce: Water', 'Can Produce: Empty Canister'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Packaged Water', 'Can Build: Packager'))
+        And(HasAll('Can Produce: Water', 'Can Produce: Empty Canister'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Packaged Water', 'Can Build: Packager'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Plastic in Refinery", player),
-        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Plastic', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(HasAll('Can Produce: Polymer Resin', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Residual Plastic', 'Can Build: Refinery')), And(HasAll('Can Produce: Rubber', 'Can Produce: Fuel'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Recycled Plastic', 'Can Build: Refinery')))
+        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Plastic', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(HasAll('Can Produce: Polymer Resin', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Residual Plastic', 'Can Build: Refinery')), And(HasAll('Can Produce: Rubber', 'Can Produce: Fuel'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Recycled Plastic', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Rubber in Refinery", player),
-        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Rubber', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(HasAll('Can Produce: Polymer Resin', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Residual Rubber', 'Can Build: Refinery')), And(HasAll('Can Produce: Plastic', 'Can Produce: Fuel'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Recycled Rubber', 'Can Build: Refinery')))
+        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Rubber', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(HasAll('Can Produce: Polymer Resin', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Residual Rubber', 'Can Build: Refinery')), And(HasAll('Can Produce: Plastic', 'Can Produce: Fuel'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Recycled Rubber', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Cable in Refinery", player),
-        And(HasAll('Can Produce: Wire', 'Can Produce: Heavy Oil Residue'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Coated Cable', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Wire', 'Can Produce: Heavy Oil Residue'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Coated Cable', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Copper Sheet in Refinery", player),
-        And(HasAll('Can Produce: Copper Ingot', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steamed Copper Sheet', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Copper Ingot', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Steamed Copper Sheet', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Heavy Oil Residue in Refinery", player),
-        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heavy Oil Residue', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Plastic', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Rubber', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Polymer Resin', 'Can Build: Refinery', 'Can Produce: Crude Oil')))
+        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Heavy Oil Residue', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Plastic', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Rubber', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Polymer Resin', 'Can Build: Refinery', 'Can Produce: Crude Oil')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Polymer Resin in Refinery", player),
-        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Polymer Resin', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fuel', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Heavy Oil Residue', 'Can Build: Refinery', 'Can Produce: Crude Oil')))
+        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Polymer Resin', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Fuel', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Heavy Oil Residue', 'Can Build: Refinery', 'Can Produce: Crude Oil')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Fuel in Refinery", player),
-        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fuel', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Residual Fuel', 'Can Build: Refinery', 'Can Produce: Heavy Oil Residue')))
+        Or(And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Fuel', 'Can Build: Refinery', 'Can Produce: Crude Oil')), And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Residual Fuel', 'Can Build: Refinery', 'Can Produce: Heavy Oil Residue')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Concrete in Refinery", player),
-        And(HasAll('Can Produce: Limestone', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Wet Concrete', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Limestone', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Wet Concrete', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Silica in Refinery", player),
-        And(HasAll('Can Produce: Bauxite', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Alumina Solution', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Bauxite', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Alumina Solution', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Dissolved Silica in Refinery", player),
-        And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Nitric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Quartz Purification', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Nitric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Quartz Purification', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Quartz Crystal in Refinery", player),
-        Or(And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Pure Quartz Crystal', 'Can Build: Refinery')), And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Nitric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Quartz Purification', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Pure Quartz Crystal', 'Can Build: Refinery')), And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Nitric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Quartz Purification', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Ingot in Refinery", player),
-        Or(And(HasAll('Can Produce: Iron Ore', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Pure Iron Ingot', 'Can Build: Refinery')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Leached Iron ingot', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Iron Ore', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Pure Iron Ingot', 'Can Build: Refinery')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Leached Iron ingot', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Copper Ingot in Refinery", player),
-        Or(And(HasAll('Can Produce: Copper Ore', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Pure Copper Ingot', 'Can Build: Refinery')), And(HasAll('Can Produce: Copper Ore', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Leached Copper Ingot', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Copper Ore', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Pure Copper Ingot', 'Can Build: Refinery')), And(HasAll('Can Produce: Copper Ore', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Leached Copper Ingot', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Caterium Ingot in Refinery", player),
-        Or(And(HasAll('Can Produce: Caterium Ore', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Pure Caterium Ingot', 'Can Build: Refinery')), And(HasAll('Can Produce: Caterium Ore', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Leached Caterium Ingot', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Caterium Ore', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Pure Caterium Ingot', 'Can Build: Refinery')), And(HasAll('Can Produce: Caterium Ore', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Leached Caterium Ingot', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Petroleum Coke in Refinery", player),
-        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Petroleum Coke', 'Can Build: Refinery', 'Can Produce: Heavy Oil Residue'))
+        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Petroleum Coke', 'Can Build: Refinery', 'Can Produce: Heavy Oil Residue'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Alumina Solution in Refinery", player),
-        Or(And(HasAll('Can Produce: Bauxite', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Alumina Solution', 'Can Build: Refinery')), And(HasAll('Can Produce: Bauxite', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Sloppy Alumina', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Bauxite', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Alumina Solution', 'Can Build: Refinery')), And(HasAll('Can Produce: Bauxite', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Sloppy Alumina', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Aluminum Scrap in Refinery", player),
-        Or(And(HasAll('Can Produce: Alumina Solution', 'Can Produce: Coal'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Aluminum Scrap', 'Can Build: Refinery')), And(HasAll('Can Produce: Alumina Solution', 'Can Produce: Petroleum Coke'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Electrode Aluminum Scrap', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Alumina Solution', 'Can Produce: Coal'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Aluminum Scrap', 'Can Build: Refinery')), And(HasAll('Can Produce: Alumina Solution', 'Can Produce: Petroleum Coke'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Electrode Aluminum Scrap', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Sulfuric Acid in Refinery", player),
-        And(HasAll('Can Produce: Sulfur', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Sulfuric Acid', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Sulfur', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Sulfuric Acid', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Fabric in Refinery", player),
-        And(HasAll('Can Produce: Polymer Resin', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Polyester Fabric', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Polymer Resin', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Polyester Fabric', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Packaged Fuel in Refinery", player),
-        And(HasAll('Can Produce: Heavy Oil Residue', 'Can Produce: Packaged Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Diluted Packaged Fuel', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Heavy Oil Residue', 'Can Produce: Packaged Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Diluted Packaged Fuel', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Turbofuel in Refinery", player),
-        Or(And(HasAll('Can Produce: Fuel', 'Can Produce: Compacted Coal'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Turbofuel', 'Can Build: Refinery')), And(HasAll('Can Produce: Heavy Oil Residue', 'Can Produce: Compacted Coal'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Turbo Heavy Fuel', 'Can Build: Refinery')))
+        Or(And(HasAll('Can Produce: Fuel', 'Can Produce: Compacted Coal'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Turbofuel', 'Can Build: Refinery')), And(HasAll('Can Produce: Heavy Oil Residue', 'Can Produce: Compacted Coal'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Turbo Heavy Fuel', 'Can Build: Refinery')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Smokeless Powder in Refinery", player),
-        And(HasAll('Can Produce: Black Powder', 'Can Produce: Heavy Oil Residue'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Smokeless Powder', 'Can Build: Refinery'))
+        And(HasAll('Can Produce: Black Powder', 'Can Produce: Heavy Oil Residue'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Smokeless Powder', 'Can Build: Refinery'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Fuel in Blender", player),
-        And(HasAll('Can Produce: Heavy Oil Residue', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Diluted Fuel', 'Can Build: Blender'))
+        And(HasAll('Can Produce: Heavy Oil Residue', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Diluted Fuel', 'Can Build: Blender'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Silica in Blender", player),
-        And(HasAll('Can Produce: Dissolved Silica', 'Can Produce: Limestone', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Distilled Silica', 'Can Build: Blender'))
+        And(HasAll('Can Produce: Dissolved Silica', 'Can Produce: Limestone', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Quartz Purification', 'Can Build: Blender'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Aluminum Scrap in Blender", player),
-        And(HasAll('Can Produce: Bauxite', 'Can Produce: Coal', 'Can Produce: Sulfuric Acid', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Instant Scrap', 'Can Build: Blender'))
+        And(HasAll('Can Produce: Bauxite', 'Can Produce: Coal', 'Can Produce: Sulfuric Acid', 'Can Produce: Water'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Instant Scrap', 'Can Build: Blender'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Nitric Acid in Blender", player),
-        And(HasAll('Can Produce: Nitrogen Gas', 'Can Produce: Water', 'Can Produce: Iron Plate'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Nitric Acid', 'Can Build: Blender'))
+        And(HasAll('Can Produce: Nitrogen Gas', 'Can Produce: Water', 'Can Produce: Iron Plate'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Nitric Acid', 'Can Build: Blender'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Encased Uranium Cell in Blender", player),
-        And(HasAll('Can Produce: Uranium', 'Can Produce: Concrete', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Can Produce: Hazmat Suit', 'Can Produce: Iodine-Infused Filter'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Encased Uranium Cell', 'Can Build: Blender'))
+        And(HasAll('Can Produce: Uranium', 'Can Produce: Concrete', 'Can Produce: Sulfuric Acid'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Can Produce: Hazmat Suit', 'Can Produce: Iodine-Infused Filter'), HasAll('Recipe: Encased Uranium Cell', 'Can Build: Blender'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Turbofuel in Blender", player),
-        And(HasAll('Can Produce: Fuel', 'Can Produce: Heavy Oil Residue', 'Can Produce: Sulfur', 'Can Produce: Petroleum Coke'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Turbo Blend Fuel', 'Can Build: Blender'))
+        And(HasAll('Can Produce: Fuel', 'Can Produce: Heavy Oil Residue', 'Can Produce: Sulfur', 'Can Produce: Petroleum Coke'), And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAll('Recipe: Turbo Blend Fuel', 'Can Build: Blender'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Limestone in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Raw Quartz in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Ore in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Copper Ore in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Coal in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Sulfur in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Caterium Ore in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Bauxite in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Uranium in Miner Mk.1", player),
-        And(HasAll('Can Produce: Hazmat Suit', 'Can Produce: Iodine-Infused Filter'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        And(HasAll('Can Produce: Hazmat Suit', 'Can Produce: Iodine-Infused Filter'), Has('Can Build: Miner Mk.1'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: SAM in Miner Mk.1", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Miner Mk.1'))
+        Has('Can Build: Miner Mk.1', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Crude Oil in Oil Extractor", player),
-        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Oil Extractor'))
+        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), Has('Can Build: Oil Extractor'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Water in Water Extractor", player),
-        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Water Extractor'))
+        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), Has('Can Build: Water Extractor'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Ingot in Smelter", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Iron Ingot', 'Can Build: Smelter', 'Can Produce: Iron Ore'))
+        HasAll('Recipe: Iron Ingot', 'Can Build: Smelter', 'Can Produce: Iron Ore')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Copper Ingot in Smelter", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Smelter', 'Can Produce: Copper Ore'))
+        HasAll('Can Build: Smelter', 'Can Produce: Copper Ore')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Caterium Ingot in Smelter", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Can Build: Smelter', 'Can Produce: Caterium Ore'))
+        HasAll('Can Build: Smelter', 'Can Produce: Caterium Ore')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Aluminum Ingot in Smelter", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Pure Aluminum Ingot', 'Can Build: Smelter', 'Can Produce: Aluminum Scrap'))
+        HasAll('Recipe: Pure Aluminum Ingot', 'Can Build: Smelter', 'Can Produce: Aluminum Scrap')
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Plate in Foundry", player),
-        And(HasAll('Can Produce: Iron Ingot', 'Can Produce: Steel Ingot'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Cast Plate', 'Can Build: Foundry'))
+        And(HasAll('Can Produce: Iron Ingot', 'Can Produce: Steel Ingot'), HasAll('Recipe: Steel Cast Plate', 'Can Build: Foundry'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Steel Pipe in Foundry", player),
-        And(HasAll('Can Produce: Steel Ingot', 'Can Produce: Concrete'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Molded Steel Pipe', 'Can Build: Foundry'))
+        And(HasAll('Can Produce: Steel Ingot', 'Can Produce: Concrete'), HasAll('Recipe: Molded Steel Pipe', 'Can Build: Foundry'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Steel Beam in Foundry", player),
-        And(HasAll('Can Produce: Steel Ingot', 'Can Produce: Concrete'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Molded Beam', 'Can Build: Foundry'))
+        And(HasAll('Can Produce: Steel Ingot', 'Can Produce: Concrete'), HasAll('Recipe: Molded Beam', 'Can Build: Foundry'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Quartz Crystal in Foundry", player),
-        And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Coal'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Fused Quartz Crystal', 'Can Build: Foundry'))
+        And(HasAll('Can Produce: Raw Quartz', 'Can Produce: Coal'), HasAll('Recipe: Fused Quartz Crystal', 'Can Build: Foundry'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Iron Ingot in Foundry", player),
-        Or(And(HasAll('Can Produce: Iron Ore', 'Can Produce: Copper Ore'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Iron Alloy Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Limestone'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Foundry')))
+        Or(And(HasAll('Can Produce: Iron Ore', 'Can Produce: Copper Ore'), HasAll('Recipe: Iron Alloy Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Limestone'), Has('Can Build: Foundry')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Steel Ingot in Foundry", player),
-        Or(And(HasAll('Can Produce: Iron Ore', 'Can Produce: Coal'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Steel Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Petroleum Coke'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Coke Steel Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Compacted Coal'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Compacted Steel Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ingot', 'Can Produce: Coal'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Solid Steel Ingot', 'Can Build: Foundry')))
+        Or(And(HasAll('Can Produce: Iron Ore', 'Can Produce: Coal'), HasAll('Recipe: Steel Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Petroleum Coke'), HasAll('Recipe: Coke Steel Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ore', 'Can Produce: Compacted Coal'), HasAll('Recipe: Compacted Steel Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Iron Ingot', 'Can Produce: Coal'), HasAll('Recipe: Solid Steel Ingot', 'Can Build: Foundry')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Copper Ingot in Foundry", player),
-        Or(And(HasAll('Can Produce: Copper Ore', 'Can Produce: Iron Ore'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Copper Alloy Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Copper Ore', 'Can Produce: Petroleum Coke'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Tempered Copper Ingot', 'Can Build: Foundry')))
+        Or(And(HasAll('Can Produce: Copper Ore', 'Can Produce: Iron Ore'), HasAll('Recipe: Copper Alloy Ingot', 'Can Build: Foundry')), And(HasAll('Can Produce: Copper Ore', 'Can Produce: Petroleum Coke'), HasAll('Recipe: Tempered Copper Ingot', 'Can Build: Foundry')))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Caterium Ingot in Foundry", player),
-        And(HasAll('Can Produce: Caterium Ore', 'Can Produce: Petroleum Coke'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Tempered Caterium Ingot', 'Can Build: Foundry'))
+        And(HasAll('Can Produce: Caterium Ore', 'Can Produce: Petroleum Coke'), HasAll('Recipe: Tempered Caterium Ingot', 'Can Build: Foundry'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Aluminum Ingot in Foundry", player),
-        And(HasAll('Can Produce: Aluminum Scrap', 'Can Produce: Silica'), HasAny('Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Aluminum Ingot', 'Can Build: Foundry'))
+        And(HasAll('Can Produce: Aluminum Scrap', 'Can Produce: Silica'), HasAll('Recipe: Aluminum Ingot', 'Can Build: Foundry'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Water in Resource Well Pressurizer", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Resource Well Pressurizer'))
+        Has('Can Build: Resource Well Pressurizer', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Crude Oil in Resource Well Pressurizer", player),
-        And(HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Resource Well Pressurizer'))
+        Has('Can Build: Resource Well Pressurizer', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Nitrogen Gas in Resource Well Pressurizer", player),
-        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), Has('Can Build: Resource Well Pressurizer'))
+        And(And(HasAny('Can Build: Pipes Mk.1', 'Can Build: Pipes Mk.2'), HasAny('Can Build: Pipeline Pump Mk.1', 'Can Build: Pipeline Pump Mk.2')), Has('Can Build: Resource Well Pressurizer'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Hazmat Suit in Equipment Workshop", player),
-        And(HasAll('Can Produce: Rubber', 'Can Produce: Plastic', 'Can Produce: Fabric', 'Can Produce: Alclad Aluminum Sheet'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Hazmat Suit', 'Can Build: Equipment Workshop'))
+        And(HasAll('Can Produce: Rubber', 'Can Produce: Plastic', 'Can Produce: Fabric', 'Can Produce: Alclad Aluminum Sheet'), HasAll('Recipe: Hazmat Suit', 'Can Build: Equipment Workshop'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Black Powder in Equipment Workshop", player),
-        And(HasAll('Can Produce: Coal', 'Can Produce: Sulfur'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Black Powder', 'Can Build: Equipment Workshop'))
+        And(HasAll('Can Produce: Coal', 'Can Produce: Sulfur'), HasAll('Recipe: Black Powder', 'Can Build: Equipment Workshop'))
     )
 
     world.set_rule(
         multiworld.get_location("Can Produce: Object Scanner in Equipment Workshop", player),
-        And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Wire', 'Can Produce: Screw'), HasAny('Can Build: Conveyor Mk.1', 'Can Build: Conveyor Mk.2', 'Can Build: Conveyor Mk.3', 'Can Build: Conveyor Mk.4', 'Can Build: Conveyor Mk.5'), HasAll('Recipe: Object Scanner', 'Can Build: Equipment Workshop'))
+        And(HasAll('Can Produce: Reinforced Iron Plate', 'Can Produce: Wire', 'Can Produce: Screw'), HasAll('Recipe: Object Scanner', 'Can Build: Equipment Workshop'))
     )

@@ -10092,12 +10092,12 @@
         "tutorials": [
           {
             "name": "Multiworld Setup Guide",
-            "description": "A guide to setting up the Super Metroid Client on your computer. This guide covers single-player, multiworld, and related software.",
+            "description": "A guide to setting up the Archipelago Super Metroid WorldGen randomizer.",
             "language": "English",
-            "file_name": "multiworld_en.md",
-            "link": "multiworld/en",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
             "authors": [
-              "Farrak Kilhn"
+              "Archipelago Team"
             ]
           }
         ]

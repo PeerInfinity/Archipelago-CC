@@ -361,7 +361,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Start Camp Scraps 2",
@@ -375,7 +375,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -395,7 +395,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -415,7 +415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 2",
@@ -429,7 +429,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 3",
@@ -443,7 +443,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 4",
@@ -457,7 +457,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 5",
@@ -471,7 +471,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 6",
@@ -485,7 +485,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 7",
@@ -499,7 +499,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 8",
@@ -513,7 +513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barn Scraps 9",
@@ -527,7 +527,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -547,7 +547,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -567,7 +567,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 2",
@@ -581,7 +581,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 3",
@@ -595,7 +595,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 4",
@@ -609,7 +609,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 5",
@@ -623,7 +623,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 6",
@@ -637,7 +637,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 7",
@@ -651,7 +651,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 8",
@@ -665,7 +665,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tutorial House Scraps 9",
@@ -679,7 +679,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -699,7 +699,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 2",
@@ -713,7 +713,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 3",
@@ -727,7 +727,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 4",
@@ -741,7 +741,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 5",
@@ -755,7 +755,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 6",
@@ -769,7 +769,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 7",
@@ -783,7 +783,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 8",
@@ -797,7 +797,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 9",
@@ -811,7 +811,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 10",
@@ -825,7 +825,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 11",
@@ -839,7 +839,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 12",
@@ -853,7 +853,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 13",
@@ -867,7 +867,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 14",
@@ -881,7 +881,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 15",
@@ -895,7 +895,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 16",
@@ -909,7 +909,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 17",
@@ -923,7 +923,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 18",
@@ -937,7 +937,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 19",
@@ -951,7 +951,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 20",
@@ -965,7 +965,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 21",
@@ -979,7 +979,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 22",
@@ -993,7 +993,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 23",
@@ -1007,7 +1007,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 24",
@@ -1021,7 +1021,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 25",
@@ -1035,7 +1035,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 26",
@@ -1049,7 +1049,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 27",
@@ -1063,7 +1063,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 28",
@@ -1077,7 +1077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 29",
@@ -1091,7 +1091,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 30",
@@ -1105,7 +1105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 31",
@@ -1119,7 +1119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Edges Scraps 32",
@@ -1133,7 +1133,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1153,7 +1153,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Shack Scraps 2",
@@ -1167,7 +1167,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Islet Scraps 1",
@@ -1181,7 +1181,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Islet Scraps 2",
@@ -1195,7 +1195,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Islet Scraps 3",
@@ -1209,7 +1209,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Islet Dead Fish",
@@ -1223,7 +1223,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Swamp Lizbeth Murkwater Mission End",
@@ -1240,7 +1240,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1260,7 +1260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 2",
@@ -1274,7 +1274,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 3",
@@ -1288,7 +1288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 4",
@@ -1302,7 +1302,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 5",
@@ -1316,7 +1316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 6",
@@ -1330,7 +1330,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 7",
@@ -1344,7 +1344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 8",
@@ -1358,7 +1358,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 9",
@@ -1372,7 +1372,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Scraps 10",
@@ -1386,7 +1386,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Daryl Mission Start",
@@ -1400,7 +1400,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Chest Ancient Tablet",
@@ -1417,7 +1417,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Area Daryl Mission End",
@@ -1434,7 +1434,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1454,7 +1454,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 2",
@@ -1468,7 +1468,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 3",
@@ -1482,7 +1482,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 4",
@@ -1496,7 +1496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 5",
@@ -1510,7 +1510,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 6",
@@ -1524,7 +1524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 7",
@@ -1538,7 +1538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 8",
@@ -1552,7 +1552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 9",
@@ -1566,7 +1566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 10",
@@ -1580,7 +1580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 11",
@@ -1594,7 +1594,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Scraps 12",
@@ -1608,7 +1608,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Chest Scraps 1",
@@ -1625,7 +1625,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Chest Scraps 2",
@@ -1642,7 +1642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Chest Scraps 3",
@@ -1659,7 +1659,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Chest Scraps 4",
@@ -1676,7 +1676,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Chest Scraps 5",
@@ -1693,7 +1693,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South House Chest Scraps 6",
@@ -1710,7 +1710,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1730,7 +1730,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 1",
@@ -1744,7 +1744,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 2",
@@ -1758,7 +1758,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 3",
@@ -1772,7 +1772,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 4",
@@ -1786,7 +1786,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 5",
@@ -1800,7 +1800,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 6",
@@ -1814,7 +1814,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 7",
@@ -1828,7 +1828,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Junkyard Shed Scraps 8",
@@ -1842,7 +1842,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1862,7 +1862,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 1",
@@ -1876,7 +1876,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 2",
@@ -1890,7 +1890,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 3",
@@ -1904,7 +1904,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 4",
@@ -1918,7 +1918,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 5",
@@ -1932,7 +1932,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 6",
@@ -1946,7 +1946,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 7",
@@ -1960,7 +1960,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 8",
@@ -1974,7 +1974,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 9",
@@ -1988,7 +1988,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 10",
@@ -2002,7 +2002,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 11",
@@ -2016,7 +2016,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Scraps 12",
@@ -2030,7 +2030,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Military Base Orange Paint Can",
@@ -2044,7 +2044,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2075,7 +2075,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Outside Scraps 2",
@@ -2089,7 +2089,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Outside Scraps 3",
@@ -2103,7 +2103,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Outside Scraps 4",
@@ -2117,7 +2117,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Outside Scraps 5",
@@ -2131,7 +2131,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Outside Scraps 6",
@@ -2145,7 +2145,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Outside Scraps 7",
@@ -2159,7 +2159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2179,7 +2179,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 2",
@@ -2193,7 +2193,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 3",
@@ -2207,7 +2207,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 4",
@@ -2221,7 +2221,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 5",
@@ -2235,7 +2235,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 6",
@@ -2249,7 +2249,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 7",
@@ -2263,7 +2263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 8",
@@ -2277,7 +2277,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Scraps 9",
@@ -2291,7 +2291,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Green Egg",
@@ -2305,7 +2305,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "South Mine Inside Green Paint Can",
@@ -2322,7 +2322,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2342,7 +2342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 1",
@@ -2356,7 +2356,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 2",
@@ -2370,7 +2370,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 3",
@@ -2384,7 +2384,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 4",
@@ -2398,7 +2398,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 5",
@@ -2412,7 +2412,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 6",
@@ -2426,7 +2426,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 7",
@@ -2440,7 +2440,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 8",
@@ -2454,7 +2454,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 9",
@@ -2468,7 +2468,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 10",
@@ -2482,7 +2482,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 11",
@@ -2496,7 +2496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 12",
@@ -2510,7 +2510,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 13",
@@ -2524,7 +2524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 14",
@@ -2538,7 +2538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 15",
@@ -2552,7 +2552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 16",
@@ -2566,7 +2566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 17",
@@ -2580,7 +2580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 18",
@@ -2594,7 +2594,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 19",
@@ -2608,7 +2608,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Scraps 20",
@@ -2622,7 +2622,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Middle Station Theodore Mission End",
@@ -2639,7 +2639,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2659,7 +2659,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 2",
@@ -2673,7 +2673,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 3",
@@ -2687,7 +2687,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 4",
@@ -2701,7 +2701,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 5",
@@ -2715,7 +2715,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 6",
@@ -2729,7 +2729,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 7",
@@ -2743,7 +2743,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 8",
@@ -2757,7 +2757,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 9",
@@ -2771,7 +2771,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 10",
@@ -2785,7 +2785,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 11",
@@ -2799,7 +2799,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 12",
@@ -2813,7 +2813,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 13",
@@ -2827,7 +2827,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 14",
@@ -2841,7 +2841,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 15",
@@ -2855,7 +2855,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 16",
@@ -2869,7 +2869,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Scraps 17",
@@ -2883,7 +2883,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Canyon Blue Box",
@@ -2897,7 +2897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2917,7 +2917,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 2",
@@ -2931,7 +2931,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 3",
@@ -2945,7 +2945,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 4",
@@ -2959,7 +2959,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 5",
@@ -2973,7 +2973,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 6",
@@ -2987,7 +2987,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 7",
@@ -3001,7 +3001,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 8",
@@ -3015,7 +3015,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 9",
@@ -3029,7 +3029,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Scraps 10",
@@ -3043,7 +3043,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Watchtower Pink Paint Can",
@@ -3060,7 +3060,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3080,7 +3080,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 2",
@@ -3094,7 +3094,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 3",
@@ -3108,7 +3108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 4",
@@ -3122,7 +3122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 5",
@@ -3136,7 +3136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 6",
@@ -3150,7 +3150,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 7",
@@ -3164,7 +3164,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Page Drawing 8",
@@ -3178,7 +3178,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 1",
@@ -3192,7 +3192,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 2",
@@ -3206,7 +3206,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 3",
@@ -3220,7 +3220,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 4",
@@ -3234,7 +3234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 5",
@@ -3248,7 +3248,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 6",
@@ -3262,7 +3262,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 7",
@@ -3276,7 +3276,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 8",
@@ -3290,7 +3290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 9",
@@ -3304,7 +3304,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 10",
@@ -3318,7 +3318,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 11",
@@ -3332,7 +3332,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 12",
@@ -3346,7 +3346,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 13",
@@ -3360,7 +3360,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 14",
@@ -3374,7 +3374,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 15",
@@ -3388,7 +3388,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 16",
@@ -3402,7 +3402,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 17",
@@ -3416,7 +3416,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Boulder Field Scraps 18",
@@ -3430,7 +3430,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3454,7 +3454,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Haunted House Scraps 1",
@@ -3468,7 +3468,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Haunted House Scraps 2",
@@ -3482,7 +3482,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Haunted House Scraps 3",
@@ -3496,7 +3496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Haunted House Scraps 4",
@@ -3510,7 +3510,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Haunted House Scraps 5",
@@ -3524,7 +3524,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Haunted House Scraps 6",
@@ -3538,7 +3538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3558,7 +3558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 2",
@@ -3572,7 +3572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 3",
@@ -3586,7 +3586,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 4",
@@ -3600,7 +3600,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 5",
@@ -3614,7 +3614,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 6",
@@ -3628,7 +3628,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 7",
@@ -3642,7 +3642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 8",
@@ -3656,7 +3656,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 9",
@@ -3670,7 +3670,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Scraps 10",
@@ -3684,7 +3684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Santiago House Journal",
@@ -3698,7 +3698,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3718,7 +3718,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 1",
@@ -3732,7 +3732,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 2",
@@ -3746,7 +3746,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 3",
@@ -3760,7 +3760,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 4",
@@ -3774,7 +3774,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 5",
@@ -3788,7 +3788,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 6",
@@ -3802,7 +3802,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 7",
@@ -3816,7 +3816,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 8",
@@ -3830,7 +3830,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 9",
@@ -3844,7 +3844,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 10",
@@ -3858,7 +3858,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 11",
@@ -3872,7 +3872,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 12",
@@ -3886,7 +3886,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 13",
@@ -3900,7 +3900,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 14",
@@ -3914,7 +3914,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 15",
@@ -3928,7 +3928,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 16",
@@ -3942,7 +3942,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 17",
@@ -3956,7 +3956,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 18",
@@ -3970,7 +3970,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Scraps 19",
@@ -3984,7 +3984,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Port Santiago Mission End",
@@ -4001,7 +4001,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4021,7 +4021,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 2",
@@ -4035,7 +4035,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 3",
@@ -4049,7 +4049,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 4",
@@ -4063,7 +4063,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 5",
@@ -4077,7 +4077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 6",
@@ -4091,7 +4091,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 7",
@@ -4105,7 +4105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 8",
@@ -4119,7 +4119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 9",
@@ -4133,7 +4133,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 10",
@@ -4147,7 +4147,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 11",
@@ -4161,7 +4161,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 12",
@@ -4175,7 +4175,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 13",
@@ -4189,7 +4189,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 14",
@@ -4203,7 +4203,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 15",
@@ -4217,7 +4217,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 16",
@@ -4231,7 +4231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 17",
@@ -4245,7 +4245,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Scraps 18",
@@ -4259,7 +4259,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Chest Scraps 1",
@@ -4276,7 +4276,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Chest Scraps 2",
@@ -4293,7 +4293,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Chest Scraps 3",
@@ -4310,7 +4310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Chest Scraps 4",
@@ -4327,7 +4327,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Chest Scraps 5",
@@ -4344,7 +4344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trench House Chest Scraps 6",
@@ -4361,7 +4361,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4381,7 +4381,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 2",
@@ -4395,7 +4395,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 3",
@@ -4409,7 +4409,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 4",
@@ -4423,7 +4423,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 5",
@@ -4437,7 +4437,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 6",
@@ -4451,7 +4451,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 7",
@@ -4465,7 +4465,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 8",
@@ -4479,7 +4479,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 9",
@@ -4493,7 +4493,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Doll Woods Scraps 10",
@@ -4507,7 +4507,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4527,7 +4527,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lost Stairs Scraps 2",
@@ -4541,7 +4541,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4561,7 +4561,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 2",
@@ -4575,7 +4575,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 3",
@@ -4589,7 +4589,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 4",
@@ -4603,7 +4603,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 5",
@@ -4617,7 +4617,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 6",
@@ -4631,7 +4631,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 7",
@@ -4645,7 +4645,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 8",
@@ -4659,7 +4659,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 9",
@@ -4673,7 +4673,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 10",
@@ -4687,7 +4687,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 11",
@@ -4701,7 +4701,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 12",
@@ -4715,7 +4715,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 13",
@@ -4729,7 +4729,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Scraps 14",
@@ -4743,7 +4743,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Chest Scraps 1",
@@ -4760,7 +4760,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Chest Scraps 2",
@@ -4777,7 +4777,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Chest Scraps 3",
@@ -4794,7 +4794,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Chest Scraps 4",
@@ -4811,7 +4811,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East House Chest Scraps 5",
@@ -4828,7 +4828,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -4859,7 +4859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 1",
@@ -4873,7 +4873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 2",
@@ -4887,7 +4887,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 3",
@@ -4901,7 +4901,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 4",
@@ -4915,7 +4915,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 5",
@@ -4929,7 +4929,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 6",
@@ -4943,7 +4943,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 7",
@@ -4957,7 +4957,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 8",
@@ -4971,7 +4971,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 9",
@@ -4985,7 +4985,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Ground Scraps 10",
@@ -4999,7 +4999,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5019,7 +5019,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Bunker Scraps 2",
@@ -5033,7 +5033,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Rockets Testing Bunker Box of Rockets",
@@ -5047,7 +5047,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5067,7 +5067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Workshop Scraps 2",
@@ -5081,7 +5081,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Workshop Scraps 3",
@@ -5095,7 +5095,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Workshop Scraps 4",
@@ -5109,7 +5109,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Workshop Scraps 5",
@@ -5123,7 +5123,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Workshop Scraps 6",
@@ -5137,7 +5137,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Workshop John Smith Mission End",
@@ -5154,7 +5154,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5174,7 +5174,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East Tower Scraps 1",
@@ -5188,7 +5188,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East Tower Scraps 2",
@@ -5202,7 +5202,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East Tower Scraps 3",
@@ -5216,7 +5216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East Tower Scraps 4",
@@ -5230,7 +5230,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East Tower Scraps 5",
@@ -5244,7 +5244,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "East Tower Scraps 6",
@@ -5258,7 +5258,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5278,7 +5278,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 2",
@@ -5292,7 +5292,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 3",
@@ -5306,7 +5306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 4",
@@ -5320,7 +5320,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 5",
@@ -5334,7 +5334,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 6",
@@ -5348,7 +5348,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 7",
@@ -5362,7 +5362,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 8",
@@ -5376,7 +5376,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 9",
@@ -5390,7 +5390,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 10",
@@ -5404,7 +5404,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 11",
@@ -5418,7 +5418,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 12",
@@ -5432,7 +5432,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 13",
@@ -5446,7 +5446,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 14",
@@ -5460,7 +5460,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 15",
@@ -5474,7 +5474,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 16",
@@ -5488,7 +5488,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 17",
@@ -5502,7 +5502,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Scraps 18",
@@ -5516,7 +5516,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Breaker 1",
@@ -5530,7 +5530,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Breaker 2",
@@ -5544,7 +5544,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Breaker 3",
@@ -5558,7 +5558,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Breaker 4",
@@ -5572,7 +5572,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Lighthouse Claire Mission End",
@@ -5590,7 +5590,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5621,7 +5621,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 2",
@@ -5635,7 +5635,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 3",
@@ -5649,7 +5649,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 4",
@@ -5663,7 +5663,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 5",
@@ -5677,7 +5677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 6",
@@ -5691,7 +5691,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 7",
@@ -5705,7 +5705,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 8",
@@ -5719,7 +5719,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 9",
@@ -5733,7 +5733,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 10",
@@ -5747,7 +5747,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 11",
@@ -5761,7 +5761,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 12",
@@ -5775,7 +5775,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 13",
@@ -5789,7 +5789,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Outside Scraps 14",
@@ -5803,7 +5803,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -5823,7 +5823,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 2",
@@ -5837,7 +5837,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 3",
@@ -5851,7 +5851,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 4",
@@ -5865,7 +5865,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 5",
@@ -5879,7 +5879,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 6",
@@ -5893,7 +5893,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 7",
@@ -5907,7 +5907,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 8",
@@ -5921,7 +5921,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 9",
@@ -5935,7 +5935,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 10",
@@ -5949,7 +5949,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 11",
@@ -5963,7 +5963,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 12",
@@ -5977,7 +5977,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 13",
@@ -5991,7 +5991,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Scraps 14",
@@ -6005,7 +6005,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Blue Egg",
@@ -6019,7 +6019,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Mine Inside Blue Paint Can",
@@ -6036,7 +6036,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6056,7 +6056,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 2",
@@ -6070,7 +6070,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 3",
@@ -6084,7 +6084,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 4",
@@ -6098,7 +6098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 5",
@@ -6112,7 +6112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 6",
@@ -6126,7 +6126,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 7",
@@ -6140,7 +6140,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 8",
@@ -6154,7 +6154,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 9",
@@ -6168,7 +6168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 10",
@@ -6182,7 +6182,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 11",
@@ -6196,7 +6196,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 12",
@@ -6210,7 +6210,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wood Bridge Scraps 13",
@@ -6224,7 +6224,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6244,7 +6244,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 2",
@@ -6258,7 +6258,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 3",
@@ -6272,7 +6272,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 4",
@@ -6286,7 +6286,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 5",
@@ -6300,7 +6300,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 6",
@@ -6314,7 +6314,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 7",
@@ -6328,7 +6328,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 8",
@@ -6342,7 +6342,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 9",
@@ -6356,7 +6356,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 10",
@@ -6370,7 +6370,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 11",
@@ -6384,7 +6384,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Scraps 12",
@@ -6398,7 +6398,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Paul Mission Start",
@@ -6412,7 +6412,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Museum Paul Mission End",
@@ -6429,7 +6429,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6449,7 +6449,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barbed Shelter Scraps 1",
@@ -6463,7 +6463,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barbed Shelter Scraps 2",
@@ -6477,7 +6477,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barbed Shelter Scraps 3",
@@ -6491,7 +6491,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barbed Shelter Scraps 4",
@@ -6505,7 +6505,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Barbed Shelter Scraps 5",
@@ -6519,7 +6519,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6542,7 +6542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Chest Scraps 2",
@@ -6559,7 +6559,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Chest Scraps 3",
@@ -6576,7 +6576,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Chest Scraps 4",
@@ -6593,7 +6593,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Chest Scraps 5",
@@ -6610,7 +6610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Chest Scraps 6",
@@ -6627,7 +6627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 1",
@@ -6641,7 +6641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 2",
@@ -6655,7 +6655,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 3",
@@ -6669,7 +6669,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 4",
@@ -6683,7 +6683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 5",
@@ -6697,7 +6697,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 6",
@@ -6711,7 +6711,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 7",
@@ -6725,7 +6725,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Beach Scraps 8",
@@ -6739,7 +6739,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6759,7 +6759,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 1",
@@ -6773,7 +6773,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 2",
@@ -6787,7 +6787,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 3",
@@ -6801,7 +6801,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 4",
@@ -6815,7 +6815,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 5",
@@ -6829,7 +6829,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 6",
@@ -6843,7 +6843,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 7",
@@ -6857,7 +6857,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 8",
@@ -6871,7 +6871,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 9",
@@ -6885,7 +6885,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 10",
@@ -6899,7 +6899,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 11",
@@ -6913,7 +6913,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Church Scraps 12",
@@ -6927,7 +6927,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -6947,7 +6947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Cottage Scraps 1",
@@ -6961,7 +6961,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Cottage Scraps 2",
@@ -6975,7 +6975,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Cottage Scraps 3",
@@ -6989,7 +6989,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Cottage Scraps 4",
@@ -7003,7 +7003,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "West Cottage Scraps 5",
@@ -7017,7 +7017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7037,7 +7037,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 2",
@@ -7051,7 +7051,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 3",
@@ -7065,7 +7065,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 4",
@@ -7079,7 +7079,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 5",
@@ -7093,7 +7093,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 6",
@@ -7107,7 +7107,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 7",
@@ -7121,7 +7121,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 8",
@@ -7135,7 +7135,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Scraps 9",
@@ -7149,7 +7149,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Chest Scraps 1",
@@ -7166,7 +7166,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Chest Scraps 2",
@@ -7183,7 +7183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Chest Scraps 3",
@@ -7200,7 +7200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Chest Scraps 4",
@@ -7217,7 +7217,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Caravan Chest Scraps 5",
@@ -7234,7 +7234,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7254,7 +7254,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trailer Cabin Scraps 2",
@@ -7268,7 +7268,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trailer Cabin Scraps 3",
@@ -7282,7 +7282,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trailer Cabin Scraps 4",
@@ -7296,7 +7296,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trailer Cabin Scraps 5",
@@ -7310,7 +7310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Trailer Cabin Scraps 6",
@@ -7324,7 +7324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7344,7 +7344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 2",
@@ -7358,7 +7358,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 3",
@@ -7372,7 +7372,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 4",
@@ -7386,7 +7386,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 5",
@@ -7400,7 +7400,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 6",
@@ -7414,7 +7414,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 7",
@@ -7428,7 +7428,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 8",
@@ -7442,7 +7442,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 9",
@@ -7456,7 +7456,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 10",
@@ -7470,7 +7470,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 11",
@@ -7484,7 +7484,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 12",
@@ -7498,7 +7498,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 13",
@@ -7512,7 +7512,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 14",
@@ -7526,7 +7526,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 15",
@@ -7540,7 +7540,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 16",
@@ -7554,7 +7554,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 17",
@@ -7568,7 +7568,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 18",
@@ -7582,7 +7582,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 19",
@@ -7596,7 +7596,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 20",
@@ -7610,7 +7610,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 21",
@@ -7624,7 +7624,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 22",
@@ -7638,7 +7638,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 23",
@@ -7652,7 +7652,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 24",
@@ -7666,7 +7666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 25",
@@ -7680,7 +7680,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 26",
@@ -7694,7 +7694,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Scraps 27",
@@ -7708,7 +7708,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Lime Paint Can",
@@ -7722,7 +7722,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Employment Contracts",
@@ -7736,7 +7736,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Towers Ronny Mission End",
@@ -7753,7 +7753,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -7776,7 +7776,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Chest Scraps 2",
@@ -7793,7 +7793,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Chest Scraps 3",
@@ -7810,7 +7810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Chest Scraps 4",
@@ -7827,7 +7827,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 1",
@@ -7841,7 +7841,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 2",
@@ -7855,7 +7855,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 3",
@@ -7869,7 +7869,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 4",
@@ -7883,7 +7883,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 5",
@@ -7897,7 +7897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 6",
@@ -7911,7 +7911,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 7",
@@ -7925,7 +7925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 8",
@@ -7939,7 +7939,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 9",
@@ -7953,7 +7953,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 10",
@@ -7967,7 +7967,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 11",
@@ -7981,7 +7981,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 12",
@@ -7995,7 +7995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 13",
@@ -8009,7 +8009,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 14",
@@ -8023,7 +8023,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Scraps 15",
@@ -8037,7 +8037,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "North Beach Teal Paint Can",
@@ -8051,7 +8051,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8074,7 +8074,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Chest Scraps 2",
@@ -8091,7 +8091,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Chest Scraps 3",
@@ -8108,7 +8108,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Chest Scraps 4",
@@ -8125,7 +8125,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Chest Scraps 5",
@@ -8142,7 +8142,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Chest Scraps 6",
@@ -8159,7 +8159,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Chest Scraps 7",
@@ -8176,7 +8176,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 1",
@@ -8190,7 +8190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 2",
@@ -8204,7 +8204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 3",
@@ -8218,7 +8218,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 4",
@@ -8232,7 +8232,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 5",
@@ -8246,7 +8246,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 6",
@@ -8260,7 +8260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 7",
@@ -8274,7 +8274,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 8",
@@ -8288,7 +8288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 9",
@@ -8302,7 +8302,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 10",
@@ -8316,7 +8316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 11",
@@ -8330,7 +8330,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 12",
@@ -8344,7 +8344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 13",
@@ -8358,7 +8358,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Shaft Scraps 14",
@@ -8372,7 +8372,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8403,7 +8403,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 1",
@@ -8417,7 +8417,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 2",
@@ -8431,7 +8431,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 3",
@@ -8445,7 +8445,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 4",
@@ -8459,7 +8459,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 5",
@@ -8473,7 +8473,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 6",
@@ -8487,7 +8487,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 7",
@@ -8501,7 +8501,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 8",
@@ -8515,7 +8515,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 9",
@@ -8529,7 +8529,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 10",
@@ -8543,7 +8543,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 11",
@@ -8557,7 +8557,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 12",
@@ -8571,7 +8571,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 13",
@@ -8585,7 +8585,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 14",
@@ -8599,7 +8599,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 15",
@@ -8613,7 +8613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Scraps 16",
@@ -8627,7 +8627,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8647,7 +8647,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Locked Room Scraps 2",
@@ -8661,7 +8661,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mob Camp Locked Room Stolen Bob",
@@ -8678,7 +8678,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8698,7 +8698,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 2",
@@ -8712,7 +8712,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 3",
@@ -8726,7 +8726,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 4",
@@ -8740,7 +8740,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 5",
@@ -8754,7 +8754,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 6",
@@ -8768,7 +8768,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 7",
@@ -8782,7 +8782,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 8",
@@ -8796,7 +8796,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mine Elevator Exit Scraps 9",
@@ -8810,7 +8810,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -8841,7 +8841,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 2",
@@ -8855,7 +8855,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 3",
@@ -8869,7 +8869,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 4",
@@ -8883,7 +8883,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 5",
@@ -8897,7 +8897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 6",
@@ -8911,7 +8911,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 7",
@@ -8925,7 +8925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 8",
@@ -8939,7 +8939,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 9",
@@ -8953,7 +8953,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 10",
@@ -8967,7 +8967,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 11",
@@ -8981,7 +8981,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 12",
@@ -8995,7 +8995,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 13",
@@ -9009,7 +9009,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 14",
@@ -9023,7 +9023,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 15",
@@ -9037,7 +9037,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 16",
@@ -9051,7 +9051,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Outside Scraps 17",
@@ -9065,7 +9065,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9085,7 +9085,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 2",
@@ -9099,7 +9099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 3",
@@ -9113,7 +9113,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 4",
@@ -9127,7 +9127,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 5",
@@ -9141,7 +9141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 6",
@@ -9155,7 +9155,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 7",
@@ -9169,7 +9169,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 8",
@@ -9183,7 +9183,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 9",
@@ -9197,7 +9197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 10",
@@ -9211,7 +9211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 11",
@@ -9225,7 +9225,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 12",
@@ -9239,7 +9239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 13",
@@ -9253,7 +9253,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 14",
@@ -9267,7 +9267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 15",
@@ -9281,7 +9281,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 16",
@@ -9295,7 +9295,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Scraps 17",
@@ -9309,7 +9309,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Red Egg",
@@ -9323,7 +9323,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Mountain Ruin Inside Red Paint Can",
@@ -9340,7 +9340,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -9363,7 +9363,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Chest Scraps 2",
@@ -9380,7 +9380,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Chest Scraps 3",
@@ -9397,7 +9397,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 1",
@@ -9411,7 +9411,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 2",
@@ -9425,7 +9425,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 3",
@@ -9439,7 +9439,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 4",
@@ -9453,7 +9453,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 5",
@@ -9467,7 +9467,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 6",
@@ -9481,7 +9481,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 7",
@@ -9495,7 +9495,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 8",
@@ -9509,7 +9509,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 9",
@@ -9523,7 +9523,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 10",
@@ -9537,7 +9537,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 11",
@@ -9551,7 +9551,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 12",
@@ -9565,7 +9565,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 13",
@@ -9579,7 +9579,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 14",
@@ -9593,7 +9593,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 15",
@@ -9607,7 +9607,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 16",
@@ -9621,7 +9621,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 17",
@@ -9635,7 +9635,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 18",
@@ -9649,7 +9649,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 19",
@@ -9663,7 +9663,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 20",
@@ -9677,7 +9677,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 21",
@@ -9691,7 +9691,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 22",
@@ -9705,7 +9705,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 23",
@@ -9719,7 +9719,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 24",
@@ -9733,7 +9733,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 25",
@@ -9747,7 +9747,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 26",
@@ -9761,7 +9761,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 27",
@@ -9775,7 +9775,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 28",
@@ -9789,7 +9789,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 29",
@@ -9803,7 +9803,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 30",
@@ -9817,7 +9817,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 31",
@@ -9831,7 +9831,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 32",
@@ -9845,7 +9845,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 33",
@@ -9859,7 +9859,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Prism Temple Scraps 34",
@@ -9873,7 +9873,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Final Boss",
@@ -9916,7 +9916,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 2",
@@ -9930,7 +9930,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 3",
@@ -9944,7 +9944,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 4",
@@ -9958,7 +9958,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 5",
@@ -9972,7 +9972,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 6",
@@ -9986,7 +9986,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 7",
@@ -10000,7 +10000,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 8",
@@ -10014,7 +10014,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 9",
@@ -10028,7 +10028,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 10",
@@ -10042,7 +10042,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 11",
@@ -10056,7 +10056,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 12",
@@ -10070,7 +10070,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 13",
@@ -10084,7 +10084,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 14",
@@ -10098,7 +10098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 15",
@@ -10112,7 +10112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 16",
@@ -10126,7 +10126,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 17",
@@ -10140,7 +10140,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 18",
@@ -10154,7 +10154,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 19",
@@ -10168,7 +10168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 20",
@@ -10182,7 +10182,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 21",
@@ -10196,7 +10196,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 22",
@@ -10210,7 +10210,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Scraps 23",
@@ -10224,7 +10224,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Purple Paint Can",
@@ -10238,7 +10238,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Jar of Pickles",
@@ -10255,7 +10255,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Pickle Val Pickle Lady Mission End",
@@ -10272,7 +10272,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -10292,7 +10292,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Shrine Near Temple Scraps 2",
@@ -10306,7 +10306,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Shrine Near Temple Scraps 3",
@@ -10320,7 +10320,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -10343,7 +10343,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Chest Scraps 2",
@@ -10360,7 +10360,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Chest Scraps 3",
@@ -10377,7 +10377,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Chest Scraps 4",
@@ -10394,7 +10394,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Chest Scraps 5",
@@ -10411,7 +10411,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 1",
@@ -10425,7 +10425,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 2",
@@ -10439,7 +10439,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 3",
@@ -10453,7 +10453,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 4",
@@ -10467,7 +10467,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 5",
@@ -10481,7 +10481,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 6",
@@ -10495,7 +10495,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 7",
@@ -10509,7 +10509,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 8",
@@ -10523,7 +10523,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 9",
@@ -10537,7 +10537,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 10",
@@ -10551,7 +10551,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 11",
@@ -10565,7 +10565,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 12",
@@ -10579,7 +10579,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Morse Bunker Scraps 13",
@@ -10593,7 +10593,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }

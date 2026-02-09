@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAll, HasAny, HelperCall, Or
+from rule_builder import True_, False_, And, Has, HasAll, HasAny, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -280,7 +280,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 1", player),
-        Has('World 1 Gate', 1)
+        True_()
     )
 
     world.set_rule(

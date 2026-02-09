@@ -3511,10 +3511,16 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
         This outputs the format expected by the frontend, matching the AST exporter format.
         Empty 'options', 'args', and 'kwargs' are omitted.
+
+        Uses _original_ast_type to encode the helper source and expansion behavior:
+        - "rb_defined_helper": has body_rule or helper_func, skip all expansion
+        - "helper": no body, allow full (pattern + standard) expansion
         """
+        # Helpers with a defined body get "rb_defined_helper" to skip all expansion
+        ast_type = "rb_defined_helper" if (self.body_rule is not None or self.helper_func is not None) else "helper"
         result: dict[str, Any] = {
             "rule": self.helper_name,
-            "_original_ast_type": "helper",
+            "_original_ast_type": ast_type,
         }
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
@@ -3659,10 +3665,19 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
 
             This outputs the format expected by the frontend, matching the AST exporter format.
             Empty 'options' and 'args' are omitted.
+
+            Uses _original_ast_type to encode the helper source and expansion behavior:
+            - "rb_defined_helper": has body_rule or helper_func, skip all expansion
+            - "rb_helper": Rule Builder native, skip pattern expansion only
             """
+            # Helpers with a defined body skip all expansion; others skip only pattern expansion
+            if self.body_rule is not None or self.helper_func is not None:
+                ast_type = "rb_defined_helper"
+            else:
+                ast_type = "rb_helper"
             result: dict[str, Any] = {
                 "rule": self.helper_name,
-                "_original_ast_type": "helper",
+                "_original_ast_type": ast_type,
             }
             if self.args:
                 # Convert args to proper rule format for frontend compatibility

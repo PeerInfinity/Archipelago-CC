@@ -71,6 +71,14 @@ class GenericGameExportHandler(BaseGameExportHandler):
         if is_auto_preserved or self.should_preserve_as_helper(helper_name):
             return None
 
+        # Don't pattern-expand helpers that have arguments - they are parametric
+        # functions whose behavior depends on the args and cannot be reduced to a
+        # simple item/capability check based on the helper name alone.
+        # For example, has_logic_list_building(buildings, index, ...) checks different
+        # items depending on args, not a single "Logic_List_Building" item.
+        if args:
+            return None
+
         # Try pattern-based expansion
         if self._is_common_helper_pattern(helper_name):
             return self._expand_common_helper(helper_name, args)

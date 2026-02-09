@@ -149,7 +149,7 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
     helper_name = None
     if rule_type == 'helper':
         helper_name = rule.get('name', '')
-    elif rule.get('_original_ast_type') == 'helper':
+    elif rule.get('_original_ast_type', '').endswith('helper'):
         # AST export format: helper name is in 'rule' field
         helper_name = rule.get('rule', '')
 
@@ -859,6 +859,11 @@ def generate_rules_py(data: ExtractedData) -> str:
             obtainable_items.add(loc_data.original_item)
     if data.starting_items:
         obtainable_items.update(data.starting_items.keys())
+    # Include resolved progressive item names (e.g., 'logistic-science-pack' from
+    # 'progressive-science-pack') - these are obtainable through the progressive mechanism
+    if data.progression_mapping:
+        for components in data.progression_mapping.values():
+            obtainable_items.update(components)
     rule_builder_generator.set_obtainable_items(obtainable_items)
 
     # Build entrance-to-parent-region mapping for resolving Attribute rules
@@ -1784,7 +1789,12 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
                 # Fall back to creating a new item if not found in pool
                 item = self.create_item(item_name)
 
-            location.place_locked_item(item)
+            # Place item without setting locked=True, so the exporter writes
+            # locked=false in rules.json (matching the original world's behavior).
+            # place_locked_item() would mark these as locked, causing the frontend
+            # spoiler test to skip them.
+            location.item = item
+            item.location = location
 '''
     else:
         pre_fill_section = ''

@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Super Mario 64 WorldGen",
   "game_directory": "sm64ex_worldgen",
-  "archipelago_version": "0.6.5",
+  "archipelago_version": "0.6.7",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -32,8 +32,8 @@
             }
           },
           {
-            "name": "Menu -> Jolly Roger Bay",
-            "connected_region": "Jolly Roger Bay",
+            "name": "Menu -> Jolly Roger Bay Door",
+            "connected_region": "Jolly Roger Bay Door",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -160,7 +160,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Toad (Second Floor)",
@@ -189,7 +189,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Toad (Third Floor)",
@@ -218,7 +218,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "MIPS 1",
@@ -247,7 +247,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "MIPS 2",
@@ -276,7 +276,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -307,7 +307,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BoB: Footrace with Koopa The Quick",
@@ -321,7 +321,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BoB: Mario Wings to the Sky",
@@ -341,7 +341,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BoB: Behind Chain Chomp's Gate",
@@ -355,7 +355,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BoB: Bob-omb Buddy",
@@ -369,7 +369,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -389,7 +389,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BoB: Find the 8 Red Coins",
@@ -403,7 +403,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -431,7 +431,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WF: Shoot into the Wild Blue",
@@ -445,7 +445,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WF: Red Coins on the Floating Isle",
@@ -459,7 +459,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WF: Fall onto the Caged Island",
@@ -476,7 +476,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WF: Blast Away the Wall",
@@ -493,7 +493,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -513,7 +513,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WF: Bob-omb Buddy",
@@ -527,9 +527,29 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
+      },
+      "Jolly Roger Bay Door": {
+        "name": "Jolly Roger Bay Door",
+        "exits": [
+          {
+            "name": "Jolly Roger Bay Door -> Jolly Roger Bay",
+            "connected_region": "Jolly Roger Bay",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "Jolly Roger Bay Door -> The Secret Aquarium",
+            "connected_region": "The Secret Aquarium",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "Jolly Roger Bay": {
         "name": "Jolly Roger Bay",
@@ -537,13 +557,6 @@
           {
             "name": "JRB: Upper",
             "connected_region": "JRB: Upper",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "Jolly Roger Bay -> The Secret Aquarium",
-            "connected_region": "The Secret Aquarium",
             "access_rule": {
               "rule": "True_"
             }
@@ -562,7 +575,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "JRB: Can the Eel Come Out to Play?",
@@ -576,7 +589,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "JRB: Treasure of the Ocean Cave",
@@ -590,7 +603,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "JRB: Blast to the Stone Pillar",
@@ -607,7 +620,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "JRB: Through the Jet Stream",
@@ -624,7 +637,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "JRB: Bob-omb Buddy",
@@ -638,7 +651,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -658,7 +671,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -678,7 +691,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: Li'l Penguin Lost",
@@ -692,7 +705,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: Big Penguin Race",
@@ -706,7 +719,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: Frosty Slide for 8 Red Coins",
@@ -720,7 +733,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: Snowman's Lost His Head",
@@ -734,7 +747,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: Wall Kicks Will Work",
@@ -751,7 +764,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: Bob-omb Buddy",
@@ -765,7 +778,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: 1Up Block Near Snowman",
@@ -779,7 +792,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: 1Up Block Ice Pillar",
@@ -793,7 +806,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "CCM: 1Up Block Secret Slide",
@@ -807,7 +820,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -835,7 +848,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BBH: Ride Big Boo's Merry-Go-Round",
@@ -849,7 +862,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BBH: Secret of the Haunted Books",
@@ -863,7 +876,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BBH: Seek the 8 Red Coins",
@@ -877,7 +890,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -908,7 +921,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -928,7 +941,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "BBH: 1Up Block Top of Mansion",
@@ -942,7 +955,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -962,7 +975,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Princess's Secret Slide Fast",
@@ -976,7 +989,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -996,7 +1009,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1016,7 +1029,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Tower of the Wing Cap Red Coins",
@@ -1030,7 +1043,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1050,7 +1063,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bowser in the Dark World Key",
@@ -1064,7 +1077,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bowser in the Dark World 1Up Block on Tower",
@@ -1078,7 +1091,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bowser in the Dark World 1Up Block near Goombas",
@@ -1092,7 +1105,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1201,7 +1214,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "HMC: Metal-Head Mario Can Move!",
@@ -1218,7 +1231,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "HMC: Watch for Rolling Rocks",
@@ -1232,7 +1245,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "HMC: Navigating the Toxic Maze",
@@ -1246,7 +1259,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "HMC: 1Up Block Past Rolling Rocks",
@@ -1260,7 +1273,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1280,7 +1293,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1300,7 +1313,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "HMC: 1Up Block above Pit",
@@ -1314,7 +1327,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1342,7 +1355,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "LLL: Bully the Bullies",
@@ -1356,7 +1369,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "LLL: 8-Coin Puzzle with 15 Pieces",
@@ -1370,7 +1383,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "LLL: Red-Hot Log Rolling",
@@ -1384,7 +1397,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1404,7 +1417,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "LLL: Elevator Tour in the Volcano",
@@ -1418,7 +1431,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1446,7 +1459,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: Shining Atop the Pyramid",
@@ -1460,7 +1473,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: Free Flying for 8 Red Coins",
@@ -1491,7 +1504,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: Bob-omb Buddy",
@@ -1505,7 +1518,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: 1Up Block Outside Pyramid",
@@ -1519,7 +1532,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: 1Up Block Pyramid Left Path",
@@ -1533,7 +1546,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: 1Up Block Pyramid Back",
@@ -1547,7 +1560,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1567,7 +1580,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: Stand Tall on the Four Pillars",
@@ -1598,7 +1611,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SSL: Pyramid Puzzle",
@@ -1612,7 +1625,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1632,7 +1645,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "DDD: Chests in the Current",
@@ -1646,7 +1659,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "DDD: Through the Jet Stream",
@@ -1663,7 +1676,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "DDD: The Manta Ray's Reward",
@@ -1677,7 +1690,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "DDD: Collect the Caps...",
@@ -1697,7 +1710,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "DDD: Pole-Jumping for Red Coins",
@@ -1714,7 +1727,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1734,7 +1747,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cavern of the Metal Cap Red Coins",
@@ -1751,7 +1764,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Cavern of the Metal Cap 1Up Block",
@@ -1765,7 +1778,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1785,7 +1798,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vanish Cap Under the Moat Red Coins",
@@ -1802,7 +1815,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Vanish Cap Under the Moat 1Up Block",
@@ -1816,7 +1829,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1849,7 +1862,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bowser in the Fire Sea Key",
@@ -1863,7 +1876,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bowser in the Fire Sea 1Up Block Swaying Stairs",
@@ -1877,7 +1890,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Bowser in the Fire Sea 1Up Block Near Poles",
@@ -1891,7 +1904,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1963,7 +1976,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: Chill with the Bully",
@@ -1977,7 +1990,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: In the Deep Freeze",
@@ -1991,7 +2004,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: Whirl from the Freezing Pond",
@@ -2005,7 +2018,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: Shell Shreddin' for Red Coins",
@@ -2019,7 +2032,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: Into the Igloo",
@@ -2036,7 +2049,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: Bob-omb Buddy",
@@ -2050,7 +2063,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: 1Up Block Near Moneybags",
@@ -2064,7 +2077,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "SL: 1Up Block inside Igloo",
@@ -2078,7 +2091,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2113,7 +2126,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2133,7 +2146,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WDW: Top o' the Town",
@@ -2147,7 +2160,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WDW: Secrets in the Shallows & Sky",
@@ -2161,7 +2174,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WDW: Bob-omb Buddy",
@@ -2175,7 +2188,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2195,7 +2208,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WDW: Quick Race Through Downtown!",
@@ -2212,7 +2225,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "WDW: 1Up Block in Downtown",
@@ -2226,7 +2239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2267,7 +2280,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTM: Blast to the Lonely Mushroom",
@@ -2284,7 +2297,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTM: Bob-omb Buddy",
@@ -2298,7 +2311,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTM: 1Up Block on Red Mushroom",
@@ -2312,7 +2325,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2332,7 +2345,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTM: Mystery of the Monkey Cage",
@@ -2346,7 +2359,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTM: Mysterious Mountainside",
@@ -2360,7 +2373,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTM: Breathtaking View from Bridge",
@@ -2374,7 +2387,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2428,7 +2441,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2456,7 +2469,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: Pluck the Piranha Flower",
@@ -2470,7 +2483,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: Rematch with Koopa the Quick",
@@ -2484,7 +2497,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: Five Itty Bitty Secrets",
@@ -2498,7 +2511,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: Wiggler's Red Coins",
@@ -2512,7 +2525,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: Bob-omb Buddy",
@@ -2526,7 +2539,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: 1Up Block THI Large near Start",
@@ -2540,7 +2553,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "THI: 1Up Block Windy Area",
@@ -2554,7 +2567,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2574,7 +2587,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2640,7 +2653,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2668,7 +2681,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTC: Get a Hand",
@@ -2682,7 +2695,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2710,7 +2723,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTC: The Pit and the Pendulums",
@@ -2724,7 +2737,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2744,7 +2757,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTC: Stomp on the Thwomp",
@@ -2758,7 +2771,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "TTC: 1Up Block at the Top",
@@ -2772,7 +2785,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2814,7 +2827,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RR: Tricky Triangles!",
@@ -2828,7 +2841,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RR: 1Up Block Top of Red Coin Maze",
@@ -2842,7 +2855,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RR: 1Up Block Under Fly Guy",
@@ -2856,7 +2869,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RR: Bob-omb Buddy",
@@ -2870,7 +2883,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2890,7 +2903,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2910,7 +2923,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RR: Somewhere Over the Rainbow",
@@ -2927,7 +2940,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2947,7 +2960,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RR: 1Up Block On House in the Sky",
@@ -2961,7 +2974,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -2984,7 +2997,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Wing Mario Over the Rainbow 1Up Block",
@@ -3001,7 +3014,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3029,7 +3042,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -3049,7 +3062,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }
@@ -3383,6 +3396,127 @@
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Painting Unlock WF": {
+        "name": "Painting Unlock WF",
+        "id": 3626231,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock JRB": {
+        "name": "Painting Unlock JRB",
+        "id": 3626232,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock CCM": {
+        "name": "Painting Unlock CCM",
+        "id": 3626233,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock LLL": {
+        "name": "Painting Unlock LLL",
+        "id": 3626236,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock SSL": {
+        "name": "Painting Unlock SSL",
+        "id": 3626237,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock DDD": {
+        "name": "Painting Unlock DDD",
+        "id": 3626238,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock SL": {
+        "name": "Painting Unlock SL",
+        "id": 3626239,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock WDW": {
+        "name": "Painting Unlock WDW",
+        "id": 3626240,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock TTM": {
+        "name": "Painting Unlock TTM",
+        "id": 3626241,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock THI": {
+        "name": "Painting Unlock THI",
+        "id": 3626242,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Painting Unlock TTC": {
+        "name": "Painting Unlock TTC",
+        "id": 3626243,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -3584,6 +3718,7 @@
         "completion_type": 0,
         "death_link": false,
         "enable_coin_stars": 0,
+        "enable_locked_paintings": false,
         "enable_move_rando": false,
         "exclamation_boxes": false,
         "exclude_locations": [],
@@ -3671,6 +3806,11 @@
           },
           "default": 0,
           "display_name": "Enable 100 Coin Stars"
+        },
+        "enable_locked_paintings": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Enable Locked Paintings"
         },
         "enable_move_rando": {
           "type": "toggle",
@@ -3821,6 +3961,7 @@
           "311": 311
         },
         "MoveRandoVec": 0,
+        "PaintingRando": 0,
         "DeathLink": 0,
         "CompletionType": 0,
         "FirstBowserDoorCost": 7,

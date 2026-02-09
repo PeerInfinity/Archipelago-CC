@@ -50,7 +50,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 2",
@@ -64,7 +64,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 3",
@@ -78,7 +78,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 4",
@@ -92,7 +92,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 5",
@@ -106,7 +106,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 6",
@@ -120,7 +120,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 1",
@@ -134,7 +134,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 2",
@@ -148,7 +148,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 3",
@@ -162,7 +162,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 4",
@@ -176,7 +176,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 5",
@@ -190,7 +190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 6",
@@ -204,7 +204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 1",
@@ -218,7 +218,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 2",
@@ -232,7 +232,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 3",
@@ -246,7 +246,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 4",
@@ -260,7 +260,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 5",
@@ -274,7 +274,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 6",
@@ -288,7 +288,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 1",
@@ -302,7 +302,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 2",
@@ -316,7 +316,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 3",
@@ -330,7 +330,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 4",
@@ -344,7 +344,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 5",
@@ -358,7 +358,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 6",
@@ -372,7 +372,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "PSI Key Storage 1",
@@ -386,7 +386,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -430,7 +430,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 8",
@@ -444,7 +444,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 9",
@@ -458,7 +458,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 10",
@@ -472,7 +472,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 11",
@@ -486,7 +486,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 12",
@@ -500,7 +500,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 7",
@@ -514,7 +514,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 8",
@@ -528,7 +528,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 9",
@@ -542,7 +542,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 10",
@@ -556,7 +556,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 11",
@@ -570,7 +570,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 12",
@@ -584,7 +584,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 7",
@@ -598,7 +598,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 8",
@@ -612,7 +612,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 9",
@@ -626,7 +626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 10",
@@ -640,7 +640,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 11",
@@ -654,7 +654,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 12",
@@ -668,7 +668,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 7",
@@ -682,7 +682,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 8",
@@ -696,7 +696,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 9",
@@ -710,7 +710,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 10",
@@ -724,7 +724,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 11",
@@ -738,7 +738,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 12",
@@ -752,7 +752,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "PSI Key Storage 2",
@@ -766,7 +766,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -810,7 +810,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 14",
@@ -824,7 +824,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 15",
@@ -838,7 +838,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 16",
@@ -852,7 +852,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 17",
@@ -866,7 +866,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Alpha Cache 18",
@@ -880,7 +880,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 13",
@@ -894,7 +894,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 14",
@@ -908,7 +908,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 15",
@@ -922,7 +922,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 16",
@@ -936,7 +936,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 17",
@@ -950,7 +950,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Beta Cache 18",
@@ -964,7 +964,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 13",
@@ -978,7 +978,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 14",
@@ -992,7 +992,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 15",
@@ -1006,7 +1006,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 16",
@@ -1020,7 +1020,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 17",
@@ -1034,7 +1034,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Gamma Cache 18",
@@ -1048,7 +1048,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 13",
@@ -1062,7 +1062,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 14",
@@ -1076,7 +1076,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 15",
@@ -1090,7 +1090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 16",
@@ -1104,7 +1104,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 17",
@@ -1118,7 +1118,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Reward Chest 18",
@@ -1132,7 +1132,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "PSI Key Storage 3",
@@ -1146,7 +1146,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1190,7 +1190,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1205,7 +1205,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1220,7 +1220,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1235,7 +1235,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1250,7 +1250,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1265,7 +1265,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1280,7 +1280,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1295,7 +1295,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1310,7 +1310,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1325,7 +1325,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1340,7 +1340,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1355,7 +1355,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1370,7 +1370,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1385,7 +1385,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1400,7 +1400,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1415,7 +1415,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1430,7 +1430,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1445,7 +1445,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1460,7 +1460,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1475,7 +1475,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1490,7 +1490,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1505,7 +1505,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1520,7 +1520,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1535,7 +1535,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
+            "locked": false,
             "progress_type": "EXCLUDED"
           },
           {
@@ -1550,7 +1550,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "The Last Place You'll Look",
@@ -1564,7 +1564,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -1595,7 +1595,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Meridian Defeat",
@@ -1641,7 +1641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Ataraxia Defeat",
@@ -1687,7 +1687,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Merodach Defeat",

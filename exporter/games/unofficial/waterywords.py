@@ -189,7 +189,7 @@ class WateryWordsGameExportHandler(GenericGameExportHandler):
         original_type = rule.get('_original_ast_type', '')
 
         # Match Rule Builder format: {'rule': 'calculate_score_in_logic', '_original_ast_type': 'helper'}
-        is_rb_helper = rule_type == 'calculate_score_in_logic' and original_type == 'helper'
+        is_rb_helper = rule_type == 'calculate_score_in_logic' and original_type.endswith('helper')
         # Match AST format: {'type': 'helper', 'name': 'calculate_score_in_logic'}
         is_ast_helper = rule_type == 'helper' and helper_name == 'calculate_score_in_logic'
 
