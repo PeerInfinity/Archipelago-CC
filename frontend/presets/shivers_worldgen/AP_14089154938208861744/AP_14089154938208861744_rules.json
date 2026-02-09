@@ -50,7 +50,10 @@
             "name": "To Lobby From Outside",
             "connected_region": "Lobby",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Key for Front Door"
+              }
             }
           }
         ],
@@ -774,7 +777,10 @@
             "name": "To Outside From Lobby",
             "connected_region": "Outside",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Key for Front Door"
+              }
             }
           },
           {

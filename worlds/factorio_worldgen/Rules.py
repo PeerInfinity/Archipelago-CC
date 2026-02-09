@@ -932,7 +932,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Automate logistic-science-pack", player),
-        True_()
+        Has('logistic-science-pack', 1)
     )
 
     world.set_rule(
