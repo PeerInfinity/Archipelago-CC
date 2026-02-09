@@ -110,7 +110,7 @@ class MinishootAdventuresExportHandler(GenericGameExportHandler):
                 return result
 
         # Handle simple_parse in RB format (rule='simple_parse', _original_ast_type='helper')
-        if rule_type == 'simple_parse' or (rule.get('_original_ast_type') == 'helper' and rule_type == 'simple_parse'):
+        if rule_type == 'simple_parse' or (rule.get('_original_ast_type', '').endswith('helper') and rule_type == 'simple_parse'):
             result = self._expand_simple_parse(rule)
             if result is not None:
                 return result

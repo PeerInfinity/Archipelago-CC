@@ -3512,17 +3512,16 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
         This outputs the format expected by the frontend, matching the AST exporter format.
         Empty 'options', 'args', and 'kwargs' are omitted.
 
-        Includes '_rb_helper_defined' flag when the helper has a body_rule or helper_func,
-        signaling to the exporter that this helper has a real definition and should not
-        be pattern-expanded into an inferred item check.
+        Uses _original_ast_type to encode the helper source and expansion behavior:
+        - "rb_defined_helper": has body_rule or helper_func, skip all expansion
+        - "helper": no body, allow full (pattern + standard) expansion
         """
+        # Helpers with a defined body get "rb_defined_helper" to skip all expansion
+        ast_type = "rb_defined_helper" if (self.body_rule is not None or self.helper_func is not None) else "helper"
         result: dict[str, Any] = {
             "rule": self.helper_name,
-            "_original_ast_type": "helper",
+            "_original_ast_type": ast_type,
         }
-        # Mark helpers that have a defined body so the exporter preserves them
-        if self.body_rule is not None or self.helper_func is not None:
-            result["_rb_helper_defined"] = True
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
         if self.args:
@@ -3667,21 +3666,19 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             This outputs the format expected by the frontend, matching the AST exporter format.
             Empty 'options' and 'args' are omitted.
 
-            Includes '_rb_helper': True to signal that this helper call was produced by
-            the Rule Builder and should not be pattern-expanded by the exporter's
-            GenericGameExportHandler. Also includes '_rb_helper_defined' flag when the
-            helper has a body_rule or helper_func, signaling that it should not be
-            expanded at all.
+            Uses _original_ast_type to encode the helper source and expansion behavior:
+            - "rb_defined_helper": has body_rule or helper_func, skip all expansion
+            - "rb_helper": Rule Builder native, skip pattern expansion only
             """
+            # Helpers with a defined body skip all expansion; others skip only pattern expansion
+            if self.body_rule is not None or self.helper_func is not None:
+                ast_type = "rb_defined_helper"
+            else:
+                ast_type = "rb_helper"
             result: dict[str, Any] = {
                 "rule": self.helper_name,
-                "_original_ast_type": "helper",
-                "_rb_helper": True,
+                "_original_ast_type": ast_type,
             }
-            # Mark helpers that have a defined body so the exporter preserves them
-            # rather than pattern-expanding (e.g., has_any_magic -> Has(Any_Magic))
-            if self.body_rule is not None or self.helper_func is not None:
-                result["_rb_helper_defined"] = True
             if self.args:
                 # Convert args to proper rule format for frontend compatibility
                 converted_args = []

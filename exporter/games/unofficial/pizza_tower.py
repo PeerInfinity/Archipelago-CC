@@ -75,7 +75,7 @@ class PizzaTowerGameExportHandler(GenericGameExportHandler):
 
         # Handle rule_from_itemset helper pattern
         # Format: {'rule': 'rule_from_itemset', '_original_ast_type': 'helper', 'args': [...]}
-        if rule_type == 'rule_from_itemset' and rule.get('_original_ast_type') == 'helper':
+        if rule_type == 'rule_from_itemset' and rule.get('_original_ast_type', '').endswith('helper'):
             result = self._convert_rule_from_itemset(rule)
             if result is not None:
                 return result

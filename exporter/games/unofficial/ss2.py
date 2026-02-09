@@ -107,7 +107,7 @@ class SystemShock2GameExportHandler(GenericGameExportHandler):
         rule_type = rule.get('type') or rule.get('rule')
 
         # Handle helper rules
-        if rule_type == 'helper' or rule.get('_original_ast_type') == 'helper':
+        if rule_type == 'helper' or rule.get('_original_ast_type', '').endswith('helper'):
             helper_name = rule.get('name') or rule.get('rule')
             args = rule.get('args', [])
 
