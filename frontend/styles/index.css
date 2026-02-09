@@ -911,6 +911,30 @@ select {
   }
 }
 
+/* Path-used badges for entrance/exit highlighting */
+.path-used-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 193, 7, 0.25);
+  border: 2px solid #FFC107;
+}
+
+.path-used-badge img {
+  width: 14px;
+  height: 14px;
+}
+
+.entrance-wrapper.path-used,
+.exit-wrapper.path-used {
+  border-color: #FFC107 !important;
+  background-color: rgba(255, 193, 7, 0.12) !important;
+}
+
 .region-controls {
   display: flex;
   gap: 0.5rem;
