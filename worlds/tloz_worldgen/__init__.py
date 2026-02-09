@@ -7,7 +7,7 @@ import json
 import os
 import types
 
-from typing import ClassVar, List, Dict, Set, Any, TYPE_CHECKING
+from typing import ClassVar, Dict, List, Set, Any, TYPE_CHECKING
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -85,11 +85,11 @@ class TheLegendofZeldaWorldGenWeb(WebWorld):
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
-            "A guide to setting up the Archipelago The Legend of Zelda WorldGen randomizer.",
+            "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
             "English",
-            "setup_en.md",
-            "setup/en",
-            ["Archipelago Team"]
+            "multiworld_en.md",
+            "multiworld/en",
+            ["Rosalie and Figment"]
         )
     ]
 

@@ -4,7 +4,7 @@
 
 [📖 Learn about this test](../tests/test-world-generator.md)
 
-**Generated:** 2026-02-08 22:51:10 UTC
+**Generated:** 2026-02-08 22:57:53 UTC
 
 **Source Data Created:** 2026-02-08 22:51:10
 
@@ -51,17 +51,17 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 
 ## Canonical Summary
 
-**Total Templates:** 7
+**Total Templates:** 62
 
 | Step | Passed | Failed | Total |
 |------|--------|--------|-------|
-| Original Generation | 0 | 0 | 0 |
-| Original Spoiler Test | 0 | 0 | 0 |
-| Stage 1: World Generation | 0 | 0 | 0 |
-| Stage 2: Seed Generation | 0 | 0 | 0 |
-| Stage 3: Rules Comparison | 0 | 0 | 0 |
-| Stage 4: WorldGen Spoiler Test | 0 | 0 | 0 |
-| Stage 5: Cross-Validation | 0 | 0 | 0 |
+| Original Generation | 62 | 0 | 62 |
+| Original Spoiler Test | 62 | 0 | 62 |
+| Stage 1: World Generation | 62 | 0 | 62 |
+| Stage 2: Seed Generation | 62 | 0 | 62 |
+| Stage 3: Rules Comparison | 50 | 12 | 62 |
+| Stage 4: WorldGen Spoiler Test | 57 | 5 | 62 |
+| Stage 5: Cross-Validation | 55 | 7 | 62 |
 
 ## Canonical Detailed Results
 
@@ -138,17 +138,17 @@ Tests run with standard randomized item placement.
 
 ## Random Summary
 
-**Total Templates:** 7
+**Total Templates:** 62
 
 | Step | Passed | Failed | Total |
 |------|--------|--------|-------|
-| Original Generation | 0 | 0 | 0 |
-| Original Spoiler Test | 0 | 0 | 0 |
-| Stage 1: World Generation | 0 | 0 | 0 |
-| Stage 2: Seed Generation | 0 | 0 | 0 |
-| Stage 3: Rules Comparison | 0 | 0 | 0 |
-| Stage 4: WorldGen Spoiler Test | 0 | 0 | 0 |
-| Stage 5: Cross-Validation | 0 | 0 | 0 |
+| Original Generation | 62 | 0 | 62 |
+| Original Spoiler Test | 62 | 0 | 62 |
+| Stage 1: World Generation | 62 | 0 | 62 |
+| Stage 2: Seed Generation | 62 | 0 | 62 |
+| Stage 3: Rules Comparison | 0 | 62 | 62 |
+| Stage 4: WorldGen Spoiler Test | 57 | 5 | 62 |
+| Stage 5: Cross-Validation | 38 | 24 | 62 |
 
 ## Random Detailed Results
 

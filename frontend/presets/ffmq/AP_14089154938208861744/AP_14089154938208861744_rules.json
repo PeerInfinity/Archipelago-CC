@@ -21749,7 +21749,11 @@
       "world_directory": "ffmq"
     }
   },
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "use_resolved_items": true
+    }
+  },
   "game_info": {
     "1": {}
   },

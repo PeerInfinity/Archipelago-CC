@@ -15827,12 +15827,12 @@
         "tutorials": [
           {
             "name": "Multiworld Setup Guide",
-            "description": "A guide to playing Secret of Evermore randomizer. This guide covers single-player, multiworld and related software.",
+            "description": "A guide to setting up the Archipelago Secret of Evermore WorldGen randomizer.",
             "language": "English",
-            "file_name": "multiworld_en.md",
-            "link": "multiworld/en",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
             "authors": [
-              "Black Sliver"
+              "Archipelago Team"
             ]
           }
         ]

@@ -1,6 +1,6 @@
 # Fuzz Test Results Summary
 
-**Generated:** 2026-02-08 01:58:03
+**Generated:** 2026-02-08 23:45:52 UTC
 
 **Source Data Created:** 2026-02-08T01:19:08.985783
 
@@ -24,7 +24,7 @@ This summary combines results from fuzz tests that validate game configurations 
 
 ### Individual Test Results
 
-- **Javascript:** 63/75 passed (84.0%)
+- **Javascript:** 64/75 passed (85.3%)
 - **UT Fuzz Original:** 38/85 passed (44.7%)
 - **UT Fuzz Worldgen:** 73/87 passed (83.9%)
 - **UT Fuzz Pickle:** 75/87 passed (86.2%)
@@ -33,8 +33,8 @@ This summary combines results from fuzz tests that validate game configurations 
 ### Combined Results (All 5 Tests)
 
 - **Games passing all 5 fuzz tests:** 31/87 (35.6%)
-- **Games passing 4 fuzz tests:** 32/87 (36.8%)
-- **Games passing 3 fuzz tests:** 8/87 (9.2%)
+- **Games passing 4 fuzz tests:** 33/87 (37.9%)
+- **Games passing 3 fuzz tests:** 7/87 (8.0%)
 - **Games passing 2 fuzz tests:** 9/87 (10.3%)
 - **Games passing 1 fuzz test:** 3/87 (3.4%)
 - **Games passing 0 fuzz tests:** 4/87 (4.6%)
@@ -43,8 +43,8 @@ This summary combines results from fuzz tests that validate game configurations 
 
 This view excludes UT Original, showing results for Javascript, UT Worldgen, UT Pickle, and UT Hybrid.
 
-- **Games passing all 4 fuzz tests:** 57/87 (65.5%)
-- **Games passing 3 fuzz tests:** 13/87 (14.9%)
+- **Games passing all 4 fuzz tests:** 58/87 (66.7%)
+- **Games passing 3 fuzz tests:** 12/87 (13.8%)
 - **Games passing 2 fuzz tests:** 10/87 (11.5%)
 - **Games passing 1 fuzz test:** 3/87 (3.4%)
 - **Games passing 0 fuzz tests:** 4/87 (4.6%)
@@ -80,7 +80,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Factorio | ✅ | ❌ 0% | ✅ | ✅ | ✅ | 295.4KB |
 | Faxanadu | ✅ | ❌ 20% | ✅ | ✅ | ✅ | 68.7KB |
 | Final Fantasy | — | ✅ | ✅ | ✅ | ✅ | N/A |
-| Final Fantasy Mystic Quest | 🔶 50% | ❌ 1% | ✅ | 🔶 80% | ❌ 0% | 549.5KB |
+| Final Fantasy Mystic Quest | ⚠️ 90% | ❌ 1% | ✅ | 🔶 80% | ❌ 0% | 549.5KB |
 | Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | 367.5KB |
 | Hollow Knight | — | ❌ 11% | ❌ 0% | ✅ | ✅ | N/A |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | 101.9KB |
@@ -120,7 +120,7 @@ This view excludes UT Original, showing results for Javascript, UT Worldgen, UT 
 | Subnautica | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 207.8KB |
 | Sudoku | — | ✅ | ✅ | ✅ | ✅ | N/A |
 | Super Mario 64 | ✅ | ❌ 29% | ✅ | ✅ | ✅ | 101.9KB |
-| Super Mario Land 2 | ⚠️ 90% | ❌ 10% | ✅ | ✅ | ✅ | 982.7KB |
+| Super Mario Land 2 | ✅ | ❌ 10% | ✅ | ✅ | ✅ | 982.7KB |
 | Super Mario World | ✅ | 🔶 54% | ✅ | ✅ | ✅ | 178.2KB |
 | Super Metroid | ❌ 0% | ❌ 1% | ❌ 0% | ❌ 49% | ❌ 0% | 625.4KB |
 | TOEM original | ✅ | ✅ | ✅ | ✅ | ✅ | 102.8KB |
