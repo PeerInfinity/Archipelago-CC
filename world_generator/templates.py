@@ -859,6 +859,11 @@ def generate_rules_py(data: ExtractedData) -> str:
             obtainable_items.add(loc_data.original_item)
     if data.starting_items:
         obtainable_items.update(data.starting_items.keys())
+    # Include resolved progressive item names (e.g., 'logistic-science-pack' from
+    # 'progressive-science-pack') - these are obtainable through the progressive mechanism
+    if data.progression_mapping:
+        for components in data.progression_mapping.values():
+            obtainable_items.update(components)
     rule_builder_generator.set_obtainable_items(obtainable_items)
 
     # Build entrance-to-parent-region mapping for resolving Attribute rules
