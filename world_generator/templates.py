@@ -859,6 +859,18 @@ def generate_rules_py(data: ExtractedData) -> str:
             obtainable_items.add(loc_data.original_item)
     if data.starting_items:
         obtainable_items.update(data.starting_items.keys())
+    # Include resolved progressive item names (e.g., 'logistic-science-pack' from
+    # 'progressive-science-pack') - these are obtainable through the progressive mechanism
+    if data.progression_mapping:
+        for components in data.progression_mapping.values():
+            obtainable_items.update(components)
+    # Include all items that have definitions in the items table. These are real items
+    # that may not be in the pool due to option settings (e.g., "Key for Front Door"
+    # when front_door_usable=false in Shivers). Their Has() rules should be preserved
+    # as-is (evaluating to false = permanently locked), not converted to True_().
+    # The lossy True_() fallback should only apply to items not defined in the items
+    # table at all (truly virtual/computed items with no item definition).
+    obtainable_items.update(data.items.keys())
     rule_builder_generator.set_obtainable_items(obtainable_items)
 
     # Build entrance-to-parent-region mapping for resolving Attribute rules

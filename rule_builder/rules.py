@@ -16,7 +16,39 @@ if TYPE_CHECKING:
 else:
     World = object
 
-from worlds.AutoWorld import LogicMixin
+def _import_logic_mixin():
+    """Import LogicMixin without triggering worlds auto-discovery.
+
+    When rule_builder is imported before worlds (e.g., from world_generator),
+    importing worlds.AutoWorld would trigger worlds/__init__.py which
+    auto-discovers and loads all world packages. Those worldgen worlds
+    import from rule_builder, creating a circular dependency.
+
+    Fix: temporarily stub sys.modules['worlds'] so worlds.AutoWorld can
+    be imported directly. worlds/AutoWorld.py has no relative imports
+    and is safe to load standalone.
+    """
+    import sys
+    if 'worlds' not in sys.modules:
+        import os, types
+        worlds_dir = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'worlds'
+        )
+        stub = types.ModuleType('worlds')
+        stub.__path__ = [worlds_dir]
+        stub.__package__ = 'worlds'
+        sys.modules['worlds'] = stub
+        try:
+            from worlds.AutoWorld import LogicMixin
+        finally:
+            del sys.modules['worlds']
+        return LogicMixin
+    else:
+        from worlds.AutoWorld import LogicMixin
+        return LogicMixin
+
+LogicMixin = _import_logic_mixin()
+del _import_logic_mixin
 
 
 class RuleBuilderLogicMixin(LogicMixin):
